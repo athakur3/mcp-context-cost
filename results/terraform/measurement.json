@@ -1,0 +1,341 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "measured",
+  "totalTokens": 2061,
+  "toolCount": 9,
+  "tools": [
+    {
+      "name": "get_latest_module_version",
+      "tokens": 200,
+      "descriptionTokens": 13,
+      "inputSchemaTokens": 139
+    },
+    {
+      "name": "get_latest_provider_version",
+      "tokens": 148,
+      "descriptionTokens": 13,
+      "inputSchemaTokens": 87
+    },
+    {
+      "name": "get_module_details",
+      "tokens": 157,
+      "descriptionTokens": 37,
+      "inputSchemaTokens": 71
+    },
+    {
+      "name": "get_policy_details",
+      "tokens": 156,
+      "descriptionTokens": 37,
+      "inputSchemaTokens": 67
+    },
+    {
+      "name": "get_provider_capabilities",
+      "tokens": 305,
+      "descriptionTokens": 138,
+      "inputSchemaTokens": 110
+    },
+    {
+      "name": "get_provider_details",
+      "tokens": 149,
+      "descriptionTokens": 42,
+      "inputSchemaTokens": 55
+    },
+    {
+      "name": "search_modules",
+      "tokens": 240,
+      "descriptionTokens": 129,
+      "inputSchemaTokens": 54
+    },
+    {
+      "name": "search_policies",
+      "tokens": 228,
+      "descriptionTokens": 138,
+      "inputSchemaTokens": 31
+    },
+    {
+      "name": "search_providers",
+      "tokens": 484,
+      "descriptionTokens": 132,
+      "inputSchemaTokens": 293
+    }
+  ],
+  "canonicalSha256": "7205f4d29a1a97d6fa9d13d2e9b3c2ccc5e8dda8539cf836d5895380c56c4b3b",
+  "rawToolsCapture": [
+    {
+      "annotations": {
+        "title": "Get Latest Module Version",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "description": "Fetches the latest version of a Terraform module from the public registry",
+      "inputSchema": {
+        "properties": {
+          "module_name": {
+            "description": "The name of the module, this is usually the service or group of service the user is deploying e.g., 'security-group', 'secrets-manager' etc.",
+            "type": "string"
+          },
+          "module_provider": {
+            "description": "The name of the Terraform provider for the module, e.g., 'aws', 'google', 'azurerm' etc.",
+            "type": "string"
+          },
+          "module_publisher": {
+            "description": "The publisher of the module, e.g., 'hashicorp', 'aws-ia', 'terraform-google-modules', 'Azure' etc.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "module_publisher",
+          "module_name",
+          "module_provider"
+        ],
+        "type": "object"
+      },
+      "name": "get_latest_module_version"
+    },
+    {
+      "annotations": {
+        "title": "Get Latest Provider Version",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "description": "Fetches the latest version of a Terraform provider from the public registry",
+      "inputSchema": {
+        "properties": {
+          "name": {
+            "description": "The name of the Terraform provider, e.g., 'aws', 'azurerm', 'google', etc.",
+            "type": "string"
+          },
+          "namespace": {
+            "description": "The namespace of the Terraform provider, typically the name of the company, or their GitHub organization name that created the provider e.g., 'hashicorp'",
+            "type": "string"
+          }
+        },
+        "required": [
+          "namespace",
+          "name"
+        ],
+        "type": "object"
+      },
+      "name": "get_latest_provider_version"
+    },
+    {
+      "annotations": {
+        "title": "Retrieve documentation for a specific Terraform module",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "description": "Fetches up-to-date documentation on how to use a Terraform module. You must call 'search_modules' first to obtain the exact valid and compatible module_id required to use this tool.",
+      "inputSchema": {
+        "properties": {
+          "module_id": {
+            "description": "Exact valid and compatible module_id retrieved from search_modules (e.g., 'squareops/terraform-kubernetes-mongodb/mongodb/2.1.1', 'GoogleCloudPlatform/vertex-ai/google/0.2.0')",
+            "type": "string"
+          }
+        },
+        "required": [
+          "module_id"
+        ],
+        "type": "object"
+      },
+      "name": "get_module_details"
+    },
+    {
+      "annotations": {
+        "title": "Fetch detailed Terraform policy documentation using a terraform_policy_id",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "description": "Fetches up-to-date documentation for a specific policy from the Terraform registry. You must call 'search_policies' first to obtain the exact terraform_policy_id required to use this tool.",
+      "inputSchema": {
+        "properties": {
+          "terraform_policy_id": {
+            "description": "Matching terraform_policy_id retrieved from the 'search_policies' tool (e.g., 'policies/hashicorp/CIS-Policy-Set-for-AWS-Terraform/1.0.1')",
+            "type": "string"
+          }
+        },
+        "required": [
+          "terraform_policy_id"
+        ],
+        "type": "object"
+      },
+      "name": "get_policy_details"
+    },
+    {
+      "annotations": {
+        "title": "Get Terraform provider capabilities and supported features",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "description": "Get the capabilities of a Terraform provider including the types of resources, data sources, functions, guides, and other features it supports.\nThis tool analyzes the provider documentation to determine what types of capabilities are available:\n- resources: Infrastructure resources that can be created/managed\n- data-sources: Read-only data sources for querying existing infrastructure  \n- functions: Provider-specific functions for data transformation\n- guides: Documentation guides and tutorials for using the provider\n- actions: Available provider actions (if any)\n- ephemeral resources: Temporary resources for credentials and tokens\n- list-resources: List resources for querying existing cloud resources (Terraform Search)\n\nReturns a summary with counts and examples for each capability type.",
+      "inputSchema": {
+        "properties": {
+          "name": {
+            "description": "The name of the Terraform provider, e.g., 'aws', 'azurerm', 'google', etc.",
+            "type": "string"
+          },
+          "namespace": {
+            "description": "The namespace of the Terraform provider, typically the name of the company, or their GitHub organization name that created the provider e.g., 'hashicorp'",
+            "type": "string"
+          },
+          "version": {
+            "description": "The version of the provider to analyze (defaults to 'latest')",
+            "type": "string"
+          }
+        },
+        "required": [
+          "namespace",
+          "name"
+        ],
+        "type": "object"
+      },
+      "name": "get_provider_capabilities"
+    },
+    {
+      "annotations": {
+        "title": "Fetch detailed Terraform provider documentation using a document ID",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "description": "Fetches up-to-date documentation for a specific service from a Terraform provider. \nYou must call 'search_providers' tool first to obtain the exact tfprovider-compatible provider_doc_id required to use this tool.",
+      "inputSchema": {
+        "properties": {
+          "provider_doc_id": {
+            "description": "Exact tfprovider-compatible provider_doc_id, (e.g., '8894603', '8906901') retrieved from 'search_providers'",
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider_doc_id"
+        ],
+        "type": "object"
+      },
+      "name": "get_provider_details"
+    },
+    {
+      "annotations": {
+        "title": "Search and match Terraform modules based on name and relevance",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "description": "Resolves a Terraform module name to obtain a compatible module_id for the get_module_details tool and returns a list of matching Terraform modules.\nYou MUST call this function before 'get_module_details' to obtain a valid and compatible module_id.\nWhen selecting the best match, consider the following:\n\t- Name similarity to the query\n\t- Description relevance\n\t- Verification status (verified)\n\t- Download counts (popularity)\nReturn the selected module_id and explain your choice. If there are multiple good matches, mention this but proceed with the most relevant one.\nIf no modules were found, reattempt the search with a new moduleName query.",
+      "inputSchema": {
+        "properties": {
+          "current_offset": {
+            "default": 0,
+            "description": "Current offset for pagination",
+            "minimum": 0,
+            "type": "number"
+          },
+          "module_query": {
+            "description": "The query to search for Terraform modules.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "module_query"
+        ],
+        "type": "object"
+      },
+      "name": "search_modules"
+    },
+    {
+      "annotations": {
+        "title": "Search and match Terraform policies based on name and relevance",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "description": "Searches for Terraform policies based on a query string.\nThis tool returns a list of matching policies, which can be used to retrieve detailed policy information using the 'get_policy_details' tool.\nYou MUST call this function before 'get_policy_details' to obtain a valid terraform_policy_id.\nWhen selecting the best match, consider the following:\n\t- Name similarity to the query\n\t- Title relevance\n\t- Verification status (verified)\n\t- Download counts (popularity)\nReturn the selected policyID and explain your choice. If there are multiple good matches, mention this but proceed with the most relevant one.\nIf no policies were found, reattempt the search with a new policy_query.",
+      "inputSchema": {
+        "properties": {
+          "policy_query": {
+            "description": "The query to search for Terraform modules.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "policy_query"
+        ],
+        "type": "object"
+      },
+      "name": "search_policies"
+    },
+    {
+      "annotations": {
+        "title": "Identify the most relevant provider document ID for a Terraform service",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "description": "This tool retrieves a list of potential documents based on the 'service_slug' and 'provider_document_type' provided.\nYou MUST call this function before 'get_provider_details' to obtain a valid tfprovider-compatible 'provider_doc_id'.\nUse the most relevant single word as the search query for 'service_slug', if unsure about the 'service_slug', use the 'provider_name' for its value.\nWhen selecting the best match, consider the following:\n\t- Title similarity to the query\n\t- Category relevance\nReturn the selected 'provider_doc_id' and explain your choice.\nIf there are multiple good matches, mention this but proceed with the most relevant one.",
+      "inputSchema": {
+        "properties": {
+          "provider_document_type": {
+            "description": "The type of the document to retrieve,\nfor general overview of the provider use 'overview',\nfor guidance on upgrading a provider or custom configuration information use 'guides',\nfor deploying resources use 'resources', for reading pre-deployed resources use 'data-sources',\nfor functions use 'functions',\nfor Terraform actions use 'actions',\nfor listing resources using Terraform Search use 'list-resources'",
+            "enum": [
+              "resources",
+              "data-sources",
+              "functions",
+              "guides",
+              "overview",
+              "actions",
+              "list-resources"
+            ],
+            "type": "string"
+          },
+          "provider_name": {
+            "description": "The name of the Terraform provider to perform the read or deployment operation",
+            "type": "string"
+          },
+          "provider_namespace": {
+            "description": "The publisher of the Terraform provider, typically the name of the company, or their GitHub organization name that created the provider",
+            "type": "string"
+          },
+          "provider_version": {
+            "description": "The version of the Terraform provider to retrieve in the format 'x.y.z', or 'latest' to get the latest version",
+            "type": "string"
+          },
+          "service_slug": {
+            "description": "The slug of the service you want to deploy or read using the Terraform provider, prefer using a single word, use underscores for multiple words and if unsure about the service_slug, use the provider_name for its value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider_name",
+          "provider_namespace",
+          "service_slug",
+          "provider_document_type"
+        ],
+        "type": "object"
+      },
+      "name": "search_providers"
+    }
+  ],
+  "measuredAt": "2026-08-16T12:08:31.393Z",
+  "serverName": "terraform-mcp-server",
+  "serverVersion": "1.2.0",
+  "launchCommand": "docker run -i --rm hashicorp/terraform-mcp-server",
+  "envVarNames": [],
+  "isolation": {
+    "docker": true,
+    "note": "command is itself a docker run (host-spawned container)"
+  }
+}

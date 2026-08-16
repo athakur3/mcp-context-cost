@@ -1,0 +1,85 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "measured",
+  "totalTokens": 319,
+  "toolCount": 2,
+  "tools": [
+    {
+      "name": "brave_web_search",
+      "tokens": 161,
+      "descriptionTokens": 65,
+      "inputSchemaTokens": 84
+    },
+    {
+      "name": "brave_local_search",
+      "tokens": 156,
+      "descriptionTokens": 82,
+      "inputSchemaTokens": 61
+    }
+  ],
+  "canonicalSha256": "727577fbcd5fe4e811453a32d9c9852ea877c90b8acf56e0cdf5eda15e97d803",
+  "rawToolsCapture": [
+    {
+      "name": "brave_web_search",
+      "description": "Performs a web search using the Brave Search API, ideal for general queries, news, articles, and online content. Use this for broad information gathering, recent events, or when you need diverse web sources. Supports pagination, content filtering, and freshness controls. Maximum 20 results per request, with offset for pagination. ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Search query (max 400 chars, 50 words)"
+          },
+          "count": {
+            "type": "number",
+            "description": "Number of results (1-20, default 10)",
+            "default": 10
+          },
+          "offset": {
+            "type": "number",
+            "description": "Pagination offset (max 9, default 0)",
+            "default": 0
+          }
+        },
+        "required": [
+          "query"
+        ]
+      }
+    },
+    {
+      "name": "brave_local_search",
+      "description": "Searches for local businesses and places using Brave's Local Search API. Best for queries related to physical locations, businesses, restaurants, services, etc. Returns detailed information including:\n- Business names and addresses\n- Ratings and review counts\n- Phone numbers and opening hours\nUse this when the query implies 'near me' or mentions specific locations. Automatically falls back to web search if no local results are found.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Local search query (e.g. 'pizza near Central Park')"
+          },
+          "count": {
+            "type": "number",
+            "description": "Number of results (1-20, default 5)",
+            "default": 5
+          }
+        },
+        "required": [
+          "query"
+        ]
+      }
+    }
+  ],
+  "measuredAt": "2026-08-16T12:00:49.982Z",
+  "serverName": "example-servers/brave-search",
+  "serverVersion": "0.1.0",
+  "launchCommand": "npx -y @modelcontextprotocol/server-brave-search",
+  "envVarNames": [
+    "BRAVE_API_KEY"
+  ],
+  "isolation": {
+    "docker": true,
+    "image": "public.ecr.aws/docker/library/node:22-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

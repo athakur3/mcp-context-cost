@@ -1,0 +1,21 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "auth-required",
+  "totalTokens": null,
+  "toolCount": null,
+  "tools": [],
+  "canonicalSha256": null,
+  "rawToolsCapture": null,
+  "measuredAt": "2026-08-16T12:08:12.815Z",
+  "serverName": "azure",
+  "launchCommand": "npx -y @azure/mcp@latest server start",
+  "notes": "server exited (code 0); stderr tail: oveNext()\n   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Azure.Mcp.Server.Program+<Main>d__2, azmcp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null]](<Main>d__2 ByRef)\n   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].Start[[Azure.Mcp.Server.Program+<Main>d__2, azmcp, Version=3.0.0.0, Culture=neutral, PublicKeyTo",
+  "isolation": {
+    "docker": true,
+    "image": "public.ecr.aws/docker/library/node:22-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

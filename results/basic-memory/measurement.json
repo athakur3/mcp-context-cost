@@ -1,0 +1,2294 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "measured",
+  "totalTokens": 9188,
+  "toolCount": 23,
+  "tools": [
+    {
+      "name": "delete_note",
+      "tokens": 398,
+      "descriptionTokens": 12,
+      "inputSchemaTokens": 293
+    },
+    {
+      "name": "read_content",
+      "tokens": 257,
+      "descriptionTokens": 10,
+      "inputSchemaTokens": 190
+    },
+    {
+      "name": "build_context",
+      "tokens": 687,
+      "descriptionTokens": 195,
+      "inputSchemaTokens": 386
+    },
+    {
+      "name": "recent_activity",
+      "tokens": 636,
+      "descriptionTokens": 61,
+      "inputSchemaTokens": 468
+    },
+    {
+      "name": "search_notes",
+      "tokens": 970,
+      "descriptionTokens": 13,
+      "inputSchemaTokens": 869
+    },
+    {
+      "name": "read_note",
+      "tokens": 501,
+      "descriptionTokens": 9,
+      "inputSchemaTokens": 404
+    },
+    {
+      "name": "view_note",
+      "tokens": 242,
+      "descriptionTokens": 11,
+      "inputSchemaTokens": 158
+    },
+    {
+      "name": "write_note",
+      "tokens": 780,
+      "descriptionTokens": 23,
+      "inputSchemaTokens": 662
+    },
+    {
+      "name": "cloud_info",
+      "tokens": 97,
+      "descriptionTokens": 10,
+      "inputSchemaTokens": 14
+    },
+    {
+      "name": "release_notes",
+      "tokens": 98,
+      "descriptionTokens": 11,
+      "inputSchemaTokens": 14
+    },
+    {
+      "name": "canvas",
+      "tokens": 381,
+      "descriptionTokens": 13,
+      "inputSchemaTokens": 287
+    },
+    {
+      "name": "list_directory",
+      "tokens": 352,
+      "descriptionTokens": 9,
+      "inputSchemaTokens": 268
+    },
+    {
+      "name": "edit_note",
+      "tokens": 722,
+      "descriptionTokens": 28,
+      "inputSchemaTokens": 606
+    },
+    {
+      "name": "move_note",
+      "tokens": 531,
+      "descriptionTokens": 16,
+      "inputSchemaTokens": 427
+    },
+    {
+      "name": "list_workspaces",
+      "tokens": 161,
+      "descriptionTokens": 16,
+      "inputSchemaTokens": 52
+    },
+    {
+      "name": "list_memory_projects",
+      "tokens": 234,
+      "descriptionTokens": 86,
+      "inputSchemaTokens": 54
+    },
+    {
+      "name": "create_memory_project",
+      "tokens": 365,
+      "descriptionTokens": 39,
+      "inputSchemaTokens": 234
+    },
+    {
+      "name": "delete_project",
+      "tokens": 241,
+      "descriptionTokens": 41,
+      "inputSchemaTokens": 124
+    },
+    {
+      "name": "search",
+      "tokens": 133,
+      "descriptionTokens": 7,
+      "inputSchemaTokens": 40
+    },
+    {
+      "name": "fetch",
+      "tokens": 135,
+      "descriptionTokens": 9,
+      "inputSchemaTokens": 39
+    },
+    {
+      "name": "schema_validate",
+      "tokens": 710,
+      "descriptionTokens": 9,
+      "inputSchemaTokens": 229
+    },
+    {
+      "name": "schema_infer",
+      "tokens": 314,
+      "descriptionTokens": 11,
+      "inputSchemaTokens": 214
+    },
+    {
+      "name": "schema_diff",
+      "tokens": 264,
+      "descriptionTokens": 11,
+      "inputSchemaTokens": 165
+    }
+  ],
+  "canonicalSha256": "0ba9e9185e3d5c167bbaf0dcfeb499f27020c307f1387a3b85374f849f0a38a7",
+  "rawToolsCapture": [
+    {
+      "name": "delete_note",
+      "title": "Delete Note",
+      "description": "Delete a note or directory by title, permalink, or path",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "description": "For files: note title or permalink to delete.\n       For directories: the directory path (e.g., \"docs\", \"projects/2025\").\n       Can be a title like \"Meeting Notes\" or permalink like \"notes/meeting-notes\""
+          },
+          "is_directory": {
+            "default": false,
+            "type": "boolean",
+            "description": "If True, deletes an entire directory and all its contents.\n         When True, identifier should be a directory path\n         (without file extensions). Defaults to False."
+          },
+          "project": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project name to delete from. Optional - server will resolve using hierarchy.\n    If unknown, use list_memory_projects() to discover available projects."
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project external_id (UUID). Prefer this over `project` when known —\n    it routes to the exact project regardless of name collisions across cloud\n    workspaces. Takes precedence over `project`. Get from list_memory_projects()."
+          },
+          "output_format": {
+            "default": "text",
+            "enum": [
+              "text",
+              "json"
+            ],
+            "type": "string",
+            "description": "\"text\" preserves existing behavior (bool/string). \"json\"\nreturns machine-readable deletion metadata."
+          }
+        },
+        "required": [
+          "identifier"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "additionalProperties": true,
+                "type": "object"
+              }
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "destructiveHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "notes"
+          ]
+        }
+      }
+    },
+    {
+      "name": "read_content",
+      "title": "Read Content",
+      "description": "Read a file's raw content by path or permalink",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "The path or permalink to the file. Can be:\n- A regular file path (docs/example.md)\n- A memory URL (memory://docs/example)\n- A permalink (docs/example)"
+          },
+          "project": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project name to read from. Optional - server will resolve using hierarchy.\n    If unknown, use list_memory_projects() to discover available projects."
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project external_id (UUID). Prefer this over `project` when known —\n    it routes to the exact project regardless of name collisions across cloud\n    workspaces. Takes precedence over `project`. Get from list_memory_projects()."
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "notes"
+          ]
+        }
+      }
+    },
+    {
+      "name": "build_context",
+      "title": "Build Context",
+      "description": "Build context from a memory:// URI to continue conversations naturally.\n\n    Use this to follow up on previous discussions or explore related topics.\n\n    Memory URL Format:\n    - Use paths like \"folder/note\" or \"memory://folder/note\"\n    - Pattern matching: \"folder/*\" matches all notes in folder\n    - Valid characters: letters, numbers, hyphens, underscores, forward slashes\n    - Avoid: double slashes (//), angle brackets (<>), quotes, pipes (|)\n    - Examples: \"specs/search\", \"projects/basic-memory\", \"notes/*\"\n\n    Timeframes support natural language like:\n    - \"2 days ago\", \"last week\", \"today\", \"3 months ago\"\n    - Or standard formats like \"7d\", \"24h\"\n\n    Format options:\n    - \"json\" (default): Structured JSON with internal fields excluded\n    - \"text\": Compact markdown text for LLM consumption\n    ",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "url": {
+            "maxLength": 2028,
+            "minLength": 1,
+            "type": "string",
+            "description": "memory:// URI pointing to discussion content (e.g. memory://specs/search)"
+          },
+          "project": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project name to build context from. Optional - server will resolve using hierarchy.\n    If unknown, use list_memory_projects() to discover available projects."
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project external_id (UUID). Prefer this over `project` when known —\n    it routes to the exact project regardless of name collisions across cloud\n    workspaces. Takes precedence over `project`. Get from list_memory_projects()."
+          },
+          "depth": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": 1,
+            "description": "How many relation hops to traverse (1-3 recommended for performance)"
+          },
+          "timeframe": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": "7d",
+            "description": "How far back to look. Supports natural language like \"2 days ago\", \"last week\""
+          },
+          "page": {
+            "default": 1,
+            "type": "integer",
+            "description": "Page number of results to return (default: 1)"
+          },
+          "page_size": {
+            "default": 10,
+            "type": "integer",
+            "description": "Number of results to return per page (default: 10)"
+          },
+          "max_related": {
+            "default": 10,
+            "type": "integer",
+            "description": "Maximum number of related results to return (default: 10)"
+          },
+          "output_format": {
+            "default": "json",
+            "enum": [
+              "json",
+              "text"
+            ],
+            "type": "string",
+            "description": "Response format - \"json\" for structured JSON dict,\n\"text\" for compact markdown text"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "navigation",
+            "notes"
+          ]
+        }
+      }
+    },
+    {
+      "name": "recent_activity",
+      "title": "Recent Activity",
+      "description": "Get recent activity for a project or across all projects.\n\n    Timeframe supports natural language formats like:\n    - \"2 days ago\"\n    - \"last week\"\n    - \"yesterday\"\n    - \"today\"\n    - \"3 weeks ago\"\n    Or standard formats like \"7d\"\n    ",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "default": "",
+            "description": "Filter by content type(s). Can be a string or list of strings.\nValid options:\n- \"entity\" or [\"entity\"] for knowledge entities\n- \"relation\" or [\"relation\"] for connections between entities\n- \"observation\" or [\"observation\"] for notes and observations\nMultiple types can be combined: [\"entity\", \"relation\"]\nCase-insensitive: \"ENTITY\" and \"entity\" are treated the same.\nDefault is entity-only. Specify other types explicitly to include\nobservations and relations."
+          },
+          "depth": {
+            "default": 1,
+            "type": "integer",
+            "description": "How many relation hops to traverse (1-3 recommended)"
+          },
+          "timeframe": {
+            "default": "7d",
+            "type": "string",
+            "description": "Time window to search. Supports natural language:\n- Relative: \"2 days ago\", \"last week\", \"yesterday\"\n- Points in time: \"2024-01-01\", \"January 1st\"\n- Standard format: \"7d\", \"24h\""
+          },
+          "page": {
+            "default": 1,
+            "type": "integer",
+            "description": "Page number for pagination (default 1)"
+          },
+          "page_size": {
+            "default": 10,
+            "type": "integer",
+            "description": "Number of items per page (default 10)"
+          },
+          "project": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project name to query. Optional - server will resolve using the\n    hierarchy above. If unknown, use list_memory_projects() to discover\n    available projects."
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project external_id (UUID). Prefer this over `project` when known —\n    it routes to the exact project regardless of name collisions across cloud\n    workspaces. Takes precedence over `project`. Get from list_memory_projects()."
+          },
+          "output_format": {
+            "default": "text",
+            "enum": [
+              "text",
+              "json"
+            ],
+            "type": "string",
+            "description": "\"text\" returns human-readable summary text. \"json\" returns\na flat list of recent items."
+          }
+        },
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "navigation",
+            "notes"
+          ]
+        }
+      }
+    },
+    {
+      "name": "search_notes",
+      "title": "Search Notes",
+      "description": "Search across all content in the knowledge base with advanced syntax support.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional search query string (supports boolean operators, phrases, patterns).\n  Omit or pass None for filter-only searches using metadata_filters, tags, or status."
+          },
+          "project": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project name to search in. Optional - server will resolve using hierarchy.\n    If unknown, use list_memory_projects() to discover available projects."
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project external_id (UUID). Prefer this over `project` when known —\n    it routes to the exact project regardless of name collisions across cloud\n    workspaces. Takes precedence over `project`. Get from list_memory_projects()."
+          },
+          "search_all_projects": {
+            "default": false,
+            "type": "boolean",
+            "description": "Optional opt-in to search every accessible project. Ignored when\n    `project` or `project_id` is supplied."
+          },
+          "page": {
+            "default": 1,
+            "type": "integer",
+            "description": "The page number of results to return (default 1)"
+          },
+          "page_size": {
+            "default": 10,
+            "type": "integer",
+            "description": "The number of results to return per page (default 10)"
+          },
+          "search_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Type of search to perform, one of:\n        \"text\", \"title\", \"permalink\", \"vector\", \"semantic\", \"hybrid\".\n        Default is dynamic: \"hybrid\" when semantic search is enabled, otherwise \"text\"."
+          },
+          "output_format": {
+            "default": "text",
+            "enum": [
+              "text",
+              "json"
+            ],
+            "type": "string",
+            "description": "\"text\" preserves existing structured search response behavior.\n\"json\" returns a machine-readable dictionary payload."
+          },
+          "note_types": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional list of note types to search (e.g., [\"note\", \"person\"])"
+          },
+          "entity_types": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional list of entity types to filter by (e.g., [\"entity\", \"observation\"])"
+          },
+          "categories": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional list of observation categories for exact matching (e.g.,\n       [\"requirement\"]). Pair with entity_types=[\"observation\"] to return only\n       observations whose category matches exactly."
+          },
+          "after_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional date filter for recent content (e.g., \"1 week\", \"2d\", \"2024-01-01\")"
+          },
+          "metadata_filters": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional structured frontmatter filters (e.g., {\"status\": \"in-progress\"})"
+          },
+          "tags": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional tag filter (frontmatter tags); shorthand for metadata_filters[\"tags\"].\n  Accepts a list ([\"a\", \"b\"]) or a comma-separated string (\"a,b\"), matching the\n  write_note tags convention and the tag: query shorthand."
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional status filter (frontmatter status); shorthand for metadata_filters[\"status\"]"
+          },
+          "min_similarity": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional float to override the global semantic_min_similarity threshold\n           for this query. E.g., 0.0 to see all vector results, or 0.8 for high precision.\n           Only applies to vector and hybrid search types."
+          }
+        },
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "search"
+          ]
+        }
+      }
+    },
+    {
+      "name": "read_note",
+      "title": "Read Note",
+      "description": "Read a markdown note by title or permalink.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "description": "The title or permalink of the note to read\n       Can be a full memory:// URL, a permalink, a title, or search text"
+          },
+          "project": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project name to read from. Optional - server will resolve using the\n    hierarchy above. If unknown, use list_memory_projects() to discover\n    available projects."
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project external_id (UUID). Prefer this over `project` when known —\n    it routes to the exact project regardless of name collisions across cloud\n    workspaces. Takes precedence over `project`. Get from list_memory_projects()."
+          },
+          "page": {
+            "default": 1,
+            "type": "integer",
+            "description": "Page of fallback-search results to use when the identifier does not\nresolve to a note directly (default: 1). A direct or exact-title match\nalways returns the full note content — page/page_size never chunk the\nnote itself, and the title-match lookup pages through fixed-size pages\nof title results until an exact match is found or results are\nexhausted, regardless of page or page_size."
+          },
+          "page_size": {
+            "default": 10,
+            "type": "integer",
+            "description": "Number of fallback-search results per page (default: 10). When no\nmatch is found, this caps how many related-note suggestions are listed."
+          },
+          "output_format": {
+            "default": "text",
+            "enum": [
+              "text",
+              "json"
+            ],
+            "type": "string",
+            "description": "\"text\" returns markdown content or guidance text.\n\"json\" returns a structured object with title/permalink/file_path/content/frontmatter."
+          },
+          "include_frontmatter": {
+            "default": false,
+            "type": "boolean",
+            "description": "When output_format=\"json\", whether content should include the\nopening YAML frontmatter block."
+          }
+        },
+        "required": [
+          "identifier"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "notes"
+          ]
+        }
+      }
+    },
+    {
+      "name": "view_note",
+      "title": "View Note",
+      "description": "View a note as a formatted artifact for better readability.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "description": "The title or permalink of the note to view"
+          },
+          "project": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project name to read from. Optional - server will resolve using hierarchy.\n    If unknown, use list_memory_projects() to discover available projects."
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project external_id (UUID). Prefer this over `project` when known —\n    it routes to the exact project regardless of name collisions across cloud\n    workspaces. Takes precedence over `project`. Get from list_memory_projects()."
+          }
+        },
+        "required": [
+          "identifier"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "notes"
+          ]
+        }
+      }
+    },
+    {
+      "name": "write_note",
+      "title": "Write Note",
+      "description": "Create a markdown note. If the note already exists, returns an error by default — pass overwrite=True to replace.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The title of the note"
+          },
+          "content": {
+            "type": "string",
+            "description": "Markdown content for the note, can include observations and relations"
+          },
+          "directory": {
+            "type": "string",
+            "description": "Directory path relative to project root where the file should be saved.\n       Use forward slashes (/) as separators. Use \"/\" or \"\" to write to project root.\n       Examples: \"notes\", \"projects/2025\", \"research/ml\", \"/\" (root)"
+          },
+          "project": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project name to write to. Optional - server will resolve using the\n    hierarchy above. Use \"workspace/project\" to route to a project in a\n    specific cloud workspace. A bare name that exists in multiple\n    workspaces resolves to the default workspace, so use the qualified\n    form (or project_id) to disambiguate. If unknown, use\n    list_memory_projects() to discover available projects and their\n    qualified names."
+          },
+          "workspace": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Workspace slug, name, or tenant_id. When provided with `project`,\n    routes as `workspace/project`. Cannot be combined with `project_id`."
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project external_id (UUID). Prefer this over `project` when known —\n    it routes to the exact project regardless of name collisions across cloud\n    workspaces. Takes precedence over `project`. Get from list_memory_projects()."
+          },
+          "tags": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Tags to categorize the note. Can be a list of strings, a comma-separated string, or None.\n  Note: If passing from external MCP clients, use a string format (e.g. \"tag1,tag2,tag3\")"
+          },
+          "note_type": {
+            "default": "note",
+            "type": "string",
+            "description": "Type of note to create (stored in frontmatter). Defaults to \"note\".\n       Can be \"guide\", \"report\", \"config\", \"person\", etc."
+          },
+          "metadata": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional dict of extra frontmatter fields merged into entity_metadata.\n      Useful for schema notes or any note that needs custom YAML frontmatter\n      beyond title/type/tags. Nested dicts are supported."
+          },
+          "overwrite": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "If True, replace existing note on conflict. If False, error on conflict.\n       If None (default), consult write_note_overwrite_default config setting."
+          },
+          "output_format": {
+            "default": "text",
+            "enum": [
+              "text",
+              "json"
+            ],
+            "type": "string",
+            "description": "\"text\" returns the existing markdown summary. \"json\" returns\n           machine-readable metadata."
+          }
+        },
+        "required": [
+          "title",
+          "content",
+          "directory"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "notes"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cloud_info",
+      "title": "Cloud Info",
+      "description": "Return optional Basic Memory Cloud information and setup guidance.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "cloud"
+          ]
+        }
+      }
+    },
+    {
+      "name": "release_notes",
+      "title": "Release Notes",
+      "description": "Return the latest product release notes for optional user review.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "cloud"
+          ]
+        }
+      }
+    },
+    {
+      "name": "canvas",
+      "title": "Create Canvas",
+      "description": "Create an Obsidian canvas file to visualize concepts and connections.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "nodes": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "description": "List of node objects following JSON Canvas 1.0 spec"
+          },
+          "edges": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "description": "List of edge objects following JSON Canvas 1.0 spec"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the canvas (will be saved as title.canvas)"
+          },
+          "directory": {
+            "type": "string",
+            "description": "Directory path relative to project root where the canvas should be saved.\n       Use forward slashes (/) as separators. Examples: \"diagrams\", \"projects/2025\", \"visual/maps\""
+          },
+          "project": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project name to create canvas in. Optional - server will resolve using hierarchy.\n    If unknown, use list_memory_projects() to discover available projects."
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project external_id (UUID). Prefer this over `project` when known —\n    it routes to the exact project regardless of name collisions across cloud\n    workspaces. Takes precedence over `project`. Get from list_memory_projects()."
+          }
+        },
+        "required": [
+          "nodes",
+          "edges",
+          "title",
+          "directory"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "canvas",
+            "notes"
+          ]
+        }
+      }
+    },
+    {
+      "name": "list_directory",
+      "title": "List Directory",
+      "description": "List directory contents with filtering and depth control.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "dir_name": {
+            "default": "/",
+            "type": "string",
+            "description": "Directory path to list (default: root \"/\")\n     Examples: \"/\", \"/projects\", \"/research/ml\""
+          },
+          "depth": {
+            "default": 1,
+            "type": "integer",
+            "description": "Recursion depth (1-10, default: 1 for immediate children only)\n   Higher values show subdirectory contents recursively"
+          },
+          "file_name_glob": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional glob pattern for filtering file names\n           Examples: \"*.md\", \"*meeting*\", \"project_*\""
+          },
+          "project": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project name to list directory from. Optional - server will resolve using hierarchy.\n    If unknown, use list_memory_projects() to discover available projects."
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project external_id (UUID). Prefer this over `project` when known —\n    it routes to the exact project regardless of name collisions across cloud\n    workspaces. Takes precedence over `project`. Get from list_memory_projects()."
+          }
+        },
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "navigation",
+            "notes"
+          ]
+        }
+      }
+    },
+    {
+      "name": "edit_note",
+      "title": "Edit Note",
+      "description": "Edit an existing markdown note using various operations like append, prepend, find_replace, replace_section, insert_before_section, or insert_after_section.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "description": "The exact title, permalink, or memory:// URL of the note to edit.\n       Must be an exact match - fuzzy matching is not supported for edit operations.\n       Use search_notes() or read_note() first to find the correct identifier if uncertain."
+          },
+          "operation": {
+            "type": "string",
+            "description": "The editing operation to perform:\n      - \"append\": Add content to the end of the note (creates the note if it doesn't exist)\n      - \"prepend\": Add content to the beginning of the note (creates the note if it doesn't exist)\n      - \"find_replace\": Replace occurrences of find_text with content (note must exist)\n      - \"replace_section\": Replace content under a specific markdown header (note must exist)\n      - \"insert_before_section\": Insert content before a section heading without consuming it (note must exist)\n      - \"insert_after_section\": Insert content after a section heading without consuming it (note must exist)"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content to add or use for replacement"
+          },
+          "project": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project name to edit in. Optional - server will resolve using hierarchy.\n    Use \"workspace/project\" to route to a project in a specific cloud workspace.\n    If unknown, use list_memory_projects() to discover available projects."
+          },
+          "workspace": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Workspace slug, name, or tenant_id. When provided with `project`,\n    routes as `workspace/project`. Cannot be combined with `project_id`."
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project external_id (UUID). Prefer this over `project` when known —\n    it routes to the exact project regardless of name collisions across cloud\n    workspaces. Takes precedence over `project`. Get from list_memory_projects()."
+          },
+          "section": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "For replace_section operation - the markdown header to replace content under (e.g., \"## Notes\", \"### Implementation\")"
+          },
+          "find_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "For find_replace operation - the text to find and replace"
+          },
+          "expected_replacements": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "For find_replace operation - the expected number of replacements (validation will fail if actual doesn't match)"
+          },
+          "output_format": {
+            "default": "text",
+            "enum": [
+              "text",
+              "json"
+            ],
+            "type": "string",
+            "description": "\"text\" returns the existing markdown summary. \"json\" returns\nmachine-readable edit metadata."
+          }
+        },
+        "required": [
+          "identifier",
+          "operation",
+          "content"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "notes"
+          ]
+        }
+      }
+    },
+    {
+      "name": "move_note",
+      "title": "Move Note",
+      "description": "Move a note or directory to a new location, updating database and maintaining links.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "description": "For files: exact entity identifier (title, permalink, or memory:// URL).\n       For directories: the directory path (e.g., \"docs\", \"projects/2025\").\n       Must be an exact match - fuzzy matching is not supported for move operations.\n       Use search_notes() or list_directory() first to find the correct path if uncertain."
+          },
+          "destination_path": {
+            "default": "",
+            "type": "string",
+            "description": "For files: new path relative to project root (e.g., \"work/meetings/note.md\")\n             For directories: new directory path (e.g., \"archive/docs\")\n             Mutually exclusive with destination_folder."
+          },
+          "destination_folder": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Move the note into this folder, preserving the original filename.\n               Mutually exclusive with destination_path. Only for single-file moves."
+          },
+          "is_directory": {
+            "default": false,
+            "type": "boolean",
+            "description": "If True, moves an entire directory and all its contents.\n         When True, identifier and destination_path should be directory paths\n         (without file extensions). Defaults to False."
+          },
+          "project": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project name to move within. Optional - server will resolve using hierarchy.\n    If unknown, use list_memory_projects() to discover available projects."
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project external_id (UUID). Prefer this over `project` when known —\n    it routes to the exact project regardless of name collisions across cloud\n    workspaces. Takes precedence over `project`. Get from list_memory_projects()."
+          },
+          "output_format": {
+            "default": "text",
+            "enum": [
+              "text",
+              "json"
+            ],
+            "type": "string",
+            "description": "\"text\" returns existing markdown guidance/success text. \"json\"\nreturns machine-readable move metadata."
+          }
+        },
+        "required": [
+          "identifier"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "notes"
+          ]
+        }
+      }
+    },
+    {
+      "name": "list_workspaces",
+      "title": "List Workspaces",
+      "description": "List available cloud workspaces (tenant_id, type, role, and name).",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "output_format": {
+            "default": "text",
+            "enum": [
+              "text",
+              "json"
+            ],
+            "type": "string",
+            "description": "\"text\" returns human-readable workspace list.\n\"json\" returns structured workspace metadata."
+          }
+        },
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "cloud",
+            "projects"
+          ]
+        }
+      }
+    },
+    {
+      "name": "list_memory_projects",
+      "title": "List Memory Projects",
+      "description": "List all available projects with their status.\n\nShows projects from both local and cloud sources when cloud credentials\nare available, merging by permalink to give a unified view.\n\nEach project entry includes an `external_id` (UUID). Pass that value as the\n`project_id` parameter on other tools to address a specific project\nunambiguously across cloud workspaces — useful when the same project name\nexists in more than one workspace.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "output_format": {
+            "default": "text",
+            "enum": [
+              "text",
+              "json"
+            ],
+            "type": "string",
+            "description": "\"text\" returns the existing human-readable project list.\n\"json\" returns structured project metadata."
+          }
+        },
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "projects"
+          ]
+        }
+      }
+    },
+    {
+      "name": "create_memory_project",
+      "title": "Create Memory Project",
+      "description": "Create a new Basic Memory project.\n\nCreates a new project with the specified name and path. The project directory\nwill be created if it doesn't exist. Optionally sets the new project as default.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "project_name": {
+            "type": "string",
+            "description": "Name for the new project (must be unique)"
+          },
+          "project_path": {
+            "type": "string",
+            "description": "File system path where the project will be stored"
+          },
+          "set_default": {
+            "default": false,
+            "type": "boolean",
+            "description": "Whether to set this project as the default (optional, defaults to False)"
+          },
+          "workspace": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional cloud workspace selector to create the project in. Slug is\npreferred for AI callers, but tenant_id and unique name are also accepted.\nWhen omitted, the connection's default workspace is used. Discover values\nvia `list_workspaces`. A workspace selector implies cloud routing:\nwithout cloud credentials the call fails fast instead of silently\ncreating a local project (#954)."
+          },
+          "output_format": {
+            "default": "text",
+            "enum": [
+              "text",
+              "json"
+            ],
+            "type": "string",
+            "description": "\"text\" returns the existing human-readable result text.\n\"json\" returns structured project creation metadata."
+          }
+        },
+        "required": [
+          "project_name",
+          "project_path"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "projects"
+          ]
+        }
+      }
+    },
+    {
+      "name": "delete_project",
+      "title": "Delete Project",
+      "description": "Delete a Basic Memory project.\n\nRemoves a project from the configuration and database. This does NOT delete\nthe actual files on disk - only removes the project from Basic Memory's\nconfiguration and database records.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "project_name": {
+            "type": "string",
+            "description": "Name of the project to delete"
+          },
+          "workspace": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional cloud workspace selector to delete the project from.\nSlug is preferred for AI callers, but tenant_id and unique name are\nalso accepted. When omitted, the connection's default workspace is\nused. A workspace selector implies cloud routing: without cloud\ncredentials the call fails fast, matching create_memory_project\nbehavior (#954)."
+          }
+        },
+        "required": [
+          "project_name"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "destructiveHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "projects"
+          ]
+        }
+      }
+    },
+    {
+      "name": "search",
+      "title": "Search Knowledge Base",
+      "description": "Search for content across the knowledge base",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Search query (full-text syntax supported by `search_notes`)"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "search"
+          ]
+        }
+      }
+    },
+    {
+      "name": "fetch",
+      "title": "Fetch Document",
+      "description": "Fetch the full contents of a search result document",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Document identifier (permalink, title, or memory URL)"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "notes",
+            "search"
+          ]
+        }
+      }
+    },
+    {
+      "name": "schema_validate",
+      "title": "Validate Schema",
+      "description": "Validate notes against their Picoschema definitions.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "note_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Note type to batch-validate (e.g., \"person\", \"meeting\").\nIf provided, validates all notes of this type."
+          },
+          "identifier": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Specific note to validate (permalink, title, or path).\nIf provided, validates only this note."
+          },
+          "project": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project name. Optional -- server will resolve."
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project external_id (UUID). Prefer this over `project` when known —\n    it routes to the exact project regardless of name collisions across cloud\n    workspaces. Takes precedence over `project`. Get from list_memory_projects()."
+          },
+          "output_format": {
+            "default": "text",
+            "enum": [
+              "text",
+              "json"
+            ],
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "anyOf": [
+              {
+                "description": "Full validation report for one or more notes.",
+                "properties": {
+                  "note_type": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "total_notes": {
+                    "default": 0,
+                    "type": "integer"
+                  },
+                  "total_entities": {
+                    "default": 0,
+                    "type": "integer"
+                  },
+                  "valid_count": {
+                    "default": 0,
+                    "type": "integer"
+                  },
+                  "warning_count": {
+                    "default": 0,
+                    "type": "integer"
+                  },
+                  "error_count": {
+                    "default": 0,
+                    "type": "integer"
+                  },
+                  "results": {
+                    "items": {
+                      "description": "Validation result for a single note against a schema.",
+                      "properties": {
+                        "note_identifier": {
+                          "type": "string"
+                        },
+                        "schema_entity": {
+                          "type": "string"
+                        },
+                        "passed": {
+                          "description": "True if no errors (warnings are OK)",
+                          "type": "boolean"
+                        },
+                        "field_results": {
+                          "items": {
+                            "description": "Result of validating a single schema field against a note.",
+                            "properties": {
+                              "field_name": {
+                                "type": "string"
+                              },
+                              "field_type": {
+                                "type": "string"
+                              },
+                              "required": {
+                                "type": "boolean"
+                              },
+                              "status": {
+                                "description": "One of: present, missing, type_mismatch",
+                                "type": "string"
+                              },
+                              "values": {
+                                "description": "Matched values from the note",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "message": {
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ],
+                                "default": null
+                              }
+                            },
+                            "required": [
+                              "field_name",
+                              "field_type",
+                              "required",
+                              "status"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "unmatched_observations": {
+                          "additionalProperties": {
+                            "type": "integer"
+                          },
+                          "description": "Observation categories not covered by schema, with counts",
+                          "type": "object"
+                        },
+                        "unmatched_relations": {
+                          "description": "Relation types not covered by schema",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "warnings": {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "errors": {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "note_identifier",
+                        "schema_entity",
+                        "passed"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  }
+                },
+                "type": "object"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "additionalProperties": true,
+                "type": "object"
+              }
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "schema"
+          ]
+        }
+      }
+    },
+    {
+      "name": "schema_infer",
+      "title": "Infer Schema",
+      "description": "Analyze existing notes and suggest a Picoschema definition.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "note_type": {
+            "type": "string",
+            "description": "The note type to analyze (e.g., \"person\", \"meeting\")."
+          },
+          "threshold": {
+            "default": 0.25,
+            "type": "number",
+            "description": "Minimum frequency (0-1) for a field to be suggested as optional.\nDefault 0.25 (25%). Fields above 95% become required."
+          },
+          "project": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project name. Optional -- server will resolve."
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project external_id (UUID). Prefer this over `project` when known —\n    it routes to the exact project regardless of name collisions across cloud\n    workspaces. Takes precedence over `project`. Get from list_memory_projects()."
+          },
+          "output_format": {
+            "default": "text",
+            "enum": [
+              "text",
+              "json"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "note_type"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "schema"
+          ]
+        }
+      }
+    },
+    {
+      "name": "schema_diff",
+      "title": "Schema Diff",
+      "description": "Detect drift between a schema definition and actual note usage.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "note_type": {
+            "type": "string",
+            "description": "The note type to check for drift (e.g., \"person\")."
+          },
+          "project": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project name. Optional -- server will resolve."
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Project external_id (UUID). Prefer this over `project` when known —\n    it routes to the exact project regardless of name collisions across cloud\n    workspaces. Takes precedence over `project`. Get from list_memory_projects()."
+          },
+          "output_format": {
+            "default": "text",
+            "enum": [
+              "text",
+              "json"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "note_type"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": [
+            "schema"
+          ]
+        }
+      }
+    }
+  ],
+  "measuredAt": "2026-08-16T12:06:39.556Z",
+  "serverName": "Basic Memory",
+  "serverVersion": "3.3.1",
+  "launchCommand": "uvx basic-memory mcp",
+  "envVarNames": [],
+  "isolation": {
+    "docker": true,
+    "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

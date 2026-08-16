@@ -1,0 +1,14 @@
+{
+  "counter": { "provider": "tiktoken", "model": "gpt-4o" },
+  "server_info": { "name": "fixture-basic", "version": "1.0.0" },
+  "total_tokens": 213,
+  "tools": {
+    "total": 196,
+    "count": 3,
+    "items": [
+      { "name": "read_file", "tokens": 64, "description_tokens": 29, "schema_tokens": 26 },
+      { "name": "write_file", "tokens": 82, "description_tokens": 28, "schema_tokens": 45 },
+      { "name": "list_directory", "tokens": 46, "description_tokens": 14, "schema_tokens": 17 }
+    ]
+  }
+}

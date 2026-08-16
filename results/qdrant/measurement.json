@@ -1,0 +1,87 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "measured",
+  "totalTokens": 188,
+  "toolCount": 2,
+  "tools": [
+    {
+      "name": "qdrant-find",
+      "tokens": 85,
+      "descriptionTokens": 39,
+      "inputSchemaTokens": 30
+    },
+    {
+      "name": "qdrant-store",
+      "tokens": 101,
+      "descriptionTokens": 15,
+      "inputSchemaTokens": 74
+    }
+  ],
+  "canonicalSha256": "2bd5a36e7293bab6b8e62c28b7d210c5261f4b80331b176c1df6dc100a7e6fc4",
+  "rawToolsCapture": [
+    {
+      "name": "qdrant-find",
+      "description": "Look up memories in Qdrant. Use this tool when you need to: \n - Find memories by their content \n - Access memories for further analysis \n - Get some personal information about the user",
+      "inputSchema": {
+        "properties": {
+          "query": {
+            "description": "What to search for",
+            "title": "Query",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "qdrant-store",
+      "description": "Keep the memory for later use, when you are asked to remember something.",
+      "inputSchema": {
+        "properties": {
+          "information": {
+            "description": "Text to store",
+            "title": "Information",
+            "type": "string"
+          },
+          "metadata": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Extra metadata stored along with memorised information. Any json is accepted.",
+            "title": "Metadata"
+          }
+        },
+        "required": [
+          "information"
+        ],
+        "type": "object"
+      }
+    }
+  ],
+  "measuredAt": "2026-08-16T12:02:53.680Z",
+  "serverName": "mcp-server-qdrant",
+  "serverVersion": "1.29.0",
+  "launchCommand": "uvx mcp-server-qdrant",
+  "envVarNames": [
+    "QDRANT_URL",
+    "COLLECTION_NAME"
+  ],
+  "isolation": {
+    "docker": true,
+    "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "measured",
+  "totalTokens": 393,
+  "toolCount": 3,
+  "tools": [
+    {
+      "name": "execute_sql",
+      "tokens": 119,
+      "descriptionTokens": 58,
+      "inputSchemaTokens": 32
+    },
+    {
+      "name": "get_schema_info",
+      "tokens": 133,
+      "descriptionTokens": 68,
+      "inputSchemaTokens": 34
+    },
+    {
+      "name": "get_table_sample",
+      "tokens": 139,
+      "descriptionTokens": 47,
+      "inputSchemaTokens": 61
+    }
+  ],
+  "canonicalSha256": "48f53cd914e3137feabfb3087abdb3bb54df46907d605a4cf97fac272bba2afb",
+  "rawToolsCapture": [
+    {
+      "name": "execute_sql",
+      "description": "Execute a SQL statement against the MySQL server. Use for SELECT, DML (INSERT/UPDATE/DELETE), SHOW, DESCRIBE, and ad-hoc queries. Supports cross-database queries using database.table notation. Single statements only — use fully qualified names instead of USE statements.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "The SQL statement to execute. Single statements only."
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "annotations": {
+        "title": "Execute SQL",
+        "readOnlyHint": false,
+        "destructiveHint": true
+      }
+    },
+    {
+      "name": "get_schema_info",
+      "description": "Get column metadata for a table or all tables in the configured database: column names, data types, nullability, default values, and comments. Call this before querying an unfamiliar table. Omit table_name to see all tables at once. Accepts bare table names (uses MYSQL_DATABASE) or database.table for cross-database lookups.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "table_name": {
+            "type": "string",
+            "description": "Optional: bare table name, or database.table for a cross-database lookup."
+          }
+        }
+      },
+      "annotations": {
+        "title": "Get Schema Info",
+        "readOnlyHint": true,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "get_table_sample",
+      "description": "Fetch a small sample of rows from a table to understand its data format and content. Use alongside get_schema_info before writing complex queries. Accepts bare table names (uses MYSQL_DATABASE) or database.table for cross-database lookups.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "table_name": {
+            "type": "string",
+            "description": "Table to sample. Use database.table notation for cross-database queries."
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Number of rows to return (default 5, max 20)."
+          }
+        },
+        "required": [
+          "table_name"
+        ]
+      },
+      "annotations": {
+        "title": "Get Table Sample",
+        "readOnlyHint": true,
+        "destructiveHint": false
+      }
+    }
+  ],
+  "measuredAt": "2026-08-16T12:06:26.953Z",
+  "serverName": "mysql_mcp_server",
+  "serverVersion": "1.29.0",
+  "launchCommand": "uvx --from mysql-mcp-server mysql_mcp_server",
+  "envVarNames": [
+    "MYSQL_HOST",
+    "MYSQL_USER",
+    "MYSQL_PASSWORD",
+    "MYSQL_DATABASE"
+  ],
+  "isolation": {
+    "docker": true,
+    "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

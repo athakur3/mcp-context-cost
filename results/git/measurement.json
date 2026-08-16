@@ -1,0 +1,21 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "startup-failure",
+  "totalTokens": null,
+  "toolCount": null,
+  "tools": [],
+  "canonicalSha256": null,
+  "rawToolsCapture": null,
+  "measuredAt": "2026-08-16T12:08:07.099Z",
+  "serverName": "git",
+  "launchCommand": "uvx mcp-server-git",
+  "notes": "server exited (code 1); stderr tail: PATH\n    - be set via $GIT_PYTHON_GIT_EXECUTABLE\n    - explicitly set via git.refresh(<full-path-to-git-executable>)\n\nAll git commands will error until this is rectified.\n\nThis initial message can be silenced or aggravated in the future by setting the\n$GIT_PYTHON_REFRESH environment variable. Use one of the following values:\n    - quiet|q|silence|s|silent|none|n|0: for no message or exception\n    - warn|w|warning|log|l|1: for a warning message (logging level ",
+  "isolation": {
+    "docker": true,
+    "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

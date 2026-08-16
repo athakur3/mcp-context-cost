@@ -1,0 +1,32 @@
+# Dogfood: measure a reference MCP server with our own harness weekly and
+# publish the badge JSON into badges/ — the same pipeline the leaderboard badges use.
+name: Self badge
+on:
+  schedule:
+    - cron: '17 6 * * 1' # weekly, Monday 06:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Measure reference server
+        # Version pinned: this job holds contents:write and pushes — never
+        # execute an unpinned third-party package here.
+        run: npm run sweep -- --name memory --command "npx -y @modelcontextprotocol/server-memory@2026.7.4"
+      - name: Commit refreshed badge
+        run: |
+          git config user.name "mcp-context-cost bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add badges/ results/
+          git diff --cached --quiet || git commit -m "chore: refresh self-badge measurement"
+          git push

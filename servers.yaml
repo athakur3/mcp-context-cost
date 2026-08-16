@@ -1,0 +1,687 @@
+# Sweep candidates — curated 2026-08-16 from live registry data (see metricSource
+# per entry; provenance summary in selection notes below). ~45 launch without
+# credentials; the rest list required env var NAMES (dummy values injected in
+# docker mode; expected statuses: measured or auth-required).
+# Remote servers with no auth are measured through the mcp-remote stdio bridge;
+# OAuth-walled remote servers are marked remote: true (listed, not measured).
+servers:
+  # ============ OFFICIAL REFERENCE (modelcontextprotocol/servers) ============
+  - name: filesystem
+    command: npx -y @modelcontextprotocol/server-filesystem /tmp
+    package: '@modelcontextprotocol/server-filesystem'
+    env: []
+    metric: 443780
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-filesystem (npm weekly, 2026-08-09..15)
+    category: official-reference
+    repo: https://github.com/modelcontextprotocol/servers
+  - name: memory
+    command: npx -y @modelcontextprotocol/server-memory
+    package: '@modelcontextprotocol/server-memory'
+    env: []
+    metric: 78102
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-memory (npm weekly)
+    category: official-reference
+    repo: https://github.com/modelcontextprotocol/servers
+  - name: everything
+    command: npx -y @modelcontextprotocol/server-everything
+    package: '@modelcontextprotocol/server-everything'
+    env: []
+    metric: 128884
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-everything (npm weekly)
+    category: official-reference
+    repo: https://github.com/modelcontextprotocol/servers
+  - name: sequential-thinking
+    command: npx -y @modelcontextprotocol/server-sequential-thinking
+    package: '@modelcontextprotocol/server-sequential-thinking'
+    env: []
+    metric: 103839
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-sequential-thinking (npm weekly)
+    category: official-reference
+    repo: https://github.com/modelcontextprotocol/servers
+  - name: fetch
+    command: uvx mcp-server-fetch
+    package: mcp-server-fetch (PyPI)
+    env: []
+    metric: 502017
+    metricSource: https://pypistats.org/packages/mcp-server-fetch (PyPI weekly)
+    category: official-reference
+    repo: https://github.com/modelcontextprotocol/servers
+  - name: git
+    command: uvx mcp-server-git
+    package: mcp-server-git (PyPI)
+    env: []
+    metric: 42975
+    metricSource: https://pypistats.org/packages/mcp-server-git (PyPI weekly)
+    category: official-reference
+    repo: https://github.com/modelcontextprotocol/servers
+  - name: time
+    command: uvx mcp-server-time
+    package: mcp-server-time (PyPI)
+    env: []
+    metric: 229101
+    metricSource: https://pypistats.org/packages/mcp-server-time (PyPI weekly)
+    category: official-reference
+    repo: https://github.com/modelcontextprotocol/servers
+  # ---- archived reference servers (still heavily downloaded) ----
+  - name: github-legacy
+    command: npx -y @modelcontextprotocol/server-github
+    package: '@modelcontextprotocol/server-github'
+    env: [GITHUB_PERSONAL_ACCESS_TOKEN]
+    metric: 99704
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-github (npm weekly)
+    category: official-reference
+    repo: https://github.com/modelcontextprotocol/servers-archived
+  - name: slack-legacy
+    command: npx -y @modelcontextprotocol/server-slack
+    package: '@modelcontextprotocol/server-slack'
+    env: [SLACK_BOT_TOKEN, SLACK_TEAM_ID]
+    metric: 87506
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-slack (npm weekly)
+    category: official-reference
+    repo: https://github.com/modelcontextprotocol/servers-archived
+  - name: postgres
+    command: npx -y @modelcontextprotocol/server-postgres postgresql://localhost/postgres
+    package: '@modelcontextprotocol/server-postgres'
+    env: []
+    metric: 66136
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-postgres (npm weekly)
+    category: official-reference
+    repo: https://github.com/modelcontextprotocol/servers-archived
+  - name: puppeteer
+    command: npx -y @modelcontextprotocol/server-puppeteer
+    package: '@modelcontextprotocol/server-puppeteer'
+    env: []
+    metric: 23406
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-puppeteer (npm weekly)
+    category: official-reference
+    repo: https://github.com/modelcontextprotocol/servers-archived
+  - name: brave-search-legacy
+    command: npx -y @modelcontextprotocol/server-brave-search
+    package: '@modelcontextprotocol/server-brave-search'
+    env: [BRAVE_API_KEY]
+    metric: 15795
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-brave-search (npm weekly)
+    category: official-reference
+    repo: https://github.com/modelcontextprotocol/servers-archived
+  - name: sqlite
+    command: uvx mcp-server-sqlite --db-path /tmp/test.db
+    package: mcp-server-sqlite (PyPI)
+    env: []
+    metric: 14798
+    metricSource: https://pypistats.org/packages/mcp-server-sqlite (PyPI weekly)
+    category: official-reference
+    repo: https://github.com/modelcontextprotocol/servers-archived
+  - name: google-maps
+    command: npx -y @modelcontextprotocol/server-google-maps
+    package: '@modelcontextprotocol/server-google-maps'
+    env: [GOOGLE_MAPS_API_KEY]
+    metric: 5204
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-google-maps (npm weekly)
+    category: official-reference
+    repo: https://github.com/modelcontextprotocol/servers-archived
+  - name: gdrive
+    command: npx -y @modelcontextprotocol/server-gdrive
+    package: '@modelcontextprotocol/server-gdrive'
+    env: [GDRIVE_CREDENTIALS_PATH]
+    metric: 4907
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-gdrive (npm weekly)
+    category: official-reference
+    repo: https://github.com/modelcontextprotocol/servers-archived
+  - name: gitlab
+    command: npx -y @modelcontextprotocol/server-gitlab
+    package: '@modelcontextprotocol/server-gitlab'
+    env: [GITLAB_PERSONAL_ACCESS_TOKEN]
+    metric: 4666
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-gitlab (npm weekly)
+    category: official-reference
+    repo: https://github.com/modelcontextprotocol/servers-archived
+  - name: redis-legacy
+    command: npx -y @modelcontextprotocol/server-redis redis://localhost:6379
+    package: '@modelcontextprotocol/server-redis'
+    env: []
+    metric: 1464
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-redis (npm weekly)
+    category: official-reference
+    repo: https://github.com/modelcontextprotocol/servers-archived
+
+  # ============ VENDOR-OFFICIAL ============
+  - name: playwright
+    command: npx -y @playwright/mcp@latest
+    package: '@playwright/mcp'
+    env: []
+    metric: 4819822
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@playwright/mcp (npm weekly)
+    category: vendor-official
+    repo: https://github.com/microsoft/playwright-mcp
+    timeoutSeconds: 180
+  - name: context7
+    command: npx -y @upstash/context7-mcp
+    package: '@upstash/context7-mcp'
+    env: []
+    metric: 1169818
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@upstash/context7-mcp (npm weekly)
+    category: vendor-official
+    repo: https://github.com/upstash/context7
+  - name: github
+    command: docker run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN=dummy ghcr.io/github/github-mcp-server
+    package: ghcr.io/github/github-mcp-server (docker)
+    env: [GITHUB_PERSONAL_ACCESS_TOKEN]
+    metric: 32282
+    metricSource: https://api.github.com/repos/github/github-mcp-server (GitHub stars; Go binary/docker, no npm)
+    category: vendor-official
+    repo: https://github.com/github/github-mcp-server
+    timeoutSeconds: 180
+  - name: aws-documentation
+    command: uvx awslabs.aws-documentation-mcp-server@latest
+    package: awslabs.aws-documentation-mcp-server (PyPI)
+    env: []
+    metric: 248642
+    metricSource: https://pypistats.org/packages/awslabs-aws-documentation-mcp-server (PyPI weekly)
+    category: vendor-official
+    repo: https://github.com/awslabs/mcp
+  - name: firecrawl
+    command: npx -y firecrawl-mcp
+    package: firecrawl-mcp
+    env: [FIRECRAWL_API_KEY]
+    metric: 167934
+    metricSource: https://api.npmjs.org/downloads/point/last-week/firecrawl-mcp (npm weekly)
+    category: vendor-official
+    repo: https://github.com/firecrawl/firecrawl-mcp-server
+  - name: notion
+    command: npx -y @notionhq/notion-mcp-server
+    package: '@notionhq/notion-mcp-server'
+    env: [NOTION_TOKEN]
+    metric: 141622
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@notionhq/notion-mcp-server (npm weekly)
+    category: vendor-official
+    repo: https://github.com/makenotion/notion-mcp-server
+  - name: azure
+    command: npx -y @azure/mcp@latest server start
+    package: '@azure/mcp'
+    env: []
+    metric: 105959
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@azure/mcp (npm weekly)
+    category: vendor-official
+    repo: https://github.com/microsoft/mcp
+    timeoutSeconds: 180
+  - name: supabase
+    command: npx -y @supabase/mcp-server-supabase@latest
+    package: '@supabase/mcp-server-supabase'
+    env: [SUPABASE_ACCESS_TOKEN]
+    metric: 89662
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@supabase/mcp-server-supabase (npm weekly)
+    category: vendor-official
+    repo: https://github.com/supabase-community/supabase-mcp
+  - name: sentry
+    command: npx -y @sentry/mcp-server@latest
+    package: '@sentry/mcp-server'
+    env: [SENTRY_ACCESS_TOKEN]
+    metric: 85640
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@sentry/mcp-server (npm weekly; remote alt https://mcp.sentry.dev/mcp)
+    category: vendor-official
+    repo: https://github.com/getsentry/sentry-mcp
+  - name: markitdown
+    command: uvx markitdown-mcp
+    package: markitdown-mcp (PyPI)
+    env: []
+    metric: 75650
+    metricSource: https://pypistats.org/packages/markitdown-mcp (PyPI weekly)
+    category: vendor-official
+    repo: https://github.com/microsoft/markitdown
+  - name: mongodb
+    command: npx -y mongodb-mcp-server
+    package: mongodb-mcp-server
+    env: []
+    metric: 72789
+    metricSource: https://api.npmjs.org/downloads/point/last-week/mongodb-mcp-server (npm weekly)
+    category: vendor-official
+    repo: https://github.com/mongodb-js/mongodb-mcp-server
+  - name: clickhouse
+    command: uvx mcp-clickhouse
+    package: mcp-clickhouse (PyPI)
+    env: [CLICKHOUSE_HOST, CLICKHOUSE_USER, CLICKHOUSE_PASSWORD]
+    metric: 46090
+    metricSource: https://pypistats.org/packages/mcp-clickhouse (PyPI weekly)
+    category: vendor-official
+    repo: https://github.com/ClickHouse/mcp-clickhouse
+  - name: chroma
+    command: uvx chroma-mcp
+    package: chroma-mcp (PyPI)
+    env: []
+    metric: 44689
+    metricSource: https://pypistats.org/packages/chroma-mcp (PyPI weekly)
+    category: vendor-official
+    repo: https://github.com/chroma-core/chroma-mcp
+  - name: circleci
+    command: npx -y @circleci/mcp-server-circleci
+    package: '@circleci/mcp-server-circleci'
+    env: [CIRCLECI_TOKEN]
+    metric: 30882
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@circleci/mcp-server-circleci (npm weekly)
+    category: vendor-official
+    repo: https://github.com/CircleCI-Public/mcp-server-circleci
+  - name: tavily
+    command: npx -y tavily-mcp
+    package: tavily-mcp
+    env: [TAVILY_API_KEY]
+    metric: 24471
+    metricSource: https://api.npmjs.org/downloads/point/last-week/tavily-mcp (npm weekly)
+    category: vendor-official
+    repo: https://github.com/tavily-ai/tavily-mcp
+  - name: magic
+    command: npx -y @21st-dev/magic@latest
+    package: '@21st-dev/magic'
+    env: [API_KEY]
+    metric: 21727
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@21st-dev/magic (npm weekly)
+    category: vendor-official
+    repo: https://github.com/21st-dev/magic-mcp
+  - name: qdrant
+    command: uvx mcp-server-qdrant
+    package: mcp-server-qdrant (PyPI)
+    env: [QDRANT_URL, COLLECTION_NAME]
+    metric: 19415
+    metricSource: https://pypistats.org/packages/mcp-server-qdrant (PyPI weekly)
+    category: vendor-official
+    repo: https://github.com/qdrant/mcp-server-qdrant
+  - name: exa
+    command: npx -y exa-mcp-server
+    package: exa-mcp-server
+    env: [EXA_API_KEY]
+    metric: 18221
+    metricSource: https://api.npmjs.org/downloads/point/last-week/exa-mcp-server (npm weekly)
+    category: vendor-official
+    repo: https://github.com/exa-labs/exa-mcp-server
+  - name: brave-search
+    command: npx -y @brave/brave-search-mcp-server
+    package: '@brave/brave-search-mcp-server'
+    env: [BRAVE_API_KEY]
+    metric: 15777
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@brave/brave-search-mcp-server (npm weekly)
+    category: vendor-official
+    repo: https://github.com/brave/brave-search-mcp-server
+  - name: apify
+    command: npx -y @apify/actors-mcp-server
+    package: '@apify/actors-mcp-server'
+    env: [APIFY_TOKEN]
+    metric: 14351
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@apify/actors-mcp-server (npm weekly)
+    category: vendor-official
+    repo: https://github.com/apify/apify-mcp-server
+  - name: shopify-dev
+    command: npx -y @shopify/dev-mcp@latest
+    package: '@shopify/dev-mcp'
+    env: []
+    metric: 13956
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@shopify/dev-mcp (npm weekly)
+    category: vendor-official
+    repo: https://shopify.dev/docs/apps/build/devmcp (GitHub repo not public)
+  - name: hubspot
+    command: npx -y @hubspot/mcp-server
+    package: '@hubspot/mcp-server'
+    env: [PRIVATE_APP_ACCESS_TOKEN]
+    metric: 12712
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@hubspot/mcp-server (npm weekly)
+    category: vendor-official
+    repo: https://developers.hubspot.com/mcp (GitHub repo not public)
+  - name: netlify
+    command: npx -y @netlify/mcp
+    package: '@netlify/mcp'
+    env: []
+    metric: 11850
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@netlify/mcp (npm weekly)
+    category: vendor-official
+    repo: https://github.com/netlify/netlify-mcp
+  - name: stripe
+    command: npx -y @stripe/mcp --tools=all
+    package: '@stripe/mcp'
+    env: [STRIPE_SECRET_KEY]
+    metric: 10572
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@stripe/mcp (npm weekly)
+    category: vendor-official
+    repo: https://github.com/stripe/ai
+  - name: pinecone
+    command: npx -y @pinecone-database/mcp
+    package: '@pinecone-database/mcp'
+    env: [PINECONE_API_KEY]
+    metric: 8982
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@pinecone-database/mcp (npm weekly)
+    category: vendor-official
+    repo: https://github.com/pinecone-io/pinecone-mcp
+  - name: heroku
+    command: npx -y @heroku/mcp-server
+    package: '@heroku/mcp-server'
+    env: [HEROKU_API_KEY]
+    metric: 7890
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@heroku/mcp-server (npm weekly)
+    category: vendor-official
+    repo: https://github.com/heroku/heroku-mcp-server
+  - name: bright-data
+    command: npx -y @brightdata/mcp
+    package: '@brightdata/mcp'
+    env: [API_TOKEN]
+    metric: 6103
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@brightdata/mcp (npm weekly)
+    category: vendor-official
+    repo: https://github.com/brightdata/brightdata-mcp
+  - name: neo4j-cypher
+    command: uvx mcp-neo4j-cypher
+    package: mcp-neo4j-cypher (PyPI)
+    env: [NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD]
+    metric: 5914
+    metricSource: https://pypistats.org/packages/mcp-neo4j-cypher (PyPI weekly)
+    category: vendor-official
+    repo: https://github.com/neo4j-contrib/mcp-neo4j
+  - name: pulumi
+    command: npx -y @pulumi/mcp-server@latest stdio
+    package: '@pulumi/mcp-server'
+    env: []
+    metric: 4343
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@pulumi/mcp-server (npm weekly)
+    category: vendor-official
+    repo: https://www.pulumi.com/docs/iac/using-pulumi/mcp-server/ (GitHub repo not public)
+  - name: grafana
+    command: docker run --rm -i -e GRAFANA_URL=http://localhost:3000 -e GRAFANA_SERVICE_ACCOUNT_TOKEN=dummy mcp/grafana
+    package: mcp/grafana (docker)
+    env: [GRAFANA_URL, GRAFANA_SERVICE_ACCOUNT_TOKEN]
+    metric: 3358
+    metricSource: https://api.github.com/repos/grafana/mcp-grafana (GitHub stars; Go binary/docker)
+    category: vendor-official
+    repo: https://github.com/grafana/mcp-grafana
+    timeoutSeconds: 180
+  - name: browserbase
+    command: npx -y @browserbasehq/mcp
+    package: '@browserbasehq/mcp'
+    env: [BROWSERBASE_API_KEY, BROWSERBASE_PROJECT_ID]
+    metric: 3231
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@browserbasehq/mcp (npm weekly)
+    category: vendor-official
+    repo: https://github.com/browserbase/mcp-server-browserbase
+  - name: cloudflare-docs
+    command: npx -y mcp-remote https://docs.mcp.cloudflare.com/sse
+    package: remote via mcp-remote bridge (no auth)
+    env: []
+    metric: 2119
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@cloudflare/mcp-server-cloudflare (npm weekly; current offering is remote suite)
+    category: vendor-official
+    repo: https://github.com/cloudflare/mcp-server-cloudflare
+    timeoutSeconds: 120
+  - name: neon
+    command: npx -y @neondatabase/mcp-server-neon start
+    package: '@neondatabase/mcp-server-neon'
+    env: [NEON_API_KEY]
+    metric: 2012
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@neondatabase/mcp-server-neon (npm weekly)
+    category: vendor-official
+    repo: https://github.com/neondatabase/mcp-server-neon
+  - name: elasticsearch
+    command: npx -y @elastic/mcp-server-elasticsearch
+    package: '@elastic/mcp-server-elasticsearch'
+    env: [ES_URL, ES_API_KEY]
+    metric: 1599
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@elastic/mcp-server-elasticsearch (npm weekly)
+    category: vendor-official
+    repo: https://github.com/elastic/mcp-server-elasticsearch
+  - name: terraform
+    command: docker run -i --rm hashicorp/terraform-mcp-server
+    package: hashicorp/terraform-mcp-server (docker)
+    env: []
+    metric: 1503
+    metricSource: https://api.github.com/repos/hashicorp/terraform-mcp-server (GitHub stars; Go binary/docker)
+    category: vendor-official
+    repo: https://github.com/hashicorp/terraform-mcp-server
+    timeoutSeconds: 180
+  - name: redis
+    command: uvx --from git+https://github.com/redis/mcp-redis.git redis-mcp-server --url redis://localhost:6379/0
+    package: git+https://github.com/redis/mcp-redis
+    env: []
+    metric: 568
+    metricSource: https://api.github.com/repos/redis/mcp-redis (GitHub stars; not on PyPI)
+    category: vendor-official
+    repo: https://github.com/redis/mcp-redis
+    timeoutSeconds: 240
+  - name: perplexity
+    command: npx -y server-perplexity-ask
+    package: server-perplexity-ask
+    env: [PERPLEXITY_API_KEY]
+    metric: 921
+    metricSource: https://api.npmjs.org/downloads/point/last-week/server-perplexity-ask (npm weekly)
+    category: vendor-official
+    repo: https://github.com/perplexityai/modelcontextprotocol
+  # ---- vendor-official remote, no auth: measured via mcp-remote bridge ----
+  - name: microsoft-learn
+    command: npx -y mcp-remote https://learn.microsoft.com/api/mcp
+    package: remote via mcp-remote bridge (no auth)
+    env: []
+    metric: 1838
+    metricSource: https://api.github.com/repos/MicrosoftDocs/mcp (GitHub stars)
+    category: vendor-official
+    repo: https://github.com/MicrosoftDocs/mcp
+    timeoutSeconds: 120
+  - name: deepwiki
+    command: npx -y mcp-remote https://mcp.deepwiki.com/mcp
+    package: remote via mcp-remote bridge (no auth)
+    env: []
+    metric: 65000
+    metricSource: https://www.pulsemcp.com/servers/deepwiki (estimated visitors)
+    category: vendor-official
+    repo: https://docs.devin.ai/work-with-devin/deepwiki-mcp
+    timeoutSeconds: 120
+  - name: huggingface
+    command: npx -y mcp-remote https://huggingface.co/mcp
+    package: remote via mcp-remote bridge (anonymous OK)
+    env: []
+    metric: 274
+    metricSource: https://api.github.com/repos/huggingface/hf-mcp-server (GitHub stars)
+    category: vendor-official
+    repo: https://github.com/huggingface/hf-mcp-server
+    timeoutSeconds: 120
+  # ---- vendor-official remote, OAuth-walled: listed, not measured ----
+  - name: linear
+    command: https://mcp.linear.app/sse
+    remote: true
+    package: remote (SSE/Streamable HTTP, OAuth)
+    env: []
+    metric: 2100000
+    metricSource: https://www.pulsemcp.com/servers/linear (estimated visitors)
+    category: vendor-official
+    repo: https://linear.app/docs/mcp
+  - name: zapier
+    command: https://mcp.zapier.com/api/mcp/mcp
+    remote: true
+    package: remote (Streamable HTTP, OAuth)
+    env: []
+    metric: 6100000
+    metricSource: https://www.pulsemcp.com/servers/zapier (estimated visitors)
+    category: vendor-official
+    repo: https://zapier.com/mcp
+  - name: vercel
+    command: https://mcp.vercel.com
+    remote: true
+    package: remote (Streamable HTTP, OAuth)
+    env: []
+    metric: 542000
+    metricSource: https://www.pulsemcp.com/servers/vercel (estimated visitors)
+    category: vendor-official
+    repo: https://vercel.com/docs/mcp/vercel-mcp
+
+  # ============ COMMUNITY ============
+  - name: mcp-atlassian
+    command: uvx mcp-atlassian
+    package: mcp-atlassian (PyPI)
+    env: [JIRA_URL, JIRA_USERNAME, JIRA_API_TOKEN]
+    metric: 353572
+    metricSource: https://pypistats.org/packages/mcp-atlassian (PyPI weekly)
+    category: community
+    repo: https://github.com/sooperset/mcp-atlassian
+  - name: postgres-mcp
+    command: uvx postgres-mcp --access-mode=restricted
+    package: postgres-mcp (PyPI)
+    env: [DATABASE_URI]
+    metric: 234706
+    metricSource: https://pypistats.org/packages/postgres-mcp (PyPI weekly)
+    category: community
+    repo: https://github.com/crystaldba/postgres-mcp
+  - name: xcodebuildmcp
+    command: npx -y xcodebuildmcp@latest
+    package: xcodebuildmcp
+    env: []
+    metric: 149200
+    metricSource: https://api.npmjs.org/downloads/point/last-week/xcodebuildmcp (npm weekly)
+    category: community
+    repo: https://github.com/getsentry/XcodeBuildMCP
+    timeoutSeconds: 180
+  - name: n8n-mcp
+    command: npx -y n8n-mcp
+    package: n8n-mcp
+    env: []
+    metric: 114676
+    metricSource: https://api.npmjs.org/downloads/point/last-week/n8n-mcp (npm weekly)
+    category: community
+    repo: https://github.com/czlonkowski/n8n-mcp
+  - name: blender
+    command: uvx blender-mcp
+    package: blender-mcp (PyPI)
+    env: []
+    metric: 71408
+    metricSource: https://pypistats.org/packages/blender-mcp (PyPI weekly)
+    category: community
+    repo: https://github.com/ahujasid/blender-mcp
+  - name: excel
+    command: uvx excel-mcp-server stdio
+    package: excel-mcp-server (PyPI)
+    env: []
+    metric: 57839
+    metricSource: https://pypistats.org/packages/excel-mcp-server (PyPI weekly)
+    category: community
+    repo: https://github.com/haris-musa/excel-mcp-server
+  - name: figma-context
+    command: npx -y figma-developer-mcp --stdio
+    package: figma-developer-mcp
+    env: [FIGMA_API_KEY]
+    metric: 57771
+    metricSource: https://api.npmjs.org/downloads/point/last-week/figma-developer-mcp (npm weekly)
+    category: community
+    repo: https://github.com/GLips/Figma-Context-MCP
+  - name: duckduckgo
+    command: uvx duckduckgo-mcp-server
+    package: duckduckgo-mcp-server (PyPI)
+    env: []
+    metric: 41360
+    metricSource: https://pypistats.org/packages/duckduckgo-mcp-server (PyPI weekly)
+    category: community
+    repo: https://github.com/nickclyde/duckduckgo-mcp-server
+  - name: desktop-commander
+    command: npx -y @wonderwhy-er/desktop-commander
+    package: '@wonderwhy-er/desktop-commander'
+    env: []
+    metric: 38626
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@wonderwhy-er/desktop-commander (npm weekly)
+    category: community
+    repo: https://github.com/wonderwhy-er/DesktopCommanderMCP
+  - name: serena
+    command: uvx --from git+https://github.com/oraios/serena serena start-mcp-server
+    package: git+https://github.com/oraios/serena
+    env: []
+    metric: 28084
+    metricSource: https://api.github.com/repos/oraios/serena (GitHub stars; installed from git)
+    category: community
+    repo: https://github.com/oraios/serena
+    timeoutSeconds: 240
+  - name: gmail
+    command: npx -y @gongrzhe/server-gmail-autoauth-mcp
+    package: '@gongrzhe/server-gmail-autoauth-mcp'
+    env: []
+    metric: 26678
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@gongrzhe/server-gmail-autoauth-mcp (npm weekly; needs OAuth keys file)
+    category: community
+    repo: https://github.com/gongrzhe/server-gmail-autoauth-mcp
+  - name: pandoc
+    command: uvx mcp-pandoc
+    package: mcp-pandoc (PyPI)
+    env: []
+    metric: 23590
+    metricSource: https://pypistats.org/packages/mcp-pandoc (PyPI weekly)
+    category: community
+    repo: https://github.com/vivekVells/mcp-pandoc
+  - name: obsidian
+    command: uvx mcp-obsidian
+    package: mcp-obsidian (PyPI)
+    env: [OBSIDIAN_API_KEY]
+    metric: 23503
+    metricSource: https://pypistats.org/packages/mcp-obsidian (PyPI weekly)
+    category: community
+    repo: https://github.com/MarkusPfundstein/mcp-obsidian
+  - name: searxng
+    command: npx -y mcp-searxng
+    package: mcp-searxng
+    env: [SEARXNG_URL]
+    metric: 22508
+    metricSource: https://api.npmjs.org/downloads/point/last-week/mcp-searxng (npm weekly)
+    category: community
+    repo: https://github.com/ihor-sokoliuk/mcp-searxng
+  - name: slack
+    command: npx -y slack-mcp-server@latest --transport stdio
+    package: slack-mcp-server
+    env: [SLACK_MCP_XOXP_TOKEN]
+    metric: 16956
+    metricSource: https://api.npmjs.org/downloads/point/last-week/slack-mcp-server (npm weekly)
+    category: community
+    repo: https://github.com/korotovsky/slack-mcp-server
+  - name: playwright-community
+    command: npx -y @executeautomation/playwright-mcp-server
+    package: '@executeautomation/playwright-mcp-server'
+    env: []
+    metric: 16066
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@executeautomation/playwright-mcp-server (npm weekly)
+    category: community
+    repo: https://github.com/executeautomation/mcp-playwright
+    timeoutSeconds: 180
+  - name: arxiv
+    command: uvx arxiv-mcp-server
+    package: arxiv-mcp-server (PyPI)
+    env: []
+    metric: 13984
+    metricSource: https://pypistats.org/packages/arxiv-mcp-server (PyPI weekly)
+    category: community
+    repo: https://github.com/blazickjp/arxiv-mcp-server
+  - name: mysql
+    command: uvx --from mysql-mcp-server mysql_mcp_server
+    package: mysql-mcp-server (PyPI)
+    env: [MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE]
+    metric: 13634
+    metricSource: https://pypistats.org/packages/mysql-mcp-server (PyPI weekly)
+    category: community
+    repo: https://github.com/designcomputer/mysql_mcp_server
+  - name: kubernetes
+    command: npx -y mcp-server-kubernetes
+    package: mcp-server-kubernetes
+    env: []
+    metric: 12374
+    metricSource: https://api.npmjs.org/downloads/point/last-week/mcp-server-kubernetes (npm weekly; uses ~/.kube/config)
+    category: community
+    repo: https://github.com/Flux159/mcp-server-kubernetes
+  - name: basic-memory
+    command: uvx basic-memory mcp
+    package: basic-memory (PyPI)
+    env: []
+    metric: 10460
+    metricSource: https://pypistats.org/packages/basic-memory (PyPI weekly)
+    category: community
+    repo: https://github.com/basicmachines-co/basic-memory
+  - name: airtable
+    command: npx -y airtable-mcp-server
+    package: airtable-mcp-server
+    env: [AIRTABLE_API_KEY]
+    metric: 3022
+    metricSource: https://api.npmjs.org/downloads/point/last-week/airtable-mcp-server (npm weekly)
+    category: community
+    repo: https://github.com/domdomegg/airtable-mcp-server
+  - name: airbnb
+    command: npx -y @openbnb/mcp-server-airbnb
+    package: '@openbnb/mcp-server-airbnb'
+    env: []
+    metric: 2599
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@openbnb/mcp-server-airbnb (npm weekly)
+    category: community
+    repo: https://github.com/openbnb-org/mcp-server-airbnb

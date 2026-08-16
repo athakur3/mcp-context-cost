@@ -1,0 +1,19 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "timeout",
+  "totalTokens": null,
+  "toolCount": null,
+  "tools": [],
+  "canonicalSha256": null,
+  "rawToolsCapture": null,
+  "measuredAt": "2026-08-16T12:11:16.733Z",
+  "serverName": "grafana",
+  "launchCommand": "docker run --rm -i -e GRAFANA_URL=http://localhost:3000 -e GRAFANA_SERVICE_ACCOUNT_TOKEN=dummy mcp/grafana",
+  "notes": "timeout after 180000ms waiting for initialize",
+  "isolation": {
+    "docker": true,
+    "note": "command is itself a docker run (host-spawned container)"
+  }
+}

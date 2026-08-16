@@ -1,0 +1,21 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "startup-failure",
+  "totalTokens": null,
+  "toolCount": null,
+  "tools": [],
+  "canonicalSha256": null,
+  "rawToolsCapture": null,
+  "measuredAt": "2026-08-16T12:08:35.557Z",
+  "serverName": "postgres-mcp",
+  "launchCommand": "uvx postgres-mcp --access-mode=restricted",
+  "notes": "server exited (code 1); stderr tail: Traceback (most recent call last):\n  File \"/tmp/.uv-cache/archive-v0/X29VIyA7dTXbxyKVSfrhs/bin/postgres-mcp\", line 6, in <module>\n    from postgres_mcp import main\n  File \"/tmp/.uv-cache/archive-v0/X29VIyA7dTXbxyKVSfrhs/lib/python3.12/site-packages/postgres_mcp/__init__.py\", line 4, in <module>\n    from . import server\n  File \"/tmp/.uv-cache/archive-v0/X29VIyA7dTXbxyKVSfrhs/lib/python3.12/site-packages/postgres_mcp/server.py\", line 15, in <module>\n    from mc",
+  "isolation": {
+    "docker": true,
+    "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

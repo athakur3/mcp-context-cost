@@ -1,0 +1,21 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "startup-failure",
+  "totalTokens": null,
+  "toolCount": null,
+  "tools": [],
+  "canonicalSha256": null,
+  "rawToolsCapture": null,
+  "measuredAt": "2026-08-16T12:08:41.803Z",
+  "serverName": "redis-legacy",
+  "launchCommand": "npx -y @modelcontextprotocol/server-redis redis://localhost:6379",
+  "notes": "server exited (code 1); stderr tail: econnect (/tmp/.npm-cache/_npx/5c1b9cdedadb4486/node_modules/@redis/client/dist/lib/client/socket.js:140:16)\n    at RedisSocket._RedisSocket_connect (/tmp/.npm-cache/_npx/5c1b9cdedadb4486/node_modules/@redis/client/dist/lib/client/socket.js:162:117)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async Commander.connect (/tmp/.npm-cache/_npx/5c1b9cdedadb4486/node_modules/@redis/client/dist/lib/client/index.js:185:9)\n ",
+  "isolation": {
+    "docker": true,
+    "image": "public.ecr.aws/docker/library/node:22-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

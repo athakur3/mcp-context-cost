@@ -1,0 +1,613 @@
+<title>mcp-context-cost</title>
+<style>
+  :root {
+    --bg: #F7F8F7; --surface: #FFFFFF; --ink: #17211D; --muted: #5C6B64;
+    --line: #DCE2DF; --accent: #14635A; --accent-soft: rgba(20, 99, 90, 0.09);
+    --track: #ECF0EE;
+    --b-brightgreen: #2E7D4F; --b-green: #4F8A2E; --b-yellow: #A87A12;
+    --b-orange: #BA5A1E; --b-red: #A63B2C;
+    --badge-l: #555555; --badge-ink: #FFFFFF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #151A18; --surface: #1C2321; --ink: #E4EAE7; --muted: #90A199;
+      --line: #2C3531; --accent: #58B3A4; --accent-soft: rgba(88, 179, 164, 0.12);
+      --track: #232B28;
+      --b-brightgreen: #6FC08D; --b-green: #8CBE62; --b-yellow: #D3A748;
+      --b-orange: #DB8A57; --b-red: #D97F6C;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #151A18; --surface: #1C2321; --ink: #E4EAE7; --muted: #90A199;
+    --line: #2C3531; --accent: #58B3A4; --accent-soft: rgba(88, 179, 164, 0.12);
+    --track: #232B28;
+    --b-brightgreen: #6FC08D; --b-green: #8CBE62; --b-yellow: #D3A748;
+    --b-orange: #DB8A57; --b-red: #D97F6C;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--ink); margin: 0; padding: 0 20px 80px;
+    font-family: "Avenir Next", "Helvetica Neue", system-ui, sans-serif;
+    font-size: 15px; line-height: 1.55;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; }
+  header { padding: 48px 0 10px; }
+  .eyebrow { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase; color: var(--accent); margin: 0 0 10px; }
+  h1 { font-family: "Futura", "Avenir Next", "Century Gothic", sans-serif; font-weight: 700; font-size: clamp(1.9rem, 5vw, 2.6rem); margin: 0 0 10px; letter-spacing: -0.01em; }
+  .sub { color: var(--muted); max-width: 62ch; margin: 0 0 8px; }
+  h2 { font-family: "Futura", "Avenir Next", sans-serif; font-size: 1.15rem; font-weight: 600; margin: 44px 0 4px; }
+  .h2sub { color: var(--muted); font-size: 0.88rem; margin: 0 0 16px; }
+  a { color: var(--accent); }
+
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 22px 0 6px; }
+  .stat { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px 10px; }
+  .stat .n { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-variant-numeric: tabular-nums; font-size: 1.45rem; font-weight: 600; display: block; }
+  .stat .l { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+  .board { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; }
+  .row { display: grid; grid-template-columns: 2ch minmax(120px, 190px) 1fr max-content; gap: 10px; align-items: center; padding: 3px 4px; border-radius: 4px; outline: none; }
+  .row:hover, .row:focus-visible { background: var(--accent-soft); }
+  .rank { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+  .name { font-size: 0.86rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .track { background: var(--track); border-radius: 3px; height: 12px; overflow: hidden; }
+  .bar { display: block; height: 100%; background: var(--accent); border-radius: 3px 3px 3px 3px; min-width: 3px; }
+  .val { font-family: ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; font-size: 0.82rem; display: flex; align-items: center; gap: 6px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; box-shadow: 0 0 0 2px var(--surface); }
+  .dot-brightgreen { background: var(--b-brightgreen); } .dot-green { background: var(--b-green); }
+  .dot-yellow { background: var(--b-yellow); } .dot-orange { background: var(--b-orange); } .dot-red { background: var(--b-red); }
+  .bandname { color: var(--muted); font-size: 0.72rem; min-width: 62px; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 10px 2px 0; font-size: 0.78rem; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 5px; }
+
+  #tip { position: fixed; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 0.78rem; padding: 6px 9px; border-radius: 5px; max-width: 340px; display: none; z-index: 10; line-height: 1.4; }
+
+  table { border-collapse: collapse; width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; font-size: 0.85rem; }
+  th { text-align: left; font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  th, td { padding: 7px 12px; border-bottom: 1px solid var(--line); }
+  tr:last-child td { border-bottom: none; }
+  td.num { font-family: ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; text-align: right; }
+  td.note { color: var(--muted); font-size: 0.8rem; }
+  .chip { font-family: ui-monospace, Menlo, monospace; font-size: 11px; background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 2px 9px; white-space: nowrap; }
+  .tablewrap { overflow-x: auto; }
+
+  .specimen { display: flex; align-items: center; gap: 14px; margin: 8px 0; }
+  .badge { display: inline-flex; font-family: "Helvetica Neue", Arial, sans-serif; font-size: 11px; border-radius: 3px; overflow: hidden; line-height: 1; }
+  .badge span { padding: 4px 7px; }
+  .badge-l { background: var(--badge-l); color: var(--badge-ink); }
+  .badge-r { color: var(--badge-ink); }
+  .badge-brightgreen { background: #4c1; } .badge-green { background: #97ca00; color: #333; }
+  .badge-yellow { background: #dfb317; color: #333; } .badge-orange { background: #fe7d37; } .badge-red { background: #e05d44; }
+  code { font-family: ui-monospace, Menlo, monospace; font-size: 0.8rem; color: var(--muted); }
+  pre { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; overflow-x: auto; font-size: 0.8rem; }
+  details summary { cursor: pointer; color: var(--muted); font-size: 0.85rem; }
+  footer { margin-top: 48px; border-top: 1px solid var(--line); padding-top: 16px; color: var(--muted); font-size: 0.8rem; font-family: ui-monospace, Menlo, monospace; }
+  @media (prefers-reduced-motion: no-preference) { .bar { transition: width 0.4s ease; } }
+</style>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">methodology v1.0 · o200k_base · generated 2026-08-16 12:17 UTC</p>
+    <h1>mcp-context-cost</h1>
+    <p class="sub">What popular MCP servers cost in context tokens before the agent does any work — measured from raw <code>tools/list</code> captures, every number re-derivable from its published measurement file.</p>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><span class="n">57<span style="font-size:0.9rem;color:var(--muted)">/82</span></span><span class="l">servers measured</span></div>
+    <div class="stat"><span class="n">2,636</span><span class="l">median tokens</span></div>
+    <div class="stat"><span class="n">54,422</span><span class="l">priciest (github)</span></div>
+    <div class="stat"><span class="n">0</span><span class="l">pending sweep</span></div>
+  </div>
+
+  <h2>Leaderboard</h2>
+  <p class="h2sub">Tokens = o200k_base count of the canonical <code>tools/list</code> bytes. Hover or focus a row for detail.</p>
+  <div class="board">
+<div class="row" tabindex="0" data-tip="44 tools · largest: issue_write (1,890 tok) · vendor-official · measured · v1.9.0">
+  <span class="rank">1</span>
+  <span class="name">github</span>
+  <span class="track"><span class="bar" style="width:100.0%"></span></span>
+  <span class="val"><span class="dot dot-red" aria-hidden="true"></span>54,422<span class="bandname">very heavy</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="8 tools · largest: brave_place_search (17,282 tok) · vendor-official · measured · v2.1.0">
+  <span class="rank">2</span>
+  <span class="name">brave-search</span>
+  <span class="track"><span class="bar" style="width:46.8%"></span></span>
+  <span class="val"><span class="dot dot-orange" aria-hidden="true"></span>25,456<span class="bandname">heavy</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="24 tools · largest: API-update-page-markdown (1,282 tok) · vendor-official · measured · v1.0.0">
+  <span class="rank">3</span>
+  <span class="name">notion</span>
+  <span class="track"><span class="bar" style="width:32.2%"></span></span>
+  <span class="val"><span class="dot dot-orange" aria-hidden="true"></span>17,500<span class="bandname">heavy</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="63 tools · largest: jira_update_proforma_form_answers (800 tok) · community · dynamic · v3.4.7">
+  <span class="rank">4</span>
+  <span class="name">mcp-atlassian</span>
+  <span class="track"><span class="bar" style="width:31.8%"></span></span>
+  <span class="val"><span class="dot dot-orange" aria-hidden="true"></span>17,311<span class="bandname">heavy</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="13 tools · largest: run_rollback_pipeline (1,391 tok) · vendor-official · measured · v1.0.0">
+  <span class="rank">5</span>
+  <span class="name">circleci</span>
+  <span class="track"><span class="bar" style="width:21.9%"></span></span>
+  <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>11,912<span class="bandname">moderate</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="10 tools · largest: search-actors (2,200 tok) · vendor-official · measured · v0.14.3">
+  <span class="rank">6</span>
+  <span class="name">apify</span>
+  <span class="track"><span class="bar" style="width:19.2%"></span></span>
+  <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>10,426<span class="bandname">moderate</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="27 tools · largest: firecrawl_search (1,391 tok) · vendor-official · measured · v3.24.0">
+  <span class="rank">7</span>
+  <span class="name">firecrawl</span>
+  <span class="track"><span class="bar" style="width:17.6%"></span></span>
+  <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>9,561<span class="bandname">moderate</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="23 tools · largest: search_notes (970 tok) · community · measured · v3.3.1">
+  <span class="rank">8</span>
+  <span class="name">basic-memory</span>
+  <span class="track"><span class="bar" style="width:16.9%"></span></span>
+  <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>9,188<span class="bandname">moderate</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="21 tools · largest: hubspot-search-objects (964 tok) · vendor-official · measured · v0.4.0">
+  <span class="rank">9</span>
+  <span class="name">hubspot</span>
+  <span class="track"><span class="bar" style="width:16.8%"></span></span>
+  <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>9,158<span class="bandname">moderate</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="27 tools · largest: explain (813 tok) · vendor-official · measured · v2.1.0">
+  <span class="rank">10</span>
+  <span class="name">mongodb</span>
+  <span class="track"><span class="bar" style="width:14.6%"></span></span>
+  <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>7,926<span class="bandname">moderate</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="9 tools · largest: update_issue (1,306 tok) · vendor-official · measured · v0.37.0">
+  <span class="rank">11</span>
+  <span class="name">sentry</span>
+  <span class="track"><span class="bar" style="width:11.9%"></span></span>
+  <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>6,455<span class="bandname">moderate</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="9 tools · largest: search-records (1,179 tok) · vendor-official · measured · v0.3.0">
+  <span class="rank">12</span>
+  <span class="name">pinecone</span>
+  <span class="track"><span class="bar" style="width:10.8%"></span></span>
+  <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>5,903<span class="bandname">moderate</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="5 tools · largest: learn_shopify_api (2,518 tok) · vendor-official · measured · v1.14.4">
+  <span class="rank">13</span>
+  <span class="name">shopify-dev</span>
+  <span class="track"><span class="bar" style="width:10.3%"></span></span>
+  <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>5,624<span class="bandname">moderate</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="23 tools · largest: kubectl_create (945 tok) · community · measured · v4.1.4">
+  <span class="rank">14</span>
+  <span class="name">kubernetes</span>
+  <span class="track"><span class="bar" style="width:9.7%"></span></span>
+  <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>5,268<span class="bandname">moderate</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="24 tools · largest: generate_hyper3d_model_via_images (454 tok) · community · measured · v1.29.0">
+  <span class="rank">15</span>
+  <span class="name">blender</span>
+  <span class="track"><span class="bar" style="width:9.7%"></span></span>
+  <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>5,258<span class="bandname">moderate</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="5 tools · largest: search_documentation (1,956 tok) · vendor-official · measured · v1.29.0">
+  <span class="rank">16</span>
+  <span class="name">aws-documentation</span>
+  <span class="track"><span class="bar" style="width:9.3%"></span></span>
+  <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>5,074<span class="bandname">moderate</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="29 tools · largest: query_logs (800 tok) · vendor-official · measured · v0.10.0">
+  <span class="rank">17</span>
+  <span class="name">supabase</span>
+  <span class="track"><span class="bar" style="width:9.2%"></span></span>
+  <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>5,013<span class="bandname">moderate</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="4 tools · largest: hf_whoami (1,948 tok) · vendor-official · measured · v0.4.9">
+  <span class="rank">18</span>
+  <span class="name">huggingface</span>
+  <span class="track"><span class="bar" style="width:8.6%"></span></span>
+  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>4,691<span class="bandname">light</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="25 tools · largest: format_range (472 tok) · community · measured · v1.29.0">
+  <span class="rank">19</span>
+  <span class="name">excel</span>
+  <span class="track"><span class="bar" style="width:7.8%"></span></span>
+  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>4,266<span class="bandname">light</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="16 tools · largest: list_records (395 tok) · community · measured · v1.14.0">
+  <span class="rank">20</span>
+  <span class="name">airtable</span>
+  <span class="track"><span class="bar" style="width:7.7%"></span></span>
+  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>4,207<span class="bandname">light</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="24 tools · largest: browser_take_screenshot (329 tok) · vendor-official · measured · v1.63.0-alpha-2026-08-05">
+  <span class="rank">21</span>
+  <span class="name">playwright</span>
+  <span class="track"><span class="bar" style="width:7.4%"></span></span>
+  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>4,024<span class="bandname">light</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="26 tools · largest: create_pull_request_review (360 tok) · official-reference · measured · v0.6.2">
+  <span class="rank">22</span>
+  <span class="name">github-legacy</span>
+  <span class="track"><span class="bar" style="width:6.5%"></span></span>
+  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>3,548<span class="bandname">light</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="14 tools · largest: search_papers (1,154 tok) · community · measured · v0.6.3">
+  <span class="rank">23</span>
+  <span class="name">arxiv</span>
+  <span class="track"><span class="bar" style="width:5.9%"></span></span>
+  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>3,228<span class="bandname">light</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="33 tools · largest: playwright_get_visible_html (228 tok) · community · measured · v1.0.11">
+  <span class="rank">24</span>
+  <span class="name">playwright-community</span>
+  <span class="track"><span class="bar" style="width:5.4%"></span></span>
+  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>2,920<span class="bandname">light</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="13 tools · largest: chroma_get_documents (610 tok) · vendor-official · measured · v1.6.0">
+  <span class="rank">25</span>
+  <span class="name">chroma</span>
+  <span class="track"><span class="bar" style="width:5.2%"></span></span>
+  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>2,837<span class="bandname">light</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="9 tools · largest: netlify-project-services-updater (896 tok) · vendor-official · measured · v1.15.1">
+  <span class="rank">26</span>
+  <span class="name">netlify</span>
+  <span class="track"><span class="bar" style="width:5.2%"></span></span>
+  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>2,831<span class="bandname">light</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="14 tools · largest: read_media_file (290 tok) · official-reference · measured · v0.2.0">
+  <span class="rank">27</span>
+  <span class="name">filesystem</span>
+  <span class="track"><span class="bar" style="width:5.2%"></span></span>
+  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>2,823<span class="bandname">light</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="12 tools · largest: pulumi-resource-search (1,011 tok) · vendor-official · measured · v0.2.0">
+  <span class="rank">28</span>
+  <span class="name">pulumi</span>
+  <span class="track"><span class="bar" style="width:5.1%"></span></span>
+  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>2,768<span class="bandname">light</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="7 tools · largest: search_templates (628 tok) · community · measured · v2.69.2">
+  <span class="rank">29</span>
+  <span class="name">n8n-mcp</span>
+  <span class="track"><span class="bar" style="width:4.8%"></span></span>
+  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>2,636<span class="bandname">light</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="9 tools · largest: search_nodes (323 tok) · official-reference · measured · v0.6.3">
+  <span class="rank">30</span>
+  <span class="name">memory</span>
+  <span class="track"><span class="bar" style="width:4.4%"></span></span>
+  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>2,378<span class="bandname">light</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="9 tools · largest: search_providers (484 tok) · vendor-official · measured · v1.2.0">
+  <span class="rank">31</span>
+  <span class="name">terraform</span>
+  <span class="track"><span class="bar" style="width:3.8%"></span></span>
+  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>2,061<span class="bandname">light</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="13 tools · largest: gzip-file-as-resource (247 tok) · official-reference · measured · v2.0.0">
+  <span class="rank">32</span>
+  <span class="name">everything</span>
+  <span class="track"><span class="bar" style="width:3.1%"></span></span>
+  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>1,708<span class="bandname">light</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="5 tools · largest: tavily_search (615 tok) · vendor-official · measured · v0.2.22">
+  <span class="rank">33</span>
+  <span class="name">tavily</span>
+  <span class="track"><span class="bar" style="width:3.0%"></span></span>
+  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>1,653<span class="bandname">light</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="4 tools · largest: searxng_web_search (770 tok) · community · measured · v1.15.0">
+  <span class="rank">34</span>
+  <span class="name">searxng</span>
+  <span class="track"><span class="bar" style="width:2.7%"></span></span>
+  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>1,481<span class="bandname">light</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="1 tools · largest: convert-contents (1,423 tok) · community · measured · v0.11.1">
+  <span class="rank">35</span>
+  <span class="name">pandoc</span>
+  <span class="track"><span class="bar" style="width:2.6%"></span></span>
+  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>1,425<span class="bandname">light</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="2 tools · largest: resolve-library-id (643 tok) · vendor-official · measured · v4.0.2">
+  <span class="rank">36</span>
+  <span class="name">context7</span>
+  <span class="track"><span class="bar" style="width:1.9%"></span></span>
+  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>1,052<span class="bandname">light</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="1 tools · largest: sequentialthinking (990 tok) · official-reference · measured · v0.2.0">
+  <span class="rank">37</span>
+  <span class="name">sequential-thinking</span>
+  <span class="track"><span class="bar" style="width:1.8%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>992<span class="bandname">lean</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="5 tools · largest: discover (347 tok) · vendor-official · measured · v2.11.1">
+  <span class="rank">38</span>
+  <span class="name">bright-data</span>
+  <span class="track"><span class="bar" style="width:1.8%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>978<span class="bandname">lean</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="3 tools · largest: microsoft_code_sample_search (396 tok) · vendor-official · measured · v1.0.0">
+  <span class="rank">39</span>
+  <span class="name">microsoft-learn</span>
+  <span class="track"><span class="bar" style="width:1.8%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>972<span class="bandname">lean</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="2 tools · largest: download_figma_images (646 tok) · community · measured · v0.13.2">
+  <span class="rank">40</span>
+  <span class="name">figma-context</span>
+  <span class="track"><span class="bar" style="width:1.7%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>946<span class="bandname">lean</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="2 tools · largest: fetch_content (387 tok) · community · measured · v1.29.0">
+  <span class="rank">41</span>
+  <span class="name">duckduckgo</span>
+  <span class="track"><span class="bar" style="width:1.3%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>724<span class="bandname">lean</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="8 tools · largest: slack_reply_to_thread (124 tok) · official-reference · measured · v1.0.0">
+  <span class="rank">42</span>
+  <span class="name">slack-legacy</span>
+  <span class="track"><span class="bar" style="width:1.3%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>681<span class="bandname">lean</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="3 tools · largest: list_tables (370 tok) · vendor-official · measured · v2.14.7">
+  <span class="rank">43</span>
+  <span class="name">clickhouse</span>
+  <span class="track"><span class="bar" style="width:1.2%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>581<span class="bandname">lean</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="7 tools · largest: maps_distance_matrix (124 tok) · official-reference · measured · v0.1.0">
+  <span class="rank">44</span>
+  <span class="name">google-maps</span>
+  <span class="track"><span class="bar" style="width:1.2%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>549<span class="bandname">lean</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="7 tools · largest: puppeteer_screenshot (142 tok) · official-reference · measured · v0.1.0">
+  <span class="rank">45</span>
+  <span class="name">puppeteer</span>
+  <span class="track"><span class="bar" style="width:1.2%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>540<span class="bandname">lean</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="2 tools · largest: web_search_exa (289 tok) · vendor-official · measured · v3.4.0">
+  <span class="rank">46</span>
+  <span class="name">exa</span>
+  <span class="track"><span class="bar" style="width:1.2%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>486<span class="bandname">lean</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="2 tools · largest: airbnb_search (319 tok) · community · measured · v0.3.0">
+  <span class="rank">47</span>
+  <span class="name">airbnb</span>
+  <span class="track"><span class="bar" style="width:1.2%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>486<span class="bandname">lean</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="2 tools · largest: search_cloudflare_documentation (351 tok) · vendor-official · measured · v0.4.13">
+  <span class="rank">48</span>
+  <span class="name">cloudflare-docs</span>
+  <span class="track"><span class="bar" style="width:1.2%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>422<span class="bandname">lean</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="3 tools · largest: get_table_sample (139 tok) · community · measured · v1.29.0">
+  <span class="rank">49</span>
+  <span class="name">mysql</span>
+  <span class="track"><span class="bar" style="width:1.2%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>393<span class="bandname">lean</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="6 tools · largest: act (69 tok) · vendor-official · measured · v3.0.0">
+  <span class="rank">50</span>
+  <span class="name">browserbase</span>
+  <span class="track"><span class="bar" style="width:1.2%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>364<span class="bandname">lean</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="3 tools · largest: ask_question (148 tok) · vendor-official · measured · v2.14.3">
+  <span class="rank">51</span>
+  <span class="name">deepwiki</span>
+  <span class="track"><span class="bar" style="width:1.2%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>359<span class="bandname">lean</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="9 tools · largest: get_file_contents (41 tok) · official-reference · measured · v0.5.1">
+  <span class="rank">52</span>
+  <span class="name">gitlab</span>
+  <span class="track"><span class="bar" style="width:1.2%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>336<span class="bandname">lean</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="2 tools · largest: brave_web_search (161 tok) · official-reference · measured · v0.1.0">
+  <span class="rank">53</span>
+  <span class="name">brave-search-legacy</span>
+  <span class="track"><span class="bar" style="width:1.2%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>319<span class="bandname">lean</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="2 tools · largest: qdrant-store (101 tok) · vendor-official · measured · v1.29.0">
+  <span class="rank">54</span>
+  <span class="name">qdrant</span>
+  <span class="track"><span class="bar" style="width:1.2%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>188<span class="bandname">lean</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="1 tools · largest: perplexity_ask (131 tok) · vendor-official · measured · v0.1.0">
+  <span class="rank">55</span>
+  <span class="name">perplexity</span>
+  <span class="track"><span class="bar" style="width:1.2%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>133<span class="bandname">lean</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="1 tools · largest: convert_to_markdown (62 tok) · vendor-official · measured · v1.8.1">
+  <span class="rank">56</span>
+  <span class="name">markitdown</span>
+  <span class="track"><span class="bar" style="width:1.2%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>64<span class="bandname">lean</span></span>
+</div>
+<div class="row" tabindex="0" data-tip="1 tools · largest: query (30 tok) · official-reference · measured · v0.1.0">
+  <span class="rank">57</span>
+  <span class="name">postgres</span>
+  <span class="track"><span class="bar" style="width:1.2%"></span></span>
+  <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>32<span class="bandname">lean</span></span>
+</div>
+  </div>
+  <div class="legend">
+    <span><span class="dot dot-brightgreen"></span>lean &lt;1K</span>
+    <span><span class="dot dot-green"></span>light 1–5K</span>
+    <span><span class="dot dot-yellow"></span>moderate 5–15K</span>
+    <span><span class="dot dot-orange"></span>heavy 15–30K</span>
+    <span><span class="dot dot-red"></span>very heavy ≥30K</span>
+  </div>
+
+  <h2>Not measured — and why</h2>
+  <p class="h2sub">Every candidate appears; failures are findings, not omissions.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>server</th><th>status</th><th>note</th></tr></thead>
+    <tbody><tr><td>fetch</td><td><span class="chip">startup-failure</span></td><td class="note">server exited (code 1); stderr tail: in &lt;module&gt;
+    from mcp_server_fetch import main
+  File &quot;/tmp/.uv-cache/archive-v0/vFrrNX6vyNRVMDZ7hjaS4/lib/py</td></tr>
+<tr><td>git</td><td><span class="chip">startup-failure</span></td><td class="note">server exited (code 1); stderr tail: PATH
+    - be set via $GIT_PYTHON_GIT_EXECUTABLE
+    - explicitly set via git.refresh(&lt;full-path-to-git-executable&gt;)
+</td></tr>
+<tr><td>time</td><td><span class="chip">startup-failure</span></td><td class="note">server exited (code 1); stderr tail: , in &lt;module&gt;
+    from mcp_server_time import main
+  File &quot;/tmp/.uv-cache/archive-v0/SfGkkZZ67zYjtZfKCUoDr/lib/p</td></tr>
+<tr><td>sqlite</td><td><span class="chip">startup-failure</span></td><td class="note">server exited (code 1); stderr tail: main)
+           ^^^^^^^^^^^^^^^^
+  File &quot;/usr/local/lib/python3.12/asyncio/runners.py&quot;, line 118, in run
+    ret</td></tr>
+<tr><td>gdrive</td><td><span class="chip">auth-required</span></td><td class="note">server exited (code 1); stderr tail: Credentials not found. Please run with 'auth' argument first.
+</td></tr>
+<tr><td>redis-legacy</td><td><span class="chip">startup-failure</span></td><td class="note">server exited (code 1); stderr tail: econnect (/tmp/.npm-cache/_npx/5c1b9cdedadb4486/node_modules/@redis/client/dist/lib/client/socket.js:140:16)
+    at RedisSo</td></tr>
+<tr><td>azure</td><td><span class="chip">auth-required</span></td><td class="note">server exited (code 0); stderr tail: oveNext()
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Azure.Mcp.Server.Program+&lt;Main&gt;d__2, az</td></tr>
+<tr><td>magic</td><td><span class="chip">auth-required</span></td><td class="note">server error -32001: Not authenticated - your API key is missing or was reset. Get a fresh key at https://21st.dev/mcp and update your MCP config (x-api-key / B</td></tr>
+<tr><td>stripe</td><td><span class="chip">startup-failure</span></td><td class="note">server exited (code 1); stderr tail: index.js:20:30)
+    at Object.&lt;anonymous&gt; (/tmp/.npm-cache/_npx/bce731a0395adf49/node_modules/@stripe/mcp/dist/index.</td></tr>
+<tr><td>heroku</td><td><span class="chip">startup-failure</span></td><td class="note">server exited (code 1); stderr tail: Fatal error in main(): Cannot find module '/tmp/.npm-cache/_npx/909ffbc9d45b7a62/node_modules/@modelcontextprotocol/sdk/dis</td></tr>
+<tr><td>neo4j-cypher</td><td><span class="chip">startup-failure</span></td><td class="note">server exited (code 1); stderr tail: CK8xthI3sJK/lib/python3.12/site-packages/neo4j/_async/driver.py&quot;, line 194, in driver
+    driver_type, security_type, </td></tr>
+<tr><td>grafana</td><td><span class="chip">timeout</span></td><td class="note">timeout after 180000ms waiting for initialize</td></tr>
+<tr><td>neon</td><td><span class="chip">startup-failure</span></td><td class="note">server exited (code 1)</td></tr>
+<tr><td>elasticsearch</td><td><span class="chip">startup-failure</span></td><td class="note">server exited (code 1); stderr tail: Server error: [
+  {
+    &quot;validation&quot;: &quot;url&quot;,
+    &quot;code&quot;: &quot;invalid_string&quot;,
+    &quo</td></tr>
+<tr><td>redis</td><td><span class="chip">startup-failure</span></td><td class="note">server exited (code 1); stderr tail:    Updating https://github.com/redis/mcp-redis.git (HEAD)
+  × Failed to download and build `redis-mcp-server @
+  │ git+http</td></tr>
+<tr><td>linear</td><td><span class="chip">remote-auth-wall</span></td><td class="note">OAuth-gated remote server; listed, not measured</td></tr>
+<tr><td>zapier</td><td><span class="chip">remote-auth-wall</span></td><td class="note">OAuth-gated remote server; listed, not measured</td></tr>
+<tr><td>vercel</td><td><span class="chip">remote-auth-wall</span></td><td class="note">OAuth-gated remote server; listed, not measured</td></tr>
+<tr><td>postgres-mcp</td><td><span class="chip">startup-failure</span></td><td class="note">server exited (code 1); stderr tail: Traceback (most recent call last):
+  File &quot;/tmp/.uv-cache/archive-v0/X29VIyA7dTXbxyKVSfrhs/bin/postgres-mcp&quot;, lin</td></tr>
+<tr><td>xcodebuildmcp</td><td><span class="chip">startup-failure</span></td><td class="note">server exited (code 1); stderr tail: &quot;none&quot;]
+      --style                   Output style (normal is detailed; minimal is compact MCP-like output)  [s</td></tr>
+<tr><td>desktop-commander</td><td><span class="chip">startup-failure</span></td><td class="note">server exited (code 1); stderr tail: nt rates) by contacting i@izs.me
+npm warn deprecated fstream@1.0.12: This package is no longer supported.
+npm warn deprecat</td></tr>
+<tr><td>serena</td><td><span class="chip">startup-failure</span></td><td class="note">server exited (code 1); stderr tail:    Updating https://github.com/oraios/serena (HEAD)
+   Building proxy-tools==0.1.0
+  × Failed to download and build `serena</td></tr>
+<tr><td>gmail</td><td><span class="chip">auth-required</span></td><td class="note">server exited (code 1); stderr tail: Error: OAuth keys file not found. Please place gcp-oauth.keys.json in current directory or /tmp/.gmail-mcp
+</td></tr>
+<tr><td>obsidian</td><td><span class="chip">startup-failure</span></td><td class="note">server exited (code 1); stderr tail: Traceback (most recent call last):
+  File &quot;/tmp/.uv-cache/archive-v0/q7a7WJc6K7v0b4ItgsxyM/bin/mcp-obsidian&quot;, lin</td></tr>
+<tr><td>slack</td><td><span class="chip">startup-failure</span></td><td class="note">server exited (code 1); stderr tail: .execFileSync (node:child_process:952:15)
+    at Object.&lt;anonymous&gt; (/tmp/.npm-cache/_npx/2f12aed4e6049c73/node_modul</td></tr></tbody>
+  </table></div>
+
+  <h2>The badge</h2>
+  <p class="h2sub">A shields.io endpoint badge backed by a reproducible measurement — merge one line into a README.</p>
+  <div class="specimen"><span class="badge"><span class="badge-l">context cost</span><span class="badge-r badge-brightgreen">32 tokens</span></span><code>badges/postgres.json</code></div>
+<div class="specimen"><span class="badge"><span class="badge-l">context cost</span><span class="badge-r badge-red">54,422 tokens</span></span><code>badges/github.json</code></div>
+  <pre>[![context cost](https://img.shields.io/endpoint?url=&lt;raw badges/&lt;server&gt;.json URL&gt;)](&lt;methodology URL&gt;)</pre>
+
+  <details><summary>Full data table</summary>
+  <div class="tablewrap" style="margin-top:10px"><table>
+    <thead><tr><th>#</th><th>server</th><th>tokens</th><th>tools</th><th>band</th><th>category</th></tr></thead>
+    <tbody><tr><td>1</td><td>github</td><td class="num">54,422</td><td class="num">44</td><td>very heavy</td><td>vendor-official</td></tr>
+<tr><td>2</td><td>brave-search</td><td class="num">25,456</td><td class="num">8</td><td>heavy</td><td>vendor-official</td></tr>
+<tr><td>3</td><td>notion</td><td class="num">17,500</td><td class="num">24</td><td>heavy</td><td>vendor-official</td></tr>
+<tr><td>4</td><td>mcp-atlassian</td><td class="num">17,311</td><td class="num">63</td><td>heavy</td><td>community</td></tr>
+<tr><td>5</td><td>circleci</td><td class="num">11,912</td><td class="num">13</td><td>moderate</td><td>vendor-official</td></tr>
+<tr><td>6</td><td>apify</td><td class="num">10,426</td><td class="num">10</td><td>moderate</td><td>vendor-official</td></tr>
+<tr><td>7</td><td>firecrawl</td><td class="num">9,561</td><td class="num">27</td><td>moderate</td><td>vendor-official</td></tr>
+<tr><td>8</td><td>basic-memory</td><td class="num">9,188</td><td class="num">23</td><td>moderate</td><td>community</td></tr>
+<tr><td>9</td><td>hubspot</td><td class="num">9,158</td><td class="num">21</td><td>moderate</td><td>vendor-official</td></tr>
+<tr><td>10</td><td>mongodb</td><td class="num">7,926</td><td class="num">27</td><td>moderate</td><td>vendor-official</td></tr>
+<tr><td>11</td><td>sentry</td><td class="num">6,455</td><td class="num">9</td><td>moderate</td><td>vendor-official</td></tr>
+<tr><td>12</td><td>pinecone</td><td class="num">5,903</td><td class="num">9</td><td>moderate</td><td>vendor-official</td></tr>
+<tr><td>13</td><td>shopify-dev</td><td class="num">5,624</td><td class="num">5</td><td>moderate</td><td>vendor-official</td></tr>
+<tr><td>14</td><td>kubernetes</td><td class="num">5,268</td><td class="num">23</td><td>moderate</td><td>community</td></tr>
+<tr><td>15</td><td>blender</td><td class="num">5,258</td><td class="num">24</td><td>moderate</td><td>community</td></tr>
+<tr><td>16</td><td>aws-documentation</td><td class="num">5,074</td><td class="num">5</td><td>moderate</td><td>vendor-official</td></tr>
+<tr><td>17</td><td>supabase</td><td class="num">5,013</td><td class="num">29</td><td>moderate</td><td>vendor-official</td></tr>
+<tr><td>18</td><td>huggingface</td><td class="num">4,691</td><td class="num">4</td><td>light</td><td>vendor-official</td></tr>
+<tr><td>19</td><td>excel</td><td class="num">4,266</td><td class="num">25</td><td>light</td><td>community</td></tr>
+<tr><td>20</td><td>airtable</td><td class="num">4,207</td><td class="num">16</td><td>light</td><td>community</td></tr>
+<tr><td>21</td><td>playwright</td><td class="num">4,024</td><td class="num">24</td><td>light</td><td>vendor-official</td></tr>
+<tr><td>22</td><td>github-legacy</td><td class="num">3,548</td><td class="num">26</td><td>light</td><td>official-reference</td></tr>
+<tr><td>23</td><td>arxiv</td><td class="num">3,228</td><td class="num">14</td><td>light</td><td>community</td></tr>
+<tr><td>24</td><td>playwright-community</td><td class="num">2,920</td><td class="num">33</td><td>light</td><td>community</td></tr>
+<tr><td>25</td><td>chroma</td><td class="num">2,837</td><td class="num">13</td><td>light</td><td>vendor-official</td></tr>
+<tr><td>26</td><td>netlify</td><td class="num">2,831</td><td class="num">9</td><td>light</td><td>vendor-official</td></tr>
+<tr><td>27</td><td>filesystem</td><td class="num">2,823</td><td class="num">14</td><td>light</td><td>official-reference</td></tr>
+<tr><td>28</td><td>pulumi</td><td class="num">2,768</td><td class="num">12</td><td>light</td><td>vendor-official</td></tr>
+<tr><td>29</td><td>n8n-mcp</td><td class="num">2,636</td><td class="num">7</td><td>light</td><td>community</td></tr>
+<tr><td>30</td><td>memory</td><td class="num">2,378</td><td class="num">9</td><td>light</td><td>official-reference</td></tr>
+<tr><td>31</td><td>terraform</td><td class="num">2,061</td><td class="num">9</td><td>light</td><td>vendor-official</td></tr>
+<tr><td>32</td><td>everything</td><td class="num">1,708</td><td class="num">13</td><td>light</td><td>official-reference</td></tr>
+<tr><td>33</td><td>tavily</td><td class="num">1,653</td><td class="num">5</td><td>light</td><td>vendor-official</td></tr>
+<tr><td>34</td><td>searxng</td><td class="num">1,481</td><td class="num">4</td><td>light</td><td>community</td></tr>
+<tr><td>35</td><td>pandoc</td><td class="num">1,425</td><td class="num">1</td><td>light</td><td>community</td></tr>
+<tr><td>36</td><td>context7</td><td class="num">1,052</td><td class="num">2</td><td>light</td><td>vendor-official</td></tr>
+<tr><td>37</td><td>sequential-thinking</td><td class="num">992</td><td class="num">1</td><td>lean</td><td>official-reference</td></tr>
+<tr><td>38</td><td>bright-data</td><td class="num">978</td><td class="num">5</td><td>lean</td><td>vendor-official</td></tr>
+<tr><td>39</td><td>microsoft-learn</td><td class="num">972</td><td class="num">3</td><td>lean</td><td>vendor-official</td></tr>
+<tr><td>40</td><td>figma-context</td><td class="num">946</td><td class="num">2</td><td>lean</td><td>community</td></tr>
+<tr><td>41</td><td>duckduckgo</td><td class="num">724</td><td class="num">2</td><td>lean</td><td>community</td></tr>
+<tr><td>42</td><td>slack-legacy</td><td class="num">681</td><td class="num">8</td><td>lean</td><td>official-reference</td></tr>
+<tr><td>43</td><td>clickhouse</td><td class="num">581</td><td class="num">3</td><td>lean</td><td>vendor-official</td></tr>
+<tr><td>44</td><td>google-maps</td><td class="num">549</td><td class="num">7</td><td>lean</td><td>official-reference</td></tr>
+<tr><td>45</td><td>puppeteer</td><td class="num">540</td><td class="num">7</td><td>lean</td><td>official-reference</td></tr>
+<tr><td>46</td><td>exa</td><td class="num">486</td><td class="num">2</td><td>lean</td><td>vendor-official</td></tr>
+<tr><td>47</td><td>airbnb</td><td class="num">486</td><td class="num">2</td><td>lean</td><td>community</td></tr>
+<tr><td>48</td><td>cloudflare-docs</td><td class="num">422</td><td class="num">2</td><td>lean</td><td>vendor-official</td></tr>
+<tr><td>49</td><td>mysql</td><td class="num">393</td><td class="num">3</td><td>lean</td><td>community</td></tr>
+<tr><td>50</td><td>browserbase</td><td class="num">364</td><td class="num">6</td><td>lean</td><td>vendor-official</td></tr>
+<tr><td>51</td><td>deepwiki</td><td class="num">359</td><td class="num">3</td><td>lean</td><td>vendor-official</td></tr>
+<tr><td>52</td><td>gitlab</td><td class="num">336</td><td class="num">9</td><td>lean</td><td>official-reference</td></tr>
+<tr><td>53</td><td>brave-search-legacy</td><td class="num">319</td><td class="num">2</td><td>lean</td><td>official-reference</td></tr>
+<tr><td>54</td><td>qdrant</td><td class="num">188</td><td class="num">2</td><td>lean</td><td>vendor-official</td></tr>
+<tr><td>55</td><td>perplexity</td><td class="num">133</td><td class="num">1</td><td>lean</td><td>vendor-official</td></tr>
+<tr><td>56</td><td>markitdown</td><td class="num">64</td><td class="num">1</td><td>lean</td><td>vendor-official</td></tr>
+<tr><td>57</td><td>postgres</td><td class="num">32</td><td class="num">1</td><td>lean</td><td>official-reference</td></tr></tbody>
+  </table></div>
+  </details>
+
+  <footer>
+    Reproduce any number: <code>mcp-context-cost verify results/&lt;server&gt;/measurement.json</code> — re-derives tokens + SHA-256 from the raw capture.
+    Bands are provisional until frozen against the full-sweep distribution.
+  </footer>
+</div>
+<div id="tip" role="status"></div>
+<script>
+  (function () {
+    var tip = document.getElementById('tip');
+    document.querySelectorAll('.row[data-tip]').forEach(function (row) {
+      function show() { tip.textContent = row.getAttribute('data-tip'); tip.style.display = 'block'; }
+      function hide() { tip.style.display = 'none'; }
+      row.addEventListener('mouseenter', show);
+      row.addEventListener('focus', show);
+      row.addEventListener('mouseleave', hide);
+      row.addEventListener('blur', hide);
+      row.addEventListener('mousemove', function (e) {
+        var x = Math.min(e.clientX + 14, window.innerWidth - tip.offsetWidth - 8);
+        tip.style.left = x + 'px';
+        tip.style.top = Math.min(e.clientY + 14, window.innerHeight - tip.offsetHeight - 8) + 'px';
+      });
+      row.addEventListener('focus', function () {
+        var r = row.getBoundingClientRect();
+        tip.style.left = r.left + 'px';
+        tip.style.top = r.bottom + 6 + 'px';
+      });
+    });
+  })();
+</script>

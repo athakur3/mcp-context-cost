@@ -1,0 +1,52 @@
+{
+  "name": "mcp-context-cost",
+  "version": "0.1.0",
+  "description": "Reproducible context-cost badges for MCP servers — measure what a server's tool schemas cost before the agent does any work",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/athakur3/mcp-context-cost.git"
+  },
+  "homepage": "https://athakur3.github.io/mcp-context-cost/",
+  "bugs": "https://github.com/athakur3/mcp-context-cost/issues",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "tokens",
+    "context-window",
+    "badge",
+    "shields",
+    "developer-tools"
+  ],
+  "bin": {
+    "mcp-context-cost": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:badge": "./upstream/tests/badge-test.sh",
+    "typecheck": "tsc --noEmit",
+    "sweep": "tsx src/sweep/run.ts",
+    "sweep:all": "tsx src/sweep/sweep-all.ts",
+    "verify": "tsx src/cli.ts verify"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "js-tiktoken": "^1.0.21",
+    "yaml": "^2.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
+  }
+}

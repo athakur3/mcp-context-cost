@@ -1,0 +1,21 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "startup-failure",
+  "totalTokens": null,
+  "toolCount": null,
+  "tools": [],
+  "canonicalSha256": null,
+  "rawToolsCapture": null,
+  "measuredAt": "2026-08-16T12:08:42.670Z",
+  "serverName": "serena",
+  "launchCommand": "uvx --from git+https://github.com/oraios/serena serena start-mcp-server",
+  "notes": "server exited (code 1); stderr tail:    Updating https://github.com/oraios/serena (HEAD)\n   Building proxy-tools==0.1.0\n  × Failed to download and build `serena-agent @\n  │ git+https://github.com/oraios/serena@93ec043105f5ee4f5ff64ea0158041500d2cdc65`\n  ├─▶ Git operation failed\n  ╰─▶ Git executable not found. Ensure that Git is installed and available.\n",
+  "isolation": {
+    "docker": true,
+    "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

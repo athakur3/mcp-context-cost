@@ -1,0 +1,21 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "startup-failure",
+  "totalTokens": null,
+  "toolCount": null,
+  "tools": [],
+  "canonicalSha256": null,
+  "rawToolsCapture": null,
+  "measuredAt": "2026-08-16T12:08:19.349Z",
+  "serverName": "neo4j-cypher",
+  "launchCommand": "uvx mcp-neo4j-cypher",
+  "notes": "server exited (code 1); stderr tail: CK8xthI3sJK/lib/python3.12/site-packages/neo4j/_async/driver.py\", line 194, in driver\n    driver_type, security_type, parsed = parse_neo4j_uri(uri)\n                                         ^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/.uv-cache/archive-v0/9T8ENNDdfoCK8xthI3sJK/lib/python3.12/site-packages/neo4j/_api.py\", line 103, in parse_neo4j_uri\n    raise ConfigurationError(\nneo4j.exceptions.ConfigurationError: URI scheme '' is not supported. Supported URI schemes ar",
+  "isolation": {
+    "docker": true,
+    "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

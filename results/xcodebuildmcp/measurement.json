@@ -1,0 +1,21 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "startup-failure",
+  "totalTokens": null,
+  "toolCount": null,
+  "tools": [],
+  "canonicalSha256": null,
+  "rawToolsCapture": null,
+  "measuredAt": "2026-08-16T12:08:38.193Z",
+  "serverName": "xcodebuildmcp",
+  "launchCommand": "npx -y xcodebuildmcp@latest",
+  "notes": "server exited (code 1); stderr tail: \"none\"]\n      --style                   Output style (normal is detailed; minimal is compact MCP-like output)  [string] [choices: \"normal\", \"minimal\"] [default: \"normal\"]\n      --file-path-render-style  Render file artifacts as a compact tree or labeled list in text output  [string] [choices: \"tree\", \"list\"]\n  -h, --help                    Show help  [boolean]\n  -v, --version                 Show version number  [boolean]\n\nRun 'xcodebuildmcp mcp' to start the",
+  "isolation": {
+    "docker": true,
+    "image": "public.ecr.aws/docker/library/node:22-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

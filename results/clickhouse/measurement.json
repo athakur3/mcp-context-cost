@@ -1,0 +1,179 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "measured",
+  "totalTokens": 581,
+  "toolCount": 3,
+  "tools": [
+    {
+      "name": "list_databases",
+      "tokens": 79,
+      "descriptionTokens": 5,
+      "inputSchemaTokens": 9
+    },
+    {
+      "name": "list_tables",
+      "tokens": 370,
+      "descriptionTokens": 191,
+      "inputSchemaTokens": 104
+    },
+    {
+      "name": "run_query",
+      "tokens": 133,
+      "descriptionTokens": 50,
+      "inputSchemaTokens": 19
+    }
+  ],
+  "canonicalSha256": "d266049ab550225c0ca1055960d43f29c64b3e7cf03fa1241e633f9b2049f240",
+  "rawToolsCapture": [
+    {
+      "name": "list_databases",
+      "description": "List available ClickHouse databases",
+      "inputSchema": {
+        "properties": {},
+        "type": "object"
+      },
+      "outputSchema": {
+        "description": "Generic wrapper for non-object return types.",
+        "properties": {
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "list_tables",
+      "description": "List available ClickHouse tables in a database, including schema, comment,\nrow count, and column count.\n\nArgs:\n    database: The database to list tables from\n    like: Optional LIKE pattern to filter table names\n    not_like: Optional NOT LIKE pattern to exclude table names\n    page_token: Token for pagination, obtained from a previous call\n    page_size: Number of tables to return per page (default: 50)\n    include_detailed_columns: Whether to include detailed column metadata (default: True).\n        When False, the columns array will be empty but create_table_query still contains\n        all column information. This reduces payload size for large schemas.\n\nReturns:\n    A JSON-encoded string of an object containing:\n    - tables: List of table information (as dictionaries)\n    - next_page_token: Token for the next page, or None if no more pages\n    - total_tables: Total number of tables matching the filters",
+      "inputSchema": {
+        "properties": {
+          "database": {
+            "type": "string"
+          },
+          "like": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "not_like": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "page_token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "page_size": {
+            "default": 50,
+            "type": "integer"
+          },
+          "include_detailed_columns": {
+            "default": true,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "database"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "description": "Generic wrapper for non-object return types.",
+        "properties": {
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "run_query",
+      "description": "Execute SQL queries in ClickHouse. Queries run in read-only mode by default. Set CLICKHOUSE_ALLOW_WRITE_ACCESS=true to allow DDL and DML operations. Set CLICKHOUSE_ALLOW_DROP=true to additionally allow destructive operations (DROP, TRUNCATE).",
+      "inputSchema": {
+        "properties": {
+          "query": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "description": "Generic wrapper for non-object return types.",
+        "properties": {
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    }
+  ],
+  "measuredAt": "2026-08-16T12:02:01.842Z",
+  "serverName": "mcp-clickhouse",
+  "serverVersion": "2.14.7",
+  "launchCommand": "uvx mcp-clickhouse",
+  "envVarNames": [
+    "CLICKHOUSE_HOST",
+    "CLICKHOUSE_USER",
+    "CLICKHOUSE_PASSWORD"
+  ],
+  "isolation": {
+    "docker": true,
+    "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

@@ -1,0 +1,1092 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "measured",
+  "totalTokens": 4691,
+  "toolCount": 4,
+  "tools": [
+    {
+      "name": "hf_whoami",
+      "tokens": 1948,
+      "descriptionTokens": 30,
+      "inputSchemaTokens": 26
+    },
+    {
+      "name": "hub_repo_search",
+      "tokens": 364,
+      "descriptionTokens": 38,
+      "inputSchemaTokens": 278
+    },
+    {
+      "name": "hub_repo_details",
+      "tokens": 453,
+      "descriptionTokens": 76,
+      "inputSchemaTokens": 327
+    },
+    {
+      "name": "hf_fs",
+      "tokens": 1924,
+      "descriptionTokens": 966,
+      "inputSchemaTokens": 87
+    }
+  ],
+  "canonicalSha256": "b269a72bb6340ebfd5cf8170399b2606a9d7ea88b2277cfd6ca3511cec51a980",
+  "rawToolsCapture": [
+    {
+      "name": "hf_whoami",
+      "title": "Hugging Face User Info",
+      "description": "Inspect the current Hugging Face authentication context, including the account, visible organization memberships, and credential access details. Read-only and never returns credential values.",
+      "inputSchema": {
+        "type": "object",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {}
+      },
+      "annotations": {
+        "title": "Hugging Face User Info",
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "const": "authenticated"
+              },
+              "account": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "user",
+                      "org",
+                      "app"
+                    ]
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "is_pro": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "id",
+                  "type",
+                  "name"
+                ],
+                "additionalProperties": false
+              },
+              "organizations": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "name": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "display_name": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "role": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "plan": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "security_restrictions": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "resource_groups": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "name": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "role": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "role"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "display_name",
+                    "url"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "credential": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "personal_access_token"
+                      },
+                      "role": {
+                        "type": "string",
+                        "enum": [
+                          "read",
+                          "write",
+                          "fine_grained"
+                        ]
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      "permissions": {
+                        "type": "object",
+                        "properties": {
+                          "scoped": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "entity": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "model",
+                                        "dataset",
+                                        "space",
+                                        "bucket",
+                                        "kernel",
+                                        "collection",
+                                        "org",
+                                        "user",
+                                        "resource_group",
+                                        "oauth_app"
+                                      ]
+                                    },
+                                    "name": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "type"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "permissions": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  }
+                                },
+                                "restrictions": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "resource_type": {
+                                        "type": "string",
+                                        "const": "inference_endpoint"
+                                      },
+                                      "patterns": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string",
+                                          "minLength": 1
+                                        }
+                                      }
+                                    },
+                                    "required": [
+                                      "resource_type",
+                                      "patterns"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                }
+                              },
+                              "required": [
+                                "entity",
+                                "permissions"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "global": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          },
+                          "can_read_gated_repos": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "scoped"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "role"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "oauth"
+                      },
+                      "expires_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      "scopes": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    },
+                    "required": [
+                      "type"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "app_token"
+                      },
+                      "role": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "entities": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "model",
+                                "dataset",
+                                "space",
+                                "bucket",
+                                "kernel",
+                                "org"
+                              ]
+                            },
+                            "name": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "entities"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "other"
+                      },
+                      "expires_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      }
+                    },
+                    "required": [
+                      "type"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
+            "required": [
+              "status",
+              "account",
+              "organizations",
+              "credential"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "const": "anonymous"
+              },
+              "account": {
+                "type": "null"
+              },
+              "organizations": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "name": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "display_name": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "role": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "plan": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "security_restrictions": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "resource_groups": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "name": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "role": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "role"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "display_name",
+                    "url"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "credential": {
+                "type": "null"
+              },
+              "guidance": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "status",
+              "account",
+              "organizations",
+              "credential",
+              "guidance"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "const": "authentication_unverified"
+              },
+              "account": {
+                "type": "null"
+              },
+              "organizations": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "name": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "display_name": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "role": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "plan": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "security_restrictions": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "resource_groups": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "name": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "role": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "role"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "display_name",
+                    "url"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "credential": {
+                "type": "null"
+              },
+              "guidance": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "status",
+              "account",
+              "organizations",
+              "credential",
+              "guidance"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "hub_repo_search",
+      "title": "Repo Search",
+      "description": "Search Hugging Face repositories with a shared query interface. You can target models, datasets, spaces, or aggregate across multiple repo types in one call. Include links to repositories in your response.",
+      "inputSchema": {
+        "type": "object",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "query": {
+            "description": "Search term. Leave blank and specify sort + limit to browse trending or recent repositories.",
+            "type": "string"
+          },
+          "repo_types": {
+            "default": [
+              "model",
+              "dataset"
+            ],
+            "description": "Repository types to search. Defaults to [\"model\", \"dataset\"]. space uses keyword search via /api/spaces.",
+            "minItems": 1,
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "model",
+                "dataset",
+                "space"
+              ]
+            }
+          },
+          "author": {
+            "description": "Organization or user namespace to filter by (e.g. 'google', 'meta-llama', 'huggingface').",
+            "type": "string"
+          },
+          "filters": {
+            "description": "Optional hub filter tags. Applied to each selected repo type (e.g. [\"text-generation\"], [\"language:en\"], [\"mcp-server\"]).",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sort": {
+            "description": "Sort order (descending): trendingScore, downloads, likes, createdAt, lastModified",
+            "type": "string",
+            "enum": [
+              "trendingScore",
+              "downloads",
+              "likes",
+              "createdAt",
+              "lastModified"
+            ]
+          },
+          "limit": {
+            "default": 20,
+            "description": "Maximum number of results to return per selected repo type",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          }
+        }
+      },
+      "annotations": {
+        "title": "Repo Search",
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "hub_repo_details",
+      "title": "Hub Repository Details",
+      "description": "Get details for one or more Hugging Face repos (model, dataset, or space). Auto-detects type unless specified. For datasets, use operations: overview, dataset_structure, dataset_preview. Use dataset_structure first to discover configs, splits, sizes, and schema. Use dataset_preview only when config and split are known, unless the dataset has a single config/split.",
+      "inputSchema": {
+        "type": "object",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "repo_ids": {
+            "minItems": 1,
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Repo IDs for (models|dataset/space) - usually in author/name format (e.g. openai/gpt-oss-120b)"
+          },
+          "repo_type": {
+            "description": "Specify lookup type; otherwise auto-detects",
+            "type": "string",
+            "enum": [
+              "model",
+              "dataset",
+              "space"
+            ]
+          },
+          "operations": {
+            "description": "Details to return. Defaults to [\"overview\"]. For datasets, prefer [\"overview\", \"dataset_structure\"] first; then call [\"dataset_preview\"] with config and split.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "overview",
+                "dataset_structure",
+                "dataset_preview"
+              ]
+            }
+          },
+          "config": {
+            "description": "Dataset Viewer config. Required for dataset_preview when the dataset has multiple config/split options. Discover via dataset_structure.",
+            "type": "string"
+          },
+          "split": {
+            "description": "Dataset Viewer split. Required for dataset_preview when the dataset has multiple config/split options. Discover via dataset_structure.",
+            "type": "string"
+          },
+          "offset": {
+            "description": "Row offset for dataset_preview. Defaults to 0.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "limit": {
+            "description": "Row count for dataset_preview. Defaults to 5 and is clamped to 1-100.",
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "repo_ids"
+        ]
+      },
+      "annotations": {
+        "title": "Hub Repository Details",
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "hf_fs",
+      "title": "Hugging Face Hub: Find, use and view models, datasets, spaces, buckets, papers, documentation and collections. Get daily papers reports, and browse trending content. ",
+      "description": "Use to access the Hugging Face Hub. Navigate resources with ls, cat, attach, find, stat, and search over hf:// URIs. Roots: hf://models, hf://datasets, hf://spaces, hf://buckets, hf://collections, hf://papers, hf://docs. For papers, ls hf://papers/ARXIV_ID to discover related resources; cat hf://papers/ARXIV_ID/paper.md or metadata.json. Documentation paths include the current version from each product's llms.txt manifest.\n\nGrammar; each token below is one args array element:\n  ls     URI [(-R|-r|-lR|-laR|--recursive)] [(-l|-a|-la|-al|--long)] [--glob GLOB]\n             [(-type|--type|--entry-type) TYPE] [--sort SORT] [(-limit|--limit) N]\n  cat    URI [RELATIVE_PATH] [(-offset|--offset) N] [(-max-bytes|--max-bytes) N]\n  attach URI [--max-bytes N]\n  stat   URI [RELATIVE_PATH]\n  find   URI [(-R|-r|--recursive)] [(-name|--name|--glob) GLOB] [(-path|--path) GLOB]\n             [(-type|--type|--entry-type) TYPE] [(-limit|--limit) N]\n  search URI [QUERY...] [(-type|--type|--entry-type) TYPE] [--sort SORT]\n                        [--tag TAG] [--kind mcp] [(-limit|--limit) N]\n\nTYPE = file|dir|repo|bucket|collection|paper|link.\nType aliases: f=file, d=dir, l=link, model|dataset|space=repo.\nSORT = createdAt|downloads|likes|lastModified|likes30d|trendingScore|mainSize|id|trending|upvotes.\nURI uses hf://, a typed shorthand such as models/OWNER/REPO, or a canonical https://huggingface.co URL. QUERY and GLOB are each one string token.\nSearch URI: hf://models|datasets|spaces[/OWNER], hf://collections[/OWNER], any hf://docs scope, or exactly hf://papers; not hf://.\nRepository and collection searches may omit QUERY to browse or filter; documentation and paper searches require it.\nSearch joins multiple positional QUERY tokens with spaces. Cat and stat join one RELATIVE_PATH token to URI. Attach accepts exactly one complete URI and no RELATIVE_PATH or offset.\nDiscover before access: use search, ls, or find to locate targets; use stat when target type is uncertain; then reuse the returned URI, or the Target URI for links, verbatim.\nCat reads confirmed UTF-8 text files only. It rejects repositories, directories, model weights, archives, images, media, Parquet, and other binary content. Use stat for metadata instead.\nAttach returns a complete JPEG, PNG, or WebP repository or bucket file as image content. It classifies only by file extension, never truncates, and has a default and hard limit of 4 MiB; --max-bytes may only lower it.\nFind recursively matches names and paths within an owner namespace, repository, or supported documentation scope. Use search—not an unscoped find—for global repository, collection, documentation, paper, or Space discovery.\nLong-list flags are accepted for compatibility; hf_fs listings are already structured, so they do not alter output.\nFind is already recursive, so recursive flags are accepted without altering behavior.\nSpace search: hf://spaces uses semantic search; repeat --tag to require tags, or use --kind mcp for --tag mcp-server. hf://spaces/OWNER uses owner-scoped keyword search.\nDocumentation: ls hf://docs for products; search any docs scope; use returned hf:// URIs verbatim.\nTrending listings: ls hf://models/trending, hf://datasets/trending, or hf://spaces/trending. They return up to 20 entries.\nTrending paths imply trending order; --sort trending|trendingScore is redundant but valid.\nTrending papers: ls hf://papers/trending.\nSort is route-specific: use it with search or supported owner/collection listings, never with repository file listings or documentation. For global trending repositories, use the /trending listing URI.\nTYPE filters mixed results; omit it when the URI already fixes the result type.\nLimits and path-specific behavior are documented at hf://README.md.\nOmit --limit and --sort unless the request asks for a cap, ordering, or exhaustive results.\nNo pipes, redirects, shell expansion, or multiple commands.",
+      "inputSchema": {
+        "type": "object",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "cmd": {
+            "type": "string",
+            "enum": [
+              "ls",
+              "cat",
+              "attach",
+              "stat",
+              "find",
+              "search"
+            ],
+            "description": "Command to execute."
+          },
+          "args": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Command arguments; each array item is one grammar token."
+          }
+        },
+        "required": [
+          "cmd",
+          "args"
+        ]
+      },
+      "annotations": {
+        "title": "Hugging Face Hub: Find, use and view models, datasets, spaces, buckets, papers, documentation and collections. Get daily papers reports, and browse trending content. ",
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": true,
+        "openWorldHint": true
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "uri": {
+            "type": "string"
+          },
+          "op": {
+            "type": "string",
+            "enum": [
+              "ls",
+              "cat",
+              "attach",
+              "stat",
+              "find",
+              "search"
+            ]
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "file",
+                    "dir",
+                    "repo",
+                    "bucket",
+                    "collection",
+                    "paper",
+                    "link"
+                  ]
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "target_uri": {
+                  "type": "string"
+                },
+                "repo_type": {
+                  "type": "string",
+                  "enum": [
+                    "model",
+                    "dataset",
+                    "space",
+                    "bucket"
+                  ]
+                },
+                "size": {
+                  "type": "number"
+                },
+                "total_files": {
+                  "type": "number"
+                },
+                "lfs": {
+                  "type": "boolean"
+                },
+                "private": {
+                  "type": "boolean"
+                },
+                "gated": {
+                  "anyOf": [
+                    {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    {
+                      "type": "string",
+                      "enum": [
+                        "auto",
+                        "manual"
+                      ]
+                    }
+                  ]
+                },
+                "likes": {
+                  "type": "number"
+                },
+                "downloads": {
+                  "type": "number"
+                },
+                "task": {
+                  "type": "string"
+                },
+                "library": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "trending_score": {
+                  "type": "number"
+                },
+                "sdk": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "semantic_relevance": {
+                  "type": "number"
+                },
+                "anchor": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "upvotes": {
+                  "type": "number"
+                },
+                "created_at": {
+                  "type": "string"
+                },
+                "published_at": {
+                  "type": "string"
+                },
+                "daily_papers_date": {
+                  "type": "string"
+                },
+                "daily_papers_uri": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "arxiv_url": {
+                  "type": "string"
+                },
+                "observed_at": {
+                  "type": "string"
+                },
+                "updated_at": {
+                  "type": "string"
+                },
+                "content_type": {
+                  "type": "string",
+                  "enum": [
+                    "application/json",
+                    "text/markdown"
+                  ]
+                }
+              },
+              "required": [
+                "type",
+                "path"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "path": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "content_type": {
+            "type": "string",
+            "enum": [
+              "application/json",
+              "text/markdown"
+            ]
+          },
+          "mime_type": {
+            "type": "string",
+            "enum": [
+              "image/jpeg",
+              "image/png",
+              "image/webp"
+            ]
+          },
+          "section": {
+            "type": "string"
+          },
+          "bytes": {
+            "type": "number"
+          },
+          "exists": {
+            "type": "boolean"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "namespace",
+              "repo",
+              "dir",
+              "file",
+              "collection",
+              "paper",
+              "link",
+              "missing"
+            ]
+          },
+          "namespace": {
+            "type": "string"
+          },
+          "size": {
+            "type": "number"
+          },
+          "lfs": {
+            "type": "boolean"
+          },
+          "target_uri": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "string"
+          },
+          "daily_papers_date": {
+            "type": "string"
+          },
+          "daily_papers_uri": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "arxiv_url": {
+            "type": "string"
+          },
+          "truncated": {
+            "type": "boolean"
+          },
+          "truncation_reason": {
+            "type": "string",
+            "enum": [
+              "entry_limit",
+              "max_bytes",
+              "limit",
+              "provider_limit"
+            ]
+          },
+          "truncation_message": {
+            "type": "string"
+          },
+          "next_offset": {
+            "type": "number"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "uri",
+          "op"
+        ],
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "op": {
+                  "const": "attach"
+                }
+              },
+              "required": [
+                "op"
+              ]
+            },
+            "then": {
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "mime_type": {
+                  "type": "string",
+                  "enum": [
+                    "image/jpeg",
+                    "image/png",
+                    "image/webp"
+                  ]
+                },
+                "bytes": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 8388608
+                }
+              },
+              "required": [
+                "path",
+                "mime_type",
+                "bytes"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "measuredAt": "2026-08-16T12:04:34.825Z",
+  "serverName": "huggingface.co/mcp",
+  "serverVersion": "0.4.9",
+  "launchCommand": "npx -y mcp-remote https://huggingface.co/mcp",
+  "envVarNames": [],
+  "isolation": {
+    "docker": true,
+    "image": "public.ecr.aws/docker/library/node:22-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

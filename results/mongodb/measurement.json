@@ -1,0 +1,2814 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "measured",
+  "totalTokens": 7926,
+  "toolCount": 27,
+  "tools": [
+    {
+      "name": "aggregate-db",
+      "tokens": 256,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 89
+    },
+    {
+      "name": "aggregate",
+      "tokens": 524,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 345
+    },
+    {
+      "name": "collection-indexes",
+      "tokens": 338,
+      "descriptionTokens": 6,
+      "inputSchemaTokens": 59
+    },
+    {
+      "name": "collection-schema",
+      "tokens": 223,
+      "descriptionTokens": 6,
+      "inputSchemaTokens": 86
+    },
+    {
+      "name": "collection-storage-size",
+      "tokens": 183,
+      "descriptionTokens": 6,
+      "inputSchemaTokens": 59
+    },
+    {
+      "name": "connect",
+      "tokens": 195,
+      "descriptionTokens": 40,
+      "inputSchemaTokens": 49
+    },
+    {
+      "name": "count",
+      "tokens": 202,
+      "descriptionTokens": 22,
+      "inputSchemaTokens": 75
+    },
+    {
+      "name": "create-collection",
+      "tokens": 205,
+      "descriptionTokens": 20,
+      "inputSchemaTokens": 59
+    },
+    {
+      "name": "create-index",
+      "tokens": 761,
+      "descriptionTokens": 6,
+      "inputSchemaTokens": 607
+    },
+    {
+      "name": "db-stats",
+      "tokens": 183,
+      "descriptionTokens": 11,
+      "inputSchemaTokens": 50
+    },
+    {
+      "name": "delete-many",
+      "tokens": 215,
+      "descriptionTokens": 13,
+      "inputSchemaTokens": 75
+    },
+    {
+      "name": "disconnect",
+      "tokens": 166,
+      "descriptionTokens": 11,
+      "inputSchemaTokens": 41
+    },
+    {
+      "name": "drop-collection",
+      "tokens": 209,
+      "descriptionTokens": 22,
+      "inputSchemaTokens": 59
+    },
+    {
+      "name": "drop-database",
+      "tokens": 181,
+      "descriptionTokens": 11,
+      "inputSchemaTokens": 50
+    },
+    {
+      "name": "drop-index",
+      "tokens": 233,
+      "descriptionTokens": 10,
+      "inputSchemaTokens": 86
+    },
+    {
+      "name": "explain",
+      "tokens": 813,
+      "descriptionTokens": 18,
+      "inputSchemaTokens": 628
+    },
+    {
+      "name": "export",
+      "tokens": 657,
+      "descriptionTokens": 13,
+      "inputSchemaTokens": 581
+    },
+    {
+      "name": "find",
+      "tokens": 375,
+      "descriptionTokens": 9,
+      "inputSchemaTokens": 209
+    },
+    {
+      "name": "insert-many",
+      "tokens": 260,
+      "descriptionTokens": 31,
+      "inputSchemaTokens": 84
+    },
+    {
+      "name": "list-collections",
+      "tokens": 202,
+      "descriptionTokens": 7,
+      "inputSchemaTokens": 50
+    },
+    {
+      "name": "list-connections",
+      "tokens": 270,
+      "descriptionTokens": 21,
+      "inputSchemaTokens": 29
+    },
+    {
+      "name": "list-databases",
+      "tokens": 207,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 41
+    },
+    {
+      "name": "mongodb-logs",
+      "tokens": 217,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 70
+    },
+    {
+      "name": "rename-collection",
+      "tokens": 233,
+      "descriptionTokens": 9,
+      "inputSchemaTokens": 82
+    },
+    {
+      "name": "update-many",
+      "tokens": 295,
+      "descriptionTokens": 32,
+      "inputSchemaTokens": 101
+    },
+    {
+      "name": "list-knowledge-sources",
+      "tokens": 132,
+      "descriptionTokens": 32,
+      "inputSchemaTokens": 29
+    },
+    {
+      "name": "search-knowledge",
+      "tokens": 189,
+      "descriptionTokens": 36,
+      "inputSchemaTokens": 86
+    }
+  ],
+  "canonicalSha256": "c771e7295dc27668861b2a251566196a3e30b5b3ac282f7736aab96891bff300",
+  "rawToolsCapture": [
+    {
+      "name": "aggregate-db",
+      "description": "Run an aggregation against a MongoDB database",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "database": {
+            "type": "string"
+          },
+          "pipeline": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": {}
+            }
+          },
+          "responseBytesLimit": {
+            "default": 1048576,
+            "type": "number"
+          }
+        },
+        "required": [
+          "connectionId",
+          "database",
+          "pipeline"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "aggregate-db",
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "documents": {
+            "type": "array",
+            "items": {}
+          },
+          "aggResultsCount": {
+            "type": "number"
+          },
+          "appliedLimits": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "config.maxDocumentsPerQuery",
+                "config.maxBytesPerQuery",
+                "tool.responseBytesLimit"
+              ]
+            }
+          }
+        },
+        "required": [
+          "documents",
+          "appliedLimits"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "aggregate",
+      "description": "Run an aggregation against a MongoDB collection",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          },
+          "pipeline": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "$vectorSearch": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "exact": {
+                              "default": false,
+                              "type": "boolean"
+                            },
+                            "index": {
+                              "type": "string"
+                            },
+                            "path": {
+                              "type": "string"
+                            },
+                            "numCandidates": {
+                              "type": "number"
+                            },
+                            "limit": {
+                              "default": 10,
+                              "type": "number"
+                            },
+                            "filter": {
+                              "type": "object",
+                              "properties": {},
+                              "additionalProperties": {}
+                            },
+                            "queryVector": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              }
+                            }
+                          },
+                          "required": [
+                            "index",
+                            "path",
+                            "queryVector"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "exact": {
+                              "default": false,
+                              "type": "boolean"
+                            },
+                            "index": {
+                              "type": "string"
+                            },
+                            "path": {
+                              "type": "string"
+                            },
+                            "numCandidates": {
+                              "type": "number"
+                            },
+                            "limit": {
+                              "default": 10,
+                              "type": "number"
+                            },
+                            "filter": {
+                              "type": "object",
+                              "properties": {},
+                              "additionalProperties": {}
+                            },
+                            "query": {
+                              "type": "object",
+                              "properties": {
+                                "text": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "text"
+                              ]
+                            },
+                            "model": {
+                              "type": "string",
+                              "enum": [
+                                "voyage-4",
+                                "voyage-4-large",
+                                "voyage-4-lite",
+                                "voyage-code-3"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "index",
+                            "path",
+                            "query"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "$vectorSearch"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {},
+                  "additionalProperties": {}
+                }
+              ]
+            }
+          },
+          "responseBytesLimit": {
+            "default": 1048576,
+            "type": "number"
+          }
+        },
+        "required": [
+          "connectionId",
+          "database",
+          "collection",
+          "pipeline"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "aggregate",
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "documents": {
+            "type": "array",
+            "items": {}
+          },
+          "count": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "const": "indeterminate"
+              }
+            ]
+          },
+          "appliedLimits": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "config.maxDocumentsPerQuery",
+                "config.maxBytesPerQuery",
+                "tool.responseBytesLimit"
+              ]
+            }
+          }
+        },
+        "required": [
+          "documents",
+          "count",
+          "appliedLimits"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "collection-indexes",
+      "description": "Describe the indexes for a collection",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "connectionId",
+          "database",
+          "collection"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "collection-indexes",
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "classicIndexes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "key": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              },
+              "required": [
+                "name",
+                "key"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "searchIndexes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "queryable": {
+                  "type": "boolean"
+                },
+                "latestDefinition": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              },
+              "required": [
+                "name",
+                "type",
+                "status",
+                "queryable",
+                "latestDefinition"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "classicIndexesCount": {
+            "type": "number"
+          },
+          "searchIndexesCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "classicIndexes",
+          "searchIndexes",
+          "classicIndexesCount",
+          "searchIndexesCount"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "collection-schema",
+      "description": "Describe the schema for a collection",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          },
+          "sampleSize": {
+            "default": 50,
+            "type": "number"
+          },
+          "responseBytesLimit": {
+            "default": 1048576,
+            "type": "number"
+          }
+        },
+        "required": [
+          "connectionId",
+          "database",
+          "collection"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "collection-schema",
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "schema": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "fieldsCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "schema",
+          "fieldsCount"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "collection-storage-size",
+      "description": "Gets the size of the collection",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "connectionId",
+          "database",
+          "collection"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "collection-storage-size",
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "size": {
+            "type": "number"
+          },
+          "units": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "size",
+          "units"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "connect",
+      "description": "Connect to a MongoDB instance and get back a connectionId to pass to the other MongoDB tools. Each call establishes a new, independent connection — multiple connections can be active at the same time.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionString": {
+            "type": "string"
+          },
+          "connectionName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "connectionString"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "connect",
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "connectionId"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "count",
+      "description": "Gets the number of documents in a MongoDB collection using db.collection.count() and query as an optional filter parameter",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          },
+          "query": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": {}
+          }
+        },
+        "required": [
+          "connectionId",
+          "database",
+          "collection"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "count",
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "count"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "create-collection",
+      "description": "Creates a new collection in a database. If the database doesn't exist, it will be created automatically.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "connectionId",
+          "database",
+          "collection"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "create-collection",
+        "openWorldHint": true,
+        "destructiveHint": false,
+        "readOnlyHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          },
+          "created": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "database",
+          "collection",
+          "created"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "create-index",
+      "description": "Create an index for a collection",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "definition": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "classic"
+                    },
+                    "keys": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "const": 1
+                          },
+                          {
+                            "type": "number",
+                            "const": -1
+                          },
+                          {
+                            "type": "string",
+                            "const": "2d"
+                          },
+                          {
+                            "type": "string",
+                            "const": "2dsphere"
+                          },
+                          {
+                            "type": "string",
+                            "const": "text"
+                          },
+                          {
+                            "type": "string",
+                            "const": "geoHaystack"
+                          },
+                          {
+                            "type": "string",
+                            "const": "hashed"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "keys"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "vectorSearch"
+                    },
+                    "fields": {
+                      "type": "array",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "filter"
+                              },
+                              "path": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "path"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "vector"
+                              },
+                              "path": {
+                                "type": "string"
+                              },
+                              "numDimensions": {
+                                "default": 1024,
+                                "type": "number"
+                              },
+                              "similarity": {
+                                "default": "euclidean",
+                                "type": "string",
+                                "enum": [
+                                  "cosine",
+                                  "euclidean",
+                                  "dotProduct"
+                                ]
+                              },
+                              "quantization": {
+                                "default": "none",
+                                "type": "string",
+                                "enum": [
+                                  "none",
+                                  "scalar",
+                                  "binary"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "path"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "autoEmbed"
+                              },
+                              "path": {
+                                "type": "string"
+                              },
+                              "model": {
+                                "type": "string",
+                                "enum": [
+                                  "voyage-4",
+                                  "voyage-4-large",
+                                  "voyage-4-lite",
+                                  "voyage-code-3"
+                                ]
+                              },
+                              "modality": {
+                                "type": "string",
+                                "enum": [
+                                  "text"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "path",
+                              "model",
+                              "modality"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "fields"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "search"
+                    },
+                    "analyzer": {
+                      "default": "lucene.standard",
+                      "type": "string"
+                    },
+                    "mappings": {
+                      "type": "object",
+                      "properties": {
+                        "dynamic": {
+                          "default": false,
+                          "anyOf": [
+                            {
+                              "type": "boolean"
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "typeSet": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "typeSet"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
+                        },
+                        "fields": {
+                          "type": "object",
+                          "propertyNames": {
+                            "type": "string"
+                          },
+                          "additionalProperties": {}
+                        }
+                      },
+                      "additionalProperties": {}
+                    },
+                    "numPartitions": {
+                      "default": "1",
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "const": "1"
+                        },
+                        {
+                          "type": "string",
+                          "const": "2"
+                        },
+                        {
+                          "type": "string",
+                          "const": "4"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "mappings"
+                  ],
+                  "additionalProperties": {}
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "connectionId",
+          "database",
+          "collection",
+          "definition"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "create-index",
+        "openWorldHint": true,
+        "destructiveHint": false,
+        "readOnlyHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          },
+          "indexName": {
+            "type": "string"
+          },
+          "indexType": {
+            "type": "string",
+            "enum": [
+              "classic",
+              "vectorSearch",
+              "search"
+            ]
+          }
+        },
+        "required": [
+          "database",
+          "collection",
+          "indexName",
+          "indexType"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "db-stats",
+      "description": "Returns statistics that reflect the use state of a single database",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "database": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "connectionId",
+          "database"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "db-stats",
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "stats": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          }
+        },
+        "required": [
+          "stats"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "delete-many",
+      "description": "Removes all documents that match the filter from a MongoDB collection",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          },
+          "filter": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": {}
+          }
+        },
+        "required": [
+          "connectionId",
+          "database",
+          "collection"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "delete-many",
+        "openWorldHint": true,
+        "readOnlyHint": false,
+        "destructiveHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          },
+          "deletedCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "database",
+          "collection",
+          "deletedCount"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "disconnect",
+      "description": "Close a MongoDB connection and revoke its connectionId.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "connectionId"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "disconnect",
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "removed",
+              "disconnected"
+            ]
+          }
+        },
+        "required": [
+          "outcome"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "drop-collection",
+      "description": "Removes a collection or view from the database. The method also removes any indexes associated with the dropped collection.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "connectionId",
+          "database",
+          "collection"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "drop-collection",
+        "openWorldHint": true,
+        "readOnlyHint": false,
+        "destructiveHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          },
+          "dropped": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "database",
+          "collection",
+          "dropped"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "drop-database",
+      "description": "Removes the specified database, deleting the associated data files",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "database": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "connectionId",
+          "database"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "drop-database",
+        "openWorldHint": true,
+        "readOnlyHint": false,
+        "destructiveHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "database": {
+            "type": "string"
+          },
+          "dropped": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "database",
+          "dropped"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "drop-index",
+      "description": "Drop an index for the provided database and collection.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          },
+          "indexName": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "classic",
+              "search"
+            ]
+          }
+        },
+        "required": [
+          "connectionId",
+          "database",
+          "collection",
+          "indexName",
+          "type"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "drop-index",
+        "openWorldHint": true,
+        "readOnlyHint": false,
+        "destructiveHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          },
+          "indexName": {
+            "type": "string"
+          },
+          "dropped": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "database",
+          "collection",
+          "indexName",
+          "dropped"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "explain",
+      "description": "Returns statistics describing the execution of the winning plan chosen by the query optimizer for the evaluated method",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          },
+          "method": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "const": "aggregate"
+                    },
+                    "arguments": {
+                      "type": "object",
+                      "properties": {
+                        "pipeline": {
+                          "type": "array",
+                          "items": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "$vectorSearch": {
+                                    "anyOf": [
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "exact": {
+                                            "default": false,
+                                            "type": "boolean"
+                                          },
+                                          "index": {
+                                            "type": "string"
+                                          },
+                                          "path": {
+                                            "type": "string"
+                                          },
+                                          "numCandidates": {
+                                            "type": "number"
+                                          },
+                                          "limit": {
+                                            "default": 10,
+                                            "type": "number"
+                                          },
+                                          "filter": {
+                                            "type": "object",
+                                            "properties": {},
+                                            "additionalProperties": {}
+                                          },
+                                          "queryVector": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "number"
+                                            }
+                                          }
+                                        },
+                                        "required": [
+                                          "index",
+                                          "path",
+                                          "queryVector"
+                                        ]
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "exact": {
+                                            "default": false,
+                                            "type": "boolean"
+                                          },
+                                          "index": {
+                                            "type": "string"
+                                          },
+                                          "path": {
+                                            "type": "string"
+                                          },
+                                          "numCandidates": {
+                                            "type": "number"
+                                          },
+                                          "limit": {
+                                            "default": 10,
+                                            "type": "number"
+                                          },
+                                          "filter": {
+                                            "type": "object",
+                                            "properties": {},
+                                            "additionalProperties": {}
+                                          },
+                                          "query": {
+                                            "type": "object",
+                                            "properties": {
+                                              "text": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "required": [
+                                              "text"
+                                            ]
+                                          },
+                                          "model": {
+                                            "type": "string",
+                                            "enum": [
+                                              "voyage-4",
+                                              "voyage-4-large",
+                                              "voyage-4-lite",
+                                              "voyage-code-3"
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "index",
+                                          "path",
+                                          "query"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "$vectorSearch"
+                                ]
+                              },
+                              {
+                                "type": "object",
+                                "properties": {},
+                                "additionalProperties": {}
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "pipeline"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "arguments"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "const": "find"
+                    },
+                    "arguments": {
+                      "type": "object",
+                      "properties": {
+                        "filter": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": {}
+                        },
+                        "projection": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": {}
+                        },
+                        "limit": {
+                          "default": 10,
+                          "type": "number"
+                        },
+                        "sort": {
+                          "type": "object",
+                          "propertyNames": {
+                            "type": "string"
+                          },
+                          "additionalProperties": {
+                            "anyOf": [
+                              {
+                                "type": "number",
+                                "const": 1
+                              },
+                              {
+                                "type": "number",
+                                "const": -1
+                              },
+                              {
+                                "type": "string",
+                                "const": "asc"
+                              },
+                              {
+                                "type": "string",
+                                "const": "desc"
+                              },
+                              {
+                                "type": "string",
+                                "const": "ascending"
+                              },
+                              {
+                                "type": "string",
+                                "const": "descending"
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "$meta": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "$meta"
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "arguments"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "const": "count"
+                    },
+                    "arguments": {
+                      "type": "object",
+                      "properties": {
+                        "query": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": {}
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "arguments"
+                  ]
+                }
+              ]
+            }
+          },
+          "verbosity": {
+            "default": "queryPlanner",
+            "type": "string",
+            "enum": [
+              "queryPlanner",
+              "queryPlannerExtended",
+              "executionStats",
+              "allPlansExecution"
+            ]
+          }
+        },
+        "required": [
+          "connectionId",
+          "database",
+          "collection",
+          "method"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "explain",
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "explainResult": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "aggregate",
+              "find",
+              "count"
+            ]
+          },
+          "verbosity": {
+            "type": "string",
+            "enum": [
+              "queryPlanner",
+              "queryPlannerExtended",
+              "executionStats",
+              "allPlansExecution"
+            ]
+          }
+        },
+        "required": [
+          "explainResult",
+          "method",
+          "verbosity"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "export",
+      "description": "Export a query or aggregation results in the specified EJSON format.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          },
+          "exportTitle": {
+            "type": "string"
+          },
+          "exportTarget": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "const": "find"
+                    },
+                    "arguments": {
+                      "type": "object",
+                      "properties": {
+                        "filter": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": {}
+                        },
+                        "projection": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": {}
+                        },
+                        "limit": {
+                          "type": "number"
+                        },
+                        "sort": {
+                          "type": "object",
+                          "propertyNames": {
+                            "type": "string"
+                          },
+                          "additionalProperties": {
+                            "anyOf": [
+                              {
+                                "type": "number",
+                                "const": 1
+                              },
+                              {
+                                "type": "number",
+                                "const": -1
+                              },
+                              {
+                                "type": "string",
+                                "const": "asc"
+                              },
+                              {
+                                "type": "string",
+                                "const": "desc"
+                              },
+                              {
+                                "type": "string",
+                                "const": "ascending"
+                              },
+                              {
+                                "type": "string",
+                                "const": "descending"
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "$meta": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "$meta"
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "arguments"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "const": "aggregate"
+                    },
+                    "arguments": {
+                      "type": "object",
+                      "properties": {
+                        "pipeline": {
+                          "type": "array",
+                          "items": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "$vectorSearch": {
+                                    "anyOf": [
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "exact": {
+                                            "default": false,
+                                            "type": "boolean"
+                                          },
+                                          "index": {
+                                            "type": "string"
+                                          },
+                                          "path": {
+                                            "type": "string"
+                                          },
+                                          "numCandidates": {
+                                            "type": "number"
+                                          },
+                                          "limit": {
+                                            "default": 10,
+                                            "type": "number"
+                                          },
+                                          "filter": {
+                                            "type": "object",
+                                            "properties": {},
+                                            "additionalProperties": {}
+                                          },
+                                          "queryVector": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "number"
+                                            }
+                                          }
+                                        },
+                                        "required": [
+                                          "index",
+                                          "path",
+                                          "queryVector"
+                                        ]
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "exact": {
+                                            "default": false,
+                                            "type": "boolean"
+                                          },
+                                          "index": {
+                                            "type": "string"
+                                          },
+                                          "path": {
+                                            "type": "string"
+                                          },
+                                          "numCandidates": {
+                                            "type": "number"
+                                          },
+                                          "limit": {
+                                            "default": 10,
+                                            "type": "number"
+                                          },
+                                          "filter": {
+                                            "type": "object",
+                                            "properties": {},
+                                            "additionalProperties": {}
+                                          },
+                                          "query": {
+                                            "type": "object",
+                                            "properties": {
+                                              "text": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "required": [
+                                              "text"
+                                            ]
+                                          },
+                                          "model": {
+                                            "type": "string",
+                                            "enum": [
+                                              "voyage-4",
+                                              "voyage-4-large",
+                                              "voyage-4-lite",
+                                              "voyage-code-3"
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "index",
+                                          "path",
+                                          "query"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "$vectorSearch"
+                                ]
+                              },
+                              {
+                                "type": "object",
+                                "properties": {},
+                                "additionalProperties": {}
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "pipeline"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "arguments"
+                  ]
+                }
+              ]
+            }
+          },
+          "jsonExportFormat": {
+            "default": "relaxed",
+            "type": "string",
+            "enum": [
+              "relaxed",
+              "canonical"
+            ]
+          }
+        },
+        "required": [
+          "connectionId",
+          "database",
+          "collection",
+          "exportTitle",
+          "exportTarget"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "export",
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      }
+    },
+    {
+      "name": "find",
+      "description": "Run a find query against a MongoDB collection",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          },
+          "filter": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": {}
+          },
+          "projection": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": {}
+          },
+          "limit": {
+            "default": 10,
+            "type": "number"
+          },
+          "sort": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "const": 1
+                },
+                {
+                  "type": "number",
+                  "const": -1
+                },
+                {
+                  "type": "string",
+                  "const": "asc"
+                },
+                {
+                  "type": "string",
+                  "const": "desc"
+                },
+                {
+                  "type": "string",
+                  "const": "ascending"
+                },
+                {
+                  "type": "string",
+                  "const": "descending"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "$meta": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "$meta"
+                  ]
+                }
+              ]
+            }
+          },
+          "responseBytesLimit": {
+            "default": 1048576,
+            "type": "number"
+          }
+        },
+        "required": [
+          "connectionId",
+          "database",
+          "collection"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "find",
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "documents": {
+            "type": "array",
+            "items": {}
+          },
+          "queryResultsCount": {
+            "type": "number"
+          },
+          "appliedLimits": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "config.maxDocumentsPerQuery",
+                "config.maxBytesPerQuery",
+                "tool.responseBytesLimit"
+              ]
+            }
+          }
+        },
+        "required": [
+          "documents",
+          "appliedLimits"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "insert-many",
+      "description": "Insert an array of documents into a MongoDB collection. If the list of documents is above com.mongodb/maxRequestPayloadBytes, consider inserting them in batches.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          },
+          "documents": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": {}
+            }
+          }
+        },
+        "required": [
+          "connectionId",
+          "database",
+          "collection",
+          "documents"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "insert-many",
+        "openWorldHint": true,
+        "destructiveHint": false,
+        "readOnlyHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          },
+          "insertedCount": {
+            "type": "number"
+          },
+          "insertedIds": {
+            "type": "array",
+            "items": {}
+          }
+        },
+        "required": [
+          "database",
+          "collection",
+          "insertedCount",
+          "insertedIds"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "list-collections",
+      "description": "List all collections for a given database",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "database": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "connectionId",
+          "database"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "list-collections",
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "collections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "totalCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "collections",
+          "totalCount"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "list-connections",
+      "description": "List the active MongoDB connections and their connectionIds. Use this to find a connectionId established earlier.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "list-connections",
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "connectionId": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "source": {
+                  "type": "string",
+                  "enum": [
+                    "explicit",
+                    "preconfigured"
+                  ]
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "connected",
+                    "connecting",
+                    "disconnected",
+                    "errored"
+                  ]
+                },
+                "description": {
+                  "type": "string"
+                },
+                "lastError": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "lastUsedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "connectionId",
+                "name",
+                "source",
+                "description",
+                "createdAt",
+                "lastUsedAt"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "connections"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "list-databases",
+      "description": "List all databases for a MongoDB connection",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "connectionId"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "list-databases",
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "databases": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "size": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "name",
+                "size"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "totalCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "databases",
+          "totalCount"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "mongodb-logs",
+      "description": "Returns the most recent logged mongod events",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "type": {
+            "default": "global",
+            "type": "string",
+            "enum": [
+              "global",
+              "startupWarnings"
+            ]
+          },
+          "limit": {
+            "default": 50,
+            "type": "number"
+          }
+        },
+        "required": [
+          "connectionId"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "mongodb-logs",
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "logs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "totalLinesWritten": {
+            "type": "number"
+          },
+          "shownCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "logs",
+          "totalLinesWritten",
+          "shownCount"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "rename-collection",
+      "description": "Renames a collection in a MongoDB database",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          },
+          "newName": {
+            "type": "string"
+          },
+          "dropTarget": {
+            "default": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "connectionId",
+          "database",
+          "collection",
+          "newName"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "rename-collection",
+        "openWorldHint": true,
+        "readOnlyHint": false,
+        "destructiveHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "database": {
+            "type": "string"
+          },
+          "oldCollection": {
+            "type": "string"
+          },
+          "newCollection": {
+            "type": "string"
+          },
+          "renamed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "database",
+          "oldCollection",
+          "newCollection",
+          "renamed"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "update-many",
+      "description": "Updates all documents that match the specified filter for a collection. If the list of documents is above com.mongodb/maxRequestPayloadBytes, consider updating them in batches.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          },
+          "filter": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": {}
+          },
+          "update": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": {}
+          },
+          "upsert": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "connectionId",
+          "database",
+          "collection",
+          "update"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "update-many",
+        "openWorldHint": true,
+        "readOnlyHint": false,
+        "destructiveHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "database": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          },
+          "matchedCount": {
+            "type": "number"
+          },
+          "modifiedCount": {
+            "type": "number"
+          },
+          "upsertedCount": {
+            "type": "number"
+          },
+          "upsertedId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "database",
+          "collection",
+          "matchedCount",
+          "modifiedCount",
+          "upsertedCount"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "list-knowledge-sources",
+      "description": "List available data sources in the MongoDB Assistant knowledge base. Use this to explore available data sources or to find search filter parameters to use in search-knowledge.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "list-knowledge-sources",
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      }
+    },
+    {
+      "name": "search-knowledge",
+      "description": "Search for information in the MongoDB Assistant knowledge base. This includes official documentation, curated expert guidance, and other resources provided by MongoDB. Supports filtering by data source and version.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "limit": {
+            "default": 5,
+            "type": "number"
+          },
+          "dataSources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "versionLabel": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name"
+              ]
+            }
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "search-knowledge",
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "com.mongodb/transport": "stdio",
+        "com.mongodb/maxRequestPayloadBytes": 52428800
+      }
+    }
+  ],
+  "measuredAt": "2026-08-16T12:02:19.138Z",
+  "serverName": "MongoDB MCP Server",
+  "serverVersion": "2.1.0",
+  "launchCommand": "npx -y mongodb-mcp-server",
+  "envVarNames": [],
+  "isolation": {
+    "docker": true,
+    "image": "public.ecr.aws/docker/library/node:22-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

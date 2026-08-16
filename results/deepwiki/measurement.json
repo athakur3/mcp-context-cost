@@ -1,0 +1,156 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "measured",
+  "totalTokens": 359,
+  "toolCount": 3,
+  "tools": [
+    {
+      "name": "ask_question",
+      "tokens": 148,
+      "descriptionTokens": 19,
+      "inputSchemaTokens": 76
+    },
+    {
+      "name": "read_wiki_contents",
+      "tokens": 104,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 41
+    },
+    {
+      "name": "read_wiki_structure",
+      "tokens": 108,
+      "descriptionTokens": 12,
+      "inputSchemaTokens": 41
+    }
+  ],
+  "canonicalSha256": "3735162916165ab23696fc91fbf626bd99a36ddcd1e15746e91e16c7e336b379",
+  "rawToolsCapture": [
+    {
+      "name": "ask_question",
+      "description": "Ask any question about a GitHub repository and get an AI-powered, context-grounded response.",
+      "inputSchema": {
+        "properties": {
+          "repoName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "GitHub repository or list of repositories (max 10) in owner/repo format."
+          },
+          "question": {
+            "description": "The question to ask about the repository.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "repoName",
+          "question"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "read_wiki_contents",
+      "description": "View documentation about a GitHub repository.",
+      "inputSchema": {
+        "properties": {
+          "repoName": {
+            "description": "GitHub repository in owner/repo format (e.g. \"facebook/react\").",
+            "type": "string"
+          }
+        },
+        "required": [
+          "repoName"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "read_wiki_structure",
+      "description": "Get a list of documentation topics for a GitHub repository.",
+      "inputSchema": {
+        "properties": {
+          "repoName": {
+            "description": "GitHub repository in owner/repo format (e.g. \"facebook/react\").",
+            "type": "string"
+          }
+        },
+        "required": [
+          "repoName"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    }
+  ],
+  "measuredAt": "2026-08-16T12:04:32.504Z",
+  "serverName": "DeepWiki",
+  "serverVersion": "2.14.3",
+  "launchCommand": "npx -y mcp-remote https://mcp.deepwiki.com/mcp",
+  "envVarNames": [],
+  "isolation": {
+    "docker": true,
+    "image": "public.ecr.aws/docker/library/node:22-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

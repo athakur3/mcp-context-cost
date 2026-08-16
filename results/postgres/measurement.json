@@ -1,0 +1,42 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "measured",
+  "totalTokens": 32,
+  "toolCount": 1,
+  "tools": [
+    {
+      "name": "query",
+      "tokens": 30,
+      "descriptionTokens": 6,
+      "inputSchemaTokens": 14
+    }
+  ],
+  "canonicalSha256": "bbdb8dd9b6d3cd9b855597127ad5268e3fa4e3355e616b3dc102f4ed12cca454",
+  "rawToolsCapture": [
+    {
+      "name": "query",
+      "description": "Run a read-only SQL query",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sql": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ],
+  "measuredAt": "2026-08-16T12:00:46.096Z",
+  "serverName": "example-servers/postgres",
+  "serverVersion": "0.1.0",
+  "launchCommand": "npx -y @modelcontextprotocol/server-postgres postgresql://localhost/postgres",
+  "envVarNames": [],
+  "isolation": {
+    "docker": true,
+    "image": "public.ecr.aws/docker/library/node:22-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

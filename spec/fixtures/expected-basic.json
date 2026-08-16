@@ -1,0 +1,98 @@
+{
+  "canonicalLength": 953,
+  "measurement": {
+    "methodologyVersion": "1.0",
+    "provider": "tiktoken",
+    "encoding": "o200k_base",
+    "status": "measured",
+    "totalTokens": 196,
+    "toolCount": 3,
+    "tools": [
+      {
+        "name": "read_file",
+        "tokens": 68,
+        "descriptionTokens": 29,
+        "inputSchemaTokens": 29
+      },
+      {
+        "name": "write_file",
+        "tokens": 83,
+        "descriptionTokens": 26,
+        "inputSchemaTokens": 47
+      },
+      {
+        "name": "list_directory",
+        "tokens": 43,
+        "descriptionTokens": 14,
+        "inputSchemaTokens": 19
+      }
+    ],
+    "canonicalSha256": "3f522f40413f9c1bec9d8dcdcbc5840f13b895580f9088967df8c171b9835656",
+    "rawToolsCapture": [
+      {
+        "name": "read_file",
+        "description": "Read the complete contents of a file from the file system. Handles various text encodings and provides detailed error messages if the file cannot be read.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "Absolute path to the file to read"
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      },
+      {
+        "name": "write_file",
+        "description": "Create a new file or completely overwrite an existing file with new content. Use with caution as it will overwrite existing files without warning.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "Absolute path of the file to write"
+            },
+            "content": {
+              "type": "string",
+              "description": "Content to write to the file"
+            }
+          },
+          "required": [
+            "path",
+            "content"
+          ]
+        }
+      },
+      {
+        "name": "list_directory",
+        "description": "Get a detailed listing of all files and directories in a specified path.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    ],
+    "measuredAt": "2026-08-16T00:00:00.000Z",
+    "serverName": "fixture-basic",
+    "serverVersion": "1.0.0",
+    "launchCommand": "npx -y fixture-basic"
+  },
+  "badge": {
+    "schemaVersion": 1,
+    "label": "context cost",
+    "message": "196 tokens",
+    "color": "brightgreen",
+    "cacheSeconds": 3600
+  },
+  "snippet": "[![context cost](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FOWNER%2Fmcp-context-cost%2Fmain%2Fbadges%2Ffixture-basic.json)](https://OWNER.github.io/mcp-context-cost/methodology#m1)"
+}

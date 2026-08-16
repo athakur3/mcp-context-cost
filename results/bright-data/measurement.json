@@ -1,0 +1,267 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "measured",
+  "totalTokens": 978,
+  "toolCount": 5,
+  "tools": [
+    {
+      "name": "search_engine",
+      "tokens": 186,
+      "descriptionTokens": 41,
+      "inputSchemaTokens": 115
+    },
+    {
+      "name": "scrape_as_markdown",
+      "tokens": 115,
+      "descriptionTokens": 37,
+      "inputSchemaTokens": 43
+    },
+    {
+      "name": "search_engine_batch",
+      "tokens": 191,
+      "descriptionTokens": 17,
+      "inputSchemaTokens": 142
+    },
+    {
+      "name": "scrape_batch",
+      "tokens": 141,
+      "descriptionTokens": 36,
+      "inputSchemaTokens": 73
+    },
+    {
+      "name": "discover",
+      "tokens": 347,
+      "descriptionTokens": 38,
+      "inputSchemaTokens": 281
+    }
+  ],
+  "canonicalSha256": "bd26660364200a7866906bbfecc185e41ea6a42e43ed5d6380b1c3b77a699eae",
+  "rawToolsCapture": [
+    {
+      "annotations": {
+        "title": "Search Engine",
+        "readOnlyHint": true,
+        "openWorldHint": true
+      },
+      "description": "Scrape search results from Google, Bing or Yandex. Returns SERP results in JSON or Markdown (URL, title, description),Ideal forgathering current information, news, and detailed search results.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "engine": {
+            "type": "string",
+            "enum": [
+              "google",
+              "bing",
+              "yandex"
+            ],
+            "default": "google"
+          },
+          "cursor": {
+            "type": "string",
+            "description": "Pagination cursor for next page"
+          },
+          "geo_location": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2,
+            "description": "2-letter country code for geo-targeted results (e.g., \"us\", \"uk\")"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "name": "search_engine"
+    },
+    {
+      "annotations": {
+        "title": "Scrape as Markdown",
+        "readOnlyHint": true,
+        "openWorldHint": true
+      },
+      "description": "Scrape a single webpage URL with advanced options for content extraction and get back the results in MarkDown language. This tool can unlock any webpage even if it uses bot detection or CAPTCHA.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "name": "scrape_as_markdown"
+    },
+    {
+      "annotations": {
+        "title": "Search Engine Batch",
+        "readOnlyHint": true,
+        "openWorldHint": true
+      },
+      "description": "Run multiple search queries simultaneously. Returns JSON for Google, Markdown for Bing/Yandex.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "queries": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "query": {
+                  "type": "string"
+                },
+                "engine": {
+                  "type": "string",
+                  "enum": [
+                    "google",
+                    "bing",
+                    "yandex"
+                  ],
+                  "default": "google"
+                },
+                "cursor": {
+                  "type": "string"
+                },
+                "geo_location": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 2,
+                  "description": "2-letter country code for geo-targeted results (e.g., \"us\", \"uk\")"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "maxItems": 5
+          }
+        },
+        "required": [
+          "queries"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "name": "search_engine_batch"
+    },
+    {
+      "annotations": {
+        "title": "Scrape Batch",
+        "readOnlyHint": true,
+        "openWorldHint": true
+      },
+      "description": "Scrape multiple webpages URLs with advanced options for content extraction and get back the results in MarkDown language. This tool can unlock any webpage even if it uses bot detection or CAPTCHA.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "minItems": 1,
+            "maxItems": 5,
+            "description": "Array of URLs to scrape (max 5)"
+          }
+        },
+        "required": [
+          "urls"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "name": "scrape_batch"
+    },
+    {
+      "annotations": {
+        "title": "Discover",
+        "readOnlyHint": true,
+        "openWorldHint": true
+      },
+      "description": "Search the web and rank results by AI-driven relevance. Returns scored results with title, description, and URL. Supports intent-based ranking, geo-targeting, date filtering, and keyword filtering.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "The search query"
+          },
+          "intent": {
+            "type": "string",
+            "description": "Describes the specific goal of the search to help the AI evaluate and rank result relevance.If not provided, the query string is used as the intent"
+          },
+          "country": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2,
+            "description": "2-letter ISO country code for localized results (e.g., \"US\", \"GB\", \"DE\")"
+          },
+          "city": {
+            "type": "string",
+            "description": "City for localized results (e.g., \"New York\", \"Berlin\")"
+          },
+          "language": {
+            "type": "string",
+            "description": "Language code (e.g., \"en\", \"es\", \"fr\")"
+          },
+          "num_results": {
+            "type": "integer",
+            "description": "Exact number of search results to return"
+          },
+          "filter_keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Keywords that must appear in search results"
+          },
+          "remove_duplicates": {
+            "type": "boolean",
+            "description": "Remove duplicate results (default: true)"
+          },
+          "start_date": {
+            "type": "string",
+            "description": "Only content updated from this date (YYYY-MM-DD)"
+          },
+          "end_date": {
+            "type": "string",
+            "description": "Only content updated until this date (YYYY-MM-DD)"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "name": "discover"
+    }
+  ],
+  "measuredAt": "2026-08-16T12:03:38.169Z",
+  "serverName": "Bright Data",
+  "serverVersion": "2.11.1",
+  "launchCommand": "npx -y @brightdata/mcp",
+  "envVarNames": [
+    "API_TOKEN"
+  ],
+  "isolation": {
+    "docker": true,
+    "image": "public.ecr.aws/docker/library/node:22-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

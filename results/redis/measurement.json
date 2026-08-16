@@ -1,0 +1,21 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "startup-failure",
+  "totalTokens": null,
+  "toolCount": null,
+  "tools": [],
+  "canonicalSha256": null,
+  "rawToolsCapture": null,
+  "measuredAt": "2026-08-16T12:08:33.290Z",
+  "serverName": "redis",
+  "launchCommand": "uvx --from git+https://github.com/redis/mcp-redis.git redis-mcp-server --url redis://localhost:6379/0",
+  "notes": "server exited (code 1); stderr tail:    Updating https://github.com/redis/mcp-redis.git (HEAD)\n  × Failed to download and build `redis-mcp-server @\n  │ git+https://github.com/redis/mcp-redis.git@5945b0b5b098c9a1882075a161a6a58f23de81ed`\n  ├─▶ Git operation failed\n  ╰─▶ Git executable not found. Ensure that Git is installed and available.\n",
+  "isolation": {
+    "docker": true,
+    "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

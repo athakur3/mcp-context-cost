@@ -1,0 +1,143 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "measured",
+  "totalTokens": 336,
+  "toolCount": 9,
+  "tools": [
+    {
+      "name": "create_or_update_file",
+      "tokens": 40,
+      "descriptionTokens": 11,
+      "inputSchemaTokens": 16
+    },
+    {
+      "name": "search_repositories",
+      "tokens": 33,
+      "descriptionTokens": 5,
+      "inputSchemaTokens": 16
+    },
+    {
+      "name": "create_repository",
+      "tokens": 33,
+      "descriptionTokens": 6,
+      "inputSchemaTokens": 16
+    },
+    {
+      "name": "get_file_contents",
+      "tokens": 41,
+      "descriptionTokens": 13,
+      "inputSchemaTokens": 16
+    },
+    {
+      "name": "push_files",
+      "tokens": 39,
+      "descriptionTokens": 12,
+      "inputSchemaTokens": 16
+    },
+    {
+      "name": "create_issue",
+      "tokens": 36,
+      "descriptionTokens": 9,
+      "inputSchemaTokens": 16
+    },
+    {
+      "name": "create_merge_request",
+      "tokens": 38,
+      "descriptionTokens": 10,
+      "inputSchemaTokens": 16
+    },
+    {
+      "name": "fork_repository",
+      "tokens": 38,
+      "descriptionTokens": 11,
+      "inputSchemaTokens": 16
+    },
+    {
+      "name": "create_branch",
+      "tokens": 36,
+      "descriptionTokens": 9,
+      "inputSchemaTokens": 16
+    }
+  ],
+  "canonicalSha256": "d51fb022687ee403f9710c9fae31ac91dbc796f5c52a3fcdbe0a91c387aa9365",
+  "rawToolsCapture": [
+    {
+      "name": "create_or_update_file",
+      "description": "Create or update a single file in a GitLab project",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "search_repositories",
+      "description": "Search for GitLab projects",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "create_repository",
+      "description": "Create a new GitLab project",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "get_file_contents",
+      "description": "Get the contents of a file or directory from a GitLab project",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "push_files",
+      "description": "Push multiple files to a GitLab project in a single commit",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "create_issue",
+      "description": "Create a new issue in a GitLab project",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "create_merge_request",
+      "description": "Create a new merge request in a GitLab project",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "fork_repository",
+      "description": "Fork a GitLab project to your account or specified namespace",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "create_branch",
+      "description": "Create a new branch in a GitLab project",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    }
+  ],
+  "measuredAt": "2026-08-16T12:01:02.957Z",
+  "serverName": "gitlab-mcp-server",
+  "serverVersion": "0.5.1",
+  "launchCommand": "npx -y @modelcontextprotocol/server-gitlab",
+  "envVarNames": [
+    "GITLAB_PERSONAL_ACCESS_TOKEN"
+  ],
+  "isolation": {
+    "docker": true,
+    "image": "public.ecr.aws/docker/library/node:22-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "startup-failure",
+  "totalTokens": null,
+  "toolCount": null,
+  "tools": [],
+  "canonicalSha256": null,
+  "rawToolsCapture": null,
+  "measuredAt": "2026-08-16T12:08:47.085Z",
+  "serverName": "obsidian",
+  "launchCommand": "uvx mcp-obsidian",
+  "notes": "server exited (code 1); stderr tail: Traceback (most recent call last):\n  File \"/tmp/.uv-cache/archive-v0/q7a7WJc6K7v0b4ItgsxyM/bin/mcp-obsidian\", line 6, in <module>\n    from mcp_obsidian import main\n  File \"/tmp/.uv-cache/archive-v0/q7a7WJc6K7v0b4ItgsxyM/lib/python3.12/site-packages/mcp_obsidian/__init__.py\", line 1, in <module>\n    from . import server\n  File \"/tmp/.uv-cache/archive-v0/q7a7WJc6K7v0b4ItgsxyM/lib/python3.12/site-packages/mcp_obsidian/server.py\", line 57, in <module>\n    @app.li",
+  "isolation": {
+    "docker": true,
+    "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

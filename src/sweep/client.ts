@@ -1,0 +1,217 @@
+/**
+ * Minimal MCP stdio client — deliberately NOT the official SDK: schema-parsing
+ * layers can reorder/strip keys, and our canonical bytes are defined as the
+ * tools array exactly as the wire carried it. JSON.parse preserves key order,
+ * so the objects captured here ARE the wire representation.
+ */
+import { spawn } from 'node:child_process';
+
+export interface WireCapture {
+  serverInfo?: { name?: string; version?: string };
+  protocolVersion?: string;
+  tools: unknown[];
+  /** true when a second tools/list returned a different tool set */
+  stderrTail: string;
+}
+
+interface Pending {
+  resolve: (v: any) => void;
+  reject: (e: Error) => void;
+}
+
+const PROTOCOL_VERSION = '2025-06-18';
+
+export class McpStdioClient {
+  private child;
+  private buffer = '';
+  private nextId = 1;
+  private pending = new Map<number, Pending>();
+  private stderrChunks: string[] = [];
+  private exited: Promise<void>;
+
+  constructor(command: string, args: string[], env: Record<string, string | undefined>) {
+    this.child = spawn(command, args, {
+      env: { ...env },
+      stdio: ['pipe', 'pipe', 'pipe'],
+    });
+    this.child.stdout.setEncoding('utf8');
+    this.child.stdout.on('data', (chunk: string) => this.onData(chunk));
+    this.child.stderr.setEncoding('utf8');
+    this.child.stderr.on('data', (chunk: string) => {
+      this.stderrChunks.push(chunk);
+      if (this.stderrChunks.length > 200) this.stderrChunks.shift();
+    });
+    // Writing to a dead pipe must not crash the sweep (EPIPE / write-after-end).
+    this.child.stdin.on('error', () => {});
+    this.exited = new Promise((resolve) => {
+      this.child.on('error', (err) => {
+        this.deadReason = `spawn failed: ${err.message}`;
+        for (const p of this.pending.values()) p.reject(new Error(this.deadReason));
+        this.pending.clear();
+        resolve();
+      });
+      this.child.on('exit', (code) => {
+        const tail = this.stderrTail.slice(-600);
+        this.deadReason = `server exited (code ${code})${tail ? `; stderr tail: ${tail}` : ''}`;
+        for (const p of this.pending.values()) p.reject(new Error(this.deadReason));
+        this.pending.clear();
+        resolve();
+      });
+    });
+  }
+
+  private onData(chunk: string) {
+    this.buffer += chunk;
+    let idx;
+    while ((idx = this.buffer.indexOf('\n')) >= 0) {
+      const line = this.buffer.slice(0, idx).trim();
+      this.buffer = this.buffer.slice(idx + 1);
+      if (!line) continue;
+      let msg: any;
+      try {
+        msg = JSON.parse(line);
+      } catch {
+        continue; // non-JSON noise on stdout — ignore
+      }
+      if (msg && typeof msg.method === 'string') {
+        // Request or notification FROM the server. Ping is capability-free and
+        // must be answered; anything else gets a method-not-found so the server
+        // is never left hanging on an unanswered request. Server request ids may
+        // collide with ours, so 'method' presence is checked before id dispatch.
+        if (msg.id !== undefined && msg.id !== null) {
+          if (msg.method === 'ping') this.send({ jsonrpc: '2.0', id: msg.id, result: {} });
+          else this.send({ jsonrpc: '2.0', id: msg.id, error: { code: -32601, message: 'method not found' } });
+        }
+        continue;
+      }
+      if (msg && typeof msg.id === 'number' && this.pending.has(msg.id)) {
+        const p = this.pending.get(msg.id)!;
+        this.pending.delete(msg.id);
+        if (msg.error) p.reject(new Error(`server error ${msg.error.code}: ${msg.error.message}`));
+        else p.resolve(msg.result);
+      }
+    }
+  }
+
+  private send(obj: unknown) {
+    this.child.stdin.write(JSON.stringify(obj) + '\n');
+  }
+
+  private deadReason: string | null = null;
+
+  request(method: string, params: unknown, timeoutMs: number): Promise<any> {
+    if (this.deadReason) return Promise.reject(new Error(this.deadReason));
+    const id = this.nextId++;
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        this.pending.delete(id);
+        reject(new Error(`timeout after ${timeoutMs}ms waiting for ${method}`));
+      }, timeoutMs);
+      this.pending.set(id, {
+        resolve: (v) => {
+          clearTimeout(timer);
+          resolve(v);
+        },
+        reject: (e) => {
+          clearTimeout(timer);
+          reject(e);
+        },
+      });
+      this.send({ jsonrpc: '2.0', id, method, params });
+    });
+  }
+
+  notify(method: string, params?: unknown) {
+    this.send(params === undefined ? { jsonrpc: '2.0', method } : { jsonrpc: '2.0', method, params });
+  }
+
+  get stderrTail(): string {
+    return this.stderrChunks.join('').slice(-4000);
+  }
+
+  async close() {
+    this.child.stdin.end();
+    const killed = setTimeout(() => this.child.kill('SIGKILL'), 2000);
+    this.child.kill('SIGTERM');
+    await this.exited;
+    clearTimeout(killed);
+  }
+}
+
+/**
+ * Launch a stdio MCP server, run initialize + paginated tools/list, capture the
+ * wire-order tools array. Caller owns error handling/status mapping.
+ */
+export async function captureTools(
+  spec: string | { command: string; argv: string[] },
+  opts: { timeoutMs?: number; env?: Record<string, string> } = {},
+): Promise<WireCapture> {
+  const timeoutMs = opts.timeoutMs ?? 60_000;
+  const [cmd, ...args] = typeof spec === 'string' ? splitCommand(spec) : [spec.command, ...spec.argv];
+  const client = new McpStdioClient(cmd, args, {
+    PATH: process.env.PATH,
+    HOME: process.env.HOME,
+    ...opts.env,
+  });
+  try {
+    const init = await client.request(
+      'initialize',
+      {
+        protocolVersion: PROTOCOL_VERSION,
+        capabilities: {},
+        clientInfo: { name: 'mcp-context-cost', version: '0.1.0' },
+      },
+      timeoutMs,
+    );
+    client.notify('notifications/initialized');
+
+    const tools: unknown[] = [];
+    const seenCursors = new Set<string>();
+    let cursor: string | undefined;
+    let pages = 0;
+    do {
+      if (++pages > 100) throw new Error('tools/list pagination exceeded 100 pages — cursor loop suspected');
+      const res = await client.request('tools/list', cursor ? { cursor } : {}, timeoutMs);
+      if (Array.isArray(res?.tools)) tools.push(...res.tools);
+      cursor = typeof res?.nextCursor === 'string' && res.nextCursor.length > 0 ? res.nextCursor : undefined;
+      if (cursor) {
+        if (seenCursors.has(cursor)) throw new Error('tools/list returned a repeated cursor — pagination loop');
+        seenCursors.add(cursor);
+      }
+    } while (cursor);
+
+    return {
+      serverInfo: init?.serverInfo,
+      protocolVersion: init?.protocolVersion,
+      tools,
+      stderrTail: client.stderrTail,
+    };
+  } finally {
+    await client.close();
+  }
+}
+
+/** Shell-free command splitting: honors single/double quotes, no expansion. */
+export function splitCommand(line: string): string[] {
+  const out: string[] = [];
+  let cur = '';
+  let quote: '"' | "'" | null = null;
+  for (const ch of line) {
+    if (quote) {
+      if (ch === quote) quote = null;
+      else cur += ch;
+    } else if (ch === '"' || ch === "'") {
+      quote = ch;
+    } else if (/\s/.test(ch)) {
+      if (cur) {
+        out.push(cur);
+        cur = '';
+      }
+    } else {
+      cur += ch;
+    }
+  }
+  if (cur) out.push(cur);
+  if (out.length === 0) throw new Error('empty command');
+  return out;
+}

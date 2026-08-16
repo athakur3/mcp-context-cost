@@ -1,0 +1,150 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "measured",
+  "totalTokens": 486,
+  "toolCount": 2,
+  "tools": [
+    {
+      "name": "airbnb_search",
+      "tokens": 319,
+      "descriptionTokens": 16,
+      "inputSchemaTokens": 291
+    },
+    {
+      "name": "airbnb_listing_details",
+      "tokens": 165,
+      "descriptionTokens": 15,
+      "inputSchemaTokens": 137
+    }
+  ],
+  "canonicalSha256": "79c3109b4fa4e4735ba1071cacbd98948c6aba20b70c9a4295a78e84850a81e0",
+  "rawToolsCapture": [
+    {
+      "name": "airbnb_search",
+      "description": "Search for Airbnb listings with various filters and pagination. Provide direct links to the user",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "description": "Location to search for (city, state, etc.)"
+          },
+          "placeId": {
+            "type": "string",
+            "description": "Google Maps Place ID (overrides the location parameter)"
+          },
+          "checkin": {
+            "type": "string",
+            "description": "Check-in date (YYYY-MM-DD)"
+          },
+          "checkout": {
+            "type": "string",
+            "description": "Check-out date (YYYY-MM-DD)"
+          },
+          "adults": {
+            "type": "number",
+            "description": "Number of adults"
+          },
+          "children": {
+            "type": "number",
+            "description": "Number of children"
+          },
+          "infants": {
+            "type": "number",
+            "description": "Number of infants"
+          },
+          "pets": {
+            "type": "number",
+            "description": "Number of pets"
+          },
+          "minPrice": {
+            "type": "number",
+            "description": "Minimum price for the stay"
+          },
+          "maxPrice": {
+            "type": "number",
+            "description": "Maximum price for the stay"
+          },
+          "cursor": {
+            "type": "string",
+            "description": "Base64-encoded string used for Pagination"
+          },
+          "propertyType": {
+            "type": "string",
+            "enum": [
+              "entire_home",
+              "private_room",
+              "shared_room",
+              "hotel_room"
+            ],
+            "description": "Filter by property type: 'entire_home' (entire homes/apartments), 'private_room' (private rooms in shared homes), 'shared_room' (shared/dorm-style rooms), 'hotel_room' (hotel rooms)"
+          },
+          "ignoreRobotsText": {
+            "type": "boolean",
+            "description": "Ignore robots.txt rules for this request"
+          }
+        },
+        "required": [
+          "location"
+        ]
+      }
+    },
+    {
+      "name": "airbnb_listing_details",
+      "description": "Get detailed information about a specific Airbnb listing. Provide direct links to the user",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The Airbnb listing ID"
+          },
+          "checkin": {
+            "type": "string",
+            "description": "Check-in date (YYYY-MM-DD)"
+          },
+          "checkout": {
+            "type": "string",
+            "description": "Check-out date (YYYY-MM-DD)"
+          },
+          "adults": {
+            "type": "number",
+            "description": "Number of adults"
+          },
+          "children": {
+            "type": "number",
+            "description": "Number of children"
+          },
+          "infants": {
+            "type": "number",
+            "description": "Number of infants"
+          },
+          "pets": {
+            "type": "number",
+            "description": "Number of pets"
+          },
+          "ignoreRobotsText": {
+            "type": "boolean",
+            "description": "Ignore robots.txt rules for this request"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      }
+    }
+  ],
+  "measuredAt": "2026-08-16T12:06:37.200Z",
+  "serverName": "airbnb",
+  "serverVersion": "0.3.0",
+  "launchCommand": "npx -y @openbnb/mcp-server-airbnb",
+  "envVarNames": [],
+  "isolation": {
+    "docker": true,
+    "image": "public.ecr.aws/docker/library/node:22-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}

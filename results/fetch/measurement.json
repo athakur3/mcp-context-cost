@@ -1,0 +1,21 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "startup-failure",
+  "totalTokens": null,
+  "toolCount": null,
+  "tools": [],
+  "canonicalSha256": null,
+  "rawToolsCapture": null,
+  "measuredAt": "2026-08-16T12:08:07.506Z",
+  "serverName": "fetch",
+  "launchCommand": "uvx mcp-server-fetch",
+  "notes": "server exited (code 1); stderr tail: in <module>\n    from mcp_server_fetch import main\n  File \"/tmp/.uv-cache/archive-v0/vFrrNX6vyNRVMDZ7hjaS4/lib/python3.12/site-packages/mcp_server_fetch/__init__.py\", line 1, in <module>\n    from .server import serve\n  File \"/tmp/.uv-cache/archive-v0/vFrrNX6vyNRVMDZ7hjaS4/lib/python3.12/site-packages/mcp_server_fetch/server.py\", line 6, in <module>\n    from mcp.shared.exceptions import McpError\nImportError: cannot import name 'McpError' from 'mcp.shared.except",
+  "isolation": {
+    "docker": true,
+    "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  }
+}
