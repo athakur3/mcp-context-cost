@@ -55,6 +55,10 @@ npx -y mcp-context-cost verify results/github/measurement.json
 # OK github-mcp-server: 54422 tokens (o200k_base, methodology 1.0) — capture, hash, and count all agree
 ```
 
+Add `--json` for scripting (`{ ok, serverName, rederivedTokens, rederivedSha, problems, badge }`
+on stdout, `badge` omitted on failure). Exit codes: `0` ok, `1` verification/measurement
+failed, `2` usage error.
+
 Full definition: [docs/METHODOLOGY.md](docs/METHODOLOGY.md) — what is counted, what the
 number is *not*, config policy, failure taxonomy, frozen color bands, known divergences.
 

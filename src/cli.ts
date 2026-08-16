@@ -2,9 +2,11 @@
 /**
  * mcp-context-cost CLI — the dispute drill as a command.
  *
- *   mcp-context-cost verify <measurement.json>   re-derive the number from the
+ *   mcp-context-cost verify <measurement.json> [--json]   re-derive the number from the
  *                                                published capture; exit 1 on mismatch
  *   mcp-context-cost measure --name x --command "npx -y ..."   one-off measurement
+ *
+ * Exit codes: 0 ok, 1 verification/measurement failed, 2 usage error.
  */
 import { readFileSync } from 'node:fs';
 import { canonicalString, countTokens, sha256Hex } from './core/canonical.js';
@@ -34,13 +36,18 @@ export function verifyMeasurement(m: Measurement): {
 const [, , cmd, ...rest] = process.argv;
 
 if (cmd === 'verify') {
+  const json = rest.includes('--json');
   const path = rest.find((a) => !a.startsWith('--'));
   if (!path) {
-    console.error('usage: mcp-context-cost verify <measurement.json>');
+    console.error('usage: mcp-context-cost verify <measurement.json> [--json]');
     process.exit(2);
   }
   const m = JSON.parse(readFileSync(path, 'utf8')) as Measurement;
   const r = verifyMeasurement(m);
+  if (json) {
+    console.log(JSON.stringify({ serverName: m.serverName, ...r, badge: r.ok ? toBadge(m) : undefined }));
+    process.exit(r.ok ? 0 : 1);
+  }
   if (r.ok) {
     console.log(
       `OK ${m.serverName}: ${r.rederivedTokens} tokens (${m.encoding}, methodology ${m.methodologyVersion}) — capture, hash, and count all agree`,
@@ -80,6 +87,7 @@ if (cmd === 'verify') {
   process.exit(2);
 } else {
   console.log('mcp-context-cost — reproducible context-cost measurement for MCP servers');
-  console.log('  verify <measurement.json>    re-derive tokens+sha from the published capture');
+  console.log('  verify <measurement.json> [--json]    re-derive tokens+sha from the published capture');
   console.log('  measure --name x --command "npx -y <server>"   run a one-off measurement');
+  console.log('exit codes: 0 ok, 1 verification/measurement failed, 2 usage error');
 }

@@ -13,8 +13,8 @@ Ordered by value-per-effort for users. Contributions welcome on any of these.
       set — closes the second "planned" promise.
 - [ ] **Expand the sweep**: more servers from the registry long-tail; re-attempt current
       startup-failures as upstream fixes land.
-- [ ] **npm 0.2.0**: `verify --remote` (fetch a measurement URL), JSON output mode,
-      documented exit codes.
+- [ ] **npm 0.2.0**: `verify --remote` (fetch a measurement URL) still open; `verify --json`
+      and documented exit codes shipped (2026-08-17), pending release.
 
 ## Later
 
