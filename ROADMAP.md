@@ -4,9 +4,6 @@ Ordered by value-per-effort for users. Contributions welcome on any of these.
 
 ## Next
 
-- [ ] **Claude divergence column**: measure the top servers via Anthropic's count_tokens
-      (tools-delta method, model-pinned, dated) and publish alongside o200k in the
-      leaderboard — closes the methodology's "planned" promise.
 - [ ] **Cost-over-time sparklines**: `results/history.csv` already accumulates a
       per-(date, server) series with every sweep; surface it on the dashboard once
       multiple sweep dates exist.
@@ -26,6 +23,10 @@ Ordered by value-per-effort for users. Contributions welcome on any of these.
 - [ ] Periodic "state of MCP context cost" data summary, when the deltas tell a story.
 
 ## Done
+
+- [x] **Claude divergence column** (`tools-delta/v1`): top 15 servers measured via Anthropic's
+      count_tokens, model-pinned and dated, published in the leaderboard and decomposed per
+      server into field selection vs tokenizer/framing (2026-08-16)
 
 - [x] v0.1.0: measurement pipeline, 57-server leaderboard, methodology v1.0, shields
       badges, verify CLI, npm publish (2026-08-16)

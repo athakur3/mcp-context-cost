@@ -51,8 +51,8 @@ the same facts, without reading the capture by hand.
   payload cost** — a lower-bound proxy that ranks servers consistently — not a promise of
   the number your client charges.
 - **Not a Claude token count.** Anthropic's tokenizer differs and drifts across model
-  releases. A dated, model-pinned Claude divergence column is planned for the launch
-  leaderboard (not yet published) so the gap becomes our data point, not a critic's.
+  releases. The gap is now measured and published rather than left to a critic — see
+  [Claude divergence](#claude-divergence) below.
 - **Not a quality judgment.** A heavy server can be worth every token. The badge makes the
   cost visible; the per-tool breakdown in `measurement.json` makes it actionable.
 
@@ -100,6 +100,48 @@ max = 54,422): *lean* ends at the bottom quartile, *light* spans the interquarti
 *moderate* begins at p75, *heavy* covers the ~p95 tail, and *very heavy* marks true
 outliers. Any future band change bumps this page's version.
 
+## Claude divergence <a id="claude-divergence"></a>
+
+Method `tools-delta/v1`. The headline number counts every byte a server returns from
+`tools/list`, tokenized with o200k_base. Neither half of that describes what the tools cost
+in an Anthropic request, so the gap is measured directly and published beside it.
+
+**How it is measured.** For each server, project the capture onto the three fields an
+Anthropic tool definition carries — `name`, `description`, `input_schema` — and send that
+array to `POST /v1/messages/count_tokens` against a **pinned model id**, alongside a minimal
+one-token user message. Subtract the same request's count with no `tools` at all. The
+difference is the tokens the server's tools add to a request. Model id and date are recorded
+in [`results/divergence.json`](https://github.com/athakur3/mcp-context-cost/blob/main/results/divergence.json)
+with the `canonicalSha256` of the capture each row was computed from, so a re-sweep marks a
+row stale instead of leaving a number that no longer matches its capture.
+
+**Why it is published as three numbers, not one.** Two independent effects move the count in
+opposite directions, and a single ratio hides the larger one:
+
+1. **Field selection.** `title`, `annotations`, `outputSchema`, `execution`, and `icons` are
+   real bytes the server ships and the canonical form counts them — but an Anthropic `tools`
+   array has nowhere to put them. Across the measured set this removes between 0.7% and
+   **80.6%** of the payload (github: 54,422 → 10,535 tokens).
+2. **Tokenizer and framing.** Anthropic's tokenizer is denser on schema text than o200k_base,
+   and the API adds its own framing around the tools channel. A single minimal tool costs
+   328 tokens more than no tools at all, which is an upper bound on the fixed part.
+
+Because the effects can cancel or compound, the Claude number is **not** a fixed multiple of
+the badge — it ranged from 0.34× to 1.92× across the top 15, and it reorders the leaderboard:
+github is the heaviest server on o200k and notion is the heaviest on Claude.
+
+**What it is not.** It is not any client's context bill either. `count_tokens` is Anthropic's
+accounting for tools sent through the API's `tools` parameter; a client that re-renders
+schemas into a prompt, defer-loads them, or forwards MCP metadata will differ. It is a second
+documented, reproducible index — measured the same way for every server — not a promise.
+
+**Attribution spot check.** To confirm effect 2 is mostly the tokenizer rather than the tools
+channel, notion's tool text was also counted as an ordinary user message: prose descriptions
+came out 1.58× their o200k count, and the identical minified JSON 1.77×, against 1.92× when
+sent as `tools`. So most of the multiplier is the tokenizer and the remainder is the channel.
+That is one server on one date, not a constant — it is recorded here as the evidence for the
+causal claim above, not as a conversion factor.
+
 ## Known divergences
 
 **sd2k/mcp-tokens** (the CLI our upstream GitHub Action contribution builds on) differs from
@@ -115,3 +157,8 @@ Details: [spec/upstream-notes.md](https://github.com/athakur3/mcp-context-cost/b
 - **v1.0** (2026-08-16) — initial definition: canonical form over the parsed `tools/list`
   value, o200k_base, bands frozen against first-sweep distribution, failure taxonomy,
   dual-run dynamic detection.
+
+The Claude divergence column (`tools-delta/v1`, added 2026-08-16) is versioned separately and
+deliberately: it adds a second published number without touching the definition above. Every
+badge, every `totalTokens`, and every canonical hash is byte-identical to before it existed,
+so bumping this page's version would have signalled a change that did not happen.

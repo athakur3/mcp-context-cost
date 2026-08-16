@@ -29,6 +29,21 @@ This project makes that cost **legible and disputable**:
 [context cost | 12,430 tokens]   ← shields.io badge, linked to the methodology
 ```
 
+## What it costs on Claude
+
+The badge counts every byte a server returns. An Anthropic request carries only `name`,
+`description`, and `input_schema` — and counts them with a denser tokenizer. Both effects are
+now measured against a pinned model and published beside the badge, and they do not cancel:
+
+| server | badge (o200k) | Claude (`claude-opus-5`) | |
+|---|---:|---:|---|
+| github | 54,422 | **18,406** | 81% of the capture is `annotations`/`outputSchema` metadata Claude never sees |
+| notion | 17,500 | **33,560** | almost no metadata to drop, so the tokenizer difference dominates |
+
+So the heaviest server on the badge is not the heaviest server on Claude. Per-server
+breakdowns are on each [detail page](https://athakur3.github.io/mcp-context-cost/servers/);
+the method is [Claude divergence](docs/METHODOLOGY.md#claude-divergence).
+
 ## Why trust the number?
 
 Every badge is backed by a `measurement.json` containing the raw `tools/list` capture, the
@@ -51,6 +66,7 @@ number is *not*, config policy, failure taxonomy, frozen color bands, known dive
 | `src/sweep/` | raw-wire MCP stdio client + Dockerized batch sweep + leaderboard/dashboard generators |
 | `src/cli.ts` | `verify` (re-derive any published number) and `measure` |
 | `spec/fixtures/` | golden vectors shared by the TypeScript and bash implementations |
+| `tools/` | the one script that calls a network API (Claude divergence); kept out of the package so the library stays offline |
 | `upstream/` | staged contribution to [sd2k/mcp-tokens-action](https://github.com/sd2k/mcp-tokens-action): `badge.sh` + action patch + tests |
 | `servers.yaml` | 82 curated candidates with live install metrics and provenance |
 | `results/` · `badges/` | measurements, leaderboard, history series, shields endpoint JSONs |

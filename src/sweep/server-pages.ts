@@ -12,8 +12,9 @@ import { join } from 'node:path';
 import { parse } from 'yaml';
 import type { Measurement } from '../core/types.js';
 import { bandColor, BAND_META } from '../core/bands.js';
-import { mdCell, type ServerEntry } from './report.js';
+import { loadDivergence, mdCell, type ServerEntry } from './report.js';
 import { parseHistory, type HistoryRow } from './history.js';
+import { claudeRatio, fieldSelectionShare, isCurrent, type DivergenceRow, type DivergenceRun } from '../core/divergence.js';
 
 /**
  * Pages are served from GitHub Pages (docs/), but results/ and badges/ are not
@@ -42,8 +43,53 @@ function isolationText(m: Measurement): string {
     .join(' · ');
 }
 
+/**
+ * The Claude divergence section: the headline, the projection onto the three
+ * fields an Anthropic tool definition carries, and Claude's own count of that
+ * projection. Printed only when a current divergence row exists for this server.
+ */
+function divergenceSection(row: DivergenceRow, run: DivergenceRun): string[] {
+  const share = fieldSelectionShare(row);
+  const ratio = claudeRatio(row);
+  const md: string[] = [];
+  md.push('## What this costs on Claude');
+  md.push('');
+  md.push(
+    `Measured ${mdCell(run.measuredAt)} against \`${mdCell(run.model)}\` via Anthropic's \`count_tokens\` ` +
+      `(method \`${mdCell(run.method)}\`).`,
+  );
+  md.push('');
+  md.push('| | tokens | |');
+  md.push('|---|---:|---|');
+  md.push(`| o200k, full capture | ${fmt(row.o200kFull)} | the badge number — every byte \`tools/list\` returned |`);
+  md.push(
+    `| o200k, Anthropic fields only | ${fmt(row.o200kMapped)} | ` +
+      `${share === null ? '—' : `${(share * 100).toFixed(1)}% of the capture is MCP-only metadata`} |`,
+  );
+  md.push(
+    `| **Claude, same fields** | **${fmt(row.claudeDelta)}** | ` +
+      `${ratio === null ? '—' : `${ratio.toFixed(2)}× the badge number`} |`,
+  );
+  md.push('');
+  md.push(
+    `An Anthropic tool definition carries \`name\`, \`description\`, and \`input_schema\` and nothing else, so ` +
+      `\`title\`, \`annotations\`, \`outputSchema\`, \`execution\`, and \`icons\` are dropped before the request — ` +
+      `that is the second row. The third row is the same tools counted by Anthropic, which is larger than the ` +
+      `second because Anthropic's tokenizer is denser on this content than o200k_base *and* the API adds its own ` +
+      `framing (at most ${fmt(run.probeDelta)} tokens of it fixed, measured against a single minimal tool). ` +
+      `The two effects run in opposite directions, which is why the Claude number is not a fixed multiple of the badge.`,
+  );
+  md.push('');
+  return md;
+}
+
 /** One server's page. `history` is that server's rows, oldest first. */
-export function renderServerPage(entry: ServerEntry, m: Measurement, history: HistoryRow[] = []): string {
+export function renderServerPage(
+  entry: ServerEntry,
+  m: Measurement,
+  history: HistoryRow[] = [],
+  divergence: DivergenceRun | null = null,
+): string {
   const total = m.totalTokens as number;
   const band = BAND_META[bandColor(total)];
   const tools = [...m.tools].sort((a, b) => b.tokens - a.tokens);
@@ -102,6 +148,11 @@ export function renderServerPage(entry: ServerEntry, m: Measurement, history: Hi
       'boundaries. The badge number is always the count of the whole array, never a sum of parts.',
   );
   md.push('');
+
+  const divRow = divergence?.servers[entry.name];
+  if (divergence && isCurrent(divRow, m.canonicalSha256)) {
+    md.push(...divergenceSection(divRow, divergence));
+  }
 
   if (history.length > 1) {
     md.push('## Over time');
@@ -189,6 +240,7 @@ export function writeServerPages(entries: ServerEntry[], root = process.cwd()): 
 
   const historyPath = join(root, 'results', 'history.csv');
   const history = existsSync(historyPath) ? parseHistory(readFileSync(historyPath, 'utf8')) : [];
+  const divergence = loadDivergence(root);
 
   const rows = entries.map((entry) => {
     const p = join(root, 'results', entry.name, 'measurement.json');
@@ -209,7 +261,7 @@ export function writeServerPages(entries: ServerEntry[], root = process.cwd()): 
     const series = history
       .filter((h) => h.server === entry.name)
       .sort((a, b) => a.date.localeCompare(b.date));
-    writeFileSync(join(outDir, `${entry.name}.md`), renderServerPage(entry, m, series));
+    writeFileSync(join(outDir, `${entry.name}.md`), renderServerPage(entry, m, series, divergence));
     pages++;
   }
   writeFileSync(join(outDir, 'index.md'), renderServerIndex(rows));

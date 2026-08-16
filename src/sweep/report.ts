@@ -5,6 +5,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Measurement } from '../core/types.js';
+import { isCurrent, parseDivergence, type DivergenceRun } from '../core/divergence.js';
 
 export interface ServerEntry {
   name: string;
@@ -45,8 +46,21 @@ function loadRows(entries: ServerEntry[], root = process.cwd()): Row[] {
   });
 }
 
+/** results/divergence.json if a divergence run has been recorded, else null. */
+export function loadDivergence(root = process.cwd()): DivergenceRun | null {
+  const p = join(root, 'results', 'divergence.json');
+  return existsSync(p) ? parseDivergence(readFileSync(p, 'utf8')) : null;
+}
+
 export function writeLeaderboard(entries: ServerEntry[], root = process.cwd()): void {
   const rows = loadRows(entries, root);
+  const div = loadDivergence(root);
+  /** Claude tokens for a row, or null when not measured / stale / errored. */
+  const claude = (r: Row): number | null => {
+    if (!div || !r.m) return null;
+    const d = div.servers[r.entry.name];
+    return isCurrent(d, r.m.canonicalSha256) ? d.claudeDelta : null;
+  };
   const measured = rows
     .filter((r) => r.m && (r.m.status === 'measured' || r.m.status === 'dynamic'))
     .sort((a, b) => (b.m!.totalTokens ?? 0) - (a.m!.totalTokens ?? 0));
@@ -61,14 +75,28 @@ export function writeLeaderboard(entries: ServerEntry[], root = process.cwd()): 
       `Server names link to their per-tool breakdown.`,
   );
   md.push('');
-  md.push('| # | server | tokens | tools | largest tool | status | category |');
-  md.push('|---:|---|---:|---:|---|---|---|');
+  if (div) {
+    const n = measured.filter((r) => claude(r) !== null).length;
+    md.push(
+      `The **claude** column is the same tools measured through Anthropic's \`count_tokens\` on ` +
+        `\`${mdCell(div.model)}\` (${mdCell(div.measuredAt)}, method \`${mdCell(div.method)}\`): the tokens the server's ` +
+        `tools add to a request, measured for the top ${n}. It is not a rescaling of the o200k column — ` +
+        `two effects pull in opposite directions, and the [per-server pages](../docs/servers/) break both out. ` +
+        `See [Claude divergence](../docs/METHODOLOGY.md#claude-divergence).`,
+    );
+    md.push('');
+  }
+  md.push(`| # | server | tokens |${div ? ' claude |' : ''} tools | largest tool | status | category |`);
+  md.push(`|---:|---|---:|${div ? '---:|' : ''}---:|---|---|---|`);
   measured.forEach((r, i) => {
     const m = r.m!;
     const largest = [...m.tools].sort((a, b) => b.tokens - a.tokens)[0];
     const link = `[${mdCell(r.entry.name)}](../docs/servers/${encodeURIComponent(r.entry.name)}.md)`;
+    const c = claude(r);
     md.push(
-      `| ${i + 1} | ${link} | ${m.totalTokens!.toLocaleString('en-US')} | ${m.toolCount} | ` +
+      `| ${i + 1} | ${link} | ${m.totalTokens!.toLocaleString('en-US')} |` +
+        (div ? ` ${c === null ? '—' : c.toLocaleString('en-US')} |` : '') +
+        ` ${m.toolCount} | ` +
         `${largest ? `${mdCell(largest.name)} (${largest.tokens.toLocaleString('en-US')})` : '—'} | ${m.status} | ${mdCell(r.entry.category)} |`,
     );
   });
@@ -86,9 +114,12 @@ export function writeLeaderboard(entries: ServerEntry[], root = process.cwd()): 
   }
   writeFileSync(join(root, 'results', 'leaderboard.md'), md.join('\n') + '\n');
 
-  const csv: string[] = ['name,tokens,toolCount,status,category,metric,metricSource'];
+  // Columns are append-only: consumers key off the header, so adding the Claude
+  // pair at the end leaves every existing parser working.
+  const csv: string[] = ['name,tokens,toolCount,status,category,metric,metricSource,claudeTokens,claudeModel'];
   for (const r of rows) {
     const m = r.m;
+    const c = claude(r);
     csv.push(
       [
         csvCell(r.entry.name),
@@ -98,6 +129,8 @@ export function writeLeaderboard(entries: ServerEntry[], root = process.cwd()): 
         csvCell(r.entry.category),
         r.entry.metric ?? '',
         csvCell(r.entry.metricSource),
+        c ?? '',
+        c === null ? '' : csvCell(div!.model),
       ].join(','),
     );
   }
