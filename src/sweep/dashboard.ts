@@ -18,8 +18,19 @@ interface Row {
   m: Measurement | null;
 }
 
+interface DivergenceEntry {
+  o200kFull: number;
+  o200kMapped: number;
+  claudeDelta: number;
+}
+
 export function generateDashboard(root = process.cwd()): string {
   const doc = parse(readFileSync(join(root, 'servers.yaml'), 'utf8')) as { servers: ServerEntry[] };
+  const divergencePath = join(root, 'results', 'divergence.json');
+  const divergence: { model?: string; servers?: Record<string, DivergenceEntry> } = existsSync(divergencePath)
+    ? JSON.parse(readFileSync(divergencePath, 'utf8'))
+    : {};
+  const dSrv = divergence.servers ?? {};
   const rows: Row[] = doc.servers.map((entry) => {
     const p = join(root, 'results', entry.name, 'measurement.json');
     return { entry, m: existsSync(p) ? (JSON.parse(readFileSync(p, 'utf8')) as Measurement) : null };
@@ -45,8 +56,10 @@ export function generateDashboard(root = process.cwd()): string {
       const meta = BAND_META[band];
       const largest = [...m.tools].sort((a, b) => b.tokens - a.tokens)[0];
       const pct = Math.max(1.2, (t / max) * 100);
+      const div = dSrv[r.entry.name];
+      const claudeTip = div ? ` · in a Claude request: ${fmt(div.claudeDelta)} tok` : '';
       // The whole row is the link to the server's detail page (docs/servers/).
-      return `<a class="row" href="servers/${encodeURIComponent(r.entry.name)}.html" data-tip="${esc(m.toolCount)} tools · largest: ${esc(largest?.name)} (${fmt(largest?.tokens ?? 0)} tok) · ${esc(r.entry.category)} · ${esc(m.status)}${m.serverVersion ? ' · v' + esc(String(m.serverVersion).replace(/^v/, '')) : ''}">
+      return `<a class="row" href="servers/${encodeURIComponent(r.entry.name)}.html" data-tip="${esc(m.toolCount)} tools · largest: ${esc(largest?.name)} (${fmt(largest?.tokens ?? 0)} tok)${claudeTip} · ${esc(r.entry.category)} · ${esc(m.status)}${m.serverVersion ? ' · v' + esc(String(m.serverVersion).replace(/^v/, '')) : ''}">
   <span class="rank">${i + 1}</span>
   <span class="name">${esc(r.entry.name)}</span>
   <span class="track"><span class="bar" style="width:${pct.toFixed(1)}%"></span></span>
@@ -66,7 +79,8 @@ export function generateDashboard(root = process.cwd()): string {
   const tableRows = measured
     .map((r, i) => {
       const m = r.m!;
-      return `<tr><td>${i + 1}</td><td>${esc(r.entry.name)}</td><td class="num">${fmt(m.totalTokens as number)}</td><td class="num">${esc(m.toolCount)}</td><td>${esc(BAND_META[bandColor(m.totalTokens as number)].label)}</td><td>${esc(r.entry.category)}</td></tr>`;
+      const div = dSrv[r.entry.name];
+      return `<tr><td>${i + 1}</td><td>${esc(r.entry.name)}</td><td class="num">${fmt(m.totalTokens as number)}</td><td class="num">${div ? fmt(div.claudeDelta) : '—'}</td><td class="num">${esc(m.toolCount)}</td><td>${esc(BAND_META[bandColor(m.totalTokens as number)].label)}</td><td>${esc(r.entry.category)}</td></tr>`;
     })
     .join('\n');
 
@@ -181,7 +195,7 @@ export function generateDashboard(root = process.cwd()): string {
   </div>
 
   <h2>Leaderboard</h2>
-  <p class="h2sub">Tokens = o200k_base count of the canonical <code>tools/list</code> bytes. Hover or focus a row for detail; open a row for its per-tool breakdown.</p>
+  <p class="h2sub">Tokens = o200k_base count of the canonical <code>tools/list</code> bytes — the wire payload. What a <em>Claude request</em> actually carries can differ sharply (github: 54,422 on the wire, ${dSrv['github'] ? fmt(dSrv['github'].claudeDelta) : '…'} in a request — 80% of its schema bytes are fields no Anthropic request sends). Hover a row for both numbers; <a href="METHODOLOGY.html#claude-divergence">method</a>.</p>
   <div class="board">
 ${barRows || '<p class="h2sub">Sweep in progress — first results land shortly.</p>'}
   </div>
@@ -207,7 +221,7 @@ ${barRows || '<p class="h2sub">Sweep in progress — first results land shortly.
 
   <details><summary>Full data table</summary>
   <div class="tablewrap" style="margin-top:10px"><table>
-    <thead><tr><th>#</th><th>server</th><th>tokens</th><th>tools</th><th>band</th><th>category</th></tr></thead>
+    <thead><tr><th>#</th><th>server</th><th>tokens (o200k)</th><th>claude req</th><th>tools</th><th>band</th><th>category</th></tr></thead>
     <tbody>${tableRows}</tbody>
   </table></div>
   </details>

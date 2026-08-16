@@ -87,7 +87,7 @@
 </style>
 <div class="wrap">
   <header>
-    <p class="eyebrow">methodology v1.0 · o200k_base · generated 2026-08-16 15:26 UTC</p>
+    <p class="eyebrow">methodology v1.0 · o200k_base · generated 2026-08-16 18:56 UTC</p>
     <h1>mcp-context-cost</h1>
     <p class="sub">What popular MCP servers cost in context tokens before the agent does any work — measured from raw <code>tools/list</code> captures, every number re-derivable from its published measurement file.</p>
   </header>
@@ -100,93 +100,93 @@
   </div>
 
   <h2>Leaderboard</h2>
-  <p class="h2sub">Tokens = o200k_base count of the canonical <code>tools/list</code> bytes. Hover or focus a row for detail; open a row for its per-tool breakdown.</p>
+  <p class="h2sub">Tokens = o200k_base count of the canonical <code>tools/list</code> bytes — the wire payload. What a <em>Claude request</em> actually carries can differ sharply (github: 54,422 on the wire, 18,406 in a request — 80% of its schema bytes are fields no Anthropic request sends). Hover a row for both numbers; <a href="METHODOLOGY.html#claude-divergence">method</a>.</p>
   <div class="board">
-<a class="row" href="servers/github.html" data-tip="44 tools · largest: issue_write (1,890 tok) · vendor-official · measured · v1.9.0">
+<a class="row" href="servers/github.html" data-tip="44 tools · largest: issue_write (1,890 tok) · in a Claude request: 18,406 tok · vendor-official · measured · v1.9.0">
   <span class="rank">1</span>
   <span class="name">github</span>
   <span class="track"><span class="bar" style="width:100.0%"></span></span>
   <span class="val"><span class="dot dot-red" aria-hidden="true"></span>54,422<span class="bandname">very heavy</span></span>
 </a>
-<a class="row" href="servers/brave-search.html" data-tip="8 tools · largest: brave_place_search (17,282 tok) · vendor-official · measured · v2.1.0">
+<a class="row" href="servers/brave-search.html" data-tip="8 tools · largest: brave_place_search (17,282 tok) · in a Claude request: 13,746 tok · vendor-official · measured · v2.1.0">
   <span class="rank">2</span>
   <span class="name">brave-search</span>
   <span class="track"><span class="bar" style="width:46.8%"></span></span>
   <span class="val"><span class="dot dot-orange" aria-hidden="true"></span>25,456<span class="bandname">heavy</span></span>
 </a>
-<a class="row" href="servers/notion.html" data-tip="24 tools · largest: API-update-page-markdown (1,282 tok) · vendor-official · measured · v1.0.0">
+<a class="row" href="servers/notion.html" data-tip="24 tools · largest: API-update-page-markdown (1,282 tok) · in a Claude request: 33,560 tok · vendor-official · measured · v1.0.0">
   <span class="rank">3</span>
   <span class="name">notion</span>
   <span class="track"><span class="bar" style="width:32.2%"></span></span>
   <span class="val"><span class="dot dot-orange" aria-hidden="true"></span>17,500<span class="bandname">heavy</span></span>
 </a>
-<a class="row" href="servers/mcp-atlassian.html" data-tip="63 tools · largest: jira_update_proforma_form_answers (800 tok) · community · dynamic · v3.4.7">
+<a class="row" href="servers/mcp-atlassian.html" data-tip="63 tools · largest: jira_update_proforma_form_answers (800 tok) · in a Claude request: 22,234 tok · community · dynamic · v3.4.7">
   <span class="rank">4</span>
   <span class="name">mcp-atlassian</span>
   <span class="track"><span class="bar" style="width:31.8%"></span></span>
   <span class="val"><span class="dot dot-orange" aria-hidden="true"></span>17,311<span class="bandname">heavy</span></span>
 </a>
-<a class="row" href="servers/circleci.html" data-tip="13 tools · largest: run_rollback_pipeline (1,391 tok) · vendor-official · measured · v1.0.0">
+<a class="row" href="servers/circleci.html" data-tip="13 tools · largest: run_rollback_pipeline (1,391 tok) · in a Claude request: 19,164 tok · vendor-official · measured · v1.0.0">
   <span class="rank">5</span>
   <span class="name">circleci</span>
   <span class="track"><span class="bar" style="width:21.9%"></span></span>
   <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>11,912<span class="bandname">moderate</span></span>
 </a>
-<a class="row" href="servers/apify.html" data-tip="10 tools · largest: search-actors (2,200 tok) · vendor-official · measured · v0.14.3">
+<a class="row" href="servers/apify.html" data-tip="10 tools · largest: search-actors (2,200 tok) · in a Claude request: 8,313 tok · vendor-official · measured · v0.14.3">
   <span class="rank">6</span>
   <span class="name">apify</span>
   <span class="track"><span class="bar" style="width:19.2%"></span></span>
   <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>10,426<span class="bandname">moderate</span></span>
 </a>
-<a class="row" href="servers/firecrawl.html" data-tip="27 tools · largest: firecrawl_search (1,391 tok) · vendor-official · measured · v3.24.0">
+<a class="row" href="servers/firecrawl.html" data-tip="27 tools · largest: firecrawl_search (1,391 tok) · in a Claude request: 16,428 tok · vendor-official · measured · v3.24.0">
   <span class="rank">7</span>
   <span class="name">firecrawl</span>
   <span class="track"><span class="bar" style="width:17.6%"></span></span>
   <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>9,561<span class="bandname">moderate</span></span>
 </a>
-<a class="row" href="servers/basic-memory.html" data-tip="23 tools · largest: search_notes (970 tok) · community · measured · v3.3.1">
+<a class="row" href="servers/basic-memory.html" data-tip="23 tools · largest: search_notes (970 tok) · in a Claude request: 12,426 tok · community · measured · v3.3.1">
   <span class="rank">8</span>
   <span class="name">basic-memory</span>
   <span class="track"><span class="bar" style="width:16.9%"></span></span>
   <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>9,188<span class="bandname">moderate</span></span>
 </a>
-<a class="row" href="servers/hubspot.html" data-tip="21 tools · largest: hubspot-search-objects (964 tok) · vendor-official · measured · v0.4.0">
+<a class="row" href="servers/hubspot.html" data-tip="21 tools · largest: hubspot-search-objects (964 tok) · in a Claude request: 14,398 tok · vendor-official · measured · v0.4.0">
   <span class="rank">9</span>
   <span class="name">hubspot</span>
   <span class="track"><span class="bar" style="width:16.8%"></span></span>
   <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>9,158<span class="bandname">moderate</span></span>
 </a>
-<a class="row" href="servers/mongodb.html" data-tip="27 tools · largest: explain (813 tok) · vendor-official · measured · v2.1.0">
+<a class="row" href="servers/mongodb.html" data-tip="27 tools · largest: explain (813 tok) · in a Claude request: 8,765 tok · vendor-official · measured · v2.1.0">
   <span class="rank">10</span>
   <span class="name">mongodb</span>
   <span class="track"><span class="bar" style="width:14.6%"></span></span>
   <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>7,926<span class="bandname">moderate</span></span>
 </a>
-<a class="row" href="servers/sentry.html" data-tip="9 tools · largest: update_issue (1,306 tok) · vendor-official · measured · v0.37.0">
+<a class="row" href="servers/sentry.html" data-tip="9 tools · largest: update_issue (1,306 tok) · in a Claude request: 10,463 tok · vendor-official · measured · v0.37.0">
   <span class="rank">11</span>
   <span class="name">sentry</span>
   <span class="track"><span class="bar" style="width:11.9%"></span></span>
   <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>6,455<span class="bandname">moderate</span></span>
 </a>
-<a class="row" href="servers/pinecone.html" data-tip="9 tools · largest: search-records (1,179 tok) · vendor-official · measured · v0.3.0">
+<a class="row" href="servers/pinecone.html" data-tip="9 tools · largest: search-records (1,179 tok) · in a Claude request: 9,184 tok · vendor-official · measured · v0.3.0">
   <span class="rank">12</span>
   <span class="name">pinecone</span>
   <span class="track"><span class="bar" style="width:10.8%"></span></span>
   <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>5,903<span class="bandname">moderate</span></span>
 </a>
-<a class="row" href="servers/shopify-dev.html" data-tip="5 tools · largest: learn_shopify_api (2,518 tok) · vendor-official · measured · v1.14.4">
+<a class="row" href="servers/shopify-dev.html" data-tip="5 tools · largest: learn_shopify_api (2,518 tok) · in a Claude request: 9,805 tok · vendor-official · measured · v1.14.4">
   <span class="rank">13</span>
   <span class="name">shopify-dev</span>
   <span class="track"><span class="bar" style="width:10.3%"></span></span>
   <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>5,624<span class="bandname">moderate</span></span>
 </a>
-<a class="row" href="servers/kubernetes.html" data-tip="23 tools · largest: kubectl_create (945 tok) · community · measured · v4.1.4">
+<a class="row" href="servers/kubernetes.html" data-tip="23 tools · largest: kubectl_create (945 tok) · in a Claude request: 9,165 tok · community · measured · v4.1.4">
   <span class="rank">14</span>
   <span class="name">kubernetes</span>
   <span class="track"><span class="bar" style="width:9.7%"></span></span>
   <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>5,268<span class="bandname">moderate</span></span>
 </a>
-<a class="row" href="servers/blender.html" data-tip="24 tools · largest: generate_hyper3d_model_via_images (454 tok) · community · measured · v1.29.0">
+<a class="row" href="servers/blender.html" data-tip="24 tools · largest: generate_hyper3d_model_via_images (454 tok) · in a Claude request: 8,106 tok · community · measured · v1.29.0">
   <span class="rank">15</span>
   <span class="name">blender</span>
   <span class="track"><span class="bar" style="width:9.7%"></span></span>
@@ -522,64 +522,64 @@ npm warn deprecat</td></tr>
 
   <details><summary>Full data table</summary>
   <div class="tablewrap" style="margin-top:10px"><table>
-    <thead><tr><th>#</th><th>server</th><th>tokens</th><th>tools</th><th>band</th><th>category</th></tr></thead>
-    <tbody><tr><td>1</td><td>github</td><td class="num">54,422</td><td class="num">44</td><td>very heavy</td><td>vendor-official</td></tr>
-<tr><td>2</td><td>brave-search</td><td class="num">25,456</td><td class="num">8</td><td>heavy</td><td>vendor-official</td></tr>
-<tr><td>3</td><td>notion</td><td class="num">17,500</td><td class="num">24</td><td>heavy</td><td>vendor-official</td></tr>
-<tr><td>4</td><td>mcp-atlassian</td><td class="num">17,311</td><td class="num">63</td><td>heavy</td><td>community</td></tr>
-<tr><td>5</td><td>circleci</td><td class="num">11,912</td><td class="num">13</td><td>moderate</td><td>vendor-official</td></tr>
-<tr><td>6</td><td>apify</td><td class="num">10,426</td><td class="num">10</td><td>moderate</td><td>vendor-official</td></tr>
-<tr><td>7</td><td>firecrawl</td><td class="num">9,561</td><td class="num">27</td><td>moderate</td><td>vendor-official</td></tr>
-<tr><td>8</td><td>basic-memory</td><td class="num">9,188</td><td class="num">23</td><td>moderate</td><td>community</td></tr>
-<tr><td>9</td><td>hubspot</td><td class="num">9,158</td><td class="num">21</td><td>moderate</td><td>vendor-official</td></tr>
-<tr><td>10</td><td>mongodb</td><td class="num">7,926</td><td class="num">27</td><td>moderate</td><td>vendor-official</td></tr>
-<tr><td>11</td><td>sentry</td><td class="num">6,455</td><td class="num">9</td><td>moderate</td><td>vendor-official</td></tr>
-<tr><td>12</td><td>pinecone</td><td class="num">5,903</td><td class="num">9</td><td>moderate</td><td>vendor-official</td></tr>
-<tr><td>13</td><td>shopify-dev</td><td class="num">5,624</td><td class="num">5</td><td>moderate</td><td>vendor-official</td></tr>
-<tr><td>14</td><td>kubernetes</td><td class="num">5,268</td><td class="num">23</td><td>moderate</td><td>community</td></tr>
-<tr><td>15</td><td>blender</td><td class="num">5,258</td><td class="num">24</td><td>moderate</td><td>community</td></tr>
-<tr><td>16</td><td>aws-documentation</td><td class="num">5,074</td><td class="num">5</td><td>moderate</td><td>vendor-official</td></tr>
-<tr><td>17</td><td>supabase</td><td class="num">5,013</td><td class="num">29</td><td>moderate</td><td>vendor-official</td></tr>
-<tr><td>18</td><td>huggingface</td><td class="num">4,691</td><td class="num">4</td><td>light</td><td>vendor-official</td></tr>
-<tr><td>19</td><td>excel</td><td class="num">4,266</td><td class="num">25</td><td>light</td><td>community</td></tr>
-<tr><td>20</td><td>airtable</td><td class="num">4,207</td><td class="num">16</td><td>light</td><td>community</td></tr>
-<tr><td>21</td><td>playwright</td><td class="num">4,024</td><td class="num">24</td><td>light</td><td>vendor-official</td></tr>
-<tr><td>22</td><td>github-legacy</td><td class="num">3,548</td><td class="num">26</td><td>light</td><td>official-reference</td></tr>
-<tr><td>23</td><td>arxiv</td><td class="num">3,228</td><td class="num">14</td><td>light</td><td>community</td></tr>
-<tr><td>24</td><td>playwright-community</td><td class="num">2,920</td><td class="num">33</td><td>light</td><td>community</td></tr>
-<tr><td>25</td><td>chroma</td><td class="num">2,837</td><td class="num">13</td><td>light</td><td>vendor-official</td></tr>
-<tr><td>26</td><td>netlify</td><td class="num">2,831</td><td class="num">9</td><td>light</td><td>vendor-official</td></tr>
-<tr><td>27</td><td>filesystem</td><td class="num">2,823</td><td class="num">14</td><td>light</td><td>official-reference</td></tr>
-<tr><td>28</td><td>pulumi</td><td class="num">2,768</td><td class="num">12</td><td>light</td><td>vendor-official</td></tr>
-<tr><td>29</td><td>n8n-mcp</td><td class="num">2,636</td><td class="num">7</td><td>light</td><td>community</td></tr>
-<tr><td>30</td><td>memory</td><td class="num">2,378</td><td class="num">9</td><td>light</td><td>official-reference</td></tr>
-<tr><td>31</td><td>terraform</td><td class="num">2,061</td><td class="num">9</td><td>light</td><td>vendor-official</td></tr>
-<tr><td>32</td><td>everything</td><td class="num">1,708</td><td class="num">13</td><td>light</td><td>official-reference</td></tr>
-<tr><td>33</td><td>tavily</td><td class="num">1,653</td><td class="num">5</td><td>light</td><td>vendor-official</td></tr>
-<tr><td>34</td><td>searxng</td><td class="num">1,481</td><td class="num">4</td><td>light</td><td>community</td></tr>
-<tr><td>35</td><td>pandoc</td><td class="num">1,425</td><td class="num">1</td><td>light</td><td>community</td></tr>
-<tr><td>36</td><td>context7</td><td class="num">1,052</td><td class="num">2</td><td>light</td><td>vendor-official</td></tr>
-<tr><td>37</td><td>sequential-thinking</td><td class="num">992</td><td class="num">1</td><td>lean</td><td>official-reference</td></tr>
-<tr><td>38</td><td>bright-data</td><td class="num">978</td><td class="num">5</td><td>lean</td><td>vendor-official</td></tr>
-<tr><td>39</td><td>microsoft-learn</td><td class="num">972</td><td class="num">3</td><td>lean</td><td>vendor-official</td></tr>
-<tr><td>40</td><td>figma-context</td><td class="num">946</td><td class="num">2</td><td>lean</td><td>community</td></tr>
-<tr><td>41</td><td>duckduckgo</td><td class="num">724</td><td class="num">2</td><td>lean</td><td>community</td></tr>
-<tr><td>42</td><td>slack-legacy</td><td class="num">681</td><td class="num">8</td><td>lean</td><td>official-reference</td></tr>
-<tr><td>43</td><td>clickhouse</td><td class="num">581</td><td class="num">3</td><td>lean</td><td>vendor-official</td></tr>
-<tr><td>44</td><td>google-maps</td><td class="num">549</td><td class="num">7</td><td>lean</td><td>official-reference</td></tr>
-<tr><td>45</td><td>puppeteer</td><td class="num">540</td><td class="num">7</td><td>lean</td><td>official-reference</td></tr>
-<tr><td>46</td><td>exa</td><td class="num">486</td><td class="num">2</td><td>lean</td><td>vendor-official</td></tr>
-<tr><td>47</td><td>airbnb</td><td class="num">486</td><td class="num">2</td><td>lean</td><td>community</td></tr>
-<tr><td>48</td><td>cloudflare-docs</td><td class="num">422</td><td class="num">2</td><td>lean</td><td>vendor-official</td></tr>
-<tr><td>49</td><td>mysql</td><td class="num">393</td><td class="num">3</td><td>lean</td><td>community</td></tr>
-<tr><td>50</td><td>browserbase</td><td class="num">364</td><td class="num">6</td><td>lean</td><td>vendor-official</td></tr>
-<tr><td>51</td><td>deepwiki</td><td class="num">359</td><td class="num">3</td><td>lean</td><td>vendor-official</td></tr>
-<tr><td>52</td><td>gitlab</td><td class="num">336</td><td class="num">9</td><td>lean</td><td>official-reference</td></tr>
-<tr><td>53</td><td>brave-search-legacy</td><td class="num">319</td><td class="num">2</td><td>lean</td><td>official-reference</td></tr>
-<tr><td>54</td><td>qdrant</td><td class="num">188</td><td class="num">2</td><td>lean</td><td>vendor-official</td></tr>
-<tr><td>55</td><td>perplexity</td><td class="num">133</td><td class="num">1</td><td>lean</td><td>vendor-official</td></tr>
-<tr><td>56</td><td>markitdown</td><td class="num">64</td><td class="num">1</td><td>lean</td><td>vendor-official</td></tr>
-<tr><td>57</td><td>postgres</td><td class="num">32</td><td class="num">1</td><td>lean</td><td>official-reference</td></tr></tbody>
+    <thead><tr><th>#</th><th>server</th><th>tokens (o200k)</th><th>claude req</th><th>tools</th><th>band</th><th>category</th></tr></thead>
+    <tbody><tr><td>1</td><td>github</td><td class="num">54,422</td><td class="num">18,406</td><td class="num">44</td><td>very heavy</td><td>vendor-official</td></tr>
+<tr><td>2</td><td>brave-search</td><td class="num">25,456</td><td class="num">13,746</td><td class="num">8</td><td>heavy</td><td>vendor-official</td></tr>
+<tr><td>3</td><td>notion</td><td class="num">17,500</td><td class="num">33,560</td><td class="num">24</td><td>heavy</td><td>vendor-official</td></tr>
+<tr><td>4</td><td>mcp-atlassian</td><td class="num">17,311</td><td class="num">22,234</td><td class="num">63</td><td>heavy</td><td>community</td></tr>
+<tr><td>5</td><td>circleci</td><td class="num">11,912</td><td class="num">19,164</td><td class="num">13</td><td>moderate</td><td>vendor-official</td></tr>
+<tr><td>6</td><td>apify</td><td class="num">10,426</td><td class="num">8,313</td><td class="num">10</td><td>moderate</td><td>vendor-official</td></tr>
+<tr><td>7</td><td>firecrawl</td><td class="num">9,561</td><td class="num">16,428</td><td class="num">27</td><td>moderate</td><td>vendor-official</td></tr>
+<tr><td>8</td><td>basic-memory</td><td class="num">9,188</td><td class="num">12,426</td><td class="num">23</td><td>moderate</td><td>community</td></tr>
+<tr><td>9</td><td>hubspot</td><td class="num">9,158</td><td class="num">14,398</td><td class="num">21</td><td>moderate</td><td>vendor-official</td></tr>
+<tr><td>10</td><td>mongodb</td><td class="num">7,926</td><td class="num">8,765</td><td class="num">27</td><td>moderate</td><td>vendor-official</td></tr>
+<tr><td>11</td><td>sentry</td><td class="num">6,455</td><td class="num">10,463</td><td class="num">9</td><td>moderate</td><td>vendor-official</td></tr>
+<tr><td>12</td><td>pinecone</td><td class="num">5,903</td><td class="num">9,184</td><td class="num">9</td><td>moderate</td><td>vendor-official</td></tr>
+<tr><td>13</td><td>shopify-dev</td><td class="num">5,624</td><td class="num">9,805</td><td class="num">5</td><td>moderate</td><td>vendor-official</td></tr>
+<tr><td>14</td><td>kubernetes</td><td class="num">5,268</td><td class="num">9,165</td><td class="num">23</td><td>moderate</td><td>community</td></tr>
+<tr><td>15</td><td>blender</td><td class="num">5,258</td><td class="num">8,106</td><td class="num">24</td><td>moderate</td><td>community</td></tr>
+<tr><td>16</td><td>aws-documentation</td><td class="num">5,074</td><td class="num">—</td><td class="num">5</td><td>moderate</td><td>vendor-official</td></tr>
+<tr><td>17</td><td>supabase</td><td class="num">5,013</td><td class="num">—</td><td class="num">29</td><td>moderate</td><td>vendor-official</td></tr>
+<tr><td>18</td><td>huggingface</td><td class="num">4,691</td><td class="num">—</td><td class="num">4</td><td>light</td><td>vendor-official</td></tr>
+<tr><td>19</td><td>excel</td><td class="num">4,266</td><td class="num">—</td><td class="num">25</td><td>light</td><td>community</td></tr>
+<tr><td>20</td><td>airtable</td><td class="num">4,207</td><td class="num">—</td><td class="num">16</td><td>light</td><td>community</td></tr>
+<tr><td>21</td><td>playwright</td><td class="num">4,024</td><td class="num">—</td><td class="num">24</td><td>light</td><td>vendor-official</td></tr>
+<tr><td>22</td><td>github-legacy</td><td class="num">3,548</td><td class="num">—</td><td class="num">26</td><td>light</td><td>official-reference</td></tr>
+<tr><td>23</td><td>arxiv</td><td class="num">3,228</td><td class="num">—</td><td class="num">14</td><td>light</td><td>community</td></tr>
+<tr><td>24</td><td>playwright-community</td><td class="num">2,920</td><td class="num">—</td><td class="num">33</td><td>light</td><td>community</td></tr>
+<tr><td>25</td><td>chroma</td><td class="num">2,837</td><td class="num">—</td><td class="num">13</td><td>light</td><td>vendor-official</td></tr>
+<tr><td>26</td><td>netlify</td><td class="num">2,831</td><td class="num">—</td><td class="num">9</td><td>light</td><td>vendor-official</td></tr>
+<tr><td>27</td><td>filesystem</td><td class="num">2,823</td><td class="num">—</td><td class="num">14</td><td>light</td><td>official-reference</td></tr>
+<tr><td>28</td><td>pulumi</td><td class="num">2,768</td><td class="num">—</td><td class="num">12</td><td>light</td><td>vendor-official</td></tr>
+<tr><td>29</td><td>n8n-mcp</td><td class="num">2,636</td><td class="num">—</td><td class="num">7</td><td>light</td><td>community</td></tr>
+<tr><td>30</td><td>memory</td><td class="num">2,378</td><td class="num">—</td><td class="num">9</td><td>light</td><td>official-reference</td></tr>
+<tr><td>31</td><td>terraform</td><td class="num">2,061</td><td class="num">—</td><td class="num">9</td><td>light</td><td>vendor-official</td></tr>
+<tr><td>32</td><td>everything</td><td class="num">1,708</td><td class="num">—</td><td class="num">13</td><td>light</td><td>official-reference</td></tr>
+<tr><td>33</td><td>tavily</td><td class="num">1,653</td><td class="num">—</td><td class="num">5</td><td>light</td><td>vendor-official</td></tr>
+<tr><td>34</td><td>searxng</td><td class="num">1,481</td><td class="num">—</td><td class="num">4</td><td>light</td><td>community</td></tr>
+<tr><td>35</td><td>pandoc</td><td class="num">1,425</td><td class="num">—</td><td class="num">1</td><td>light</td><td>community</td></tr>
+<tr><td>36</td><td>context7</td><td class="num">1,052</td><td class="num">—</td><td class="num">2</td><td>light</td><td>vendor-official</td></tr>
+<tr><td>37</td><td>sequential-thinking</td><td class="num">992</td><td class="num">—</td><td class="num">1</td><td>lean</td><td>official-reference</td></tr>
+<tr><td>38</td><td>bright-data</td><td class="num">978</td><td class="num">—</td><td class="num">5</td><td>lean</td><td>vendor-official</td></tr>
+<tr><td>39</td><td>microsoft-learn</td><td class="num">972</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>vendor-official</td></tr>
+<tr><td>40</td><td>figma-context</td><td class="num">946</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>community</td></tr>
+<tr><td>41</td><td>duckduckgo</td><td class="num">724</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>community</td></tr>
+<tr><td>42</td><td>slack-legacy</td><td class="num">681</td><td class="num">—</td><td class="num">8</td><td>lean</td><td>official-reference</td></tr>
+<tr><td>43</td><td>clickhouse</td><td class="num">581</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>vendor-official</td></tr>
+<tr><td>44</td><td>google-maps</td><td class="num">549</td><td class="num">—</td><td class="num">7</td><td>lean</td><td>official-reference</td></tr>
+<tr><td>45</td><td>puppeteer</td><td class="num">540</td><td class="num">—</td><td class="num">7</td><td>lean</td><td>official-reference</td></tr>
+<tr><td>46</td><td>exa</td><td class="num">486</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>vendor-official</td></tr>
+<tr><td>47</td><td>airbnb</td><td class="num">486</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>community</td></tr>
+<tr><td>48</td><td>cloudflare-docs</td><td class="num">422</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>vendor-official</td></tr>
+<tr><td>49</td><td>mysql</td><td class="num">393</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>community</td></tr>
+<tr><td>50</td><td>browserbase</td><td class="num">364</td><td class="num">—</td><td class="num">6</td><td>lean</td><td>vendor-official</td></tr>
+<tr><td>51</td><td>deepwiki</td><td class="num">359</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>vendor-official</td></tr>
+<tr><td>52</td><td>gitlab</td><td class="num">336</td><td class="num">—</td><td class="num">9</td><td>lean</td><td>official-reference</td></tr>
+<tr><td>53</td><td>brave-search-legacy</td><td class="num">319</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>official-reference</td></tr>
+<tr><td>54</td><td>qdrant</td><td class="num">188</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>vendor-official</td></tr>
+<tr><td>55</td><td>perplexity</td><td class="num">133</td><td class="num">—</td><td class="num">1</td><td>lean</td><td>vendor-official</td></tr>
+<tr><td>56</td><td>markitdown</td><td class="num">64</td><td class="num">—</td><td class="num">1</td><td>lean</td><td>vendor-official</td></tr>
+<tr><td>57</td><td>postgres</td><td class="num">32</td><td class="num">—</td><td class="num">1</td><td>lean</td><td>official-reference</td></tr></tbody>
   </table></div>
   </details>
 
