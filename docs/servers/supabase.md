@@ -1,0 +1,61 @@
+# supabase — context cost
+
+**5,013 tokens** across 29 tools — *moderate* (5–15K). Measured 2026-08-16 under [methodology v1.0](../METHODOLOGY.html).
+
+| | |
+|---|---|
+| server (self-reported) | supabase v0.10.0 |
+| status | measured |
+| tokenizer | tiktoken / o200k_base |
+| launch command | `npx -y @supabase/mcp-server-supabase@latest` |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| env vars supplied | SUPABASE_ACCESS_TOKEN |
+| canonical SHA-256 | `ebbc7cd5f3f0c9a1c7eff808c38c4630b4cdc88126e34538b46b860efb89bd35` |
+| category | vendor-official |
+| source | https://github.com/supabase-community/supabase-mcp |
+
+## Where the tokens are
+
+| tool | tokens | share | description | schema |
+|---|---:|---:|---:|---:|
+| query_logs | 800 | 16.0% | 102 | 655 |
+| search_docs | 483 | 9.6% | 387 | 48 |
+| deploy_edge_function | 447 | 8.9% | 104 | 277 |
+| create_project | 279 | 5.6% | 39 | 198 |
+| create_branch | 193 | 3.8% | 60 | 91 |
+| list_tables | 189 | 3.8% | 33 | 114 |
+| get_advisors | 180 | 3.6% | 69 | 66 |
+| get_publishable_keys | 173 | 3.5% | 86 | 41 |
+| confirm_cost | 162 | 3.2% | 46 | 72 |
+| get_cost | 149 | 3.0% | 36 | 68 |
+| apply_migration | 149 | 3.0% | 28 | 78 |
+| execute_sql | 143 | 2.9% | 43 | 58 |
+| reset_branch | 122 | 2.4% | 19 | 61 |
+| list_branches | 116 | 2.3% | 32 | 41 |
+| rebase_branch | 111 | 2.2% | 26 | 41 |
+| get_edge_function | 110 | 2.2% | 14 | 52 |
+| get_organization | 99 | 2.0% | 10 | 45 |
+| list_projects | 98 | 2.0% | 27 | 29 |
+| get_project | 96 | 1.9% | 8 | 45 |
+| generate_typescript_types | 96 | 1.9% | 9 | 41 |
+| merge_branch | 96 | 1.9% | 13 | 41 |
+| list_edge_functions | 95 | 1.9% | 10 | 41 |
+| get_project_url | 93 | 1.9% | 8 | 41 |
+| list_migrations | 91 | 1.8% | 7 | 41 |
+| pause_project | 90 | 1.8% | 7 | 41 |
+| restore_project | 90 | 1.8% | 7 | 41 |
+| list_extensions | 90 | 1.8% | 7 | 41 |
+| delete_branch | 88 | 1.8% | 5 | 41 |
+| list_organizations | 83 | 1.7% | 11 | 29 |
+
+Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
+
+## Re-derive it
+
+```bash
+npx -y mcp-context-cost verify results/supabase/measurement.json
+```
+
+That re-tokenizes the [published capture](https://github.com/athakur3/mcp-context-cost/blob/main/results/supabase/measurement.json) and checks the count and the hash. If it disagrees with the badge, the badge is wrong — [open an issue](https://github.com/athakur3/mcp-context-cost/issues) and it gets corrected.
+
+[Badge JSON](https://github.com/athakur3/mcp-context-cost/blob/main/badges/supabase.json) · [All servers](index.html) · [Leaderboard](https://github.com/athakur3/mcp-context-cost/blob/main/results/leaderboard.md) · [Methodology](../METHODOLOGY.html)

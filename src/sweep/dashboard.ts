@@ -8,18 +8,10 @@ import { dirname, join } from 'node:path';
 import { parse } from 'yaml';
 import type { Measurement } from '../core/types.js';
 import type { ServerEntry } from './report.js';
-import { bandColor } from '../core/bands.js';
+import { bandColor, BAND_META } from '../core/bands.js';
 
 const esc = (s: unknown): string =>
   String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-
-const BAND_META: Record<string, { label: string; range: string }> = {
-  brightgreen: { label: 'lean', range: '< 1K' },
-  green: { label: 'light', range: '1–5K' },
-  yellow: { label: 'moderate', range: '5–15K' },
-  orange: { label: 'heavy', range: '15–30K' },
-  red: { label: 'very heavy', range: '≥ 30K' },
-};
 
 interface Row {
   entry: ServerEntry;
@@ -53,12 +45,13 @@ export function generateDashboard(root = process.cwd()): string {
       const meta = BAND_META[band];
       const largest = [...m.tools].sort((a, b) => b.tokens - a.tokens)[0];
       const pct = Math.max(1.2, (t / max) * 100);
-      return `<div class="row" tabindex="0" data-tip="${esc(m.toolCount)} tools · largest: ${esc(largest?.name)} (${fmt(largest?.tokens ?? 0)} tok) · ${esc(r.entry.category)} · ${esc(m.status)}${m.serverVersion ? ' · v' + esc(String(m.serverVersion).replace(/^v/, '')) : ''}">
+      // The whole row is the link to the server's detail page (docs/servers/).
+      return `<a class="row" href="servers/${encodeURIComponent(r.entry.name)}.html" data-tip="${esc(m.toolCount)} tools · largest: ${esc(largest?.name)} (${fmt(largest?.tokens ?? 0)} tok) · ${esc(r.entry.category)} · ${esc(m.status)}${m.serverVersion ? ' · v' + esc(String(m.serverVersion).replace(/^v/, '')) : ''}">
   <span class="rank">${i + 1}</span>
   <span class="name">${esc(r.entry.name)}</span>
   <span class="track"><span class="bar" style="width:${pct.toFixed(1)}%"></span></span>
   <span class="val"><span class="dot dot-${band}" aria-hidden="true"></span>${fmt(t)}<span class="bandname">${meta.label}</span></span>
-</div>`;
+</a>`;
     })
     .join('\n');
 
@@ -133,8 +126,9 @@ export function generateDashboard(root = process.cwd()): string {
   .stat .l { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 
   .board { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; }
-  .row { display: grid; grid-template-columns: 2ch minmax(120px, 190px) 1fr max-content; gap: 10px; align-items: center; padding: 3px 4px; border-radius: 4px; outline: none; }
+  .row { display: grid; grid-template-columns: 2ch minmax(120px, 190px) 1fr max-content; gap: 10px; align-items: center; padding: 3px 4px; border-radius: 4px; outline: none; color: inherit; text-decoration: none; }
   .row:hover, .row:focus-visible { background: var(--accent-soft); }
+  .row:hover .name, .row:focus-visible .name { text-decoration: underline; }
   .rank { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
   .name { font-size: 0.86rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .track { background: var(--track); border-radius: 3px; height: 12px; overflow: hidden; }
@@ -187,7 +181,7 @@ export function generateDashboard(root = process.cwd()): string {
   </div>
 
   <h2>Leaderboard</h2>
-  <p class="h2sub">Tokens = o200k_base count of the canonical <code>tools/list</code> bytes. Hover or focus a row for detail.</p>
+  <p class="h2sub">Tokens = o200k_base count of the canonical <code>tools/list</code> bytes. Hover or focus a row for detail; open a row for its per-tool breakdown.</p>
   <div class="board">
 ${barRows || '<p class="h2sub">Sweep in progress — first results land shortly.</p>'}
   </div>

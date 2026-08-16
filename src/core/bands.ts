@@ -12,3 +12,12 @@ export function bandColor(totalTokens: number): string {
 }
 
 export const UNKNOWN_COLOR = 'lightgrey';
+
+/** Human-readable name + range for each band, shared by every generated view. */
+export const BAND_META: Record<string, { label: string; range: string }> = {
+  brightgreen: { label: 'lean', range: '< 1K' },
+  green: { label: 'light', range: '1–5K' },
+  yellow: { label: 'moderate', range: '5–15K' },
+  orange: { label: 'heavy', range: '15–30K' },
+  red: { label: 'very heavy', range: '≥ 30K' },
+};

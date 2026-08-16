@@ -1,0 +1,37 @@
+# shopify-dev — context cost
+
+**5,624 tokens** across 5 tools — *moderate* (5–15K). Measured 2026-08-16 under [methodology v1.0](../METHODOLOGY.html).
+
+| | |
+|---|---|
+| server (self-reported) | shopify-dev-mcp v1.14.4 |
+| status | measured |
+| tokenizer | tiktoken / o200k_base |
+| launch command | `npx -y @shopify/dev-mcp@latest` |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| env vars supplied | none |
+| canonical SHA-256 | `6c863ee06d8d4d8fb2ade2e07673c087b75cc1482b3e521e9c9375151860c659` |
+| category | vendor-official |
+| source | https://shopify.dev/docs/apps/build/devmcp (GitHub repo not public) |
+
+## Where the tokens are
+
+| tool | tokens | share | description | schema |
+|---|---:|---:|---:|---:|
+| learn_shopify_api | 2,518 | 44.8% | 2,102 | 344 |
+| validate_graphql_codeblocks | 1,179 | 21.0% | 202 | 949 |
+| validate_component_codeblocks | 1,173 | 20.9% | 547 | 550 |
+| validate_theme | 451 | 8.0% | 194 | 236 |
+| search_docs_chunks | 301 | 5.4% | 29 | 253 |
+
+Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
+
+## Re-derive it
+
+```bash
+npx -y mcp-context-cost verify results/shopify-dev/measurement.json
+```
+
+That re-tokenizes the [published capture](https://github.com/athakur3/mcp-context-cost/blob/main/results/shopify-dev/measurement.json) and checks the count and the hash. If it disagrees with the badge, the badge is wrong — [open an issue](https://github.com/athakur3/mcp-context-cost/issues) and it gets corrected.
+
+[Badge JSON](https://github.com/athakur3/mcp-context-cost/blob/main/badges/shopify-dev.json) · [All servers](index.html) · [Leaderboard](https://github.com/athakur3/mcp-context-cost/blob/main/results/leaderboard.md) · [Methodology](../METHODOLOGY.html)

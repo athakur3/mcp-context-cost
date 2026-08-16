@@ -39,6 +39,10 @@ console.log(getEncoding("o200k_base").encode(canonical).length); // === m.totalT
 If you dispute a badge, the dispute reduces to a byte-level diff of captures — which is the
 argument we want to have.
 
+Each measured server also has a [detail page](servers/) carrying that server's per-tool
+breakdown, launch command, isolation, canonical hash, and the one-line `verify` command —
+the same facts, without reading the capture by hand.
+
 ## What the number is not
 
 - **Not any client's exact context bill.** Clients (Claude Code, Cursor, ...) re-render tool

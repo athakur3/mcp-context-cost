@@ -6,12 +6,14 @@ We measured 82 popular MCP servers (57 measurable without credentials). The spre
 1,700×: from markitdown's 64 tokens to the official GitHub server's **54,422 tokens** —
 more than a quarter of a 200K context window, before the agent takes a single action.
 
-- **[The leaderboard](../results/leaderboard.md)** — every candidate listed, failures
-  included with reasons
+- **[The dashboard](dashboard.html)** — the ranked chart; open any row for its breakdown
+- **[Server pages](servers/)** — per-server: where the tokens are, tool by tool
+- **[The leaderboard](https://github.com/athakur3/mcp-context-cost/blob/main/results/leaderboard.md)**
+  — every candidate listed, failures included with reasons
 - **[Methodology v1.0](METHODOLOGY.md)** — what the number is, how to reproduce it in five
   lines, what it is not
-- **[Get the badge](../README.md#measure-your-own-server)** — one line in your README,
-  backed by a published measurement
+- **[Get the badge](https://github.com/athakur3/mcp-context-cost#measure-your-own-server)** —
+  one line in your README, backed by a published measurement
 
 ## The badge
 

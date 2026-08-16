@@ -19,7 +19,9 @@ popular servers:
 | markitdown | 64 | 1 |
 
 *(57 of 82 popular servers measured, 2026-08-16 sweep — full table in
-[results/leaderboard.md](results/leaderboard.md); every failure is listed with its reason.)*
+[results/leaderboard.md](results/leaderboard.md); every failure is listed with its reason.
+Each measured server also has a [detail page](https://athakur3.github.io/mcp-context-cost/servers/)
+showing which tools its tokens are in.)*
 
 This project makes that cost **legible and disputable**:
 
@@ -51,7 +53,8 @@ number is *not*, config policy, failure taxonomy, frozen color bands, known dive
 | `spec/fixtures/` | golden vectors shared by the TypeScript and bash implementations |
 | `upstream/` | staged contribution to [sd2k/mcp-tokens-action](https://github.com/sd2k/mcp-tokens-action): `badge.sh` + action patch + tests |
 | `servers.yaml` | 82 curated candidates with live install metrics and provenance |
-| `results/` · `badges/` | measurements, leaderboard, shields endpoint JSONs |
+| `results/` · `badges/` | measurements, leaderboard, history series, shields endpoint JSONs |
+| `docs/` | methodology, dashboard, and a generated page per measured server |
 
 ## Measure your own server
 
@@ -64,8 +67,12 @@ cat badges/my-server.json   # strict shields.io endpoint JSON
 Then in your README:
 
 ```markdown
-[![context cost](https://img.shields.io/endpoint?url=<raw URL of badges/my-server.json>)](<methodology URL>)
+[![context cost](https://img.shields.io/endpoint?url=<raw URL of badges/my-server.json>)](<link target>)
 ```
+
+Point the link at the measurement behind the number — for servers in this sweep that is
+`https://athakur3.github.io/mcp-context-cost/servers/<name>.html`; otherwise the
+methodology page. A badge nobody can audit is decoration.
 
 Or self-serve from CI via the (staged) mcp-tokens-action badge inputs — see
 [upstream/action-patch.md](upstream/action-patch.md).
@@ -73,7 +80,7 @@ Or self-serve from CI via the (staged) mcp-tokens-action badge inputs — see
 ## Development
 
 ```bash
-npm test                        # 24 TS tests incl. golden fixtures + dispute drills
+npm test                        # 53 TS tests incl. golden fixtures + dispute drills
 npx tsc --noEmit                # typecheck
 ./upstream/tests/badge-test.sh  # 21 bash tests — byte-identical to the TS reference
 npm run sweep:all -- --docker   # full curated sweep (Docker isolation)

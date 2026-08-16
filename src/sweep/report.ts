@@ -26,7 +26,7 @@ interface Row {
 }
 
 /** Neutralize markdown/table syntax in third-party strings (tool names, notes). */
-function mdCell(s: unknown): string {
+export function mdCell(s: unknown): string {
   return String(s ?? '')
     .replace(/[|`[\]<>]/g, (c) => `\\${c}`)
     .replace(/\r?\n/g, ' ')
@@ -57,7 +57,8 @@ export function writeLeaderboard(entries: ServerEntry[], root = process.cwd()): 
   md.push('');
   md.push(
     `Tokens = o200k_base count of the canonical \`tools/list\` bytes ([methodology v1.0](../docs/METHODOLOGY.md)). ` +
-      `Measured ${measured.length}/${rows.length} candidates; every candidate is listed — failures are findings, not omissions.`,
+      `Measured ${measured.length}/${rows.length} candidates; every candidate is listed — failures are findings, not omissions. ` +
+      `Server names link to their per-tool breakdown.`,
   );
   md.push('');
   md.push('| # | server | tokens | tools | largest tool | status | category |');
@@ -65,8 +66,9 @@ export function writeLeaderboard(entries: ServerEntry[], root = process.cwd()): 
   measured.forEach((r, i) => {
     const m = r.m!;
     const largest = [...m.tools].sort((a, b) => b.tokens - a.tokens)[0];
+    const link = `[${mdCell(r.entry.name)}](../docs/servers/${encodeURIComponent(r.entry.name)}.md)`;
     md.push(
-      `| ${i + 1} | ${mdCell(r.entry.name)} | ${m.totalTokens!.toLocaleString('en-US')} | ${m.toolCount} | ` +
+      `| ${i + 1} | ${link} | ${m.totalTokens!.toLocaleString('en-US')} | ${m.toolCount} | ` +
         `${largest ? `${mdCell(largest.name)} (${largest.tokens.toLocaleString('en-US')})` : '—'} | ${m.status} | ${mdCell(r.entry.category)} |`,
     );
   });

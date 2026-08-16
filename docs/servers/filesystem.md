@@ -1,0 +1,46 @@
+# filesystem — context cost
+
+**2,823 tokens** across 14 tools — *light* (1–5K). Measured 2026-08-16 under [methodology v1.0](../METHODOLOGY.html).
+
+| | |
+|---|---|
+| server (self-reported) | secure-filesystem-server v0.2.0 |
+| status | measured |
+| tokenizer | tiktoken / o200k_base |
+| launch command | `npx -y @modelcontextprotocol/server-filesystem /tmp` |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| env vars supplied | none |
+| canonical SHA-256 | `245b04832111268c3fcc72543af89fb2f8c109d8306c1b5b8c49dc45977e41e1` |
+| category | official-reference |
+| source | https://github.com/modelcontextprotocol/servers |
+
+## Where the tokens are
+
+| tool | tokens | share | description | schema |
+|---|---:|---:|---:|---:|
+| read_media_file | 290 | 10.3% | 47 | 34 |
+| read_text_file | 256 | 9.1% | 97 | 78 |
+| edit_file | 245 | 8.7% | 35 | 118 |
+| search_files | 218 | 7.7% | 79 | 60 |
+| read_multiple_files | 210 | 7.4% | 58 | 71 |
+| directory_tree | 202 | 7.2% | 72 | 51 |
+| list_directory_with_sizes | 201 | 7.1% | 56 | 62 |
+| move_file | 192 | 6.8% | 57 | 43 |
+| read_file | 179 | 6.3% | 19 | 78 |
+| create_directory | 177 | 6.3% | 51 | 34 |
+| write_file | 174 | 6.2% | 39 | 43 |
+| list_directory | 166 | 5.9% | 53 | 34 |
+| get_file_info | 162 | 5.7% | 47 | 34 |
+| list_allowed_directories | 149 | 5.3% | 41 | 24 |
+
+Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
+
+## Re-derive it
+
+```bash
+npx -y mcp-context-cost verify results/filesystem/measurement.json
+```
+
+That re-tokenizes the [published capture](https://github.com/athakur3/mcp-context-cost/blob/main/results/filesystem/measurement.json) and checks the count and the hash. If it disagrees with the badge, the badge is wrong — [open an issue](https://github.com/athakur3/mcp-context-cost/issues) and it gets corrected.
+
+[Badge JSON](https://github.com/athakur3/mcp-context-cost/blob/main/badges/filesystem.json) · [All servers](index.html) · [Leaderboard](https://github.com/athakur3/mcp-context-cost/blob/main/results/leaderboard.md) · [Methodology](../METHODOLOGY.html)

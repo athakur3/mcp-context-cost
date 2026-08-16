@@ -1,0 +1,34 @@
+# figma-context — context cost
+
+**946 tokens** across 2 tools — *lean* (< 1K). Measured 2026-08-16 under [methodology v1.0](../METHODOLOGY.html).
+
+| | |
+|---|---|
+| server (self-reported) | Figma MCP Server v0.13.2 |
+| status | measured |
+| tokenizer | tiktoken / o200k_base |
+| launch command | `npx -y figma-developer-mcp --stdio` |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| env vars supplied | FIGMA_API_KEY |
+| canonical SHA-256 | `c1409e496bb0262b3dd4d78de8da42d1b79d5704fcf693e1455c5b3dff0f2604` |
+| category | community |
+| source | https://github.com/GLips/Figma-Context-MCP |
+
+## Where the tokens are
+
+| tool | tokens | share | description | schema |
+|---|---:|---:|---:|---:|
+| download_figma_images | 646 | 68.3% | 35 | 574 |
+| get_figma_data | 298 | 31.5% | 16 | 245 |
+
+Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
+
+## Re-derive it
+
+```bash
+npx -y mcp-context-cost verify results/figma-context/measurement.json
+```
+
+That re-tokenizes the [published capture](https://github.com/athakur3/mcp-context-cost/blob/main/results/figma-context/measurement.json) and checks the count and the hash. If it disagrees with the badge, the badge is wrong — [open an issue](https://github.com/athakur3/mcp-context-cost/issues) and it gets corrected.
+
+[Badge JSON](https://github.com/athakur3/mcp-context-cost/blob/main/badges/figma-context.json) · [All servers](index.html) · [Leaderboard](https://github.com/athakur3/mcp-context-cost/blob/main/results/leaderboard.md) · [Methodology](../METHODOLOGY.html)
