@@ -40,6 +40,7 @@ async function worker() {
       docker,
       dockerImage: e.dockerImage,
       dummyEnv: e.env ?? [],
+      needsGit: e.needsGit,
     });
     const secs = ((Date.now() - started) / 1000).toFixed(0);
     summary[e.name] =

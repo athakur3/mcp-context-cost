@@ -1,6 +1,6 @@
 # Server pages
 
-One page per measured server: the per-tool breakdown behind the badge, the exact launch command, and the command that re-derives the number. 57 of 82 candidates measured.
+One page per measured server: the per-tool breakdown behind the badge, the exact launch command, and the command that re-derives the number. 59 of 82 candidates measured.
 
 | # | server | tokens | tools | band |
 |---:|---|---:|---:|---|
@@ -11,56 +11,58 @@ One page per measured server: the per-tool breakdown behind the badge, the exact
 | 5 | [circleci](circleci.html) | 11,912 | 13 | moderate |
 | 6 | [apify](apify.html) | 10,426 | 10 | moderate |
 | 7 | [firecrawl](firecrawl.html) | 9,561 | 27 | moderate |
-| 8 | [basic-memory](basic-memory.html) | 9,188 | 23 | moderate |
-| 9 | [hubspot](hubspot.html) | 9,158 | 21 | moderate |
-| 10 | [mongodb](mongodb.html) | 7,926 | 27 | moderate |
-| 11 | [sentry](sentry.html) | 6,455 | 9 | moderate |
-| 12 | [pinecone](pinecone.html) | 5,903 | 9 | moderate |
-| 13 | [shopify-dev](shopify-dev.html) | 5,624 | 5 | moderate |
-| 14 | [kubernetes](kubernetes.html) | 5,268 | 23 | moderate |
-| 15 | [blender](blender.html) | 5,258 | 24 | moderate |
-| 16 | [aws-documentation](aws-documentation.html) | 5,074 | 5 | moderate |
-| 17 | [supabase](supabase.html) | 5,013 | 29 | moderate |
-| 18 | [huggingface](huggingface.html) | 4,691 | 4 | light |
-| 19 | [excel](excel.html) | 4,266 | 25 | light |
-| 20 | [airtable](airtable.html) | 4,207 | 16 | light |
-| 21 | [playwright](playwright.html) | 4,024 | 24 | light |
-| 22 | [github-legacy](github-legacy.html) | 3,548 | 26 | light |
-| 23 | [arxiv](arxiv.html) | 3,228 | 14 | light |
-| 24 | [playwright-community](playwright-community.html) | 2,920 | 33 | light |
-| 25 | [chroma](chroma.html) | 2,837 | 13 | light |
-| 26 | [netlify](netlify.html) | 2,831 | 9 | light |
-| 27 | [filesystem](filesystem.html) | 2,823 | 14 | light |
-| 28 | [pulumi](pulumi.html) | 2,768 | 12 | light |
-| 29 | [n8n-mcp](n8n-mcp.html) | 2,636 | 7 | light |
-| 30 | [memory](memory.html) | 2,378 | 9 | light |
-| 31 | [terraform](terraform.html) | 2,061 | 9 | light |
-| 32 | [everything](everything.html) | 1,708 | 13 | light |
-| 33 | [tavily](tavily.html) | 1,653 | 5 | light |
-| 34 | [searxng](searxng.html) | 1,481 | 4 | light |
-| 35 | [pandoc](pandoc.html) | 1,425 | 1 | light |
-| 36 | [context7](context7.html) | 1,052 | 2 | light |
-| 37 | [sequential-thinking](sequential-thinking.html) | 992 | 1 | lean |
-| 38 | [bright-data](bright-data.html) | 978 | 5 | lean |
-| 39 | [microsoft-learn](microsoft-learn.html) | 972 | 3 | lean |
-| 40 | [figma-context](figma-context.html) | 946 | 2 | lean |
-| 41 | [duckduckgo](duckduckgo.html) | 724 | 2 | lean |
-| 42 | [slack-legacy](slack-legacy.html) | 681 | 8 | lean |
-| 43 | [clickhouse](clickhouse.html) | 581 | 3 | lean |
-| 44 | [google-maps](google-maps.html) | 549 | 7 | lean |
-| 45 | [puppeteer](puppeteer.html) | 540 | 7 | lean |
-| 46 | [exa](exa.html) | 486 | 2 | lean |
-| 47 | [airbnb](airbnb.html) | 486 | 2 | lean |
-| 48 | [cloudflare-docs](cloudflare-docs.html) | 422 | 2 | lean |
-| 49 | [mysql](mysql.html) | 393 | 3 | lean |
-| 50 | [browserbase](browserbase.html) | 364 | 6 | lean |
-| 51 | [deepwiki](deepwiki.html) | 359 | 3 | lean |
-| 52 | [gitlab](gitlab.html) | 336 | 9 | lean |
-| 53 | [brave-search-legacy](brave-search-legacy.html) | 319 | 2 | lean |
-| 54 | [qdrant](qdrant.html) | 188 | 2 | lean |
-| 55 | [perplexity](perplexity.html) | 133 | 1 | lean |
-| 56 | [markitdown](markitdown.html) | 64 | 1 | lean |
-| 57 | [postgres](postgres.html) | 32 | 1 | lean |
+| 8 | [redis](redis.html) | 9,246 | 53 | moderate |
+| 9 | [basic-memory](basic-memory.html) | 9,188 | 23 | moderate |
+| 10 | [hubspot](hubspot.html) | 9,158 | 21 | moderate |
+| 11 | [serena](serena.html) | 8,204 | 29 | moderate |
+| 12 | [mongodb](mongodb.html) | 7,926 | 27 | moderate |
+| 13 | [sentry](sentry.html) | 6,455 | 9 | moderate |
+| 14 | [pinecone](pinecone.html) | 5,903 | 9 | moderate |
+| 15 | [shopify-dev](shopify-dev.html) | 5,624 | 5 | moderate |
+| 16 | [kubernetes](kubernetes.html) | 5,268 | 23 | moderate |
+| 17 | [blender](blender.html) | 5,258 | 24 | moderate |
+| 18 | [aws-documentation](aws-documentation.html) | 5,074 | 5 | moderate |
+| 19 | [supabase](supabase.html) | 5,013 | 29 | moderate |
+| 20 | [huggingface](huggingface.html) | 4,691 | 4 | light |
+| 21 | [excel](excel.html) | 4,266 | 25 | light |
+| 22 | [airtable](airtable.html) | 4,207 | 16 | light |
+| 23 | [playwright](playwright.html) | 4,024 | 24 | light |
+| 24 | [github-legacy](github-legacy.html) | 3,548 | 26 | light |
+| 25 | [arxiv](arxiv.html) | 3,228 | 14 | light |
+| 26 | [playwright-community](playwright-community.html) | 2,920 | 33 | light |
+| 27 | [chroma](chroma.html) | 2,837 | 13 | light |
+| 28 | [netlify](netlify.html) | 2,831 | 9 | light |
+| 29 | [filesystem](filesystem.html) | 2,823 | 14 | light |
+| 30 | [pulumi](pulumi.html) | 2,768 | 12 | light |
+| 31 | [n8n-mcp](n8n-mcp.html) | 2,636 | 7 | light |
+| 32 | [memory](memory.html) | 2,378 | 9 | light |
+| 33 | [terraform](terraform.html) | 2,061 | 9 | light |
+| 34 | [everything](everything.html) | 1,708 | 13 | light |
+| 35 | [tavily](tavily.html) | 1,653 | 5 | light |
+| 36 | [searxng](searxng.html) | 1,481 | 4 | light |
+| 37 | [pandoc](pandoc.html) | 1,425 | 1 | light |
+| 38 | [context7](context7.html) | 1,052 | 2 | light |
+| 39 | [sequential-thinking](sequential-thinking.html) | 992 | 1 | lean |
+| 40 | [bright-data](bright-data.html) | 978 | 5 | lean |
+| 41 | [microsoft-learn](microsoft-learn.html) | 972 | 3 | lean |
+| 42 | [figma-context](figma-context.html) | 946 | 2 | lean |
+| 43 | [duckduckgo](duckduckgo.html) | 724 | 2 | lean |
+| 44 | [slack-legacy](slack-legacy.html) | 681 | 8 | lean |
+| 45 | [clickhouse](clickhouse.html) | 581 | 3 | lean |
+| 46 | [google-maps](google-maps.html) | 549 | 7 | lean |
+| 47 | [puppeteer](puppeteer.html) | 540 | 7 | lean |
+| 48 | [exa](exa.html) | 486 | 2 | lean |
+| 49 | [airbnb](airbnb.html) | 486 | 2 | lean |
+| 50 | [cloudflare-docs](cloudflare-docs.html) | 422 | 2 | lean |
+| 51 | [mysql](mysql.html) | 393 | 3 | lean |
+| 52 | [browserbase](browserbase.html) | 364 | 6 | lean |
+| 53 | [deepwiki](deepwiki.html) | 359 | 3 | lean |
+| 54 | [gitlab](gitlab.html) | 336 | 9 | lean |
+| 55 | [brave-search-legacy](brave-search-legacy.html) | 319 | 2 | lean |
+| 56 | [qdrant](qdrant.html) | 188 | 2 | lean |
+| 57 | [perplexity](perplexity.html) | 133 | 1 | lean |
+| 58 | [markitdown](markitdown.html) | 64 | 1 | lean |
+| 59 | [postgres](postgres.html) | 32 | 1 | lean |
 
 ## Not measured
 
@@ -82,14 +84,12 @@ No page: there is no number to show. The reason is recorded per candidate.
 | grafana | timeout |
 | neon | startup-failure |
 | elasticsearch | startup-failure |
-| redis | startup-failure |
 | linear | remote-auth-wall |
 | zapier | remote-auth-wall |
 | vercel | remote-auth-wall |
 | postgres-mcp | startup-failure |
 | xcodebuildmcp | startup-failure |
 | desktop-commander | startup-failure |
-| serena | startup-failure |
 | gmail | auth-required |
 | obsidian | startup-failure |
 | slack | startup-failure |

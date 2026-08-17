@@ -19,7 +19,7 @@ popular servers:
 | filesystem (reference) | 2,823 | 14 |
 | markitdown | 64 | 1 |
 
-*(57 of 82 popular servers measured, 2026-08-16 sweep — full table in
+*(59 of 82 popular servers measured, 2026-08-17 sweep — full table in
 [results/leaderboard.md](results/leaderboard.md); every failure is listed with its reason.
 Each measured server also has a [detail page](https://athakur3.github.io/mcp-context-cost/servers/)
 showing which tools its tokens are in.)*

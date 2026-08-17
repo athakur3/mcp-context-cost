@@ -19,6 +19,8 @@ export interface ServerEntry {
   remote?: boolean;
   dockerImage?: string;
   timeoutSeconds?: number;
+  /** Launch needs the `git` binary (e.g. `uvx --from git+...`) — absent from the slim isolation images. */
+  needsGit?: boolean;
 }
 
 interface Row {

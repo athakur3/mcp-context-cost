@@ -54,6 +54,7 @@ servers:
     metricSource: https://pypistats.org/packages/mcp-server-git (PyPI weekly)
     category: official-reference
     repo: https://github.com/modelcontextprotocol/servers
+    needsGit: true
   - name: time
     command: uvx mcp-server-time
     package: mcp-server-time (PyPI)
@@ -439,6 +440,7 @@ servers:
     metricSource: https://api.github.com/repos/redis/mcp-redis (GitHub stars; not on PyPI)
     category: vendor-official
     repo: https://github.com/redis/mcp-redis
+    needsGit: true
     timeoutSeconds: 240
   - name: perplexity
     command: npx -y server-perplexity-ask
@@ -586,6 +588,7 @@ servers:
     metric: 28084
     metricSource: https://api.github.com/repos/oraios/serena (GitHub stars; installed from git)
     category: community
+    needsGit: true
     repo: https://github.com/oraios/serena
     timeoutSeconds: 240
   - name: gmail

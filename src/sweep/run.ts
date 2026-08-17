@@ -26,6 +26,8 @@ export interface MeasureOptions {
   dockerImage?: string;
   /** env var NAMES to provide as dummy values (docker mode). */
   dummyEnv?: string[];
+  /** Install `git` in the container before launch (docker mode) — see docker.ts. */
+  needsGit?: boolean;
   /**
    * Exact argv, when the caller already has it (client configs store command and
    * args separately). Avoids re-splitting a joined string on spaces, which would
@@ -60,7 +62,12 @@ export async function measureServer(
     isolation = { docker: true, note: 'command is itself a docker run (host-spawned container)' };
   } else if (opts.docker) {
     containerName = `mcp-ctx-${name}-${process.pid}-${Math.floor(Math.random() * 1e6)}`;
-    const d = dockerize(command, { image: opts.dockerImage, dummyEnv: opts.dummyEnv, containerName });
+    const d = dockerize(command, {
+      image: opts.dockerImage,
+      dummyEnv: opts.dummyEnv,
+      containerName,
+      needsGit: opts.needsGit,
+    });
     spec = { command: d.command, argv: d.argv };
     isolation = d.isolation;
   }

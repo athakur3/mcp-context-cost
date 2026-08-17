@@ -12,6 +12,14 @@ export interface DockerOptions {
   dummyEnv?: string[];
   /** Container name, so a timed-out container can be force-removed. */
   containerName?: string;
+  /**
+   * Install `git` inside the container before launch. The slim base images
+   * carry no VCS, so `uvx --from git+...` installs fail with "Git executable
+   * not found" — this only prefixes the containerized invocation, never the
+   * recorded `launchCommand`, so the published command stays what a user with
+   * git already on PATH would actually run.
+   */
+  needsGit?: boolean;
 }
 
 // ECR Public / ghcr mirrors — Docker Hub pulls hang on some networks (observed
@@ -62,7 +70,10 @@ export function dockerize(
   for (const name of opts.dummyEnv ?? []) {
     argv.push('-e', `${name}=dummy`);
   }
-  argv.push(image, 'sh', '-lc', commandLine);
+  const gitPrefix = opts.needsGit
+    ? 'command -v git >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq --no-install-recommends git >/dev/null 2>&1); '
+    : '';
+  argv.push(image, 'sh', '-lc', gitPrefix + commandLine);
   return {
     command: 'docker',
     argv,
@@ -70,7 +81,9 @@ export function dockerize(
       docker: true,
       image,
       network: 'bridge',
-      note: 'network enabled for package fetch; clean FS, no host credentials',
+      note: opts.needsGit
+        ? 'network enabled for package fetch; clean FS, no host credentials, git installed'
+        : 'network enabled for package fetch; clean FS, no host credentials',
     },
   };
 }
