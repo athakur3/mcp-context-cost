@@ -53,6 +53,9 @@ command. Disputes reduce to a byte-level diff:
 ```bash
 npx -y mcp-context-cost verify results/github/measurement.json
 # OK github-mcp-server: 54422 tokens (o200k_base, methodology 1.0) — capture, hash, and count all agree
+
+# or point it at a published measurement.json directly, no clone required
+npx -y mcp-context-cost verify --remote https://raw.githubusercontent.com/athakur3/mcp-context-cost/main/results/github/measurement.json
 ```
 
 Add `--json` for scripting (`{ ok, serverName, rederivedTokens, rederivedSha, problems, badge }`

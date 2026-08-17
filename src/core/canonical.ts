@@ -66,7 +66,9 @@ export function measureTools(
     toolCount: tools.length,
     tools: perTool,
     canonicalSha256: sha256Hex(canonical),
-    rawToolsCapture: tools,
+    // Snapshot from the canonical string, not the live `tools` reference — the whole
+    // point of a capture is that it can't change out from under its own hash later.
+    rawToolsCapture: JSON.parse(canonical),
     measuredAt: meta.measuredAt ?? new Date().toISOString(),
     serverName: meta.serverName,
     serverVersion: meta.serverVersion,

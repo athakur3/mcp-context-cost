@@ -1,13 +1,16 @@
-import { describe, it, expect } from 'vitest';
-import { execFileSync } from 'node:child_process';
+import { describe, it, expect, afterAll } from 'vitest';
+import { execFileSync, execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import { readFileSync, writeFileSync, mkdtempSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
+import { createServer } from 'node:http';
 import { verifyMeasurement } from '../src/cli.js';
 import { measureTools } from '../src/core/canonical.js';
 import type { Measurement } from '../src/core/types.js';
 
+const execFileAsync = promisify(execFile);
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const fixtures = join(repoRoot, 'spec/fixtures');
 const tools = JSON.parse(readFileSync(join(fixtures, 'tools-basic.json'), 'utf8'));
@@ -86,5 +89,62 @@ describe('verify --json (CLI process)', () => {
       code = (e as { status: number }).status;
     }
     expect(code).toBe(2);
+  });
+});
+
+describe('verify --remote', () => {
+  const m = measureTools(tools, { serverName: 'x' });
+  const server = createServer((req, res) => {
+    if (req.url === '/ok.json') {
+      res.end(JSON.stringify(m));
+    } else {
+      res.statusCode = 404;
+      res.end('not found');
+    }
+  });
+  let base = '';
+  const ready = new Promise<void>((resolve) => {
+    server.listen(0, '127.0.0.1', () => {
+      const addr = server.address();
+      base = typeof addr === 'object' && addr ? `http://127.0.0.1:${addr.port}` : '';
+      resolve();
+    });
+  });
+
+  afterAll(() => {
+    server.close();
+  });
+
+  it('fetches and verifies a remote measurement', async () => {
+    await ready;
+    // execFileSync would block this process's event loop while the child's fetch
+    // tries to reach the server that lives in this same process — deadlock.
+    const { stdout } = await execFileAsync('npx', ['tsx', 'src/cli.ts', 'verify', '--remote', `${base}/ok.json`, '--json'], {
+      cwd: repoRoot,
+      encoding: 'utf8',
+    });
+    const parsed = JSON.parse(stdout);
+    expect(parsed).toMatchObject({ ok: true, serverName: 'x', problems: [] });
+    expect(parsed.badge).toBeDefined();
+  });
+
+  it('exits 1 with a JSON problem on a 404', async () => {
+    await ready;
+    let out = '';
+    let code = 0;
+    try {
+      await execFileAsync('npx', ['tsx', 'src/cli.ts', 'verify', '--remote', `${base}/missing.json`, '--json'], {
+        cwd: repoRoot,
+        encoding: 'utf8',
+      });
+    } catch (e) {
+      const err = e as { code: number; stdout: string };
+      code = err.code;
+      out = err.stdout;
+    }
+    expect(code).toBe(1);
+    const parsed = JSON.parse(out);
+    expect(parsed.ok).toBe(false);
+    expect(parsed.problems.join(' ')).toContain('HTTP 404');
   });
 });

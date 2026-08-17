@@ -4,6 +4,7 @@
  *
  *   mcp-context-cost verify <measurement.json> [--json]   re-derive the number from the
  *                                                published capture; exit 1 on mismatch
+ *   mcp-context-cost verify --remote <url> [--json]   same, fetched from a measurement URL
  *   mcp-context-cost measure --name x --command "npx -y ..."   one-off measurement
  *
  * Exit codes: 0 ok, 1 verification/measurement failed, 2 usage error.
@@ -37,12 +38,30 @@ const [, , cmd, ...rest] = process.argv;
 
 if (cmd === 'verify') {
   const json = rest.includes('--json');
-  const path = rest.find((a) => !a.startsWith('--'));
-  if (!path) {
+  const remoteIdx = rest.indexOf('--remote');
+  const remoteUrl = remoteIdx >= 0 ? rest[remoteIdx + 1] : undefined;
+  const path = rest.find((a) => !a.startsWith('--') && a !== remoteUrl);
+  if (!remoteUrl && !path) {
     console.error('usage: mcp-context-cost verify <measurement.json> [--json]');
+    console.error('       mcp-context-cost verify --remote <url> [--json]');
     process.exit(2);
   }
-  const m = JSON.parse(readFileSync(path, 'utf8')) as Measurement;
+  let raw: string;
+  if (remoteUrl) {
+    try {
+      const res = await fetch(remoteUrl, { signal: AbortSignal.timeout(15_000) });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      raw = await res.text();
+    } catch (e) {
+      const problem = `failed to fetch ${remoteUrl}: ${(e as Error).message}`;
+      if (json) console.log(JSON.stringify({ ok: false, rederivedTokens: null, rederivedSha: null, problems: [problem] }));
+      else console.error(problem);
+      process.exit(1);
+    }
+  } else {
+    raw = readFileSync(path!, 'utf8');
+  }
+  const m = JSON.parse(raw) as Measurement;
   const r = verifyMeasurement(m);
   if (json) {
     console.log(JSON.stringify({ serverName: m.serverName, ...r, badge: r.ok ? toBadge(m) : undefined }));
@@ -88,6 +107,7 @@ if (cmd === 'verify') {
 } else {
   console.log('mcp-context-cost — reproducible context-cost measurement for MCP servers');
   console.log('  verify <measurement.json> [--json]    re-derive tokens+sha from the published capture');
+  console.log('  verify --remote <url> [--json]        same, fetched from a measurement URL');
   console.log('  measure --name x --command "npx -y <server>"   run a one-off measurement');
   console.log('exit codes: 0 ok, 1 verification/measurement failed, 2 usage error');
 }
