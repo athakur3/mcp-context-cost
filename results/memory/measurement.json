@@ -766,15 +766,13 @@
       }
     }
   ],
-  "measuredAt": "2026-08-16T12:00:32.668Z",
+  "measuredAt": "2026-08-17T07:17:07.079Z",
   "serverName": "memory-server",
   "serverVersion": "0.6.3",
-  "launchCommand": "npx -y @modelcontextprotocol/server-memory",
+  "launchCommand": "npx -y @modelcontextprotocol/server-memory@2026.7.4",
   "envVarNames": [],
   "isolation": {
-    "docker": true,
-    "image": "public.ecr.aws/docker/library/node:22-slim",
-    "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+    "docker": false
+  },
+  "timeoutMs": 60000
 }

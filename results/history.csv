@@ -56,3 +56,4 @@ date,server,tokens,toolCount,status
 2026-08-16,supabase,5013,29,measured
 2026-08-16,tavily,1653,5,measured
 2026-08-16,terraform,2061,9,measured
+2026-08-17,memory,2378,9,measured
