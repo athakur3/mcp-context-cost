@@ -29,6 +29,7 @@
   ],
   "scripts": {
     "build": "tsc",
+    "prepublishOnly": "npm run build && npm test && npm run typecheck",
     "test": "vitest run",
     "test:badge": "./upstream/tests/badge-test.sh",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.tools.json",
