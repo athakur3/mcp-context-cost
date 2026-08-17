@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- `verify --remote <url> [--json]`: fetch and verify a published `measurement.json`
+  directly from a URL, no clone required. 15s request timeout.
+- `verify --json`: machine-readable output (`{ ok, serverName, rederivedTokens,
+  rederivedSha, problems, badge }`); documented exit codes (0 ok, 1 verification/
+  measurement failed, 2 usage error).
 - Claude divergence column (`tools-delta/v1`): the top 15 servers measured through Anthropic's
   `count_tokens` against a pinned model, published in the leaderboard and broken down per
   server into field selection (MCP-only fields an Anthropic request cannot carry) and
