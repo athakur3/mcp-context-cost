@@ -23,6 +23,13 @@ jobs:
         # Version pinned: this job holds contents:write and pushes — never
         # execute an unpinned third-party package here.
         run: npm run sweep -- --name memory --command "npx -y @modelcontextprotocol/server-memory@2026.7.4"
+      - name: Refresh Claude divergence column
+        # Best-effort: an Anthropic API hiccup here must not block the weekly badge
+        # commit below, which is the job's primary purpose.
+        continue-on-error: true
+        env:
+          MCP_CTX_ANTHROPIC_KEY: ${{ secrets.MCP_CTX_ANTHROPIC_KEY }}
+        run: npm run divergence
       - name: Commit refreshed badge
         run: |
           git config user.name "mcp-context-cost bot"
