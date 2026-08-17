@@ -1,6 +1,6 @@
 {
   "name": "mcp-context-cost",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Reproducible context-cost badges for MCP servers — measure what a server's tool schemas cost before the agent does any work",
   "type": "module",
   "license": "MIT",

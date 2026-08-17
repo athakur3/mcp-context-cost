@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 — 2026-08-17
 
 - `verify --remote <url> [--json]`: fetch and verify a published `measurement.json`
   directly from a URL, no clone required. 15s request timeout.
