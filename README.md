@@ -67,6 +67,12 @@ Totals are reported per config file, never merged: a context window belongs to o
 session, so summing Cursor's servers into Claude Desktop's total would describe a session
 nobody runs.
 
+One nuance: Claude Code's tool search (default-on in recent versions) defers full MCP
+schemas until used, loading only tool names at session start. Audit totals are the weight
+of the schema surface itself — what loads upfront in clients without deferral (Claude
+Desktop, Cursor, VS Code, Windsurf today), and what Claude Code's documented fallback
+modes still load. Deferral-aware reporting is on the roadmap.
+
 **In CI**, make it a gate — the bundlesize move for agents:
 
 ```bash
