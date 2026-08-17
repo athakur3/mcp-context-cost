@@ -50,6 +50,18 @@ export interface HeaviestTool {
   tokens: number;
 }
 
+/**
+ * What turning off the heaviest few tools would recover, for clients that let
+ * you disable individual tools rather than whole servers (Claude Code's
+ * per-tool permission rules, Cursor's per-tool toggles). `null` when there's
+ * nothing worth trimming (one tool total, or no measured tokens).
+ */
+export interface TrimAdvice {
+  tools: HeaviestTool[];
+  recoverableTokens: number;
+  recoverableShare: number;
+}
+
 export interface AuditConfigResult {
   client: string;
   source: string;
@@ -60,6 +72,16 @@ export interface AuditConfigResult {
   servers: AuditServerResult[];
   skipped: AuditServerResult[];
   heaviestTools: HeaviestTool[];
+  trimAdvice: TrimAdvice | null;
+}
+
+const TRIM_TOOL_COUNT = 3;
+
+function buildTrimAdvice(sortedTools: HeaviestTool[], totalTokens: number): TrimAdvice | null {
+  if (totalTokens <= 0 || sortedTools.length < 2) return null;
+  const trimmed = sortedTools.slice(0, TRIM_TOOL_COUNT);
+  const recoverableTokens = trimmed.reduce((a, t) => a + t.tokens, 0);
+  return { tools: trimmed, recoverableTokens, recoverableShare: recoverableTokens / totalTokens };
 }
 
 export interface AuditReport {
@@ -181,6 +203,7 @@ export function buildReport(
       servers: ok,
       skipped,
       heaviestTools: tools.slice(0, 5),
+      trimAdvice: buildTrimAdvice(tools, totalTokens),
     });
   }
 
@@ -264,6 +287,16 @@ export function formatReport(report: AuditReport): string {
       for (const t of cfg.heaviestTools) {
         lines.push(`    ${`${t.server} · ${t.tool}`.padEnd(tw)}  ${n(t.tokens).padStart(7)}`);
       }
+    }
+
+    if (cfg.trimAdvice) {
+      const names = cfg.trimAdvice.tools.map((t) => `${t.server}·${t.tool}`).join(', ');
+      lines.push('');
+      lines.push(
+        `  trim: disabling ${cfg.trimAdvice.tools.length} tool${cfg.trimAdvice.tools.length === 1 ? '' : 's'} ` +
+          `(${names}) would recover ${n(cfg.trimAdvice.recoverableTokens)} tokens ` +
+          `(${pct(cfg.trimAdvice.recoverableShare)} of this config) — if your client supports per-tool filtering.`,
+      );
     }
 
     if (cfg.skipped.length) {

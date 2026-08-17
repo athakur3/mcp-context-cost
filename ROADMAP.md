@@ -4,9 +4,6 @@ Ordered by value-per-effort for users. Contributions welcome on any of these.
 
 ## Next
 
-- [ ] **Trim advice in `audit`**: the per-tool breakdown already names the heaviest tools;
-      turn that into "disabling these 3 tools recovers N tokens" for clients that support
-      per-tool filtering.
 - [ ] **Cost-over-time sparklines**: `results/history.csv` already accumulates a
       per-(date, server) series with every sweep; surface it on the dashboard once
       multiple sweep dates exist.
@@ -24,6 +21,12 @@ Ordered by value-per-effort for users. Contributions welcome on any of these.
 - [ ] Periodic "state of MCP context cost" data summary, when the deltas tell a story.
 
 ## Done
+
+- [x] **Trim advice in `audit`**: each config's report now names the 3 heaviest tools and
+      what disabling them would recover — tokens and share of that config's total — for
+      clients that let you turn off individual tools rather than whole servers. `null` when
+      there's nothing to trim (one tool, or nothing measured) rather than a hollow 0%
+      (2026-08-17)
 
 - [x] **`audit --claude`**: annotates each audited server with its Anthropic-request cost
       from the published `tools-delta/v1` divergence run — an exact number when the

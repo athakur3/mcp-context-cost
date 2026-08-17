@@ -220,6 +220,35 @@ describe('buildReport', () => {
     expect(c.heaviestTools[0].server).toBe('alpha');
   });
 
+  describe('trimAdvice', () => {
+    it('recovers the top 3 tools worth of tokens out of a larger set', () => {
+      const a = stdio('alpha', ['node', 'a.js']);
+      const measured = new Map([[serverKey(a), measurement('alpha', 3)]]); // 6 tools total
+      const c = buildReport(cfg([a]), measured, {}).configs[0];
+      expect(c.trimAdvice).not.toBeNull();
+      expect(c.trimAdvice!.tools).toHaveLength(3);
+      expect(c.trimAdvice!.tools).toEqual(c.heaviestTools.slice(0, 3));
+      expect(c.trimAdvice!.recoverableTokens).toBe(c.trimAdvice!.tools.reduce((a, t) => a + t.tokens, 0));
+      expect(c.trimAdvice!.recoverableShare).toBeCloseTo(c.trimAdvice!.recoverableTokens / c.totalTokens, 10);
+      expect(c.trimAdvice!.recoverableShare).toBeLessThan(1); // tools remain beyond the trimmed set
+    });
+
+    it('is null when there is only one tool total — nothing to trim relative to', () => {
+      const a = stdio('alpha', ['node', 'a.js']);
+      const oneTool = measureTools([{ name: 'only_tool', description: 'x'.repeat(40) }], { serverName: 'alpha' });
+      const measured = new Map([[serverKey(a), oneTool]]);
+      const c = buildReport(cfg([a]), measured, {}).configs[0];
+      expect(c.trimAdvice).toBeNull();
+    });
+
+    it('is null when the config has no measured tokens', () => {
+      const broken = stdio('broken', ['node', 'broken.js']);
+      const measured = new Map([[serverKey(broken), failedMeasurement('startup-failure', { serverName: 'broken' })]]);
+      const c = buildReport(cfg([broken]), measured, {}).configs[0];
+      expect(c.trimAdvice).toBeNull();
+    });
+  });
+
   it('records a config-level parse error as a problem', () => {
     const r = buildReport(
       [{ client: 'x', source: '/broken.json', servers: [], error: 'Unexpected token' }],
@@ -309,6 +338,21 @@ describe('formatReport', () => {
 
   it('omits the claude column when --claude was not requested', () => {
     expect(formatReport(report)).not.toContain('Anthropic-request cost');
+  });
+
+  it('prints trim advice naming the recoverable tools and share', () => {
+    const b = { ...a, name: 'beta', command: 'node b.js', argv: ['node', 'b.js'] };
+    const withTrim = buildReport(
+      [{ client: 'claude-desktop', source: '/cfg.json', servers: [a, b] }] as Parameters<typeof buildReport>[0],
+      new Map([
+        [serverKey(a), measurement('alpha', 3)],
+        [serverKey(b), measurement('beta')],
+      ]),
+      { generatedAt: 'T' },
+    );
+    const text = formatReport(withTrim);
+    expect(text).toContain('trim: disabling 3 tools');
+    expect(text).toContain('per-tool filtering');
   });
 
   it('adds a claude column with a match and a "—" for a stale one', () => {

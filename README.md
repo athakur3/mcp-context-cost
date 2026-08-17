@@ -55,6 +55,10 @@ claude-desktop  ~/Library/Application Support/Claude/claude_desktop_config.json
   heaviest tools
     sequential-thinking · sequentialthinking      990
     memory · search_nodes                         323
+
+  trim: disabling 3 tools (sequential-thinking·sequentialthinking, memory·search_nodes,
+  memory·open_nodes) would recover 1,635 tokens (20.7% of this config) — if your client
+  supports per-tool filtering.
 ```
 
 It finds configs for Claude Desktop, Claude Code (`~/.claude.json`, `.mcp.json`), Cursor,
