@@ -30,10 +30,14 @@ jobs:
         env:
           MCP_CTX_ANTHROPIC_KEY: ${{ secrets.MCP_CTX_ANTHROPIC_KEY }}
         run: npm run divergence
+      - name: Regenerate leaderboard + server pages
+        # Server pages read results/history.csv for their "Over time" table, so
+        # this must run after the sweep above or that table goes stale.
+        run: npx tsx src/sweep/regen.ts
       - name: Commit refreshed badge
         run: |
           git config user.name "mcp-context-cost bot"
           git config user.email "actions@users.noreply.github.com"
-          git add badges/ results/
+          git add badges/ results/ docs/
           git diff --cached --quiet || git commit -m "chore: refresh self-badge measurement"
           git push
