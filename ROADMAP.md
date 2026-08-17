@@ -13,8 +13,8 @@ Ordered by value-per-effort for users. Contributions welcome on any of these.
       set — closes the second "planned" promise.
 - [ ] **Expand the sweep**: more servers from the registry long-tail; re-attempt current
       startup-failures as upstream fixes land.
-- [ ] **npm 0.2.0**: `verify --remote` (fetch a measurement URL) still open; `verify --json`
-      and documented exit codes shipped (2026-08-17), pending release.
+- [ ] **npm 0.2.0**: `verify --json`, documented exit codes, and `verify --remote` all
+      shipped (2026-08-17); pending release.
 
 ## Later
 
@@ -23,6 +23,9 @@ Ordered by value-per-effort for users. Contributions welcome on any of these.
 - [ ] Periodic "state of MCP context cost" data summary, when the deltas tell a story.
 
 ## Done
+
+- [x] **`verify --remote <url>`**: fetch and verify a published measurement.json directly,
+      no clone required; 15s request timeout (2026-08-17)
 
 - [x] **Claude divergence column** (`tools-delta/v1`): top 15 servers measured via Anthropic's
       count_tokens, model-pinned and dated, published in the leaderboard and decomposed per
