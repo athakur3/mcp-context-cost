@@ -1,7 +1,7 @@
 {
   "name": "mcp-context-cost",
-  "version": "0.2.0",
-  "description": "Reproducible context-cost badges for MCP servers — measure what a server's tool schemas cost before the agent does any work",
+  "version": "0.3.0",
+  "description": "Measure what your MCP servers cost in context tokens — audit your own config, or badge the server you publish",
   "type": "module",
   "license": "MIT",
   "repository": {
@@ -15,6 +15,10 @@
     "model-context-protocol",
     "tokens",
     "context-window",
+    "audit",
+    "token-budget",
+    "claude",
+    "cursor",
     "badge",
     "shields",
     "developer-tools"

@@ -2,12 +2,14 @@
 /**
  * mcp-context-cost CLI — the dispute drill as a command.
  *
+ *   mcp-context-cost audit [--budget N] [--json]      measure the servers in your own
+ *                                                MCP config; exit 1 if over budget
  *   mcp-context-cost verify <measurement.json> [--json]   re-derive the number from the
  *                                                published capture; exit 1 on mismatch
  *   mcp-context-cost verify --remote <url> [--json]   same, fetched from a measurement URL
  *   mcp-context-cost measure --name x --command "npx -y ..."   one-off measurement
  *
- * Exit codes: 0 ok, 1 verification/measurement failed, 2 usage error.
+ * Exit codes: 0 ok, 1 verification/measurement/budget failed, 2 usage error.
  */
 import { readFileSync } from 'node:fs';
 import { canonicalString, countTokens, sha256Hex } from './core/canonical.js';
@@ -36,7 +38,53 @@ export function verifyMeasurement(m: Measurement): {
 
 const [, , cmd, ...rest] = process.argv;
 
-if (cmd === 'verify') {
+if (cmd === 'audit') {
+  const argOf = (name: string) => {
+    const i = rest.indexOf(`--${name}`);
+    return i >= 0 ? rest[i + 1] : undefined;
+  };
+  const all = (name: string) =>
+    rest.flatMap((a, i) => (a === `--${name}` && rest[i + 1] ? [rest[i + 1]] : []));
+  const json = rest.includes('--json');
+  const numeric = (name: string): number | undefined => {
+    const raw = argOf(name);
+    if (raw === undefined) return undefined;
+    const v = Number(raw);
+    if (!Number.isFinite(v) || v <= 0) {
+      console.error(`--${name} must be a positive number, got '${raw}'`);
+      process.exit(2);
+    }
+    return v;
+  };
+
+  const budget = numeric('budget');
+  const { runAudit } = await import('./audit/run.js');
+  const { formatReport } = await import('./audit/audit.js');
+  const report = await runAudit({
+    configPaths: all('config'),
+    budget,
+    contextWindow: numeric('context'),
+    timeoutMs: numeric('timeout'),
+    concurrency: numeric('concurrency'),
+    docker: rest.includes('--docker'),
+    // Progress goes to stderr so `--json` stdout stays a single parseable object.
+    onProgress: json ? undefined : (name, done, total) => process.stderr.write(`  [${done}/${total}] ${name}\n`),
+  });
+
+  if (report.configs.length === 0) {
+    const where = report.problems.length ? `\n${report.problems.map((p) => `  ${p}`).join('\n')}` : '';
+    if (json) console.log(JSON.stringify(report));
+    else
+      console.error(
+        `no MCP config found. Looked in the standard Claude Desktop / Claude Code / Cursor / VS Code / Windsurf locations.${where}\n` +
+          `Point at one explicitly: mcp-context-cost audit --config <path/to/mcp.json>`,
+      );
+    process.exit(1);
+  }
+
+  console.log(json ? JSON.stringify(report) : formatReport(report));
+  process.exit(report.budget?.over ? 1 : 0);
+} else if (cmd === 'verify') {
   const json = rest.includes('--json');
   const remoteIdx = rest.indexOf('--remote');
   const remoteUrl = remoteIdx >= 0 ? rest[remoteIdx + 1] : undefined;
@@ -106,8 +154,10 @@ if (cmd === 'verify') {
   process.exit(2);
 } else {
   console.log('mcp-context-cost — reproducible context-cost measurement for MCP servers');
+  console.log('  audit [--config <path>] [--budget N]  measure the servers in your own MCP config');
+  console.log('        [--json] [--context N] [--timeout ms] [--concurrency N] [--docker]');
   console.log('  verify <measurement.json> [--json]    re-derive tokens+sha from the published capture');
   console.log('  verify --remote <url> [--json]        same, fetched from a measurement URL');
   console.log('  measure --name x --command "npx -y <server>"   run a one-off measurement');
-  console.log('exit codes: 0 ok, 1 verification/measurement failed, 2 usage error');
+  console.log('exit codes: 0 ok, 1 verification/measurement/budget failed, 2 usage error');
 }

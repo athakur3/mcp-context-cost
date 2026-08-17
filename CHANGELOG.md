@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.3.0 — 2026-08-17
+
+- **`audit`**: measure the servers you actually have installed, not one at a time.
+  Discovers MCP configs for Claude Desktop, Claude Code (`~/.claude.json` including
+  per-project blocks, and `.mcp.json`), Cursor, VS Code (`.vscode/mcp.json`) and Windsurf,
+  or takes `--config <path>` (repeatable). Reports each config's total, per-server share,
+  share of the context window, the heaviest individual tools, and every server it could not
+  measure with the reason.
+  - `--budget N` exits 1 when the stack exceeds N tokens — a CI gate for agent repos. The
+    gate is evaluated against the *heaviest* config found, not the average.
+  - `--json` emits the whole report on stdout (progress goes to stderr). Env var **values**
+    are never included — only names, same rule as `measurement.json`.
+  - Totals are per config file and never merged across clients: a context window belongs to
+    one client session. A server appearing in two configs is measured once and counted in
+    both.
+  - Measurement is the leaderboard's own path (dual `tools/list` capture, o200k_base over
+    canonical bytes, full failure taxonomy), so a server measured here and in the sweep
+    produces the same number. No color band is applied to a stack total — the bands were
+    frozen against the per-server distribution and don't describe a sum.
+  - Writes nothing to the working directory.
+- Config parsing tolerates comments and trailing commas (VS Code's `mcp.json` allows both,
+  and hand-edited configs pick them up), with string literals respected so a `//` inside a
+  URL or description survives.
+- `measureServer` gains `argv` (exact argv from a config, so paths containing spaces are not
+  re-split) and `persist: false` (in-memory measurement).
+- Fixed: `src/sweep/run.ts` treated any entry-point path ending in `run.ts`/`run.js` as
+  itself, so adding `src/audit/run.ts` made unrelated scripts print its usage and exit 2.
+  The check now compares resolved paths.
+
 ## 0.2.0 — 2026-08-17
 
 - `verify --remote <url> [--json]`: fetch and verify a published `measurement.json`

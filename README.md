@@ -3,7 +3,8 @@
 [![npm](https://img.shields.io/npm/v/mcp-context-cost)](https://www.npmjs.com/package/mcp-context-cost)
 [![CI](https://github.com/athakur3/mcp-context-cost/actions/workflows/ci.yml/badge.svg)](https://github.com/athakur3/mcp-context-cost/actions/workflows/ci.yml)
 
-**Reproducible context-cost badges for MCP servers.**
+**Reproducible context-cost measurement for MCP servers — for the one you publish, and for
+the stack you actually run.**
 
 Every MCP server you wire into an agent injects its tool schemas into the model's context
 before any work happens. That cost is invisible — and it varies by **1,700×** across
@@ -28,6 +29,53 @@ This project makes that cost **legible and disputable**:
 ```
 [context cost | 12,430 tokens]   ← shields.io badge, linked to the methodology
 ```
+
+## What does *your* setup cost?
+
+The leaderboard measures one server at a time. You don't run one server — you run a stack.
+Point `audit` at your own MCP config and it measures every server you actually have installed:
+
+```bash
+npx -y mcp-context-cost audit
+```
+
+```
+claude-desktop  ~/Library/Application Support/Claude/claude_desktop_config.json
+  server               tools  tokens   share
+  filesystem              14   2,823   35.7%
+  memory                   9   2,378   30.1%
+  everything              13   1,708   21.6%
+  sequential-thinking      1     992   12.6%
+  ────────────────────────────────────────────
+  total                   37   7,901
+
+  Every request in this client carries 7,901 tokens of tool schemas — 4.0% of a
+  200,000-token context window, before you type anything.
+
+  heaviest tools
+    sequential-thinking · sequentialthinking      990
+    memory · search_nodes                         323
+```
+
+It finds configs for Claude Desktop, Claude Code (`~/.claude.json`, `.mcp.json`), Cursor,
+VS Code (`.vscode/mcp.json`), and Windsurf — or pass `--config <path>`. Servers are measured
+by the same path as the published leaderboard (dual `tools/list` capture, `o200k_base` over
+canonical JSON), so a server in both places gets the same number. Nothing is written to your
+project, and env var **values** are never read into the output — only their names.
+
+Totals are reported per config file, never merged: a context window belongs to one client
+session, so summing Cursor's servers into Claude Desktop's total would describe a session
+nobody runs.
+
+**In CI**, make it a gate — the bundlesize move for agents:
+
+```bash
+npx -y mcp-context-cost audit --config .mcp.json --budget 20000
+# exits 1 when the stack exceeds the budget, so a PR adding a 25K-token server fails
+```
+
+Flags: `--json` (full report on stdout, progress on stderr), `--budget N`, `--context N`
+(default 200,000), `--timeout ms`, `--concurrency N`, `--docker`.
 
 ## What it costs on Claude
 
@@ -71,7 +119,8 @@ number is *not*, config policy, failure taxonomy, frozen color bands, known dive
 |---|---|
 | `src/core/` | the measurement spec, executable — canonical form, tokenizer, bands, badge JSON |
 | `src/sweep/` | raw-wire MCP stdio client + Dockerized batch sweep + leaderboard/dashboard generators |
-| `src/cli.ts` | `verify` (re-derive any published number) and `measure` |
+| `src/audit/` | client-config discovery (5 clients, JSONC-tolerant) + the per-stack report |
+| `src/cli.ts` | `audit` (measure your own stack), `verify` (re-derive any published number), `measure` |
 | `spec/fixtures/` | golden vectors shared by the TypeScript and bash implementations |
 | `tools/` | the one script that calls a network API (Claude divergence); kept out of the package so the library stays offline |
 | `upstream/` | staged contribution to [sd2k/mcp-tokens-action](https://github.com/sd2k/mcp-tokens-action): `badge.sh` + action patch + tests |
@@ -103,7 +152,7 @@ Or self-serve from CI via the (staged) mcp-tokens-action badge inputs — see
 ## Development
 
 ```bash
-npm test                        # 53 TS tests incl. golden fixtures + dispute drills
+npm test                        # 105 TS tests incl. golden fixtures + dispute drills
 npx tsc --noEmit                # typecheck
 ./upstream/tests/badge-test.sh  # 21 bash tests — byte-identical to the TS reference
 npm run sweep:all -- --docker   # full curated sweep (Docker isolation)

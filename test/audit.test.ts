@@ -1,0 +1,320 @@
+import { describe, it, expect } from 'vitest';
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync, readFileSync, writeFileSync, readdirSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { tmpdir } from 'node:os';
+import { fileURLToPath } from 'node:url';
+import { parseJsonc, extractServers, configCandidates, loadConfigs } from '../src/audit/config.js';
+import { buildReport, formatReport, serverKey, DEFAULT_CONTEXT_WINDOW } from '../src/audit/audit.js';
+import { measureTools, failedMeasurement } from '../src/core/canonical.js';
+import type { Measurement } from '../src/core/types.js';
+
+const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
+const tools = JSON.parse(readFileSync(join(repoRoot, 'spec/fixtures/tools-basic.json'), 'utf8'));
+
+describe('parseJsonc', () => {
+  it('parses plain JSON', () => {
+    expect(parseJsonc('{"a":1}')).toEqual({ a: 1 });
+  });
+
+  it('strips line and block comments', () => {
+    expect(parseJsonc('{\n // note\n "a":1 /* inline */, "b":2\n}')).toEqual({ a: 1, b: 2 });
+  });
+
+  it('tolerates trailing commas in objects and arrays', () => {
+    expect(parseJsonc('{"a":[1,2,],"b":2,}')).toEqual({ a: [1, 2], b: 2 });
+  });
+
+  it('leaves comment-like and comma-like text inside strings alone', () => {
+    const doc = parseJsonc('{"url":"https://x.dev//p","desc":"ends with a comma, }"}') as Record<string, string>;
+    expect(doc.url).toBe('https://x.dev//p');
+    expect(doc.desc).toBe('ends with a comma, }');
+  });
+
+  it('preserves escaped quotes', () => {
+    expect(parseJsonc('{"a":"say \\"hi\\" // now"}')).toEqual({ a: 'say "hi" // now' });
+  });
+});
+
+describe('extractServers', () => {
+  const meta = { client: 'test', source: '/cfg.json' };
+
+  it('reads the mcpServers block with args and env', () => {
+    const s = extractServers(
+      { mcpServers: { memory: { command: 'npx', args: ['-y', '@modelcontextprotocol/server-memory'], env: { API_KEY: 'secret-value' } } } },
+      meta,
+    );
+    expect(s).toHaveLength(1);
+    expect(s[0]).toMatchObject({
+      name: 'memory',
+      transport: 'stdio',
+      command: 'npx -y @modelcontextprotocol/server-memory',
+      envVarNames: ['API_KEY'],
+    });
+    expect(s[0].argv).toEqual(['npx', '-y', '@modelcontextprotocol/server-memory']);
+  });
+
+  it("reads VS Code's servers block", () => {
+    const s = extractServers({ servers: { fs: { command: 'node', args: ['server.js'] } } }, meta);
+    expect(s.map((x) => x.name)).toEqual(['fs']);
+  });
+
+  it('reads Claude Code per-project servers keyed by directory', () => {
+    const doc = { projects: { '/home/me/proj': { mcpServers: { local: { command: 'node', args: ['x.js'] } } } } };
+    expect(extractServers(doc, { ...meta, cwd: '/home/me/proj' }).map((s) => s.name)).toEqual(['local']);
+    expect(extractServers(doc, { ...meta, cwd: '/home/me/other' })).toEqual([]);
+  });
+
+  it('quotes args containing spaces so the printed command is copy-pasteable', () => {
+    const s = extractServers(
+      { mcpServers: { fs: { command: 'npx', args: ['-y', 'server-filesystem', '/Users/me/My Docs'] } } },
+      meta,
+    );
+    expect(s[0].command).toBe('npx -y server-filesystem "/Users/me/My Docs"');
+    expect(s[0].argv).toEqual(['npx', '-y', 'server-filesystem', '/Users/me/My Docs']);
+  });
+
+  it('classifies url entries as remote and skips disabled ones', () => {
+    const s = extractServers(
+      {
+        mcpServers: {
+          linear: { url: 'https://mcp.linear.app/sse', type: 'sse' },
+          off: { command: 'node', args: ['x.js'], disabled: true },
+        },
+      },
+      meta,
+    );
+    expect(s).toHaveLength(1);
+    expect(s[0]).toMatchObject({ name: 'linear', transport: 'remote', url: 'https://mcp.linear.app/sse' });
+  });
+
+  it('ignores malformed entries instead of throwing', () => {
+    expect(extractServers({ mcpServers: { a: null, b: 'nope', c: {} } }, meta)).toEqual([]);
+    expect(extractServers(null, meta)).toEqual([]);
+  });
+});
+
+describe('configCandidates', () => {
+  it('points at the per-platform Claude Desktop location', () => {
+    const mac = configCandidates({ home: '/Users/me', cwd: '/proj', platform: 'darwin' });
+    expect(mac[0].path).toBe('/Users/me/Library/Application Support/Claude/claude_desktop_config.json');
+    const linux = configCandidates({ home: '/home/me', cwd: '/proj', platform: 'linux' });
+    expect(linux[0].path).toBe('/home/me/.config/Claude/claude_desktop_config.json');
+  });
+
+  it('covers the project-local config files', () => {
+    const paths = configCandidates({ home: '/h', cwd: '/proj', platform: 'darwin' }).map((c) => c.path);
+    expect(paths).toContain('/proj/.mcp.json');
+    expect(paths).toContain('/proj/.cursor/mcp.json');
+    expect(paths).toContain('/proj/.vscode/mcp.json');
+  });
+});
+
+describe('loadConfigs', () => {
+  it('skips missing files, reports unparseable ones, ignores configs with no servers', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'mcp-audit-cfg-'));
+    writeFileSync(join(dir, 'good.json'), '{"mcpServers":{"a":{"command":"node","args":["a.js"]}}}');
+    writeFileSync(join(dir, 'bad.json'), '{not json');
+    writeFileSync(join(dir, 'empty.json'), '{"otherKey":1}');
+    const loaded = loadConfigs(
+      [
+        { client: 'x', path: join(dir, 'good.json') },
+        { client: 'x', path: join(dir, 'bad.json') },
+        { client: 'x', path: join(dir, 'empty.json') },
+        { client: 'x', path: join(dir, 'nope.json') },
+      ],
+      dir,
+    );
+    expect(loaded).toHaveLength(2);
+    expect(loaded[0].servers).toHaveLength(1);
+    expect(loaded[1].error).toBeDefined();
+  });
+});
+
+function measurement(name: string, extraTools = 0): Measurement {
+  const t = [...tools, ...Array.from({ length: extraTools }, (_, i) => ({ name: `extra_${i}`, description: 'x'.repeat(40) }))];
+  return measureTools(t, { serverName: name });
+}
+
+describe('buildReport', () => {
+  const cfg = (servers: unknown[]) =>
+    [{ client: 'claude-desktop', source: '/cfg.json', servers }] as Parameters<typeof buildReport>[0];
+
+  const stdio = (name: string, argv: string[]) => ({
+    name,
+    client: 'claude-desktop',
+    source: '/cfg.json',
+    transport: 'stdio' as const,
+    command: argv.join(' '),
+    argv,
+    envVarNames: [],
+  });
+
+  it('totals a config, ranks servers, and computes shares', () => {
+    const a = stdio('alpha', ['node', 'a.js']);
+    const b = stdio('beta', ['node', 'b.js']);
+    const measured = new Map([
+      [serverKey(a), measurement('alpha')],
+      [serverKey(b), measurement('beta', 6)],
+    ]);
+    const r = buildReport(cfg([a, b]), measured, { generatedAt: 'T' });
+    expect(r.configs).toHaveLength(1);
+    const c = r.configs[0];
+    expect(c.servers.map((s) => s.name)).toEqual(['beta', 'alpha']); // heaviest first
+    expect(c.totalTokens).toBe((c.servers[0].tokens ?? 0) + (c.servers[1].tokens ?? 0));
+    expect(c.servers.reduce((a, s) => a + (s.share ?? 0), 0)).toBeCloseTo(1, 10);
+    expect(c.contextShare).toBeCloseTo(c.totalTokens / DEFAULT_CONTEXT_WINDOW, 10);
+  });
+
+  it('puts failures and remote servers under skipped, not in the total', () => {
+    const ok = stdio('ok', ['node', 'ok.js']);
+    const broken = stdio('broken', ['node', 'broken.js']);
+    const remote = { ...stdio('linear', []), transport: 'remote' as const, url: 'https://x/sse', argv: undefined };
+    const measured = new Map([
+      [serverKey(ok), measurement('ok')],
+      [serverKey(broken), failedMeasurement('startup-failure', { serverName: 'broken', notes: 'server exited (code 1)' })],
+    ]);
+    const r = buildReport(cfg([ok, broken, remote]), measured, { generatedAt: 'T' });
+    const c = r.configs[0];
+    expect(c.servers.map((s) => s.name)).toEqual(['ok']);
+    expect(c.skipped.map((s) => s.status).sort()).toEqual(['remote-not-measurable', 'startup-failure']);
+    expect(c.totalTokens).toBe(c.servers[0].tokens);
+  });
+
+  it('never totals across config files', () => {
+    const a = stdio('alpha', ['node', 'a.js']);
+    const b = { ...stdio('beta', ['node', 'b.js']), client: 'cursor', source: '/other.json' };
+    const measured = new Map([
+      [serverKey(a), measurement('alpha')],
+      [serverKey(b), measurement('beta', 6)],
+    ]);
+    const configs = [
+      { client: 'claude-desktop', source: '/cfg.json', servers: [a] },
+      { client: 'cursor', source: '/other.json', servers: [b] },
+    ] as Parameters<typeof buildReport>[0];
+    const r = buildReport(configs, measured, { generatedAt: 'T' });
+    expect(r.configs).toHaveLength(2);
+    expect(r.configs[0].source).toBe('/other.json'); // heaviest config first
+    expect(r.configs[0].totalTokens).not.toBe(r.configs[0].totalTokens + r.configs[1].totalTokens);
+  });
+
+  it('gates the budget on the heaviest config', () => {
+    const a = stdio('alpha', ['node', 'a.js']);
+    const measured = new Map([[serverKey(a), measurement('alpha')]]);
+    const total = measured.get(serverKey(a))!.totalTokens!;
+    expect(buildReport(cfg([a]), measured, { budget: total - 1 }).budget).toMatchObject({ over: true });
+    expect(buildReport(cfg([a]), measured, { budget: total }).budget).toMatchObject({ over: false });
+  });
+
+  it('surfaces the heaviest individual tools', () => {
+    const a = stdio('alpha', ['node', 'a.js']);
+    const measured = new Map([[serverKey(a), measurement('alpha', 3)]]);
+    const c = buildReport(cfg([a]), measured, {}).configs[0];
+    expect(c.heaviestTools.length).toBeGreaterThan(0);
+    expect(c.heaviestTools[0].tokens).toBeGreaterThanOrEqual(c.heaviestTools.at(-1)!.tokens);
+    expect(c.heaviestTools[0].server).toBe('alpha');
+  });
+
+  it('records a config-level parse error as a problem', () => {
+    const r = buildReport(
+      [{ client: 'x', source: '/broken.json', servers: [], error: 'Unexpected token' }],
+      new Map(),
+      {},
+    );
+    expect(r.configs).toHaveLength(0);
+    expect(r.problems[0]).toContain('/broken.json');
+  });
+
+  it('never serializes env values', () => {
+    const a = { ...stdio('alpha', ['node', 'a.js']), envVarNames: ['API_KEY'], env: { API_KEY: 'super-secret-value' } };
+    const measured = new Map([[serverKey(a), measurement('alpha')]]);
+    const json = JSON.stringify(buildReport(cfg([a]), measured, {}));
+    expect(json).toContain('API_KEY');
+    expect(json).not.toContain('super-secret-value');
+  });
+});
+
+describe('formatReport', () => {
+  const a = {
+    name: 'alpha',
+    client: 'claude-desktop',
+    source: '/cfg.json',
+    transport: 'stdio' as const,
+    command: 'node a.js',
+    argv: ['node', 'a.js'],
+    envVarNames: [],
+  };
+  const report = buildReport(
+    [{ client: 'claude-desktop', source: '/cfg.json', servers: [a] }] as Parameters<typeof buildReport>[0],
+    new Map([[serverKey(a), measurement('alpha')]]),
+    { budget: 1, generatedAt: 'T' },
+  );
+
+  it('renders the total, the context share, and the budget verdict', () => {
+    const text = formatReport(report);
+    expect(text).toContain('claude-desktop  /cfg.json');
+    expect(text).toContain('alpha');
+    expect(text).toContain('BUDGET FAIL');
+    expect(text).toMatch(/% of a 200,000-token context window/);
+  });
+
+  it('states the wire-vs-billed caveat', () => {
+    expect(formatReport(report)).toContain('wire tokens');
+  });
+});
+
+describe('audit CLI', () => {
+  it('measures a real server from a config file and leaves no files behind', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'mcp-audit-cli-'));
+    writeFileSync(
+      join(dir, 'mcp.json'),
+      JSON.stringify({
+        mcpServers: {
+          memory: { command: 'npx', args: ['-y', '@modelcontextprotocol/server-memory'] },
+          linear: { url: 'https://mcp.example/sse' },
+        },
+      }),
+    );
+    const out = execFileSync(
+      'npx',
+      ['tsx', join(repoRoot, 'src/cli.ts'), 'audit', '--config', join(dir, 'mcp.json'), '--json'],
+      { cwd: dir, encoding: 'utf8', timeout: 180_000 },
+    );
+    const report = JSON.parse(out);
+    expect(report.configs).toHaveLength(1);
+    expect(report.configs[0].servers[0]).toMatchObject({ name: 'memory', status: 'measured' });
+    expect(report.configs[0].totalTokens).toBeGreaterThan(1000);
+    expect(report.configs[0].skipped[0]).toMatchObject({ name: 'linear', status: 'remote-not-measurable' });
+    // audit runs in someone's own project — it must not write results/ or badges/
+    expect(readdirSync(dir).sort()).toEqual(['mcp.json']);
+  }, 200_000);
+
+  it('exits 1 when no config is found', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'mcp-audit-none-'));
+    let code = 0;
+    try {
+      execFileSync('npx', ['tsx', join(repoRoot, 'src/cli.ts'), 'audit', '--config', join(dir, 'missing.json')], {
+        cwd: dir,
+        encoding: 'utf8',
+        stdio: 'pipe',
+      });
+    } catch (e) {
+      code = (e as { status: number }).status;
+    }
+    expect(code).toBe(1);
+  });
+
+  it('exits 2 on a malformed --budget', () => {
+    let code = 0;
+    try {
+      execFileSync('npx', ['tsx', join(repoRoot, 'src/cli.ts'), 'audit', '--budget', 'lots'], {
+        cwd: repoRoot,
+        encoding: 'utf8',
+        stdio: 'pipe',
+      });
+    } catch (e) {
+      code = (e as { status: number }).status;
+    }
+    expect(code).toBe(2);
+  });
+});

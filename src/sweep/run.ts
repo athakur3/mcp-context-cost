@@ -5,7 +5,8 @@
  * Runs tools/list capture TWICE; differing tool sets -> status "dynamic".
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { captureTools } from './client.js';
 import { dockerize } from './docker.js';
 import { measureTools, failedMeasurement, canonicalString } from '../core/canonical.js';
@@ -25,6 +26,17 @@ export interface MeasureOptions {
   dockerImage?: string;
   /** env var NAMES to provide as dummy values (docker mode). */
   dummyEnv?: string[];
+  /**
+   * Exact argv, when the caller already has it (client configs store command and
+   * args separately). Avoids re-splitting a joined string on spaces, which would
+   * break any path containing one. Host path only — docker still wraps `command`.
+   */
+  argv?: string[];
+  /**
+   * Write results/<name>/measurement.json + badges/<name>.json (default true).
+   * `audit` runs in the user's own directory and must not litter it.
+   */
+  persist?: boolean;
 }
 
 export async function measureServer(
@@ -32,11 +44,15 @@ export async function measureServer(
   command: string,
   opts: MeasureOptions = {},
 ): Promise<Measurement> {
-  if (!/^[a-z0-9][a-z0-9._-]*$/i.test(name) || name.includes('..')) {
+  const persist = opts.persist !== false;
+  // The name becomes a directory when persisting; that's the only reason it's
+  // constrained, so in-memory callers may use whatever the config called it.
+  if (persist && (!/^[a-z0-9][a-z0-9._-]*$/i.test(name) || name.includes('..'))) {
     throw new Error(`invalid server name '${name}' — letters/digits/dot/dash/underscore only`);
   }
   const root = opts.root ?? process.cwd();
-  let spec: string | { command: string; argv: string[] } = command;
+  let spec: string | { command: string; argv: string[] } =
+    opts.argv && opts.argv.length ? { command: opts.argv[0], argv: opts.argv.slice(1) } : command;
   let isolation: Measurement['isolation'] = { docker: false };
   let containerName: string | undefined;
   if (opts.docker && command.trimStart().startsWith('docker ')) {
@@ -82,6 +98,8 @@ export async function measureServer(
     }
   }
 
+  if (!persist) return m;
+
   const resultDir = join(root, 'results', name);
   mkdirSync(resultDir, { recursive: true });
   writeFileSync(join(resultDir, 'measurement.json'), JSON.stringify(m, null, 2) + '\n');
@@ -91,7 +109,10 @@ export async function measureServer(
   return m;
 }
 
-const isMain = process.argv[1]?.endsWith('run.ts') || process.argv[1]?.endsWith('run.js');
+// Exact path match, not endsWith('run.ts'): any other file whose name happens to
+// end in "run.ts" (src/audit/run.ts, a scratch dryrun.ts) would otherwise run this
+// block and exit 2 on missing --name.
+const isMain = process.argv[1] !== undefined && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
   const name = arg('name');
   const command = arg('command');

@@ -4,6 +4,12 @@ Ordered by value-per-effort for users. Contributions welcome on any of these.
 
 ## Next
 
+- [ ] **`audit --claude`**: annotate each audited server with its Anthropic-request cost
+      where the published `tools-delta/v1` capture hash matches what's installed locally —
+      an exact number when versions agree, silence when they don't.
+- [ ] **Trim advice in `audit`**: the per-tool breakdown already names the heaviest tools;
+      turn that into "disabling these 3 tools recovers N tokens" for clients that support
+      per-tool filtering.
 - [ ] **Cost-over-time sparklines**: `results/history.csv` already accumulates a
       per-(date, server) series with every sweep; surface it on the dashboard once
       multiple sweep dates exist.
@@ -21,6 +27,11 @@ Ordered by value-per-effort for users. Contributions welcome on any of these.
 - [ ] Periodic "state of MCP context cost" data summary, when the deltas tell a story.
 
 ## Done
+
+- [x] **`audit`**: measure the servers in your own MCP config — Claude Desktop, Claude Code,
+      Cursor, VS Code, Windsurf — with per-config totals, context-window share, heaviest
+      tools, and a `--budget N` CI gate. The leaderboard answers "what does this server
+      cost?"; `audit` answers "what does my stack cost?" (2026-08-17)
 
 - [x] **`verify --remote <url>`**: fetch and verify a published measurement.json directly,
       no clone required; 15s request timeout (2026-08-17)
