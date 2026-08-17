@@ -7,8 +7,13 @@
 import { homedir } from 'node:os';
 import { measureServer } from '../sweep/run.js';
 import type { Measurement } from '../core/types.js';
+import { parseDivergence, type DivergenceRun } from '../core/divergence.js';
 import { buildReport, serverKey, type AuditReport } from './audit.js';
 import { configCandidates, loadConfigs, type ConfiguredServer, type LoadedConfig } from './config.js';
+
+/** Where the published `tools-delta/v1` run lives when `--claude` doesn't override it. */
+export const DEFAULT_DIVERGENCE_URL =
+  'https://raw.githubusercontent.com/athakur3/mcp-context-cost/main/results/divergence.json';
 
 export interface AuditOptions {
   /** Explicit config path(s); when empty, every known client location is tried. */
@@ -20,7 +25,23 @@ export interface AuditOptions {
   docker?: boolean;
   contextWindow?: number;
   budget?: number;
+  /** Join each measured server against the published Claude divergence run. */
+  claude?: boolean;
+  /** Override the divergence.json source — mainly for tests and self-hosted mirrors. */
+  divergenceUrl?: string;
   onProgress?: (name: string, done: number, total: number) => void;
+}
+
+/** Fetch and parse the published divergence run. Never throws: a failure is a report problem, not a crash. */
+export async function fetchDivergence(url: string): Promise<{ run: DivergenceRun | null; problem?: string }> {
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(15_000) });
+    if (!res.ok) return { run: null, problem: `claude divergence: HTTP ${res.status} fetching ${url}` };
+    const run = parseDivergence(await res.text());
+    return run ? { run } : { run: null, problem: `claude divergence: malformed data at ${url}` };
+  } catch (e) {
+    return { run: null, problem: `claude divergence: failed to fetch ${url}: ${(e as Error).message}` };
+  }
 }
 
 export function discover(opts: AuditOptions = {}): LoadedConfig[] {
@@ -74,8 +95,20 @@ export async function measureAll(
 export async function runAudit(opts: AuditOptions = {}): Promise<AuditReport> {
   const configs = discover(opts);
   const measured = await measureAll(configs, opts);
-  return buildReport(configs, measured, {
+
+  let divergence: DivergenceRun | null = null;
+  let divergenceProblem: string | undefined;
+  if (opts.claude) {
+    const fetched = await fetchDivergence(opts.divergenceUrl ?? DEFAULT_DIVERGENCE_URL);
+    divergence = fetched.run;
+    divergenceProblem = fetched.problem;
+  }
+
+  const report = buildReport(configs, measured, {
     contextWindow: opts.contextWindow,
     budget: opts.budget,
+    divergence,
   });
+  if (divergenceProblem) report.problems.push(divergenceProblem);
+  return report;
 }

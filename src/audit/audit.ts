@@ -13,6 +13,7 @@
  * commands shared by two configs are still only measured once.
  */
 import { METHODOLOGY_VERSION } from '../core/canonical.js';
+import { isCurrent, type DivergenceRun } from '../core/divergence.js';
 import type { Measurement, MeasurementStatus, ToolMeasurement } from '../core/types.js';
 import type { ConfiguredServer, LoadedConfig } from './config.js';
 
@@ -33,6 +34,13 @@ export interface AuditServerResult {
   /** Names only — a server's env values never enter a report. */
   envVarNames: string[];
   canonicalSha256?: string | null;
+  /**
+   * Anthropic-request cost from the published Claude divergence run, only when
+   * its captured hash matches this install (`--claude`). `null` means the
+   * install doesn't match what was published — silence, not a stale guess.
+   * `undefined` means `--claude` wasn't requested at all.
+   */
+  claudeTokens?: number | null;
   notes?: string;
 }
 
@@ -61,6 +69,8 @@ export interface AuditReport {
   contextWindow: number;
   configs: AuditConfigResult[];
   budget?: { limit: number; worstTotal: number; worstSource: string; over: boolean };
+  /** Present only when a divergence run was supplied (`--claude`). */
+  claudeDivergence?: { model: string; measuredAt: string };
   problems: string[];
 }
 
@@ -81,7 +91,13 @@ function measuredOk(m: Measurement): boolean {
 export function buildReport(
   configs: LoadedConfig[],
   measured: Map<string, Measurement>,
-  opts: { contextWindow?: number; budget?: number; generatedAt?: string } = {},
+  opts: {
+    contextWindow?: number;
+    budget?: number;
+    generatedAt?: string;
+    /** Published `tools-delta/v1` run to join against (`--claude`); omit to skip the join. */
+    divergence?: DivergenceRun | null;
+  } = {},
 ): AuditReport {
   const contextWindow = opts.contextWindow ?? DEFAULT_CONTEXT_WINDOW;
   const problems: string[] = [];
@@ -131,6 +147,7 @@ export function buildReport(
         });
         continue;
       }
+      const divRow = opts.divergence?.servers[s.name];
       ok.push({
         ...base,
         status: m.status,
@@ -138,6 +155,7 @@ export function buildReport(
         toolCount: m.toolCount,
         share: null, // filled once the total is known
         canonicalSha256: m.canonicalSha256,
+        claudeTokens: opts.divergence ? (isCurrent(divRow, m.canonicalSha256 ?? null) ? divRow.claudeDelta : null) : undefined,
         notes: m.status === 'dynamic' ? m.notes : undefined,
       });
       for (const t of m.tools) tools.push({ server: s.name, tool: t.name, tokens: t.tokens });
@@ -177,6 +195,10 @@ export function buildReport(
     problems,
   };
 
+  if (opts.divergence) {
+    report.claudeDivergence = { model: opts.divergence.model, measuredAt: opts.divergence.measuredAt };
+  }
+
   if (typeof opts.budget === 'number') {
     // The worst config is the gate: passing because your *lightest* client fits
     // would be a green check on a session you don't run.
@@ -201,6 +223,8 @@ export function formatReport(report: AuditReport): string {
     `mcp-context-cost audit · methodology ${report.methodologyVersion} · ${report.encoding} · context window ${n(report.contextWindow)}`,
   );
 
+  const showClaude = !!report.claudeDivergence;
+
   for (const cfg of report.configs) {
     lines.push('');
     lines.push(`${cfg.client}  ${cfg.source}`);
@@ -210,19 +234,22 @@ export function formatReport(report: AuditReport): string {
       tools: s.toolCount === null ? '—' : String(s.toolCount),
       tokens: s.tokens === null ? '—' : n(s.tokens),
       share: s.share === null ? '—' : pct(s.share),
+      claude: s.claudeTokens == null ? '—' : n(s.claudeTokens),
     }));
     const w = {
       name: Math.max(6, ...rows.map((r) => r.name.length), 'total'.length),
       tools: Math.max(5, ...rows.map((r) => r.tools.length)),
       tokens: Math.max(6, ...rows.map((r) => r.tokens.length), n(cfg.totalTokens).length),
+      claude: Math.max(6, ...rows.map((r) => r.claude.length)),
     };
-    const line = (name: string, tools: string, tokens: string, share: string) =>
-      `  ${name.padEnd(w.name)}  ${tools.padStart(w.tools)}  ${tokens.padStart(w.tokens)}  ${share.padStart(6)}`;
+    const line = (name: string, tools: string, tokens: string, share: string, claude: string) =>
+      `  ${name.padEnd(w.name)}  ${tools.padStart(w.tools)}  ${tokens.padStart(w.tokens)}  ${share.padStart(6)}` +
+      (showClaude ? `  ${claude.padStart(w.claude)}` : '');
 
-    lines.push(line('server', 'tools', 'tokens', 'share'));
-    for (const r of rows) lines.push(line(r.name, r.tools, r.tokens, r.share));
-    lines.push(`  ${'─'.repeat(w.name + w.tools + w.tokens + 14)}`);
-    lines.push(line('total', String(cfg.toolCount), n(cfg.totalTokens), ''));
+    lines.push(line('server', 'tools', 'tokens', 'share', 'claude'));
+    for (const r of rows) lines.push(line(r.name, r.tools, r.tokens, r.share, r.claude));
+    lines.push(`  ${'─'.repeat(w.name + w.tools + w.tokens + 14 + (showClaude ? w.claude + 2 : 0))}`);
+    lines.push(line('total', String(cfg.toolCount), n(cfg.totalTokens), '', ''));
 
     lines.push('');
     lines.push(
@@ -247,6 +274,14 @@ export function formatReport(report: AuditReport): string {
         lines.push(`    ${s.name.padEnd(sw)}  ${s.status}${s.notes ? ` — ${s.notes}` : ''}`);
       }
     }
+  }
+
+  if (showClaude) {
+    lines.push('');
+    lines.push(
+      `  claude = Anthropic-request cost from the ${report.claudeDivergence!.measuredAt} ${report.claudeDivergence!.model} ` +
+        `divergence run, shown only where the published capture hash matches this install; '—' means no current match.`,
+    );
   }
 
   if (report.problems.length) {

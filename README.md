@@ -80,8 +80,20 @@ npx -y mcp-context-cost audit --config .mcp.json --budget 20000
 # exits 1 when the stack exceeds the budget, so a PR adding a 25K-token server fails
 ```
 
+Add `--claude` to annotate each server with its Anthropic-request cost from the published
+[Claude divergence](docs/METHODOLOGY.md#claude-divergence) run — an exact number when the
+published capture hash matches what you have installed, `—` (silence, not a stale guess)
+when it doesn't (today the run covers the top 15 measured servers, so most installs will
+show a mix):
+
+```
+  server               tools  tokens   share   claude
+  github                  44  54,422   95.8%   18,406
+  memory                   9   2,378    4.2%       —
+```
+
 Flags: `--json` (full report on stdout, progress on stderr), `--budget N`, `--context N`
-(default 200,000), `--timeout ms`, `--concurrency N`, `--docker`.
+(default 200,000), `--timeout ms`, `--concurrency N`, `--docker`, `--claude`.
 
 ## What it costs on Claude
 

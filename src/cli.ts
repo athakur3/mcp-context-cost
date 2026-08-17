@@ -2,8 +2,11 @@
 /**
  * mcp-context-cost CLI — the dispute drill as a command.
  *
- *   mcp-context-cost audit [--budget N] [--json]      measure the servers in your own
- *                                                MCP config; exit 1 if over budget
+ *   mcp-context-cost audit [--budget N] [--claude] [--json]   measure the servers in your
+ *                                                own MCP config; exit 1 if over budget.
+ *                                                --claude adds each server's Anthropic-
+ *                                                request cost where the published capture
+ *                                                hash matches what's installed.
  *   mcp-context-cost verify <measurement.json> [--json]   re-derive the number from the
  *                                                published capture; exit 1 on mismatch
  *   mcp-context-cost verify --remote <url> [--json]   same, fetched from a measurement URL
@@ -67,6 +70,8 @@ if (cmd === 'audit') {
     timeoutMs: numeric('timeout'),
     concurrency: numeric('concurrency'),
     docker: rest.includes('--docker'),
+    claude: rest.includes('--claude'),
+    divergenceUrl: argOf('divergence-url'),
     // Progress goes to stderr so `--json` stdout stays a single parseable object.
     onProgress: json ? undefined : (name, done, total) => process.stderr.write(`  [${done}/${total}] ${name}\n`),
   });
@@ -154,7 +159,7 @@ if (cmd === 'audit') {
   process.exit(2);
 } else {
   console.log('mcp-context-cost — reproducible context-cost measurement for MCP servers');
-  console.log('  audit [--config <path>] [--budget N]  measure the servers in your own MCP config');
+  console.log('  audit [--config <path>] [--budget N] [--claude]  measure the servers in your own MCP config');
   console.log('        [--json] [--context N] [--timeout ms] [--concurrency N] [--docker]');
   console.log('  verify <measurement.json> [--json]    re-derive tokens+sha from the published capture');
   console.log('  verify --remote <url> [--json]        same, fetched from a measurement URL');

@@ -4,9 +4,6 @@ Ordered by value-per-effort for users. Contributions welcome on any of these.
 
 ## Next
 
-- [ ] **`audit --claude`**: annotate each audited server with its Anthropic-request cost
-      where the published `tools-delta/v1` capture hash matches what's installed locally —
-      an exact number when versions agree, silence when they don't.
 - [ ] **Trim advice in `audit`**: the per-tool breakdown already names the heaviest tools;
       turn that into "disabling these 3 tools recovers N tokens" for clients that support
       per-tool filtering.
@@ -27,6 +24,13 @@ Ordered by value-per-effort for users. Contributions welcome on any of these.
 - [ ] Periodic "state of MCP context cost" data summary, when the deltas tell a story.
 
 ## Done
+
+- [x] **`audit --claude`**: annotates each audited server with its Anthropic-request cost
+      from the published `tools-delta/v1` divergence run — an exact number when the
+      published capture hash matches what's installed locally, silence (`—`) when it
+      doesn't. Fetches `results/divergence.json` from the published repo (`--divergence-url`
+      to override); a fetch failure degrades to no column plus a recorded problem, never a
+      crash (2026-08-17)
 
 - [x] **`audit`**: measure the servers in your own MCP config — Claude Desktop, Claude Code,
       Cursor, VS Code, Windsurf — with per-config totals, context-window share, heaviest

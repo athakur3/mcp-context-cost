@@ -1,13 +1,18 @@
-import { describe, it, expect } from 'vitest';
-import { execFileSync } from 'node:child_process';
+import { describe, it, expect, afterAll } from 'vitest';
+import { execFileSync, execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import { createServer } from 'node:http';
 import { mkdtempSync, readFileSync, writeFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { parseJsonc, extractServers, configCandidates, loadConfigs } from '../src/audit/config.js';
 import { buildReport, formatReport, serverKey, DEFAULT_CONTEXT_WINDOW } from '../src/audit/audit.js';
+import { runAudit, fetchDivergence } from '../src/audit/run.js';
 import { measureTools, failedMeasurement } from '../src/core/canonical.js';
 import type { Measurement } from '../src/core/types.js';
+
+const execFileAsync = promisify(execFile);
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const tools = JSON.parse(readFileSync(join(repoRoot, 'spec/fixtures/tools-basic.json'), 'utf8'));
@@ -232,6 +237,46 @@ describe('buildReport', () => {
     expect(json).toContain('API_KEY');
     expect(json).not.toContain('super-secret-value');
   });
+
+  describe('claude divergence join (--claude)', () => {
+    const divergenceRun = (servers: Record<string, { capturedSha256: string; claudeDelta: number }>) => ({
+      method: 'tools-delta/v1',
+      model: 'claude-opus-5',
+      measuredAt: '2026-08-16',
+      baselineTokens: 7,
+      probeDelta: 328,
+      servers: Object.fromEntries(
+        Object.entries(servers).map(([name, row]) => [name, { ...row, toolCount: 1 }]),
+      ),
+    });
+
+    it('attaches claudeTokens when the published capture hash matches the install', () => {
+      const a = stdio('alpha', ['node', 'a.js']);
+      const m = measurement('alpha');
+      const measured = new Map([[serverKey(a), m]]);
+      const divergence = divergenceRun({ alpha: { capturedSha256: m.canonicalSha256!, claudeDelta: 1234 } });
+      const r = buildReport(cfg([a]), measured, { divergence });
+      expect(r.configs[0].servers[0].claudeTokens).toBe(1234);
+      expect(r.claudeDivergence).toEqual({ model: 'claude-opus-5', measuredAt: '2026-08-16' });
+    });
+
+    it('stays silent (null, not a stale number) when the hash no longer matches', () => {
+      const a = stdio('alpha', ['node', 'a.js']);
+      const measured = new Map([[serverKey(a), measurement('alpha')]]);
+      const divergence = divergenceRun({ alpha: { capturedSha256: 'stale-hash-from-a-prior-sweep', claudeDelta: 1234 } });
+      const r = buildReport(cfg([a]), measured, { divergence });
+      expect(r.configs[0].servers[0].claudeTokens).toBeNull();
+    });
+
+    it('leaves claudeTokens undefined and omits claudeDivergence when --claude was not requested', () => {
+      const a = stdio('alpha', ['node', 'a.js']);
+      const measured = new Map([[serverKey(a), measurement('alpha')]]);
+      const r = buildReport(cfg([a]), measured, {});
+      expect(r.configs[0].servers[0].claudeTokens).toBeUndefined();
+      expect(r.claudeDivergence).toBeUndefined();
+      expect(JSON.stringify(r)).not.toContain('claudeTokens');
+    });
+  });
 });
 
 describe('formatReport', () => {
@@ -260,6 +305,33 @@ describe('formatReport', () => {
 
   it('states the wire-vs-billed caveat', () => {
     expect(formatReport(report)).toContain('wire tokens');
+  });
+
+  it('omits the claude column when --claude was not requested', () => {
+    expect(formatReport(report)).not.toContain('Anthropic-request cost');
+  });
+
+  it('adds a claude column with a match and a "—" for a stale one', () => {
+    const m = measurement('alpha');
+    const withClaude = buildReport(
+      [{ client: 'claude-desktop', source: '/cfg.json', servers: [a] }] as Parameters<typeof buildReport>[0],
+      new Map([[serverKey(a), m]]),
+      {
+        generatedAt: 'T',
+        divergence: {
+          method: 'tools-delta/v1',
+          model: 'claude-opus-5',
+          measuredAt: '2026-08-16',
+          baselineTokens: 7,
+          probeDelta: 328,
+          servers: { alpha: { capturedSha256: m.canonicalSha256!, claudeDelta: 999, toolCount: 1 } },
+        },
+      },
+    );
+    const text = formatReport(withClaude);
+    expect(text).toContain('Anthropic-request cost');
+    expect(text).toContain('999');
+    expect(text).toContain('claude-opus-5');
   });
 });
 
@@ -317,4 +389,107 @@ describe('audit CLI', () => {
     }
     expect(code).toBe(2);
   });
+});
+
+describe('fetchDivergence', () => {
+  const server = createServer((req, res) => {
+    if (req.url === '/ok.json') {
+      res.end(JSON.stringify({ model: 'claude-opus-5', measuredAt: '2026-08-16', servers: { x: { capturedSha256: 'abc', claudeDelta: 1 } } }));
+    } else if (req.url === '/garbage.json') {
+      res.end('not json');
+    } else {
+      res.statusCode = 404;
+      res.end('not found');
+    }
+  });
+  let base = '';
+  const ready = new Promise<void>((resolve) => {
+    server.listen(0, '127.0.0.1', () => {
+      const addr = server.address();
+      base = typeof addr === 'object' && addr ? `http://127.0.0.1:${addr.port}` : '';
+      resolve();
+    });
+  });
+  afterAll(() => server.close());
+
+  it('parses a reachable divergence run', async () => {
+    await ready;
+    const { run, problem } = await fetchDivergence(`${base}/ok.json`);
+    expect(problem).toBeUndefined();
+    expect(run?.model).toBe('claude-opus-5');
+  });
+
+  it('returns a problem, not a throw, on a 404', async () => {
+    await ready;
+    const { run, problem } = await fetchDivergence(`${base}/missing.json`);
+    expect(run).toBeNull();
+    expect(problem).toContain('HTTP 404');
+  });
+
+  it('returns a problem, not a throw, on malformed JSON', async () => {
+    await ready;
+    const { run, problem } = await fetchDivergence(`${base}/garbage.json`);
+    expect(run).toBeNull();
+    expect(problem).toContain('malformed');
+  });
+});
+
+describe('audit CLI --claude', () => {
+  it('joins claudeTokens from a reachable divergence source, end to end', async () => {
+    const dir = mkdtempSync(join(tmpdir(), 'mcp-audit-claude-'));
+    const configPath = join(dir, 'mcp.json');
+    writeFileSync(
+      configPath,
+      JSON.stringify({ mcpServers: { memory: { command: 'npx', args: ['-y', '@modelcontextprotocol/server-memory'] } } }),
+    );
+
+    // Learn the real capture hash first — the divergence fixture must match it to prove
+    // the join, not just that a fetch happened.
+    const base = await runAudit({ configPaths: [configPath] });
+    const memory = base.configs[0].servers[0];
+    expect(memory.name).toBe('memory');
+
+    const server = createServer((req, res) => {
+      res.end(
+        JSON.stringify({
+          method: 'tools-delta/v1',
+          model: 'claude-opus-5',
+          measuredAt: '2026-08-16',
+          baselineTokens: 7,
+          probeDelta: 328,
+          servers: { memory: { capturedSha256: memory.canonicalSha256, claudeDelta: 4242, toolCount: memory.toolCount } },
+        }),
+      );
+    });
+    await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', () => resolve()));
+    const addr = server.address();
+    const divergenceUrl = typeof addr === 'object' && addr ? `http://127.0.0.1:${addr.port}/divergence.json` : '';
+
+    try {
+      // execFileSync would block this process's event loop while the child's fetch tries
+      // to reach the server that lives in this same process — deadlock. Use the async form.
+      const { stdout } = await execFileAsync(
+        'npx',
+        ['tsx', join(repoRoot, 'src/cli.ts'), 'audit', '--config', configPath, '--claude', '--divergence-url', divergenceUrl, '--json'],
+        { cwd: dir, encoding: 'utf8', timeout: 180_000 },
+      );
+      const report = JSON.parse(stdout);
+      expect(report.configs[0].servers[0]).toMatchObject({ name: 'memory', claudeTokens: 4242 });
+      expect(report.claudeDivergence).toMatchObject({ model: 'claude-opus-5' });
+    } finally {
+      server.close();
+    }
+  }, 200_000);
+
+  it('degrades to no join and a recorded problem when the divergence source is unreachable', async () => {
+    const dir = mkdtempSync(join(tmpdir(), 'mcp-audit-claude-fail-'));
+    const configPath = join(dir, 'mcp.json');
+    writeFileSync(
+      configPath,
+      JSON.stringify({ mcpServers: { memory: { command: 'npx', args: ['-y', '@modelcontextprotocol/server-memory'] } } }),
+    );
+    const r = await runAudit({ configPaths: [configPath], claude: true, divergenceUrl: 'http://127.0.0.1:1/unreachable' });
+    expect(r.configs[0].servers[0].claudeTokens).toBeUndefined();
+    expect(r.problems.some((p) => p.includes('claude divergence'))).toBe(true);
+  }, 200_000);
 });
