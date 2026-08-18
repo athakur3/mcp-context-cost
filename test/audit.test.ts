@@ -7,7 +7,7 @@ import { dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { parseJsonc, extractServers, configCandidates, loadConfigs } from '../src/audit/config.js';
-import { buildReport, formatReport, serverKey, DEFAULT_CONTEXT_WINDOW } from '../src/audit/audit.js';
+import { buildReport, formatReport, planBudgetFit, serverKey, DEFAULT_CONTEXT_WINDOW } from '../src/audit/audit.js';
 import { runAudit, fetchDivergence } from '../src/audit/run.js';
 import { measureTools, failedMeasurement } from '../src/core/canonical.js';
 import type { Measurement } from '../src/core/types.js';
@@ -209,6 +209,103 @@ describe('buildReport', () => {
     const total = measured.get(serverKey(a))!.totalTokens!;
     expect(buildReport(cfg([a]), measured, { budget: total - 1 }).budget).toMatchObject({ over: true });
     expect(buildReport(cfg([a]), measured, { budget: total }).budget).toMatchObject({ over: false });
+  });
+
+  it('says what to drop, not just that you are over', () => {
+    // "BUDGET FAIL: 84,455 > 20,000" tells a reader they have a problem and nothing
+    // about its shape. The person running audit is the person paying the tokens.
+    const heavy = stdio('heavy', ['node', 'h.js']);
+    const light = stdio('light', ['node', 'l.js']);
+    const measured = new Map([
+      [serverKey(heavy), measurement('heavy', 60)],
+      [serverKey(light), measurement('light')],
+    ]);
+    const full = buildReport(cfg([heavy, light]), measured, { generatedAt: 'T' });
+    const lightTokens = full.configs[0].servers.find((x) => x.name === 'light')!.tokens!;
+
+    // A budget that only the light server fits: the heavy one must be named.
+    const r = buildReport(cfg([heavy, light]), measured, {
+      budget: lightTokens,
+      generatedAt: 'T',
+    });
+    expect(r.budget!.over).toBe(true);
+    const fit = r.budget!.fit!;
+    expect(fit.drop.map((d) => d.name)).toEqual(['heavy']);
+    expect(fit.feasible).toBe(true);
+    expect(fit.keptCount).toBe(1);
+    expect(fit.keptTokens).toBe(lightTokens);
+    // The arithmetic has to close, or the reader cannot check it.
+    expect(fit.drop[0].remaining).toBe(r.budget!.worstTotal - fit.drop[0].tokens);
+    expect(fit.overBy).toBe(r.budget!.worstTotal - lightTokens);
+  });
+
+  it('drops heaviest first and stops as soon as it fits', () => {
+    const a = stdio('a', ['node', 'a.js']);
+    const b = stdio('b', ['node', 'b.js']);
+    const c = stdio('c', ['node', 'c.js']);
+    const measured = new Map([
+      [serverKey(a), measurement('a', 90)],
+      [serverKey(b), measurement('b', 40)],
+      [serverKey(c), measurement('c')],
+    ]);
+    const full = buildReport(cfg([a, b, c]), measured, { generatedAt: 'T' });
+    const total = full.configs[0].totalTokens;
+    const aTokens = full.configs[0].servers.find((x) => x.name === 'a')!.tokens!;
+
+    const fit = planBudgetFit(full.configs[0], total - aTokens);
+    expect(fit.drop).toHaveLength(1);          // dropping the heaviest alone suffices
+    expect(fit.drop[0].name).toBe('a');
+    expect(fit.keptCount).toBe(2);
+  });
+
+  it('does not sell "drop everything" as a solution', () => {
+    // A budget of 0 is satisfied by running no servers, which is arithmetically true and
+    // useless. True-and-misleading is the exact pair this tool exists to keep apart.
+    const a = stdio('a', ['node', 'a.js']);
+    const measured = new Map([[serverKey(a), measurement('a')]]);
+    const full = buildReport(cfg([a]), measured, { generatedAt: 'T' });
+    const fit = planBudgetFit(full.configs[0], 0);
+    expect(fit.keptCount).toBe(0);
+    expect(fit.keptTokens).toBe(0);
+    const out = formatReport(buildReport(cfg([a]), measured, { budget: 0, generatedAt: 'T' }));
+    expect(out).toContain('no subset fits');
+    expect(out).not.toContain('keeps 0 server');
+  });
+
+  it('computes no fit plan when already under budget', () => {
+    const a = stdio('a', ['node', 'a.js']);
+    const measured = new Map([[serverKey(a), measurement('a')]]);
+    const total = measured.get(serverKey(a))!.totalTokens!;
+    const r = buildReport(cfg([a]), measured, { budget: total + 1, generatedAt: 'T' });
+    expect(r.budget!.over).toBe(false);
+    expect(r.budget!.fit).toBeUndefined();
+  });
+
+  it('prints the drop plan and refuses to call it advice', () => {
+    const heavy = stdio('heavy', ['node', 'h.js']);
+    const light = stdio('light', ['node', 'l.js']);
+    const measured = new Map([
+      [serverKey(heavy), measurement('heavy', 60)],
+      [serverKey(light), measurement('light')],
+    ]);
+    const full = buildReport(cfg([heavy, light]), measured, { generatedAt: 'T' });
+    const lightTokens = full.configs[0].servers.find((x) => x.name === 'light')!.tokens!;
+    const out = formatReport(
+      buildReport(cfg([heavy, light]), measured, { budget: lightTokens, generatedAt: 'T' }),
+    );
+    expect(out).toContain('BUDGET FAIL');
+    expect(out).toContain('drop  heavy');
+    expect(out).toContain('fits');
+    expect(out).toContain('arithmetic, not advice');
+    // Under budget, none of the drop machinery should appear.
+    const ok = formatReport(
+      buildReport(cfg([heavy, light]), measured, {
+        budget: full.configs[0].totalTokens + 1,
+        generatedAt: 'T',
+      }),
+    );
+    expect(ok).toContain('to spare');
+    expect(ok).not.toContain('drop  ');
   });
 
   it('surfaces the heaviest individual tools', () => {

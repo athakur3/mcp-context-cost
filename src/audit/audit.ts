@@ -84,13 +84,76 @@ function buildTrimAdvice(sortedTools: HeaviestTool[], totalTokens: number): Trim
   return { tools: trimmed, recoverableTokens, recoverableShare: recoverableTokens / totalTokens };
 }
 
+export interface BudgetFitStep {
+  name: string;
+  tokens: number;
+  /** What the config still costs after removing this one and everything above it. */
+  remaining: number;
+}
+
+export interface BudgetFit {
+  /** How far over the limit the worst config starts. */
+  overBy: number;
+  /** Heaviest-first removals until the remainder fits. Empty if nothing can be removed. */
+  drop: BudgetFitStep[];
+  keptCount: number;
+  keptTokens: number;
+  /** False when removing every measured server still would not fit — a limit set too low. */
+  feasible: boolean;
+}
+
+/**
+ * The smallest heaviest-first set of servers that gets a config under its budget.
+ *
+ * `--budget` used to print "BUDGET FAIL: 84,455 > 20,000" and stop, which tells a reader
+ * they have a problem and nothing about the shape of it. The whole point of the audit
+ * surface is that the person running it is the person paying the tokens, and "you are over"
+ * is a measurement where "these two are why" is a decision.
+ *
+ * Heaviest-first is ONE ordering, not a recommendation: this cannot know which servers you
+ * need, and dropping by weight will sometimes name the one you cannot live without. That
+ * caveat is printed with the result rather than left implied.
+ */
+export function planBudgetFit(config: AuditConfigResult, limit: number): BudgetFit {
+  const measured = config.servers
+    .filter((srv) => typeof srv.tokens === 'number' && (srv.tokens as number) > 0)
+    .sort((a, b) => (b.tokens as number) - (a.tokens as number));
+
+  const overBy = config.totalTokens - limit;
+  const drop: BudgetFitStep[] = [];
+  let remaining = config.totalTokens;
+
+  for (const srv of measured) {
+    if (remaining <= limit) break;
+    remaining -= srv.tokens as number;
+    drop.push({ name: srv.name, tokens: srv.tokens as number, remaining });
+  }
+
+  return {
+    overBy,
+    drop,
+    keptCount: measured.length - drop.length,
+    keptTokens: remaining,
+    // Removing everything measured still leaves unmeasured/base cost behind, so the
+    // honest test is whether the remainder actually landed under the limit.
+    feasible: remaining <= limit,
+  };
+}
+
 export interface AuditReport {
   methodologyVersion: string;
   encoding: 'o200k_base';
   generatedAt: string;
   contextWindow: number;
   configs: AuditConfigResult[];
-  budget?: { limit: number; worstTotal: number; worstSource: string; over: boolean };
+  budget?: {
+    limit: number;
+    worstTotal: number;
+    worstSource: string;
+    over: boolean;
+    /** Present only when over budget: the arithmetic of getting back under it. */
+    fit?: BudgetFit;
+  };
   /** Present only when a divergence run was supplied (`--claude`). */
   claudeDivergence?: { model: string; measuredAt: string };
   problems: string[];
@@ -226,11 +289,13 @@ export function buildReport(
     // The worst config is the gate: passing because your *lightest* client fits
     // would be a green check on a session you don't run.
     const worst = results[0];
+    const over = (worst?.totalTokens ?? 0) > opts.budget;
     report.budget = {
       limit: opts.budget,
       worstTotal: worst?.totalTokens ?? 0,
       worstSource: worst?.source ?? '(none)',
-      over: (worst?.totalTokens ?? 0) > opts.budget,
+      over,
+      fit: over && worst ? planBudgetFit(worst, opts.budget) : undefined,
     };
   }
   return report;
@@ -324,12 +389,54 @@ export function formatReport(report: AuditReport): string {
   }
 
   if (report.budget) {
+    const b = report.budget;
     lines.push('');
-    lines.push(
-      report.budget.over
-        ? `BUDGET FAIL: ${n(report.budget.worstTotal)} > ${n(report.budget.limit)} (${report.budget.worstSource})`
-        : `budget ok: ${n(report.budget.worstTotal)} ≤ ${n(report.budget.limit)}`,
-    );
+    if (!b.over) {
+      const headroom = b.limit - b.worstTotal;
+      lines.push(`budget ok: ${n(b.worstTotal)} ≤ ${n(b.limit)} — ${n(headroom)} to spare`);
+    } else {
+      lines.push(`BUDGET FAIL: ${n(b.worstTotal)} > ${n(b.limit)} (${b.worstSource})`);
+      const fit = b.fit;
+      if (fit && fit.drop.length) {
+        lines.push('');
+        lines.push(`  over by ${n(fit.overBy)}. Heaviest-first, this is what gets you under:`);
+        for (const step of fit.drop) {
+          const verdict = step.remaining <= b.limit ? 'fits' : 'still over';
+          lines.push(
+            `    drop  ${step.name.padEnd(22)} ${n(step.tokens).padStart(9)}  →  ${n(step.remaining).padStart(9)}  ${verdict}`,
+          );
+        }
+        lines.push('');
+        if (fit.feasible && fit.keptCount === 0) {
+          // Arithmetically it fits, and the answer is useless: the only way under this
+          // limit is to run no servers at all. Saying "fits" here would be true and
+          // misleading, which is the pair this whole tool exists to keep apart.
+          lines.push(
+            `  no subset fits: every measured server would have to go. The limit is below`,
+          );
+          lines.push(`  what any one of these servers costs.`);
+        } else if (fit.feasible) {
+          const share = b.limit > 0 ? ` (${pct(fit.keptTokens / b.limit)} of budget)` : '';
+          lines.push(
+            `  keeps ${fit.keptCount} server(s) at ${n(fit.keptTokens)} tokens${share}`,
+          );
+        } else {
+          lines.push(
+            `  even removing every measured server leaves ${n(fit.keptTokens)} — the limit is below this config's floor`,
+          );
+        }
+        lines.push('');
+        lines.push(
+          '  This is arithmetic, not advice: it cannot know which servers you need, and by',
+        );
+        lines.push(
+          '  weight alone it will sometimes name the one you cannot work without. Use --json',
+        );
+        lines.push('  for the full per-server list and pick your own order.');
+      } else if (fit) {
+        lines.push('  nothing measured could be removed to get under the limit.');
+      }
+    }
   }
 
   lines.push('');
