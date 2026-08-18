@@ -21,6 +21,7 @@
  * Exit codes: 0 ok, 1 verification/measurement/budget failed, 2 usage error.
  */
 import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { canonicalString, countTokens, sha256Hex } from './core/canonical.js';
 import { toBadge } from './core/badge.js';
 import type { Measurement } from './core/types.js';
@@ -51,9 +52,64 @@ export function slugFromUrl(url: string): string {
   return host.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'remote';
 }
 
+
+/** Installed version, for error messages that need to say which one you are running. */
+export function cliVersion(): string {
+  try {
+    return createRequire(import.meta.url)('../package.json').version as string;
+  } catch {
+    return 'unknown';
+  }
+}
+
+/**
+ * Reject flags this build does not know.
+ *
+ * An older CLI used to ignore an unrecognised flag and carry on. That is the exact failure
+ * this project exists to catch, in our own tool: `audit --baseline base.json
+ * --max-increase 2000` on a build without those flags ran a plain audit and **exited 0** —
+ * a green CI check on a gate that never ran. The README documents flags before they are
+ * published, so the version skew is not hypothetical; it is the normal case for anyone
+ * running `npx -y mcp-context-cost`.
+ *
+ * So an unknown flag is a usage error, and the message names the running version, because
+ * the likeliest cause is that the reader's command is newer than their install.
+ */
+export function unknownFlags(argv: string[], spec: { value: string[]; boolean: string[] }): string[] {
+  const known = new Set([...spec.value, ...spec.boolean]);
+  const unknown: string[] = [];
+  for (let i = 0; i < argv.length; i++) {
+    const tok = argv[i];
+    if (!tok.startsWith('--')) continue;
+    const name = tok.slice(2).split('=')[0];
+    if (!known.has(name)) {
+      unknown.push(tok.split('=')[0]);
+      continue;
+    }
+    // Skip a value-taking flag's value, so `--command "--weird"` is not read as a flag.
+    if (spec.value.includes(name) && !tok.includes('=')) i++;
+  }
+  return unknown;
+}
+
+function rejectUnknownFlags(cmd: string, argv: string[], spec: { value: string[]; boolean: string[] }): void {
+  const bad = unknownFlags(argv, spec);
+  if (!bad.length) return;
+  const all = [...spec.value, ...spec.boolean].sort().map((f) => `--${f}`).join(' ');
+  console.error(`unknown flag for \`${cmd}\`: ${bad.join(', ')}`);
+  console.error(`this is mcp-context-cost ${cliVersion()} — if you copied the command from the README,`);
+  console.error(`your install may be older than the docs. Try: npx -y mcp-context-cost@latest ${cmd} ...`);
+  console.error(`known flags for ${cmd}: ${all}`);
+  process.exit(2);
+}
+
 const [, , cmd, ...rest] = process.argv;
 
 if (cmd === 'audit') {
+  rejectUnknownFlags('audit', rest, {
+    value: ['config', 'budget', 'baseline', 'max-increase', 'context', 'timeout', 'concurrency', 'divergence-url'],
+    boolean: ['json', 'docker', 'claude'],
+  });
   const argOf = (name: string) => {
     const i = rest.indexOf(`--${name}`);
     return i >= 0 ? rest[i + 1] : undefined;
@@ -146,6 +202,7 @@ if (cmd === 'audit') {
   console.log(json ? JSON.stringify(report) : formatReport(report));
   process.exit(report.budget?.over || report.increaseGate?.pass === false ? 1 : 0);
 } else if (cmd === 'verify') {
+  rejectUnknownFlags('verify', rest, { value: ['remote'], boolean: ['json'] });
   const json = rest.includes('--json');
   const remoteIdx = rest.indexOf('--remote');
   const remoteUrl = remoteIdx >= 0 ? rest[remoteIdx + 1] : undefined;
@@ -187,6 +244,10 @@ if (cmd === 'audit') {
   for (const p of r.problems) console.error(`  - ${p}`);
   process.exit(1);
 } else if (cmd === 'measure') {
+  rejectUnknownFlags('measure', rest, {
+    value: ['name', 'command', 'remote', 'timeout', 'docker-image'],
+    boolean: ['docker'],
+  });
   const argOf = (name: string) => {
     const i = rest.indexOf(`--${name}`);
     return i >= 0 ? rest[i + 1] : undefined;

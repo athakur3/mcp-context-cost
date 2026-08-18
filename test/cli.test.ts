@@ -6,7 +6,7 @@ import { dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { createServer } from 'node:http';
-import { verifyMeasurement, slugFromUrl } from '../src/cli.js';
+import { verifyMeasurement, slugFromUrl, unknownFlags, cliVersion } from '../src/cli.js';
 import { measureTools } from '../src/core/canonical.js';
 import type { Measurement } from '../src/core/types.js';
 
@@ -187,4 +187,71 @@ describe('verify --remote', () => {
     expect(parsed.ok).toBe(false);
     expect(parsed.problems.join(' ')).toContain('HTTP 404');
   });
+});
+
+
+// ---------------------------------------------------------------------------
+// Unknown flags must fail loud. Regression for a real silent-pass defect:
+// `audit --baseline b.json --max-increase 2000` on a build without those flags
+// ran a plain audit and exited 0 — a green CI check on a gate that never ran.
+// ---------------------------------------------------------------------------
+
+describe('unknownFlags', () => {
+  const AUDIT = {
+    value: ['config', 'budget', 'baseline', 'max-increase', 'context', 'timeout', 'concurrency', 'divergence-url'],
+    boolean: ['json', 'docker', 'claude'],
+  };
+
+  it('accepts every flag the audit command actually supports', () => {
+    const argv = ['--config', 'a.json', '--budget', '20000', '--baseline', 'b.json', '--max-increase', '2000',
+                  '--context', '200000', '--timeout', '60000', '--concurrency', '3', '--docker', '--claude', '--json'];
+    expect(unknownFlags(argv, AUDIT)).toEqual([]);
+  });
+
+  it('names an unknown flag, and every unknown flag', () => {
+    expect(unknownFlags(['--config', 'a.json', '--nope'], AUDIT)).toEqual(['--nope']);
+    expect(unknownFlags(['--nope', '--also-nope'], AUDIT)).toEqual(['--nope', '--also-nope']);
+  });
+
+  it('does not read a value-taking flag\'s value as a flag', () => {
+    // `measure --command "npx -y foo --bar"` is one argv element and must stay a value.
+    const MEASURE = { value: ['name', 'command', 'remote', 'timeout', 'docker-image'], boolean: ['docker'] };
+    expect(unknownFlags(['--command', '--weird-looking-value', '--docker'], MEASURE)).toEqual([]);
+    expect(unknownFlags(['--command', 'npx -y foo --bar'], MEASURE)).toEqual([]);
+  });
+
+  it('handles --flag=value form', () => {
+    expect(unknownFlags(['--budget=20000'], AUDIT)).toEqual([]);
+    expect(unknownFlags(['--nope=1'], AUDIT)).toEqual(['--nope']);
+  });
+
+  it('reports a real version so the message can explain a version skew', () => {
+    expect(cliVersion()).toMatch(/^\d+\.\d+\.\d+/);
+  });
+});
+
+describe('CLI rejects unknown flags', () => {
+  const run = (args: string[]) => {
+    try {
+      execFileSync('npx', ['tsx', 'src/cli.ts', ...args], { cwd: repoRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+      return { code: 0, stderr: '' };
+    } catch (e) {
+      const err = e as { status: number; stderr: string };
+      return { code: err.status, stderr: err.stderr ?? '' };
+    }
+  };
+
+  it('exits 2 and names the version, not 0', () => {
+    const r = run(['audit', '--config', 'nope.json', '--totally-made-up']);
+    expect(r.code).toBe(2);
+    expect(r.stderr).toContain('unknown flag');
+    expect(r.stderr).toContain('--totally-made-up');
+    expect(r.stderr).toContain(cliVersion());
+    expect(r.stderr).toContain('older than the docs');
+  }, 60_000);
+
+  it('covers verify and measure too', () => {
+    expect(run(['verify', 'x.json', '--bogus']).code).toBe(2);
+    expect(run(['measure', '--name', 'x', '--command', 'true', '--bogus']).code).toBe(2);
+  }, 60_000);
 });

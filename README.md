@@ -83,6 +83,13 @@ INCREASE FAIL:
   .mcp.json: +2,823 tokens per request, over the 2,000 allowed
 ```
 
+> **Version note.** `--baseline` and `--max-increase` are **not in the published 0.3.0** —
+> they are on `main` and ship in the next release. This matters more than a normal
+> unreleased-feature note: 0.3.0 ignores flags it does not recognise, so running the command
+> above against it produces a plain audit and **exit 0** — a passing CI check on a gate that
+> never ran. Builds after 0.3.0 reject unknown flags with exit 2 instead. Until the next
+> release, pin the gate to a version that has it, or it is not gating anything.
+
 A baseline is just a stored `audit --json` report, so any artifact store works. Without
 `--max-increase` the diff is informational and the exit code is unchanged.
 
@@ -126,10 +133,12 @@ Flags: `--json` (full report on stdout, progress on stderr), `--budget N`,
 
 ## Where the numbers come from
 
-The number `audit` gives you is the same measurement, run across the ecosystem every week —
-which is how you can tell it is a measurement and not this tool's opinion. It also shows what
-you are choosing between: cost varies by **1,700×** across servers people install without
-ever seeing a number.
+The number `audit` gives you is the same measurement, run across a curated set of public
+servers — which is how you can tell it is a measurement and not this tool's opinion. It also
+shows what you are choosing between: across the 59 servers measured, cost spans **1,700×**,
+from the 32-token `postgres` reference server to github's 54,422. The table below starts at
+markitdown's 64 tokens, an 850× spread; the full range is in
+[results/leaderboard.md](results/leaderboard.md).
 
 | server | context cost | tools |
 |---|---:|---:|
@@ -245,7 +254,9 @@ color bands are frozen against the observed distribution of the first full sweep
 
 ## Status
 
-Active. The leaderboard refreshes weekly; badge PRs are open across the ecosystem and
+Active. 56 of the 59 numbers come from a single sweep on 2026-08-16 and 3 from 2026-08-17;
+the weekly job currently re-measures one server (`memory`), so treat the leaderboard as a
+dated snapshot rather than a live feed. Badge PRs are open across the ecosystem and
 [sd2k/mcp-tokens-action#5](https://github.com/sd2k/mcp-tokens-action/pull/5) proposes the
 self-serve badge path upstream. See [ROADMAP.md](ROADMAP.md) for what's next —
 contributions welcome, especially new `servers.yaml` entries.
