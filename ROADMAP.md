@@ -4,9 +4,6 @@ Ordered by value-per-effort for users. Contributions welcome on any of these.
 
 ## Next
 
-- [ ] **Cost-over-time sparklines**: `results/history.csv` already accumulates a
-      per-(date, server) series with every sweep; surface it on the dashboard once
-      multiple sweep dates exist.
 - [ ] **CLI cross-check column**: publish ours-vs-mcp-tokens divergence across the measured
       set — closes the second "planned" promise.
 - [ ] **Expand the sweep**: more servers from the registry long-tail; re-attempt current
@@ -19,6 +16,12 @@ Ordered by value-per-effort for users. Contributions welcome on any of these.
 - [ ] Periodic "state of MCP context cost" data summary, when the deltas tell a story.
 
 ## Done
+
+- [x] **Cost-over-time sparklines**: leaderboard rows now carry a 12-point-max inline
+      trend line from `results/history.csv` (muted line, accent dot on the current
+      value), with the same delta spelled out in the row tooltip and a `trend` column
+      in the full data table; servers with only one sweep on record simply show no
+      line yet (2026-08-18)
 
 - [x] **`measure --remote <url>`**: one-off measurement of a remote MCP server via the
       `mcp-remote` bridge, no servers.yaml entry needed — `--name` optional, defaulting to

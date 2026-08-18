@@ -9,6 +9,39 @@ import { parse } from 'yaml';
 import type { Measurement } from '../core/types.js';
 import type { ServerEntry } from './report.js';
 import { bandColor, BAND_META } from '../core/bands.js';
+import { parseHistory } from './history.js';
+
+/** Longest series a sparkline plots — a stat-tile trend, not a full chart. */
+const SPARK_MAX_POINTS = 12;
+
+/**
+ * A 12-point-max inline trend line, oldest to newest. Muted stroke (this is
+ * texture, not a headline number) with the current value picked out as an
+ * accent dot, per the sparkline spec: de-emphasis hue for the line, accent
+ * for "now". Flat series still draw a level line rather than faking a zero
+ * baseline. Returns '' when there's nothing to trend (0-1 points).
+ */
+export function renderSparkline(tokens: number[]): string {
+  const points = tokens.slice(-SPARK_MAX_POINTS);
+  if (points.length < 2) return '';
+  const w = 56;
+  const h = 18;
+  const pad = 3;
+  const min = Math.min(...points);
+  const max = Math.max(...points);
+  const range = max - min;
+  const stepX = (w - pad * 2) / (points.length - 1);
+  const coords = points.map((v, i) => {
+    const x = pad + i * stepX;
+    const y = range === 0 ? h / 2 : pad + (h - pad * 2) * (1 - (v - min) / range);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  });
+  const [lastX, lastY] = coords[coords.length - 1]!.split(',');
+  return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true" focusable="false">
+    <polyline points="${coords.join(' ')}" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="${lastX}" cy="${lastY}" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
+  </svg>`;
+}
 
 const esc = (s: unknown): string =>
   String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -31,6 +64,13 @@ export function generateDashboard(root = process.cwd()): string {
     ? JSON.parse(readFileSync(divergencePath, 'utf8'))
     : {};
   const dSrv = divergence.servers ?? {};
+  const historyPath = join(root, 'results', 'history.csv');
+  const history = existsSync(historyPath) ? parseHistory(readFileSync(historyPath, 'utf8')) : [];
+  const seriesFor = (name: string): number[] =>
+    history
+      .filter((h) => h.server === name)
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .map((h) => h.tokens);
   const rows: Row[] = doc.servers.map((entry) => {
     const p = join(root, 'results', entry.name, 'measurement.json');
     return { entry, m: existsSync(p) ? (JSON.parse(readFileSync(p, 'utf8')) as Measurement) : null };
@@ -58,11 +98,16 @@ export function generateDashboard(root = process.cwd()): string {
       const pct = Math.max(1.2, (t / max) * 100);
       const div = dSrv[r.entry.name];
       const claudeTip = div ? ` · in a Claude request: ${fmt(div.claudeDelta)} tok` : '';
+      const series = seriesFor(r.entry.name);
+      const spark = renderSparkline(series);
+      const trendTip =
+        series.length > 1 ? ` · ${series.length}-sweep trend: ${series[0]!.toLocaleString('en-US')} → ${series[series.length - 1]!.toLocaleString('en-US')}` : '';
       // The whole row is the link to the server's detail page (docs/servers/).
-      return `<a class="row" href="servers/${encodeURIComponent(r.entry.name)}.html" data-tip="${esc(m.toolCount)} tools · largest: ${esc(largest?.name)} (${fmt(largest?.tokens ?? 0)} tok)${claudeTip} · ${esc(r.entry.category)} · ${esc(m.status)}${m.serverVersion ? ' · v' + esc(String(m.serverVersion).replace(/^v/, '')) : ''}">
+      return `<a class="row" href="servers/${encodeURIComponent(r.entry.name)}.html" data-tip="${esc(m.toolCount)} tools · largest: ${esc(largest?.name)} (${fmt(largest?.tokens ?? 0)} tok)${claudeTip}${trendTip} · ${esc(r.entry.category)} · ${esc(m.status)}${m.serverVersion ? ' · v' + esc(String(m.serverVersion).replace(/^v/, '')) : ''}">
   <span class="rank">${i + 1}</span>
   <span class="name">${esc(r.entry.name)}</span>
   <span class="track"><span class="bar" style="width:${pct.toFixed(1)}%"></span></span>
+  <span class="spark-cell">${spark}</span>
   <span class="val"><span class="dot dot-${band}" aria-hidden="true"></span>${fmt(t)}<span class="bandname">${meta.label}</span></span>
 </a>`;
     })
@@ -80,7 +125,12 @@ export function generateDashboard(root = process.cwd()): string {
     .map((r, i) => {
       const m = r.m!;
       const div = dSrv[r.entry.name];
-      return `<tr><td>${i + 1}</td><td>${esc(r.entry.name)}</td><td class="num">${fmt(m.totalTokens as number)}</td><td class="num">${div ? fmt(div.claudeDelta) : '—'}</td><td class="num">${esc(m.toolCount)}</td><td>${esc(BAND_META[bandColor(m.totalTokens as number)].label)}</td><td>${esc(r.entry.category)}</td></tr>`;
+      const series = seriesFor(r.entry.name);
+      const trend =
+        series.length > 1
+          ? `${series[series.length - 1]! - series[0]! >= 0 ? '+' : ''}${fmt(series[series.length - 1]! - series[0]!)} / ${series.length}d`
+          : '—';
+      return `<tr><td>${i + 1}</td><td>${esc(r.entry.name)}</td><td class="num">${fmt(m.totalTokens as number)}</td><td class="num">${div ? fmt(div.claudeDelta) : '—'}</td><td class="num">${esc(m.toolCount)}</td><td>${esc(BAND_META[bandColor(m.totalTokens as number)].label)}</td><td>${esc(r.entry.category)}</td><td class="num">${trend}</td></tr>`;
     })
     .join('\n');
 
@@ -140,13 +190,15 @@ export function generateDashboard(root = process.cwd()): string {
   .stat .l { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 
   .board { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; }
-  .row { display: grid; grid-template-columns: 2ch minmax(120px, 190px) 1fr max-content; gap: 10px; align-items: center; padding: 3px 4px; border-radius: 4px; outline: none; color: inherit; text-decoration: none; }
+  .row { display: grid; grid-template-columns: 2ch minmax(120px, 190px) 1fr 56px max-content; gap: 10px; align-items: center; padding: 3px 4px; border-radius: 4px; outline: none; color: inherit; text-decoration: none; }
   .row:hover, .row:focus-visible { background: var(--accent-soft); }
   .row:hover .name, .row:focus-visible .name { text-decoration: underline; }
   .rank { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
   .name { font-size: 0.86rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .track { background: var(--track); border-radius: 3px; height: 12px; overflow: hidden; }
   .bar { display: block; height: 100%; background: var(--accent); border-radius: 3px 3px 3px 3px; min-width: 3px; }
+  .spark-cell { display: flex; align-items: center; justify-content: center; height: 18px; }
+  .spark-cell:empty { visibility: hidden; }
   .val { font-family: ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; font-size: 0.82rem; display: flex; align-items: center; gap: 6px; }
   .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; box-shadow: 0 0 0 2px var(--surface); }
   .dot-brightgreen { background: var(--b-brightgreen); } .dot-green { background: var(--b-green); }
@@ -195,7 +247,7 @@ export function generateDashboard(root = process.cwd()): string {
   </div>
 
   <h2>Leaderboard</h2>
-  <p class="h2sub">Tokens = o200k_base count of the canonical <code>tools/list</code> bytes — the wire payload. What a <em>Claude request</em> actually carries can differ sharply (github: 54,422 on the wire, ${dSrv['github'] ? fmt(dSrv['github'].claudeDelta) : '…'} in a request — 80% of its schema bytes are fields no Anthropic request sends). Hover a row for both numbers; <a href="METHODOLOGY.html#claude-divergence">method</a>.</p>
+  <p class="h2sub">Tokens = o200k_base count of the canonical <code>tools/list</code> bytes — the wire payload. What a <em>Claude request</em> actually carries can differ sharply (github: 54,422 on the wire, ${dSrv['github'] ? fmt(dSrv['github'].claudeDelta) : '…'} in a request — 80% of its schema bytes are fields no Anthropic request sends). The trend line plots tokens across every sweep date on record (oldest→newest, dot = current); servers with one sweep so far show no line yet. Hover a row for exact numbers; <a href="METHODOLOGY.html#claude-divergence">method</a>.</p>
   <div class="board">
 ${barRows || '<p class="h2sub">Sweep in progress — first results land shortly.</p>'}
   </div>
@@ -221,7 +273,7 @@ ${barRows || '<p class="h2sub">Sweep in progress — first results land shortly.
 
   <details><summary>Full data table</summary>
   <div class="tablewrap" style="margin-top:10px"><table>
-    <thead><tr><th>#</th><th>server</th><th>tokens (o200k)</th><th>claude req</th><th>tools</th><th>band</th><th>category</th></tr></thead>
+    <thead><tr><th>#</th><th>server</th><th>tokens (o200k)</th><th>claude req</th><th>tools</th><th>band</th><th>category</th><th>trend</th></tr></thead>
     <tbody>${tableRows}</tbody>
   </table></div>
   </details>
