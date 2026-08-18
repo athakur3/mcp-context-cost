@@ -67,3 +67,4 @@ date,server,tokens,toolCount,status
 2026-08-18,postgres-mcp,8632,9,measured
 2026-08-18,sqlite,268,6,measured
 2026-08-18,time,293,2,measured
+2026-08-18,xcodebuildmcp,26594,24,measured

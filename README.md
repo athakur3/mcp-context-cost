@@ -135,7 +135,7 @@ Flags: `--json` (full report on stdout, progress on stderr), `--budget N`,
 
 The number `audit` gives you is the same measurement, run across a curated set of public
 servers — which is how you can tell it is a measurement and not this tool's opinion. It also
-shows what you are choosing between: across the 65 servers measured, cost spans **1,700×**,
+shows what you are choosing between: across the 68 servers measured, cost spans **1,700×**,
 from the 32-token `postgres` reference server to github's 54,422. The table below starts at
 markitdown's 64 tokens, an 850× spread; the full range is in
 [results/leaderboard.md](results/leaderboard.md).
@@ -149,7 +149,7 @@ markitdown's 64 tokens, an 850× spread; the full range is in
 | filesystem (reference) | 2,823 | 14 |
 | markitdown | 64 | 1 |
 
-*(67 of 82 popular servers measured, 2026-08-18 sweep — full table in
+*(68 of 82 popular servers measured, 2026-08-18 sweep — full table in
 [results/leaderboard.md](results/leaderboard.md); every failure is listed with its reason.
 Each measured server also has a [detail page](https://athakur3.github.io/mcp-context-cost/servers/)
 showing which tools its tokens are in.)*

@@ -61,7 +61,7 @@ zapier,,,remote-auth-wall,vendor-official,6100000,https://www.pulsemcp.com/serve
 vercel,,,remote-auth-wall,vendor-official,542000,https://www.pulsemcp.com/servers/vercel (estimated visitors),,
 mcp-atlassian,17311,63,dynamic,community,353572,https://pypistats.org/packages/mcp-atlassian (PyPI weekly),22234,claude-opus-5
 postgres-mcp,8632,9,measured,community,234706,https://pypistats.org/packages/postgres-mcp (PyPI weekly),,
-xcodebuildmcp,,,startup-failure,community,149200,https://api.npmjs.org/downloads/point/last-week/xcodebuildmcp (npm weekly),,
+xcodebuildmcp,26594,24,measured,community,149200,https://api.npmjs.org/downloads/point/last-week/xcodebuildmcp (npm weekly),,
 n8n-mcp,2636,7,measured,community,114676,https://api.npmjs.org/downloads/point/last-week/n8n-mcp (npm weekly),,
 blender,5258,24,measured,community,71408,https://pypistats.org/packages/blender-mcp (PyPI weekly),8106,claude-opus-5
 excel,4266,25,measured,community,57839,https://pypistats.org/packages/excel-mcp-server (PyPI weekly),,

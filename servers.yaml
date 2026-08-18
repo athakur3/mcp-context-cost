@@ -528,7 +528,7 @@ servers:
     repo: https://github.com/crystaldba/postgres-mcp
     timeoutSeconds: 120
   - name: xcodebuildmcp
-    command: npx -y xcodebuildmcp@latest
+    command: npx -y xcodebuildmcp@latest mcp
     package: xcodebuildmcp
     env: []
     metric: 149200
