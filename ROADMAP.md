@@ -7,8 +7,6 @@ Ordered by value-per-effort for users. Contributions welcome on any of these.
 - [ ] **Cost-over-time sparklines**: `results/history.csv` already accumulates a
       per-(date, server) series with every sweep; surface it on the dashboard once
       multiple sweep dates exist.
-- [ ] **`measure --remote <url>`**: first-class remote-server measurement (wrapping the
-      mcp-remote bridge internally).
 - [ ] **CLI cross-check column**: publish ours-vs-mcp-tokens divergence across the measured
       set — closes the second "planned" promise.
 - [ ] **Expand the sweep**: more servers from the registry long-tail; re-attempt current
@@ -21,6 +19,10 @@ Ordered by value-per-effort for users. Contributions welcome on any of these.
 - [ ] Periodic "state of MCP context cost" data summary, when the deltas tell a story.
 
 ## Done
+
+- [x] **`measure --remote <url>`**: one-off measurement of a remote MCP server via the
+      `mcp-remote` bridge, no servers.yaml entry needed — `--name` optional, defaulting to
+      a slug of the URL's hostname (2026-08-18)
 
 - [x] **Trim advice in `audit`**: each config's report now names the 3 heaviest tools and
       what disabling them would recover — tokens and share of that config's total — for

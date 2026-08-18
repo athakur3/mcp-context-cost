@@ -6,7 +6,7 @@ import { dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { createServer } from 'node:http';
-import { verifyMeasurement } from '../src/cli.js';
+import { verifyMeasurement, slugFromUrl } from '../src/cli.js';
 import { measureTools } from '../src/core/canonical.js';
 import type { Measurement } from '../src/core/types.js';
 
@@ -85,6 +85,46 @@ describe('verify --json (CLI process)', () => {
     let code = 0;
     try {
       execFileSync('npx', ['tsx', 'src/cli.ts', 'verify'], { cwd: repoRoot, encoding: 'utf8' });
+    } catch (e) {
+      code = (e as { status: number }).status;
+    }
+    expect(code).toBe(2);
+  });
+});
+
+describe('slugFromUrl', () => {
+  it('strips a leading mcp./www. and non-alnum runs', () => {
+    expect(slugFromUrl('https://mcp.deepwiki.com/mcp')).toBe('deepwiki-com');
+    expect(slugFromUrl('https://www.example.com:443/sse')).toBe('example-com');
+  });
+
+  it('falls back to "remote" when the hostname strips to nothing', () => {
+    expect(slugFromUrl('https://mcp./x')).toBe('remote');
+  });
+});
+
+describe('measure --remote (usage validation, no network)', () => {
+  it('exits 2 when --remote is not an http(s) URL', () => {
+    let code = 0;
+    let stderr = '';
+    try {
+      execFileSync('npx', ['tsx', 'src/cli.ts', 'measure', '--remote', 'not-a-url'], {
+        cwd: repoRoot,
+        encoding: 'utf8',
+      });
+    } catch (e) {
+      const err = e as { status: number; stderr: string };
+      code = err.status;
+      stderr = err.stderr;
+    }
+    expect(code).toBe(2);
+    expect(stderr).toContain('must be an http(s) URL');
+  });
+
+  it('exits 2 when neither --command nor --remote is given', () => {
+    let code = 0;
+    try {
+      execFileSync('npx', ['tsx', 'src/cli.ts', 'measure', '--name', 'x'], { cwd: repoRoot, encoding: 'utf8' });
     } catch (e) {
       code = (e as { status: number }).status;
     }

@@ -11,6 +11,8 @@
  *                                                published capture; exit 1 on mismatch
  *   mcp-context-cost verify --remote <url> [--json]   same, fetched from a measurement URL
  *   mcp-context-cost measure --name x --command "npx -y ..."   one-off measurement
+ *   mcp-context-cost measure --remote <url> [--name x]   same, via the mcp-remote bridge
+ *                                                (name defaults to the URL's hostname)
  *
  * Exit codes: 0 ok, 1 verification/measurement/budget failed, 2 usage error.
  */
@@ -37,6 +39,12 @@ export function verifyMeasurement(m: Measurement): {
   if (m.toolCount !== m.rawToolsCapture.length)
     problems.push(`toolCount mismatch: capture has ${m.rawToolsCapture.length}, stored ${m.toolCount}`);
   return { ok: problems.length === 0, rederivedTokens: tokens, rederivedSha: sha, problems };
+}
+
+/** Derives a servers.yaml-style slug from a remote URL's hostname, e.g. mcp.deepwiki.com -> deepwiki. */
+export function slugFromUrl(url: string): string {
+  const host = new URL(url).hostname.replace(/^(www|mcp)\./, '');
+  return host.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'remote';
 }
 
 const [, , cmd, ...rest] = process.argv;
@@ -135,17 +143,28 @@ if (cmd === 'audit') {
     const i = rest.indexOf(`--${name}`);
     return i >= 0 ? rest[i + 1] : undefined;
   };
-  const name = argOf('name');
   const command = argOf('command');
-  if (!name || !command) {
+  const remoteUrl = argOf('remote');
+  if (remoteUrl && !/^https?:\/\//i.test(remoteUrl)) {
+    console.error(`--remote must be an http(s) URL, got '${remoteUrl}'`);
+    process.exit(2);
+  }
+  if (!command && !remoteUrl) {
+    console.error('usage: mcp-context-cost measure --name <slug> --command "npx -y <server>" [--timeout ms] [--docker]');
+    console.error('       mcp-context-cost measure --remote <url> [--name <slug>] [--timeout ms] [--docker]');
+    process.exit(2);
+  }
+  const name = argOf('name') ?? (remoteUrl ? slugFromUrl(remoteUrl) : undefined);
+  if (!name) {
     console.error('usage: mcp-context-cost measure --name <slug> --command "npx -y <server>" [--timeout ms] [--docker]');
     process.exit(2);
   }
   const { measureServer } = await import('./sweep/run.js');
-  const m = await measureServer(name, command, {
+  const m = await measureServer(name, remoteUrl ? `npx -y mcp-remote ${remoteUrl}` : command!, {
     timeoutMs: Number(argOf('timeout') ?? 60_000),
     docker: rest.includes('--docker'),
     dockerImage: argOf('docker-image'),
+    argv: remoteUrl ? ['npx', '-y', 'mcp-remote', remoteUrl] : undefined,
   });
   const ok = m.status === 'measured' || m.status === 'dynamic';
   console.log(
@@ -164,5 +183,6 @@ if (cmd === 'audit') {
   console.log('  verify <measurement.json> [--json]    re-derive tokens+sha from the published capture');
   console.log('  verify --remote <url> [--json]        same, fetched from a measurement URL');
   console.log('  measure --name x --command "npx -y <server>"   run a one-off measurement');
+  console.log('  measure --remote <url> [--name x]      measure a remote server via mcp-remote');
   console.log('exit codes: 0 ok, 1 verification/measurement/budget failed, 2 usage error');
 }
