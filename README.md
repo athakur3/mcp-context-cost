@@ -3,37 +3,12 @@
 [![npm](https://img.shields.io/npm/v/mcp-context-cost)](https://www.npmjs.com/package/mcp-context-cost)
 [![CI](https://github.com/athakur3/mcp-context-cost/actions/workflows/ci.yml/badge.svg)](https://github.com/athakur3/mcp-context-cost/actions/workflows/ci.yml)
 
-**Reproducible context-cost measurement for MCP servers — for the one you publish, and for
-the stack you actually run.**
+**What do the MCP servers in your config cost you before you type anything — and what did
+that last config change add to every session you will ever run?**
 
-Every MCP server you wire into an agent injects its tool schemas into the model's context
-before any work happens. That cost is invisible — and it varies by **1,700×** across
-popular servers:
-
-| server | context cost | tools |
-|---|---:|---:|
-| github (official) | **54,422 tokens** | 44 |
-| brave-search | 25,456 | 8 |
-| notion | 17,500 | 24 |
-| playwright *(4.8M installs/week)* | 4,024 | 24 |
-| filesystem (reference) | 2,823 | 14 |
-| markitdown | 64 | 1 |
-
-*(59 of 82 popular servers measured, 2026-08-17 sweep — full table in
-[results/leaderboard.md](results/leaderboard.md); every failure is listed with its reason.
-Each measured server also has a [detail page](https://athakur3.github.io/mcp-context-cost/servers/)
-showing which tools its tokens are in.)*
-
-This project makes that cost **legible and disputable**:
-
-```
-[context cost | 12,430 tokens]   ← shields.io badge, linked to the methodology
-```
-
-## What does *your* setup cost?
-
-The leaderboard measures one server at a time. You don't run one server — you run a stack.
-Point `audit` at your own MCP config and it measures every server you actually have installed:
+Every MCP server you wire into an agent injects its tool schemas into the model's context on
+every single request. You pay that whether or not the agent ends up using the tools, and no
+client shows you the number. Point `audit` at your own MCP config:
 
 ```bash
 npx -y mcp-context-cost audit
@@ -146,6 +121,34 @@ Flags: `--json` (full report on stdout, progress on stderr), `--budget N`,
 `--baseline <report.json>`, `--max-increase N`, `--context N` (default 200,000),
 `--timeout ms`, `--concurrency N`, `--docker`, `--claude`.
 
+## Where the numbers come from
+
+The number `audit` gives you is the same measurement, run across the ecosystem every week —
+which is how you can tell it is a measurement and not this tool's opinion. It also shows what
+you are choosing between: cost varies by **1,700×** across servers people install without
+ever seeing a number.
+
+| server | context cost | tools |
+|---|---:|---:|
+| github (official) | **54,422 tokens** | 44 |
+| brave-search | 25,456 | 8 |
+| notion | 17,500 | 24 |
+| playwright *(4.8M installs/week)* | 4,024 | 24 |
+| filesystem (reference) | 2,823 | 14 |
+| markitdown | 64 | 1 |
+
+*(59 of 82 popular servers measured, 2026-08-17 sweep — full table in
+[results/leaderboard.md](results/leaderboard.md); every failure is listed with its reason.
+Each measured server also has a [detail page](https://athakur3.github.io/mcp-context-cost/servers/)
+showing which tools its tokens are in.)*
+
+If you publish a server, the same measurement is available as a badge, so your users can see
+the cost before they install rather than after:
+
+```
+[context cost | 12,430 tokens]   ← shields.io badge, linked to the methodology
+```
+
 ## What it costs on Claude
 
 The badge counts every byte a server returns. An Anthropic request carries only `name`,
@@ -163,9 +166,9 @@ the method is [Claude divergence](docs/METHODOLOGY.md#claude-divergence).
 
 ## Why trust the number?
 
-Every badge is backed by a `measurement.json` containing the raw `tools/list` capture, the
-SHA-256 of its canonical bytes, the pinned tokenizer (`o200k_base`), and the exact launch
-command. Disputes reduce to a byte-level diff:
+Every published number is backed by a `measurement.json` containing the raw `tools/list`
+capture, the SHA-256 of its canonical bytes, the pinned tokenizer (`o200k_base`), and the
+exact launch command. Disputes reduce to a byte-level diff:
 
 ```bash
 npx -y mcp-context-cost verify results/github/measurement.json
@@ -178,6 +181,11 @@ npx -y mcp-context-cost verify --remote https://raw.githubusercontent.com/athaku
 Add `--json` for scripting (`{ ok, serverName, rederivedTokens, rederivedSha, problems, badge }`
 on stdout, `badge` omitted on failure). Exit codes: `0` ok, `1` verification/measurement
 failed, `2` usage error.
+
+`audit` runs that same code path on your own machine and reports each server's
+`canonicalSha256` in `--json`, so you can check that the version you installed is byte-identical
+to the one that was published — which is exactly what `--claude` uses to decide whether it is
+allowed to show you a number.
 
 Full definition: [docs/METHODOLOGY.md](docs/METHODOLOGY.md) — what is counted, what the
 number is *not*, config policy, failure taxonomy, frozen color bands, known divergences.
@@ -221,7 +229,7 @@ Or self-serve from CI via the (staged) mcp-tokens-action badge inputs — see
 ## Development
 
 ```bash
-npm test                        # 105 TS tests incl. golden fixtures + dispute drills
+npm test                        # 158 TS tests incl. golden fixtures + dispute drills
 npx tsc --noEmit                # typecheck
 ./upstream/tests/badge-test.sh  # 21 bash tests — byte-identical to the TS reference
 npm run sweep:all -- --docker   # full curated sweep (Docker isolation)
