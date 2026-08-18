@@ -584,6 +584,7 @@ servers:
     metricSource: https://api.npmjs.org/downloads/point/last-week/@wonderwhy-er/desktop-commander (npm weekly)
     category: community
     repo: https://github.com/wonderwhy-er/DesktopCommanderMCP
+    timeoutSeconds: 240
   - name: serena
     command: uvx --from git+https://github.com/oraios/serena serena start-mcp-server
     package: git+https://github.com/oraios/serena

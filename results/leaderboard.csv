@@ -67,7 +67,7 @@ blender,5258,24,measured,community,71408,https://pypistats.org/packages/blender-
 excel,4266,25,measured,community,57839,https://pypistats.org/packages/excel-mcp-server (PyPI weekly),,
 figma-context,946,2,measured,community,57771,https://api.npmjs.org/downloads/point/last-week/figma-developer-mcp (npm weekly),,
 duckduckgo,724,2,measured,community,41360,https://pypistats.org/packages/duckduckgo-mcp-server (PyPI weekly),,
-desktop-commander,,,startup-failure,community,38626,https://api.npmjs.org/downloads/point/last-week/@wonderwhy-er/desktop-commander (npm weekly),,
+desktop-commander,11835,26,dynamic,community,38626,https://api.npmjs.org/downloads/point/last-week/@wonderwhy-er/desktop-commander (npm weekly),,
 serena,8204,29,measured,community,28084,https://api.github.com/repos/oraios/serena (GitHub stars; installed from git),,
 gmail,,,auth-required,community,26678,https://api.npmjs.org/downloads/point/last-week/@gongrzhe/server-gmail-autoauth-mcp (npm weekly; needs OAuth keys file),,
 pandoc,1425,1,measured,community,23590,https://pypistats.org/packages/mcp-pandoc (PyPI weekly),,
