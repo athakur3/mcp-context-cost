@@ -1,8 +1,8 @@
-import { describe, it, expect, afterAll } from 'vitest';
+import { describe, it, expect, afterAll, afterEach } from 'vitest';
 import { execFileSync, execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { createServer } from 'node:http';
-import { mkdtempSync, readFileSync, writeFileSync, readdirSync } from 'node:fs';
+import { mkdtempSync, readFileSync, writeFileSync, readdirSync, rmSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
@@ -17,6 +17,16 @@ const execFileAsync = promisify(execFile);
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const tools = JSON.parse(readFileSync(join(repoRoot, 'spec/fixtures/tools-basic.json'), 'utf8'));
+
+const tmpDirs: string[] = [];
+function tempDir(prefix: string): string {
+  const dir = mkdtempSync(join(tmpdir(), prefix));
+  tmpDirs.push(dir);
+  return dir;
+}
+afterEach(() => {
+  for (const dir of tmpDirs.splice(0)) rmSync(dir, { recursive: true, force: true });
+});
 
 describe('parseJsonc', () => {
   it('parses plain JSON', () => {
@@ -118,7 +128,7 @@ describe('configCandidates', () => {
 
 describe('loadConfigs', () => {
   it('skips missing files, reports unparseable ones, ignores configs with no servers', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'mcp-audit-cfg-'));
+    const dir = tempDir('mcp-audit-cfg-');
     writeFileSync(join(dir, 'good.json'), '{"mcpServers":{"a":{"command":"node","args":["a.js"]}}}');
     writeFileSync(join(dir, 'bad.json'), '{not json');
     writeFileSync(join(dir, 'empty.json'), '{"otherKey":1}');
@@ -479,7 +489,7 @@ describe('formatReport', () => {
 
 describe('audit CLI', () => {
   it('measures a real server from a config file and leaves no files behind', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'mcp-audit-cli-'));
+    const dir = tempDir('mcp-audit-cli-');
     writeFileSync(
       join(dir, 'mcp.json'),
       JSON.stringify({
@@ -504,7 +514,7 @@ describe('audit CLI', () => {
   }, 200_000);
 
   it('exits 1 when no config is found', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'mcp-audit-none-'));
+    const dir = tempDir('mcp-audit-none-');
     let code = 0;
     try {
       execFileSync('npx', ['tsx', join(repoRoot, 'src/cli.ts'), 'audit', '--config', join(dir, 'missing.json')], {
@@ -578,7 +588,7 @@ describe('fetchDivergence', () => {
 
 describe('audit CLI --claude', () => {
   it('joins claudeTokens from a reachable divergence source, end to end', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'mcp-audit-claude-'));
+    const dir = tempDir('mcp-audit-claude-');
     const configPath = join(dir, 'mcp.json');
     writeFileSync(
       configPath,
@@ -624,7 +634,7 @@ describe('audit CLI --claude', () => {
   }, 200_000);
 
   it('degrades to no join and a recorded problem when the divergence source is unreachable', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'mcp-audit-claude-fail-'));
+    const dir = tempDir('mcp-audit-claude-fail-');
     const configPath = join(dir, 'mcp.json');
     writeFileSync(
       configPath,
@@ -951,7 +961,7 @@ describe('audit --baseline CLI', () => {
   };
 
   it('rejects an unreadable or malformed baseline before measuring anything', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'mcp-audit-baseline-'));
+    const dir = tempDir('mcp-audit-baseline-');
     writeFileSync(join(dir, 'mcp.json'), '{"mcpServers":{"memory":{"command":"npx","args":["-y","@modelcontextprotocol/server-memory"]}}}');
     writeFileSync(join(dir, 'junk.json'), '{"hello":1}');
 
@@ -965,14 +975,14 @@ describe('audit --baseline CLI', () => {
   }, 60_000);
 
   it('rejects --max-increase without a baseline to measure against', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'mcp-audit-baseline-usage-'));
+    const dir = tempDir('mcp-audit-baseline-usage-');
     const r = cli(['audit', '--max-increase', '100'], dir);
     expect(r.code).toBe(2);
     expect(r.stderr).toContain('needs a --baseline');
   }, 60_000);
 
   it('diffs a real measurement against its own stored report and passes a zero-increase gate', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'mcp-audit-baseline-e2e-'));
+    const dir = tempDir('mcp-audit-baseline-e2e-');
     const configPath = join(dir, 'mcp.json');
     writeFileSync(
       configPath,

@@ -1,7 +1,7 @@
 import { describe, it, expect, afterAll } from 'vitest';
 import { execFileSync, execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { readFileSync, writeFileSync, mkdtempSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdtempSync, rmSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
@@ -46,6 +46,7 @@ describe('verify command (dispute drill)', () => {
 
 describe('verify --json (CLI process)', () => {
   const dir = mkdtempSync(join(tmpdir(), 'mcp-context-cost-cli-'));
+  afterAll(() => rmSync(dir, { recursive: true, force: true }));
 
   it('prints a single JSON object and exits 0 on success', () => {
     const m = measureTools(tools, { serverName: 'x' });

@@ -1,6 +1,8 @@
 # Roadmap
 
-Ordered by value-per-effort for users. Contributions welcome on any of these.
+Ordered by value-per-effort for users. Contributions welcome on any of these. This is the
+user-facing view of what's shipped and coming next — it doesn't carry every internal
+planning note.
 
 ## Next
 
