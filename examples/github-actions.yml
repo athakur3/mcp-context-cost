@@ -1,0 +1,67 @@
+# Fail a pull request that inflates what every session costs.
+#
+# The base branch is measured first, the PR head is measured second, and the two
+# are diffed. The gate fails on an increase over the limit — and equally on any
+# reason the increase could not be established (a server that stopped starting, a
+# config with no baseline), because a green check has to mean checked.
+#
+# Copy to .github/workflows/context-cost.yml and set --max-increase to whatever
+# your team is willing to pay per request.
+
+name: context cost
+
+on:
+  pull_request:
+    paths:
+      # Only the files that can change the answer. Drop this if your MCP config
+      # is generated, and gate every PR instead.
+      - '.mcp.json'
+      - '.vscode/mcp.json'
+
+jobs:
+  context-cost:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the base branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Servers are measured by launching them, so this step needs whatever the
+      # config's launch commands need — network for `npx`, and any API keys the
+      # servers demand before they will answer tools/list.
+      - name: Measure the base branch
+        run: npx -y mcp-context-cost audit --config .mcp.json --json > "$RUNNER_TEMP/baseline.json"
+
+      - name: Check out this pull request
+        uses: actions/checkout@v4
+        with:
+          clean: false
+
+      - name: Fail if this PR adds more than 2,000 tokens per request
+        run: |
+          npx -y mcp-context-cost audit \
+            --config .mcp.json \
+            --baseline "$RUNNER_TEMP/baseline.json" \
+            --max-increase 2000
+
+      # Optional: keep the measurement, so a reviewer can read the per-server
+      # numbers instead of re-running the job.
+      - name: Save the report
+        if: always()
+        run: npx -y mcp-context-cost audit --config .mcp.json --json > "$RUNNER_TEMP/report.json" || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: context-cost-report
+          path: ${{ runner.temp }}/report.json
+          if-no-files-found: ignore
+
+# A PR that adds the first MCP config to a repo fails at the "Measure the base
+# branch" step, because there is nothing on the base branch to measure. That is
+# the right outcome — a first config is a change to read, not a delta — but the
+# error reads as a tooling failure, so it is worth knowing in advance.

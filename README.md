@@ -86,6 +86,9 @@ INCREASE FAIL:
 A baseline is just a stored `audit --json` report, so any artifact store works. Without
 `--max-increase` the diff is informational and the exit code is unchanged.
 
+[`examples/github-actions.yml`](examples/github-actions.yml) is the whole thing as a workflow:
+measure the base branch, measure the PR, fail on the difference.
+
 `--max-increase` fails on more than the number — it also fails whenever the increase could
 not be established. A server that measured yesterday and won't start today takes its tokens
 out of the total in exactly the way uninstalling it would, and reporting that as a saving is
