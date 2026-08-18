@@ -16,6 +16,7 @@ import { METHODOLOGY_VERSION } from '../core/canonical.js';
 import { isCurrent, type DivergenceRun } from '../core/divergence.js';
 import type { Measurement, MeasurementStatus, ToolMeasurement } from '../core/types.js';
 import type { ConfiguredServer, LoadedConfig } from './config.js';
+import { formatDiff, formatGate, type AuditDiff, type IncreaseGate } from './diff.js';
 
 export const DEFAULT_CONTEXT_WINDOW = 200_000;
 
@@ -156,6 +157,10 @@ export interface AuditReport {
   };
   /** Present only when a divergence run was supplied (`--claude`). */
   claudeDivergence?: { model: string; measuredAt: string };
+  /** Present only when a baseline report was supplied (`--baseline`). */
+  diff?: AuditDiff;
+  /** Present only when `--max-increase` was supplied alongside a baseline. */
+  increaseGate?: IncreaseGate;
   problems: string[];
 }
 
@@ -437,6 +442,12 @@ export function formatReport(report: AuditReport): string {
         lines.push('  nothing measured could be removed to get under the limit.');
       }
     }
+  }
+
+  if (report.diff) lines.push(formatDiff(report.diff, report.contextWindow));
+  if (report.increaseGate) {
+    lines.push('');
+    lines.push(formatGate(report.increaseGate));
   }
 
   lines.push('');

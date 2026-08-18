@@ -4,6 +4,10 @@
  *
  *   mcp-context-cost audit [--budget N] [--claude] [--json]   measure the servers in your
  *                                                own MCP config; exit 1 if over budget.
+ *   mcp-context-cost audit --baseline <report.json> [--max-increase N]   diff against a
+ *                                                stored earlier report; exit 1 if this
+ *                                                config change adds more than N tokens
+ *                                                to every request (or if it can't tell).
  *                                                --claude adds each server's Anthropic-
  *                                                request cost where the published capture
  *                                                hash matches what's installed.
@@ -68,7 +72,46 @@ if (cmd === 'audit') {
     return v;
   };
 
+  const nonNegative = (name: string): number | undefined => {
+    const raw = argOf(name);
+    if (raw === undefined) return undefined;
+    const v = Number(raw);
+    if (!Number.isFinite(v) || v < 0) {
+      console.error(`--${name} must be zero or a positive number, got '${raw}'`);
+      process.exit(2);
+    }
+    return v;
+  };
+
   const budget = numeric('budget');
+  const baselinePath = argOf('baseline');
+  const maxIncrease = nonNegative('max-increase');
+  if (maxIncrease !== undefined && !baselinePath) {
+    console.error('--max-increase needs a --baseline to measure the increase against');
+    process.exit(2);
+  }
+
+  const { buildDiff, evaluateIncreaseGate, parseBaselineReport } = await import('./audit/diff.js');
+
+  // Read and shape-check the baseline BEFORE measuring anything: a typo in the path
+  // should cost a second, not a full server sweep that is then thrown away.
+  let baseline: import('./audit/audit.js').AuditReport | undefined;
+  if (baselinePath) {
+    let raw: string;
+    try {
+      raw = readFileSync(baselinePath, 'utf8');
+    } catch (e) {
+      console.error(`cannot read baseline ${baselinePath}: ${(e as Error).message}`);
+      process.exit(2);
+    }
+    const parsed = parseBaselineReport(raw);
+    if (!parsed.report) {
+      console.error(`${baselinePath}: ${parsed.problem}`);
+      process.exit(2);
+    }
+    baseline = parsed.report;
+  }
+
   const { runAudit } = await import('./audit/run.js');
   const { formatReport } = await import('./audit/audit.js');
   const report = await runAudit({
@@ -95,8 +138,13 @@ if (cmd === 'audit') {
     process.exit(1);
   }
 
+  if (baseline) {
+    report.diff = buildDiff(baseline, report);
+    if (maxIncrease !== undefined) report.increaseGate = evaluateIncreaseGate(report.diff, maxIncrease);
+  }
+
   console.log(json ? JSON.stringify(report) : formatReport(report));
-  process.exit(report.budget?.over ? 1 : 0);
+  process.exit(report.budget?.over || report.increaseGate?.pass === false ? 1 : 0);
 } else if (cmd === 'verify') {
   const json = rest.includes('--json');
   const remoteIdx = rest.indexOf('--remote');
@@ -180,6 +228,9 @@ if (cmd === 'audit') {
   console.log('mcp-context-cost — reproducible context-cost measurement for MCP servers');
   console.log('  audit [--config <path>] [--budget N] [--claude]  measure the servers in your own MCP config');
   console.log('        [--json] [--context N] [--timeout ms] [--concurrency N] [--docker]');
+  console.log('        [--baseline <report.json>] [--max-increase N]   diff against an earlier');
+  console.log('                                              audit --json report; --max-increase');
+  console.log('                                              fails when a change adds too much');
   console.log('  verify <measurement.json> [--json]    re-derive tokens+sha from the published capture');
   console.log('  verify --remote <url> [--json]        same, fetched from a measurement URL');
   console.log('  measure --name x --command "npx -y <server>"   run a one-off measurement');

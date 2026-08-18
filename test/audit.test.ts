@@ -7,7 +7,8 @@ import { dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { parseJsonc, extractServers, configCandidates, loadConfigs } from '../src/audit/config.js';
-import { buildReport, formatReport, planBudgetFit, serverKey, DEFAULT_CONTEXT_WINDOW } from '../src/audit/audit.js';
+import { buildReport, formatReport, planBudgetFit, serverKey, DEFAULT_CONTEXT_WINDOW, type AuditReport } from '../src/audit/audit.js';
+import { buildDiff, evaluateIncreaseGate, formatDiff, formatGate, parseBaselineReport } from '../src/audit/diff.js';
 import { runAudit, fetchDivergence } from '../src/audit/run.js';
 import { measureTools, failedMeasurement } from '../src/core/canonical.js';
 import type { Measurement } from '../src/core/types.js';
@@ -633,4 +634,357 @@ describe('audit CLI --claude', () => {
     expect(r.configs[0].servers[0].claudeTokens).toBeUndefined();
     expect(r.problems.some((p) => p.includes('claude divergence'))).toBe(true);
   }, 200_000);
+});
+
+// ---------------------------------------------------------------------------
+// audit --baseline: the config diff
+// ---------------------------------------------------------------------------
+
+type DiffSrv = { name: string; tokens: number | null };
+
+/** Minimal but real AuditReport, so diff tests never depend on spawning a server. */
+function reportOf(
+  configs: { source: string; client?: string; servers: DiffSrv[] }[],
+  over: Partial<AuditReport> = {},
+): AuditReport {
+  return {
+    methodologyVersion: '1.0',
+    encoding: 'o200k_base',
+    generatedAt: '2026-08-01T00:00:00.000Z',
+    contextWindow: DEFAULT_CONTEXT_WINDOW,
+    problems: [],
+    configs: configs.map((c) => {
+      const ok = c.servers.filter((s) => s.tokens !== null);
+      const bad = c.servers.filter((s) => s.tokens === null);
+      const totalTokens = ok.reduce((a, s) => a + (s.tokens ?? 0), 0);
+      return {
+        client: c.client ?? 'claude-desktop',
+        source: c.source,
+        totalTokens,
+        toolCount: ok.length,
+        serverCount: ok.length,
+        contextShare: totalTokens / (over.contextWindow ?? DEFAULT_CONTEXT_WINDOW),
+        servers: ok.map((s) => ({
+          name: s.name,
+          transport: 'stdio' as const,
+          status: 'measured' as const,
+          tokens: s.tokens,
+          toolCount: 1,
+          share: totalTokens > 0 ? (s.tokens ?? 0) / totalTokens : 0,
+          envVarNames: [],
+        })),
+        skipped: bad.map((s) => ({
+          name: s.name,
+          transport: 'stdio' as const,
+          status: 'startup-failure' as const,
+          tokens: null,
+          toolCount: null,
+          share: null,
+          envVarNames: [],
+        })),
+        heaviestTools: [],
+        trimAdvice: null,
+      };
+    }),
+    ...over,
+  };
+}
+
+const CFG = '/cfg.json';
+const byName = (d: ReturnType<typeof buildDiff>, name: string) =>
+  d.configs[0].servers.find((s) => s.name === name)!;
+
+describe('buildDiff', () => {
+  it('reports an added server as tokens added to every request', () => {
+    const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }] }]);
+    const after = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }, { name: 'b', tokens: 17_000 }] }]);
+    const d = buildDiff(before, after);
+    expect(d.configs[0]).toMatchObject({ beforeTotal: 5_000, afterTotal: 22_000, delta: 17_000, exact: true });
+    expect(byName(d, 'b')).toMatchObject({ kind: 'added', before: null, after: 17_000, delta: 17_000 });
+    expect(byName(d, 'a').kind).toBe('unchanged');
+    expect(d.worstIncrease).toEqual({ source: CFG, delta: 17_000 });
+    expect(formatDiff(d, DEFAULT_CONTEXT_WINDOW)).toContain('adds 17,000 tokens to every request');
+  });
+
+  it('reports a removed server and a grown schema with signed deltas', () => {
+    const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }, { name: 'b', tokens: 9_000 }] }]);
+    const after = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 6_200 }] }]);
+    const d = buildDiff(before, after);
+    expect(byName(d, 'b')).toMatchObject({ kind: 'removed', before: 9_000, after: null, delta: -9_000 });
+    expect(byName(d, 'a')).toMatchObject({ kind: 'changed', delta: 1_200 });
+    expect(d.configs[0].delta).toBe(-7_800);
+    expect(d.worstIncrease).toBeNull();
+    expect(formatDiff(d, DEFAULT_CONTEXT_WINDOW)).toContain('removes 7,800 tokens');
+  });
+
+  it('says nothing changed when nothing changed', () => {
+    const r = () => reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }] }]);
+    const d = buildDiff(r(), r());
+    expect(d.configs[0]).toMatchObject({ delta: 0, exact: true });
+    const out = formatDiff(d, DEFAULT_CONTEXT_WINDOW);
+    expect(out).toContain('No change');
+    expect(out).toContain('(1 server unchanged)');
+  });
+
+  // The flattering reading and the true one have the same shape here: a server that
+  // died takes its tokens out of the total exactly like a server you uninstalled.
+  it('never reports a server that stopped measuring as a saving', () => {
+    const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }, { name: 'heavy', tokens: 9_246 }] }]);
+    const after = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }, { name: 'heavy', tokens: null }] }]);
+    const d = buildDiff(before, after);
+    const heavy = byName(d, 'heavy');
+    expect(heavy).toMatchObject({ kind: 'unmeasured-now', before: 9_246, after: null, delta: null });
+    expect(d.configs[0].exact).toBe(false);
+    expect(d.configs[0].understatedBy).toBe(9_246);
+    const out = formatDiff(d, DEFAULT_CONTEXT_WINDOW);
+    expect(out).toContain('Not a clean comparison');
+    expect(out).toContain('at least 9,246 higher');
+    // The flattering sentence must not be printed at all, not merely corrected afterwards:
+    // the headline is where a skimmer stops reading.
+    expect(out).not.toMatch(/removes [\d,]+ tokens/);
+    expect(out).toContain('not what your config did');
+  });
+
+  it('marks newly measurable cost as newly visible, not new', () => {
+    const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }, { name: 'fixed', tokens: null }] }]);
+    const after = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }, { name: 'fixed', tokens: 4_000 }] }]);
+    const d = buildDiff(before, after);
+    expect(byName(d, 'fixed')).toMatchObject({ kind: 'unmeasured-before', before: null, after: 4_000, delta: null });
+    expect(d.configs[0]).toMatchObject({ exact: false, overstatedBy: 4_000, delta: 4_000 });
+    const out = formatDiff(d, DEFAULT_CONTEXT_WINDOW);
+    expect(out).toContain('up to 4,000 of that movement was already being paid');
+    expect(out).not.toMatch(/adds [\d,]+ tokens to every request/);
+  });
+
+  it('keeps a server unmeasurable in both runs visible as a blind spot, not as zero', () => {
+    const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }, { name: 'dead', tokens: null }] }]);
+    const after = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }, { name: 'dead', tokens: null }] }]);
+    const d = buildDiff(before, after);
+    expect(byName(d, 'dead').kind).toBe('unmeasured-both');
+    expect(d.configs[0]).toMatchObject({ exact: true, delta: 0 }); // it moved neither total
+    expect(formatDiff(d, DEFAULT_CONTEXT_WINDOW)).toContain('hides an unknown cost');
+  });
+
+  it('gives no delta for adding or removing a server that was never measured', () => {
+    const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }, { name: 'gone', tokens: null }] }]);
+    const after = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }, { name: 'new', tokens: null }] }]);
+    const d = buildDiff(before, after);
+    expect(byName(d, 'gone')).toMatchObject({ kind: 'removed', delta: null });
+    expect(byName(d, 'new')).toMatchObject({ kind: 'added', delta: null });
+    expect(formatDiff(d, DEFAULT_CONTEXT_WINDOW)).toContain('its cost is unknown, not zero');
+  });
+
+  it('does not let a config that vanished read as a config that got cheaper', () => {
+    const before = reportOf([
+      { source: CFG, servers: [{ name: 'a', tokens: 5_000 }] },
+      { source: '/other.json', client: 'cursor', servers: [{ name: 'b', tokens: 8_000 }] },
+    ]);
+    const after = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }] }]);
+    const d = buildDiff(before, after);
+    expect(d.configs).toHaveLength(1);
+    expect(d.configs[0].delta).toBe(0);
+    expect(d.droppedConfigs).toEqual([{ client: 'cursor', source: '/other.json', totalTokens: 8_000 }]);
+    expect(d.warnings.join('\n')).toContain('not a config that got cheaper');
+  });
+
+  it('shows a config with no baseline as a total, not as a change', () => {
+    const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }] }]);
+    const after = reportOf([
+      { source: CFG, servers: [{ name: 'a', tokens: 5_000 }] },
+      { source: '/new.json', client: 'cursor', servers: [{ name: 'b', tokens: 8_000 }] },
+    ]);
+    const d = buildDiff(before, after);
+    const fresh = d.configs.find((c) => c.source === '/new.json')!;
+    expect(fresh).toMatchObject({ matchedBy: 'unmatched', beforeTotal: null, delta: null });
+    expect(formatDiff(d, DEFAULT_CONTEXT_WINDOW)).toContain('no baseline for this config');
+  });
+
+  it('pairs one config against one config across machines, and refuses to guess beyond that', () => {
+    const before = reportOf([{ source: '/Users/dev/.cursor/mcp.json', servers: [{ name: 'a', tokens: 5_000 }] }]);
+    const after = reportOf([{ source: '/home/runner/work/repo/.vscode/mcp.json', servers: [{ name: 'a', tokens: 5_500 }] }]);
+    const one = buildDiff(before, after);
+    expect(one.configs[0]).toMatchObject({ matchedBy: 'sole-config', delta: 500 });
+
+    const twoBefore = reportOf([
+      { source: '/a/one.json', servers: [{ name: 'a', tokens: 5_000 }] },
+      { source: '/a/two.json', servers: [{ name: 'b', tokens: 1_000 }] },
+    ]);
+    const twoAfter = reportOf([
+      { source: '/b/one.json', servers: [{ name: 'a', tokens: 5_000 }] },
+      { source: '/b/two.json', servers: [{ name: 'b', tokens: 1_000 }] },
+    ]);
+    const two = buildDiff(twoBefore, twoAfter);
+    expect(two.configs.every((c) => c.matchedBy === 'unmatched')).toBe(true);
+    expect(two.droppedConfigs).toHaveLength(2);
+  });
+
+  it('refuses to compare across a methodology or encoding change', () => {
+    const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }] }], { methodologyVersion: '0.9' });
+    const after = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }] }]);
+    const d = buildDiff(before, after);
+    expect(d.comparable).toBe(false);
+    expect(d.warnings.join('\n')).toContain('not the same measurement');
+    expect(formatDiff(d, DEFAULT_CONTEXT_WINDOW)).toContain('Re-record the baseline');
+
+    const enc = buildDiff(reportOf([{ source: CFG, servers: [] }], { encoding: 'cl100k_base' as 'o200k_base' }), after);
+    expect(enc.comparable).toBe(false);
+  });
+
+  it('treats a context-window change as a share caveat, not a broken comparison', () => {
+    const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }] }], { contextWindow: 100_000 });
+    const after = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 6_000 }] }]);
+    const d = buildDiff(before, after);
+    expect(d.comparable).toBe(true);
+    expect(d.configs[0].delta).toBe(1_000);
+    expect(d.warnings.join('\n')).toContain('shares are not comparable, token counts still are');
+  });
+});
+
+describe('formatReport with a diff attached', () => {
+  it('renders the diff and gate above the methodology footnote, and never says "explicit"', () => {
+    const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }] }]);
+    const after = reportOf([{ source: CFG, client: 'explicit', servers: [{ name: 'a', tokens: 5_000 }, { name: 'b', tokens: 900 }] }]);
+    after.diff = buildDiff(before, after);
+    after.increaseGate = evaluateIncreaseGate(after.diff, 100);
+    const out = formatReport(after);
+
+    expect(out).toContain('every request in this client');
+    expect(out).not.toMatch(/request in explicit/);
+    expect(out.indexOf('diff vs baseline')).toBeGreaterThan(-1);
+    expect(out.indexOf('INCREASE FAIL')).toBeGreaterThan(out.indexOf('diff vs baseline'));
+    expect(out.indexOf('These are wire tokens')).toBeGreaterThan(out.indexOf('INCREASE FAIL'));
+  });
+});
+
+describe('parseBaselineReport', () => {
+  it('accepts a real audit --json report', () => {
+    const raw = JSON.stringify(reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 1 }] }]));
+    expect(parseBaselineReport(raw).report).toBeTruthy();
+  });
+
+  it.each([
+    ['not json at all', '{nope'],
+    ['a bare array', '[]'],
+    ['an object with no configs', '{"methodologyVersion":"1.0","encoding":"o200k_base"}'],
+    ['a report missing methodology', '{"configs":[]}'],
+    ['a config with no source', '{"methodologyVersion":"1.0","encoding":"o200k_base","configs":[{"totalTokens":1}]}'],
+  ])('rejects %s with a problem, never a silent empty diff', (_label, raw) => {
+    const r = parseBaselineReport(raw);
+    expect(r.report).toBeNull();
+    expect(r.problem).toBeTruthy();
+  });
+});
+
+describe('evaluateIncreaseGate', () => {
+  const diffOf = (b: DiffSrv[], a: DiffSrv[]) =>
+    buildDiff(reportOf([{ source: CFG, servers: b }]), reportOf([{ source: CFG, servers: a }]));
+
+  it('passes an increase inside the limit and fails one over it', () => {
+    const d = diffOf([{ name: 'a', tokens: 5_000 }], [{ name: 'a', tokens: 5_000 }, { name: 'b', tokens: 900 }]);
+    expect(evaluateIncreaseGate(d, 1_000)).toMatchObject({ pass: true, increase: 900 });
+    const over = evaluateIncreaseGate(d, 899);
+    expect(over.pass).toBe(false);
+    expect(formatGate(over)).toContain('+900 tokens per request, over the 899 allowed');
+  });
+
+  it('passes a decrease and an exact no-change', () => {
+    expect(evaluateIncreaseGate(diffOf([{ name: 'a', tokens: 5_000 }], [{ name: 'a', tokens: 10 }]), 0).pass).toBe(true);
+    expect(evaluateIncreaseGate(diffOf([{ name: 'a', tokens: 5_000 }], [{ name: 'a', tokens: 5_000 }]), 0)).toMatchObject({
+      pass: true,
+      increase: 0,
+    });
+  });
+
+  // The gate's whole reason to exist: green must mean checked, not merely not-red.
+  it('fails when a server stopped measuring, even though the total went down', () => {
+    const d = diffOf(
+      [{ name: 'a', tokens: 5_000 }, { name: 'heavy', tokens: 9_000 }],
+      [{ name: 'a', tokens: 5_000 }, { name: 'heavy', tokens: null }],
+    );
+    expect(d.configs[0].delta).toBeLessThan(0);
+    const gate = evaluateIncreaseGate(d, 0);
+    expect(gate.pass).toBe(false);
+    expect(gate.reasons.join(' ')).toContain('could not be established exactly');
+  });
+
+  it('fails on an unmatched config, a dropped config, and an incomparable baseline', () => {
+    const unmatched = buildDiff(
+      reportOf([{ source: CFG, servers: [] }]),
+      reportOf([{ source: CFG, servers: [] }, { source: '/new.json', servers: [{ name: 'b', tokens: 8_000 }] }]),
+    );
+    expect(evaluateIncreaseGate(unmatched, 100_000).pass).toBe(false);
+
+    const droppedCfg = buildDiff(
+      reportOf([{ source: CFG, servers: [] }, { source: '/gone.json', servers: [{ name: 'b', tokens: 8_000 }] }]),
+      reportOf([{ source: CFG, servers: [] }]),
+    );
+    expect(evaluateIncreaseGate(droppedCfg, 100_000).pass).toBe(false);
+
+    const stale = buildDiff(
+      reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 1 }] }], { methodologyVersion: '0.9' }),
+      reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 1 }] }]),
+    );
+    expect(evaluateIncreaseGate(stale, 100_000).pass).toBe(false);
+  });
+
+  it('reports no increase to measure rather than a zero when nothing was comparable', () => {
+    const d = buildDiff(reportOf([]), reportOf([]));
+    const gate = evaluateIncreaseGate(d, 0);
+    expect(gate.increase).toBeNull();
+    expect(formatGate(gate)).toContain('no change to measure');
+  });
+});
+
+describe('audit --baseline CLI', () => {
+  const cli = (args: string[], cwd: string) => {
+    try {
+      const stdout = execFileSync('npx', ['tsx', join(repoRoot, 'src/cli.ts'), ...args], {
+        cwd,
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'pipe'],
+      });
+      return { code: 0, stdout, stderr: '' };
+    } catch (e) {
+      const err = e as { status: number; stdout: string; stderr: string };
+      return { code: err.status, stdout: err.stdout ?? '', stderr: err.stderr ?? '' };
+    }
+  };
+
+  it('rejects an unreadable or malformed baseline before measuring anything', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'mcp-audit-baseline-'));
+    writeFileSync(join(dir, 'mcp.json'), '{"mcpServers":{"memory":{"command":"npx","args":["-y","@modelcontextprotocol/server-memory"]}}}');
+    writeFileSync(join(dir, 'junk.json'), '{"hello":1}');
+
+    const missing = cli(['audit', '--config', join(dir, 'mcp.json'), '--baseline', join(dir, 'nope.json')], dir);
+    expect(missing.code).toBe(2);
+    expect(missing.stderr).toContain('cannot read baseline');
+
+    const junk = cli(['audit', '--config', join(dir, 'mcp.json'), '--baseline', join(dir, 'junk.json')], dir);
+    expect(junk.code).toBe(2);
+    expect(junk.stderr).toContain('audit --json');
+  }, 60_000);
+
+  it('rejects --max-increase without a baseline to measure against', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'mcp-audit-baseline-usage-'));
+    const r = cli(['audit', '--max-increase', '100'], dir);
+    expect(r.code).toBe(2);
+    expect(r.stderr).toContain('needs a --baseline');
+  }, 60_000);
+
+  it('diffs a real measurement against its own stored report and passes a zero-increase gate', async () => {
+    const dir = mkdtempSync(join(tmpdir(), 'mcp-audit-baseline-e2e-'));
+    const configPath = join(dir, 'mcp.json');
+    writeFileSync(
+      configPath,
+      JSON.stringify({ mcpServers: { memory: { command: 'npx', args: ['-y', '@modelcontextprotocol/server-memory'] } } }),
+    );
+    const baselinePath = join(dir, 'baseline.json');
+    writeFileSync(baselinePath, JSON.stringify(await runAudit({ configPaths: [configPath] })));
+
+    const r = cli(['audit', '--config', configPath, '--baseline', baselinePath, '--max-increase', '0', '--json'], dir);
+    expect(r.code).toBe(0);
+    const report = JSON.parse(r.stdout);
+    expect(report.diff.configs[0]).toMatchObject({ delta: 0, exact: true, matchedBy: 'source' });
+    expect(report.increaseGate).toMatchObject({ pass: true, increase: 0, limit: 0 });
+  }, 300_000);
 });

@@ -84,6 +84,52 @@ npx -y mcp-context-cost audit --config .mcp.json --budget 20000
 # exits 1 when the stack exceeds the budget, so a PR adding a 25K-token server fails
 ```
 
+The budget is an absolute ceiling. What a reviewer actually wants to know is what *this pull
+request* did, so record a baseline and diff against it:
+
+```bash
+npx -y mcp-context-cost audit --config .mcp.json --json > baseline.json          # on main
+npx -y mcp-context-cost audit --config .mcp.json --baseline baseline.json --max-increase 2000
+```
+
+```
+diff vs baseline measured 2026-08-18T01:51:49.555Z (methodology 1.0)
+
+  .mcp.json
+    2,378  →  5,201   +2,823
+
+    added             filesystem          — →     2,823  +2,823
+    (1 server unchanged)
+
+    This change adds 2,823 tokens to every request in this client — 1.2% → 2.6% of a
+    200,000-token context window.
+
+INCREASE FAIL:
+  .mcp.json: +2,823 tokens per request, over the 2,000 allowed
+```
+
+A baseline is just a stored `audit --json` report, so any artifact store works. Without
+`--max-increase` the diff is informational and the exit code is unchanged.
+
+`--max-increase` fails on more than the number — it also fails whenever the increase could
+not be established. A server that measured yesterday and won't start today takes its tokens
+out of the total in exactly the way uninstalling it would, and reporting that as a saving is
+the one mistake this tool must not make. So a server that crossed the measured/unmeasured
+line, a config with no baseline, or a baseline config this run never found each fail the
+gate and name themselves:
+
+```
+    Not a clean comparison: a server changed measured-ness between the two runs.
+    The measured total moved −2,378, but that is not what your config did.
+
+      memory: measured 2,378 in the baseline and could not be measured now — its cost is
+              missing from the total, not gone from your config
+      → true cost is at least 2,378 higher than the 0 measured now.
+
+INCREASE FAIL:
+  .mcp.json: a server changed measured-ness, so the change could not be established exactly
+```
+
 Add `--claude` to annotate each server with its Anthropic-request cost from the published
 [Claude divergence](docs/METHODOLOGY.md#claude-divergence) run — an exact number when the
 published capture hash matches what you have installed, `—` (silence, not a stale guess)
@@ -96,8 +142,9 @@ show a mix):
   memory                   9   2,378    4.2%       —
 ```
 
-Flags: `--json` (full report on stdout, progress on stderr), `--budget N`, `--context N`
-(default 200,000), `--timeout ms`, `--concurrency N`, `--docker`, `--claude`.
+Flags: `--json` (full report on stdout, progress on stderr), `--budget N`,
+`--baseline <report.json>`, `--max-increase N`, `--context N` (default 200,000),
+`--timeout ms`, `--concurrency N`, `--docker`, `--claude`.
 
 ## What it costs on Claude
 
@@ -141,7 +188,7 @@ number is *not*, config policy, failure taxonomy, frozen color bands, known dive
 |---|---|
 | `src/core/` | the measurement spec, executable — canonical form, tokenizer, bands, badge JSON |
 | `src/sweep/` | raw-wire MCP stdio client + Dockerized batch sweep + leaderboard/dashboard generators |
-| `src/audit/` | client-config discovery (5 clients, JSONC-tolerant) + the per-stack report |
+| `src/audit/` | client-config discovery (5 clients, JSONC-tolerant), the per-stack report, and the baseline diff |
 | `src/cli.ts` | `audit` (measure your own stack), `verify` (re-derive any published number), `measure` |
 | `spec/fixtures/` | golden vectors shared by the TypeScript and bash implementations |
 | `tools/` | the one script that calls a network API (Claude divergence); kept out of the package so the library stays offline |
