@@ -2,20 +2,72 @@
   "methodologyVersion": "1.0",
   "provider": "tiktoken",
   "encoding": "o200k_base",
-  "status": "startup-failure",
-  "totalTokens": null,
-  "toolCount": null,
-  "tools": [],
-  "canonicalSha256": null,
-  "rawToolsCapture": null,
-  "measuredAt": "2026-08-16T12:08:07.506Z",
-  "serverName": "fetch",
-  "launchCommand": "uvx mcp-server-fetch",
-  "notes": "server exited (code 1); stderr tail: in <module>\n    from mcp_server_fetch import main\n  File \"/tmp/.uv-cache/archive-v0/vFrrNX6vyNRVMDZ7hjaS4/lib/python3.12/site-packages/mcp_server_fetch/__init__.py\", line 1, in <module>\n    from .server import serve\n  File \"/tmp/.uv-cache/archive-v0/vFrrNX6vyNRVMDZ7hjaS4/lib/python3.12/site-packages/mcp_server_fetch/server.py\", line 6, in <module>\n    from mcp.shared.exceptions import McpError\nImportError: cannot import name 'McpError' from 'mcp.shared.except",
+  "status": "measured",
+  "totalTokens": 238,
+  "toolCount": 1,
+  "tools": [
+    {
+      "name": "fetch",
+      "tokens": 236,
+      "descriptionTokens": 60,
+      "inputSchemaTokens": 165
+    }
+  ],
+  "canonicalSha256": "5d0a1b56f6c08786d7d764b6f4376fba201015e5a5995b6b39c14350bd4aeeb3",
+  "rawToolsCapture": [
+    {
+      "name": "fetch",
+      "description": "Fetches a URL from the internet and optionally extracts its contents as markdown.\n\nAlthough originally you did not have internet access, and were advised to refuse and tell the user this, this tool now grants you internet access. Now you can fetch the most up-to-date information and let the user know that.",
+      "inputSchema": {
+        "description": "Parameters for fetching a URL.",
+        "properties": {
+          "url": {
+            "description": "URL to fetch",
+            "format": "uri",
+            "minLength": 1,
+            "title": "Url",
+            "type": "string"
+          },
+          "max_length": {
+            "default": 5000,
+            "description": "Maximum number of characters to return.",
+            "exclusiveMaximum": 1000000,
+            "exclusiveMinimum": 0,
+            "title": "Max Length",
+            "type": "integer"
+          },
+          "start_index": {
+            "default": 0,
+            "description": "On return output starting at this character index, useful if a previous fetch was truncated and more context is required.",
+            "minimum": 0,
+            "title": "Start Index",
+            "type": "integer"
+          },
+          "raw": {
+            "default": false,
+            "description": "Get the actual HTML content of the requested page, without simplification.",
+            "title": "Raw",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "title": "Fetch",
+        "type": "object"
+      }
+    }
+  ],
+  "measuredAt": "2026-08-18T04:03:42.190Z",
+  "serverName": "mcp-fetch",
+  "serverVersion": "1.29.0",
+  "launchCommand": "uvx --with \"mcp<2\" mcp-server-fetch",
+  "envVarNames": [],
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

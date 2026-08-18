@@ -2,20 +2,148 @@
   "methodologyVersion": "1.0",
   "provider": "tiktoken",
   "encoding": "o200k_base",
-  "status": "startup-failure",
-  "totalTokens": null,
-  "toolCount": null,
-  "tools": [],
-  "canonicalSha256": null,
-  "rawToolsCapture": null,
-  "measuredAt": "2026-08-16T12:08:10.313Z",
+  "status": "measured",
+  "totalTokens": 268,
+  "toolCount": 6,
+  "tools": [
+    {
+      "name": "read_query",
+      "tokens": 46,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 27
+    },
+    {
+      "name": "write_query",
+      "tokens": 50,
+      "descriptionTokens": 13,
+      "inputSchemaTokens": 26
+    },
+    {
+      "name": "create_table",
+      "tokens": 45,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 26
+    },
+    {
+      "name": "list_tables",
+      "tokens": 28,
+      "descriptionTokens": 7,
+      "inputSchemaTokens": 9
+    },
+    {
+      "name": "describe_table",
+      "tokens": 49,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 30
+    },
+    {
+      "name": "append_insight",
+      "tokens": 49,
+      "descriptionTokens": 7,
+      "inputSchemaTokens": 30
+    }
+  ],
+  "canonicalSha256": "d432983abc546eac2725c9db1a07f5f8dad0e6cbfb12f925c1d4fb61743d1c6b",
+  "rawToolsCapture": [
+    {
+      "name": "read_query",
+      "description": "Execute a SELECT query on the SQLite database",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "SELECT SQL query to execute"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      }
+    },
+    {
+      "name": "write_query",
+      "description": "Execute an INSERT, UPDATE, or DELETE query on the SQLite database",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "SQL query to execute"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      }
+    },
+    {
+      "name": "create_table",
+      "description": "Create a new table in the SQLite database",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "CREATE TABLE SQL statement"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      }
+    },
+    {
+      "name": "list_tables",
+      "description": "List all tables in the SQLite database",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "describe_table",
+      "description": "Get the schema information for a specific table",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "table_name": {
+            "type": "string",
+            "description": "Name of the table to describe"
+          }
+        },
+        "required": [
+          "table_name"
+        ]
+      }
+    },
+    {
+      "name": "append_insight",
+      "description": "Add a business insight to the memo",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "insight": {
+            "type": "string",
+            "description": "Business insight discovered from data analysis"
+          }
+        },
+        "required": [
+          "insight"
+        ]
+      }
+    }
+  ],
+  "measuredAt": "2026-08-18T04:03:49.616Z",
   "serverName": "sqlite",
-  "launchCommand": "uvx mcp-server-sqlite --db-path /tmp/test.db",
-  "notes": "server exited (code 1); stderr tail: main)\n           ^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/asyncio/runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/asyncio/base_events.py\", line 691, in run_until_complete\n    return future.result()\n           ^^^^^^^^^^^^^^^\n  File \"/tmp/.uv-cache/archive-v0/gkV8vMYFf-FtDeMJE29sI/lib/python3.12/site-packages/mcp_server_sqlite/server.py\", lin",
+  "serverVersion": "0.1.0",
+  "launchCommand": "uvx --with \"mcp<2\" mcp-server-sqlite --db-path /tmp/test.db",
+  "envVarNames": [],
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

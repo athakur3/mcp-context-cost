@@ -2,7 +2,7 @@
 
 **How much of your agent's context window does an MCP server eat before it does anything?**
 
-We measured 82 popular MCP servers (59 measurable without credentials). The spread is
+We measured 82 popular MCP servers (65 measurable without credentials). The spread is
 1,700×: from markitdown's 64 tokens to the official GitHub server's **54,422 tokens** —
 more than a quarter of a 200K context window, before the agent takes a single action.
 

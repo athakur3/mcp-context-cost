@@ -39,7 +39,7 @@ servers:
     category: official-reference
     repo: https://github.com/modelcontextprotocol/servers
   - name: fetch
-    command: uvx mcp-server-fetch
+    command: uvx --with "mcp<2" mcp-server-fetch
     package: mcp-server-fetch (PyPI)
     env: []
     metric: 502017
@@ -47,7 +47,7 @@ servers:
     category: official-reference
     repo: https://github.com/modelcontextprotocol/servers
   - name: git
-    command: uvx mcp-server-git
+    command: uvx --with "mcp<2" mcp-server-git
     package: mcp-server-git (PyPI)
     env: []
     metric: 42975
@@ -56,7 +56,7 @@ servers:
     repo: https://github.com/modelcontextprotocol/servers
     needsGit: true
   - name: time
-    command: uvx mcp-server-time
+    command: uvx --with "mcp<2" mcp-server-time
     package: mcp-server-time (PyPI)
     env: []
     metric: 229101
@@ -105,7 +105,7 @@ servers:
     category: official-reference
     repo: https://github.com/modelcontextprotocol/servers-archived
   - name: sqlite
-    command: uvx mcp-server-sqlite --db-path /tmp/test.db
+    command: uvx --with "mcp<2" mcp-server-sqlite --db-path /tmp/test.db
     package: mcp-server-sqlite (PyPI)
     env: []
     metric: 14798
@@ -517,13 +517,14 @@ servers:
     category: community
     repo: https://github.com/sooperset/mcp-atlassian
   - name: postgres-mcp
-    command: uvx postgres-mcp --access-mode=restricted
+    command: uvx --with "mcp<2" postgres-mcp --access-mode=restricted
     package: postgres-mcp (PyPI)
     env: [DATABASE_URI]
     metric: 234706
     metricSource: https://pypistats.org/packages/postgres-mcp (PyPI weekly)
     category: community
     repo: https://github.com/crystaldba/postgres-mcp
+    timeoutSeconds: 120
   - name: xcodebuildmcp
     command: npx -y xcodebuildmcp@latest
     package: xcodebuildmcp
@@ -608,7 +609,7 @@ servers:
     category: community
     repo: https://github.com/vivekVells/mcp-pandoc
   - name: obsidian
-    command: uvx mcp-obsidian
+    command: uvx --with "mcp<2" mcp-obsidian
     package: mcp-obsidian (PyPI)
     env: [OBSIDIAN_API_KEY]
     metric: 23503

@@ -2,20 +2,90 @@
   "methodologyVersion": "1.0",
   "provider": "tiktoken",
   "encoding": "o200k_base",
-  "status": "startup-failure",
-  "totalTokens": null,
-  "toolCount": null,
-  "tools": [],
-  "canonicalSha256": null,
-  "rawToolsCapture": null,
-  "measuredAt": "2026-08-16T12:08:06.879Z",
-  "serverName": "time",
-  "launchCommand": "uvx mcp-server-time",
-  "notes": "server exited (code 1); stderr tail: , in <module>\n    from mcp_server_time import main\n  File \"/tmp/.uv-cache/archive-v0/SfGkkZZ67zYjtZfKCUoDr/lib/python3.12/site-packages/mcp_server_time/__init__.py\", line 1, in <module>\n    from .server import serve\n  File \"/tmp/.uv-cache/archive-v0/SfGkkZZ67zYjtZfKCUoDr/lib/python3.12/site-packages/mcp_server_time/server.py\", line 12, in <module>\n    from mcp.shared.exceptions import McpError\nImportError: cannot import name 'McpError' from 'mcp.shared.except",
+  "status": "measured",
+  "totalTokens": 293,
+  "toolCount": 2,
+  "tools": [
+    {
+      "name": "get_current_time",
+      "tokens": 105,
+      "descriptionTokens": 7,
+      "inputSchemaTokens": 59
+    },
+    {
+      "name": "convert_time",
+      "tokens": 186,
+      "descriptionTokens": 5,
+      "inputSchemaTokens": 143
+    }
+  ],
+  "canonicalSha256": "7c6ff08840620894a66a103e02a8eb315013dd0a7d7c6cfb59b0fbe51f8a5d87",
+  "rawToolsCapture": [
+    {
+      "name": "get_current_time",
+      "description": "Get current time in a specific timezone",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "timezone": {
+            "type": "string",
+            "description": "IANA timezone name (e.g., 'America/New_York', 'Europe/London'). Use 'Etc/UTC' as local timezone if no timezone provided by the user."
+          }
+        },
+        "required": [
+          "timezone"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "convert_time",
+      "description": "Convert time between timezones",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "source_timezone": {
+            "type": "string",
+            "description": "Source IANA timezone name (e.g., 'America/New_York', 'Europe/London'). Use 'Etc/UTC' as local timezone if no source timezone provided by the user."
+          },
+          "time": {
+            "type": "string",
+            "description": "Time to convert in 24-hour format (HH:MM)"
+          },
+          "target_timezone": {
+            "type": "string",
+            "description": "Target IANA timezone name (e.g., 'Asia/Tokyo', 'America/San_Francisco'). Use 'Etc/UTC' as local timezone if no target timezone provided by the user."
+          }
+        },
+        "required": [
+          "source_timezone",
+          "time",
+          "target_timezone"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    }
+  ],
+  "measuredAt": "2026-08-18T04:03:41.966Z",
+  "serverName": "mcp-time",
+  "serverVersion": "1.29.0",
+  "launchCommand": "uvx --with \"mcp<2\" mcp-server-time",
+  "envVarNames": [],
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

@@ -1,0 +1,33 @@
+# fetch — context cost
+
+**238 tokens** across 1 tools — *lean* (< 1K). Measured 2026-08-18 under [methodology v1.0](../METHODOLOGY.html).
+
+| | |
+|---|---|
+| server (self-reported) | mcp-fetch v1.29.0 |
+| status | measured |
+| tokenizer | tiktoken / o200k_base |
+| launch command | `uvx --with "mcp\<2" mcp-server-fetch` |
+| isolation | docker · ghcr.io/astral-sh/uv:python3.12-bookworm-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| env vars supplied | none |
+| canonical SHA-256 | `5d0a1b56f6c08786d7d764b6f4376fba201015e5a5995b6b39c14350bd4aeeb3` |
+| category | official-reference |
+| source | https://github.com/modelcontextprotocol/servers |
+
+## Where the tokens are
+
+| tool | tokens | share | description | schema |
+|---|---:|---:|---:|---:|
+| fetch | 236 | 99.2% | 60 | 165 |
+
+Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
+
+## Re-derive it
+
+```bash
+npx -y mcp-context-cost verify results/fetch/measurement.json
+```
+
+That re-tokenizes the [published capture](https://github.com/athakur3/mcp-context-cost/blob/main/results/fetch/measurement.json) and checks the count and the hash. If it disagrees with the badge, the badge is wrong — [open an issue](https://github.com/athakur3/mcp-context-cost/issues) and it gets corrected.
+
+[Badge JSON](https://github.com/athakur3/mcp-context-cost/blob/main/badges/fetch.json) · [All servers](index.html) · [Leaderboard](https://github.com/athakur3/mcp-context-cost/blob/main/results/leaderboard.md) · [Methodology](../METHODOLOGY.html)

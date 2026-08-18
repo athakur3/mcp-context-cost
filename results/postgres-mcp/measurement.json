@@ -2,20 +2,3075 @@
   "methodologyVersion": "1.0",
   "provider": "tiktoken",
   "encoding": "o200k_base",
-  "status": "startup-failure",
-  "totalTokens": null,
-  "toolCount": null,
-  "tools": [],
-  "canonicalSha256": null,
-  "rawToolsCapture": null,
-  "measuredAt": "2026-08-16T12:08:35.557Z",
+  "status": "measured",
+  "totalTokens": 8632,
+  "toolCount": 9,
+  "tools": [
+    {
+      "name": "list_schemas",
+      "tokens": 862,
+      "descriptionTokens": 6,
+      "inputSchemaTokens": 16
+    },
+    {
+      "name": "list_objects",
+      "tokens": 916,
+      "descriptionTokens": 5,
+      "inputSchemaTokens": 73
+    },
+    {
+      "name": "get_object_details",
+      "tokens": 942,
+      "descriptionTokens": 7,
+      "inputSchemaTokens": 95
+    },
+    {
+      "name": "explain_query",
+      "tokens": 1147,
+      "descriptionTokens": 23,
+      "inputSchemaTokens": 285
+    },
+    {
+      "name": "analyze_workload_indexes",
+      "tokens": 934,
+      "descriptionTokens": 11,
+      "inputSchemaTokens": 79
+    },
+    {
+      "name": "analyze_query_indexes",
+      "tokens": 968,
+      "descriptionTokens": 16,
+      "inputSchemaTokens": 110
+    },
+    {
+      "name": "analyze_db_health",
+      "tokens": 1026,
+      "descriptionTokens": 128,
+      "inputSchemaTokens": 56
+    },
+    {
+      "name": "get_top_queries",
+      "tokens": 957,
+      "descriptionTokens": 21,
+      "inputSchemaTokens": 97
+    },
+    {
+      "name": "execute_sql",
+      "tokens": 878,
+      "descriptionTokens": 6,
+      "inputSchemaTokens": 34
+    }
+  ],
+  "canonicalSha256": "9bb1e5d26dd377de9dbfac88ffe77663a1169cddf66c6b1f52f57d3a740b0e54",
+  "rawToolsCapture": [
+    {
+      "name": "list_schemas",
+      "description": "List all schemas in the database",
+      "inputSchema": {
+        "properties": {},
+        "title": "list_schemasArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "Annotations": {
+            "additionalProperties": true,
+            "properties": {
+              "audience": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "user",
+                        "assistant"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Audience"
+              },
+              "priority": {
+                "anyOf": [
+                  {
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Priority"
+              }
+            },
+            "title": "Annotations",
+            "type": "object"
+          },
+          "BlobResourceContents": {
+            "additionalProperties": true,
+            "description": "Binary contents of a resource.",
+            "properties": {
+              "uri": {
+                "format": "uri",
+                "minLength": 1,
+                "title": "Uri",
+                "type": "string"
+              },
+              "mimeType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Mimetype"
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              },
+              "blob": {
+                "title": "Blob",
+                "type": "string"
+              }
+            },
+            "required": [
+              "uri",
+              "blob"
+            ],
+            "title": "BlobResourceContents",
+            "type": "object"
+          },
+          "EmbeddedResource": {
+            "additionalProperties": true,
+            "description": "The contents of a resource, embedded into a prompt or tool call result.\n\nIt is up to the client how best to render embedded resources for the benefit\nof the LLM and/or the user.",
+            "properties": {
+              "type": {
+                "const": "resource",
+                "title": "Type",
+                "type": "string"
+              },
+              "resource": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/TextResourceContents"
+                  },
+                  {
+                    "$ref": "#/$defs/BlobResourceContents"
+                  }
+                ],
+                "title": "Resource"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "resource"
+            ],
+            "title": "EmbeddedResource",
+            "type": "object"
+          },
+          "ImageContent": {
+            "additionalProperties": true,
+            "description": "Image content for a message.",
+            "properties": {
+              "type": {
+                "const": "image",
+                "title": "Type",
+                "type": "string"
+              },
+              "data": {
+                "title": "Data",
+                "type": "string"
+              },
+              "mimeType": {
+                "title": "Mimetype",
+                "type": "string"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "data",
+              "mimeType"
+            ],
+            "title": "ImageContent",
+            "type": "object"
+          },
+          "TextContent": {
+            "additionalProperties": true,
+            "description": "Text content for a message.",
+            "properties": {
+              "type": {
+                "const": "text",
+                "title": "Type",
+                "type": "string"
+              },
+              "text": {
+                "title": "Text",
+                "type": "string"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "text"
+            ],
+            "title": "TextContent",
+            "type": "object"
+          },
+          "TextResourceContents": {
+            "additionalProperties": true,
+            "description": "Text contents of a resource.",
+            "properties": {
+              "uri": {
+                "format": "uri",
+                "minLength": 1,
+                "title": "Uri",
+                "type": "string"
+              },
+              "mimeType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Mimetype"
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              },
+              "text": {
+                "title": "Text",
+                "type": "string"
+              }
+            },
+            "required": [
+              "uri",
+              "text"
+            ],
+            "title": "TextResourceContents",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/TextContent"
+                },
+                {
+                  "$ref": "#/$defs/ImageContent"
+                },
+                {
+                  "$ref": "#/$defs/EmbeddedResource"
+                }
+              ]
+            },
+            "title": "Result",
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "list_schemasOutput",
+        "type": "object"
+      }
+    },
+    {
+      "name": "list_objects",
+      "description": "List objects in a schema",
+      "inputSchema": {
+        "properties": {
+          "schema_name": {
+            "description": "Schema name",
+            "title": "Schema Name",
+            "type": "string"
+          },
+          "object_type": {
+            "default": "table",
+            "description": "Object type: 'table', 'view', 'sequence', or 'extension'",
+            "title": "Object Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "schema_name"
+        ],
+        "title": "list_objectsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "Annotations": {
+            "additionalProperties": true,
+            "properties": {
+              "audience": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "user",
+                        "assistant"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Audience"
+              },
+              "priority": {
+                "anyOf": [
+                  {
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Priority"
+              }
+            },
+            "title": "Annotations",
+            "type": "object"
+          },
+          "BlobResourceContents": {
+            "additionalProperties": true,
+            "description": "Binary contents of a resource.",
+            "properties": {
+              "uri": {
+                "format": "uri",
+                "minLength": 1,
+                "title": "Uri",
+                "type": "string"
+              },
+              "mimeType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Mimetype"
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              },
+              "blob": {
+                "title": "Blob",
+                "type": "string"
+              }
+            },
+            "required": [
+              "uri",
+              "blob"
+            ],
+            "title": "BlobResourceContents",
+            "type": "object"
+          },
+          "EmbeddedResource": {
+            "additionalProperties": true,
+            "description": "The contents of a resource, embedded into a prompt or tool call result.\n\nIt is up to the client how best to render embedded resources for the benefit\nof the LLM and/or the user.",
+            "properties": {
+              "type": {
+                "const": "resource",
+                "title": "Type",
+                "type": "string"
+              },
+              "resource": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/TextResourceContents"
+                  },
+                  {
+                    "$ref": "#/$defs/BlobResourceContents"
+                  }
+                ],
+                "title": "Resource"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "resource"
+            ],
+            "title": "EmbeddedResource",
+            "type": "object"
+          },
+          "ImageContent": {
+            "additionalProperties": true,
+            "description": "Image content for a message.",
+            "properties": {
+              "type": {
+                "const": "image",
+                "title": "Type",
+                "type": "string"
+              },
+              "data": {
+                "title": "Data",
+                "type": "string"
+              },
+              "mimeType": {
+                "title": "Mimetype",
+                "type": "string"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "data",
+              "mimeType"
+            ],
+            "title": "ImageContent",
+            "type": "object"
+          },
+          "TextContent": {
+            "additionalProperties": true,
+            "description": "Text content for a message.",
+            "properties": {
+              "type": {
+                "const": "text",
+                "title": "Type",
+                "type": "string"
+              },
+              "text": {
+                "title": "Text",
+                "type": "string"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "text"
+            ],
+            "title": "TextContent",
+            "type": "object"
+          },
+          "TextResourceContents": {
+            "additionalProperties": true,
+            "description": "Text contents of a resource.",
+            "properties": {
+              "uri": {
+                "format": "uri",
+                "minLength": 1,
+                "title": "Uri",
+                "type": "string"
+              },
+              "mimeType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Mimetype"
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              },
+              "text": {
+                "title": "Text",
+                "type": "string"
+              }
+            },
+            "required": [
+              "uri",
+              "text"
+            ],
+            "title": "TextResourceContents",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/TextContent"
+                },
+                {
+                  "$ref": "#/$defs/ImageContent"
+                },
+                {
+                  "$ref": "#/$defs/EmbeddedResource"
+                }
+              ]
+            },
+            "title": "Result",
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "list_objectsOutput",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_object_details",
+      "description": "Show detailed information about a database object",
+      "inputSchema": {
+        "properties": {
+          "schema_name": {
+            "description": "Schema name",
+            "title": "Schema Name",
+            "type": "string"
+          },
+          "object_name": {
+            "description": "Object name",
+            "title": "Object Name",
+            "type": "string"
+          },
+          "object_type": {
+            "default": "table",
+            "description": "Object type: 'table', 'view', 'sequence', or 'extension'",
+            "title": "Object Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "schema_name",
+          "object_name"
+        ],
+        "title": "get_object_detailsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "Annotations": {
+            "additionalProperties": true,
+            "properties": {
+              "audience": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "user",
+                        "assistant"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Audience"
+              },
+              "priority": {
+                "anyOf": [
+                  {
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Priority"
+              }
+            },
+            "title": "Annotations",
+            "type": "object"
+          },
+          "BlobResourceContents": {
+            "additionalProperties": true,
+            "description": "Binary contents of a resource.",
+            "properties": {
+              "uri": {
+                "format": "uri",
+                "minLength": 1,
+                "title": "Uri",
+                "type": "string"
+              },
+              "mimeType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Mimetype"
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              },
+              "blob": {
+                "title": "Blob",
+                "type": "string"
+              }
+            },
+            "required": [
+              "uri",
+              "blob"
+            ],
+            "title": "BlobResourceContents",
+            "type": "object"
+          },
+          "EmbeddedResource": {
+            "additionalProperties": true,
+            "description": "The contents of a resource, embedded into a prompt or tool call result.\n\nIt is up to the client how best to render embedded resources for the benefit\nof the LLM and/or the user.",
+            "properties": {
+              "type": {
+                "const": "resource",
+                "title": "Type",
+                "type": "string"
+              },
+              "resource": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/TextResourceContents"
+                  },
+                  {
+                    "$ref": "#/$defs/BlobResourceContents"
+                  }
+                ],
+                "title": "Resource"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "resource"
+            ],
+            "title": "EmbeddedResource",
+            "type": "object"
+          },
+          "ImageContent": {
+            "additionalProperties": true,
+            "description": "Image content for a message.",
+            "properties": {
+              "type": {
+                "const": "image",
+                "title": "Type",
+                "type": "string"
+              },
+              "data": {
+                "title": "Data",
+                "type": "string"
+              },
+              "mimeType": {
+                "title": "Mimetype",
+                "type": "string"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "data",
+              "mimeType"
+            ],
+            "title": "ImageContent",
+            "type": "object"
+          },
+          "TextContent": {
+            "additionalProperties": true,
+            "description": "Text content for a message.",
+            "properties": {
+              "type": {
+                "const": "text",
+                "title": "Type",
+                "type": "string"
+              },
+              "text": {
+                "title": "Text",
+                "type": "string"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "text"
+            ],
+            "title": "TextContent",
+            "type": "object"
+          },
+          "TextResourceContents": {
+            "additionalProperties": true,
+            "description": "Text contents of a resource.",
+            "properties": {
+              "uri": {
+                "format": "uri",
+                "minLength": 1,
+                "title": "Uri",
+                "type": "string"
+              },
+              "mimeType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Mimetype"
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              },
+              "text": {
+                "title": "Text",
+                "type": "string"
+              }
+            },
+            "required": [
+              "uri",
+              "text"
+            ],
+            "title": "TextResourceContents",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/TextContent"
+                },
+                {
+                  "$ref": "#/$defs/ImageContent"
+                },
+                {
+                  "$ref": "#/$defs/EmbeddedResource"
+                }
+              ]
+            },
+            "title": "Result",
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "get_object_detailsOutput",
+        "type": "object"
+      }
+    },
+    {
+      "name": "explain_query",
+      "description": "Explains the execution plan for a SQL query, showing how the database will execute it and provides detailed cost estimates.",
+      "inputSchema": {
+        "properties": {
+          "sql": {
+            "description": "SQL query to explain",
+            "title": "Sql",
+            "type": "string"
+          },
+          "analyze": {
+            "default": false,
+            "description": "When True, actually runs the query to show real execution statistics instead of estimates. Takes longer but provides more accurate information.",
+            "title": "Analyze",
+            "type": "boolean"
+          },
+          "hypothetical_indexes": {
+            "default": [],
+            "description": "A list of hypothetical indexes to simulate. Each index must be a dictionary with these keys:\n    - 'table': The table name to add the index to (e.g., 'users')\n    - 'columns': List of column names to include in the index (e.g., ['email'] or ['last_name', 'first_name'])\n    - 'using': Optional index method (default: 'btree', other options include 'hash', 'gist', etc.)\n\nExamples: [\n    {\"table\": \"users\", \"columns\": [\"email\"], \"using\": \"btree\"},\n    {\"table\": \"orders\", \"columns\": [\"user_id\", \"created_at\"]}\n]\nIf there is no hypothetical index, you can pass an empty list.",
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Hypothetical Indexes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "sql"
+        ],
+        "title": "explain_queryArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "Annotations": {
+            "additionalProperties": true,
+            "properties": {
+              "audience": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "user",
+                        "assistant"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Audience"
+              },
+              "priority": {
+                "anyOf": [
+                  {
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Priority"
+              }
+            },
+            "title": "Annotations",
+            "type": "object"
+          },
+          "BlobResourceContents": {
+            "additionalProperties": true,
+            "description": "Binary contents of a resource.",
+            "properties": {
+              "uri": {
+                "format": "uri",
+                "minLength": 1,
+                "title": "Uri",
+                "type": "string"
+              },
+              "mimeType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Mimetype"
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              },
+              "blob": {
+                "title": "Blob",
+                "type": "string"
+              }
+            },
+            "required": [
+              "uri",
+              "blob"
+            ],
+            "title": "BlobResourceContents",
+            "type": "object"
+          },
+          "EmbeddedResource": {
+            "additionalProperties": true,
+            "description": "The contents of a resource, embedded into a prompt or tool call result.\n\nIt is up to the client how best to render embedded resources for the benefit\nof the LLM and/or the user.",
+            "properties": {
+              "type": {
+                "const": "resource",
+                "title": "Type",
+                "type": "string"
+              },
+              "resource": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/TextResourceContents"
+                  },
+                  {
+                    "$ref": "#/$defs/BlobResourceContents"
+                  }
+                ],
+                "title": "Resource"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "resource"
+            ],
+            "title": "EmbeddedResource",
+            "type": "object"
+          },
+          "ImageContent": {
+            "additionalProperties": true,
+            "description": "Image content for a message.",
+            "properties": {
+              "type": {
+                "const": "image",
+                "title": "Type",
+                "type": "string"
+              },
+              "data": {
+                "title": "Data",
+                "type": "string"
+              },
+              "mimeType": {
+                "title": "Mimetype",
+                "type": "string"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "data",
+              "mimeType"
+            ],
+            "title": "ImageContent",
+            "type": "object"
+          },
+          "TextContent": {
+            "additionalProperties": true,
+            "description": "Text content for a message.",
+            "properties": {
+              "type": {
+                "const": "text",
+                "title": "Type",
+                "type": "string"
+              },
+              "text": {
+                "title": "Text",
+                "type": "string"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "text"
+            ],
+            "title": "TextContent",
+            "type": "object"
+          },
+          "TextResourceContents": {
+            "additionalProperties": true,
+            "description": "Text contents of a resource.",
+            "properties": {
+              "uri": {
+                "format": "uri",
+                "minLength": 1,
+                "title": "Uri",
+                "type": "string"
+              },
+              "mimeType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Mimetype"
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              },
+              "text": {
+                "title": "Text",
+                "type": "string"
+              }
+            },
+            "required": [
+              "uri",
+              "text"
+            ],
+            "title": "TextResourceContents",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/TextContent"
+                },
+                {
+                  "$ref": "#/$defs/ImageContent"
+                },
+                {
+                  "$ref": "#/$defs/EmbeddedResource"
+                }
+              ]
+            },
+            "title": "Result",
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "explain_queryOutput",
+        "type": "object"
+      }
+    },
+    {
+      "name": "analyze_workload_indexes",
+      "description": "Analyze frequently executed queries in the database and recommend optimal indexes",
+      "inputSchema": {
+        "properties": {
+          "max_index_size_mb": {
+            "default": 10000,
+            "description": "Max index size in MB",
+            "title": "Max Index Size Mb",
+            "type": "integer"
+          },
+          "method": {
+            "default": "dta",
+            "description": "Method to use for analysis",
+            "enum": [
+              "dta",
+              "llm"
+            ],
+            "title": "Method",
+            "type": "string"
+          }
+        },
+        "title": "analyze_workload_indexesArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "Annotations": {
+            "additionalProperties": true,
+            "properties": {
+              "audience": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "user",
+                        "assistant"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Audience"
+              },
+              "priority": {
+                "anyOf": [
+                  {
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Priority"
+              }
+            },
+            "title": "Annotations",
+            "type": "object"
+          },
+          "BlobResourceContents": {
+            "additionalProperties": true,
+            "description": "Binary contents of a resource.",
+            "properties": {
+              "uri": {
+                "format": "uri",
+                "minLength": 1,
+                "title": "Uri",
+                "type": "string"
+              },
+              "mimeType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Mimetype"
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              },
+              "blob": {
+                "title": "Blob",
+                "type": "string"
+              }
+            },
+            "required": [
+              "uri",
+              "blob"
+            ],
+            "title": "BlobResourceContents",
+            "type": "object"
+          },
+          "EmbeddedResource": {
+            "additionalProperties": true,
+            "description": "The contents of a resource, embedded into a prompt or tool call result.\n\nIt is up to the client how best to render embedded resources for the benefit\nof the LLM and/or the user.",
+            "properties": {
+              "type": {
+                "const": "resource",
+                "title": "Type",
+                "type": "string"
+              },
+              "resource": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/TextResourceContents"
+                  },
+                  {
+                    "$ref": "#/$defs/BlobResourceContents"
+                  }
+                ],
+                "title": "Resource"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "resource"
+            ],
+            "title": "EmbeddedResource",
+            "type": "object"
+          },
+          "ImageContent": {
+            "additionalProperties": true,
+            "description": "Image content for a message.",
+            "properties": {
+              "type": {
+                "const": "image",
+                "title": "Type",
+                "type": "string"
+              },
+              "data": {
+                "title": "Data",
+                "type": "string"
+              },
+              "mimeType": {
+                "title": "Mimetype",
+                "type": "string"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "data",
+              "mimeType"
+            ],
+            "title": "ImageContent",
+            "type": "object"
+          },
+          "TextContent": {
+            "additionalProperties": true,
+            "description": "Text content for a message.",
+            "properties": {
+              "type": {
+                "const": "text",
+                "title": "Type",
+                "type": "string"
+              },
+              "text": {
+                "title": "Text",
+                "type": "string"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "text"
+            ],
+            "title": "TextContent",
+            "type": "object"
+          },
+          "TextResourceContents": {
+            "additionalProperties": true,
+            "description": "Text contents of a resource.",
+            "properties": {
+              "uri": {
+                "format": "uri",
+                "minLength": 1,
+                "title": "Uri",
+                "type": "string"
+              },
+              "mimeType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Mimetype"
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              },
+              "text": {
+                "title": "Text",
+                "type": "string"
+              }
+            },
+            "required": [
+              "uri",
+              "text"
+            ],
+            "title": "TextResourceContents",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/TextContent"
+                },
+                {
+                  "$ref": "#/$defs/ImageContent"
+                },
+                {
+                  "$ref": "#/$defs/EmbeddedResource"
+                }
+              ]
+            },
+            "title": "Result",
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "analyze_workload_indexesOutput",
+        "type": "object"
+      }
+    },
+    {
+      "name": "analyze_query_indexes",
+      "description": "Analyze a list of (up to 10) SQL queries and recommend optimal indexes",
+      "inputSchema": {
+        "properties": {
+          "queries": {
+            "description": "List of Query strings to analyze",
+            "items": {
+              "type": "string"
+            },
+            "title": "Queries",
+            "type": "array"
+          },
+          "max_index_size_mb": {
+            "default": 10000,
+            "description": "Max index size in MB",
+            "title": "Max Index Size Mb",
+            "type": "integer"
+          },
+          "method": {
+            "default": "dta",
+            "description": "Method to use for analysis",
+            "enum": [
+              "dta",
+              "llm"
+            ],
+            "title": "Method",
+            "type": "string"
+          }
+        },
+        "required": [
+          "queries"
+        ],
+        "title": "analyze_query_indexesArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "Annotations": {
+            "additionalProperties": true,
+            "properties": {
+              "audience": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "user",
+                        "assistant"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Audience"
+              },
+              "priority": {
+                "anyOf": [
+                  {
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Priority"
+              }
+            },
+            "title": "Annotations",
+            "type": "object"
+          },
+          "BlobResourceContents": {
+            "additionalProperties": true,
+            "description": "Binary contents of a resource.",
+            "properties": {
+              "uri": {
+                "format": "uri",
+                "minLength": 1,
+                "title": "Uri",
+                "type": "string"
+              },
+              "mimeType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Mimetype"
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              },
+              "blob": {
+                "title": "Blob",
+                "type": "string"
+              }
+            },
+            "required": [
+              "uri",
+              "blob"
+            ],
+            "title": "BlobResourceContents",
+            "type": "object"
+          },
+          "EmbeddedResource": {
+            "additionalProperties": true,
+            "description": "The contents of a resource, embedded into a prompt or tool call result.\n\nIt is up to the client how best to render embedded resources for the benefit\nof the LLM and/or the user.",
+            "properties": {
+              "type": {
+                "const": "resource",
+                "title": "Type",
+                "type": "string"
+              },
+              "resource": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/TextResourceContents"
+                  },
+                  {
+                    "$ref": "#/$defs/BlobResourceContents"
+                  }
+                ],
+                "title": "Resource"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "resource"
+            ],
+            "title": "EmbeddedResource",
+            "type": "object"
+          },
+          "ImageContent": {
+            "additionalProperties": true,
+            "description": "Image content for a message.",
+            "properties": {
+              "type": {
+                "const": "image",
+                "title": "Type",
+                "type": "string"
+              },
+              "data": {
+                "title": "Data",
+                "type": "string"
+              },
+              "mimeType": {
+                "title": "Mimetype",
+                "type": "string"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "data",
+              "mimeType"
+            ],
+            "title": "ImageContent",
+            "type": "object"
+          },
+          "TextContent": {
+            "additionalProperties": true,
+            "description": "Text content for a message.",
+            "properties": {
+              "type": {
+                "const": "text",
+                "title": "Type",
+                "type": "string"
+              },
+              "text": {
+                "title": "Text",
+                "type": "string"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "text"
+            ],
+            "title": "TextContent",
+            "type": "object"
+          },
+          "TextResourceContents": {
+            "additionalProperties": true,
+            "description": "Text contents of a resource.",
+            "properties": {
+              "uri": {
+                "format": "uri",
+                "minLength": 1,
+                "title": "Uri",
+                "type": "string"
+              },
+              "mimeType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Mimetype"
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              },
+              "text": {
+                "title": "Text",
+                "type": "string"
+              }
+            },
+            "required": [
+              "uri",
+              "text"
+            ],
+            "title": "TextResourceContents",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/TextContent"
+                },
+                {
+                  "$ref": "#/$defs/ImageContent"
+                },
+                {
+                  "$ref": "#/$defs/EmbeddedResource"
+                }
+              ]
+            },
+            "title": "Result",
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "analyze_query_indexesOutput",
+        "type": "object"
+      }
+    },
+    {
+      "name": "analyze_db_health",
+      "description": "Analyzes database health. Here are the available health checks:\n- index - checks for invalid, duplicate, and bloated indexes\n- connection - checks the number of connection and their utilization\n- vacuum - checks vacuum health for transaction id wraparound\n- sequence - checks sequences at risk of exceeding their maximum value\n- replication - checks replication health including lag and slots\n- buffer - checks for buffer cache hit rates for indexes and tables\n- constraint - checks for invalid constraints\n- all - runs all checks\nYou can optionally specify a single health check or a comma-separated list of health checks. The default is 'all' checks.",
+      "inputSchema": {
+        "properties": {
+          "health_type": {
+            "default": "all",
+            "description": "Optional. Valid values are: all, buffer, connection, constraint, index, replication, sequence, vacuum.",
+            "title": "Health Type",
+            "type": "string"
+          }
+        },
+        "title": "analyze_db_healthArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "Annotations": {
+            "additionalProperties": true,
+            "properties": {
+              "audience": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "user",
+                        "assistant"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Audience"
+              },
+              "priority": {
+                "anyOf": [
+                  {
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Priority"
+              }
+            },
+            "title": "Annotations",
+            "type": "object"
+          },
+          "BlobResourceContents": {
+            "additionalProperties": true,
+            "description": "Binary contents of a resource.",
+            "properties": {
+              "uri": {
+                "format": "uri",
+                "minLength": 1,
+                "title": "Uri",
+                "type": "string"
+              },
+              "mimeType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Mimetype"
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              },
+              "blob": {
+                "title": "Blob",
+                "type": "string"
+              }
+            },
+            "required": [
+              "uri",
+              "blob"
+            ],
+            "title": "BlobResourceContents",
+            "type": "object"
+          },
+          "EmbeddedResource": {
+            "additionalProperties": true,
+            "description": "The contents of a resource, embedded into a prompt or tool call result.\n\nIt is up to the client how best to render embedded resources for the benefit\nof the LLM and/or the user.",
+            "properties": {
+              "type": {
+                "const": "resource",
+                "title": "Type",
+                "type": "string"
+              },
+              "resource": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/TextResourceContents"
+                  },
+                  {
+                    "$ref": "#/$defs/BlobResourceContents"
+                  }
+                ],
+                "title": "Resource"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "resource"
+            ],
+            "title": "EmbeddedResource",
+            "type": "object"
+          },
+          "ImageContent": {
+            "additionalProperties": true,
+            "description": "Image content for a message.",
+            "properties": {
+              "type": {
+                "const": "image",
+                "title": "Type",
+                "type": "string"
+              },
+              "data": {
+                "title": "Data",
+                "type": "string"
+              },
+              "mimeType": {
+                "title": "Mimetype",
+                "type": "string"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "data",
+              "mimeType"
+            ],
+            "title": "ImageContent",
+            "type": "object"
+          },
+          "TextContent": {
+            "additionalProperties": true,
+            "description": "Text content for a message.",
+            "properties": {
+              "type": {
+                "const": "text",
+                "title": "Type",
+                "type": "string"
+              },
+              "text": {
+                "title": "Text",
+                "type": "string"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "text"
+            ],
+            "title": "TextContent",
+            "type": "object"
+          },
+          "TextResourceContents": {
+            "additionalProperties": true,
+            "description": "Text contents of a resource.",
+            "properties": {
+              "uri": {
+                "format": "uri",
+                "minLength": 1,
+                "title": "Uri",
+                "type": "string"
+              },
+              "mimeType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Mimetype"
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              },
+              "text": {
+                "title": "Text",
+                "type": "string"
+              }
+            },
+            "required": [
+              "uri",
+              "text"
+            ],
+            "title": "TextResourceContents",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/TextContent"
+                },
+                {
+                  "$ref": "#/$defs/ImageContent"
+                },
+                {
+                  "$ref": "#/$defs/EmbeddedResource"
+                }
+              ]
+            },
+            "title": "Result",
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "analyze_db_healthOutput",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_top_queries",
+      "description": "Reports the slowest or most resource-intensive queries using data from the 'pg_stat_statements' extension.",
+      "inputSchema": {
+        "properties": {
+          "sort_by": {
+            "default": "resources",
+            "description": "Ranking criteria: 'total_time' for total execution time or 'mean_time' for mean execution time per call, or 'resources' for resource-intensive queries",
+            "title": "Sort By",
+            "type": "string"
+          },
+          "limit": {
+            "default": 10,
+            "description": "Number of queries to return when ranking based on mean_time or total_time",
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "get_top_queriesArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "Annotations": {
+            "additionalProperties": true,
+            "properties": {
+              "audience": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "user",
+                        "assistant"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Audience"
+              },
+              "priority": {
+                "anyOf": [
+                  {
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Priority"
+              }
+            },
+            "title": "Annotations",
+            "type": "object"
+          },
+          "BlobResourceContents": {
+            "additionalProperties": true,
+            "description": "Binary contents of a resource.",
+            "properties": {
+              "uri": {
+                "format": "uri",
+                "minLength": 1,
+                "title": "Uri",
+                "type": "string"
+              },
+              "mimeType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Mimetype"
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              },
+              "blob": {
+                "title": "Blob",
+                "type": "string"
+              }
+            },
+            "required": [
+              "uri",
+              "blob"
+            ],
+            "title": "BlobResourceContents",
+            "type": "object"
+          },
+          "EmbeddedResource": {
+            "additionalProperties": true,
+            "description": "The contents of a resource, embedded into a prompt or tool call result.\n\nIt is up to the client how best to render embedded resources for the benefit\nof the LLM and/or the user.",
+            "properties": {
+              "type": {
+                "const": "resource",
+                "title": "Type",
+                "type": "string"
+              },
+              "resource": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/TextResourceContents"
+                  },
+                  {
+                    "$ref": "#/$defs/BlobResourceContents"
+                  }
+                ],
+                "title": "Resource"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "resource"
+            ],
+            "title": "EmbeddedResource",
+            "type": "object"
+          },
+          "ImageContent": {
+            "additionalProperties": true,
+            "description": "Image content for a message.",
+            "properties": {
+              "type": {
+                "const": "image",
+                "title": "Type",
+                "type": "string"
+              },
+              "data": {
+                "title": "Data",
+                "type": "string"
+              },
+              "mimeType": {
+                "title": "Mimetype",
+                "type": "string"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "data",
+              "mimeType"
+            ],
+            "title": "ImageContent",
+            "type": "object"
+          },
+          "TextContent": {
+            "additionalProperties": true,
+            "description": "Text content for a message.",
+            "properties": {
+              "type": {
+                "const": "text",
+                "title": "Type",
+                "type": "string"
+              },
+              "text": {
+                "title": "Text",
+                "type": "string"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "text"
+            ],
+            "title": "TextContent",
+            "type": "object"
+          },
+          "TextResourceContents": {
+            "additionalProperties": true,
+            "description": "Text contents of a resource.",
+            "properties": {
+              "uri": {
+                "format": "uri",
+                "minLength": 1,
+                "title": "Uri",
+                "type": "string"
+              },
+              "mimeType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Mimetype"
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              },
+              "text": {
+                "title": "Text",
+                "type": "string"
+              }
+            },
+            "required": [
+              "uri",
+              "text"
+            ],
+            "title": "TextResourceContents",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/TextContent"
+                },
+                {
+                  "$ref": "#/$defs/ImageContent"
+                },
+                {
+                  "$ref": "#/$defs/EmbeddedResource"
+                }
+              ]
+            },
+            "title": "Result",
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "get_top_queriesOutput",
+        "type": "object"
+      }
+    },
+    {
+      "name": "execute_sql",
+      "description": "Execute a read-only SQL query",
+      "inputSchema": {
+        "properties": {
+          "sql": {
+            "default": "all",
+            "description": "SQL to run",
+            "title": "Sql",
+            "type": "string"
+          }
+        },
+        "title": "execute_sqlArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "Annotations": {
+            "additionalProperties": true,
+            "properties": {
+              "audience": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "user",
+                        "assistant"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Audience"
+              },
+              "priority": {
+                "anyOf": [
+                  {
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Priority"
+              }
+            },
+            "title": "Annotations",
+            "type": "object"
+          },
+          "BlobResourceContents": {
+            "additionalProperties": true,
+            "description": "Binary contents of a resource.",
+            "properties": {
+              "uri": {
+                "format": "uri",
+                "minLength": 1,
+                "title": "Uri",
+                "type": "string"
+              },
+              "mimeType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Mimetype"
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              },
+              "blob": {
+                "title": "Blob",
+                "type": "string"
+              }
+            },
+            "required": [
+              "uri",
+              "blob"
+            ],
+            "title": "BlobResourceContents",
+            "type": "object"
+          },
+          "EmbeddedResource": {
+            "additionalProperties": true,
+            "description": "The contents of a resource, embedded into a prompt or tool call result.\n\nIt is up to the client how best to render embedded resources for the benefit\nof the LLM and/or the user.",
+            "properties": {
+              "type": {
+                "const": "resource",
+                "title": "Type",
+                "type": "string"
+              },
+              "resource": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/TextResourceContents"
+                  },
+                  {
+                    "$ref": "#/$defs/BlobResourceContents"
+                  }
+                ],
+                "title": "Resource"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "resource"
+            ],
+            "title": "EmbeddedResource",
+            "type": "object"
+          },
+          "ImageContent": {
+            "additionalProperties": true,
+            "description": "Image content for a message.",
+            "properties": {
+              "type": {
+                "const": "image",
+                "title": "Type",
+                "type": "string"
+              },
+              "data": {
+                "title": "Data",
+                "type": "string"
+              },
+              "mimeType": {
+                "title": "Mimetype",
+                "type": "string"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "data",
+              "mimeType"
+            ],
+            "title": "ImageContent",
+            "type": "object"
+          },
+          "TextContent": {
+            "additionalProperties": true,
+            "description": "Text content for a message.",
+            "properties": {
+              "type": {
+                "const": "text",
+                "title": "Type",
+                "type": "string"
+              },
+              "text": {
+                "title": "Text",
+                "type": "string"
+              },
+              "annotations": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Annotations"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              }
+            },
+            "required": [
+              "type",
+              "text"
+            ],
+            "title": "TextContent",
+            "type": "object"
+          },
+          "TextResourceContents": {
+            "additionalProperties": true,
+            "description": "Text contents of a resource.",
+            "properties": {
+              "uri": {
+                "format": "uri",
+                "minLength": 1,
+                "title": "Uri",
+                "type": "string"
+              },
+              "mimeType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Mimetype"
+              },
+              "_meta": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Meta"
+              },
+              "text": {
+                "title": "Text",
+                "type": "string"
+              }
+            },
+            "required": [
+              "uri",
+              "text"
+            ],
+            "title": "TextResourceContents",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "result": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/TextContent"
+                },
+                {
+                  "$ref": "#/$defs/ImageContent"
+                },
+                {
+                  "$ref": "#/$defs/EmbeddedResource"
+                }
+              ]
+            },
+            "title": "Result",
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "execute_sqlOutput",
+        "type": "object"
+      }
+    }
+  ],
+  "measuredAt": "2026-08-18T04:04:53.025Z",
   "serverName": "postgres-mcp",
-  "launchCommand": "uvx postgres-mcp --access-mode=restricted",
-  "notes": "server exited (code 1); stderr tail: Traceback (most recent call last):\n  File \"/tmp/.uv-cache/archive-v0/X29VIyA7dTXbxyKVSfrhs/bin/postgres-mcp\", line 6, in <module>\n    from postgres_mcp import main\n  File \"/tmp/.uv-cache/archive-v0/X29VIyA7dTXbxyKVSfrhs/lib/python3.12/site-packages/postgres_mcp/__init__.py\", line 4, in <module>\n    from . import server\n  File \"/tmp/.uv-cache/archive-v0/X29VIyA7dTXbxyKVSfrhs/lib/python3.12/site-packages/postgres_mcp/server.py\", line 15, in <module>\n    from mc",
+  "serverVersion": "1.29.0",
+  "launchCommand": "uvx --with \"mcp<2\" postgres-mcp --access-mode=restricted",
+  "envVarNames": [
+    "DATABASE_URI"
+  ],
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 120000
 }

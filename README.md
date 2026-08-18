@@ -135,7 +135,7 @@ Flags: `--json` (full report on stdout, progress on stderr), `--budget N`,
 
 The number `audit` gives you is the same measurement, run across a curated set of public
 servers — which is how you can tell it is a measurement and not this tool's opinion. It also
-shows what you are choosing between: across the 59 servers measured, cost spans **1,700×**,
+shows what you are choosing between: across the 65 servers measured, cost spans **1,700×**,
 from the 32-token `postgres` reference server to github's 54,422. The table below starts at
 markitdown's 64 tokens, an 850× spread; the full range is in
 [results/leaderboard.md](results/leaderboard.md).
@@ -149,7 +149,7 @@ markitdown's 64 tokens, an 850× spread; the full range is in
 | filesystem (reference) | 2,823 | 14 |
 | markitdown | 64 | 1 |
 
-*(59 of 82 popular servers measured, 2026-08-17 sweep — full table in
+*(65 of 82 popular servers measured, 2026-08-18 sweep — full table in
 [results/leaderboard.md](results/leaderboard.md); every failure is listed with its reason.
 Each measured server also has a [detail page](https://athakur3.github.io/mcp-context-cost/servers/)
 showing which tools its tokens are in.)*
@@ -254,7 +254,9 @@ color bands are frozen against the observed distribution of the first full sweep
 
 ## Status
 
-Active. 56 of the 59 numbers come from a single sweep on 2026-08-16 and 3 from 2026-08-17;
+Active. 56 of the 65 numbers come from a single sweep on 2026-08-16, 3 from 2026-08-17, and
+6 from 2026-08-18 (an upstream `mcp` package bump broke the old low-level-`Server` API these
+six relied on; pinning `mcp<2` in their launch commands fixed startup, not this project's code);
 the weekly job currently re-measures one server (`memory`), so treat the leaderboard as a
 dated snapshot rather than a live feed. Badge PRs are open across the ecosystem and
 [sd2k/mcp-tokens-action#5](https://github.com/sd2k/mcp-tokens-action/pull/5) proposes the
