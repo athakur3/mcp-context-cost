@@ -59,8 +59,10 @@ date,server,tokens,toolCount,status
 2026-08-17,memory,2378,9,measured
 2026-08-17,redis,9246,53,measured
 2026-08-17,serena,8204,29,measured
+2026-08-18,elasticsearch,374,4,measured
 2026-08-18,fetch,238,1,measured
 2026-08-18,git,1455,12,measured
+2026-08-18,neo4j-cypher,523,3,measured
 2026-08-18,obsidian,1132,12,measured
 2026-08-18,postgres-mcp,8632,9,measured
 2026-08-18,sqlite,268,6,measured

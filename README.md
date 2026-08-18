@@ -149,7 +149,7 @@ markitdown's 64 tokens, an 850× spread; the full range is in
 | filesystem (reference) | 2,823 | 14 |
 | markitdown | 64 | 1 |
 
-*(65 of 82 popular servers measured, 2026-08-18 sweep — full table in
+*(67 of 82 popular servers measured, 2026-08-18 sweep — full table in
 [results/leaderboard.md](results/leaderboard.md); every failure is listed with its reason.
 Each measured server also has a [detail page](https://athakur3.github.io/mcp-context-cost/servers/)
 showing which tools its tokens are in.)*

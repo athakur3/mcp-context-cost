@@ -1,6 +1,6 @@
 # Server pages
 
-One page per measured server: the per-tool breakdown behind the badge, the exact launch command, and the command that re-derives the number. 65 of 82 candidates measured.
+One page per measured server: the per-tool breakdown behind the badge, the exact launch command, and the command that re-derives the number. 67 of 82 candidates measured.
 
 | # | server | tokens | tools | band |
 |---:|---|---:|---:|---|
@@ -54,21 +54,23 @@ One page per measured server: the per-tool breakdown behind the badge, the exact
 | 48 | [clickhouse](clickhouse.html) | 581 | 3 | lean |
 | 49 | [google-maps](google-maps.html) | 549 | 7 | lean |
 | 50 | [puppeteer](puppeteer.html) | 540 | 7 | lean |
-| 51 | [exa](exa.html) | 486 | 2 | lean |
-| 52 | [airbnb](airbnb.html) | 486 | 2 | lean |
-| 53 | [cloudflare-docs](cloudflare-docs.html) | 422 | 2 | lean |
-| 54 | [mysql](mysql.html) | 393 | 3 | lean |
-| 55 | [browserbase](browserbase.html) | 364 | 6 | lean |
-| 56 | [deepwiki](deepwiki.html) | 359 | 3 | lean |
-| 57 | [gitlab](gitlab.html) | 336 | 9 | lean |
-| 58 | [brave-search-legacy](brave-search-legacy.html) | 319 | 2 | lean |
-| 59 | [time](time.html) | 293 | 2 | lean |
-| 60 | [sqlite](sqlite.html) | 268 | 6 | lean |
-| 61 | [fetch](fetch.html) | 238 | 1 | lean |
-| 62 | [qdrant](qdrant.html) | 188 | 2 | lean |
-| 63 | [perplexity](perplexity.html) | 133 | 1 | lean |
-| 64 | [markitdown](markitdown.html) | 64 | 1 | lean |
-| 65 | [postgres](postgres.html) | 32 | 1 | lean |
+| 51 | [neo4j-cypher](neo4j-cypher.html) | 523 | 3 | lean |
+| 52 | [exa](exa.html) | 486 | 2 | lean |
+| 53 | [airbnb](airbnb.html) | 486 | 2 | lean |
+| 54 | [cloudflare-docs](cloudflare-docs.html) | 422 | 2 | lean |
+| 55 | [mysql](mysql.html) | 393 | 3 | lean |
+| 56 | [elasticsearch](elasticsearch.html) | 374 | 4 | lean |
+| 57 | [browserbase](browserbase.html) | 364 | 6 | lean |
+| 58 | [deepwiki](deepwiki.html) | 359 | 3 | lean |
+| 59 | [gitlab](gitlab.html) | 336 | 9 | lean |
+| 60 | [brave-search-legacy](brave-search-legacy.html) | 319 | 2 | lean |
+| 61 | [time](time.html) | 293 | 2 | lean |
+| 62 | [sqlite](sqlite.html) | 268 | 6 | lean |
+| 63 | [fetch](fetch.html) | 238 | 1 | lean |
+| 64 | [qdrant](qdrant.html) | 188 | 2 | lean |
+| 65 | [perplexity](perplexity.html) | 133 | 1 | lean |
+| 66 | [markitdown](markitdown.html) | 64 | 1 | lean |
+| 67 | [postgres](postgres.html) | 32 | 1 | lean |
 
 ## Not measured
 
@@ -82,10 +84,8 @@ No page: there is no number to show. The reason is recorded per candidate.
 | magic | auth-required |
 | stripe | startup-failure |
 | heroku | startup-failure |
-| neo4j-cypher | startup-failure |
 | grafana | timeout |
 | neon | startup-failure |
-| elasticsearch | startup-failure |
 | linear | remote-auth-wall |
 | zapier | remote-auth-wall |
 | vercel | remote-auth-wall |

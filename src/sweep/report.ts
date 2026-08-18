@@ -21,6 +21,12 @@ export interface ServerEntry {
   timeoutSeconds?: number;
   /** Launch needs the `git` binary (e.g. `uvx --from git+...`) — absent from the slim isolation images. */
   needsGit?: boolean;
+  /**
+   * Per-var overrides for the literal `dummy` placeholder docker mode injects
+   * for `env` names — for servers that parse a var's shape (URI scheme, URL)
+   * before ever reaching tools/list. See docker.ts `dummyEnvValues`.
+   */
+  envValues?: Record<string, string>;
 }
 
 interface Row {

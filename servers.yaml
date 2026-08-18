@@ -369,6 +369,7 @@ servers:
     command: uvx mcp-neo4j-cypher
     package: mcp-neo4j-cypher (PyPI)
     env: [NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD]
+    envValues: {NEO4J_URI: 'bolt://localhost:7687'}
     metric: 5914
     metricSource: https://pypistats.org/packages/mcp-neo4j-cypher (PyPI weekly)
     category: vendor-official
@@ -419,6 +420,7 @@ servers:
     command: npx -y @elastic/mcp-server-elasticsearch
     package: '@elastic/mcp-server-elasticsearch'
     env: [ES_URL, ES_API_KEY]
+    envValues: {ES_URL: 'http://localhost:9200'}
     metric: 1599
     metricSource: https://api.npmjs.org/downloads/point/last-week/@elastic/mcp-server-elasticsearch (npm weekly)
     category: vendor-official

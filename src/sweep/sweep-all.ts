@@ -40,6 +40,7 @@ async function worker() {
       docker,
       dockerImage: e.dockerImage,
       dummyEnv: e.env ?? [],
+      dummyEnvValues: e.envValues,
       needsGit: e.needsGit,
     });
     const secs = ((Date.now() - started) / 1000).toFixed(0);

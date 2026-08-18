@@ -10,6 +10,16 @@ export interface DockerOptions {
   image?: string;
   /** Extra env var NAMES to pass through with dummy values. */
   dummyEnv?: string[];
+  /**
+   * Override the literal `dummy` value for specific `dummyEnv` names. Some
+   * servers parse an env var's shape before ever reaching tools/list (a URI
+   * scheme, a URL) and crash on a value that isn't real-looking rather than
+   * a value that isn't a real credential — e.g. `NEO4J_URI=dummy` fails
+   * `neo4j.exceptions.ConfigurationError` before the driver is even asked to
+   * connect. A locally-scoped placeholder (`bolt://localhost:7687`) clears
+   * that parse step without providing a working credential.
+   */
+  dummyEnvValues?: Record<string, string>;
   /** Container name, so a timed-out container can be force-removed. */
   containerName?: string;
   /**
@@ -68,7 +78,7 @@ export function dockerize(
     'UV_CACHE_DIR=/tmp/.uv-cache',
   ];
   for (const name of opts.dummyEnv ?? []) {
-    argv.push('-e', `${name}=dummy`);
+    argv.push('-e', `${name}=${opts.dummyEnvValues?.[name] ?? 'dummy'}`);
   }
   const gitPrefix = opts.needsGit
     ? 'command -v git >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq --no-install-recommends git >/dev/null 2>&1); '

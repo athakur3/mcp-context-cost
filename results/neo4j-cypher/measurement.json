@@ -2,20 +2,143 @@
   "methodologyVersion": "1.0",
   "provider": "tiktoken",
   "encoding": "o200k_base",
-  "status": "startup-failure",
-  "totalTokens": null,
-  "toolCount": null,
-  "tools": [],
-  "canonicalSha256": null,
-  "rawToolsCapture": null,
-  "measuredAt": "2026-08-16T12:08:19.349Z",
-  "serverName": "neo4j-cypher",
+  "status": "measured",
+  "totalTokens": 523,
+  "toolCount": 3,
+  "tools": [
+    {
+      "name": "get_neo4j_schema",
+      "tokens": 238,
+      "descriptionTokens": 109,
+      "inputSchemaTokens": 50
+    },
+    {
+      "name": "read_neo4j_cypher",
+      "tokens": 143,
+      "descriptionTokens": 13,
+      "inputSchemaTokens": 56
+    },
+    {
+      "name": "write_neo4j_cypher",
+      "tokens": 143,
+      "descriptionTokens": 13,
+      "inputSchemaTokens": 56
+    }
+  ],
+  "canonicalSha256": "2e66ec7b2ea28f25f5b986a65cc950c06febad089b2c3033be49e15548f9c432",
+  "rawToolsCapture": [
+    {
+      "name": "get_neo4j_schema",
+      "title": "Get Neo4j Schema",
+      "description": "Returns nodes, their properties (with types and indexed flags), and relationships\nusing APOC's schema inspection.\n\nYou should only provide a `sample_size` value if requested by the user, or tuning the retrieval performance.\n\nPerformance Notes:\n    - If `sample_size` is not provided, uses the server's default sample setting defined in the server configuration.\n    - If retrieving the schema times out, try lowering the sample size, e.g. `sample_size=100`.\n    - To sample the entire graph use `sample_size=-1`.",
+      "inputSchema": {
+        "properties": {
+          "sample_size": {
+            "default": null,
+            "description": "The sample size used to infer the graph schema. Larger samples are slower, but more accurate. Smaller samples are faster, but might miss information.",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Get Neo4j Schema",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "read_neo4j_cypher",
+      "title": "Read Neo4j Cypher",
+      "description": "Execute a read Cypher query on the neo4j database.",
+      "inputSchema": {
+        "properties": {
+          "query": {
+            "description": "The Cypher query to execute.",
+            "type": "string"
+          },
+          "params": {
+            "additionalProperties": true,
+            "default": {},
+            "description": "The parameters to pass to the Cypher query.",
+            "type": "object"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Read Neo4j Cypher",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "write_neo4j_cypher",
+      "title": "Write Neo4j Cypher",
+      "description": "Execute a write Cypher query on the neo4j database.",
+      "inputSchema": {
+        "properties": {
+          "query": {
+            "description": "The Cypher query to execute.",
+            "type": "string"
+          },
+          "params": {
+            "additionalProperties": true,
+            "default": {},
+            "description": "The parameters to pass to the Cypher query.",
+            "type": "object"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Write Neo4j Cypher",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    }
+  ],
+  "measuredAt": "2026-08-18T13:59:15.797Z",
+  "serverName": "mcp-neo4j-cypher",
+  "serverVersion": "2.13.3",
   "launchCommand": "uvx mcp-neo4j-cypher",
-  "notes": "server exited (code 1); stderr tail: CK8xthI3sJK/lib/python3.12/site-packages/neo4j/_async/driver.py\", line 194, in driver\n    driver_type, security_type, parsed = parse_neo4j_uri(uri)\n                                         ^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/.uv-cache/archive-v0/9T8ENNDdfoCK8xthI3sJK/lib/python3.12/site-packages/neo4j/_api.py\", line 103, in parse_neo4j_uri\n    raise ConfigurationError(\nneo4j.exceptions.ConfigurationError: URI scheme '' is not supported. Supported URI schemes ar",
+  "envVarNames": [
+    "NEO4J_URI",
+    "NEO4J_USERNAME",
+    "NEO4J_PASSWORD"
+  ],
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

@@ -26,6 +26,8 @@ export interface MeasureOptions {
   dockerImage?: string;
   /** env var NAMES to provide as dummy values (docker mode). */
   dummyEnv?: string[];
+  /** Override the literal `dummy` value for specific `dummyEnv` names — see docker.ts. */
+  dummyEnvValues?: Record<string, string>;
   /** Install `git` in the container before launch (docker mode) — see docker.ts. */
   needsGit?: boolean;
   /**
@@ -53,28 +55,40 @@ export async function measureServer(
     throw new Error(`invalid server name '${name}' — letters/digits/dot/dash/underscore only`);
   }
   const root = opts.root ?? process.cwd();
-  let spec: string | { command: string; argv: string[] } =
+  const hostSpec: string | { command: string; argv: string[] } =
     opts.argv && opts.argv.length ? { command: opts.argv[0], argv: opts.argv.slice(1) } : command;
   let isolation: Measurement['isolation'] = { docker: false };
-  let containerName: string | undefined;
-  if (opts.docker && command.trimStart().startsWith('docker ')) {
-    // Command is already a container — wrapping it again would need docker-in-docker.
-    isolation = { docker: true, note: 'command is itself a docker run (host-spawned container)' };
-  } else if (opts.docker) {
-    containerName = `mcp-ctx-${name}-${process.pid}-${Math.floor(Math.random() * 1e6)}`;
+  const containerNames: string[] = [];
+  // A fresh container name per capture: some servers don't exit on stdin close
+  // (background timers keep the event loop alive), so `close()`'s SIGKILL only
+  // detaches the host-side `docker run` CLI — the container itself can outlive
+  // it. Reusing one name across both tools/list captures then races `--rm`'s
+  // async cleanup: the second `docker run --name X` collides with the first
+  // container mid-removal. Distinct names sidestep the race entirely; the
+  // `finally` below force-removes every name this call created either way.
+  function buildSpec(): string | { command: string; argv: string[] } {
+    if (opts.docker && command.trimStart().startsWith('docker ')) {
+      // Command is already a container — wrapping it again would need docker-in-docker.
+      isolation = { docker: true, note: 'command is itself a docker run (host-spawned container)' };
+      return hostSpec;
+    }
+    if (!opts.docker) return hostSpec;
+    const containerName = `mcp-ctx-${name}-${process.pid}-${Math.floor(Math.random() * 1e6)}-${containerNames.length}`;
+    containerNames.push(containerName);
     const d = dockerize(command, {
       image: opts.dockerImage,
       dummyEnv: opts.dummyEnv,
+      dummyEnvValues: opts.dummyEnvValues,
       containerName,
       needsGit: opts.needsGit,
     });
-    spec = { command: d.command, argv: d.argv };
     isolation = d.isolation;
+    return { command: d.command, argv: d.argv };
   }
   let m: Measurement;
   try {
-    const first = await captureTools(spec, opts);
-    const second = await captureTools(spec, opts);
+    const first = await captureTools(buildSpec(), opts);
+    const second = await captureTools(buildSpec(), opts);
     m = measureTools(first.tools, {
       serverName: first.serverInfo?.name ?? name,
       serverVersion: first.serverInfo?.version,
@@ -98,10 +112,12 @@ export async function measureServer(
     m.isolation = isolation;
     m.timeoutMs = opts.timeoutMs ?? 60_000;
   } finally {
-    if (containerName) {
-      // Killing the docker CLI on timeout orphans the container — remove it.
+    if (containerNames.length) {
+      // Killing the docker CLI on timeout/non-exit orphans the container — remove it.
       const { spawn } = await import('node:child_process');
-      spawn('docker', ['rm', '-f', containerName], { stdio: 'ignore' }).on('error', () => {});
+      for (const n of containerNames) {
+        spawn('docker', ['rm', '-f', n], { stdio: 'ignore' }).on('error', () => {});
+      }
     }
   }
 

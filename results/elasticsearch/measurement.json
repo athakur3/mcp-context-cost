@@ -2,20 +2,139 @@
   "methodologyVersion": "1.0",
   "provider": "tiktoken",
   "encoding": "o200k_base",
-  "status": "startup-failure",
-  "totalTokens": null,
-  "toolCount": null,
-  "tools": [],
-  "canonicalSha256": null,
-  "rawToolsCapture": null,
-  "measuredAt": "2026-08-16T12:08:27.112Z",
-  "serverName": "elasticsearch",
+  "status": "measured",
+  "totalTokens": 374,
+  "toolCount": 4,
+  "tools": [
+    {
+      "name": "list_indices",
+      "tokens": 72,
+      "descriptionTokens": 5,
+      "inputSchemaTokens": 56
+    },
+    {
+      "name": "get_mappings",
+      "tokens": 76,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 56
+    },
+    {
+      "name": "search",
+      "tokens": 159,
+      "descriptionTokens": 15,
+      "inputSchemaTokens": 135
+    },
+    {
+      "name": "get_shards",
+      "tokens": 65,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 45
+    }
+  ],
+  "canonicalSha256": "76a005f840c738f5788e7b5801fdc12194713fce1ed435ad500f891a2b2dd13c",
+  "rawToolsCapture": [
+    {
+      "name": "list_indices",
+      "description": "List all available Elasticsearch indices",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "indexPattern": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Index pattern of Elasticsearch indices to list"
+          }
+        },
+        "required": [
+          "indexPattern"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "get_mappings",
+      "description": "Get field mappings for a specific Elasticsearch index",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Name of the Elasticsearch index to get mappings for"
+          }
+        },
+        "required": [
+          "index"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "search",
+      "description": "Perform an Elasticsearch search with the provided query DSL. Highlights are always enabled.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Name of the Elasticsearch index to search"
+          },
+          "queryBody": {
+            "type": "object",
+            "additionalProperties": {},
+            "description": "Complete Elasticsearch query DSL object that can include query, size, from, sort, etc."
+          },
+          "profile": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to include query profiling information"
+          },
+          "explain": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to include explanation of how the query was executed"
+          }
+        },
+        "required": [
+          "index",
+          "queryBody"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "get_shards",
+      "description": "Get shard information for all or specific indices",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "string",
+            "description": "Optional index name to get shard information for"
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    }
+  ],
+  "measuredAt": "2026-08-18T14:02:11.680Z",
+  "serverName": "elasticsearch-mcp",
+  "serverVersion": "0.3.1",
   "launchCommand": "npx -y @elastic/mcp-server-elasticsearch",
-  "notes": "server exited (code 1); stderr tail: Server error: [\n  {\n    \"validation\": \"url\",\n    \"code\": \"invalid_string\",\n    \"message\": \"Invalid Elasticsearch URL format\",\n    \"path\": [\n      \"url\"\n    ]\n  }\n]\n",
+  "envVarNames": [
+    "ES_URL",
+    "ES_API_KEY"
+  ],
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

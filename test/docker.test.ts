@@ -20,6 +20,20 @@ describe('dockerize', () => {
     expect(d.isolation.note).toContain('git installed');
   });
 
+  it('injects the literal dummy value for a dummyEnv name with no override', () => {
+    const d = dockerize('uvx mcp-neo4j-cypher', { dummyEnv: ['NEO4J_USERNAME'] });
+    expect(d.argv).toContain('NEO4J_USERNAME=dummy');
+  });
+
+  it('uses the per-name override instead of the literal dummy value', () => {
+    const d = dockerize('uvx mcp-neo4j-cypher', {
+      dummyEnv: ['NEO4J_URI', 'NEO4J_USERNAME'],
+      dummyEnvValues: { NEO4J_URI: 'bolt://localhost:7687' },
+    });
+    expect(d.argv).toContain('NEO4J_URI=bolt://localhost:7687');
+    expect(d.argv).toContain('NEO4J_USERNAME=dummy');
+  });
+
   it('never changes the recorded isolation.docker/image/network shape', () => {
     const withoutGit = dockerize('npx -y demo');
     const withGit = dockerize('npx -y demo', { needsGit: true });
