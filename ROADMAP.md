@@ -19,6 +19,14 @@ planning note.
 
 ## Done
 
+- [x] **Every published row is now measured the same way**: the weekly job that re-measures
+      the reference server ran on a bare runner while the other 68 rows are measured in an
+      isolated container, so each Monday one row of the leaderboard was quietly republished
+      under conditions none of its neighbours shared — and because a trend line refuses to
+      span a change in those conditions, that row was on course to be the only one that
+      could never draw a sparkline. It now runs in the same isolation as everything else,
+      verified on a real runner rather than assumed (2026-08-19)
+
 - [x] **A trend line never mixes measurement conditions**: every row of the published history
       now records whether it was measured inside a container or on a bare machine, and the
       sparkline only spans sweeps taken the same way. The same server can resolve a different
