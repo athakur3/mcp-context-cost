@@ -19,6 +19,17 @@ planning note.
 
 ## Done
 
+- [x] **Every server's numbers keep getting refreshed, not just one**: the trend line under a
+      leaderboard row only grows when that server is measured again, and until now the only
+      thing measured on a schedule was the single reference server behind this project's own
+      badge — so every other row's history stopped at whatever date someone last swept by
+      hand. Re-measuring all 82 weekly isn't the fix either: a fresh CI runner shares no
+      package cache, so each server pays a cold install and the heaviest one on record took
+      over three minutes that way. A scheduled job now measures one deterministic slice of
+      the list each week and comes back round to the same servers six weeks later. Which
+      slice is a function of the date, so a week the job doesn't fire needs no repair, and
+      servers outside the week's slice keep their published number untouched (2026-08-19)
+
 - [x] **A broken measuring machine can't wipe out the leaderboard**: if the harness itself
       breaks — a wedged Docker network stack has done exactly this here, returning uniform
       timeouts for all 79 servers — every server it touches comes back failed, and the

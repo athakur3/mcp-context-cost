@@ -1,0 +1,75 @@
+# Rotating re-sweep: one deterministic slice of servers.yaml per week, so every
+# published row keeps getting a fresh measurement instead of only `memory`.
+#
+# `results/history.csv` — and therefore every sparkline on the leaderboard —
+# only grows for servers that get measured again. Until this job existed the
+# only scheduled measurement was the weekly self-badge run, which measures one
+# server; every other row's trend line stopped at whatever date a maintenance
+# run last swept by hand.
+#
+# The whole set does not fit here: a fresh runner shares no package-cache
+# volume, so each server pays a cold install, and the heaviest entry on record
+# took 216s that way. `--shards 6` measures a sixth of the set each week and
+# comes back round to the same servers six weeks later. The slice is derived
+# from the date (see src/sweep/shard.ts), so a week this job fails to fire
+# needs no repair — there is no cursor to reset.
+name: Rotating re-sweep
+on:
+  schedule:
+    # Wednesday, deliberately not Monday: the self-badge job pushes at 06:17 on
+    # Mondays and this one can run for tens of minutes, so sharing a day invites
+    # two jobs racing to push the same branch.
+    - cron: '11 3 * * 3'
+  workflow_dispatch:
+    inputs:
+      shard_index:
+        description: 'Pin the slice instead of deriving it from today (0-5)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+# Two of these overlapping would measure the same servers twice and race on the
+# push. A queued run is fine; a concurrent one is not.
+concurrency:
+  group: resweep
+  cancel-in-progress: false
+
+jobs:
+  resweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Measure this week's shard
+        # `--docker` because every published row is measured that way, and a
+        # sparkline refuses to span a change of isolation — a host measurement
+        # here would break the trend line of every server in the slice.
+        #
+        # Concurrency 2 rather than the sweep default of 3: a GitHub runner has
+        # fewer cores than the machine that default was chosen on, and
+        # contention is what produced two false timeouts in an earlier sweep.
+        #
+        # Safe unattended because the sweep exits non-zero on a harness fault
+        # and restores what it overwrote (src/sweep/harness-guard.ts), so a
+        # broken Docker daemon on the runner stops the job here rather than
+        # pushing a leaderboard full of failures.
+        run: npm run sweep:all -- --docker --shards 6 --concurrency 2 ${{ inputs.shard_index && format('--shard-index {0}', inputs.shard_index) || '' }}
+      - name: Regenerate leaderboard, server pages and dashboard
+        run: npx tsx src/sweep/regen.ts
+      - name: Commit refreshed measurements
+        run: |
+          git config user.name "mcp-context-cost bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add badges/ results/ docs/
+          git diff --cached --quiet && echo "no change to publish" && exit 0
+          git commit -m "chore: rotating re-sweep of this week's server shard"
+          # This job can run long enough for main to have moved underneath it.
+          git pull --rebase origin main
+          git push

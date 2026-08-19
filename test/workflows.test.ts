@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { parse } from 'yaml';
+import { selectShard } from '../src/sweep/shard.js';
+import { MIN_REGRESSIONS } from '../src/sweep/harness-guard.js';
 
 /**
  * The weekly self-badge job republishes `results/memory/measurement.json` — a
@@ -16,10 +19,9 @@ import { join } from 'node:path';
  * one server that can never draw a sparkline. This asserts the invocation, not
  * the outcome, because the outcome is only visible on a Monday.
  */
-const workflow = readFileSync(
-  join(import.meta.dirname, '..', '.github', 'workflows', 'self-badge.yml'),
-  'utf8',
-);
+const wfDir = join(import.meta.dirname, '..', '.github', 'workflows');
+const workflow = readFileSync(join(wfDir, 'self-badge.yml'), 'utf8');
+const resweep = readFileSync(join(wfDir, 'resweep.yml'), 'utf8');
 
 /** The `npm run sweep` command lines the workflow actually executes. */
 function sweepInvocations(yaml: string): string[] {
@@ -48,5 +50,58 @@ describe('self-badge workflow', () => {
     const timeout = /--timeout (\d+)/.exec(sweepInvocations(workflow)[0]);
     expect(timeout).not.toBeNull();
     expect(Number(timeout![1])).toBeGreaterThan(60_000);
+  });
+});
+
+/**
+ * The rotating re-sweep is the only scheduled job that touches more than one
+ * server, and it holds `contents: write`. Everything asserted here is a property
+ * the job's safety rests on but that is only observable weeks apart on a real
+ * Wednesday — exactly the kind of thing that rots without anyone noticing.
+ */
+describe('rotating re-sweep workflow', () => {
+  const invocation = resweep
+    .split('\n')
+    .map((l) => l.trim())
+    .filter((l) => l.startsWith('run:') && l.includes('npm run sweep:all'));
+
+  it('measures a rotating slice rather than the whole set', () => {
+    expect(invocation.length).toBe(1);
+    expect(invocation[0]).toMatch(/--shards \d+/);
+  });
+
+  it('measures in the same isolation as every other published row', () => {
+    // A sparkline refuses to span a change of isolation, so a host measurement
+    // here would break the trend line of every server in the slice.
+    expect(invocation[0]).toContain('--docker');
+  });
+
+  it('keeps every shard large enough for the harness guard to fire', () => {
+    // The guard needs MIN_REGRESSIONS previously-good servers to fail together
+    // before it will call a broken harness. Shard the set too finely and a
+    // week's slice drops below that floor — the job would then publish a whole
+    // slice of failures from a wedged runner without tripping anything.
+    const shards = Number(/--shards (\d+)/.exec(invocation[0])![1]);
+    const doc = parse(readFileSync(join(import.meta.dirname, '..', 'servers.yaml'), 'utf8')) as {
+      servers: { name: string; remote?: boolean }[];
+    };
+    const sweepable = doc.servers.filter((s) => !s.remote);
+    const sizes = Array.from({ length: shards }, (_, i) => selectShard(sweepable, shards, i).length);
+    expect(Math.min(...sizes)).toBeGreaterThanOrEqual(MIN_REGRESSIONS);
+  });
+
+  it('cannot run concurrently with itself', () => {
+    // Two overlapping runs would measure the same servers twice and race to
+    // push the same branch.
+    expect(resweep).toMatch(/concurrency:\n\s*group: resweep/);
+  });
+
+  it('does not share a day with the other job that pushes', () => {
+    const dayOf = (yaml: string) => /cron: '[^']*\s(\S+)'/.exec(yaml)![1];
+    expect(dayOf(resweep)).not.toBe(dayOf(workflow));
+  });
+
+  it('rebases before pushing, because it can run long enough for main to move', () => {
+    expect(resweep).toContain('git pull --rebase origin main');
   });
 });

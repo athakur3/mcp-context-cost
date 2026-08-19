@@ -1,8 +1,15 @@
 /**
  * Batch sweep over servers.yaml:
  *   npx tsx src/sweep/sweep-all.ts [--docker] [--only name1,name2] [--concurrency 3]
+ *                                  [--shards N [--shard-index K]]
  * Writes results/<name>/measurement.json + badges/<name>.json per server, then
  * regenerates the leaderboard.
+ *
+ * `--shards N` measures only this week's rotating slice (see shard.ts), so a
+ * scheduled job can keep every server's history growing without sweeping all of
+ * servers.yaml in one runner. `--shard-index K` pins the slice instead of
+ * deriving it from the date — for reproducing a given week, not for scheduled
+ * use.
  */
 import { readFileSync } from 'node:fs';
 import { parse } from 'yaml';
@@ -10,6 +17,7 @@ import { measureServer } from './run.js';
 import { writeLeaderboard, type ServerEntry } from './report.js';
 import { appendHistory } from './history.js';
 import { snapshot, verdict, restore } from './harness-guard.js';
+import { selectShard, shardIndexForDate } from './shard.js';
 import type { MeasurementStatus } from '../core/types.js';
 
 function arg(name: string): string | undefined {
@@ -23,13 +31,41 @@ const docker = process.argv.includes('--docker');
 const concurrency = Number(arg('concurrency') ?? 3);
 const defaultTimeout = Number(arg('default-timeout') ?? 60);
 
-const entries = doc.servers.filter((s) => {
+const shards = arg('shards') === undefined ? undefined : Number(arg('shards'));
+const shardIndexArg = arg('shard-index') === undefined ? undefined : Number(arg('shard-index'));
+
+if (shards !== undefined && only) {
+  // Both narrow the set, but the sharded one is meant to be a *complete*
+  // partition of servers.yaml. Silently intersecting them would produce a slice
+  // that belongs to no cycle and still looks like a normal week's sweep in the log.
+  console.error('--shards and --only both select servers; pass one or the other');
+  process.exit(2);
+}
+if (shardIndexArg !== undefined && shards === undefined) {
+  console.error('--shard-index needs --shards');
+  process.exit(2);
+}
+
+const sweepable = doc.servers.filter((s) => {
   if (only && !only.includes(s.name)) return false;
   if (s.remote) return false; // remote servers handled separately (mcp-remote bridge)
   return true;
 });
 
-console.log(`sweeping ${entries.length} servers (docker=${docker}, concurrency=${concurrency})`);
+let entries = sweepable;
+let shardLabel = '';
+if (shards !== undefined) {
+  const index = shardIndexArg ?? shardIndexForDate(new Date(), shards);
+  entries = selectShard(sweepable, shards, index);
+  shardLabel = `, shard ${index + 1}/${shards}`;
+  console.log(
+    `shard ${index + 1}/${shards} of ${sweepable.length} sweepable: ${entries.map((e) => e.name).join(', ')}`,
+  );
+}
+
+console.log(
+  `sweeping ${entries.length} servers (docker=${docker}, concurrency=${concurrency}${shardLabel})`,
+);
 
 // Taken before anything is measured: measureServer persists each result the
 // moment it has one, so this is the only chance to hold on to what was
@@ -81,6 +117,9 @@ if (v.fault) {
 }
 
 // Serial, after every worker has finished: history.csv is a read-modify-write.
+// Always the full set: the leaderboard is regenerated from what is on disk, so
+// a shard sweep republishes every server's most recent measurement rather than
+// dropping the servers this week did not touch.
 writeLeaderboard(doc.servers);
 const h = appendHistory();
 const measured = Object.values(summary).filter((s) => s.includes('tokens')).length;
