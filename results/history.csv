@@ -114,6 +114,7 @@ date,server,tokens,toolCount,status,isolation
 2026-08-19,huggingface,4691,4,measured,docker
 2026-08-19,kubernetes,5268,23,measured,docker
 2026-08-19,mcp-atlassian,17311,63,dynamic,docker
+2026-08-19,memory,2378,9,measured,docker
 2026-08-19,microsoft-learn,972,3,measured,docker
 2026-08-19,mysql,393,3,measured,docker
 2026-08-19,n8n-mcp,2636,7,measured,docker
