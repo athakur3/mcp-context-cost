@@ -19,6 +19,17 @@ planning note.
 
 ## Done
 
+- [x] **A broken measuring machine can't wipe out the leaderboard**: if the harness itself
+      breaks — a wedged Docker network stack has done exactly this here, returning uniform
+      timeouts for all 79 servers — every server it touches comes back failed, and the
+      per-server retries just confirm it, because they re-run through the same broken
+      harness. A sweep now records what was published before it starts, and a wave of
+      previously-working servers failing together reads as a broken harness rather than 60
+      simultaneously-broken servers: the leaderboard and history are left alone, the
+      previous measurements are put back exactly as they were, and the sweep exits
+      non-zero. A handful of servers breaking at once still publishes normally — that's
+      what a real upstream breakage looks like (2026-08-19)
+
 - [x] **Every published row is now measured the same way**: the weekly job that re-measures
       the reference server ran on a bare runner while the other 68 rows are measured in an
       isolated container, so each Monday one row of the leaderboard was quietly republished

@@ -98,6 +98,25 @@ way, the note says which retry it survived — so "broken upstream" and "broken 
 differently without re-running the sweep. A `timeout` note always names the widest budget
 tried, not the first one that failed.
 
+**A whole sweep is checked before any of it is published.** Both retries above re-run
+through the same harness, so neither can see the failure mode that isn't about any
+individual server: the machine doing the measuring is broken. That case is real — a wedged
+Docker network stack once returned uniform timeouts for every server in a sweep, and the
+per-server retries only confirmed them. The signal it leaves is population-level: servers
+that measured fine before failing *together*, in bulk. Upstream breakages arrive a package
+at a time; the largest genuine simultaneous one on record here was a handful of servers
+sharing one unbounded dependency, single digits against ~65 measured.
+
+So a batch sweep records what was published before it starts, and if at least 5 servers
+that had a real number come back failed — and they are at least half of the servers that
+could have regressed — it declares a harness fault: the leaderboard and `history.csv` are
+not written, the previous measurements and badges are restored byte for byte, and the sweep
+exits non-zero. Nothing about that sweep reaches the published data. Below either threshold
+the sweep publishes normally, including failures, because a small number of servers breaking
+at once is exactly what a real upstream breakage looks like. A sweep with no prior
+measurements to compare against reports that the check could not be performed, rather than
+reporting a pass.
+
 ## Trends over time — same conditions, or no line
 
 `results/history.csv` carries one row per (date, server): the tokens a server measured on

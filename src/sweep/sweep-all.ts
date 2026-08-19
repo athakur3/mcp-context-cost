@@ -9,6 +9,8 @@ import { parse } from 'yaml';
 import { measureServer } from './run.js';
 import { writeLeaderboard, type ServerEntry } from './report.js';
 import { appendHistory } from './history.js';
+import { snapshot, verdict, restore } from './harness-guard.js';
+import type { MeasurementStatus } from '../core/types.js';
 
 function arg(name: string): string | undefined {
   const i = process.argv.indexOf(`--${name}`);
@@ -29,8 +31,15 @@ const entries = doc.servers.filter((s) => {
 
 console.log(`sweeping ${entries.length} servers (docker=${docker}, concurrency=${concurrency})`);
 
+// Taken before anything is measured: measureServer persists each result the
+// moment it has one, so this is the only chance to hold on to what was
+// published in case this sweep turns out to be measuring through a broken
+// harness (see harness-guard.ts).
+const prior = snapshot(entries.map((e) => e.name));
+
 const queue = [...entries];
 const summary: Record<string, string> = {};
+const statuses = new Map<string, MeasurementStatus>();
 
 async function worker() {
   for (let e = queue.shift(); e; e = queue.shift()) {
@@ -44,6 +53,7 @@ async function worker() {
       needsGit: e.needsGit,
     });
     const secs = ((Date.now() - started) / 1000).toFixed(0);
+    statuses.set(e.name, m.status);
     summary[e.name] =
       m.status === 'measured' || m.status === 'dynamic'
         ? `${m.totalTokens} tokens / ${m.toolCount} tools (${m.status}, ${secs}s)`
@@ -53,6 +63,22 @@ async function worker() {
 }
 
 await Promise.all(Array.from({ length: Math.max(1, concurrency) }, () => worker()));
+
+// Before publishing anything: is this sweep a statement about the servers, or
+// about the machine that measured them?
+const v = verdict(prior, statuses);
+console.log(`harness check: ${v.reason}`);
+if (v.fault) {
+  const restored = restore(prior, v.regressed);
+  console.error(
+    `\nHARNESS FAULT — refusing to publish this sweep.\n` +
+      `  regressed: ${v.regressed.join(', ')}\n` +
+      `  restored ${restored.length} previous measurement(s) and badge(s); ` +
+      `leaderboard and history.csv are untouched.\n` +
+      `  Check the measurement environment (Docker daemon, network, disk) and re-run.`,
+  );
+  process.exit(1);
+}
 
 // Serial, after every worker has finished: history.csv is a read-modify-write.
 writeLeaderboard(doc.servers);
