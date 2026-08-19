@@ -90,6 +90,16 @@ describe('rotating re-sweep workflow', () => {
     expect(Math.min(...sizes)).toBeGreaterThanOrEqual(MIN_REGRESSIONS);
   });
 
+  it('allows more than the default budget for a cold runner', () => {
+    // Same reason as the self-badge job: no package-cache volume survives
+    // between jobs, so every server in the slice pays a full cold install. At
+    // the 60s default most of them would time out, and a slice of timeouts is
+    // both a red job every week and a wave of regressions to adjudicate.
+    const budget = /--default-timeout (\d+)/.exec(invocation[0]);
+    expect(budget).not.toBeNull();
+    expect(Number(budget![1])).toBeGreaterThan(60);
+  });
+
   it('cannot run concurrently with itself', () => {
     // Two overlapping runs would measure the same servers twice and race to
     // push the same branch.

@@ -56,11 +56,16 @@ jobs:
         # fewer cores than the machine that default was chosen on, and
         # contention is what produced two false timeouts in an earlier sweep.
         #
+        # `--default-timeout` for the same reason the self-badge job widens its
+        # budget: no package-cache volume survives between jobs, so every server
+        # here pays a full cold install and the 60s default would time out on
+        # most of them. Entries with their own `timeoutSeconds` keep it.
+        #
         # Safe unattended because the sweep exits non-zero on a harness fault
         # and restores what it overwrote (src/sweep/harness-guard.ts), so a
         # broken Docker daemon on the runner stops the job here rather than
         # pushing a leaderboard full of failures.
-        run: npm run sweep:all -- --docker --shards 6 --concurrency 2 ${{ inputs.shard_index && format('--shard-index {0}', inputs.shard_index) || '' }}
+        run: npm run sweep:all -- --docker --shards 6 --concurrency 2 --default-timeout 240 ${{ inputs.shard_index && format('--shard-index {0}', inputs.shard_index) || '' }}
       - name: Regenerate leaderboard, server pages and dashboard
         run: npx tsx src/sweep/regen.ts
       - name: Commit refreshed measurements
