@@ -92,7 +92,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:08:04.768Z",
+  "measuredAt": "2026-08-19T12:04:37.074Z",
   "serverName": "mysql_mcp_server",
   "serverVersion": "1.29.0",
   "launchCommand": "uvx --from mysql-mcp-server mysql_mcp_server",
@@ -108,5 +108,5 @@
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

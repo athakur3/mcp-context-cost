@@ -1,6 +1,6 @@
 # slack-legacy — context cost
 
-**681 tokens** across 8 tools — *lean* (< 1K). Measured 2026-08-18 under [methodology v1.0](../METHODOLOGY.html).
+**681 tokens** across 8 tools — *lean* (< 1K). Measured 2026-08-19 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @modelcontextprotocol/server-slack` |
-| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials, shared package cache by |
 | env vars supplied | SLACK_BOT_TOKEN, SLACK_TEAM_ID |
 | canonical SHA-256 | `5939f969618ff709e86ff0599b80cc8f418db8904b4304a6eeb82a25f30ccd81` |
 | category | official-reference |
@@ -35,6 +35,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 |---|---:|---:|---|---:|
 | 2026-08-16 | 681 | 8 | not recorded | — |
 | 2026-08-18 | 681 | 8 | docker | no change |
+| 2026-08-19 | 681 | 8 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

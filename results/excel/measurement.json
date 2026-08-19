@@ -1560,7 +1560,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:06:07.181Z",
+  "measuredAt": "2026-08-19T12:04:30.915Z",
   "serverName": "excel-mcp",
   "serverVersion": "1.29.0",
   "launchCommand": "uvx excel-mcp-server stdio",
@@ -1571,5 +1571,5 @@
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

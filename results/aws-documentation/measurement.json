@@ -843,7 +843,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-18T23:58:18.948Z",
+  "measuredAt": "2026-08-19T12:03:50.751Z",
   "serverName": "awslabs.aws-documentation-mcp-server",
   "serverVersion": "1.29.0",
   "launchCommand": "uvx awslabs.aws-documentation-mcp-server@latest",
@@ -854,5 +854,5 @@
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

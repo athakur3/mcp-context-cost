@@ -97,6 +97,7 @@ date,server,tokens,toolCount,status,isolation
 2026-08-19,airtable,4207,16,measured,docker
 2026-08-19,apify,10426,10,measured,docker
 2026-08-19,arxiv,3228,14,measured,docker
+2026-08-19,aws-documentation,5074,5,measured,docker
 2026-08-19,basic-memory,9188,23,measured,docker
 2026-08-19,blender,5462,25,measured,docker
 2026-08-19,brave-search,25456,8,measured,docker
@@ -107,12 +108,14 @@ date,server,tokens,toolCount,status,isolation
 2026-08-19,desktop-commander,11836,26,dynamic,docker
 2026-08-19,duckduckgo,724,2,measured,docker
 2026-08-19,elasticsearch,374,4,measured,docker
+2026-08-19,everything,1708,13,measured,docker
 2026-08-19,exa,486,2,measured,docker
 2026-08-19,excel,4266,25,measured,docker
 2026-08-19,figma-context,946,2,measured,docker
 2026-08-19,hubspot,9158,21,measured,docker
 2026-08-19,huggingface,4691,4,measured,docker
 2026-08-19,kubernetes,5268,23,measured,docker
+2026-08-19,markitdown,64,1,measured,docker
 2026-08-19,mcp-atlassian,17311,63,dynamic,docker
 2026-08-19,memory,2378,9,measured,docker
 2026-08-19,microsoft-learn,972,3,measured,docker
@@ -133,5 +136,6 @@ date,server,tokens,toolCount,status,isolation
 2026-08-19,searxng,1481,4,measured,docker
 2026-08-19,serena,8204,29,measured,docker
 2026-08-19,shopify-dev,5624,5,measured,docker
+2026-08-19,slack-legacy,681,8,measured,docker
 2026-08-19,terraform,2061,9,measured,docker
 2026-08-19,xcodebuildmcp,26594,24,measured,docker

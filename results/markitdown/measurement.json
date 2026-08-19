@@ -33,7 +33,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-18T23:58:58.205Z",
+  "measuredAt": "2026-08-19T12:03:55.996Z",
   "serverName": "markitdown",
   "serverVersion": "1.8.1",
   "launchCommand": "uvx markitdown-mcp",
@@ -44,5 +44,5 @@
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

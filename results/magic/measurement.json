@@ -8,7 +8,7 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-08-18T23:59:29.157Z",
+  "measuredAt": "2026-08-19T12:03:53.140Z",
   "serverName": "magic",
   "launchCommand": "npx -y @21st-dev/magic@latest",
   "notes": "server error -32001: Not authenticated - your API key is missing or was reset. Get a fresh key at https://21st.dev/mcp and update your MCP config (x-api-key / Bearer).",
@@ -18,5 +18,5 @@
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }
