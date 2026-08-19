@@ -89,7 +89,7 @@
 </style>
 <div class="wrap">
   <header>
-    <p class="eyebrow">methodology v1.0 · o200k_base · generated 2026-08-19 00:29 UTC</p>
+    <p class="eyebrow">methodology v1.0 · o200k_base · generated 2026-08-19 06:01 UTC</p>
     <h1>mcp-context-cost</h1>
     <p class="sub">What popular MCP servers cost in context tokens before the agent does any work — measured from raw <code>tools/list</code> captures, every number re-derivable from its published measurement file.</p>
   </header>
@@ -102,7 +102,7 @@
   </div>
 
   <h2>Leaderboard</h2>
-  <p class="h2sub">Tokens = o200k_base count of the canonical <code>tools/list</code> bytes — the wire payload. What a <em>Claude request</em> actually carries can differ sharply (github: 54,422 on the wire, 18,406 in a request — 80% of its schema bytes are fields no Anthropic request sends). The trend line plots tokens across every sweep date on record (oldest→newest, dot = current); servers with one sweep so far show no line yet. Hover a row for exact numbers; <a href="METHODOLOGY.html#claude-divergence">method</a>.</p>
+  <p class="h2sub">Tokens = o200k_base count of the canonical <code>tools/list</code> bytes — the wire payload. What a <em>Claude request</em> actually carries can differ sharply (github: 54,422 on the wire, 18,406 in a request — 80% of its schema bytes are fields no Anthropic request sends). The trend line plots tokens across every sweep date on record (oldest→newest, dot = current); servers with one sweep so far show no line yet, and a sweep taken under different isolation than the current one is left out rather than drawn as a change in the server. Hover a row for exact numbers; <a href="METHODOLOGY.html#claude-divergence">method</a>.</p>
   <div class="board">
 <a class="row" href="servers/github.html" data-tip="44 tools · largest: issue_write (1,890 tok) · in a Claude request: 18,406 tok · 2-sweep trend: 54,422 → 54,422 · vendor-official · measured · v1.9.0">
   <span class="rank">1</span>

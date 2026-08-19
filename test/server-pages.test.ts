@@ -91,14 +91,19 @@ describe('renderServerPage', () => {
   });
 
   it('shows the series only once there is more than one date', () => {
-    const one = [{ date: '2026-08-16', server: 'demo', tokens: 1000, toolCount: 2, status: 'measured' }];
+    const one = [
+      { date: '2026-08-16', server: 'demo', tokens: 1000, toolCount: 2, status: 'measured', isolation: 'docker' },
+    ];
     expect(renderServerPage(entry, measurement(), one)).not.toContain('## Over time');
 
-    const two = [...one, { date: '2026-08-23', server: 'demo', tokens: 1200, toolCount: 3, status: 'measured' }];
+    const two = [
+      ...one,
+      { date: '2026-08-23', server: 'demo', tokens: 1200, toolCount: 3, status: 'measured', isolation: 'docker' },
+    ];
     const md = renderServerPage(entry, measurement(), two);
     expect(md).toContain('## Over time');
-    expect(md).toContain('| 2026-08-23 | 1,200 | 3 | +200 |');
-    expect(md).toContain('| 2026-08-16 | 1,000 | 2 | — |');
+    expect(md).toContain('| 2026-08-23 | 1,200 | 3 | docker | +200 |');
+    expect(md).toContain('| 2026-08-16 | 1,000 | 2 | docker | — |');
   });
 });
 
@@ -173,6 +178,42 @@ describe('writeServerPages', () => {
     expect(md).toContain('## Over time');
     expect(md.indexOf('2026-08-16')).toBeLessThan(md.indexOf('2026-08-23')); // oldest first
     expect(md).not.toContain('| 50 |');
+  });
+
+  it('marks the over-time row that crosses an isolation change as not comparable', () => {
+    seed('demo', measurement());
+    mkdirSync(join(root, 'results'), { recursive: true });
+    writeFileSync(
+      join(root, 'results', 'history.csv'),
+      'date,server,tokens,toolCount,status,isolation\n' +
+        '2026-08-16,demo,900,2,measured,host\n' +
+        '2026-08-18,demo,1200,3,measured,docker\n' +
+        '2026-08-19,demo,1210,3,measured,docker\n',
+    );
+    writeServerPages([entry], root);
+    const md = readFileSync(join(root, 'docs', 'servers', 'demo.md'), 'utf8');
+    expect(md).toContain('| measured in |');
+    expect(md).toContain('| host |');
+    expect(md).toContain('not comparable'); // the +300 across the boundary is never stated
+    expect(md).not.toContain('+300');
+    expect(md).toContain('+10'); // the within-docker change still is
+    expect(md).toContain('the published trend starts at 2026-08-18');
+  });
+
+  it('says so when a series predates the isolation column instead of implying it is docker', () => {
+    seed('demo', measurement());
+    mkdirSync(join(root, 'results'), { recursive: true });
+    writeFileSync(
+      join(root, 'results', 'history.csv'),
+      'date,server,tokens,toolCount,status\n' +
+        '2026-08-16,demo,1000,2,measured\n' +
+        '2026-08-18,demo,1200,3,measured\n',
+    );
+    writeServerPages([entry], root);
+    const md = readFileSync(join(root, 'docs', 'servers', 'demo.md'), 'utf8');
+    expect(md).toContain('| not recorded |');
+    expect(md).toContain('predate the `isolation` column');
+    expect(md).toContain('+200'); // unknown is not evidence of a difference, so the delta stands
   });
 
   it('is deterministic — regenerating without a new sweep changes nothing', () => {

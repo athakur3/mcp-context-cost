@@ -78,6 +78,44 @@ describe('generateDashboard sparklines', () => {
     expect(html).not.toContain('class="spark"');
     expect(html).toContain('spark-cell');
   });
+
+  it('does not draw a step across an isolation change — the harness moved, not the server', () => {
+    writeFileSync(
+      join(root, 'results', 'history.csv'),
+      'date,server,tokens,toolCount,status,isolation\n' +
+        '2026-08-16,demo,900,2,measured,host\n' +
+        '2026-08-17,demo,910,2,measured,host\n' +
+        '2026-08-18,demo,1200,2,measured,docker\n' +
+        '2026-08-19,demo,1210,2,measured,docker\n',
+    );
+    const html = generateDashboard(root);
+    expect(html).toContain('1,200 → 1,210'); // only the docker run is plotted
+    expect(html).not.toContain('900 → 1,210'); // the false 34% jump is never published
+    expect(html).toContain('2 earlier sweeps measured under different isolation, not plotted');
+    expect(html).toContain('+10 / 2d'); // and the table column agrees with the line
+  });
+
+  it('says why there is no line when only the pre-change sweeps would remain', () => {
+    writeFileSync(
+      join(root, 'results', 'history.csv'),
+      'date,server,tokens,toolCount,status,isolation\n' +
+        '2026-08-16,demo,900,2,measured,host\n' +
+        '2026-08-18,demo,1200,2,measured,docker\n',
+    );
+    const html = generateDashboard(root);
+    expect(html).not.toContain('class="spark"');
+    expect(html).toContain('earlier sweeps were measured under different isolation, so no trend is plotted');
+  });
+
+  it('still plots a series recorded before the isolation column existed', () => {
+    writeFileSync(
+      join(root, 'results', 'history.csv'),
+      'date,server,tokens,toolCount,status\n2026-08-16,demo,900,2,measured\n2026-08-18,demo,1200,2,measured,docker\n',
+    );
+    const html = generateDashboard(root);
+    expect(html).toContain('class="spark"');
+    expect(html).toContain('900 → 1,200');
+  });
 });
 
 describe('writeDashboard', () => {

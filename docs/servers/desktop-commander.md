@@ -63,10 +63,12 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 
 ## Over time
 
-| date | tokens | tools | change |
-|---|---:|---:|---:|
-| 2026-08-18 | 11,835 | 26 | — |
-| 2026-08-19 | 11,836 | 26 | +1 |
+| date | tokens | tools | measured in | change |
+|---|---:|---:|---|---:|
+| 2026-08-18 | 11,835 | 26 | not recorded | — |
+| 2026-08-19 | 11,836 | 26 | docker | +1 |
+
+> Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 
 Full series: [results/history.csv](https://github.com/athakur3/mcp-context-cost/blob/main/results/history.csv).
 

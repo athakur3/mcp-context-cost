@@ -19,6 +19,15 @@ planning note.
 
 ## Done
 
+- [x] **A trend line never mixes measurement conditions**: every row of the published history
+      now records whether it was measured inside a container or on a bare machine, and the
+      sparkline only spans sweeps taken the same way. The same server can resolve a different
+      package, run on a different Node and see a different environment on the host than in a
+      clean container, so a step between those two numbers says the harness moved, not the
+      server — and that is exactly what a trend line was about to publish as a change. Rows
+      recorded before this existed read `not recorded` rather than being back-filled with a
+      guess (2026-08-19)
+
 - [x] **A slow server is no longer published as a broken one**: a measurement that times out
       is now re-run on double the budget before anything is written down, because a server
       that merely starts slowly while the sweep is busy looks exactly like one that never

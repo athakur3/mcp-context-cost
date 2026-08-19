@@ -18,9 +18,19 @@ export interface HistoryRow {
   toolCount: number;
   /** 'measured' or 'dynamic' — dynamic means the tool set moved between captures. */
   status: string;
+  /**
+   * How the measurement was taken: `docker` (isolated container), `host` (bare
+   * machine), or `''` when the row predates this column and the conditions are
+   * not on record. Two numbers taken under different isolation are not
+   * comparable — same server, different node, different resolution of an
+   * `@latest` tag, different ambient env — so a step between them is a property
+   * of the harness, not of the server. Recording it is what lets the trend line
+   * refuse to draw such a step; see `plottableSeries`.
+   */
+  isolation: string;
 }
 
-export const HISTORY_HEADER = 'date,server,tokens,toolCount,status';
+export const HISTORY_HEADER = 'date,server,tokens,toolCount,status,isolation';
 
 function csvCell(s: unknown): string {
   const v = String(s ?? '');
@@ -55,10 +65,19 @@ export function parseHistory(text: string): HistoryRow[] {
   const rows: HistoryRow[] = [];
   for (const line of text.split('\n')) {
     if (!line.trim() || line.startsWith('date,')) continue;
-    const [date, server, tokens, toolCount, status] = splitCsvLine(line);
+    const [date, server, tokens, toolCount, status, isolation] = splitCsvLine(line);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date ?? '') || !server) continue;
     if (!/^\d+$/.test(tokens ?? '') || !/^\d+$/.test(toolCount ?? '')) continue;
-    rows.push({ date, server, tokens: Number(tokens), toolCount: Number(toolCount), status: status ?? '' });
+    // A 5-field row is a pre-`isolation` write: its conditions are unknown, and
+    // unknown is recorded as unknown rather than back-filled with a guess.
+    rows.push({
+      date,
+      server,
+      tokens: Number(tokens),
+      toolCount: Number(toolCount),
+      status: status ?? '',
+      isolation: isolation ?? '',
+    });
   }
   return rows;
 }
@@ -66,7 +85,7 @@ export function parseHistory(text: string): HistoryRow[] {
 export function formatHistory(rows: HistoryRow[]): string {
   const sorted = [...rows].sort((a, b) => a.date.localeCompare(b.date) || a.server.localeCompare(b.server));
   const lines = sorted.map((r) =>
-    [csvCell(r.date), csvCell(r.server), r.tokens, r.toolCount, csvCell(r.status)].join(','),
+    [csvCell(r.date), csvCell(r.server), r.tokens, r.toolCount, csvCell(r.status), csvCell(r.isolation)].join(','),
   );
   return [HISTORY_HEADER, ...lines].join('\n') + '\n';
 }
@@ -85,12 +104,24 @@ export function upsert(rows: HistoryRow[], row: HistoryRow): HistoryRow[] {
  * auth walls are recorded in the leaderboard's "not measured" section, and
  * writing them here as zeros would fabricate a drop to zero in the series.
  */
+export function isolationOf(m: Measurement): string {
+  if (!m.isolation) return '';
+  return m.isolation.docker ? 'docker' : 'host';
+}
+
 export function rowFor(server: string, m: Measurement): HistoryRow | null {
   if (m.status !== 'measured' && m.status !== 'dynamic') return null;
   if (typeof m.totalTokens !== 'number' || typeof m.toolCount !== 'number') return null;
   const date = String(m.measuredAt ?? '').slice(0, 10);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
-  return { date, server, tokens: m.totalTokens, toolCount: m.toolCount, status: m.status };
+  return {
+    date,
+    server,
+    tokens: m.totalTokens,
+    toolCount: m.toolCount,
+    status: m.status,
+    isolation: isolationOf(m),
+  };
 }
 
 /**
@@ -122,4 +153,47 @@ export function appendHistory(root = process.cwd()): { rows: number; added: numb
 
   writeFileSync(path, formatHistory(rows));
   return { rows: rows.length, added: rows.length - existing.length };
+}
+
+export interface PlottableSeries {
+  /** The rows a trend may be drawn across, oldest first. */
+  rows: HistoryRow[];
+  /** Older rows excluded because they were measured under a different isolation. */
+  dropped: number;
+  /** True when a plotted row's conditions are not on record (a pre-`isolation` write). */
+  conditionsUnknown: boolean;
+}
+
+/**
+ * The longest run of a server's history, ending at its newest row, that a trend
+ * line may honestly be drawn across.
+ *
+ * Walking back from the newest row, a row stops the run when its isolation is
+ * known, the newest row's isolation is known, and the two differ — a step across
+ * that boundary would say the server changed when what changed is how it was
+ * measured. An *unknown* isolation is not evidence either way, so it stays in
+ * the run and is reported through `conditionsUnknown` instead: the alternative,
+ * treating unknown as its own incompatible value, would silently blank every
+ * series recorded before this column existed.
+ */
+export function plottableSeries(rows: HistoryRow[]): PlottableSeries {
+  const sorted = [...rows].sort((a, b) => a.date.localeCompare(b.date));
+  if (!sorted.length) return { rows: [], dropped: 0, conditionsUnknown: false };
+  const current = sorted[sorted.length - 1]!.isolation;
+  let start = 0;
+  if (current) {
+    for (let i = sorted.length - 1; i >= 0; i--) {
+      const iso = sorted[i]!.isolation;
+      if (iso && iso !== current) {
+        start = i + 1;
+        break;
+      }
+    }
+  }
+  const kept = sorted.slice(start);
+  return {
+    rows: kept,
+    dropped: start,
+    conditionsUnknown: kept.some((r) => !r.isolation),
+  };
 }

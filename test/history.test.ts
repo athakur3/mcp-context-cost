@@ -8,6 +8,8 @@ import {
   upsert,
   rowFor,
   appendHistory,
+  plottableSeries,
+  isolationOf,
   HISTORY_HEADER,
   type HistoryRow,
 } from '../src/sweep/history.js';
@@ -26,6 +28,7 @@ function measurement(over: Partial<Measurement> = {}): Measurement {
     rawToolsCapture: [],
     measuredAt: '2026-08-16T12:03:51.569Z',
     serverName: 'memory',
+    isolation: { docker: true, image: 'node:22-slim' },
     ...over,
   };
 }
@@ -56,6 +59,7 @@ describe('history rows', () => {
       tokens: 2378,
       toolCount: 9,
       status: 'measured',
+      isolation: 'docker',
     });
   });
 
@@ -77,15 +81,15 @@ describe('history rows', () => {
 
 describe('csv round trip', () => {
   const rows: HistoryRow[] = [
-    { date: '2026-08-16', server: 'memory', tokens: 2378, toolCount: 9, status: 'measured' },
-    { date: '2026-08-09', server: 'github', tokens: 54422, toolCount: 44, status: 'measured' },
+    { date: '2026-08-16', server: 'memory', tokens: 2378, toolCount: 9, status: 'measured', isolation: 'docker' },
+    { date: '2026-08-09', server: 'github', tokens: 54422, toolCount: 44, status: 'measured', isolation: 'host' },
   ];
 
   it('writes a header and sorts by date then server', () => {
     const lines = formatHistory(rows).trim().split('\n');
     expect(lines[0]).toBe(HISTORY_HEADER);
-    expect(lines[1]).toBe('2026-08-09,github,54422,44,measured');
-    expect(lines[2]).toBe('2026-08-16,memory,2378,9,measured');
+    expect(lines[1]).toBe('2026-08-09,github,54422,44,measured,host');
+    expect(lines[2]).toBe('2026-08-16,memory,2378,9,measured,docker');
   });
 
   it('round-trips through parseHistory', () => {
@@ -96,7 +100,7 @@ describe('csv round trip', () => {
 
   it('escapes and re-reads a server name containing a comma', () => {
     const odd: HistoryRow[] = [
-      { date: '2026-08-16', server: 'a,b "c"', tokens: 1, toolCount: 1, status: 'measured' },
+      { date: '2026-08-16', server: 'a,b "c"', tokens: 1, toolCount: 1, status: 'measured', isolation: 'docker' },
     ];
     expect(parseHistory(formatHistory(odd))).toEqual(odd);
   });
@@ -106,13 +110,20 @@ describe('csv round trip', () => {
       `${HISTORY_HEADER}\n\nnonsense\n2026-13,x,1,1,measured\n2026-08-16,x,NaN,1,measured\n2026-08-16,ok,5,2,measured\n`,
     );
     expect(parsed).toEqual([
-      { date: '2026-08-16', server: 'ok', tokens: 5, toolCount: 2, status: 'measured' },
+      { date: '2026-08-16', server: 'ok', tokens: 5, toolCount: 2, status: 'measured', isolation: '' },
     ]);
   });
 });
 
 describe('upsert', () => {
-  const base: HistoryRow = { date: '2026-08-16', server: 'x', tokens: 10, toolCount: 1, status: 'measured' };
+  const base: HistoryRow = {
+    date: '2026-08-16',
+    server: 'x',
+    tokens: 10,
+    toolCount: 1,
+    status: 'measured',
+    isolation: 'docker',
+  };
 
   it('replaces the row for the same (date, server)', () => {
     const out = upsert([base], { ...base, tokens: 20 });
@@ -133,7 +144,7 @@ describe('appendHistory', () => {
     const r = appendHistory(root);
     expect(r).toEqual({ rows: 2, added: 2 });
     expect(history()).toBe(
-      `${HISTORY_HEADER}\n2026-08-16,github,54422,44,measured\n2026-08-16,memory,2378,9,measured\n`,
+      `${HISTORY_HEADER}\n2026-08-16,github,54422,44,measured,docker\n2026-08-16,memory,2378,9,measured,docker\n`,
     );
   });
 
@@ -152,7 +163,7 @@ describe('appendHistory', () => {
     writeResult('memory', measurement({ totalTokens: 2400 })); // re-swept same day
     appendHistory(root);
     expect(parseHistory(history())).toEqual([
-      { date: '2026-08-16', server: 'memory', tokens: 2400, toolCount: 9, status: 'measured' },
+      { date: '2026-08-16', server: 'memory', tokens: 2400, toolCount: 9, status: 'measured', isolation: 'docker' },
     ]);
 
     writeResult('memory', measurement({ measuredAt: '2026-08-23T06:17:00.000Z', totalTokens: 2500 }));
@@ -175,5 +186,87 @@ describe('appendHistory', () => {
     writeResult('broken', '{ not json');
     writeResult('memory', measurement());
     expect(appendHistory(root).rows).toBe(1);
+  });
+});
+
+describe('isolation is recorded, not guessed', () => {
+  it('reads docker vs host off the measurement', () => {
+    expect(isolationOf(measurement())).toBe('docker');
+    expect(isolationOf(measurement({ isolation: { docker: false } }))).toBe('host');
+  });
+
+  it('leaves isolation unknown when the measurement never recorded one', () => {
+    expect(isolationOf(measurement({ isolation: undefined }))).toBe('');
+    expect(rowFor('memory', measurement({ isolation: undefined }))?.isolation).toBe('');
+  });
+
+  it('reads a pre-isolation 5-field row as unknown rather than assuming docker', () => {
+    expect(parseHistory(`${HISTORY_HEADER}\n2026-08-16,memory,2378,9,measured\n`)).toEqual([
+      { date: '2026-08-16', server: 'memory', tokens: 2378, toolCount: 9, status: 'measured', isolation: '' },
+    ]);
+  });
+
+  it('records the isolation a sweep actually ran under', () => {
+    writeResult('memory', measurement({ isolation: { docker: false } }));
+    appendHistory(root);
+    expect(history().trim().split('\n')[1]).toBe('2026-08-16,memory,2378,9,measured,host');
+  });
+});
+
+describe('plottableSeries', () => {
+  const row = (date: string, tokens: number, isolation: string): HistoryRow => ({
+    date,
+    server: 'x',
+    tokens,
+    toolCount: 1,
+    status: 'measured',
+    isolation,
+  });
+
+  it('plots the whole series when every sweep ran the same way', () => {
+    const s = plottableSeries([row('2026-08-16', 10, 'docker'), row('2026-08-17', 12, 'docker')]);
+    expect(s.rows.map((r) => r.tokens)).toEqual([10, 12]);
+    expect(s.dropped).toBe(0);
+    expect(s.conditionsUnknown).toBe(false);
+  });
+
+  it('drops the sweeps before an isolation change instead of drawing a step', () => {
+    const s = plottableSeries([
+      row('2026-08-16', 10, 'host'),
+      row('2026-08-17', 11, 'host'),
+      row('2026-08-18', 900, 'docker'),
+      row('2026-08-19', 910, 'docker'),
+    ]);
+    expect(s.rows.map((r) => r.tokens)).toEqual([900, 910]);
+    expect(s.dropped).toBe(2);
+  });
+
+  it('breaks on the most recent change only, not the first one', () => {
+    const s = plottableSeries([
+      row('2026-08-16', 10, 'docker'),
+      row('2026-08-17', 20, 'host'),
+      row('2026-08-18', 30, 'docker'),
+    ]);
+    expect(s.rows.map((r) => r.tokens)).toEqual([30]);
+    expect(s.dropped).toBe(2);
+  });
+
+  it('keeps unrecorded conditions in the line but flags them', () => {
+    const s = plottableSeries([row('2026-08-16', 10, ''), row('2026-08-17', 12, 'docker')]);
+    expect(s.rows).toHaveLength(2);
+    expect(s.dropped).toBe(0);
+    expect(s.conditionsUnknown).toBe(true);
+  });
+
+  it('plots everything when the newest row itself has no isolation on record', () => {
+    const s = plottableSeries([row('2026-08-16', 10, 'host'), row('2026-08-17', 12, '')]);
+    expect(s.rows).toHaveLength(2);
+    expect(s.conditionsUnknown).toBe(true);
+  });
+
+  it('sorts by date before deciding, and handles an empty series', () => {
+    const s = plottableSeries([row('2026-08-18', 30, 'docker'), row('2026-08-16', 10, 'docker')]);
+    expect(s.rows.map((r) => r.date)).toEqual(['2026-08-16', '2026-08-18']);
+    expect(plottableSeries([])).toEqual({ rows: [], dropped: 0, conditionsUnknown: false });
   });
 });

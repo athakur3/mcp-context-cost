@@ -98,6 +98,26 @@ way, the note says which retry it survived — so "broken upstream" and "broken 
 differently without re-running the sweep. A `timeout` note always names the widest budget
 tried, not the first one that failed.
 
+## Trends over time — same conditions, or no line
+
+`results/history.csv` carries one row per (date, server): the tokens a server measured on
+the day it was measured. The leaderboard sparkline and each server page's *Over time* table
+are drawn from it.
+
+A row also records **how** it was measured — `docker` or `host` — because two numbers taken
+under different isolation are not comparable. The same server can resolve an `@latest` tag
+to a different package, run on a different Node, and see a different ambient environment on
+a bare machine than inside a clean container. A step between two such numbers is a property
+of the harness, not of the server, and publishing it as a trend would say the server changed
+when it didn't.
+
+So the published trend only spans the run of sweeps ending at the current one that were all
+measured the same way. Earlier sweeps taken under a different isolation are left out, and the
+server page names the date the comparable series starts at. Rows recorded before this column
+existed read `not recorded`: unknown conditions are shown as unknown rather than back-filled
+with a guess, and because unknown is not evidence of a difference either, those rows still
+plot — with the page saying their conditions aren't on record.
+
 ## Color bands (provisional)
 
 | tokens | color |

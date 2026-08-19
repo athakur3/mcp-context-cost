@@ -13,7 +13,7 @@ import { parse } from 'yaml';
 import type { Measurement } from '../core/types.js';
 import { bandColor, BAND_META } from '../core/bands.js';
 import { loadDivergence, mdCell, type ServerEntry } from './report.js';
-import { parseHistory, type HistoryRow } from './history.js';
+import { parseHistory, plottableSeries, type HistoryRow } from './history.js';
 import { claudeRatio, fieldSelectionShare, isCurrent, type DivergenceRow, type DivergenceRun } from '../core/divergence.js';
 
 /**
@@ -155,17 +155,47 @@ export function renderServerPage(
   }
 
   if (history.length > 1) {
+    // A change is only a change if both numbers were taken the same way, so the
+    // delta column is blank across an isolation boundary rather than reporting a
+    // difference the harness produced.
+    const plottable = plottableSeries(history);
+    const comparableFrom = plottable.rows[0]?.date;
     md.push('## Over time');
     md.push('');
-    md.push('| date | tokens | tools | change |');
-    md.push('|---|---:|---:|---:|');
+    md.push('| date | tokens | tools | measured in | change |');
+    md.push('|---|---:|---:|---|---:|');
     history.forEach((h, i) => {
       const prev = history[i - 1];
-      const delta = prev ? h.tokens - prev.tokens : null;
-      const change = delta === null ? '—' : delta === 0 ? 'no change' : `${delta > 0 ? '+' : ''}${fmt(delta)}`;
-      md.push(`| ${mdCell(h.date)} | ${fmt(h.tokens)} | ${h.toolCount} | ${change} |`);
+      const comparable = prev && (!prev.isolation || !h.isolation || prev.isolation === h.isolation);
+      const delta = prev && comparable ? h.tokens - prev.tokens : null;
+      const change = !prev
+        ? '—'
+        : !comparable
+          ? 'not comparable'
+          : delta === 0
+            ? 'no change'
+            : `${delta! > 0 ? '+' : ''}${fmt(delta!)}`;
+      md.push(
+        `| ${mdCell(h.date)} | ${fmt(h.tokens)} | ${h.toolCount} | ${mdCell(h.isolation || 'not recorded')} | ${change} |`,
+      );
     });
     md.push('');
+    if (plottable.dropped) {
+      md.push(
+        `> The first ${plottable.dropped} row${plottable.dropped === 1 ? ' was' : 's were'} measured under a ` +
+          `different isolation than the current measurement, so the published trend starts at ` +
+          `${mdCell(comparableFrom)}. Numbers taken on the host and inside a container are not ` +
+          `interchangeable — the package a \`@latest\` tag resolves to, the runtime version and the ` +
+          `ambient environment can all differ.`,
+      );
+      md.push('');
+    } else if (plottable.conditionsUnknown) {
+      md.push(
+        '> Some of these sweeps predate the `isolation` column, so the conditions they were ' +
+          'measured under are not on record.',
+      );
+      md.push('');
+    }
     md.push(`Full series: [results/history.csv](${BLOB}/results/history.csv).`);
     md.push('');
   }

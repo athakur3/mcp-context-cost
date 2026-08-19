@@ -9,7 +9,7 @@ import { parse } from 'yaml';
 import type { Measurement } from '../core/types.js';
 import type { ServerEntry } from './report.js';
 import { bandColor, BAND_META } from '../core/bands.js';
-import { parseHistory } from './history.js';
+import { parseHistory, plottableSeries, type PlottableSeries } from './history.js';
 
 /** Longest series a sparkline plots — a stat-tile trend, not a full chart. */
 const SPARK_MAX_POINTS = 12;
@@ -66,11 +66,10 @@ export function generateDashboard(root = process.cwd()): string {
   const dSrv = divergence.servers ?? {};
   const historyPath = join(root, 'results', 'history.csv');
   const history = existsSync(historyPath) ? parseHistory(readFileSync(historyPath, 'utf8')) : [];
-  const seriesFor = (name: string): number[] =>
-    history
-      .filter((h) => h.server === name)
-      .sort((a, b) => a.date.localeCompare(b.date))
-      .map((h) => h.tokens);
+  // Only the run of sweeps taken under the same isolation is plotted: a step
+  // across an isolation change is the harness moving, not the server.
+  const seriesFor = (name: string): PlottableSeries =>
+    plottableSeries(history.filter((h) => h.server === name));
   const rows: Row[] = doc.servers.map((entry) => {
     const p = join(root, 'results', entry.name, 'measurement.json');
     return { entry, m: existsSync(p) ? (JSON.parse(readFileSync(p, 'utf8')) as Measurement) : null };
@@ -99,9 +98,17 @@ export function generateDashboard(root = process.cwd()): string {
       const div = dSrv[r.entry.name];
       const claudeTip = div ? ` · in a Claude request: ${fmt(div.claudeDelta)} tok` : '';
       const series = seriesFor(r.entry.name);
-      const spark = renderSparkline(series);
+      const tokens = series.rows.map((h) => h.tokens);
+      const spark = renderSparkline(tokens);
       const trendTip =
-        series.length > 1 ? ` · ${series.length}-sweep trend: ${series[0]!.toLocaleString('en-US')} → ${series[series.length - 1]!.toLocaleString('en-US')}` : '';
+        tokens.length > 1
+          ? ` · ${tokens.length}-sweep trend: ${tokens[0]!.toLocaleString('en-US')} → ${tokens[tokens.length - 1]!.toLocaleString('en-US')}` +
+            (series.dropped
+              ? ` (${series.dropped} earlier sweep${series.dropped === 1 ? '' : 's'} measured under different isolation, not plotted)`
+              : '')
+          : series.dropped
+            ? ` · earlier sweeps were measured under different isolation, so no trend is plotted`
+            : '';
       // The whole row is the link to the server's detail page (docs/servers/).
       return `<a class="row" href="servers/${encodeURIComponent(r.entry.name)}.html" data-tip="${esc(m.toolCount)} tools · largest: ${esc(largest?.name)} (${fmt(largest?.tokens ?? 0)} tok)${claudeTip}${trendTip} · ${esc(r.entry.category)} · ${esc(m.status)}${m.serverVersion ? ' · v' + esc(String(m.serverVersion).replace(/^v/, '')) : ''}">
   <span class="rank">${i + 1}</span>
@@ -125,10 +132,10 @@ export function generateDashboard(root = process.cwd()): string {
     .map((r, i) => {
       const m = r.m!;
       const div = dSrv[r.entry.name];
-      const series = seriesFor(r.entry.name);
+      const tokens = seriesFor(r.entry.name).rows.map((h) => h.tokens);
       const trend =
-        series.length > 1
-          ? `${series[series.length - 1]! - series[0]! >= 0 ? '+' : ''}${fmt(series[series.length - 1]! - series[0]!)} / ${series.length}d`
+        tokens.length > 1
+          ? `${tokens[tokens.length - 1]! - tokens[0]! >= 0 ? '+' : ''}${fmt(tokens[tokens.length - 1]! - tokens[0]!)} / ${tokens.length}d`
           : '—';
       return `<tr><td>${i + 1}</td><td>${esc(r.entry.name)}</td><td class="num">${fmt(m.totalTokens as number)}</td><td class="num">${div ? fmt(div.claudeDelta) : '—'}</td><td class="num">${esc(m.toolCount)}</td><td>${esc(BAND_META[bandColor(m.totalTokens as number)].label)}</td><td>${esc(r.entry.category)}</td><td class="num">${trend}</td></tr>`;
     })
@@ -247,7 +254,7 @@ export function generateDashboard(root = process.cwd()): string {
   </div>
 
   <h2>Leaderboard</h2>
-  <p class="h2sub">Tokens = o200k_base count of the canonical <code>tools/list</code> bytes — the wire payload. What a <em>Claude request</em> actually carries can differ sharply (github: 54,422 on the wire, ${dSrv['github'] ? fmt(dSrv['github'].claudeDelta) : '…'} in a request — 80% of its schema bytes are fields no Anthropic request sends). The trend line plots tokens across every sweep date on record (oldest→newest, dot = current); servers with one sweep so far show no line yet. Hover a row for exact numbers; <a href="METHODOLOGY.html#claude-divergence">method</a>.</p>
+  <p class="h2sub">Tokens = o200k_base count of the canonical <code>tools/list</code> bytes — the wire payload. What a <em>Claude request</em> actually carries can differ sharply (github: 54,422 on the wire, ${dSrv['github'] ? fmt(dSrv['github'].claudeDelta) : '…'} in a request — 80% of its schema bytes are fields no Anthropic request sends). The trend line plots tokens across every sweep date on record (oldest→newest, dot = current); servers with one sweep so far show no line yet, and a sweep taken under different isolation than the current one is left out rather than drawn as a change in the server. Hover a row for exact numbers; <a href="METHODOLOGY.html#claude-divergence">method</a>.</p>
   <div class="board">
 ${barRows || '<p class="h2sub">Sweep in progress — first results land shortly.</p>'}
   </div>
