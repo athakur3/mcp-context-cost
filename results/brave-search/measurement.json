@@ -5771,7 +5771,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-16T12:02:39.907Z",
+  "measuredAt": "2026-08-19T00:00:06.662Z",
   "serverName": "brave-search-mcp-server",
   "serverVersion": "2.1.0",
   "launchCommand": "npx -y @brave/brave-search-mcp-server",
@@ -5783,5 +5783,6 @@
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

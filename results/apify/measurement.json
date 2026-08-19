@@ -1908,7 +1908,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-16T12:02:55.027Z",
+  "measuredAt": "2026-08-19T00:00:36.827Z",
   "serverName": "apify-mcp-server",
   "serverVersion": "0.14.3",
   "launchCommand": "npx -y @apify/actors-mcp-server",
@@ -1920,5 +1920,6 @@
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

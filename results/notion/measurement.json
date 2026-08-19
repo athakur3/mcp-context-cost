@@ -6564,7 +6564,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-16T12:01:33.579Z",
+  "measuredAt": "2026-08-18T23:58:30.464Z",
   "serverName": "Notion API",
   "serverVersion": "1.0.0",
   "launchCommand": "npx -y @notionhq/notion-mcp-server",
@@ -6576,5 +6576,6 @@
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

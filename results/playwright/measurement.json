@@ -972,7 +972,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-16T12:01:07.491Z",
+  "measuredAt": "2026-08-18T23:58:03.954Z",
   "serverName": "Playwright",
   "serverVersion": "1.63.0-alpha-2026-08-05",
   "launchCommand": "npx -y @playwright/mcp@latest",
@@ -982,5 +982,6 @@
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 180000
 }

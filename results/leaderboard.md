@@ -2,30 +2,30 @@
 
 Tokens = o200k_base count of the canonical `tools/list` bytes ([methodology v1.0](../docs/METHODOLOGY.md)). Measured 69/82 candidates; every candidate is listed — failures are findings, not omissions. Server names link to their per-tool breakdown.
 
-The **claude** column is the same tools measured through Anthropic's `count_tokens` on `claude-opus-5` (2026-08-16, method `tools-delta/v1`): the tokens the server's tools add to a request, measured for the top 15. It is not a rescaling of the o200k column — two effects pull in opposite directions, and the [per-server pages](../docs/servers/) break both out. See [Claude divergence](../docs/METHODOLOGY.md#claude-divergence).
+The **claude** column is the same tools measured through Anthropic's `count_tokens` on `claude-opus-5` (2026-08-19, method `tools-delta/v1`): the tokens the server's tools add to a request, measured for the top 19. It is not a rescaling of the o200k column — two effects pull in opposite directions, and the [per-server pages](../docs/servers/) break both out. See [Claude divergence](../docs/METHODOLOGY.md#claude-divergence).
 
 | # | server | tokens | claude | tools | largest tool | status | category |
 |---:|---|---:|---:|---:|---|---|---|
 | 1 | [github](../docs/servers/github.md) | 54,422 | 18,406 | 44 | issue_write (1,890) | measured | vendor-official |
-| 2 | [xcodebuildmcp](../docs/servers/xcodebuildmcp.md) | 26,594 | — | 24 | snapshot_ui (2,139) | measured | community |
+| 2 | [xcodebuildmcp](../docs/servers/xcodebuildmcp.md) | 26,594 | 5,335 | 24 | snapshot_ui (2,139) | measured | community |
 | 3 | [brave-search](../docs/servers/brave-search.md) | 25,456 | 13,746 | 8 | brave_place_search (17,282) | measured | vendor-official |
 | 4 | [notion](../docs/servers/notion.md) | 17,500 | 33,560 | 24 | API-update-page-markdown (1,282) | measured | vendor-official |
 | 5 | [mcp-atlassian](../docs/servers/mcp-atlassian.md) | 17,311 | 22,234 | 63 | jira_update_proforma_form_answers (800) | dynamic | community |
 | 6 | [circleci](../docs/servers/circleci.md) | 11,912 | 19,164 | 13 | run_rollback_pipeline (1,391) | measured | vendor-official |
-| 7 | [desktop-commander](../docs/servers/desktop-commander.md) | 11,835 | — | 26 | start_search (1,351) | dynamic | community |
+| 7 | [desktop-commander](../docs/servers/desktop-commander.md) | 11,836 | 19,305 | 26 | start_search (1,351) | dynamic | community |
 | 8 | [apify](../docs/servers/apify.md) | 10,426 | 8,313 | 10 | search-actors (2,200) | measured | vendor-official |
 | 9 | [firecrawl](../docs/servers/firecrawl.md) | 9,561 | 16,428 | 27 | firecrawl_search (1,391) | measured | vendor-official |
-| 10 | [redis](../docs/servers/redis.md) | 9,246 | — | 53 | hybrid_search (510) | measured | vendor-official |
+| 10 | [redis](../docs/servers/redis.md) | 9,246 | 13,221 | 53 | hybrid_search (510) | measured | vendor-official |
 | 11 | [basic-memory](../docs/servers/basic-memory.md) | 9,188 | 12,426 | 23 | search_notes (970) | measured | community |
 | 12 | [hubspot](../docs/servers/hubspot.md) | 9,158 | 14,398 | 21 | hubspot-search-objects (964) | measured | vendor-official |
-| 13 | [postgres-mcp](../docs/servers/postgres-mcp.md) | 8,632 | — | 9 | explain_query (1,147) | measured | community |
-| 14 | [serena](../docs/servers/serena.md) | 8,204 | — | 29 | find_symbol (883) | measured | community |
+| 13 | [postgres-mcp](../docs/servers/postgres-mcp.md) | 8,632 | 2,381 | 9 | explain_query (1,147) | measured | community |
+| 14 | [serena](../docs/servers/serena.md) | 8,204 | 11,494 | 29 | find_symbol (883) | measured | community |
 | 15 | [mongodb](../docs/servers/mongodb.md) | 7,926 | 8,765 | 27 | explain (813) | measured | vendor-official |
 | 16 | [sentry](../docs/servers/sentry.md) | 6,455 | 10,463 | 9 | update_issue (1,306) | measured | vendor-official |
 | 17 | [pinecone](../docs/servers/pinecone.md) | 5,903 | 9,184 | 9 | search-records (1,179) | measured | vendor-official |
 | 18 | [shopify-dev](../docs/servers/shopify-dev.md) | 5,624 | 9,805 | 5 | learn_shopify_api (2,518) | measured | vendor-official |
-| 19 | [kubernetes](../docs/servers/kubernetes.md) | 5,268 | 9,165 | 23 | kubectl_create (945) | measured | community |
-| 20 | [blender](../docs/servers/blender.md) | 5,258 | 8,106 | 24 | generate_hyper3d_model_via_images (454) | measured | community |
+| 19 | [blender](../docs/servers/blender.md) | 5,462 | — | 25 | generate_hyper3d_model_via_images (454) | measured | community |
+| 20 | [kubernetes](../docs/servers/kubernetes.md) | 5,268 | 9,165 | 23 | kubectl_create (945) | measured | community |
 | 21 | [aws-documentation](../docs/servers/aws-documentation.md) | 5,074 | — | 5 | search_documentation (1,956) | measured | vendor-official |
 | 22 | [supabase](../docs/servers/supabase.md) | 5,013 | — | 29 | query_logs (800) | measured | vendor-official |
 | 23 | [huggingface](../docs/servers/huggingface.md) | 4,691 | — | 4 | hf_whoami (1,948) | measured | vendor-official |
@@ -80,17 +80,17 @@ The **claude** column is the same tools measured through Anthropic's `count_toke
 
 | server | status | note |
 |---|---|---|
-| gdrive | auth-required | server exited (code 1); stderr tail: Credentials not found. Please run with 'auth' argument first.  |
-| redis-legacy | startup-failure | server exited (code 1); stderr tail: econnect (/tmp/.npm-cache/_npx/5c1b9cdedadb4486/node_modules/@redis/client/dist/lib/client/socket.js:140:16)     at RedisSo |
+| gdrive | auth-required | server exited (code 1); stderr tail: npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For C |
+| redis-legacy | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: econnect (/tmp/.npm-cache/_npx/5c1b9cdedadb4486/node_modules/@redis/clie |
 | azure | auth-required | server exited (code 0); stderr tail: oveNext()    at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start\[\[Azure.Mcp.Server.Program+\<Main\>d__2, azmc |
 | magic | auth-required | server error -32001: Not authenticated - your API key is missing or was reset. Get a fresh key at https://21st.dev/mcp and update your MCP config (x-api-key / B |
-| stripe | startup-failure | server exited (code 1); stderr tail: index.js:20:30)     at Object.\<anonymous\> (/tmp/.npm-cache/_npx/bce731a0395adf49/node_modules/@stripe/mcp/dist/index.js:8 |
-| heroku | startup-failure | server exited (code 1); stderr tail: Fatal error in main(): Cannot find module '/tmp/.npm-cache/_npx/909ffbc9d45b7a62/node_modules/@modelcontextprotocol/sdk/dis |
+| stripe | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: index.js:20:30)     at Object.\<anonymous\> (/tmp/.npm-cache/_npx/bce731 |
+| heroku | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: Fatal error in main(): Cannot find module '/tmp/.npm-cache/_npx/909ffbc9 |
 | grafana | timeout | timeout after 180000ms waiting for initialize |
-| neon | startup-failure | server exited (code 1) |
+| neon | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1) |
 | linear | remote-auth-wall |  |
 | zapier | remote-auth-wall |  |
 | vercel | remote-auth-wall |  |
 | gmail | auth-required | server exited (code 1); stderr tail: Error: OAuth keys file not found. Please place gcp-oauth.keys.json in current directory or /tmp/.gmail-mcp  |
-| slack | startup-failure | server exited (code 1); stderr tail: .execFileSync (node:child_process:952:15)     at Object.\<anonymous\> (/tmp/.npm-cache/_npx/2f12aed4e6049c73/node_modules/s |
+| slack | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: .execFileSync (node:child_process:952:15)     at Object.\<anonymous\> (/ |
 

@@ -33,7 +33,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-16T12:02:03.584Z",
+  "measuredAt": "2026-08-18T23:58:58.205Z",
   "serverName": "markitdown",
   "serverVersion": "1.8.1",
   "launchCommand": "uvx markitdown-mcp",
@@ -43,5 +43,6 @@
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

@@ -1,6 +1,6 @@
 # pulumi — context cost
 
-**2,768 tokens** across 12 tools — *light* (1–5K). Measured 2026-08-16 under [methodology v1.0](../METHODOLOGY.html).
+**2,768 tokens** across 12 tools — *light* (1–5K). Measured 2026-08-19 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -32,6 +32,15 @@
 | deploy-to-aws | 96 | 3.5% | 51 | 24 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
+
+## Over time
+
+| date | tokens | tools | change |
+|---|---:|---:|---:|
+| 2026-08-16 | 2,768 | 12 | — |
+| 2026-08-19 | 2,768 | 12 | no change |
+
+Full series: [results/history.csv](https://github.com/athakur3/mcp-context-cost/blob/main/results/history.csv).
 
 ## Re-derive it
 

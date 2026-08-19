@@ -1,6 +1,6 @@
 # supabase — context cost
 
-**5,013 tokens** across 29 tools — *moderate* (5–15K). Measured 2026-08-16 under [methodology v1.0](../METHODOLOGY.html).
+**5,013 tokens** across 29 tools — *moderate* (5–15K). Measured 2026-08-18 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -49,6 +49,15 @@
 | list_organizations | 83 | 1.7% | 11 | 29 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
+
+## Over time
+
+| date | tokens | tools | change |
+|---|---:|---:|---:|
+| 2026-08-16 | 5,013 | 29 | — |
+| 2026-08-18 | 5,013 | 29 | no change |
+
+Full series: [results/history.csv](https://github.com/athakur3/mcp-context-cost/blob/main/results/history.csv).
 
 ## Re-derive it
 

@@ -310,12 +310,22 @@ ${barRows || '<p class="h2sub">Sweep in progress — first results land shortly.
 `;
 }
 
+/**
+ * Render and write the dashboard. Exported so `regen.ts` refreshes it alongside
+ * the leaderboard and the server pages: this is the published Pages surface, and
+ * when only the CLI wrote it every sweep updated `results/` and `docs/servers/`
+ * while the page people actually open kept the previous run's numbers.
+ */
+export function writeDashboard(root = process.cwd(), out = 'docs/dashboard.html'): { out: string; bytes: number } {
+  const html = generateDashboard(root);
+  mkdirSync(dirname(out), { recursive: true });
+  writeFileSync(out, html);
+  return { out, bytes: html.length };
+}
+
 const isMain = process.argv[1]?.endsWith('dashboard.ts') || process.argv[1]?.endsWith('dashboard.js');
 if (isMain) {
   const i = process.argv.indexOf('--out');
-  const out = i >= 0 ? process.argv[i + 1] : 'docs/dashboard.html';
-  const html = generateDashboard();
-  mkdirSync(dirname(out), { recursive: true });
-  writeFileSync(out, html);
-  console.log(`wrote ${out} (${(html.length / 1024).toFixed(0)}KB)`);
+  const w = writeDashboard(process.cwd(), i >= 0 ? process.argv[i + 1] : 'docs/dashboard.html');
+  console.log(`wrote ${w.out} (${(w.bytes / 1024).toFixed(0)}KB)`);
 }

@@ -989,7 +989,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-16T12:06:17.379Z",
+  "measuredAt": "2026-08-19T00:08:49.840Z",
   "serverName": "playwright-mcp",
   "serverVersion": "1.0.11",
   "launchCommand": "npx -y @executeautomation/playwright-mcp-server",
@@ -999,5 +999,6 @@
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 180000
 }

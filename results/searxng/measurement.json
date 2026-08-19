@@ -220,7 +220,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-16T12:06:04.712Z",
+  "measuredAt": "2026-08-19T00:07:46.973Z",
   "serverName": "ihor-sokoliuk/mcp-searxng",
   "serverVersion": "1.15.0",
   "launchCommand": "npx -y mcp-searxng",
@@ -232,5 +232,6 @@
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

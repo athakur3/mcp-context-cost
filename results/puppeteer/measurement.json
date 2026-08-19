@@ -198,7 +198,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-16T12:01:27.065Z",
+  "measuredAt": "2026-08-19T00:10:07.695Z",
   "serverName": "example-servers/puppeteer",
   "serverVersion": "0.1.0",
   "launchCommand": "npx -y @modelcontextprotocol/server-puppeteer",
@@ -208,5 +208,6 @@
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 240000
 }

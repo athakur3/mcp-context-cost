@@ -142,7 +142,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-16T12:04:32.504Z",
+  "measuredAt": "2026-08-19T00:04:30.328Z",
   "serverName": "DeepWiki",
   "serverVersion": "2.14.3",
   "launchCommand": "npx -y mcp-remote https://mcp.deepwiki.com/mcp",
@@ -152,5 +152,6 @@
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 120000
 }

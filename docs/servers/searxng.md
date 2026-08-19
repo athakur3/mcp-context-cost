@@ -1,6 +1,6 @@
 # searxng — context cost
 
-**1,481 tokens** across 4 tools — *light* (1–5K). Measured 2026-08-16 under [methodology v1.0](../METHODOLOGY.html).
+**1,481 tokens** across 4 tools — *light* (1–5K). Measured 2026-08-19 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -24,6 +24,15 @@
 | searxng_search_suggestions | 118 | 8.0% | 23 | 66 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
+
+## Over time
+
+| date | tokens | tools | change |
+|---|---:|---:|---:|
+| 2026-08-16 | 1,481 | 4 | — |
+| 2026-08-19 | 1,481 | 4 | no change |
+
+Full series: [results/history.csv](https://github.com/athakur3/mcp-context-cost/blob/main/results/history.csv).
 
 ## Re-derive it
 

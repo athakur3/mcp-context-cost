@@ -19,6 +19,17 @@ planning note.
 
 ## Done
 
+- [x] **Whole-set re-sweep, and a trend line on nearly every row**: every server measured
+      again in Docker isolation, so 65 of the 69 measured rows now plot a real sparkline
+      instead of a single point. Two fixes came out of it: a server that fails only because
+      a cached package went bad is no longer published as a failure — the sweep re-measures
+      it from a clean cache first — and a failure that survives that retry now says so in
+      its note, so "broken upstream" reads differently from "broken here" (2026-08-19)
+
+- [x] **`regen` rewrites the dashboard too**: the leaderboard, the per-server pages and the
+      dashboard now refresh in one step, so the published page can no longer sit on the
+      previous sweep's numbers while everything around it updates (2026-08-19)
+
 - [x] **Cost-over-time sparklines**: leaderboard rows now carry a 12-point-max inline
       trend line from `results/history.csv` (muted line, accent dot on the current
       value), with the same delta spelled out in the row tooltip and a `trend` column

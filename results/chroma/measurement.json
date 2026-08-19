@@ -603,7 +603,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-16T12:02:30.845Z",
+  "measuredAt": "2026-08-18T23:59:14.545Z",
   "serverName": "chroma",
   "serverVersion": "1.6.0",
   "launchCommand": "uvx chroma-mcp",
@@ -613,5 +613,6 @@
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

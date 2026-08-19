@@ -10,7 +10,7 @@ One page per measured server: the per-tool breakdown behind the badge, the exact
 | 4 | [notion](notion.html) | 17,500 | 24 | heavy |
 | 5 | [mcp-atlassian](mcp-atlassian.html) | 17,311 | 63 | heavy |
 | 6 | [circleci](circleci.html) | 11,912 | 13 | moderate |
-| 7 | [desktop-commander](desktop-commander.html) | 11,835 | 26 | moderate |
+| 7 | [desktop-commander](desktop-commander.html) | 11,836 | 26 | moderate |
 | 8 | [apify](apify.html) | 10,426 | 10 | moderate |
 | 9 | [firecrawl](firecrawl.html) | 9,561 | 27 | moderate |
 | 10 | [redis](redis.html) | 9,246 | 53 | moderate |
@@ -22,8 +22,8 @@ One page per measured server: the per-tool breakdown behind the badge, the exact
 | 16 | [sentry](sentry.html) | 6,455 | 9 | moderate |
 | 17 | [pinecone](pinecone.html) | 5,903 | 9 | moderate |
 | 18 | [shopify-dev](shopify-dev.html) | 5,624 | 5 | moderate |
-| 19 | [kubernetes](kubernetes.html) | 5,268 | 23 | moderate |
-| 20 | [blender](blender.html) | 5,258 | 24 | moderate |
+| 19 | [blender](blender.html) | 5,462 | 25 | moderate |
+| 20 | [kubernetes](kubernetes.html) | 5,268 | 23 | moderate |
 | 21 | [aws-documentation](aws-documentation.html) | 5,074 | 5 | moderate |
 | 22 | [supabase](supabase.html) | 5,013 | 29 | moderate |
 | 23 | [huggingface](huggingface.html) | 4,691 | 4 | light |

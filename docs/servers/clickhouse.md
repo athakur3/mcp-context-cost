@@ -1,6 +1,6 @@
 # clickhouse — context cost
 
-**581 tokens** across 3 tools — *lean* (< 1K). Measured 2026-08-16 under [methodology v1.0](../METHODOLOGY.html).
+**581 tokens** across 3 tools — *lean* (< 1K). Measured 2026-08-18 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -23,6 +23,15 @@
 | list_databases | 79 | 13.6% | 5 | 9 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
+
+## Over time
+
+| date | tokens | tools | change |
+|---|---:|---:|---:|
+| 2026-08-16 | 581 | 3 | — |
+| 2026-08-18 | 581 | 3 | no change |
+
+Full series: [results/history.csv](https://github.com/athakur3/mcp-context-cost/blob/main/results/history.csv).
 
 ## Re-derive it
 

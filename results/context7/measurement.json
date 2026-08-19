@@ -80,7 +80,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-16T12:01:14.187Z",
+  "measuredAt": "2026-08-18T23:58:15.070Z",
   "serverName": "Context7",
   "serverVersion": "4.0.2",
   "launchCommand": "npx -y @upstash/context7-mcp",
@@ -90,5 +90,6 @@
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

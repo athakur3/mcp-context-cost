@@ -1,7 +1,7 @@
 {
   "method": "tools-delta/v1",
   "model": "claude-opus-5",
-  "measuredAt": "2026-08-16",
+  "measuredAt": "2026-08-19",
   "baselineTokens": 7,
   "probeDelta": 328,
   "servers": {
@@ -40,6 +40,13 @@
       "toolCount": 13,
       "capturedSha256": "f4d995111363bc9a5c220871fb9e4c2d81372ef647572f5f4f19cb5d4bd08bbe"
     },
+    "desktop-commander": {
+      "o200kFull": 11836,
+      "o200kMapped": 11056,
+      "claudeDelta": 19305,
+      "toolCount": 26,
+      "capturedSha256": "8623f9de377963b97d6e8294e16ac107c445e29b3ad97fbe78f18c1971dde6f5"
+    },
     "firecrawl": {
       "o200kFull": 9561,
       "o200kMapped": 8869,
@@ -73,7 +80,7 @@
       "o200kMapped": 12823,
       "claudeDelta": 22234,
       "toolCount": 63,
-      "capturedSha256": "c55fb33bea2aebc0be1aa5c7a04e19652f01508e0891e8fdf705684f5de3ce85"
+      "capturedSha256": "1ff1b32a4f6f0b8485b54314964e498d26ebe605e7f4871cd4f5cbba371bf3ac"
     },
     "mongodb": {
       "o200kFull": 7926,
@@ -96,6 +103,20 @@
       "toolCount": 9,
       "capturedSha256": "cc8ffaadb37615f11747b0a1eafd8541cfb2f31064adcd4973860f8f03bab377"
     },
+    "postgres-mcp": {
+      "o200kFull": 8632,
+      "o200kMapped": 1178,
+      "claudeDelta": 2381,
+      "toolCount": 9,
+      "capturedSha256": "9bb1e5d26dd377de9dbfac88ffe77663a1169cddf66c6b1f52f57d3a740b0e54"
+    },
+    "redis": {
+      "o200kFull": 9246,
+      "o200kMapped": 7489,
+      "claudeDelta": 13221,
+      "toolCount": 53,
+      "capturedSha256": "92a01e079c4436e651586a0fa4117e21204dc481de169763e621253280225570"
+    },
     "sentry": {
       "o200kFull": 6455,
       "o200kMapped": 6051,
@@ -103,12 +124,26 @@
       "toolCount": 9,
       "capturedSha256": "b56928d7394324ec80ddda1377e382b535fd3abc7b488cda6b4a52e4a01b410b"
     },
+    "serena": {
+      "o200kFull": 8204,
+      "o200kMapped": 6550,
+      "claudeDelta": 11494,
+      "toolCount": 29,
+      "capturedSha256": "7d876a84707e0689df306366dc7c3225ae49762ca045d7604c7c9a2b20dfbc3c"
+    },
     "shopify-dev": {
       "o200kFull": 5624,
       "o200kMapped": 5584,
       "claudeDelta": 9805,
       "toolCount": 5,
       "capturedSha256": "6c863ee06d8d4d8fb2ade2e07673c087b75cc1482b3e521e9c9375151860c659"
+    },
+    "xcodebuildmcp": {
+      "o200kFull": 26594,
+      "o200kMapped": 2676,
+      "claudeDelta": 5335,
+      "toolCount": 24,
+      "capturedSha256": "f467743f38a30d15da18709c500aa4e22186a755f0e3d2c97966ccd343978a5d"
     }
   }
 }

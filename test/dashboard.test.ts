@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync, readFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { generateDashboard, renderSparkline } from '../src/sweep/dashboard.js';
+import { generateDashboard, renderSparkline, writeDashboard } from '../src/sweep/dashboard.js';
 import type { Measurement } from '../src/core/types.js';
 
 describe('renderSparkline', () => {
@@ -77,5 +77,44 @@ describe('generateDashboard sparklines', () => {
     const html = generateDashboard(root);
     expect(html).not.toContain('class="spark"');
     expect(html).toContain('spark-cell');
+  });
+});
+
+describe('writeDashboard', () => {
+  let root: string;
+
+  beforeEach(() => {
+    root = mkdtempSync(join(tmpdir(), 'mcc-writedash-'));
+    mkdirSync(join(root, 'results', 'demo'), { recursive: true });
+    writeFileSync(join(root, 'servers.yaml'), 'servers:\n  - name: demo\n    command: npx -y demo-mcp\n    category: search\n');
+    writeFileSync(join(root, 'results', 'demo', 'measurement.json'), JSON.stringify(measurement()));
+    writeFileSync(
+      join(root, 'results', 'history.csv'),
+      'date,server,tokens,toolCount,status\n2026-08-16,demo,900,2,measured\n2026-08-18,demo,1200,2,measured\n',
+    );
+  });
+
+  afterEach(() => rmSync(root, { recursive: true, force: true }));
+
+  it('writes the rendered dashboard to the given path, creating the directory', () => {
+    const out = join(root, 'docs', 'dashboard.html');
+    expect(existsSync(out)).toBe(false);
+    const w = writeDashboard(root, out);
+    expect(w.out).toBe(out);
+    const html = readFileSync(out, 'utf8');
+    expect(w.bytes).toBe(html.length);
+    expect(html).toContain('class="spark"');
+  });
+
+  it('picks up a new history point on rewrite — a stale dashboard is the defect this exists to stop', () => {
+    const out = join(root, 'docs', 'dashboard.html');
+    writeDashboard(root, out);
+    expect(readFileSync(out, 'utf8')).toContain('900 → 1,200');
+    writeFileSync(
+      join(root, 'results', 'history.csv'),
+      'date,server,tokens,toolCount,status\n2026-08-16,demo,900,2,measured\n2026-08-18,demo,1200,2,measured\n2026-08-19,demo,1500,2,measured\n',
+    );
+    writeDashboard(root, out);
+    expect(readFileSync(out, 'utf8')).toContain('900 → 1,500');
   });
 });

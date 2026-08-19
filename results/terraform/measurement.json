@@ -329,7 +329,7 @@
       "name": "search_providers"
     }
   ],
-  "measuredAt": "2026-08-16T12:08:31.393Z",
+  "measuredAt": "2026-08-19T00:03:22.810Z",
   "serverName": "terraform-mcp-server",
   "serverVersion": "1.2.0",
   "launchCommand": "docker run -i --rm hashicorp/terraform-mcp-server",
@@ -337,5 +337,6 @@
   "isolation": {
     "docker": true,
     "note": "command is itself a docker run (host-spawned container)"
-  }
+  },
+  "timeoutMs": 180000
 }

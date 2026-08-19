@@ -1,14 +1,14 @@
 # memory — context cost
 
-**2,378 tokens** across 9 tools — *light* (1–5K). Measured 2026-08-17 under [methodology v1.0](../METHODOLOGY.html).
+**2,378 tokens** across 9 tools — *light* (1–5K). Measured 2026-08-18 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
 | server (self-reported) | memory-server v0.6.3 |
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
-| launch command | `npx -y @modelcontextprotocol/server-memory@2026.7.4` |
-| isolation | host process (no container) |
+| launch command | `npx -y @modelcontextprotocol/server-memory` |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | none |
 | canonical SHA-256 | `d028274f76dc9aa2e622ae02a17ce313aa65d7b5935254ca53889d4094238abb` |
 | category | official-reference |
@@ -36,6 +36,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 |---|---:|---:|---:|
 | 2026-08-16 | 2,378 | 9 | — |
 | 2026-08-17 | 2,378 | 9 | no change |
+| 2026-08-18 | 2,378 | 9 | no change |
 
 Full series: [results/history.csv](https://github.com/athakur3/mcp-context-cost/blob/main/results/history.csv).
 

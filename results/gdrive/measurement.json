@@ -8,14 +8,15 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-08-16T12:08:11.500Z",
+  "measuredAt": "2026-08-18T23:57:50.995Z",
   "serverName": "gdrive",
   "launchCommand": "npx -y @modelcontextprotocol/server-gdrive",
-  "notes": "server exited (code 1); stderr tail: Credentials not found. Please run with 'auth' argument first.\n",
+  "notes": "server exited (code 1); stderr tail: npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).\nnpm warn deprecated @modelcontextprotocol/server-gdrive@2025.1.14: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.\nCredentials not found. Please run with 'auth' argument first.\n",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

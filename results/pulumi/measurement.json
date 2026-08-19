@@ -418,7 +418,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-16T12:03:51.569Z",
+  "measuredAt": "2026-08-19T00:02:18.913Z",
   "serverName": "@pulumi/mcp-server",
   "serverVersion": "0.2.0",
   "launchCommand": "npx -y @pulumi/mcp-server@latest stdio",
@@ -428,5 +428,6 @@
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

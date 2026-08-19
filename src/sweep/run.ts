@@ -43,6 +43,32 @@ export interface MeasureOptions {
   persist?: boolean;
 }
 
+/**
+ * Marks a startup-failure that was re-attempted from a cold package cache and
+ * failed the same way. Its absence on a startup-failure means the retry never
+ * ran (host mode, or a self-containerised command), not that it passed.
+ */
+export const RETRY_CONFIRMED_PREFIX = 'reproduced with the shared package cache bypassed; ';
+
+/**
+ * Whether a failed measurement gets a second attempt with the shared package
+ * caches bypassed (see `DockerOptions.noSharedCache`).
+ *
+ * A poisoned cache entry and a genuinely broken server produce the same exit
+ * code, so a `startup-failure` is not published until it reproduces from a cold
+ * cache. Deliberately only `startup-failure`: a `timeout` is usually the slow
+ * install a cold retry would only make slower, `auth-required` is a real answer
+ * about the server, and a command that is already its own `docker run` has no
+ * cache mount to bypass.
+ */
+export function retriesWithoutSharedCache(
+  status: Measurement['status'],
+  docker: boolean,
+  command: string,
+): boolean {
+  return status === 'startup-failure' && docker && !command.trimStart().startsWith('docker ');
+}
+
 export async function measureServer(
   name: string,
   command: string,
@@ -66,7 +92,7 @@ export async function measureServer(
   // async cleanup: the second `docker run --name X` collides with the first
   // container mid-removal. Distinct names sidestep the race entirely; the
   // `finally` below force-removes every name this call created either way.
-  function buildSpec(): string | { command: string; argv: string[] } {
+  function buildSpec(noSharedCache = false): string | { command: string; argv: string[] } {
     if (opts.docker && command.trimStart().startsWith('docker ')) {
       // Command is already a container — wrapping it again would need docker-in-docker.
       isolation = { docker: true, note: 'command is itself a docker run (host-spawned container)' };
@@ -81,36 +107,60 @@ export async function measureServer(
       dummyEnvValues: opts.dummyEnvValues,
       containerName,
       needsGit: opts.needsGit,
+      noSharedCache,
     });
     isolation = d.isolation;
     return { command: d.command, argv: d.argv };
   }
+  async function attempt(noSharedCache: boolean): Promise<Measurement> {
+    // A cold install has to fetch everything again, so the retry gets its own
+    // floor — otherwise the bypass would trade a cache-poisoned startup-failure
+    // for a timeout and report just as wrongly.
+    const attemptOpts = noSharedCache
+      ? { ...opts, timeoutMs: Math.max(opts.timeoutMs ?? 60_000, 240_000) }
+      : opts;
+    let r: Measurement;
+    try {
+      const first = await captureTools(buildSpec(noSharedCache), attemptOpts);
+      const second = await captureTools(buildSpec(noSharedCache), attemptOpts);
+      r = measureTools(first.tools, {
+        serverName: first.serverInfo?.name ?? name,
+        serverVersion: first.serverInfo?.version,
+        launchCommand: command,
+        envVarNames: [...Object.keys(opts.env ?? {}), ...(opts.dummyEnv ?? [])],
+      });
+      if (canonicalString(first.tools) !== canonicalString(second.tools)) {
+        r.status = 'dynamic';
+        r.notes = 'tools/list differed between two runs; value is for the first capture';
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      const status = msg.includes('timeout')
+        ? 'timeout'
+        : /auth|unauthorized|401|forbidden|credential|api.?key|token/i.test(msg)
+          ? 'auth-required'
+          : 'startup-failure';
+      r = failedMeasurement(status, { serverName: name, launchCommand: command, notes: msg.slice(0, 700) });
+    }
+    r.isolation = isolation;
+    r.timeoutMs = attemptOpts.timeoutMs ?? 60_000;
+    return r;
+  }
+
   let m: Measurement;
   try {
-    const first = await captureTools(buildSpec(), opts);
-    const second = await captureTools(buildSpec(), opts);
-    m = measureTools(first.tools, {
-      serverName: first.serverInfo?.name ?? name,
-      serverVersion: first.serverInfo?.version,
-      launchCommand: command,
-      envVarNames: [...Object.keys(opts.env ?? {}), ...(opts.dummyEnv ?? [])],
-    });
-    m.isolation = isolation;
-    m.timeoutMs = opts.timeoutMs ?? 60_000;
-    if (canonicalString(first.tools) !== canonicalString(second.tools)) {
-      m.status = 'dynamic';
-      m.notes = 'tools/list differed between two runs; value is for the first capture';
+    m = await attempt(false);
+    if (retriesWithoutSharedCache(m.status, opts.docker === true, command)) {
+      const retry = await attempt(true);
+      if (retry.status !== 'startup-failure') {
+        m = retry;
+      } else {
+        // Keep the warm attempt — its stderr is the one worth reading — but say
+        // that the failure survived a cold cache, so a reader can tell a real
+        // breakage from a cache artifact without re-running the sweep.
+        m.notes = `${RETRY_CONFIRMED_PREFIX}${m.notes ?? ''}`.slice(0, 700);
+      }
     }
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
-    const status = msg.includes('timeout')
-      ? 'timeout'
-      : /auth|unauthorized|401|forbidden|credential|api.?key|token/i.test(msg)
-        ? 'auth-required'
-        : 'startup-failure';
-    m = failedMeasurement(status, { serverName: name, launchCommand: command, notes: msg.slice(0, 700) });
-    m.isolation = isolation;
-    m.timeoutMs = opts.timeoutMs ?? 60_000;
   } finally {
     if (containerNames.length) {
       // Killing the docker CLI on timeout/non-exit orphans the container — remove it.

@@ -51,7 +51,7 @@ cloudflare-docs,422,2,measured,vendor-official,2119,https://api.npmjs.org/downlo
 neon,,,startup-failure,vendor-official,2012,https://api.npmjs.org/downloads/point/last-week/@neondatabase/mcp-server-neon (npm weekly),,
 elasticsearch,374,4,measured,vendor-official,1599,https://api.npmjs.org/downloads/point/last-week/@elastic/mcp-server-elasticsearch (npm weekly),,
 terraform,2061,9,measured,vendor-official,1503,https://api.github.com/repos/hashicorp/terraform-mcp-server (GitHub stars; Go binary/docker),,
-redis,9246,53,measured,vendor-official,568,https://api.github.com/repos/redis/mcp-redis (GitHub stars; not on PyPI),,
+redis,9246,53,measured,vendor-official,568,https://api.github.com/repos/redis/mcp-redis (GitHub stars; not on PyPI),13221,claude-opus-5
 perplexity,133,1,measured,vendor-official,921,https://api.npmjs.org/downloads/point/last-week/server-perplexity-ask (npm weekly),,
 microsoft-learn,972,3,measured,vendor-official,1838,https://api.github.com/repos/MicrosoftDocs/mcp (GitHub stars),,
 deepwiki,359,3,measured,vendor-official,65000,https://www.pulsemcp.com/servers/deepwiki (estimated visitors),,
@@ -60,15 +60,15 @@ linear,,,remote-auth-wall,vendor-official,2100000,https://www.pulsemcp.com/serve
 zapier,,,remote-auth-wall,vendor-official,6100000,https://www.pulsemcp.com/servers/zapier (estimated visitors),,
 vercel,,,remote-auth-wall,vendor-official,542000,https://www.pulsemcp.com/servers/vercel (estimated visitors),,
 mcp-atlassian,17311,63,dynamic,community,353572,https://pypistats.org/packages/mcp-atlassian (PyPI weekly),22234,claude-opus-5
-postgres-mcp,8632,9,measured,community,234706,https://pypistats.org/packages/postgres-mcp (PyPI weekly),,
-xcodebuildmcp,26594,24,measured,community,149200,https://api.npmjs.org/downloads/point/last-week/xcodebuildmcp (npm weekly),,
+postgres-mcp,8632,9,measured,community,234706,https://pypistats.org/packages/postgres-mcp (PyPI weekly),2381,claude-opus-5
+xcodebuildmcp,26594,24,measured,community,149200,https://api.npmjs.org/downloads/point/last-week/xcodebuildmcp (npm weekly),5335,claude-opus-5
 n8n-mcp,2636,7,measured,community,114676,https://api.npmjs.org/downloads/point/last-week/n8n-mcp (npm weekly),,
-blender,5258,24,measured,community,71408,https://pypistats.org/packages/blender-mcp (PyPI weekly),8106,claude-opus-5
+blender,5462,25,measured,community,71408,https://pypistats.org/packages/blender-mcp (PyPI weekly),,
 excel,4266,25,measured,community,57839,https://pypistats.org/packages/excel-mcp-server (PyPI weekly),,
 figma-context,946,2,measured,community,57771,https://api.npmjs.org/downloads/point/last-week/figma-developer-mcp (npm weekly),,
 duckduckgo,724,2,measured,community,41360,https://pypistats.org/packages/duckduckgo-mcp-server (PyPI weekly),,
-desktop-commander,11835,26,dynamic,community,38626,https://api.npmjs.org/downloads/point/last-week/@wonderwhy-er/desktop-commander (npm weekly),,
-serena,8204,29,measured,community,28084,https://api.github.com/repos/oraios/serena (GitHub stars; installed from git),,
+desktop-commander,11836,26,dynamic,community,38626,https://api.npmjs.org/downloads/point/last-week/@wonderwhy-er/desktop-commander (npm weekly),19305,claude-opus-5
+serena,8204,29,measured,community,28084,https://api.github.com/repos/oraios/serena (GitHub stars; installed from git),11494,claude-opus-5
 gmail,,,auth-required,community,26678,https://api.npmjs.org/downloads/point/last-week/@gongrzhe/server-gmail-autoauth-mcp (npm weekly; needs OAuth keys file),,
 pandoc,1425,1,measured,community,23590,https://pypistats.org/packages/mcp-pandoc (PyPI weekly),,
 obsidian,1132,12,measured,community,23503,https://pypistats.org/packages/mcp-obsidian (PyPI weekly),,

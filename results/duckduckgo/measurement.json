@@ -114,7 +114,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-16T12:05:03.034Z",
+  "measuredAt": "2026-08-19T00:06:18.741Z",
   "serverName": "ddg-search",
   "serverVersion": "1.29.0",
   "launchCommand": "uvx duckduckgo-mcp-server",
@@ -124,5 +124,6 @@
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

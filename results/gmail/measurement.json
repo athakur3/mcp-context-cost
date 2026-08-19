@@ -8,7 +8,7 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-08-16T12:08:45.089Z",
+  "measuredAt": "2026-08-19T00:10:53.541Z",
   "serverName": "gmail",
   "launchCommand": "npx -y @gongrzhe/server-gmail-autoauth-mcp",
   "notes": "server exited (code 1); stderr tail: Error: OAuth keys file not found. Please place gcp-oauth.keys.json in current directory or /tmp/.gmail-mcp\n",
@@ -17,5 +17,6 @@
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 240000
 }

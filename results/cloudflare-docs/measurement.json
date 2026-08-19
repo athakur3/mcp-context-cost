@@ -101,7 +101,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-16T12:03:42.512Z",
+  "measuredAt": "2026-08-19T00:02:28.965Z",
   "serverName": "docs-ai-search",
   "serverVersion": "0.4.13",
   "launchCommand": "npx -y mcp-remote https://docs.mcp.cloudflare.com/sse",
@@ -111,5 +111,6 @@
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 120000
 }

@@ -843,7 +843,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-16T12:01:20.961Z",
+  "measuredAt": "2026-08-18T23:58:18.948Z",
   "serverName": "awslabs.aws-documentation-mcp-server",
   "serverVersion": "1.29.0",
   "launchCommand": "uvx awslabs.aws-documentation-mcp-server@latest",
@@ -853,5 +853,6 @@
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

@@ -125,7 +125,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-18T13:59:15.797Z",
+  "measuredAt": "2026-08-19T00:01:38.018Z",
   "serverName": "mcp-neo4j-cypher",
   "serverVersion": "2.13.3",
   "launchCommand": "uvx mcp-neo4j-cypher",

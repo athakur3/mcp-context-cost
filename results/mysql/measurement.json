@@ -92,7 +92,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-16T12:06:26.953Z",
+  "measuredAt": "2026-08-19T00:08:04.768Z",
   "serverName": "mysql_mcp_server",
   "serverVersion": "1.29.0",
   "launchCommand": "uvx --from mysql-mcp-server mysql_mcp_server",
@@ -107,5 +107,6 @@
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

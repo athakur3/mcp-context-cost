@@ -1,6 +1,6 @@
 # shopify-dev — context cost
 
-**5,624 tokens** across 5 tools — *moderate* (5–15K). Measured 2026-08-16 under [methodology v1.0](../METHODOLOGY.html).
+**5,624 tokens** across 5 tools — *moderate* (5–15K). Measured 2026-08-19 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @shopify/dev-mcp@latest` |
-| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials, shared package cache by |
 | env vars supplied | none |
 | canonical SHA-256 | `6c863ee06d8d4d8fb2ade2e07673c087b75cc1482b3e521e9c9375151860c659` |
 | category | vendor-official |
@@ -28,7 +28,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 
 ## What this costs on Claude
 
-Measured 2026-08-16 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
+Measured 2026-08-19 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
 
 | | tokens | |
 |---|---:|---|
@@ -37,6 +37,15 @@ Measured 2026-08-16 against `claude-opus-5` via Anthropic's `count_tokens` (meth
 | **Claude, same fields** | **9,805** | 1.74× the badge number |
 
 An Anthropic tool definition carries `name`, `description`, and `input_schema` and nothing else, so `title`, `annotations`, `outputSchema`, `execution`, and `icons` are dropped before the request — that is the second row. The third row is the same tools counted by Anthropic, which is larger than the second because Anthropic's tokenizer is denser on this content than o200k_base *and* the API adds its own framing (at most 328 tokens of it fixed, measured against a single minimal tool). The two effects run in opposite directions, which is why the Claude number is not a fixed multiple of the badge.
+
+## Over time
+
+| date | tokens | tools | change |
+|---|---:|---:|---:|
+| 2026-08-16 | 5,624 | 5 | — |
+| 2026-08-19 | 5,624 | 5 | no change |
+
+Full series: [results/history.csv](https://github.com/athakur3/mcp-context-cost/blob/main/results/history.csv).
 
 ## Re-derive it
 

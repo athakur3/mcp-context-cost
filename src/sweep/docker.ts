@@ -30,6 +30,19 @@ export interface DockerOptions {
    * git already on PATH would actually run.
    */
   needsGit?: boolean;
+  /**
+   * Skip the shared npm/uv cache volumes, paying a cold install for a clean one.
+   *
+   * The caches are what make a re-sweep minutes instead of hours, but a cache
+   * entry can go bad and stay bad: npm remembers a failed postinstall, and every
+   * later install that resolves through it fails the same way. Observed
+   * 2026-08-19 — a cached `esbuild@0.25.12` whose postinstall exits 1 made
+   * `npx -y @shopify/dev-mcp@latest` exit 1 with no output, against a server that
+   * installs and answers fine from an empty cache. Nothing in the exit code tells
+   * that apart from a genuinely broken server, so the sweep retries here rather
+   * than publishing the downgrade.
+   */
+  noSharedCache?: boolean;
 }
 
 // ECR Public / ghcr mirrors — Docker Hub pulls hang on some networks (observed
@@ -68,14 +81,18 @@ export function dockerize(
     '-w',
     '/tmp',
     // Shared package caches across containers — packages only, no credentials.
-    '-v',
-    'mcp-ctx-npm-cache:/tmp/.npm-cache',
-    '-e',
-    'npm_config_cache=/tmp/.npm-cache',
-    '-v',
-    'mcp-ctx-uv-cache:/tmp/.uv-cache',
-    '-e',
-    'UV_CACHE_DIR=/tmp/.uv-cache',
+    ...(opts.noSharedCache
+      ? []
+      : [
+          '-v',
+          'mcp-ctx-npm-cache:/tmp/.npm-cache',
+          '-e',
+          'npm_config_cache=/tmp/.npm-cache',
+          '-v',
+          'mcp-ctx-uv-cache:/tmp/.uv-cache',
+          '-e',
+          'UV_CACHE_DIR=/tmp/.uv-cache',
+        ]),
   ];
   for (const name of opts.dummyEnv ?? []) {
     argv.push('-e', `${name}=${opts.dummyEnvValues?.[name] ?? 'dummy'}`);
@@ -91,9 +108,10 @@ export function dockerize(
       docker: true,
       image,
       network: 'bridge',
-      note: opts.needsGit
-        ? 'network enabled for package fetch; clean FS, no host credentials, git installed'
-        : 'network enabled for package fetch; clean FS, no host credentials',
+      note:
+        'network enabled for package fetch; clean FS, no host credentials' +
+        (opts.needsGit ? ', git installed' : '') +
+        (opts.noSharedCache ? ', shared package cache bypassed' : ''),
     },
   };
 }

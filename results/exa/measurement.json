@@ -19,7 +19,7 @@
       "inputSchemaTokens": 87
     }
   ],
-  "canonicalSha256": "eea558e4c905976a1bf6e014b1a1a73cffa2b9baa707c11da9ec26db70e38e46",
+  "canonicalSha256": "8c3c954e5a791807875357bc783cc67385bd7bb53ee31b659e83015b36ed99a9",
   "rawToolsCapture": [
     {
       "name": "web_search_exa",
@@ -46,7 +46,7 @@
       "annotations": {
         "readOnlyHint": true,
         "destructiveHint": false,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "idempotentHint": true
       },
       "execution": {
@@ -81,7 +81,7 @@
       "annotations": {
         "readOnlyHint": true,
         "destructiveHint": false,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "idempotentHint": true
       },
       "execution": {
@@ -89,9 +89,9 @@
       }
     }
   ],
-  "measuredAt": "2026-08-16T12:02:29.708Z",
+  "measuredAt": "2026-08-19T00:00:02.114Z",
   "serverName": "exa-search-server",
-  "serverVersion": "3.4.0",
+  "serverVersion": "3.4.1",
   "launchCommand": "npx -y exa-mcp-server",
   "envVarNames": [
     "EXA_API_KEY"
@@ -101,5 +101,6 @@
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

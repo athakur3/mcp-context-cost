@@ -756,7 +756,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-16T12:00:33.233Z",
+  "measuredAt": "2026-08-18T23:56:42.808Z",
   "serverName": "secure-filesystem-server",
   "serverVersion": "0.2.0",
   "launchCommand": "npx -y @modelcontextprotocol/server-filesystem /tmp",
@@ -766,5 +766,6 @@
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

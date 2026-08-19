@@ -8,14 +8,15 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-08-16T12:08:14.410Z",
+  "measuredAt": "2026-08-19T00:24:03.047Z",
   "serverName": "stripe",
   "launchCommand": "npx -y @stripe/mcp --tools=all",
-  "notes": "server exited (code 1); stderr tail: index.js:20:30)\n    at Object.<anonymous> (/tmp/.npm-cache/_npx/bce731a0395adf49/node_modules/@stripe/mcp/dist/index.js:81:5)\n    at Module._compile (node:internal/modules/cjs/loader:1781:14)\n    at Object..js (node:internal/modules/cjs/loader:1913:10)\n    at Module.load (node:internal/modules/cjs/loader:1505:32)\n    at Function._load (node:internal/modules/cjs/loader:1309:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:254:19)\n    at Function.exe",
+  "notes": "reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: index.js:20:30)\n    at Object.<anonymous> (/tmp/.npm-cache/_npx/bce731a0395adf49/node_modules/@stripe/mcp/dist/index.js:81:5)\n    at Module._compile (node:internal/modules/cjs/loader:1781:14)\n    at Object..js (node:internal/modules/cjs/loader:1913:10)\n    at Module.load (node:internal/modules/cjs/loader:1505:32)\n    at Function._load (node:internal/modules/cjs/loader:1309:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:254:19)\n    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)\n    at node:internal/main/run_main_module:36:49\n\nNode.js v22.23.2\n",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

@@ -58,7 +58,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-18T04:03:42.190Z",
+  "measuredAt": "2026-08-18T23:56:50.680Z",
   "serverName": "mcp-fetch",
   "serverVersion": "1.29.0",
   "launchCommand": "uvx --with \"mcp<2\" mcp-server-fetch",

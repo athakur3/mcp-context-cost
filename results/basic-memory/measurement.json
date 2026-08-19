@@ -2280,7 +2280,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-16T12:06:39.556Z",
+  "measuredAt": "2026-08-19T00:08:59.684Z",
   "serverName": "Basic Memory",
   "serverVersion": "3.3.1",
   "launchCommand": "uvx basic-memory mcp",
@@ -2290,5 +2290,6 @@
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
-  }
+  },
+  "timeoutMs": 60000
 }

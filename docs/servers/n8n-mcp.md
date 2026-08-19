@@ -1,10 +1,10 @@
 # n8n-mcp — context cost
 
-**2,636 tokens** across 7 tools — *light* (1–5K). Measured 2026-08-16 under [methodology v1.0](../METHODOLOGY.html).
+**2,636 tokens** across 7 tools — *light* (1–5K). Measured 2026-08-19 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
-| server (self-reported) | n8n-documentation-mcp v2.69.2 |
+| server (self-reported) | n8n-documentation-mcp v2.72.0 |
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y n8n-mcp` |
@@ -27,6 +27,15 @@
 | get_template | 134 | 5.1% | 28 | 75 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
+
+## Over time
+
+| date | tokens | tools | change |
+|---|---:|---:|---:|
+| 2026-08-16 | 2,636 | 7 | — |
+| 2026-08-19 | 2,636 | 7 | no change |
+
+Full series: [results/history.csv](https://github.com/athakur3/mcp-context-cost/blob/main/results/history.csv).
 
 ## Re-derive it
 
