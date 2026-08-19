@@ -19,6 +19,13 @@ planning note.
 
 ## Done
 
+- [x] **A slow server is no longer published as a broken one**: a measurement that times out
+      is now re-run on double the budget before anything is written down, because a server
+      that merely starts slowly while the sweep is busy looks exactly like one that never
+      starts — two servers were recorded as failures for that reason alone. If the retry
+      succeeds, that measurement is the published one; if it times out again, the note says
+      so and names the wider budget it survived (2026-08-19)
+
 - [x] **Whole-set re-sweep, and a trend line on nearly every row**: every server measured
       again in Docker isolation, so 65 of the 69 measured rows now plot a real sparkline
       instead of a single point. Two fixes came out of it: a server that fails only because

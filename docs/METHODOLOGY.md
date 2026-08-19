@@ -84,6 +84,20 @@ Every candidate server appears in published results with exactly one status:
 | `remote-auth-wall` | OAuth-gated remote server; listed, not measured |
 | `not-yet-run` | candidate not yet swept (appears in interim leaderboards only) |
 
+**A failure is retried before it is published.** Two of these statuses can be produced by
+the machine doing the measuring rather than by the server, so neither is published on a
+single attempt:
+
+- a `startup-failure` under Docker isolation is re-attempted with the shared package caches
+  bypassed, because a poisoned cache entry and a genuinely broken package exit identically;
+- a `timeout` is re-attempted on double the configured budget, because a server that starts
+  slowly under sweep concurrency and one that never starts both come back `timeout`.
+
+If the retry succeeds, the successful measurement is the published one. If it fails the same
+way, the note says which retry it survived — so "broken upstream" and "broken here" read
+differently without re-running the sweep. A `timeout` note always names the widest budget
+tried, not the first one that failed.
+
 ## Color bands (provisional)
 
 | tokens | color |

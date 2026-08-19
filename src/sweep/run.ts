@@ -57,9 +57,10 @@ export const RETRY_CONFIRMED_PREFIX = 'reproduced with the shared package cache 
  * A poisoned cache entry and a genuinely broken server produce the same exit
  * code, so a `startup-failure` is not published until it reproduces from a cold
  * cache. Deliberately only `startup-failure`: a `timeout` is usually the slow
- * install a cold retry would only make slower, `auth-required` is a real answer
- * about the server, and a command that is already its own `docker run` has no
- * cache mount to bypass.
+ * install a cold retry would only make slower (it has its own retry — see
+ * `retriesWithLongerTimeout`), `auth-required` is a real answer about the
+ * server, and a command that is already its own `docker run` has no cache mount
+ * to bypass.
  */
 export function retriesWithoutSharedCache(
   status: Measurement['status'],
@@ -67,6 +68,31 @@ export function retriesWithoutSharedCache(
   command: string,
 ): boolean {
   return status === 'startup-failure' && docker && !command.trimStart().startsWith('docker ');
+}
+
+/**
+ * Marks a `timeout` that was re-attempted on a larger budget and timed out
+ * again. Its absence on a timeout means the retry never ran, not that it passed.
+ */
+export const TIMEOUT_CONFIRMED_PREFIX = 'reproduced on double the timeout budget; ';
+
+/** A timed-out measurement is re-attempted on this multiple of its budget. */
+export const TIMEOUT_RETRY_FACTOR = 2;
+
+/**
+ * Whether a timed-out measurement gets a second attempt on a larger budget.
+ *
+ * Sweeps and `audit` both run a worker pool, and a server that starts slowly
+ * under that contention is indistinguishable from one that never starts: both
+ * come back `timeout`. Two servers were published as failures for exactly this
+ * reason (`puppeteer` and `kubernetes`, 2026-08-19) and measured normally when
+ * re-run alone, so a timeout is not published until it survives a second, wider
+ * budget. Unlike the cold-cache retry this is isolation-independent — contention
+ * is not a property of the package cache, so host runs and commands that are
+ * their own `docker run` are retried too.
+ */
+export function retriesWithLongerTimeout(status: Measurement['status']): boolean {
+  return status === 'timeout';
 }
 
 export async function measureServer(
@@ -112,13 +138,16 @@ export async function measureServer(
     isolation = d.isolation;
     return { command: d.command, argv: d.argv };
   }
-  async function attempt(noSharedCache: boolean): Promise<Measurement> {
+  async function attempt(noSharedCache: boolean, timeoutMsOverride?: number): Promise<Measurement> {
     // A cold install has to fetch everything again, so the retry gets its own
     // floor — otherwise the bypass would trade a cache-poisoned startup-failure
     // for a timeout and report just as wrongly.
-    const attemptOpts = noSharedCache
-      ? { ...opts, timeoutMs: Math.max(opts.timeoutMs ?? 60_000, 240_000) }
-      : opts;
+    const attemptOpts =
+      timeoutMsOverride !== undefined
+        ? { ...opts, timeoutMs: timeoutMsOverride }
+        : noSharedCache
+          ? { ...opts, timeoutMs: Math.max(opts.timeoutMs ?? 60_000, 240_000) }
+          : opts;
     let r: Measurement;
     try {
       const first = await captureTools(buildSpec(noSharedCache), attemptOpts);
@@ -159,6 +188,14 @@ export async function measureServer(
         // that the failure survived a cold cache, so a reader can tell a real
         // breakage from a cache artifact without re-running the sweep.
         m.notes = `${RETRY_CONFIRMED_PREFIX}${m.notes ?? ''}`.slice(0, 700);
+      }
+    } else if (retriesWithLongerTimeout(m.status)) {
+      const retry = await attempt(false, (opts.timeoutMs ?? 60_000) * TIMEOUT_RETRY_FACTOR);
+      // The retry replaces the first attempt either way: it is the wider budget,
+      // so its `timeoutMs` is the number a reader needs to judge the verdict.
+      m = retry;
+      if (retry.status === 'timeout') {
+        m.notes = `${TIMEOUT_CONFIRMED_PREFIX}${m.notes ?? ''}`.slice(0, 700);
       }
     }
   } finally {
