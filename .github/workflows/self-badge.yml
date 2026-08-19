@@ -22,7 +22,20 @@ jobs:
       - name: Measure reference server
         # Version pinned: this job holds contents:write and pushes — never
         # execute an unpinned third-party package here.
-        run: npm run sweep -- --name memory --command "npx -y @modelcontextprotocol/server-memory@2026.7.4"
+        #
+        # `--docker` because every other published row is measured that way. A
+        # host measurement here would republish results/memory/measurement.json
+        # each Monday with a different provenance from the 68 rows beside it,
+        # and break that row's own trend line: a sparkline refuses to span a
+        # change of isolation (see history.ts), so alternating host/docker
+        # sweeps would leave `memory` permanently unable to draw one.
+        #
+        # The wider timeout covers the cold image pull and package install a
+        # fresh runner always pays — no shared cache volume survives between
+        # jobs. A container problem is safe: the sweep exits non-zero on a
+        # failed measurement, so the job stops here rather than reaching the
+        # commit step with a broken badge.
+        run: npm run sweep -- --docker --timeout 240000 --name memory --command "npx -y @modelcontextprotocol/server-memory@2026.7.4"
       - name: Refresh Claude divergence column
         # Best-effort: an Anthropic API hiccup here must not block the weekly badge
         # commit below, which is the job's primary purpose.
