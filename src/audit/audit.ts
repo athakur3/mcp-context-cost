@@ -16,6 +16,14 @@ import { METHODOLOGY_VERSION } from '../core/canonical.js';
 import { isCurrent, type DivergenceRun } from '../core/divergence.js';
 import type { Measurement, MeasurementStatus, ToolMeasurement } from '../core/types.js';
 import type { ConfiguredServer, LoadedConfig } from './config.js';
+import {
+  evaluateDeferral,
+  PUBLISHED_WIRE_TO_CLIENT_RATIO,
+  SHELL_SOURCE,
+  type DeferralVerdict,
+  type ToolSearchEnv,
+  type ToolSearchSource,
+} from './deferral.js';
 import { formatDiff, formatGate, type AuditDiff, type IncreaseGate } from './diff.js';
 
 export const DEFAULT_CONTEXT_WINDOW = 200_000;
@@ -74,6 +82,16 @@ export interface AuditConfigResult {
   skipped: AuditServerResult[];
   heaviestTools: HeaviestTool[];
   trimAdvice: TrimAdvice | null;
+  /**
+   * Whether this client loads the total up front or defers it, and — when the
+   * client decides that by a threshold — which side of it this stack is on.
+   * Every config carries one: the answer "no deferral is on record for this
+   * client" is a reading, not a gap.
+   *
+   * Configs that one session loads together share a single verdict object, so
+   * `deferral.sources` can name more files than this config's own `source`.
+   */
+  deferral: DeferralVerdict;
 }
 
 const TRIM_TOOL_COUNT = 3;
@@ -169,8 +187,121 @@ export function serverKey(s: ConfiguredServer): string {
   return JSON.stringify(s.argv ?? [s.url ?? s.name]);
 }
 
+/**
+ * One entry's environment, as a value two entries can be compared by.
+ *
+ * Values are read here and compared here, and nothing derived from them leaves
+ * this function — the count that does is a count of entries. Same rule as
+ * `config.ts`: env values are read to spawn a server, never written to a report.
+ */
+function envSignature(s: ConfiguredServer): string {
+  const env = s.env ?? {};
+  return JSON.stringify(Object.keys(env).sort().map((k) => [k, env[k]]));
+}
+
+/**
+ * The measurement keys that stand for more than one distinct server.
+ *
+ * `serverKey` is the argv alone, so two entries running the same command under
+ * different environments are measured once and both are given that one number.
+ * Environment decides what a server serves — `GITHUB_TOOLSETS` on
+ * `github-mcp-server` selects which toolsets it lists — so for entries under one
+ * of these keys, the number reported is one entry's, not each one's.
+ *
+ * Same argv AND same environment is not collapsed: two clients pointing at an
+ * identical server are one measurement, which is the reuse this key is for.
+ */
+export function collapsedKeys(configs: LoadedConfig[]): Set<string> {
+  const envs = new Map<string, Set<string>>();
+  for (const cfg of configs) {
+    if (cfg.error) continue;
+    for (const s of cfg.servers) {
+      if (s.transport !== 'stdio') continue;
+      const key = serverKey(s);
+      const seen = envs.get(key);
+      if (seen) seen.add(envSignature(s));
+      else envs.set(key, new Set([envSignature(s)]));
+    }
+  }
+  return new Set([...envs].filter(([, sigs]) => sigs.size > 1).map(([key]) => key));
+}
+
 function measuredOk(m: Measurement): boolean {
   return (m.status === 'measured' || m.status === 'dynamic') && typeof m.totalTokens === 'number';
+}
+
+/**
+ * Clients whose several config files are read into ONE session.
+ *
+ * Claude Code loads user-scope `~/.claude.json` and project-scope
+ * `<cwd>/.mcp.json` together, so a stack split across them faces the deferral
+ * threshold as a sum. Judging each file alone tells the standard setup it is
+ * under a line the session it actually runs is over.
+ *
+ * This does not merge the reported totals, which stay per file: a context
+ * window belongs to one session, and that is the argument for adding these two
+ * together — not for adding one client's servers to another's.
+ */
+const ONE_SESSION_PER_CLIENT = new Set(['claude-code']);
+
+/** Which configs share a deferral verdict. */
+function deferralScopeKey(client: string, source: string): string {
+  return ONE_SESSION_PER_CLIENT.has(client) ? client : `${client}\0${source}`;
+}
+
+/**
+ * Give every config a deferral verdict, computed once per session scope and
+ * shared by identity across the configs that scope covers — so the report can
+ * print it once and a `--json` consumer can see which files it spans.
+ */
+function attachDeferral(
+  configs: Omit<AuditConfigResult, 'deferral'>[],
+  contextWindow: number,
+  opts: {
+    env?: ToolSearchEnv;
+    settings?: ToolSearchSource[];
+    divergence?: DivergenceRun | null;
+    /**
+     * Per config, how many of its counted servers were measured as another
+     * entry's twin. Keyed by the built config itself rather than by source,
+     * because that is what the scopes below are grouped from.
+     */
+    shared: Map<Omit<AuditConfigResult, 'deferral'>, number>;
+  },
+): AuditConfigResult[] {
+  const scopes = new Map<string, Omit<AuditConfigResult, 'deferral'>[]>();
+  for (const cfg of configs) {
+    const key = deferralScopeKey(cfg.client, cfg.source);
+    const group = scopes.get(key);
+    if (group) group.push(cfg);
+    else scopes.set(key, [cfg]);
+  }
+
+  const verdicts = new Map<string, DeferralVerdict>();
+  for (const [key, group] of scopes) {
+    verdicts.set(
+      key,
+      // Computed against the same context window the share uses, so any
+      // threshold moves with `--context` instead of being pinned to 200,000.
+      evaluateDeferral(
+        {
+          client: group[0].client,
+          sources: group.map((c) => c.source),
+          servers: group.flatMap((c) =>
+            c.servers.map((s) => ({ tokens: s.tokens ?? 0, claudeTokens: s.claudeTokens })),
+          ),
+          skippedCount: group.reduce((a, c) => a + c.skipped.length, 0),
+          sharedMeasurements: group.reduce((a, c) => a + (opts.shared.get(c) ?? 0), 0),
+        },
+        { contextWindow, env: opts.env, settings: opts.settings, divergence: opts.divergence },
+      ),
+    );
+  }
+
+  return configs.map((cfg) => ({
+    ...cfg,
+    deferral: verdicts.get(deferralScopeKey(cfg.client, cfg.source))!,
+  }));
 }
 
 /**
@@ -187,11 +318,29 @@ export function buildReport(
     generatedAt?: string;
     /** Published `tools-delta/v1` run to join against (`--claude`); omit to skip the join. */
     divergence?: DivergenceRun | null;
+    /**
+     * The audited machine's SHELL tool-search variables. Passed in rather than
+     * read here so this stays pure and a report is reproducible from its
+     * inputs; `runAudit` supplies the real environment. Omitted means the shell
+     * set nothing.
+     */
+    env?: ToolSearchEnv;
+    /**
+     * The other place those variables come from: Claude Code's own settings
+     * files, highest precedence first, as `loadSettingsSources` read them.
+     * `runAudit` supplies these. Omitted means they were not read here — which
+     * the report says, rather than reporting a default it did not establish.
+     */
+    settings?: ToolSearchSource[];
   } = {},
 ): AuditReport {
   const contextWindow = opts.contextWindow ?? DEFAULT_CONTEXT_WINDOW;
   const problems: string[] = [];
-  const results: AuditConfigResult[] = [];
+  const built: Omit<AuditConfigResult, 'deferral'>[] = [];
+  // Across every config at once: a twin in one client's file is measured for
+  // the other client's entry just the same.
+  const collapsed = collapsedKeys(configs);
+  const shared = new Map<Omit<AuditConfigResult, 'deferral'>, number>();
 
   for (const cfg of configs) {
     if (cfg.error) {
@@ -201,6 +350,9 @@ export function buildReport(
     const ok: AuditServerResult[] = [];
     const skipped: AuditServerResult[] = [];
     const tools: HeaviestTool[] = [];
+    // Counted only for servers that put a number into the total: a twin that
+    // failed to launch is already a floor, and adds nothing to a sum.
+    let sharedHere = 0;
 
     for (const s of cfg.servers) {
       const base = {
@@ -237,6 +389,7 @@ export function buildReport(
         });
         continue;
       }
+      if (collapsed.has(serverKey(s))) sharedHere++;
       const divRow = opts.divergence?.servers[s.name];
       ok.push({
         ...base,
@@ -257,7 +410,7 @@ export function buildReport(
     for (const s of ok) s.share = totalTokens > 0 ? (s.tokens ?? 0) / totalTokens : 0;
     tools.sort((a, b) => b.tokens - a.tokens);
 
-    results.push({
+    const result = {
       client: cfg.client,
       source: cfg.source,
       totalTokens,
@@ -272,10 +425,13 @@ export function buildReport(
       skipped,
       heaviestTools: tools.slice(0, 5),
       trimAdvice: buildTrimAdvice(tools, totalTokens),
-    });
+    };
+    built.push(result);
+    shared.set(result, sharedHere);
   }
 
-  results.sort((a, b) => b.totalTokens - a.totalTokens);
+  built.sort((a, b) => b.totalTokens - a.totalTokens);
+  const results = attachDeferral(built, contextWindow, { ...opts, shared });
 
   const report: AuditReport = {
     methodologyVersion: METHODOLOGY_VERSION,
@@ -309,6 +465,270 @@ export function buildReport(
 const n = (x: number) => x.toLocaleString('en-US');
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
 
+/** The measurement itself — unconditional, and separate from any claim about who pays it. */
+function measurementLine(cfg: AuditConfigResult, contextWindow: number): string {
+  return (
+    `  ${n(cfg.totalTokens)} tokens of tool schemas — ${pct(cfg.contextShare)} of a ` +
+    `${n(contextWindow)}-token context window.`
+  );
+}
+
+/** How a place is named in a sentence; the shell has a path-shaped stand-in in JSON. */
+function sourceName(source: string): string {
+  return source === SHELL_SOURCE ? 'this shell' : source;
+}
+
+/** "ENABLE_TOOL_SEARCH=auto on this machine" / "unset here, the documented default". */
+function settingPhrase(d: DeferralVerdict): string {
+  const s = d.setting;
+  if (!s || !s.variable) return 'by default';
+  // Which place it was read in is not spelled here: a settings path is longer
+  // than this report's line, and both cases — the value and the silence — are
+  // answered by the list `postureSourceLines` prints directly underneath, which
+  // marks the place that decided it.
+  if (!s.readFromMachine) return `${s.variable} is unset here, which is the documented default`;
+  // A base URL is reported by hostname only (see ToolSearchSetting.value), so it
+  // is phrased as where the variable points and never as what it equals.
+  if (s.variable === 'ANTHROPIC_BASE_URL') return `${s.variable} points at ${s.value} on this machine`;
+  return `${s.variable}=${s.value} on this machine`;
+}
+
+/**
+ * Which places this posture was read from, and what each one held.
+ *
+ * The sentence above this list states a verdict about tokens on somebody's
+ * machine, and the commonest of those verdicts — the documented default — is
+ * an argument from silence. Silence is only evidence across the places that
+ * were opened, so they are named: a reader who sets `ENABLE_TOOL_SEARCH` in a
+ * file this audit did not read can see that from the report instead of
+ * believing a default that does not apply to them.
+ */
+function postureSourceLines(d: DeferralVerdict): string[] {
+  const recs = d.setting?.sources ?? [];
+  if (recs.length === 0) return [];
+  const lines = [
+    '  Where this was read — Claude Code takes these variables from the shell it',
+    '  starts in and from the env block of its own settings files:',
+  ];
+  let absent = 0;
+  for (const r of recs) {
+    if (r.state === 'absent') {
+      absent++;
+      continue;
+    }
+    const held =
+      r.state === 'unreadable'
+        ? 'could not be read — what it sets is unknown'
+        : r.sets.length
+          ? `sets ${r.sets.join(', ')}`
+          : 'sets none of them';
+    // Which place the verdict came out of, said once rather than left to a
+    // reader to work out from two lists.
+    const decided = d.setting?.source === r.source ? ', which decided this' : '';
+    lines.push(`    ${sourceName(r.source)} — ${held}${decided}`);
+  }
+  if (absent > 0) {
+    lines.push(`    ${absent} other settings file(s) it reads are not on this machine`);
+  }
+  if (!recs.some((r) => r.scope !== 'shell')) {
+    lines.push("    its settings files were NOT read here, so what they set is unknown");
+  }
+  return lines;
+}
+
+/**
+ * The total the lines around this one are about was summed from a measurement
+ * that stood for more than one entry, so it is not a number to reason from.
+ *
+ * Printed in EVERY mode, not only the one that weighs the total against a
+ * threshold. The other modes state what these tokens cost just as plainly —
+ * `loads-upfront` says every request carries them, and there the number IS the
+ * whole cost claim — so a total this report will not stand behind must not be
+ * left uncaveated in any of them. `evaluateDeferral` additionally withholds
+ * `clientTokens` and `crosses`, which only threshold mode derives; the other
+ * modes derive nothing from the total, so this paragraph is the whole of the
+ * rule there.
+ */
+function sharedMeasurementLines(
+  d: DeferralVerdict,
+  skippedNames: number,
+  consequence: readonly string[],
+): string[] {
+  const lines = [
+    `  How big this stack is cannot be said here: ${d.sharedMeasurements} of the servers above run`,
+    '  the same command as another entry and differ only in the environment they',
+    '  are given, so one launch was measured and its number counted for each of',
+    '  them. Environment decides what a server serves, so that sum can be wrong in',
+    ...consequence,
+  ];
+  if (d.isFloor) {
+    lines.push(`  ${skippedNames} server(s) here also produced no number — see "not measured" above.`);
+  }
+  return lines;
+}
+
+/** Where a threshold is in play, the unknown size is the whole verdict. */
+const SIDE_UNKNOWN = [
+  '  either direction — which side of the threshold this stack falls on cannot be',
+  '  read off it. Measurements here are keyed by command line alone; nothing is',
+  '  wrong with the config.',
+] as const;
+
+/** Where none is, the size is simply not a figure to quote. */
+const SIZE_UNKNOWN = [
+  '  either direction — how many tokens this stack costs cannot be read off it.',
+  '  Measurements here are keyed by command line alone; nothing is wrong with',
+  '  the config.',
+] as const;
+
+/**
+ * Whether the tokens above are paid up front, and — only where the client
+ * decides that by a threshold — which side of it this stack is on.
+ *
+ * Two things this must not do, both of which an earlier version did. It must
+ * not present the threshold as what decides the default case: Claude Code's
+ * default defers every MCP tool definition unconditionally, so a stack of any
+ * size is deferred and telling its owner they pay those tokens is wrong in the
+ * commonest case there is. And where a threshold does apply, it must not
+ * compare the audit's wire count against it as though they were the same unit;
+ * they differ by a factor this repository publishes and cannot narrow, so the
+ * answer is a range and sometimes an admission.
+ */
+function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
+  const lines: string[] = [];
+
+  if (d.sources.length > 1) {
+    lines.push(`  These ${d.sources.length} config files are read into one ${d.client} session:`);
+    for (const s of d.sources) lines.push(`    ${s}`);
+    lines.push('  so they face the question below together, as their sum.');
+  }
+
+  if (d.mode === 'client-unknown') {
+    lines.push('  Which client reads this config is not known here, so whether it defers');
+    lines.push('  tool definitions by default is not known either. Read as loaded up front.');
+    if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
+    return lines;
+  }
+
+  if (d.mode === 'no-deferral-on-record') {
+    lines.push(`  No default deferral is on record for ${d.client}, so every request`);
+    lines.push('  carries these tokens before you type anything — an absence of a record');
+    lines.push('  about the client, not a measurement of it.');
+    if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
+    return lines;
+  }
+
+  if (d.mode === 'setting-unrecognized') {
+    lines.push(`  ${d.setting?.variable} is set to "${d.setting?.value}" on this machine, which is not`);
+    lines.push('  one of the values Claude Code documents (unset, true, false, auto, auto:N).');
+    lines.push('  Whether these tokens are deferred cannot be said from it.');
+    lines.push(...postureSourceLines(d));
+    if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
+    return lines;
+  }
+
+  if (d.mode === 'setting-unresolved') {
+    if (d.setting?.unresolved === 'sources-disagree') {
+      lines.push(`  ${d.setting.variable} is set to different values by more than one place this`);
+      lines.push('  machine reads it from, and which one Claude Code takes is not on record');
+      lines.push('  here. Whether these tokens are deferred cannot be said from them.');
+    } else {
+      lines.push('  A settings file Claude Code reads exists here and could not be read, so');
+      lines.push('  what it sets is unknown — and it can set the variable that decides this.');
+      lines.push('  Whether these tokens are deferred cannot be said from them.');
+    }
+    lines.push(...postureSourceLines(d));
+    if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
+    return lines;
+  }
+
+  if (d.mode === 'loads-upfront') {
+    lines.push(`  ${d.client} loads every tool definition up front here: ${d.mechanism} is off`);
+    lines.push(`  because ${settingPhrase(d)}. Every request carries these`);
+    lines.push('  tokens before you type anything.');
+    lines.push(...postureSourceLines(d));
+    if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
+    return lines;
+  }
+
+  if (d.mode === 'defers-all') {
+    lines.push(`  ${d.client} defers every MCP tool definition (${d.mechanism}), with no threshold —`);
+    lines.push(`  ${settingPhrase(d)}. These tokens are NOT loaded`);
+    lines.push('  up front at any size; they load when the model reaches for a tool. Size');
+    lines.push('  decides nothing here, so none of the arithmetic above changes the answer.');
+    lines.push(...postureSourceLines(d));
+    if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
+    lines.push('  The full number is paid where deferral does not apply:');
+    for (const e of d.exceptions) lines.push(`    ${e}`);
+    return lines;
+  }
+
+  // Threshold mode: the only mode where how big this stack is matters at all.
+  const t = d.thresholdTokens ?? 0;
+  lines.push(`  ${d.client} defers tool definitions above a threshold here (${d.mechanism}):`);
+  lines.push(`  ${settingPhrase(d)}, so deferral activates once the`);
+  lines.push(`  definitions reach ${n(t)} tokens — ${pct(d.thresholdShare ?? 0)} of the context window.`);
+  lines.push(...postureSourceLines(d));
+
+  const c = d.clientTokens;
+  if (!c) {
+    // No total was established, so there is no side to be on and no number to
+    // say it with. Both are withheld together: printing the sum here and only
+    // withholding the verdict would leave a figure a reader would compare
+    // against the threshold themselves.
+    lines.push(...sharedMeasurementLines(d, skippedNames, SIDE_UNKNOWN));
+    return lines;
+  }
+
+  const total = d.isFloor ? `at least ${n(d.wireTokens)}` : n(d.wireTokens);
+  if (c.estimated === 0) {
+    lines.push(`  This stack is ${total} tokens on the wire, and ${n(c.low)} by the published`);
+    lines.push(`  Anthropic counts for all ${c.exact} measured server(s) — which is the side the`);
+    lines.push('  threshold is counted on.');
+  } else {
+    lines.push(`  This stack is ${total} tokens on the wire. The threshold is counted in what`);
+    lines.push(`  the client sends to the API, which is a different number: across ${d.ratio!.servers}`);
+    lines.push(
+      `  servers in ${d.ratio!.source} the two differ by ${ratioBand(d)}, putting this stack`,
+    );
+    lines.push(
+      `  between ${n(c.low)} and ${n(c.high)} tokens on that side` +
+        (c.exact > 0 ? `, with ${c.exact} of them taken from published counts.` : '.'),
+    );
+  }
+
+  if (d.crosses === true) {
+    lines.push(`  That is at or above the threshold — over by ${n(d.distanceTokens!.low)} at the low end —`);
+    lines.push('  so these tokens are NOT loaded up front. The full number is still paid');
+    lines.push('  where deferral does not apply:');
+    for (const e of d.exceptions) lines.push(`    ${e}`);
+  } else if (d.crosses === false) {
+    lines.push(`  That is below the threshold — under by ${n(-d.distanceTokens!.high)} at the high end —`);
+    lines.push('  so deferral does not activate and every request carries these tokens');
+    lines.push('  before you type anything.');
+  } else {
+    lines.push('  Which side this stack falls on cannot be said:');
+    if (c.low < t && c.high >= t) {
+      lines.push(`    that range straddles the ${n(t)}-token threshold`);
+    }
+    if (d.isFloor) {
+      lines.push(`    ${skippedNames} server(s) here produced no number, and what they serve`);
+      lines.push('    counts toward it too — see "not measured" above');
+    }
+    if (c.estimated > 0) {
+      lines.push('    run with --claude to replace the estimate with published Anthropic');
+      lines.push('    counts wherever a capture still matches');
+    }
+  }
+  return lines;
+}
+
+/** "0.20×–1.92×", from whichever band the verdict was actually computed against. */
+function ratioBand(d: DeferralVerdict): string {
+  const r = d.ratio ?? PUBLISHED_WIRE_TO_CLIENT_RATIO;
+  return `${r.low.toFixed(2)}×–${r.high.toFixed(2)}×`;
+}
+
 /** Human output. JSON output is the report object itself. */
 export function formatReport(report: AuditReport): string {
   const lines: string[] = [];
@@ -317,6 +737,9 @@ export function formatReport(report: AuditReport): string {
   );
 
   const showClaude = !!report.claudeDivergence;
+  // Configs one session loads together share a verdict object; it answers for
+  // all of them at once, so it is printed under the first one and not repeated.
+  const verdictPrinted = new Set<DeferralVerdict>();
 
   for (const cfg of report.configs) {
     lines.push('');
@@ -345,10 +768,14 @@ export function formatReport(report: AuditReport): string {
     lines.push(line('total', String(cfg.toolCount), n(cfg.totalTokens), '', ''));
 
     lines.push('');
-    lines.push(
-      `  Every request in this client carries ${n(cfg.totalTokens)} tokens of tool schemas — ` +
-        `${pct(cfg.contextShare)} of a ${n(report.contextWindow)}-token context window, before you type anything.`,
-    );
+    lines.push(measurementLine(cfg, report.contextWindow));
+    if (!verdictPrinted.has(cfg.deferral)) {
+      verdictPrinted.add(cfg.deferral);
+      const skippedInScope = report.configs
+        .filter((c) => c.deferral === cfg.deferral)
+        .reduce((a, c) => a + c.skipped.length, 0);
+      for (const line of deferralLines(cfg.deferral, skippedInScope)) lines.push(line);
+    }
 
     if (cfg.heaviestTools.length) {
       lines.push('');
@@ -455,7 +882,8 @@ export function formatReport(report: AuditReport): string {
     'These are wire tokens — what the server puts on the wire, counted with o200k_base. What your model is billed',
   );
   lines.push(
-    'differs per provider: measured ratios run 0.34×–1.92× on Anthropic requests. See docs/METHODOLOGY.md §claude-divergence.',
+    `differs per provider: measured ratios run ${PUBLISHED_WIRE_TO_CLIENT_RATIO.low.toFixed(2)}×–` +
+      `${PUBLISHED_WIRE_TO_CLIENT_RATIO.high.toFixed(2)}× on Anthropic requests. See docs/METHODOLOGY.md §claude-divergence.`,
   );
   return lines.map((l) => l.replace(/\s+$/, '')).join('\n');
 }

@@ -9,7 +9,15 @@ import { measureServer } from '../sweep/run.js';
 import type { Measurement } from '../core/types.js';
 import { parseDivergence, type DivergenceRun } from '../core/divergence.js';
 import { buildReport, serverKey, type AuditReport } from './audit.js';
-import { configCandidates, loadConfigs, type ConfiguredServer, type LoadedConfig } from './config.js';
+import { toolSearchEnv, type ToolSearchEnv, type ToolSearchSource } from './deferral.js';
+import {
+  configCandidates,
+  loadConfigs,
+  loadSettingsSources,
+  settingsCandidates,
+  type ConfiguredServer,
+  type LoadedConfig,
+} from './config.js';
 
 /** Where the published `tools-delta/v1` run lives when `--claude` doesn't override it. */
 export const DEFAULT_DIVERGENCE_URL =
@@ -29,6 +37,18 @@ export interface AuditOptions {
   claude?: boolean;
   /** Override the divergence.json source — mainly for tests and self-hosted mirrors. */
   divergenceUrl?: string;
+  /**
+   * The tool-search variables as this process's SHELL has them. Defaults to
+   * this process's environment. Overridable so a test can state a machine
+   * rather than inherit the one it runs on.
+   */
+  env?: ToolSearchEnv;
+  /**
+   * The same variables as Claude Code's own settings files set them — the other
+   * half of the answer, and the half a shell cannot show. Defaults to reading
+   * those files off the machine being audited (`discoverSettings`).
+   */
+  settings?: ToolSearchSource[];
   onProgress?: (name: string, done: number, total: number) => void;
 }
 
@@ -52,6 +72,22 @@ export function discover(opts: AuditOptions = {}): LoadedConfig[] {
       ? opts.configPaths.map((path) => ({ client: 'explicit', path }))
       : configCandidates({ home, cwd, platform: process.platform, appData: process.env.APPDATA });
   return loadConfigs(candidates, cwd);
+}
+
+/**
+ * Read every settings file Claude Code would take its deferral setting from.
+ *
+ * A sibling of `discover` above and deliberately separate from it: that one
+ * finds which servers exist, this one finds how the client treats them. The
+ * setting does not live in a client config, and reading only the shell that
+ * launched this audit answers for the wrong machine.
+ */
+export function discoverSettings(opts: AuditOptions = {}): ToolSearchSource[] {
+  const cwd = opts.cwd ?? process.cwd();
+  const home = opts.home ?? homedir();
+  return loadSettingsSources(
+    settingsCandidates({ home, cwd, platform: process.platform, programData: process.env.ProgramData }),
+  );
 }
 
 /** Measure every distinct stdio server across the given configs, once each. */
@@ -108,6 +144,8 @@ export async function runAudit(opts: AuditOptions = {}): Promise<AuditReport> {
     contextWindow: opts.contextWindow,
     budget: opts.budget,
     divergence,
+    env: opts.env ?? toolSearchEnv(process.env),
+    settings: opts.settings ?? discoverSettings(opts),
   });
   if (divergenceProblem) report.problems.push(divergenceProblem);
   return report;

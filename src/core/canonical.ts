@@ -45,6 +45,12 @@ export function measureTools(
     launchCommand?: string;
     envVarNames?: string[];
     measuredAt?: string;
+    /**
+     * The initialize `instructions` string, or null when the server returned
+     * none. Omit it only when nothing was captured: an omitted field records
+     * "never asked", which session-start.ts refuses to read as zero.
+     */
+    instructions?: string | null;
   },
 ): Measurement {
   const canonical = canonicalString(tools);
@@ -74,6 +80,9 @@ export function measureTools(
     serverVersion: meta.serverVersion,
     launchCommand: meta.launchCommand,
     envVarNames: meta.envVarNames,
+    // Left undefined (and so absent from the JSON) when the caller had nothing
+    // to record, which is exactly how a pre-field measurement reads.
+    serverInstructions: meta.instructions,
   };
 }
 

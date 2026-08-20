@@ -166,19 +166,19 @@ describe('publishing the column', () => {
   it('omits the claude column entirely when no divergence run exists', () => {
     writeLeaderboard([entry], root);
     const md = readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8');
-    expect(md).toContain('| # | server | tokens | tools |');
+    expect(md).toContain('| # | server | tokens | session start | tools |');
     expect(md).not.toContain('claude');
     const csv = readFileSync(join(root, 'results', 'leaderboard.csv'), 'utf8');
     expect(csv.split('\n')[0]).toContain('claudeTokens,claudeModel');
-    expect(csv.split('\n')[1]).toMatch(/,,$/);
+    expect(csv.split('\n')[1].split(',').slice(7, 9)).toEqual(['', '']);
   });
 
   it('publishes the claude number and pins the model once a run exists', () => {
     writeFileSync(join(root, 'results', 'divergence.json'), JSON.stringify(run()));
     writeLeaderboard([entry], root);
     const md = readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8');
-    expect(md).toContain('| # | server | tokens | claude | tools |');
-    expect(md).toContain('| 1 | [demo](../docs/servers/demo.md) | 1,000 | 700 | 2 |');
+    expect(md).toContain('| # | server | tokens | session start | claude | tools |');
+    expect(md).toContain('| 1 | [demo](../docs/servers/demo.md) | 1,000 | ≥1 | 700 | 2 |');
     expect(md).toContain('claude-opus-5');
     const csv = readFileSync(join(root, 'results', 'leaderboard.csv'), 'utf8');
     expect(csv.split('\n')[1]).toContain(',700,claude-opus-5');
@@ -189,9 +189,9 @@ describe('publishing the column', () => {
     writeFileSync(join(root, 'results', 'divergence.json'), JSON.stringify(stale));
     writeLeaderboard([entry], root);
     const md = readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8');
-    expect(md).toContain('| 1 | [demo](../docs/servers/demo.md) | 1,000 | — | 2 |');
+    expect(md).toContain('| 1 | [demo](../docs/servers/demo.md) | 1,000 | ≥1 | — | 2 |');
     const csv = readFileSync(join(root, 'results', 'leaderboard.csv'), 'utf8');
-    expect(csv.split('\n')[1]).toMatch(/,,$/);
+    expect(csv.split('\n')[1].split(',').slice(7, 9)).toEqual(['', '']);
   });
 
   it('breaks the decomposition out on the server page', () => {

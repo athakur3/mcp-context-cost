@@ -24,8 +24,10 @@ claude-desktop  ~/Library/Application Support/Claude/claude_desktop_config.json
   ────────────────────────────────────────────
   total                   37   7,901
 
-  Every request in this client carries 7,901 tokens of tool schemas — 4.0% of a
-  200,000-token context window, before you type anything.
+  7,901 tokens of tool schemas — 4.0% of a 200,000-token context window.
+  No default deferral is on record for claude-desktop, so every request
+  carries these tokens before you type anything — an absence of a record
+  about the client, not a measurement of it.
 
   heaviest tools
     sequential-thinking · sequentialthinking      990
@@ -46,11 +48,71 @@ Totals are reported per config file, never merged: a context window belongs to o
 session, so summing Cursor's servers into Claude Desktop's total would describe a session
 nobody runs.
 
-One nuance: Claude Code's tool search (default-on in recent versions) defers full MCP
-schemas until used, loading only tool names at session start. Audit totals are the weight
-of the schema surface itself — what loads upfront in clients without deferral (Claude
-Desktop, Cursor, VS Code, Windsurf today), and what Claude Code's documented fallback
-modes still load. Deferral-aware reporting is on the roadmap.
+### Where this cost is paid in full, and where it is deferred away
+
+Not every client puts every tool definition in context on every request, so the total above
+is not automatically your bill. Which client reads the config, and how that client is
+configured **on this machine**, decides it — and `audit` reads that rather than assuming it.
+
+**Clients with no default deferral on record** — Claude Desktop, Cursor, VS Code, Windsurf.
+The total is what every request carries, as in the example above. That sentence is an
+absence of a record about those clients, not a measurement of them, and the report says so
+in those words.
+
+**Claude Code defers MCP tool definitions by default** (its **tool search**): they are not
+in context at session start, and load when the model reaches for one. Three variables move
+that, and `audit` reads all three — from the shell it runs in *and* from the `env` block of
+Claude Code's own settings files (managed, `.claude/settings.local.json`,
+`.claude/settings.json`, `~/.claude/settings.json`), because a machine that switched
+deferral off in a settings file is not a machine running the default:
+
+| setting | what the audit reports |
+|---|---|
+| nothing set (the default) | every definition deferred, at any size — no threshold applies |
+| `ENABLE_TOOL_SEARCH=true` | same: every definition deferred |
+| `ENABLE_TOOL_SEARCH=false` | deferral off — every request carries the full total |
+| `ENABLE_TOOL_SEARCH=auto` / `auto:N` | deferred only once definitions reach 10% / N% of the context window |
+| `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` set | tool search off — read first, because `ENABLE_TOOL_SEARCH` cannot override it |
+| `ANTHROPIC_BASE_URL` off `api.anthropic.com` | falls back to loading up front — consulted only while `ENABLE_TOOL_SEARCH` is unset |
+| anything else in `ENABLE_TOOL_SEARCH` | not a documented value, so nothing is claimed from it |
+
+On a machine where none of them is set, the same stack reads:
+
+```
+  7,901 tokens of tool schemas — 4.0% of a 200,000-token context window.
+  claude-code defers every MCP tool definition (tool search), with no threshold —
+  ENABLE_TOOL_SEARCH is unset here, which is the documented default. These tokens are NOT loaded
+  up front at any size; they load when the model reaches for a tool. Size
+  decides nothing here, so none of the arithmetic above changes the answer.
+  Where this was read — Claude Code takes these variables from the shell it
+  starts in and from the env block of its own settings files:
+    this shell — sets none of them
+    4 other settings file(s) it reads are not on this machine
+  The full number is paid where deferral does not apply:
+    a Microsoft Foundry deployment hosted on Azure, which rejects tool search server-side
+    Google Cloud's Agent Platform on a model earlier than the Claude 4.5 generation
+    a model without support for tool_reference blocks (before Sonnet 4.5 / Haiku 4.5 / Opus 4.5)
+    a server pinned with "alwaysLoad": true, whose tools load at session start regardless
+```
+
+Set `ENABLE_TOOL_SEARCH=false` in that shell and the same config reports the opposite —
+`loads every tool definition up front here`, naming the variable and the place it was read
+from. Deferring is also not free: what a deferring client *does* load at session start —
+tool names plus the server's `instructions` — is measured per server and published in the
+leaderboard's `session start` column, and for at least one server in the published set it
+costs **more** than loading the definitions would.
+
+Three things the report will not do: it will not convert between units silently (in
+threshold mode the stack is compared as a range, because the audit counts wire bytes and the
+threshold is counted in what the client sends to the API — measured at 0.20×–1.92× across 20
+servers); it will not pick a winner when two places on the machine set the same variable to
+different values, or when a settings file exists and cannot be read; and it will not pass an
+absence of a record off as a measurement. The first two print as unanswered questions. The
+third prints as an answer that names itself: for the four discovered clients with no default
+on record — `claude-desktop`, `cursor`, `vscode`, `windsurf` — the tokens are counted as
+loaded up front, and the report says so in those words, "an absence of a record about the
+client, not a measurement of it".
+Full model, sources and dates: [METHODOLOGY §who pays the number](docs/METHODOLOGY.md#who-pays).
 
 **In CI**, make it a gate — the bundlesize move for agents:
 
@@ -83,12 +145,12 @@ INCREASE FAIL:
   .mcp.json: +2,823 tokens per request, over the 2,000 allowed
 ```
 
-> **Version note.** `--baseline` and `--max-increase` are **not in the published 0.3.0** —
-> they are on `main` and ship in the next release. This matters more than a normal
-> unreleased-feature note: 0.3.0 ignores flags it does not recognise, so running the command
-> above against it produces a plain audit and **exit 0** — a passing CI check on a gate that
-> never ran. Builds after 0.3.0 reject unknown flags with exit 2 instead. Until the next
-> release, pin the gate to a version that has it, or it is not gating anything.
+> **Version note.** `--baseline` and `--max-increase` shipped in **0.4.0** (published
+> 2026-08-18, and the current `latest`), so the command above gates on
+> `npx -y mcp-context-cost@latest`. Pinning to **0.3.0 or earlier** does not gate, and fails
+> quietly: those builds ignore flags they do not recognise, so the same command produces a
+> plain audit and **exit 0** — a passing CI check on a gate that never ran. 0.4.0 rejects
+> unknown flags with exit 2 instead. Pin at or above 0.4.0, or do not pin.
 
 A baseline is just a stored `audit --json` report, so any artifact store works. Without
 `--max-increase` the diff is informational and the exit code is unchanged.
@@ -118,7 +180,7 @@ INCREASE FAIL:
 Add `--claude` to annotate each server with its Anthropic-request cost from the published
 [Claude divergence](docs/METHODOLOGY.md#claude-divergence) run — an exact number when the
 published capture hash matches what you have installed, `—` (silence, not a stale guess)
-when it doesn't (today the run covers the top 15 measured servers, so most installs will
+when it doesn't (today the run covers the top 20 measured servers, so most installs will
 show a mix):
 
 ```
@@ -135,7 +197,7 @@ Flags: `--json` (full report on stdout, progress on stderr), `--budget N`,
 
 The number `audit` gives you is the same measurement, run across a curated set of public
 servers — which is how you can tell it is a measurement and not this tool's opinion. It also
-shows what you are choosing between: across the 68 servers measured, cost spans **1,700×**,
+shows what you are choosing between: across the 69 servers measured, cost spans **1,700×**,
 from the 32-token `postgres` reference server to github's 54,422. The table below starts at
 markitdown's 64 tokens, an 850× spread; the full range is in
 [results/leaderboard.md](results/leaderboard.md).
@@ -149,7 +211,7 @@ markitdown's 64 tokens, an 850× spread; the full range is in
 | filesystem (reference) | 2,823 | 14 |
 | markitdown | 64 | 1 |
 
-*(68 of 82 popular servers measured, 2026-08-18 sweep — full table in
+*(69 of 82 popular servers measured, sweeps of 2026-08-18 and 2026-08-19 — full table in
 [results/leaderboard.md](results/leaderboard.md); every failure is listed with its reason.
 Each measured server also has a [detail page](https://athakur3.github.io/mcp-context-cost/servers/)
 showing which tools its tokens are in.)*
@@ -235,32 +297,36 @@ Point the link at the measurement behind the number — for servers in this swee
 `https://athakur3.github.io/mcp-context-cost/servers/<name>.html`; otherwise the
 methodology page. A badge nobody can audit is decoration.
 
+How many projects outside this repository actually display it is a dated reading rather
+than a guess — [docs/adoption.md](docs/adoption.md), regenerated by `npm run adoption`,
+which publishes the queries it ran and every file it examined. A zero there means the
+search ran and found none; if it could not run, it says that instead of publishing a zero.
+
 Or self-serve from CI via the (staged) mcp-tokens-action badge inputs — see
 [upstream/action-patch.md](upstream/action-patch.md).
 
 ## Development
 
 ```bash
-npm test                        # 158 TS tests incl. golden fixtures + dispute drills
+npm test                        # 403 TS tests incl. golden fixtures + dispute drills
 npx tsc --noEmit                # typecheck
 ./upstream/tests/badge-test.sh  # 21 bash tests — byte-identical to the TS reference
 npm run sweep:all -- --docker   # full curated sweep (Docker isolation)
 ```
 
-Notable engineering choices: the MCP client is a deliberate ~150-line raw-wire
+Notable engineering choices: the MCP client is a deliberate ~220-line raw-wire
 implementation (SDK schema-parsing can reorder keys, which would corrupt canonical bytes);
 sweep servers run in credential-free Docker containers with recorded isolation; the badge
 color bands are frozen against the observed distribution of the first full sweep.
 
 ## Status
 
-Active. 56 of the 65 numbers come from a single sweep on 2026-08-16, 3 from 2026-08-17, and
-6 from 2026-08-18 (an upstream `mcp` package bump broke the old low-level-`Server` API these
-six relied on; pinning `mcp<2` in their launch commands fixed startup, not this project's code);
-the weekly job currently re-measures one server (`memory`), so treat the leaderboard as a
-dated snapshot rather than a live feed. Badge PRs are open across the ecosystem and
-[sd2k/mcp-tokens-action#5](https://github.com/sd2k/mcp-tokens-action/pull/5) proposes the
-self-serve badge path upstream. See [ROADMAP.md](ROADMAP.md) for what's next —
+Active. 46 of the 69 numbers come from the sweep of 2026-08-19 and 23 from 2026-08-18. Two
+weekly jobs re-measure the set — one reference server (`memory`) every Monday, and a rotating
+sixth of the list every Wednesday, so the full set turns over in six weeks — but treat the
+leaderboard as a dated snapshot rather than a live feed. Badge PRs are open across the
+ecosystem and [sd2k/mcp-tokens-action#5](https://github.com/sd2k/mcp-tokens-action/pull/5)
+proposes the self-serve badge path upstream. See [ROADMAP.md](ROADMAP.md) for what's next —
 contributions welcome, especially new `servers.yaml` entries.
 
 MIT © 2026

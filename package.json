@@ -1,6 +1,6 @@
 {
   "name": "mcp-context-cost",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Measure what your MCP servers cost in context tokens — audit your own config, or badge the server you publish",
   "type": "module",
   "license": "MIT",
@@ -37,7 +37,9 @@
     "test": "vitest run",
     "test:badge": "./upstream/tests/badge-test.sh",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.tools.json",
+    "adoption": "tsx tools/measure-adoption.ts",
     "divergence": "tsx tools/measure-divergence.ts",
+    "session-start": "tsx src/sweep/session-start.ts",
     "sweep": "tsx src/sweep/run.ts",
     "sweep:all": "tsx src/sweep/sweep-all.ts",
     "verify": "tsx src/cli.ts verify"

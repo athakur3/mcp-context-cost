@@ -10,7 +10,12 @@ export interface WireCapture {
   serverInfo?: { name?: string; version?: string };
   protocolVersion?: string;
   tools: unknown[];
-  /** true when a second tools/list returned a different tool set */
+  /**
+   * The `instructions` string from the initialize result — half of the
+   * session-start load. `null` means the server returned none, which is a
+   * different fact from never having asked, so the two are never conflated.
+   */
+  instructions: string | null;
   stderrTail: string;
 }
 
@@ -184,6 +189,7 @@ export async function captureTools(
       serverInfo: init?.serverInfo,
       protocolVersion: init?.protocolVersion,
       tools,
+      instructions: typeof init?.instructions === 'string' ? init.instructions : null,
       stderrTail: client.stderrTail,
     };
   } finally {
