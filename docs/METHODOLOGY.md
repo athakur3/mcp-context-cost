@@ -53,7 +53,9 @@ the same facts, without reading the capture by hand.
   until a tool is used puts only names and instructions in context up front, which is a
   different number — usually far smaller, but not always, because the instructions half is
   not bounded by the definitions being deferred. It is now measured and published beside the
-  headline — see [session-start load](#session-start-load).
+  headline — see [session-start load](#session-start-load). *Whether* the client reading your
+  config defers at all is a separate question, answered per machine by `audit` — see
+  [who pays the number](#who-pays).
 - **Not a Claude token count.** Anthropic's tokenizer differs and drifts across model
   releases. The gap is now measured and published rather than left to a critic — see
   [Claude divergence](#claude-divergence) below.
@@ -258,6 +260,85 @@ with a server identifier, wrap the list in their own framing, and choose indepen
 to inject `instructions` at all. Like every number here it is a documented, reproducible index
 measured the same way for every server — the ratio between the two columns is the finding, not
 the absolute figure.
+
+## Who pays the number, and where it is deferred away <a id="who-pays"></a>
+
+Everything above measures what a server puts on the wire. Whether a **session** pays it is a
+property of the client and of the machine that client runs on, not of the server — so it is
+not part of the definition, moves no published number, and no badge or `totalTokens` changes
+because of anything in this section. It is what `audit` answers for a config it discovers,
+and it is stated here because a number nobody can attribute to a payer is not a cost.
+
+**Where the cost is paid in full.** No default deferral is on record for Claude Desktop,
+Cursor, VS Code or Windsurf: for a config read by one of those, every request carries the
+whole total. That is an absence of a record about the client, not a measurement of it, and
+`audit` prints it in those words — the same rule this project follows for every value it has
+not observed. A config passed as `--config <path>` is read the same way, because which client
+reads that file is not knowable from the file.
+
+**Where it is deferred away.** Claude Code defers MCP tool definitions by default, through
+its **tool search**: the definitions are not in context at session start and load when the
+model reaches for one. Which posture is in force is decided by three environment variables on
+the audited machine, resolved in this order — a disagreement about a variable that would not
+have decided anything does not spoil the answer:
+
+| read | value | posture |
+|---|---|---|
+| 1. `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` | any non-empty value | tool search off — loads up front. Read first because it cannot be overridden by `ENABLE_TOOL_SEARCH` |
+| 2. `ENABLE_TOOL_SEARCH` | `true` | every definition deferred, at any size |
+| | `false` | loads up front |
+| | `auto` / `auto:N` (N = 0–100) | deferred once the definitions reach 10% / N% of the context window |
+| | anything else | **unrecognized** — no posture is claimed from it |
+| 3. `ANTHROPIC_BASE_URL` | host other than `api.anthropic.com`, or a value that does not parse | loads up front. Consulted only while `ENABLE_TOOL_SEARCH` is unset |
+| | otherwise / nothing set anywhere | the documented default: every definition deferred, no threshold |
+
+**Two places set them, and both are read.** Claude Code takes those variables from the shell
+it starts in *and* from the `env` block of its own settings files, so `audit` opens all of
+them: the managed settings file for the platform
+(`/Library/Application Support/ClaudeCode/managed-settings.json` on macOS,
+`/etc/claude-code/managed-settings.json` on Linux, `%ProgramData%\ClaudeCode\managed-settings.json` on Windows),
+`<cwd>/.claude/settings.local.json`, `<cwd>/.claude/settings.json`, then
+`~/.claude/settings.json`. Among the settings files the first that sets a variable wins.
+Every place consulted is published with what it set — **by name, never by value** — and each
+is marked read, absent, or unreadable, so a variable set nowhere can be told apart from a
+place this audit never opened. Reading only the shell is how an earlier version reported "NOT
+loaded up front at any size" on a machine that had switched deferral off in
+`~/.claude/settings.json`.
+
+**Configs one session loads together face the question together.** Claude Code reads
+`~/.claude.json` and `<cwd>/.mcp.json` into one session, so the threshold question is put to
+their sum and answered once. Per-config totals are still never merged (see above): the sum
+exists for the threshold and nowhere else.
+
+**The threshold comparison is a range, not a point.** Only `auto`/`auto:N` makes size decide
+anything. There the audit's number and the threshold are counted in different units — wire
+bytes under `o200k_base` here, versus what the client sends to the API — so the stack is
+converted through the published [Claude divergence](#claude-divergence) band (0.20×–1.92×
+across 20 servers), taking the exact published count wherever a server's capture still
+matches, and the verdict is `above` only when the low end clears the threshold and `below`
+only when the high end does not.
+
+**What it refuses to answer.** Deferral has one honest non-answer and the report prints it
+rather than a guess: when two places set the same variable to different values and no order
+between them is on record; when a settings file exists and cannot be read, since what it sets
+is unknown rather than nothing; when `ENABLE_TOOL_SEARCH` holds an undocumented value; when
+the threshold range straddles the line; and when the stack's total could not be established
+because two configured entries collapsed onto one measurement.
+
+**Deferral is not a blanket discount.** Even where the posture defers, the full number is
+paid on a Microsoft Foundry deployment hosted on Azure (which rejects tool search
+server-side), on Google Cloud's Agent Platform below the Claude 4.5 generation, on a model
+without support for `tool_reference` blocks, and for any server pinned `"alwaysLoad": true`.
+None of those is readable from a config or an environment, so they are printed as conditions
+for the reader to check, never folded into the verdict. And deferring has its own bill: see
+[session-start load](#session-start-load), where one server in the published set costs a
+deferring client *more* than an eager one.
+
+**Source, and its date.** All of the above is a model of another product's documented
+behaviour, not an observation of it: Claude Code MCP documentation, §"Scale with MCP tool
+search", read **2026-08-20**. Nothing here measured Claude Code deferring or not deferring
+anything. If that documentation changes, this section and `src/audit/deferral.ts` are what
+have to change with it.
 
 ## Known divergences
 

@@ -24,8 +24,10 @@ claude-desktop  ~/Library/Application Support/Claude/claude_desktop_config.json
   ────────────────────────────────────────────
   total                   37   7,901
 
-  Every request in this client carries 7,901 tokens of tool schemas — 4.0% of a
-  200,000-token context window, before you type anything.
+  7,901 tokens of tool schemas — 4.0% of a 200,000-token context window.
+  No default deferral is on record for claude-desktop, so every request
+  carries these tokens before you type anything — an absence of a record
+  about the client, not a measurement of it.
 
   heaviest tools
     sequential-thinking · sequentialthinking      990
@@ -46,11 +48,67 @@ Totals are reported per config file, never merged: a context window belongs to o
 session, so summing Cursor's servers into Claude Desktop's total would describe a session
 nobody runs.
 
-One nuance: Claude Code's tool search (default-on in recent versions) defers full MCP
-schemas until used, loading only tool names at session start. Audit totals are the weight
-of the schema surface itself — what loads upfront in clients without deferral (Claude
-Desktop, Cursor, VS Code, Windsurf today), and what Claude Code's documented fallback
-modes still load. Deferral-aware reporting is on the roadmap.
+### Where this cost is paid in full, and where it is deferred away
+
+Not every client puts every tool definition in context on every request, so the total above
+is not automatically your bill. Which client reads the config, and how that client is
+configured **on this machine**, decides it — and `audit` reads that rather than assuming it.
+
+**Clients with no default deferral on record** — Claude Desktop, Cursor, VS Code, Windsurf.
+The total is what every request carries, as in the example above. That sentence is an
+absence of a record about those clients, not a measurement of them, and the report says so
+in those words.
+
+**Claude Code defers MCP tool definitions by default** (its **tool search**): they are not
+in context at session start, and load when the model reaches for one. Three variables move
+that, and `audit` reads all three — from the shell it runs in *and* from the `env` block of
+Claude Code's own settings files (managed, `.claude/settings.local.json`,
+`.claude/settings.json`, `~/.claude/settings.json`), because a machine that switched
+deferral off in a settings file is not a machine running the default:
+
+| setting | what the audit reports |
+|---|---|
+| nothing set (the default) | every definition deferred, at any size — no threshold applies |
+| `ENABLE_TOOL_SEARCH=true` | same: every definition deferred |
+| `ENABLE_TOOL_SEARCH=false` | deferral off — every request carries the full total |
+| `ENABLE_TOOL_SEARCH=auto` / `auto:N` | deferred only once definitions reach 10% / N% of the context window |
+| `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` set | tool search off — read first, because `ENABLE_TOOL_SEARCH` cannot override it |
+| `ANTHROPIC_BASE_URL` off `api.anthropic.com` | falls back to loading up front — consulted only while `ENABLE_TOOL_SEARCH` is unset |
+| anything else in `ENABLE_TOOL_SEARCH` | not a documented value, so nothing is claimed from it |
+
+On a machine where none of them is set, the same stack reads:
+
+```
+  5,201 tokens of tool schemas — 2.6% of a 200,000-token context window.
+  claude-code defers every MCP tool definition (tool search), with no threshold —
+  ENABLE_TOOL_SEARCH is unset here, which is the documented default. These tokens are NOT loaded
+  up front at any size; they load when the model reaches for a tool. Size
+  decides nothing here, so none of the arithmetic above changes the answer.
+  Where this was read — Claude Code takes these variables from the shell it
+  starts in and from the env block of its own settings files:
+    this shell — sets none of them
+    4 other settings file(s) it reads are not on this machine
+  The full number is paid where deferral does not apply:
+    a Microsoft Foundry deployment hosted on Azure, which rejects tool search server-side
+    Google Cloud's Agent Platform on a model earlier than the Claude 4.5 generation
+    a model without support for tool_reference blocks (before Sonnet 4.5 / Haiku 4.5 / Opus 4.5)
+    a server pinned with "alwaysLoad": true, whose tools load at session start regardless
+```
+
+Set `ENABLE_TOOL_SEARCH=false` in that shell and the same config reports the opposite —
+`loads every tool definition up front here`, naming the variable and the place it was read
+from. Deferring is also not free: what a deferring client *does* load at session start —
+tool names plus the server's `instructions` — is measured per server and published in the
+leaderboard's `session start` column, and for at least one server in the published set it
+costs **more** than loading the definitions would.
+
+Three things the report will not do: it will not convert between units silently (in
+threshold mode the stack is compared as a range, because the audit counts wire bytes and the
+threshold is counted in what the client sends to the API — measured at 0.20×–1.92× across 20
+servers); it will not pick a winner when two places on the machine set the same variable to
+different values, or when a settings file exists and cannot be read; and it will not report
+a posture for a client it has no record for. Each of those prints as an unanswered question.
+Full model, sources and dates: [METHODOLOGY §who pays the number](docs/METHODOLOGY.md#who-pays).
 
 **In CI**, make it a gate — the bundlesize move for agents:
 
