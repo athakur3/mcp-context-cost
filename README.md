@@ -106,8 +106,12 @@ Three things the report will not do: it will not convert between units silently 
 threshold mode the stack is compared as a range, because the audit counts wire bytes and the
 threshold is counted in what the client sends to the API — measured at 0.20×–1.92× across 20
 servers); it will not pick a winner when two places on the machine set the same variable to
-different values, or when a settings file exists and cannot be read; and it will not report
-a posture for a client it has no record for. Each of those prints as an unanswered question.
+different values, or when a settings file exists and cannot be read; and it will not pass an
+absence of a record off as a measurement. The first two print as unanswered questions. The
+third prints as an answer that names itself: for the four discovered clients with no default
+on record — `claude-desktop`, `cursor`, `vscode`, `windsurf` — the tokens are counted as
+loaded up front, and the report says so in those words, "an absence of a record about the
+client, not a measurement of it".
 Full model, sources and dates: [METHODOLOGY §who pays the number](docs/METHODOLOGY.md#who-pays).
 
 **In CI**, make it a gate — the bundlesize move for agents:
