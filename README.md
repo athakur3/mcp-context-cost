@@ -141,12 +141,12 @@ INCREASE FAIL:
   .mcp.json: +2,823 tokens per request, over the 2,000 allowed
 ```
 
-> **Version note.** `--baseline` and `--max-increase` are **not in the published 0.3.0** —
-> they are on `main` and ship in the next release. This matters more than a normal
-> unreleased-feature note: 0.3.0 ignores flags it does not recognise, so running the command
-> above against it produces a plain audit and **exit 0** — a passing CI check on a gate that
-> never ran. Builds after 0.3.0 reject unknown flags with exit 2 instead. Until the next
-> release, pin the gate to a version that has it, or it is not gating anything.
+> **Version note.** `--baseline` and `--max-increase` shipped in **0.4.0** (published
+> 2026-08-18, and the current `latest`), so the command above gates on
+> `npx -y mcp-context-cost@latest`. Pinning to **0.3.0 or earlier** does not gate, and fails
+> quietly: those builds ignore flags they do not recognise, so the same command produces a
+> plain audit and **exit 0** — a passing CI check on a gate that never ran. 0.4.0 rejects
+> unknown flags with exit 2 instead. Pin at or above 0.4.0, or do not pin.
 
 A baseline is just a stored `audit --json` report, so any artifact store works. Without
 `--max-increase` the diff is informational and the exit code is unchanged.
@@ -176,7 +176,7 @@ INCREASE FAIL:
 Add `--claude` to annotate each server with its Anthropic-request cost from the published
 [Claude divergence](docs/METHODOLOGY.md#claude-divergence) run — an exact number when the
 published capture hash matches what you have installed, `—` (silence, not a stale guess)
-when it doesn't (today the run covers the top 15 measured servers, so most installs will
+when it doesn't (today the run covers the top 20 measured servers, so most installs will
 show a mix):
 
 ```
@@ -193,7 +193,7 @@ Flags: `--json` (full report on stdout, progress on stderr), `--budget N`,
 
 The number `audit` gives you is the same measurement, run across a curated set of public
 servers — which is how you can tell it is a measurement and not this tool's opinion. It also
-shows what you are choosing between: across the 68 servers measured, cost spans **1,700×**,
+shows what you are choosing between: across the 69 servers measured, cost spans **1,700×**,
 from the 32-token `postgres` reference server to github's 54,422. The table below starts at
 markitdown's 64 tokens, an 850× spread; the full range is in
 [results/leaderboard.md](results/leaderboard.md).
@@ -207,7 +207,7 @@ markitdown's 64 tokens, an 850× spread; the full range is in
 | filesystem (reference) | 2,823 | 14 |
 | markitdown | 64 | 1 |
 
-*(68 of 82 popular servers measured, 2026-08-18 sweep — full table in
+*(69 of 82 popular servers measured, sweeps of 2026-08-18 and 2026-08-19 — full table in
 [results/leaderboard.md](results/leaderboard.md); every failure is listed with its reason.
 Each measured server also has a [detail page](https://athakur3.github.io/mcp-context-cost/servers/)
 showing which tools its tokens are in.)*
@@ -304,26 +304,25 @@ Or self-serve from CI via the (staged) mcp-tokens-action badge inputs — see
 ## Development
 
 ```bash
-npm test                        # 158 TS tests incl. golden fixtures + dispute drills
+npm test                        # 403 TS tests incl. golden fixtures + dispute drills
 npx tsc --noEmit                # typecheck
 ./upstream/tests/badge-test.sh  # 21 bash tests — byte-identical to the TS reference
 npm run sweep:all -- --docker   # full curated sweep (Docker isolation)
 ```
 
-Notable engineering choices: the MCP client is a deliberate ~150-line raw-wire
+Notable engineering choices: the MCP client is a deliberate ~220-line raw-wire
 implementation (SDK schema-parsing can reorder keys, which would corrupt canonical bytes);
 sweep servers run in credential-free Docker containers with recorded isolation; the badge
 color bands are frozen against the observed distribution of the first full sweep.
 
 ## Status
 
-Active. 56 of the 65 numbers come from a single sweep on 2026-08-16, 3 from 2026-08-17, and
-6 from 2026-08-18 (an upstream `mcp` package bump broke the old low-level-`Server` API these
-six relied on; pinning `mcp<2` in their launch commands fixed startup, not this project's code);
-the weekly job currently re-measures one server (`memory`), so treat the leaderboard as a
-dated snapshot rather than a live feed. Badge PRs are open across the ecosystem and
-[sd2k/mcp-tokens-action#5](https://github.com/sd2k/mcp-tokens-action/pull/5) proposes the
-self-serve badge path upstream. See [ROADMAP.md](ROADMAP.md) for what's next —
+Active. 46 of the 69 numbers come from the sweep of 2026-08-19 and 23 from 2026-08-18. Two
+weekly jobs re-measure the set — one reference server (`memory`) every Monday, and a rotating
+sixth of the list every Wednesday, so the full set turns over in six weeks — but treat the
+leaderboard as a dated snapshot rather than a live feed. Badge PRs are open across the
+ecosystem and [sd2k/mcp-tokens-action#5](https://github.com/sd2k/mcp-tokens-action/pull/5)
+proposes the self-serve badge path upstream. See [ROADMAP.md](ROADMAP.md) for what's next —
 contributions welcome, especially new `servers.yaml` entries.
 
 MIT © 2026
