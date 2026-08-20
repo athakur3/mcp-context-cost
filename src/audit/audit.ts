@@ -19,8 +19,10 @@ import type { ConfiguredServer, LoadedConfig } from './config.js';
 import {
   evaluateDeferral,
   PUBLISHED_WIRE_TO_CLIENT_RATIO,
+  SHELL_SOURCE,
   type DeferralVerdict,
   type ToolSearchEnv,
+  type ToolSearchSource,
 } from './deferral.js';
 import { formatDiff, formatGate, type AuditDiff, type IncreaseGate } from './diff.js';
 
@@ -257,6 +259,7 @@ function attachDeferral(
   contextWindow: number,
   opts: {
     env?: ToolSearchEnv;
+    settings?: ToolSearchSource[];
     divergence?: DivergenceRun | null;
     /**
      * Per config, how many of its counted servers were measured as another
@@ -290,7 +293,7 @@ function attachDeferral(
           skippedCount: group.reduce((a, c) => a + c.skipped.length, 0),
           sharedMeasurements: group.reduce((a, c) => a + (opts.shared.get(c) ?? 0), 0),
         },
-        { contextWindow, env: opts.env, divergence: opts.divergence },
+        { contextWindow, env: opts.env, settings: opts.settings, divergence: opts.divergence },
       ),
     );
   }
@@ -316,11 +319,19 @@ export function buildReport(
     /** Published `tools-delta/v1` run to join against (`--claude`); omit to skip the join. */
     divergence?: DivergenceRun | null;
     /**
-     * The audited machine's tool-search variables. Passed in rather than read
-     * here so this stays pure and a report is reproducible from its inputs;
-     * `runAudit` supplies the real environment. Omitted means nothing was set.
+     * The audited machine's SHELL tool-search variables. Passed in rather than
+     * read here so this stays pure and a report is reproducible from its
+     * inputs; `runAudit` supplies the real environment. Omitted means the shell
+     * set nothing.
      */
     env?: ToolSearchEnv;
+    /**
+     * The other place those variables come from: Claude Code's own settings
+     * files, highest precedence first, as `loadSettingsSources` read them.
+     * `runAudit` supplies these. Omitted means they were not read here — which
+     * the report says, rather than reporting a default it did not establish.
+     */
+    settings?: ToolSearchSource[];
   } = {},
 ): AuditReport {
   const contextWindow = opts.contextWindow ?? DEFAULT_CONTEXT_WINDOW;
@@ -462,15 +473,67 @@ function measurementLine(cfg: AuditConfigResult, contextWindow: number): string 
   );
 }
 
-/** "ENABLE_TOOL_SEARCH=auto on this machine" / "unset on this machine, the documented default". */
+/** How a place is named in a sentence; the shell has a path-shaped stand-in in JSON. */
+function sourceName(source: string): string {
+  return source === SHELL_SOURCE ? 'this shell' : source;
+}
+
+/** "ENABLE_TOOL_SEARCH=auto on this machine" / "unset here, the documented default". */
 function settingPhrase(d: DeferralVerdict): string {
   const s = d.setting;
   if (!s || !s.variable) return 'by default';
+  // Which place it was read in is not spelled here: a settings path is longer
+  // than this report's line, and both cases — the value and the silence — are
+  // answered by the list `postureSourceLines` prints directly underneath, which
+  // marks the place that decided it.
   if (!s.readFromMachine) return `${s.variable} is unset here, which is the documented default`;
   // A base URL is reported by hostname only (see ToolSearchSetting.value), so it
   // is phrased as where the variable points and never as what it equals.
   if (s.variable === 'ANTHROPIC_BASE_URL') return `${s.variable} points at ${s.value} on this machine`;
   return `${s.variable}=${s.value} on this machine`;
+}
+
+/**
+ * Which places this posture was read from, and what each one held.
+ *
+ * The sentence above this list states a verdict about tokens on somebody's
+ * machine, and the commonest of those verdicts — the documented default — is
+ * an argument from silence. Silence is only evidence across the places that
+ * were opened, so they are named: a reader who sets `ENABLE_TOOL_SEARCH` in a
+ * file this audit did not read can see that from the report instead of
+ * believing a default that does not apply to them.
+ */
+function postureSourceLines(d: DeferralVerdict): string[] {
+  const recs = d.setting?.sources ?? [];
+  if (recs.length === 0) return [];
+  const lines = [
+    '  Where this was read — Claude Code takes these variables from the shell it',
+    '  starts in and from the env block of its own settings files:',
+  ];
+  let absent = 0;
+  for (const r of recs) {
+    if (r.state === 'absent') {
+      absent++;
+      continue;
+    }
+    const held =
+      r.state === 'unreadable'
+        ? 'could not be read — what it sets is unknown'
+        : r.sets.length
+          ? `sets ${r.sets.join(', ')}`
+          : 'sets none of them';
+    // Which place the verdict came out of, said once rather than left to a
+    // reader to work out from two lists.
+    const decided = d.setting?.source === r.source ? ', which decided this' : '';
+    lines.push(`    ${sourceName(r.source)} — ${held}${decided}`);
+  }
+  if (absent > 0) {
+    lines.push(`    ${absent} other settings file(s) it reads are not on this machine`);
+  }
+  if (!recs.some((r) => r.scope !== 'shell')) {
+    lines.push("    its settings files were NOT read here, so what they set is unknown");
+  }
+  return lines;
 }
 
 /**
@@ -559,6 +622,22 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
     lines.push(`  ${d.setting?.variable} is set to "${d.setting?.value}" on this machine, which is not`);
     lines.push('  one of the values Claude Code documents (unset, true, false, auto, auto:N).');
     lines.push('  Whether these tokens are deferred cannot be said from it.');
+    lines.push(...postureSourceLines(d));
+    if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
+    return lines;
+  }
+
+  if (d.mode === 'setting-unresolved') {
+    if (d.setting?.unresolved === 'sources-disagree') {
+      lines.push(`  ${d.setting.variable} is set to different values by more than one place this`);
+      lines.push('  machine reads it from, and which one Claude Code takes is not on record');
+      lines.push('  here. Whether these tokens are deferred cannot be said from them.');
+    } else {
+      lines.push('  A settings file Claude Code reads exists here and could not be read, so');
+      lines.push('  what it sets is unknown — and it can set the variable that decides this.');
+      lines.push('  Whether these tokens are deferred cannot be said from them.');
+    }
+    lines.push(...postureSourceLines(d));
     if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
     return lines;
   }
@@ -567,6 +646,7 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
     lines.push(`  ${d.client} loads every tool definition up front here: ${d.mechanism} is off`);
     lines.push(`  because ${settingPhrase(d)}. Every request carries these`);
     lines.push('  tokens before you type anything.');
+    lines.push(...postureSourceLines(d));
     if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
     return lines;
   }
@@ -576,6 +656,7 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
     lines.push(`  ${settingPhrase(d)}. These tokens are NOT loaded`);
     lines.push('  up front at any size; they load when the model reaches for a tool. Size');
     lines.push('  decides nothing here, so none of the arithmetic above changes the answer.');
+    lines.push(...postureSourceLines(d));
     if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
     lines.push('  The full number is paid where deferral does not apply:');
     for (const e of d.exceptions) lines.push(`    ${e}`);
@@ -587,6 +668,7 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
   lines.push(`  ${d.client} defers tool definitions above a threshold here (${d.mechanism}):`);
   lines.push(`  ${settingPhrase(d)}, so deferral activates once the`);
   lines.push(`  definitions reach ${n(t)} tokens — ${pct(d.thresholdShare ?? 0)} of the context window.`);
+  lines.push(...postureSourceLines(d));
 
   const c = d.clientTokens;
   if (!c) {

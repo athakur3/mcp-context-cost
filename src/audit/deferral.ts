@@ -48,6 +48,15 @@ import type { DivergenceRun } from '../core/divergence.js';
 /** Share of the context window at which deferral activates under `auto`. */
 export const TOOL_SEARCH_AUTO_SHARE = 0.1;
 
+/** The variables that decide whether this machine's Claude Code defers. */
+export const TOOL_SEARCH_VARS = [
+  'ENABLE_TOOL_SEARCH',
+  'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS',
+  'ANTHROPIC_BASE_URL',
+] as const;
+
+export type ToolSearchVar = (typeof TOOL_SEARCH_VARS)[number];
+
 /** The env vars that decide whether this machine's Claude Code defers. */
 export interface ToolSearchEnv {
   ENABLE_TOOL_SEARCH?: string;
@@ -64,6 +73,65 @@ export function toolSearchEnv(env: Record<string, string | undefined>): ToolSear
   };
 }
 
+/**
+ * A place the audited machine can set those variables.
+ *
+ * Two kinds, because Claude Code reads two kinds: the environment of the shell
+ * it was started in, and the `env` block of its own settings files. Reading
+ * only the first is how this reported the documented default — "these tokens
+ * are NOT loaded up front at any size" — at a machine that had switched
+ * deferral off in `~/.claude/settings.json`.
+ */
+export type ToolSearchScope =
+  | 'shell'
+  | 'managed-settings'
+  | 'local-settings'
+  | 'project-settings'
+  | 'user-settings';
+
+/** What `source` says for the process environment, which has no path. */
+export const SHELL_SOURCE = '(shell environment)';
+
+export interface ToolSearchSource {
+  scope: ToolSearchScope;
+  /** Path of the settings file, or `SHELL_SOURCE`. */
+  source: string;
+  /**
+   * `read` — consulted, and `vars` is what it sets.
+   * `absent` — not on this machine, so it sets nothing.
+   * `unreadable` — it exists and could not be read: what it sets is UNKNOWN,
+   * which is not the same as nothing and is never resolved as though it were.
+   */
+  state: 'read' | 'absent' | 'unreadable';
+  /** What this place sets, of the three. Values are read here, never reported. */
+  vars: ToolSearchEnv;
+}
+
+/**
+ * A source as it appears in a report: names of what it sets, never values.
+ *
+ * This is the record that lets a reader tell "nothing is set anywhere" from
+ * "that place was never opened" — the two states `readFromMachine: false`
+ * cannot distinguish on its own.
+ */
+export interface ToolSearchSourceRecord {
+  scope: ToolSearchScope;
+  source: string;
+  state: ToolSearchSource['state'];
+  /** Variable NAMES set here. A value can be a base URL carrying a credential. */
+  sets: ToolSearchVar[];
+}
+
+/** A source as it is published: what it sets, by name. */
+export function toolSearchSourceRecord(s: ToolSearchSource): ToolSearchSourceRecord {
+  return {
+    scope: s.scope,
+    source: s.source,
+    state: s.state,
+    sets: TOOL_SEARCH_VARS.filter((n) => (s.vars[n] ?? '').trim() !== ''),
+  };
+}
+
 export type DeferralMode =
   /** Every MCP tool definition is deferred, at any size. No threshold applies. */
   | 'defers-all'
@@ -73,6 +141,8 @@ export type DeferralMode =
   | 'loads-upfront'
   /** ENABLE_TOOL_SEARCH holds a value Claude Code does not document. */
   | 'setting-unrecognized'
+  /** More than one place sets the variable, or one of them could not be read. */
+  | 'setting-unresolved'
   /** A client we know about, with no default deferral on record. */
   | 'no-deferral-on-record'
   /** `--config <path>`: the file was read, but which client reads it is unknown. */
@@ -98,10 +168,28 @@ export interface ToolSearchSetting {
   value: string | null;
   /** True when a variable on the audited machine decided this, false for the default. */
   readFromMachine: boolean;
+  /**
+   * Which place the deciding value was read from — a settings file's path, or
+   * `SHELL_SOURCE`. Null when nothing was set anywhere and the documented
+   * default stands.
+   */
+  source: string | null;
+  /**
+   * Every place that was consulted, in the order Claude Code would take them,
+   * and what each one sets — by name. Printed and serialized so a reader can
+   * see what was opened, and a `--json` consumer can tell a variable that is
+   * set nowhere from a place this audit never read.
+   */
+  sources: ToolSearchSourceRecord[];
+  /** Set only in `setting-unresolved`: why no mode could be read off them. */
+  unresolved?: 'sources-disagree' | 'source-unreadable';
 }
 
-interface ResolvedToolSearch extends ToolSearchSetting {
-  mode: Extract<DeferralMode, 'defers-all' | 'threshold' | 'loads-upfront' | 'setting-unrecognized'>;
+interface ResolvedToolSearch extends Omit<ToolSearchSetting, 'sources'> {
+  mode: Extract<
+    DeferralMode,
+    'defers-all' | 'threshold' | 'loads-upfront' | 'setting-unrecognized' | 'setting-unresolved'
+  >;
   thresholdShare: number | null;
 }
 
@@ -128,10 +216,14 @@ function baseUrlHost(raw: string): string | null {
 }
 
 /**
- * Read the machine's tool-search setting. Values are matched exactly as
- * documented: an unrecognized value produces `setting-unrecognized` rather than
- * a guess, because guessing here would print a definite verdict about tokens
- * the reader may or may not be paying.
+ * Read the tool-search setting out of ONE environment. Values are matched
+ * exactly as documented: an unrecognized value produces `setting-unrecognized`
+ * rather than a guess, because guessing here would print a definite verdict
+ * about tokens the reader may or may not be paying.
+ *
+ * `source` is left null here: this function is given one environment and has no
+ * way to say which of the machine's places it came from. `resolveToolSearchSources`,
+ * which does, fills it in.
  */
 export function resolveToolSearch(env: ToolSearchEnv): ResolvedToolSearch {
   const betas = env.CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS?.trim();
@@ -142,6 +234,7 @@ export function resolveToolSearch(env: ToolSearchEnv): ResolvedToolSearch {
       thresholdShare: null,
       variable: 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS',
       value: betas,
+      source: null,
       readFromMachine: true,
     };
   }
@@ -155,6 +248,7 @@ export function resolveToolSearch(env: ToolSearchEnv): ResolvedToolSearch {
     thresholdShare,
     variable: 'ENABLE_TOOL_SEARCH',
     value: raw ?? null,
+    source: null,
     readFromMachine: true,
   });
 
@@ -169,6 +263,7 @@ export function resolveToolSearch(env: ToolSearchEnv): ResolvedToolSearch {
           variable: 'ANTHROPIC_BASE_URL',
           // The hostname alone. `base` itself is never carried out of here.
           value: host ?? UNREADABLE_BASE_URL,
+          source: null,
           readFromMachine: true,
         };
       }
@@ -178,6 +273,7 @@ export function resolveToolSearch(env: ToolSearchEnv): ResolvedToolSearch {
       thresholdShare: null,
       variable: 'ENABLE_TOOL_SEARCH',
       value: null,
+      source: null,
       readFromMachine: false,
     };
   }
@@ -191,6 +287,87 @@ export function resolveToolSearch(env: ToolSearchEnv): ResolvedToolSearch {
     if (pct >= 0 && pct <= 100) return set('threshold', pct / 100);
   }
   return set('setting-unrecognized', null);
+}
+
+/**
+ * Read the posture from every place the audited machine can set it.
+ *
+ * Claude Code takes these variables from the shell it was started in AND from
+ * the `env` block of its own settings files, so an audit that reads only the
+ * shell answers the machine's question with someone else's environment. The
+ * case that made this necessary: `~/.claude/settings.json` sets
+ * `ENABLE_TOOL_SEARCH: "false"`, the shell running the audit sets nothing, and
+ * every request on that machine pays for every tool definition while the report
+ * calls it the documented default and says the tokens are not loaded at all.
+ *
+ * Among the settings files the order is Claude Code's documented precedence —
+ * enterprise managed policy, then project-local, then project, then user
+ * (Claude Code settings documentation, §"Settings files", read 2026-08-20) — so
+ * the first of them that sets a variable is the one that would win.
+ *
+ * Between the settings files and the shell there is NO order on record here, so
+ * a disagreement is refused rather than resolved: `setting-unresolved` names the
+ * variable and every place, and no verdict is given. A place that exists and
+ * could not be read is the same refusal for the same reason — what it sets is
+ * unknown, and an unknown that could flip the answer is not a default.
+ *
+ * Not visible from here at all, and so not claimed: a variable set on Claude
+ * Code's own command line.
+ */
+export function resolveToolSearchSources(sources: ToolSearchSource[]): ResolvedToolSearch {
+  const unresolved = (
+    reason: 'sources-disagree' | 'source-unreadable',
+    variable: string | null,
+  ): ResolvedToolSearch => ({
+    mode: 'setting-unresolved',
+    thresholdShare: null,
+    variable,
+    value: null,
+    source: null,
+    readFromMachine: false,
+    unresolved: reason,
+  });
+
+  if (sources.some((s) => s.state === 'unreadable')) return unresolved('source-unreadable', null);
+
+  const settings = sources.filter((s) => s.scope !== 'shell');
+  const shell = sources.find((s) => s.scope === 'shell');
+
+  /** The value that would win for one variable, or the fact that two places disagree. */
+  const read = (name: ToolSearchVar): { value: string; source: string } | 'conflict' | null => {
+    const winner = settings
+      .map((s) => ({ value: (s.vars[name] ?? '').trim(), source: s.source }))
+      .find((v) => v.value !== '');
+    const shellValue = (shell?.vars[name] ?? '').trim();
+    if (winner && shellValue && winner.value !== shellValue) return 'conflict';
+    if (winner) return winner;
+    if (shellValue && shell) return { value: shellValue, source: shell.source };
+    return null;
+  };
+
+  // Consulted in the same order `resolveToolSearch` consults them, so a
+  // disagreement over a variable that would not have decided anything —
+  // ANTHROPIC_BASE_URL behind an explicit ENABLE_TOOL_SEARCH — does not refuse
+  // an answer the machine actually gives.
+  const betas = read('CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS');
+  if (betas === 'conflict') return unresolved('sources-disagree', 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS');
+  if (betas) {
+    return {
+      ...resolveToolSearch({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: betas.value }),
+      source: betas.source,
+    };
+  }
+
+  const enable = read('ENABLE_TOOL_SEARCH');
+  if (enable === 'conflict') return unresolved('sources-disagree', 'ENABLE_TOOL_SEARCH');
+  if (enable) {
+    return { ...resolveToolSearch({ ENABLE_TOOL_SEARCH: enable.value }), source: enable.source };
+  }
+
+  const base = read('ANTHROPIC_BASE_URL');
+  if (base === 'conflict') return unresolved('sources-disagree', 'ANTHROPIC_BASE_URL');
+  const resolved = resolveToolSearch(base ? { ANTHROPIC_BASE_URL: base.value } : {});
+  return { ...resolved, source: resolved.readFromMachine ? (base?.source ?? null) : null };
 }
 
 /**
@@ -397,8 +574,15 @@ export function evaluateDeferral(
   scope: DeferralScope,
   opts: {
     contextWindow: number;
-    /** The audited machine's variables. Omitted means nothing was set. */
+    /** The audited machine's SHELL variables. Omitted means the shell set nothing. */
     env?: ToolSearchEnv;
+    /**
+     * The Claude Code settings files read on that machine, highest precedence
+     * first — the other place these variables come from. Omitted means they
+     * were not read here, which is published as such rather than as an absence
+     * of settings: see `ToolSearchSetting.sources`.
+     */
+    settings?: ToolSearchSource[];
     /** Supplied by `--claude`; sharpens the unit conversion where rows match. */
     divergence?: DivergenceRun | null;
   },
@@ -439,11 +623,21 @@ export function evaluateDeferral(
     };
   }
 
-  const resolved = resolveToolSearch(opts.env ?? {});
+  // The shell is one place among several, not the machine. Everything Claude
+  // Code would read is resolved together, and a disagreement between them is
+  // refused rather than decided by whichever this happened to open.
+  const sources: ToolSearchSource[] = [
+    { scope: 'shell', source: SHELL_SOURCE, state: 'read', vars: opts.env ?? {} },
+    ...(opts.settings ?? []),
+  ];
+  const resolved = resolveToolSearchSources(sources);
   const setting: ToolSearchSetting = {
     variable: resolved.variable,
     value: resolved.value,
+    source: resolved.source,
     readFromMachine: resolved.readFromMachine,
+    sources: sources.map(toolSearchSourceRecord),
+    ...(resolved.unresolved ? { unresolved: resolved.unresolved } : {}),
   };
 
   if (resolved.mode !== 'threshold') {

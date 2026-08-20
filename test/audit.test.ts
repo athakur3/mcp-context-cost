@@ -2,21 +2,31 @@ import { describe, it, expect, afterAll, afterEach } from 'vitest';
 import { execFileSync, execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { createServer } from 'node:http';
-import { mkdtempSync, readFileSync, writeFileSync, readdirSync, rmSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync, readdirSync, rmSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
-import { parseJsonc, extractServers, configCandidates, loadConfigs } from '../src/audit/config.js';
+import {
+  parseJsonc,
+  extractServers,
+  configCandidates,
+  loadConfigs,
+  loadSettingsSources,
+  settingsCandidates,
+} from '../src/audit/config.js';
 import { buildReport, formatReport, planBudgetFit, serverKey, DEFAULT_CONTEXT_WINDOW, type AuditReport } from '../src/audit/audit.js';
 import { buildDiff, evaluateIncreaseGate, formatDiff, formatGate, parseBaselineReport } from '../src/audit/diff.js';
 import {
   evaluateDeferral,
   resolveToolSearch,
+  resolveToolSearchSources,
   toolSearchEnv,
   wireToClientRatio,
   PUBLISHED_WIRE_TO_CLIENT_RATIO,
+  SHELL_SOURCE,
   TOOL_SEARCH_AUTO_SHARE,
   type ToolSearchEnv,
+  type ToolSearchSource,
 } from '../src/audit/deferral.js';
 import { runAudit, fetchDivergence } from '../src/audit/run.js';
 import { measureTools, failedMeasurement } from '../src/core/canonical.js';
@@ -1614,5 +1624,251 @@ describe('formatReport states where the cost is paid', () => {
   it('quotes one divergence band, in the verdict and in the footer alike', () => {
     const out = render('claude-code', 12_000, { env: { ENABLE_TOOL_SEARCH: 'auto' } });
     expect(out.match(/0\.20×–1\.92×/g)).toHaveLength(2);
+  });
+});
+
+describe('the deferral posture is read from every place the machine sets it', () => {
+  // The shell that runs an audit is not the machine's answer. Claude Code takes
+  // ENABLE_TOOL_SEARCH from its own settings files too, and reading only the
+  // shell reported the documented default — "these tokens are NOT loaded up
+  // front at any size" — at a machine that had switched deferral off in
+  // ~/.claude/settings.json and pays for every definition on every request.
+  const USER = '/home/u/.claude/settings.json';
+  const LOCAL = '/proj/.claude/settings.local.json';
+
+  const file = (
+    scope: ToolSearchSource['scope'],
+    source: string,
+    vars: ToolSearchEnv,
+    state: ToolSearchSource['state'] = 'read',
+  ): ToolSearchSource => ({ scope, source, state, vars });
+
+  const shell = (vars: ToolSearchEnv): ToolSearchSource =>
+    ({ scope: 'shell', source: SHELL_SOURCE, state: 'read', vars });
+
+  const srv = {
+    name: 'alpha',
+    client: 'claude-code',
+    source: CFG,
+    transport: 'stdio' as const,
+    command: 'node a.js',
+    argv: ['node', 'a.js'],
+    envVarNames: [],
+  };
+  const configs = [{ client: 'claude-code', source: CFG, servers: [srv] }] as Parameters<
+    typeof buildReport
+  >[0];
+  const report = (opts: { env?: ToolSearchEnv; settings?: ToolSearchSource[] }) =>
+    buildReport(configs, new Map([[serverKey(srv), measurement('alpha')]]), {
+      generatedAt: 'T',
+      ...opts,
+    });
+  const text = (opts: { env?: ToolSearchEnv; settings?: ToolSearchSource[] }) =>
+    formatReport(report(opts)).replace(/\s+/g, ' ');
+
+  describe('resolveToolSearchSources', () => {
+    it('lets a settings file decide it while the shell says nothing', () => {
+      expect(
+        resolveToolSearchSources([shell({}), file('user-settings', USER, { ENABLE_TOOL_SEARCH: 'false' })]),
+      ).toMatchObject({ mode: 'loads-upfront', value: 'false', source: USER, readFromMachine: true });
+    });
+
+    it('takes the settings files in Claude Code documented precedence', () => {
+      expect(
+        resolveToolSearchSources([
+          shell({}),
+          file('local-settings', LOCAL, { ENABLE_TOOL_SEARCH: 'auto' }),
+          file('user-settings', USER, { ENABLE_TOOL_SEARCH: 'false' }),
+        ]),
+      ).toMatchObject({ mode: 'threshold', source: LOCAL });
+    });
+
+    it('refuses where the shell and a settings file disagree, rather than picking one', () => {
+      // There is no order on record here between them, and picking whichever
+      // this happens to read first is how one machine gets two answers.
+      expect(
+        resolveToolSearchSources([
+          shell({ ENABLE_TOOL_SEARCH: 'true' }),
+          file('user-settings', USER, { ENABLE_TOOL_SEARCH: 'false' }),
+        ]),
+      ).toMatchObject({
+        mode: 'setting-unresolved',
+        unresolved: 'sources-disagree',
+        variable: 'ENABLE_TOOL_SEARCH',
+        value: null,
+        readFromMachine: false,
+      });
+    });
+
+    it('is not a disagreement when the two say the same thing', () => {
+      expect(
+        resolveToolSearchSources([
+          shell({ ENABLE_TOOL_SEARCH: 'auto:5' }),
+          file('user-settings', USER, { ENABLE_TOOL_SEARCH: ' auto:5 ' }),
+        ]),
+      ).toMatchObject({ mode: 'threshold', thresholdShare: 0.05 });
+    });
+
+    it('does not refuse over a variable that would have decided nothing', () => {
+      // ANTHROPIC_BASE_URL is consulted only while ENABLE_TOOL_SEARCH is unset.
+      expect(
+        resolveToolSearchSources([
+          shell({ ENABLE_TOOL_SEARCH: 'false', ANTHROPIC_BASE_URL: 'https://a.example/v1' }),
+          file('user-settings', USER, { ANTHROPIC_BASE_URL: 'https://b.example/v1' }),
+        ]),
+      ).toMatchObject({ mode: 'loads-upfront', variable: 'ENABLE_TOOL_SEARCH' });
+    });
+
+    it('refuses on a settings file it could not read, which is not a file that sets nothing', () => {
+      expect(
+        resolveToolSearchSources([shell({}), file('user-settings', USER, {}, 'unreadable')]),
+      ).toMatchObject({ mode: 'setting-unresolved', unresolved: 'source-unreadable' });
+    });
+
+    it('still reaches the documented default when every place was read and set nothing', () => {
+      expect(
+        resolveToolSearchSources([shell({}), file('user-settings', USER, {}, 'absent')]),
+      ).toMatchObject({ mode: 'defers-all', readFromMachine: false, source: null });
+    });
+  });
+
+  describe('the report', () => {
+    it('tells a machine that switched tool search off in its settings that it pays', () => {
+      const r = report({ env: {}, settings: [file('user-settings', USER, { ENABLE_TOOL_SEARCH: 'false' })] });
+      expect(r.configs[0].deferral).toMatchObject({ mode: 'loads-upfront', setting: { source: USER } });
+      const out = formatReport(r).replace(/\s+/g, ' ');
+      expect(out).toContain('loads every tool definition up front here');
+      expect(out).toContain('Every request carries these tokens before you type anything');
+      expect(out).toContain(`${USER} — sets ENABLE_TOOL_SEARCH, which decided this`);
+      // What it said about the same machine while it read only the shell.
+      expect(out).not.toContain('is unset here, which is the documented default');
+      expect(out).not.toContain('NOT loaded up front at any size');
+    });
+
+    it('names the places the documented default was read across', () => {
+      const out = text({ env: {}, settings: [file('user-settings', USER, {})] });
+      expect(out).toContain('ENABLE_TOOL_SEARCH is unset here, which is the documented default');
+      expect(out).toContain('Where this was read');
+      expect(out).toContain('this shell — sets none of them');
+      expect(out).toContain(`${USER} — sets none of them`);
+    });
+
+    it('says so when the settings files were not read at all, instead of defaulting past them', () => {
+      const out = text({ env: {} });
+      expect(out).toContain('its settings files were NOT read here, so what they set is unknown');
+    });
+
+    it('counts the settings files that are simply not there', () => {
+      const out = text({
+        env: {},
+        settings: [file('user-settings', USER, {}, 'absent'), file('local-settings', LOCAL, {}, 'absent')],
+      });
+      expect(out).toContain('2 other settings file(s) it reads are not on this machine');
+      expect(out).not.toContain('were NOT read here');
+    });
+
+    it('states no verdict at all where the places disagree', () => {
+      const out = text({
+        env: { ENABLE_TOOL_SEARCH: 'true' },
+        settings: [file('user-settings', USER, { ENABLE_TOOL_SEARCH: 'false' })],
+      });
+      expect(out).toContain('ENABLE_TOOL_SEARCH is set to different values by more than one place');
+      expect(out).toContain('cannot be said from them');
+      // Every sentence that would tell the reader an answer.
+      expect(out).not.toContain('NOT loaded up front at any size');
+      expect(out).not.toContain('Every request carries these tokens before you type anything');
+      expect(out).not.toContain('deferral activates once');
+    });
+
+    it('states no verdict where a settings file could not be read', () => {
+      const out = text({ env: {}, settings: [file('user-settings', USER, {}, 'unreadable')] });
+      expect(out).toContain('could not be read — what it sets is unknown');
+      expect(out).not.toContain('NOT loaded up front at any size');
+      expect(out).not.toContain('Every request carries these tokens before you type anything');
+    });
+  });
+
+  describe('--json', () => {
+    it('distinguishes a variable set nowhere from a place that was never read', () => {
+      const readIt = JSON.parse(
+        JSON.stringify(report({ env: {}, settings: [file('user-settings', USER, {})] })),
+      ) as AuditReport;
+      const never = JSON.parse(JSON.stringify(report({ env: {} }))) as AuditReport;
+      for (const r of [readIt, never]) {
+        // The field that cannot tell them apart, identical in both.
+        expect(r.configs[0].deferral.setting).toMatchObject({ readFromMachine: false, value: null });
+      }
+      expect(readIt.configs[0].deferral.setting!.sources).toEqual([
+        { scope: 'shell', source: SHELL_SOURCE, state: 'read', sets: [] },
+        { scope: 'user-settings', source: USER, state: 'read', sets: [] },
+      ]);
+      expect(never.configs[0].deferral.setting!.sources).toEqual([
+        { scope: 'shell', source: SHELL_SOURCE, state: 'read', sets: [] },
+      ]);
+    });
+
+    it('publishes what a settings file sets by name, never by value', () => {
+      // An env block is where a person keeps their keys, and a base URL routed
+      // through a proxy carries a credential — same rule as config.ts.
+      const secret = 'https://svc:sk-secret-abc123@proxy.internal/v1?key=sk-live-9';
+      const r = report({
+        env: {},
+        settings: [file('user-settings', USER, { ENABLE_TOOL_SEARCH: 'false', ANTHROPIC_BASE_URL: secret })],
+      });
+      expect(r.configs[0].deferral.setting!.sources[1].sets).toEqual([
+        'ENABLE_TOOL_SEARCH',
+        'ANTHROPIC_BASE_URL',
+      ]);
+      for (const out of [formatReport(r), JSON.stringify(r)]) {
+        expect(out).not.toContain('sk-secret-abc123');
+        expect(out).not.toContain('sk-live-9');
+        expect(out).not.toContain('proxy.internal');
+      }
+    });
+  });
+
+  describe('reading the files off disk', () => {
+    it('takes the three variables out of an env block and leaves the rest', () => {
+      const home = tempDir('mcc-home-');
+      const cwd = tempDir('mcc-proj-');
+      mkdirSync(join(home, '.claude'));
+      writeFileSync(
+        join(home, '.claude', 'settings.json'),
+        JSON.stringify({
+          env: { ENABLE_TOOL_SEARCH: 'auto:5', ANTHROPIC_API_KEY: 'sk-ant-DONOTREAD' },
+          permissions: { allow: [] },
+        }),
+      );
+      const read = loadSettingsSources(settingsCandidates({ home, cwd, platform: 'linux' }));
+      const user = read.find((r) => r.scope === 'user-settings')!;
+      expect(user).toMatchObject({ state: 'read', vars: { ENABLE_TOOL_SEARCH: 'auto:5' } });
+      expect(JSON.stringify(user.vars)).not.toContain('sk-ant-DONOTREAD');
+      expect(read.find((r) => r.scope === 'project-settings')).toMatchObject({ state: 'absent', vars: {} });
+    });
+
+    it('calls a settings file it cannot parse unreadable, not a file that sets nothing', () => {
+      const cwd = tempDir('mcc-proj-');
+      mkdirSync(join(cwd, '.claude'));
+      writeFileSync(join(cwd, '.claude', 'settings.json'), '{ "env": { oops');
+      const read = loadSettingsSources(
+        settingsCandidates({ home: tempDir('mcc-home-'), cwd, platform: 'linux' }),
+      );
+      expect(read.find((r) => r.scope === 'project-settings')).toMatchObject({ state: 'unreadable' });
+    });
+
+    it('lists the files in precedence order, and knows where the managed one lives', () => {
+      const at = (platform: NodeJS.Platform, programData?: string) =>
+        settingsCandidates({ home: '/h', cwd: '/c', platform, programData });
+      expect(at('darwin').map((c) => c.scope)).toEqual([
+        'managed-settings',
+        'local-settings',
+        'project-settings',
+        'user-settings',
+      ]);
+      expect(at('darwin')[0].path).toBe('/Library/Application Support/ClaudeCode/managed-settings.json');
+      expect(at('linux')[0].path).toBe('/etc/claude-code/managed-settings.json');
+      expect(at('win32', 'D:\\PD')[0].path).toBe(join('D:\\PD', 'ClaudeCode', 'managed-settings.json'));
+      expect(at('darwin')[3].path).toBe(join('/h', '.claude', 'settings.json'));
+    });
   });
 });
