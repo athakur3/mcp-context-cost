@@ -79,7 +79,7 @@ deferral off in a settings file is not a machine running the default:
 On a machine where none of them is set, the same stack reads:
 
 ```
-  5,201 tokens of tool schemas — 2.6% of a 200,000-token context window.
+  7,901 tokens of tool schemas — 4.0% of a 200,000-token context window.
   claude-code defers every MCP tool definition (tool search), with no threshold —
   ENABLE_TOOL_SEARCH is unset here, which is the documented default. These tokens are NOT loaded
   up front at any size; they load when the model reaches for a tool. Size
