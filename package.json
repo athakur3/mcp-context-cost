@@ -37,6 +37,7 @@
     "test": "vitest run",
     "test:badge": "./upstream/tests/badge-test.sh",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.tools.json",
+    "adoption": "tsx tools/measure-adoption.ts",
     "divergence": "tsx tools/measure-divergence.ts",
     "session-start": "tsx src/sweep/session-start.ts",
     "sweep": "tsx src/sweep/run.ts",
