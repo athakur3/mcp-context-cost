@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.5.0 — 2026-08-20
+
+- **`audit` reads the deferral posture of each client it discovers.** For a Claude Code
+  config it reads the setting that actually decides whether tool definitions are withheld
+  from the context window, and says how far the stack sits from the threshold that
+  activates it. The number stops being unconditional: you are told whether these tokens
+  are loaded up front *here*, and what decides it.
+- **An absence of a record is never printed as a measurement.** For the four discovered
+  clients with no default on record — `claude-desktop`, `cursor`, `vscode`, `windsurf` —
+  the tokens are counted as loaded up front and the report says so in those words. The
+  front page now describes that behaviour instead of promising a silence the tool does
+  not keep.
+- **Badge adoption has an instrument** (`tools/measure-adoption.ts`, `docs/adoption.md`).
+  How many third-party projects actually display the badge is now a reading, so a zero
+  can be told apart from never having looked.
+- **The front page agrees with the repository.** Test counts, measurement dates, the size
+  of the measured set, and the version note are re-derived from what is on disk rather
+  than copied from prose that cites them.
+
 ## 0.4.0 — 2026-08-18
 
 - **`audit --baseline <report.json>` + `--max-increase N`**: diff this run against a stored
