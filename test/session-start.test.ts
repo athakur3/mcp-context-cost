@@ -172,9 +172,30 @@ describe('sessionStartLoad', () => {
     expect(sessionStartLoad(measurement({ rawToolsCapture: null, status: 'startup-failure' }))).toBeNull();
   });
 
-  it('never claims a total larger than the definitions it defers', () => {
-    const m = measurement({ serverInstructions: null });
-    expect(sessionStartLoad(m)!.totalTokens).toBeLessThan(m.totalTokens!);
+  // The names half IS bounded by the definitions — every name is bytes inside
+  // the canonical capture. The total is not, and an earlier version of this
+  // test claimed it was: it asserted the total never exceeds the headline and
+  // passed only because its fixture had no instructions. The published set
+  // already breaks that claim (a server whose instructions re-list its tools),
+  // so the assertion is scoped to the half that is genuinely guaranteed and the
+  // other half is pinned below.
+  it('never claims a names half larger than the definitions it defers', () => {
+    const load = sessionStartLoad(measurement({ serverInstructions: 'Prefer search over fetch.' }))!;
+    expect(load.toolNameTokens).toBeLessThan(measurement().totalTokens!);
+  });
+
+  it('lets instructions carry the total past the headline, because the headline never counted them', () => {
+    // The shape that does this in the wild: a short tool set and instructions
+    // that describe every tool again in prose.
+    const instructions = rawTools
+      .map((t) => `${t.name}: ${t.description} Call it when the user asks for ${t.name} work.`)
+      .join(' ')
+      .repeat(6);
+    const m = measurement({ serverInstructions: instructions });
+    const load = sessionStartLoad(m)!;
+    expect(load.isFloor).toBe(false);
+    expect(load.totalTokens).toBeGreaterThan(m.totalTokens!);
+    expect(load.totalTokens).toBe(load.toolNameTokens + load.instructionsTokens!);
   });
 });
 
@@ -259,6 +280,32 @@ describe('the leaderboard shows both figures for every measured server', () => {
     rmSync(join(root, 'results', 'floored'), { recursive: true });
     writeLeaderboard([entries[0], entries[2]], root);
     expect(readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8')).not.toContain('marks a floor');
+  });
+
+  it('names the rows where deferring costs more, with both figures', () => {
+    const instructions = rawTools
+      .map((t) => `${t.name}: ${t.description} Call it when the user asks for ${t.name} work.`)
+      .join(' ')
+      .repeat(6);
+    place('known', measurement({ serverName: 'known', serverInstructions: instructions }));
+    writeLeaderboard(entries, root);
+    const md = readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8');
+    const m = measurement({ serverInstructions: instructions });
+    const load = sessionStartLoad(m)!;
+    expect(md).toContain('**Deferring costs more than it saves on 1 of 2 rows.**');
+    expect(md).toContain(
+      `\`known\` pays ${load.totalTokens.toLocaleString('en-US')} at session start against ` +
+        `${m.totalTokens!.toLocaleString('en-US')} of definitions`,
+    );
+    // The lead sentence must survive as one bold run — a nested `**` would end
+    // it at the server name and un-bold the figures.
+    const line = md.split('\n').find((l) => l.startsWith('**Deferring costs more'))!;
+    expect(line.split('**')).toHaveLength(3);
+  });
+
+  it('says nothing about deferring costing more when it never does', () => {
+    writeLeaderboard(entries, root);
+    expect(readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8')).not.toContain('Deferring costs more');
   });
 
   it('uses a current side capture to lift a legacy row off its floor', () => {

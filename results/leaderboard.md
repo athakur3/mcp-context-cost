@@ -8,6 +8,8 @@ The **session start** column is what a client puts in context when it *defers* t
 
 **`≥` marks a floor, on 4 of 69 rows.** Tool names are counted exactly from the published capture, but `instructions` is not part of `tools/list` and has not been captured for these servers — so the figure is the names half alone and the true number is that or higher. A row stops being a floor the first time the server is measured with its instructions.
 
+**Deferring costs more than it saves on 1 of 69 rows.** `deepwiki` pays 521 at session start against 359 of definitions. The names half is always a fraction of the headline, but `instructions` are bytes the tokens column never counted and their length is independent of the tool set — so a server that re-lists its tools in its instructions makes a deferring client pay for a prose copy of the schemas it just skipped. A client that defers definitions is better off on every other measured row and worse off on this one.
+
 | # | server | tokens | session start | claude | tools | largest tool | status | category |
 |---:|---|---:|---:|---:|---:|---|---|---|
 | 1 | [github](../docs/servers/github.md) | 54,422 | 556 | 18,406 | 44 | issue_write (1,890) | measured | vendor-official |

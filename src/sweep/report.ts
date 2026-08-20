@@ -140,6 +140,40 @@ export function writeLeaderboard(entries: ServerEntry[], root = process.cwd()): 
     );
     md.push('');
   }
+  // Deferring usually saves almost everything, but it is not guaranteed to save
+  // anything: `instructions` are bytes the headline never counted, and a server
+  // that re-lists its tools in prose can charge a deferring client more than an
+  // eager one. Those rows are the most useful thing this column finds, so they
+  // are named here rather than left for a reader to spot by comparing columns.
+  // Derived on every write — no row is listed by hand, and the paragraph
+  // disappears if the set ever empties, rather than asserting a stale count.
+  const costlier = measured.filter((r) => {
+    const load = session(r);
+    return load !== null && r.m!.totalTokens !== null && load.totalTokens >= r.m!.totalTokens;
+  });
+  if (costlier.length > 0) {
+    // Server names are backticked, not bolded: the lead sentence is already
+    // bold and a nested `**` would close it early, silently un-bolding the
+    // half of the sentence that carries the finding.
+    const named = costlier
+      .map((r) => {
+        const load = session(r)!;
+        return `\`${mdCell(r.entry.name)}\` pays ${load.isFloor ? '≥' : ''}${load.totalTokens.toLocaleString(
+          'en-US',
+        )} at session start against ${r.m!.totalTokens!.toLocaleString('en-US')} of definitions`;
+      })
+      .join('; ');
+    md.push(
+      `**Deferring costs more than it saves on ${costlier.length} of ${measured.length} rows.** ${named}. ` +
+        `The names half is always a fraction of the headline, but \`instructions\` are bytes the tokens column ` +
+        `never counted and their length is independent of the tool set — so a server that re-lists its tools in ` +
+        `its instructions makes a deferring client pay for a prose copy of the schemas it just skipped. ` +
+        `A client that defers definitions is better off on every other measured row and worse off on ${
+          costlier.length === 1 ? 'this one' : 'these'
+        }.`,
+    );
+    md.push('');
+  }
   md.push(`| # | server | tokens | session start |${div ? ' claude |' : ''} tools | largest tool | status | category |`);
   md.push(`|---:|---|---:|---:|${div ? '---:|' : ''}---:|---|---|---|`);
   measured.forEach((r, i) => {

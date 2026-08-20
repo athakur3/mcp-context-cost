@@ -51,8 +51,9 @@ the same facts, without reading the capture by hand.
   ranks servers consistently — not a promise of the number your client charges.
 - **Not what a deferring client loads at session start.** A client that defers definitions
   until a tool is used puts only names and instructions in context up front, which is a
-  different and much smaller number. It is now measured and published beside the headline —
-  see [session-start load](#session-start-load).
+  different number — usually far smaller, but not always, because the instructions half is
+  not bounded by the definitions being deferred. It is now measured and published beside the
+  headline — see [session-start load](#session-start-load).
 - **Not a Claude token count.** Anthropic's tokenizer differs and drifts across model
   releases. The gap is now measured and published rather than left to a critic — see
   [Claude divergence](#claude-divergence) below.
@@ -228,6 +229,18 @@ so it is measured too, and published in the `session start` column of the
 The two halves are counted separately and summed rather than tokenized as one joined string:
 joining lets tokens merge across the seam, and a published total that does not equal the parts
 printed beside it is a discrepancy no reader can account for.
+
+**Deferring is not guaranteed to be cheaper.** The names half is a projection of the definition
+bytes and so is always a small fraction of the headline. The instructions half is not: it is
+separate bytes that the headline never counted, and its length is independent of how many tools
+the server ships. A server whose `instructions` re-list and explain its tools therefore charges
+a deferring client *more* than an eager one — the deferral saves the schemas and then pays for a
+prose copy of them. This is not a hypothetical: it is true of a server in the published set, and
+the leaderboard names every row where it happens, with both figures, rather than leaving the
+reader to notice that one column is larger than the other. The count and the names live in the
+[leaderboard](https://github.com/athakur3/mcp-context-cost/blob/main/results/leaderboard.md)
+because they are regenerated from the measurements on every sweep; a number written into this
+page by hand would be a claim that quietly stops being true.
 
 **`≥` means the instructions half is missing.** `instructions` is not part of `tools/list`, so
 no measurement taken before this method existed carries it. Those rows publish the names half

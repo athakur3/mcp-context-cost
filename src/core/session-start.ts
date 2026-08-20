@@ -5,8 +5,18 @@
  * The headline number counts every byte of `tools/list`, because that is what a
  * client loading definitions eagerly pays. Clients increasingly do not: they put
  * a *list of names* in context and fetch the definition only when the model
- * reaches for the tool. That client pays a different, much smaller bill at
- * session start, and the headline number says nothing about it.
+ * reaches for the tool. That client pays a different bill at session start, and
+ * the headline number says nothing about it.
+ *
+ * Different, and usually far smaller — but *not* smaller by construction, and
+ * nothing here may claim it is. Only one of the two halves below is bounded by
+ * the definitions being deferred. Instructions are separate bytes that no part
+ * of the headline counts, and their length has nothing to do with the size of
+ * the tool set, so a server that re-lists its tools in its `instructions`
+ * charges a deferring client *more* than an eager one. That is not
+ * hypothetical: it is true of a server on the published leaderboard, which is
+ * the most useful thing this measurement has found, and every renderer of these
+ * numbers is expected to let the reader see it rather than smooth it away.
  *
  * Two quantities make up that bill, and only one of them is in the published
  * capture:
