@@ -15,18 +15,29 @@
  *
  * ## What counts as displaying the badge
  *
- * A file, in a repository owned by someone else, containing a shields.io
- * endpoint badge whose `url` points at this repository's `badges/` directory.
- * That is the badge this project publishes: the number is rendered by shields
- * from a measurement whose capture and hash anyone can re-derive.
+ * A file, in a repository owned by someone else, carrying a shields.io endpoint
+ * badge that is auditable — and the project publishes two ways to make one, so
+ * the rule counts both. Either the badge's JSON is served from this
+ * repository's `badges/` directory, or the author hosts their own
+ * `badges/<name>.json` — which is what `npm run sweep` produces, and what every
+ * badge snippet this project ships tells a reader to point shields at — and
+ * links the badge back at the measurement here, which the same snippet
+ * requires.
  *
- * A badge whose JSON is self-hosted — an author runs the sweep and commits
- * their own `badges/<name>.json` — is invisible to that rule unless the file
- * also names this project somewhere, which the published snippet's link target
- * does. That is not an accident of the search: this project's own README says a
- * badge nobody can audit is decoration, and a badge carrying no reference back
- * to the measurement behind it is exactly that. The limit is published rather
- * than papered over; see `renderAdoptionPage`.
+ * Counting only the first form would have published a zero about a spelling
+ * nobody was ever told to write: no snippet in README, in the dashboard or in
+ * the staged upstream patch produces a URL inside this repository's `badges/`,
+ * because each of them is addressed to an author measuring their own server.
+ *
+ * What is still outside the rule is a self-hosted badge that links back to
+ * nothing. Nothing in such a file names this project, so no query can nominate
+ * it — and this project's own README says a badge nobody can audit is
+ * decoration. That limit is published on the page rather than papered over; see
+ * `renderAdoptionPage`.
+ *
+ * The link is paired with the image it wraps rather than looked for anywhere in
+ * the file, because a README carrying an unrelated shields badge and, elsewhere,
+ * a sentence naming this project is not a project displaying this badge.
  *
  * ## Why the search is a net and not the judgement
  *
@@ -169,21 +180,94 @@ export function decodeLoose(text: string): string {
 }
 
 /**
- * Every shields endpoint `url` parameter in a file that points at this
- * project's badges, decoded. Matched without regard to case: GitHub owner and
- * repository names are case-insensitive, a badge written `MCP-Context-Cost`
- * renders exactly the same one, and code search found the file that way too.
+ * A shields endpoint badge as it stands in a file: the JSON it renders from,
+ * and the link a reader clicking it would follow. `linkTarget` is null when the
+ * image is not wrapped in a link at all.
+ */
+export interface EndpointBadge {
+  url: string;
+  linkTarget: string | null;
+}
+
+/** How far either side of an image to look for the link wrapping it. */
+const LINK_WINDOW = 400;
+
+/**
+ * Every shields endpoint badge in a file, decoded, each paired with its own
+ * link target. Both spellings a README uses are read: markdown
+ * `[![alt](img)](target)`, which is the snippet this project publishes, and an
+ * HTML anchor wrapping an `<img>`.
+ */
+export function endpointBadges(text: string): EndpointBadge[] {
+  const decoded = decodeLoose(text);
+  const out: EndpointBadge[] = [];
+  const re = /img\.shields\.io\/endpoint\?url=([^\s)"'<>\]]+)/gi;
+  for (const m of decoded.matchAll(re)) {
+    const start = m.index ?? 0;
+    const after = decoded.slice(start + m[0].length, start + m[0].length + LINK_WINDOW);
+    // The image's own closing paren, an optional markdown title, then the link
+    // it is nested in. Anchored, so a stray `)](` later in the file is not read
+    // as this badge's link.
+    const md = after.match(/^\s*(?:"[^"]*"|'[^']*')?\s*\)\s*\]\s*\(\s*([^\s)]+)/);
+    let linkTarget: string | null = md ? md[1] : null;
+    if (linkTarget === null) {
+      const before = decoded.slice(Math.max(0, start - LINK_WINDOW), start);
+      const anchors = [...before.matchAll(/<a\b[^>]*?href\s*=\s*["']([^"']+)["']/gi)];
+      const last = anchors[anchors.length - 1];
+      if (last && !before.slice(last.index ?? 0).includes('</a>')) linkTarget = last[1];
+    }
+    out.push({ url: m[1], linkTarget });
+  }
+  return out;
+}
+
+/**
+ * Whether a badge's JSON is served from this repository — auditable by
+ * construction, whatever the badge links to. Matched without regard to case:
+ * GitHub owner and repository names are case-insensitive, a badge written
+ * `MCP-Context-Cost` renders exactly the same one, and code search found the
+ * file that way too.
+ */
+export function hostedHere(url: string, src: BadgeSource = BADGE_SOURCE): boolean {
+  const lower = decodeLoose(url).toLowerCase();
+  return lower.includes(`${src.owner}/${src.repo}/`.toLowerCase()) && lower.includes('/badges/');
+}
+
+/**
+ * Whether a badge's link target leads back to this project — the repository,
+ * the published pages, or a raw file in either. This is exactly what the
+ * published snippet asks an author to do with a badge whose JSON they host
+ * themselves, and it is what makes that badge auditable rather than decoration.
+ */
+export function linksBackToProject(target: string, src: BadgeSource = BADGE_SOURCE): boolean {
+  const lower = decodeLoose(target).toLowerCase();
+  return (
+    lower.includes(`${src.owner}.github.io/${src.repo}`.toLowerCase()) ||
+    lower.includes(`${src.owner}/${src.repo}`.toLowerCase())
+  );
+}
+
+/**
+ * Whether a file displays this project's badge, in either published form: the
+ * JSON served from here, or self-hosted JSON with the badge linked back at the
+ * measurement here. See the header for why both count and why the link is
+ * paired with the image rather than looked for anywhere in the file.
+ */
+export function displaysBadge(text: string, src: BadgeSource = BADGE_SOURCE): boolean {
+  return endpointBadges(text).some(
+    (b) => hostedHere(b.url, src) || (b.linkTarget !== null && linksBackToProject(b.linkTarget, src)),
+  );
+}
+
+/**
+ * Every shields endpoint `url` in a file whose JSON is served from this
+ * repository's `badges/` directory, decoded. The first of the two forms above,
+ * on its own.
  */
 export function endpointUrls(text: string, src: BadgeSource = BADGE_SOURCE): string[] {
-  const decoded = decodeLoose(text);
-  const out: string[] = [];
-  const re = /img\.shields\.io\/endpoint\?url=([^\s)"'<>\]]+)/gi;
-  for (const m of decoded.matchAll(re)) out.push(m[1]);
-  const needle = `${src.owner}/${src.repo}/`.toLowerCase();
-  return out.filter((u) => {
-    const lower = u.toLowerCase();
-    return lower.includes(needle) && lower.includes('/badges/');
-  });
+  return endpointBadges(text)
+    .map((b) => b.url)
+    .filter((u) => hostedHere(u, src));
 }
 
 /**
@@ -197,7 +281,7 @@ export function endpointUrls(text: string, src: BadgeSource = BADGE_SOURCE): str
  * genuinely stopped mentioning the project.
  */
 export function classifyFile(text: string, src: BadgeSource = BADGE_SOURCE): SightingKind | null {
-  if (endpointUrls(text, src).length > 0) return 'badge';
+  if (displaysBadge(text, src)) return 'badge';
   const decoded = decodeLoose(text).toLowerCase();
   return decoded.includes(src.repo.toLowerCase()) ? 'mention' : null;
 }
@@ -391,6 +475,21 @@ export function renderAdoptionPage(run: AdoptionRun | null, src: BadgeSource = B
   out.push('its date, and re-running it is one command.');
   out.push('');
 
+  out.push('## What counts as displaying it');
+  out.push('');
+  out.push('A file in somebody else\'s repository carrying a shields.io endpoint badge that can be');
+  out.push('audited, in either of the two forms this project publishes instructions for:');
+  out.push('');
+  out.push('- the badge\'s JSON is served from this repository\'s `badges/` directory; or');
+  out.push('- the author hosts their own `badges/<name>.json` — what `npm run sweep` writes, and');
+  out.push('  what every badge snippet here tells you to point shields at — **and links the badge**');
+  out.push('  **back at the measurement**, which the same snippet requires.');
+  out.push('');
+  out.push('The link is read from the badge itself, not from anywhere in the file: a README with an');
+  out.push('unrelated shields badge that elsewhere names this project is counted as naming it, not');
+  out.push('as displaying the badge.');
+  out.push('');
+
   out.push('## What was asked');
   out.push('');
   out.push('| query | what it is for | files found |');
@@ -427,9 +526,10 @@ export function renderAdoptionPage(run: AdoptionRun | null, src: BadgeSource = B
 
   out.push('## What this cannot see');
   out.push('');
-  out.push('- A badge whose JSON is self-hosted and which links back to nothing. Nothing in such a');
-  out.push('  file names this project, so no query can nominate it — and a badge carrying no route');
-  out.push('  to the measurement behind it is the kind this project calls decoration.');
+  out.push('- A self-hosted badge that links back to nothing — the one badge shape above that is');
+  out.push('  not counted. Nothing in such a file names this project, so no query can nominate it');
+  out.push('  either, and a badge carrying no route to the measurement behind it is the kind this');
+  out.push('  project calls decoration.');
   out.push('- Anything outside public GitHub: private repositories, other forges, documentation');
   out.push('  sites whose source is not on GitHub, and repositories the code search index has not');
   out.push('  reached.');

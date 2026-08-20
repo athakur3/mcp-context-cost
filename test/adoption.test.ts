@@ -7,8 +7,11 @@ import {
   carryResolved,
   classifyFile,
   decodeLoose,
+  displaysBadge,
+  endpointBadges,
   endpointUrls,
   isThirdParty,
+  linksBackToProject,
   mergeSightings,
   parseAdoption,
   renderAdoptionPage,
@@ -114,6 +117,98 @@ describe('classifyFile', () => {
     expect(classifyFile('the 55K-token MCP-context-cost concrete number')).toBe('mention');
     const md = `[![context cost](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAThakur3%2FMCP-Context-Cost%2Fmain%2Fbadges%2Fx.json)](${PAGE})`;
     expect(classifyFile(md)).toBe('badge');
+  });
+});
+
+describe('the badge forms this project actually publishes', () => {
+  // Every snippet the project ships is addressed to an author measuring their
+  // own server, so every one of them points shields at the author's own JSON.
+  // A rule that only counted JSON served from here would publish a zero about a
+  // spelling nobody was told to write.
+  const OWN = 'https://raw.githubusercontent.com/someone/their-server/main/badges/their-server.json';
+  const METHODOLOGY = 'https://athakur3.github.io/mcp-context-cost/METHODOLOGY.html';
+
+  it('counts README.md\'s snippet: the author\'s own badges/ JSON, linked back here', () => {
+    expect(classifyFile(readmeSnippet(OWN, PAGE))).toBe('badge');
+    expect(classifyFile(readmeSnippet(OWN, METHODOLOGY))).toBe('badge');
+  });
+
+  it('counts the dashboard\'s snippet written by hand, unencoded', () => {
+    expect(classifyFile(`[![context cost](https://img.shields.io/endpoint?url=${OWN})](${METHODOLOGY})`)).toBe(
+      'badge',
+    );
+  });
+
+  it('counts the staged action\'s gist badge, which has no badges/ segment at all', () => {
+    const gist = 'https://gist.githubusercontent.com/someone/abc123/raw/badge.json';
+    expect(classifyFile(`[![context cost](https://img.shields.io/endpoint?url=${gist})](${METHODOLOGY})`)).toBe(
+      'badge',
+    );
+  });
+
+  it('counts an HTML anchor wrapping the image, which READMEs also use', () => {
+    const html = `<a href="${PAGE}"><img src="https://img.shields.io/endpoint?url=${encodeURIComponent(OWN)}" alt="context cost"></a>`;
+    expect(classifyFile(html)).toBe('badge');
+  });
+
+  it('still counts a badge served from this repository, however it is linked', () => {
+    expect(classifyFile(`![context cost](https://img.shields.io/endpoint?url=${encodeURIComponent(RAW)})`)).toBe(
+      'badge',
+    );
+  });
+
+  it('leaves a self-hosted badge that links back to nothing outside the count', () => {
+    // The one shape the page says it cannot see, stated there and true here.
+    expect(classifyFile(`[![context cost](https://img.shields.io/endpoint?url=${OWN})](https://example.com)`)).toBe(
+      null,
+    );
+    expect(classifyFile(`![context cost](https://img.shields.io/endpoint?url=${OWN})`)).toBe(null);
+  });
+
+  it('does not read an unrelated badge plus a mention elsewhere as a badge', () => {
+    const md = [
+      `[![build](https://img.shields.io/endpoint?url=${OWN})](https://ci.example.com)`,
+      '',
+      'Measured with mcp-context-cost, which you should read about at',
+      PAGE,
+    ].join('\n');
+    expect(classifyFile(md)).toBe('mention');
+  });
+});
+
+describe('endpointBadges', () => {
+  it('pairs each image with its own link and no other', () => {
+    const md = `[![a](https://img.shields.io/endpoint?url=one)](https://x.example) [![b](https://img.shields.io/endpoint?url=two)](https://y.example)`;
+    expect(endpointBadges(md)).toEqual([
+      { url: 'one', linkTarget: 'https://x.example' },
+      { url: 'two', linkTarget: 'https://y.example' },
+    ]);
+  });
+
+  it('reports no link rather than borrowing a later one', () => {
+    const md = `![a](https://img.shields.io/endpoint?url=one)\n\nsee [the page](${PAGE})`;
+    expect(endpointBadges(md)).toEqual([{ url: 'one', linkTarget: null }]);
+  });
+});
+
+describe('linksBackToProject', () => {
+  it('accepts the pages site, the repository and a raw file in it', () => {
+    expect(linksBackToProject(PAGE)).toBe(true);
+    expect(linksBackToProject('https://github.com/athakur3/mcp-context-cost')).toBe(true);
+    expect(linksBackToProject('https://github.com/AThakur3/MCP-Context-Cost#readme')).toBe(true);
+    expect(linksBackToProject(RAW)).toBe(true);
+  });
+
+  it('rejects somewhere else entirely', () => {
+    expect(linksBackToProject('https://example.com')).toBe(false);
+    expect(linksBackToProject('https://github.com/someone/mcp-context-costs-more')).toBe(false);
+  });
+});
+
+describe('displaysBadge', () => {
+  it('is the judgement classifyFile makes, on its own', () => {
+    expect(displaysBadge(readmeSnippet(RAW, PAGE))).toBe(true);
+    expect(displaysBadge('mcp-context-cost is great')).toBe(false);
   });
 });
 

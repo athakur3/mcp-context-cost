@@ -9,6 +9,20 @@ That zero was looked for: 4 queries ran and turned up 28 third-party file(s), li
 A reading is a dated observation, not a live counter. It is worth exactly as much as
 its date, and re-running it is one command.
 
+## What counts as displaying it
+
+A file in somebody else's repository carrying a shields.io endpoint badge that can be
+audited, in either of the two forms this project publishes instructions for:
+
+- the badge's JSON is served from this repository's `badges/` directory; or
+- the author hosts their own `badges/<name>.json` — what `npm run sweep` writes, and
+  what every badge snippet here tells you to point shields at — **and links the badge**
+  **back at the measurement**, which the same snippet requires.
+
+The link is read from the badge itself, not from anywhere in the file: a README with an
+unrelated shields badge that elsewhere names this project is counted as naming it, not
+as displaying the badge.
+
 ## What was asked
 
 | query | what it is for | files found |
@@ -60,9 +74,10 @@ and not by this one.
 
 ## What this cannot see
 
-- A badge whose JSON is self-hosted and which links back to nothing. Nothing in such a
-  file names this project, so no query can nominate it — and a badge carrying no route
-  to the measurement behind it is the kind this project calls decoration.
+- A self-hosted badge that links back to nothing — the one badge shape above that is
+  not counted. Nothing in such a file names this project, so no query can nominate it
+  either, and a badge carrying no route to the measurement behind it is the kind this
+  project calls decoration.
 - Anything outside public GitHub: private repositories, other forges, documentation
   sites whose source is not on GitHub, and repositories the code search index has not
   reached.
