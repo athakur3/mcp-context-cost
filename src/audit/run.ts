@@ -9,6 +9,7 @@ import { measureServer } from '../sweep/run.js';
 import type { Measurement } from '../core/types.js';
 import { parseDivergence, type DivergenceRun } from '../core/divergence.js';
 import { buildReport, serverKey, type AuditReport } from './audit.js';
+import { toolSearchEnv, type ToolSearchEnv } from './deferral.js';
 import { configCandidates, loadConfigs, type ConfiguredServer, type LoadedConfig } from './config.js';
 
 /** Where the published `tools-delta/v1` run lives when `--claude` doesn't override it. */
@@ -29,6 +30,13 @@ export interface AuditOptions {
   claude?: boolean;
   /** Override the divergence.json source — mainly for tests and self-hosted mirrors. */
   divergenceUrl?: string;
+  /**
+   * The tool-search variables to read the client's deferral setting from.
+   * Defaults to this process's environment, which is the machine being audited
+   * — the setting lives there, not in any config file. Overridable so a test
+   * can state a machine rather than inherit the one it runs on.
+   */
+  env?: ToolSearchEnv;
   onProgress?: (name: string, done: number, total: number) => void;
 }
 
@@ -108,6 +116,7 @@ export async function runAudit(opts: AuditOptions = {}): Promise<AuditReport> {
     contextWindow: opts.contextWindow,
     budget: opts.budget,
     divergence,
+    env: opts.env ?? toolSearchEnv(process.env),
   });
   if (divergenceProblem) report.problems.push(divergenceProblem);
   return report;

@@ -1,151 +1,428 @@
 /**
- * Whether the client reading this config loads tool schemas up front — or defers
- * them until the model reaches for one.
+ * Whether the client reading this config loads MCP tool definitions up front —
+ * or defers them until the model reaches for one.
  *
  * The headline audit number is what a session pays to put every tool definition
- * in the context window. Whether it pays that is now a property of the client,
- * not of the servers: Anthropic's tool search withholds tool definitions from
- * the context window entirely, and under its `auto` setting it decides by
- * counting the deferrable definition tokens against the model's context window
- * and activating at 10% of it.
+ * in the context window. Whether it pays that is a property of the client and
+ * of the machine it runs on, not of the servers. So this module answers with
+ * three separate things, because collapsing them is how the first version of
+ * this got the common case wrong:
  *
- * Which makes the number the audit already computes the *input to that
- * decision* rather than the answer to it — and the decision depends on the
- * config on the machine being audited, which is the one thing a scraped
- * leaderboard cannot know. So the audit states three things per config: whether
- * that client defers by default, where the threshold sits for this context
- * window, and how far this stack is from it.
+ *   1. **What mode is in force.** Claude Code's default is to defer EVERY MCP
+ *      tool definition, unconditionally — there is no threshold in the default
+ *      case. A threshold exists only in the opt-in `auto` mode, and `auto:N`
+ *      lets that percentage be anything from 0 to 100. Which mode is in force
+ *      is decided by environment variables on the machine being audited, so
+ *      they are read rather than assumed.
+ *   2. **Where the threshold sits**, when there is one at all.
+ *   3. **Which side of it this stack falls on** — as a range, not a point,
+ *      because the audit's number and the threshold are counted in different
+ *      units (see `wireToClientRatio` below).
  *
  * Sources, and their dates, because these are claims about someone else's
  * product and they will rot:
  *
- *   - Claude Code tool-search documentation, read 2026-08-20: "Tool search is on
- *     by default"; "tool definitions are withheld from the context window"; under
- *     `auto` the SDK "counts the tokens in the tool definitions that tool search
- *     can defer and compares the total against the model's context window",
- *     activating at 10%. It covers MCP-registered tools that are not pinned to
- *     always load, and does not apply behind a non-first-party
- *     `ANTHROPIC_BASE_URL`, on Azure Foundry deployments, on pre-4.5 models, or
- *     with betas disabled.
+ *   - Claude Code MCP documentation, §"Scale with MCP tool search", read
+ *     2026-08-20. "Tool search is enabled by default. MCP tools are deferred
+ *     rather than loaded into context upfront." The `ENABLE_TOOL_SEARCH` table:
+ *     unset → "All MCP tools deferred and loaded on demand"; `true` → all
+ *     deferred; `auto` → "Threshold mode: Claude Code loads the tools it would
+ *     otherwise defer upfront while their definitions total less than 10% of
+ *     the context window, and defers all of them once the definitions reach
+ *     10%"; `auto:N` → "Threshold mode with a custom percentage, where `N` is
+ *     0-100"; `false` → "All MCP tools loaded upfront, no deferral". Deferral
+ *     also falls back to upfront loading behind a non-first-party
+ *     `ANTHROPIC_BASE_URL`, on a Microsoft Foundry deployment hosted on Azure,
+ *     and on Google Cloud Agent Platform models earlier than the Claude 4.5
+ *     generation; `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` "keeps tool search
+ *     off. You can't override it by setting `ENABLE_TOOL_SEARCH` yourself."
+ *     A server with `alwaysLoad: true` loads at session start regardless.
  *
  * No default deferral is on record here for the other four clients this tool
- * discovers. That is an absence of a record, not a measurement of those clients,
- * and it is printed as such — the same rule the rest of this project follows for
- * a value it has not observed.
+ * discovers. That is an absence of a record, not a measurement of those
+ * clients, and it is printed as such — the same rule the rest of this project
+ * follows for a value it has not observed.
  */
+import type { DivergenceRun } from '../core/divergence.js';
 
-/** Share of the model's context window at which tool search activates under `auto`. */
-export const TOOL_SEARCH_THRESHOLD_SHARE = 0.1;
+/** Share of the context window at which deferral activates under `auto`. */
+export const TOOL_SEARCH_AUTO_SHARE = 0.1;
 
-export type DeferralPosture =
-  /** This client withholds tool definitions by default, above a threshold. */
-  | 'defers-by-default'
+/** The env vars that decide whether this machine's Claude Code defers. */
+export interface ToolSearchEnv {
+  ENABLE_TOOL_SEARCH?: string;
+  CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS?: string;
+  ANTHROPIC_BASE_URL?: string;
+}
+
+/** Pick the three variables that matter out of a process environment. */
+export function toolSearchEnv(env: Record<string, string | undefined>): ToolSearchEnv {
+  return {
+    ENABLE_TOOL_SEARCH: env.ENABLE_TOOL_SEARCH,
+    CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: env.CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS,
+    ANTHROPIC_BASE_URL: env.ANTHROPIC_BASE_URL,
+  };
+}
+
+export type DeferralMode =
+  /** Every MCP tool definition is deferred, at any size. No threshold applies. */
+  | 'defers-all'
+  /** Deferral activates only once the definitions reach a share of the window. */
+  | 'threshold'
+  /** Deferral is off here: every definition is in context at session start. */
+  | 'loads-upfront'
+  /** ENABLE_TOOL_SEARCH holds a value Claude Code does not document. */
+  | 'setting-unrecognized'
   /** A client we know about, with no default deferral on record. */
   | 'no-deferral-on-record'
   /** `--config <path>`: the file was read, but which client reads it is unknown. */
   | 'client-unknown';
 
-interface ClientDeferral {
-  posture: DeferralPosture;
-  /** What the client calls the mechanism, for a reader who wants to look it up. */
-  mechanism?: string;
-  /** Fraction of the context window at which it activates. */
-  thresholdShare?: number;
-  /** Where the deferral does not apply, so the full number is paid after all. */
-  exceptions?: string[];
+/** How the mode was decided — printed, so a reader can check it against their own shell. */
+export interface ToolSearchSetting {
+  /** The variable that decided it, or null when nothing was set and the default stands. */
+  variable: string | null;
+  /** Its value as read. Null when the decision came from the documented default. */
+  value: string | null;
+  /** True when a variable on the audited machine decided this, false for the default. */
+  readFromMachine: boolean;
 }
 
-const CLIENTS: Record<string, ClientDeferral> = {
-  'claude-code': {
-    posture: 'defers-by-default',
-    mechanism: 'tool search',
-    thresholdShare: TOOL_SEARCH_THRESHOLD_SHARE,
-    exceptions: [
-      'a non-first-party ANTHROPIC_BASE_URL',
-      'Azure Foundry deployments',
-      'models before 4.5',
-      'betas disabled',
-      'servers pinned to always load',
-    ],
-  },
-  'claude-desktop': { posture: 'no-deferral-on-record' },
-  cursor: { posture: 'no-deferral-on-record' },
-  vscode: { posture: 'no-deferral-on-record' },
-  windsurf: { posture: 'no-deferral-on-record' },
-  explicit: { posture: 'client-unknown' },
+interface ResolvedToolSearch extends ToolSearchSetting {
+  mode: Extract<DeferralMode, 'defers-all' | 'threshold' | 'loads-upfront' | 'setting-unrecognized'>;
+  thresholdShare: number | null;
+}
+
+/** The one host Claude Code treats as first-party for the tool-search fallback. */
+const FIRST_PARTY_API_HOST = 'api.anthropic.com';
+
+function firstPartyBaseUrl(raw: string): boolean {
+  try {
+    return new URL(raw).hostname.toLowerCase() === FIRST_PARTY_API_HOST;
+  } catch {
+    // Not a URL we can read. Treated as not-first-party, which is the reading
+    // that says tokens are paid — never the one that says they are free.
+    return false;
+  }
+}
+
+/**
+ * Read the machine's tool-search setting. Values are matched exactly as
+ * documented: an unrecognized value produces `setting-unrecognized` rather than
+ * a guess, because guessing here would print a definite verdict about tokens
+ * the reader may or may not be paying.
+ */
+export function resolveToolSearch(env: ToolSearchEnv): ResolvedToolSearch {
+  const betas = env.CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS?.trim();
+  // Read first: documented as not overridable by ENABLE_TOOL_SEARCH.
+  if (betas) {
+    return {
+      mode: 'loads-upfront',
+      thresholdShare: null,
+      variable: 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS',
+      value: betas,
+      readFromMachine: true,
+    };
+  }
+
+  const raw = env.ENABLE_TOOL_SEARCH?.trim();
+  const set = (
+    mode: ResolvedToolSearch['mode'],
+    thresholdShare: number | null,
+  ): ResolvedToolSearch => ({
+    mode,
+    thresholdShare,
+    variable: 'ENABLE_TOOL_SEARCH',
+    value: raw ?? null,
+    readFromMachine: true,
+  });
+
+  if (raw === undefined || raw === '') {
+    const base = env.ANTHROPIC_BASE_URL?.trim();
+    if (base && !firstPartyBaseUrl(base)) {
+      return {
+        mode: 'loads-upfront',
+        thresholdShare: null,
+        variable: 'ANTHROPIC_BASE_URL',
+        value: base,
+        readFromMachine: true,
+      };
+    }
+    return {
+      mode: 'defers-all',
+      thresholdShare: null,
+      variable: 'ENABLE_TOOL_SEARCH',
+      value: null,
+      readFromMachine: false,
+    };
+  }
+
+  if (raw === 'true') return set('defers-all', null);
+  if (raw === 'false') return set('loads-upfront', null);
+  if (raw === 'auto') return set('threshold', TOOL_SEARCH_AUTO_SHARE);
+  const custom = /^auto:(\d{1,3})$/.exec(raw);
+  if (custom) {
+    const pct = Number(custom[1]);
+    if (pct >= 0 && pct <= 100) return set('threshold', pct / 100);
+  }
+  return set('setting-unrecognized', null);
+}
+
+/**
+ * The factor between the number this audit counts and the number the threshold
+ * is counted in.
+ *
+ * The audit's total is o200k_base over the bytes a server puts on the wire. The
+ * threshold is a share of the context window measured in what the client
+ * actually sends to the API — the name/description/input_schema projection,
+ * counted by Anthropic's tokenizer, plus the tool framework overhead. Those are
+ * not the same number and the gap is not small: across the published
+ * divergence run it runs from 0.20× to 1.92×, so a single stack total maps to a
+ * range roughly ten times as wide as itself. Comparing the wire number directly
+ * against the threshold understates the deferrable side for schema-heavy
+ * servers and overstates it for metadata-heavy ones, in one direction each.
+ */
+export interface WireToClientRatio {
+  low: number;
+  high: number;
+  /** How many servers the band was measured across, for the printed caveat. */
+  servers: number;
+  /** The run it came from, so a reader can date it. */
+  source: string;
+}
+
+/**
+ * The band as published in this repository's own `results/divergence.json`
+ * (claude-opus-5, 2026-08-19, 20 servers). Used when no divergence run was
+ * supplied; `--claude` recomputes it from the run it fetched.
+ */
+export const PUBLISHED_WIRE_TO_CLIENT_RATIO: WireToClientRatio = {
+  low: 0.2,
+  high: 1.92,
+  servers: 20,
+  source: 'the published claude-opus-5 divergence run',
 };
+
+/** Derive the band from a supplied divergence run, falling back to the published one. */
+export function wireToClientRatio(run?: DivergenceRun | null): WireToClientRatio {
+  if (!run) return PUBLISHED_WIRE_TO_CLIENT_RATIO;
+  let low = Infinity;
+  let high = -Infinity;
+  let servers = 0;
+  for (const row of Object.values(run.servers)) {
+    if (!row || row.error || typeof row.claudeDelta !== 'number' || !(row.o200kFull > 0)) continue;
+    const ratio = row.claudeDelta / row.o200kFull;
+    low = Math.min(low, ratio);
+    high = Math.max(high, ratio);
+    servers++;
+  }
+  if (servers === 0) return PUBLISHED_WIRE_TO_CLIENT_RATIO;
+  return { low, high, servers, source: `the ${run.measuredAt} ${run.model} divergence run` };
+}
+
+/** One measured server, as the deferral arithmetic needs it. */
+export interface DeferralServer {
+  /** o200k tokens over the wire capture — the audit's own unit. */
+  tokens: number;
+  /**
+   * Anthropic's own count for this server from a current divergence row, when
+   * `--claude` supplied one. `null` means no current match, `undefined` means
+   * the join was not requested — either way it is converted through the band.
+   */
+  claudeTokens?: number | null;
+}
+
+/**
+ * The configs one session of one client loads together.
+ *
+ * Claude Code reads both `~/.claude.json` and `<cwd>/.mcp.json` into a single
+ * session, so they get one verdict against their sum rather than two verdicts
+ * each judged alone. The report still totals each config file separately — a
+ * context window belongs to one session, which is the argument for adding these
+ * two together, not for adding one client's servers to another's.
+ */
+export interface DeferralScope {
+  client: string;
+  /** Every config file this verdict covers. */
+  sources: string[];
+  servers: DeferralServer[];
+  /** Entries discovered across those configs that produced no number. */
+  skippedCount: number;
+}
+
+/** What the client would count for this stack, as a range. */
+export interface ClientSideEstimate {
+  low: number;
+  high: number;
+  /** Servers taken from a published Anthropic count rather than converted. */
+  exact: number;
+  /** Servers converted through the ratio band. */
+  estimated: number;
+}
 
 export interface DeferralVerdict {
   client: string;
-  posture: DeferralPosture;
-  /** Named only when the client defers; null otherwise. */
+  mode: DeferralMode;
+  /** What the client calls the mechanism, for a reader who wants to look it up. */
   mechanism: string | null;
-  /** Tokens at which deferral activates for this context window; null when there is no rule. */
+  /** Every config file this one verdict covers. */
+  sources: string[];
+  /** Which variable decided the mode, and whether it was read or defaulted. */
+  setting: ToolSearchSetting | null;
+  /** Null whenever no threshold applies — which includes the default case. */
+  thresholdShare: number | null;
   thresholdTokens: number | null;
-  /** What this config puts on the deferrable side of that comparison. */
-  deferrableTokens: number;
+  /** o200k tokens summed across the scope — what this audit measured. */
+  wireTokens: number;
+  /** Null when there is no threshold to compare against. */
+  clientTokens: ClientSideEstimate | null;
+  ratio: WireToClientRatio | null;
   /**
-   * True when `deferrableTokens` is a lower bound rather than a count — some
-   * server in this config could not be measured, and a session would still load
-   * whatever it serves. A floor, on the same rule the leaderboard's
-   * session-start column follows: absent is unknown, never zero.
+   * True when the stack total is a lower bound rather than a count — some
+   * server in this scope could not be measured, and a session would still load
+   * whatever it serves. Absent is unknown, never zero.
    */
-  deferrableIsFloor: boolean;
-  /** deferrableTokens − thresholdTokens; positive is over. null when there is no rule. */
-  distanceTokens: number | null;
+  isFloor: boolean;
+  /** clientTokens − thresholdTokens, at each end of the range. Positive is over. */
+  distanceTokens: { low: number; high: number } | null;
   /**
-   * true = activates, false = does not, null = cannot be said. Null happens two
-   * ways: the client has no threshold rule at all, or the measured total sits
-   * under the threshold while unmeasured servers could still carry it over.
+   * true = deferral activates, false = it does not, null = cannot be said.
+   * Null has three causes, all of them real: there is no threshold rule to be
+   * on a side of, the unit conversion straddles the threshold, or an unmeasured
+   * server could carry an under-threshold stack over.
    */
   crosses: boolean | null;
-  /** Conditions under which a deferring client pays the full number anyway. */
+  /** Conditions this cannot read, under which a deferring client pays in full. */
   exceptions: string[];
 }
 
+/** Clients this tool discovers that have no default deferral on record. */
+const NO_DEFERRAL_ON_RECORD = new Set(['claude-desktop', 'cursor', 'vscode', 'windsurf']);
+
 /**
- * The part of a config result this reads. Stated structurally rather than
- * imported, so the verdict can be attached to the result that carries it
- * without the two modules depending on each other.
+ * Where deferral does not apply even when the machine's setting says it should.
+ * None of these can be read from the config or the environment, so they are
+ * printed as conditions for the reader to check rather than folded into the
+ * verdict.
  */
-export interface DeferralSubject {
-  client: string;
-  totalTokens: number;
-  /** Entries that were discovered but produced no number. */
-  skipped: unknown[];
+const EXCEPTIONS = [
+  'a Microsoft Foundry deployment hosted on Azure, which rejects tool search server-side',
+  "Google Cloud's Agent Platform on a model earlier than the Claude 4.5 generation",
+  'a model without support for tool_reference blocks (before Sonnet 4.5 / Haiku 4.5 / Opus 4.5)',
+  'a server pinned with "alwaysLoad": true, whose tools load at session start regardless',
+];
+
+function estimate(servers: DeferralServer[], ratio: WireToClientRatio): ClientSideEstimate {
+  let low = 0;
+  let high = 0;
+  let exact = 0;
+  let estimated = 0;
+  for (const s of servers) {
+    if (typeof s.claudeTokens === 'number') {
+      // A published Anthropic count for this exact capture. It carries the tool
+      // framework overhead the API charges once per request rather than once
+      // per server, so a multi-server sum leans high by at most that overhead —
+      // far inside the band the converted servers already contribute.
+      low += s.claudeTokens;
+      high += s.claudeTokens;
+      exact++;
+    } else {
+      low += s.tokens * ratio.low;
+      high += s.tokens * ratio.high;
+      estimated++;
+    }
+  }
+  return { low: Math.round(low), high: Math.round(high), exact, estimated };
 }
 
 /**
- * Read one config's deferral position. Pure arithmetic over a built config
- * result — no config file is re-read and no server is launched.
+ * Read one session's deferral position. Pure arithmetic over a built scope — no
+ * config file is re-read and no server is launched. The environment is passed
+ * in rather than read here, so the answer is reproducible from its inputs.
  */
-export function evaluateDeferral(cfg: DeferralSubject, contextWindow: number): DeferralVerdict {
-  const client = CLIENTS[cfg.client] ?? { posture: 'client-unknown' as const };
-  // A server that could not be measured still ships tools to a real session, so
-  // its absence lowers this total below the truth rather than not affecting it.
-  const deferrableIsFloor = cfg.skipped.length > 0;
-  const deferrableTokens = cfg.totalTokens;
+export function evaluateDeferral(
+  scope: DeferralScope,
+  opts: {
+    contextWindow: number;
+    /** The audited machine's variables. Omitted means nothing was set. */
+    env?: ToolSearchEnv;
+    /** Supplied by `--claude`; sharpens the unit conversion where rows match. */
+    divergence?: DivergenceRun | null;
+  },
+): DeferralVerdict {
+  const wireTokens = scope.servers.reduce((a, s) => a + s.tokens, 0);
+  const isFloor = scope.skippedCount > 0;
 
-  const base = {
-    client: cfg.client,
-    posture: client.posture,
-    mechanism: client.mechanism ?? null,
-    deferrableTokens,
-    deferrableIsFloor,
-    exceptions: client.exceptions ?? [],
+  // Every field a verdict carries, at its "nothing to say" value. Each mode
+  // below overrides only what it can actually answer.
+  const base: Omit<DeferralVerdict, 'mode'> = {
+    client: scope.client,
+    sources: scope.sources,
+    wireTokens,
+    isFloor,
+    mechanism: null,
+    setting: null,
+    thresholdShare: null,
+    thresholdTokens: null,
+    clientTokens: null,
+    ratio: null,
+    distanceTokens: null,
+    crosses: null,
+    exceptions: [],
   };
 
-  if (client.posture !== 'defers-by-default' || !client.thresholdShare) {
-    return { ...base, thresholdTokens: null, distanceTokens: null, crosses: null };
+  if (scope.client !== 'claude-code') {
+    return {
+      ...base,
+      mode: NO_DEFERRAL_ON_RECORD.has(scope.client) ? 'no-deferral-on-record' : 'client-unknown',
+    };
   }
 
-  const thresholdTokens = Math.round(contextWindow * client.thresholdShare);
-  const distanceTokens = deferrableTokens - thresholdTokens;
-  // At-or-above, on the documented "activates at 10%".
-  const overOnWhatWasMeasured = deferrableTokens >= thresholdTokens;
-  // A floor that is already over cannot be argued back under; a floor that is
-  // under has not answered the question, and says so rather than saying "no".
-  const crosses = overOnWhatWasMeasured ? true : deferrableIsFloor ? null : false;
+  const resolved = resolveToolSearch(opts.env ?? {});
+  const setting: ToolSearchSetting = {
+    variable: resolved.variable,
+    value: resolved.value,
+    readFromMachine: resolved.readFromMachine,
+  };
 
-  return { ...base, thresholdTokens, distanceTokens, crosses };
+  if (resolved.mode !== 'threshold') {
+    return {
+      ...base,
+      mode: resolved.mode,
+      mechanism: 'tool search',
+      setting,
+      // Nothing is deferred in the other two modes, so the conditions under
+      // which deferral fails to apply are not worth printing there.
+      exceptions: resolved.mode === 'defers-all' ? EXCEPTIONS : [],
+    };
+  }
+
+  const thresholdShare = resolved.thresholdShare ?? TOOL_SEARCH_AUTO_SHARE;
+  const thresholdTokens = Math.round(opts.contextWindow * thresholdShare);
+  const ratio = wireToClientRatio(opts.divergence);
+  const clientTokens = estimate(scope.servers, ratio);
+
+  // At-or-above, on the documented "defers all of them once the definitions
+  // reach 10%". A range that is entirely over is over even if it is a floor:
+  // more unmeasured tokens cannot take it back under.
+  const crosses =
+    clientTokens.low >= thresholdTokens
+      ? true
+      : isFloor || clientTokens.high >= thresholdTokens
+        ? null
+        : false;
+
+  return {
+    ...base,
+    mode: 'threshold',
+    mechanism: 'tool search',
+    setting,
+    thresholdShare,
+    thresholdTokens,
+    clientTokens,
+    ratio,
+    distanceTokens: { low: clientTokens.low - thresholdTokens, high: clientTokens.high - thresholdTokens },
+    crosses,
+    exceptions: EXCEPTIONS,
+  };
 }
