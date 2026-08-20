@@ -157,6 +157,7 @@ export async function measureServer(
         serverVersion: first.serverInfo?.version,
         launchCommand: command,
         envVarNames: [...Object.keys(opts.env ?? {}), ...(opts.dummyEnv ?? [])],
+        instructions: first.instructions,
       });
       if (canonicalString(first.tools) !== canonicalString(second.tools)) {
         r.status = 'dynamic';

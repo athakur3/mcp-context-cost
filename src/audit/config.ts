@@ -18,6 +18,12 @@
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import {
+  TOOL_SEARCH_VARS,
+  type ToolSearchEnv,
+  type ToolSearchScope,
+  type ToolSearchSource,
+} from './deferral.js';
 
 export interface ConfiguredServer {
   name: string;
@@ -220,4 +226,78 @@ export function loadConfigs(candidates: ConfigCandidate[], cwd: string): LoadedC
     }
   }
   return out;
+}
+
+/** One file Claude Code reads its `env` block from. */
+export interface SettingsCandidate {
+  scope: ToolSearchScope;
+  path: string;
+}
+
+/**
+ * Every settings file Claude Code takes environment variables from, highest
+ * precedence first.
+ *
+ * A client config says which servers there are; these say how the client
+ * behaves — including whether it defers their tool definitions. They are a
+ * different set of files from `configCandidates` above and are read for a
+ * different question, so they are listed separately rather than folded in.
+ *
+ * Order is Claude Code's documented settings precedence (enterprise managed
+ * policy, then project-local, then project, then user), read 2026-08-20. Paths
+ * in, candidates out — nothing here touches a disk.
+ */
+export function settingsCandidates(env: {
+  home: string;
+  cwd: string;
+  platform: NodeJS.Platform;
+  programData?: string;
+}): SettingsCandidate[] {
+  const { home, cwd, platform } = env;
+  const managed =
+    platform === 'darwin'
+      ? '/Library/Application Support/ClaudeCode/managed-settings.json'
+      : platform === 'win32'
+        ? join(env.programData ?? 'C:\\ProgramData', 'ClaudeCode', 'managed-settings.json')
+        : '/etc/claude-code/managed-settings.json';
+
+  return [
+    { scope: 'managed-settings', path: managed },
+    { scope: 'local-settings', path: join(cwd, '.claude', 'settings.local.json') },
+    { scope: 'project-settings', path: join(cwd, '.claude', 'settings.json') },
+    { scope: 'user-settings', path: join(home, '.claude', 'settings.json') },
+  ];
+}
+
+/**
+ * Read what each settings file sets, of the variables that decide deferral.
+ *
+ * Every candidate comes back, present or not, because "this file is not on the
+ * machine" and "this file was never opened" are different answers to the
+ * question the report asks, and only one of them means the default stands.
+ *
+ * Only the three tool-search variables are picked out; the rest of an `env`
+ * block — which is where a person keeps their API keys — is left where it is.
+ * A file that exists but cannot be parsed is `unreadable`, never silently
+ * treated as setting nothing.
+ */
+export function loadSettingsSources(candidates: SettingsCandidate[]): ToolSearchSource[] {
+  return candidates.map((c) => {
+    if (!existsSync(c.path)) return { scope: c.scope, source: c.path, state: 'absent' as const, vars: {} };
+    try {
+      const doc = parseJsonc(readFileSync(c.path, 'utf8'));
+      if (!doc || typeof doc !== 'object' || Array.isArray(doc)) throw new Error('not a settings object');
+      const block = (doc as { env?: unknown }).env;
+      const vars: ToolSearchEnv = {};
+      if (block && typeof block === 'object' && !Array.isArray(block)) {
+        for (const name of TOOL_SEARCH_VARS) {
+          const v = (block as Record<string, unknown>)[name];
+          if (typeof v === 'string') vars[name] = v;
+        }
+      }
+      return { scope: c.scope, source: c.path, state: 'read' as const, vars };
+    } catch {
+      return { scope: c.scope, source: c.path, state: 'unreadable' as const, vars: {} };
+    }
+  });
 }

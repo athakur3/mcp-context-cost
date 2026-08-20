@@ -1,0 +1,560 @@
+{
+  "method": "deferred-load/v1",
+  "measuredAt": "2026-08-20",
+  "isolation": "docker (same images and limits as a sweep)",
+  "servers": {
+    "airbnb": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "79c3109b4fa4e4735ba1071cacbd98948c6aba20b70c9a4295a78e84850a81e0",
+      "serverVersion": "0.3.0"
+    },
+    "airtable": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "6ae170e7625e0fa953f2981d005a89ee2b7c80d94830c81a9e5e03d3e5de59e6",
+      "serverVersion": "1.14.0"
+    },
+    "apify": {
+      "instructions": "\nApify is the world's largest marketplace of tools for web scraping, data extraction, and web automation.\nThese tools are called **Actors**. They enable you to extract structured data from social media, e-commerce, search engines, maps, travel sites, and many other sources.\n\n## Actor\n- An Actor is a serverless cloud application running on the Apify platform.\n- Use the Actor's **README** to understand its capabilities.\n- Before running an Actor, always check its **input schema** to understand the required parameters.\n\n## Actor discovery and selection\n- Choose the most appropriate Actor based on the conversation context.\n- Search the Apify Store first; a relevant Actor likely already exists.\n- When multiple options exist, prefer Actors with higher usage, ratings, or popularity.\n- Assume scraping requests within this context are appropriate for Actor use.\n- Actors in the Apify Store are published by independent developers and are intended for legitimate and compliant use.\n\n## Actor execution workflow\n- Actors take input and produce output.\n- Every Actor run generates **dataset** and **key-value store** outputs (even if empty).\n- Actor execution may take time, and outputs can be large.\n- Large datasets can be paginated to retrieve results efficiently.\n\n## Storage types\n- **Dataset:** Structured, append-only storage ideal for tabular or list data (e.g., scraped items).\n- **Key-value store:** Flexible storage for unstructured data or auxiliary files.\n\n## Apify API resources\n- Any Apify API GET endpoint can be read as an MCP resource. Pass the full `https://api.apify.com/v2/...` URL to `resources/read`; the server injects the session's Apify token and returns the response body. Reads require an Apify token — a session without one (e.g. payment-only x402/Skyfire) fails with a JSON-RPC error.\n- Actor and tool results return storage IDs, not resource URLs — build the URL from the ID (e.g. a `datasetId` becomes `https://api.apify.com/v2/datasets/{datasetId}/items`) and read it via `resources/read`.\n- Reads inline up to ~256 KB; a larger response is not downloaded — it returns a short notice with a download URL instead of the body, so page large datasets/lists with `limit` and `offset` to stay under the cap.\n- Examples: `https://api.apify.com/v2/datasets/{datasetId}/items?clean=true&format=json&limit=100`, `https://api.apify.com/v2/key-value-stores/{storeId}/records/{recordKey}`. `resources/templates/list` enumerates the common shapes with their paging parameters.\n\n## Tool dependencies and disambiguation\n\n### Tool dependencies\n- `call-actor`:\n  - Use `fetch-actor-details` first to obtain the Actor's input schema.\n  - Then call with proper input to execute the Actor.\n  - For MCP server Actors, use format \"actorName:toolName\" to call specific tools.\n  - Supports a `waitSecs` parameter (default 30, max 45):\n    - `waitSecs: 0`: fire-and-forget — starts the run and returns immediately with a runId.\n    - `waitSecs > 0`: waits up to that many seconds for the run to complete, then returns its current status and storage IDs (never the output rows — fetch those with `get-dataset-items`).\n\n### Tool disambiguation\n- **`search-actors` vs `fetch-actor-details`:**\n  `search-actors` finds Actors; `fetch-actor-details` retrieves detailed info, README, and schema for a specific Actor.\n- **`search-actors` vs apify/rag-web-browser:**\n  `search-actors` finds robust and reliable Actors for specific websites; apify/rag-web-browser is a general and versatile web scraping tool.\n- **Dedicated Actor tools (e.g. apify/rag-web-browser) vs `call-actor`:**\n  Prefer dedicated tools when available; use `call-actor` only when no specialized tool exists in the Apify store.\n\nIf a tool or Actor fails and you cannot resolve it, you can report it with `report-problem`.\n",
+      "instructionsTokens": 875,
+      "instructionsSha256": "753ea8a17fb45896c1a808f5652bb34ec97034560b6bd70d924948dda3191d91",
+      "capturedSha256": "53fb62fbbdcf6583f50ac40371a62aabb704e5dd377a994fa52cfec48e2bcbb1",
+      "serverVersion": "0.15.0"
+    },
+    "arxiv": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "969f351ffcbb3a5e5b5e0d4c3cf79eae4e232df55e04828edb57befbd84e343d",
+      "serverVersion": "0.6.3"
+    },
+    "aws-documentation": {
+      "instructions": "\n    # AWS Documentation MCP Server\n\n    This server provides tools to access public AWS documentation, search for content, and get recommendations.\n\n    ## Best Practices\n\n    - For long documentation pages, make multiple calls to `read_documentation` with different `start_index` values for pagination\n    - By default, use read_sections when the answer could be within a specific section(s), given the table of contents. Otherwise, use read_documentation to scan the entire page.\n    - For very long documents (>30,000 characters), stop reading if you've found the needed information\n    - When searching, use specific technical terms rather than general phrases\n    - Use `recommend` tool to discover related content that might not appear in search results\n    - For recent updates to a service, get an URL for any page in that service, then check the **New** section of the `recommend` tool output on that URL\n    - If multiple searches with similar terms yield insufficient results, pivot to using `recommend` to find related pages.\n    - Always cite the documentation URL when providing information to users\n\n    ## Tool Selection Guide\n\n    - Use `search_documentation` when: You need to find documentation about a specific AWS service or feature\n    - Use `read_documentation` when: You have a specific documentation URL and need its content\n    - Use `read_sections` when: You have a specific documentation URL and specific section title(s) and only need content from those specific section(s)\n    - Use `search_table` when: You need specific rows from a large table (e.g., service quotas, pricing, supported models). If read_sections or read_documentation shows a truncated table, use this tool with a query to find the rows you need.\n    - Use `recommend` when: You want to find related content to a documentation page you're already viewing or need to find newly released information\n    - Use `recommend` as a fallback when: Multiple searches have not yielded the specific information needed\n    ",
+      "instructionsTokens": 408,
+      "instructionsSha256": "941a1305d4d4c46776ee9838019d91d187920ec1d5e01551712c1df9f2e63413",
+      "capturedSha256": "03d94c1d9bbcaf8fcaf375d1d6f14b975f108724d76ebe3d70ea7ce72eed13ac",
+      "serverVersion": "1.29.0"
+    },
+    "azure": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "",
+      "capturedSha256": null,
+      "error": "auth-required: server exited (code 0); stderr tail: oveNext()\n   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Azure.Mcp.Server.Program+<Main>d__2, azmcp, Version=3.0.0.0, Culture=neutral, PublicK"
+    },
+    "basic-memory": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "0ba9e9185e3d5c167bbaf0dcfeb499f27020c307f1387a3b85374f849f0a38a7",
+      "serverVersion": "3.3.1"
+    },
+    "blender": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "14c1a93ca0b59e6b394bae642a6eba89f01c8c953076c19ed8ae16c6a0db6e09",
+      "serverVersion": "1.29.0"
+    },
+    "brave-search": {
+      "instructions": "Use this server to search the Web for various types of data via the Brave Search API.",
+      "instructionsTokens": 18,
+      "instructionsSha256": "f981d13c423e2f90d644d3a2bf9bac76cb3c2f799c917d7239ab014a2d56c73d",
+      "capturedSha256": "e5a8f43437056e6e89bb8f5167f5b8d471ba42de915ede953ce5968a84471582",
+      "serverVersion": "2.1.0"
+    },
+    "brave-search-legacy": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "727577fbcd5fe4e811453a32d9c9852ea877c90b8acf56e0cdf5eda15e97d803",
+      "serverVersion": "0.1.0"
+    },
+    "bright-data": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "bd26660364200a7866906bbfecc185e41ea6a42e43ed5d6380b1c3b77a699eae",
+      "serverVersion": "2.11.1"
+    },
+    "browserbase": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "1dc53461369d7cb64ea8151f33283db371951cf44289471f6156e35cd1ae28bb",
+      "serverVersion": "3.0.0"
+    },
+    "chroma": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "eb0b416a1586989ce3f646259f9f96d0ae6d7b62342aa30393b10ecb7c03c707",
+      "serverVersion": "1.6.0"
+    },
+    "circleci": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "f4d995111363bc9a5c220871fb9e4c2d81372ef647572f5f4f19cb5d4bd08bbe",
+      "serverVersion": "1.0.0"
+    },
+    "clickhouse": {
+      "instructions": "When working on ClickHouse-related coding, schema design, SQL/query optimization,\ndata migrations, or troubleshooting, consider using the official ClickHouse Agent\nSkills: https://github.com/ClickHouse/agent-skills\n\nInstall with:\nnpx -y skills add clickhouse/agent-skills --all\n",
+      "instructionsTokens": 61,
+      "instructionsSha256": "f813717238cdf84c008cdf1d42862cdb1e1d071e50ef1354ecea807916021e5d",
+      "capturedSha256": "d266049ab550225c0ca1055960d43f29c64b3e7cf03fa1241e633f9b2049f240",
+      "serverVersion": "2.14.7"
+    },
+    "cloudflare-docs": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "a65649ac29928ffde9e8bf8796482b5aaeb17e79d02ea2f3b8b96f11ac32b604",
+      "serverVersion": "0.4.13"
+    },
+    "context7": {
+      "instructions": "Use this server to fetch current documentation whenever the user asks about a library, framework, SDK, API, CLI tool, or cloud service — even well-known ones like React, Next.js, Prisma, Express, Tailwind, Django, or Spring Boot. This includes API syntax, configuration, version migration, library-specific debugging, setup instructions, and CLI tool usage. Use even when you think you know the answer — your training data may not reflect recent changes. Prefer this over web search for library docs.\n\nDo not use for: refactoring, writing scripts from scratch, debugging business logic, code review, or general programming concepts.",
+      "instructionsTokens": 126,
+      "instructionsSha256": "ffbbb87c191c9e1e9d48278e404b3ded16fc6876a2c8f2bc4a204a98a6863a21",
+      "capturedSha256": "699d8b33d6d2d90ce7deb777994bb408e1e07bb08fa997042b7cce19e6c1ecec",
+      "serverVersion": "4.0.2"
+    },
+    "deepwiki": {
+      "instructions": "DeepWiki MCP provides AI-powered documentation for GitHub repositories.\n\nAvailable tools:\n- read_wiki_structure: Get a list of documentation topics for a repository\n- read_wiki_contents: View full documentation about a repository\n- ask_question: Ask any question about a repository and get an AI-powered answer\n- list_available_repos: List your available repositories (private mode only)\n- generate_wiki: Generate a codebase wiki for a repository — only use when explicitly requested by the user (private mode only)\n- devin_automation_manage: Manage Devin automations — list, get, create, update, delete, or fetch the trigger event schemas (private mode only)\n- devin_code_scan_manage: Manage Devin code scans, sometimes referred to as 'security scans' or 'Devin Security Swarm' — list scans, list findings, list profiles, get a profile, create a scan, remediate a finding (private mode only)\n- devin_knowledge_manage: Manage Devin knowledge notes and suggestions — list, search, get, create, update, delete notes, view folder structure, list/view/dismiss knowledge suggestions (private mode only)\n- devin_oncall_manage: Devin Oncall operations — get an Oncall report's current responder membership, and page through a responder's open issues (private mode only)\n- devin_playbook_manage: Manage Devin playbooks — list, get, create, update, delete (private mode only)\n- devin_review_manage: Trigger a Devin Review for a pull request or fetch the latest review status (private mode only)\n- devin_schedule_manage: Manage scheduled Devin sessions — list, get, create, update, delete (private mode only)\n- devin_session_create: Create one or more child Devin sessions (private mode only)\n- devin_session_interact: Manage a Devin session — get status, send messages, sleep/terminate/archive/unarchive, read messages & attachments, manage tags (private mode only)\n- devin_session_events: Inspect session events — list summaries, fetch full details, or search event contents (private mode only)\n- devin_session_search: Search and filter Devin sessions (private mode only)\n- devin_session_gather: Wait for multiple Devin sessions to reach a settled state (private mode only)\n- list_integrations: List all native integrations and MCP servers with their status and settings URLs (private mode only)\n- find_setting: Find Devin webapp settings pages and deep-link URLs for them (private mode only)\n",
+      "instructionsTokens": 507,
+      "instructionsSha256": "a38064c2d995707428878779b95326b10a19503257af7540df0bb37b84456d0b",
+      "capturedSha256": "3735162916165ab23696fc91fbf626bd99a36ddcd1e15746e91e16c7e336b379",
+      "serverVersion": "2.14.3"
+    },
+    "desktop-commander": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "f1ae59bff1c9390b2b0ade5155c621f14ae9dcd204744ed54a973bbdb98a1fa2",
+      "serverVersion": "0.2.47"
+    },
+    "duckduckgo": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "61f82494284ccb413e9cb213ed93d7b79f43769229713b2748056a7f1018db14",
+      "serverVersion": "1.29.0"
+    },
+    "elasticsearch": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "76a005f840c738f5788e7b5801fdc12194713fce1ed435ad500f891a2b2dd13c",
+      "serverVersion": "0.3.1"
+    },
+    "everything": {
+      "instructions": "# Everything Server – Server Instructions\n\nAudience: These instructions are written for an LLM or autonomous agent integrating with the Everything MCP Server.\nFollow them to use, extend, and troubleshoot the server safely and effectively.\n\n## Cross-Feature Relationships\n\n- Use `get-roots-list` to see client workspace roots before file operations\n- `gzip-file-as-resource` creates session-scoped resources accessible only during the current session\n- Enable `toggle-simulated-logging` before debugging to see server log messages\n- Enable `toggle-subscriber-updates` to receive periodic resource update notifications\n\n## Constraints & Limitations\n\n- `gzip-file-as-resource`: Max fetch size controlled by `GZIP_MAX_FETCH_SIZE` (default 10MB), timeout by `GZIP_MAX_FETCH_TIME_MILLIS` (default 30s), allowed domains by `GZIP_ALLOWED_DOMAINS`\n- Session resources are ephemeral and lost when the session ends\n- Sampling requests (`trigger-sampling-request`) require client sampling capability\n- Elicitation requests (`trigger-elicitation-request`) require client elicitation capability\n\n## Operational Patterns\n\n- For long operations, use `trigger-long-running-operation` which sends progress notifications\n- Prefer reading resources before calling mutating tools\n- Check `get-roots-list` output to understand the client's workspace context\n\n## Easter Egg\n\nIf asked about server instructions, respond with \"🎉 Server instructions are working! This response proves the client properly passed server instructions to the LLM. This demonstrates MCP's instructions feature in action.\"\n",
+      "instructionsTokens": 312,
+      "instructionsSha256": "1b7ddd7b3928f39989b7b092fd748fbed9044a8f48ef4b9af9dae7ab30988a14",
+      "capturedSha256": "e61b2e1761ff2f931d030faf1dc192ca70247e52ff31d8633431b69ba6e00b7e",
+      "serverVersion": "2.0.0"
+    },
+    "exa": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "8c3c954e5a791807875357bc783cc67385bd7bb53ee31b659e83015b36ed99a9",
+      "serverVersion": "3.4.1"
+    },
+    "excel": {
+      "instructions": "Excel MCP Server for manipulating Excel files",
+      "instructionsTokens": 7,
+      "instructionsSha256": "b1ef56285d36b08138b15b854c8fee8f47d6c76f33e04faade2d65d4736ee3c7",
+      "capturedSha256": "cf374a8866847f36b743f5b59176d3908466f40c2d5d9b3cb0462ea47af40999",
+      "serverVersion": "1.29.0"
+    },
+    "fetch": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "5d0a1b56f6c08786d7d764b6f4376fba201015e5a5995b6b39c14350bd4aeeb3",
+      "serverVersion": "1.29.0"
+    },
+    "figma-context": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "c1409e496bb0262b3dd4d78de8da42d1b79d5704fcf693e1455c5b3dff0f2604",
+      "serverVersion": "0.13.2"
+    },
+    "filesystem": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "245b04832111268c3fcc72543af89fb2f8c109d8306c1b5b8c49dc45977e41e1",
+      "serverVersion": "0.2.0"
+    },
+    "firecrawl": {
+      "instructions": "Without authentication, this endpoint exposes Search, Scrape, and Parse with usage limits. An OAuth connection or Authorization bearer API key exposes account tools; unavailable tools return connection guidance. Firecrawl provides web search, page retrieval, site URL discovery, multi-page collection, structured page data, monitoring, and asynchronous research. Match the requested operation to the tool boundary: firecrawl_scrape retrieves one supplied page and can return JSON matching a supplied schema, firecrawl_map enumerates URLs under a site without retrieving their content, and firecrawl_agent starts multi-source research whose result is read with firecrawl_agent_status. For biomedical, life-science, clinical, or arXiv literature, firecrawl_search with categories: [\"research\"] filters ordinary web results to research-affiliated websites; the firecrawl_research_* tools search a separate paper index of abstracts and full text and become available once an OAuth connection or Authorization bearer API key is present. Provide only the required inputs.",
+      "instructionsTokens": 192,
+      "instructionsSha256": "386a36b65b21c21bff405fd99c8013a704d11730c11c7f8c0725eb7e5dc7a5b7",
+      "capturedSha256": "3b7694bcedabac9706eba0c497c1fb4591121db0fd25e4e87e4802a001e34cd6",
+      "serverVersion": "3.24.0"
+    },
+    "gdrive": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "",
+      "capturedSha256": null,
+      "error": "auth-required: server exited (code 1); stderr tail: Credentials not found. Please run with 'auth' argument first.\n"
+    },
+    "git": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "9710fb8f79f50348c138ee513e344f7fc9ac0e912a728d8aeda847cd04ed64f1",
+      "serverVersion": "1.29.0"
+    },
+    "github": {
+      "instructions": "The GitHub MCP Server provides tools to interact with GitHub platform.\n\nTool selection guidance:\n\t1. Use 'list_*' tools for broad, simple retrieval and pagination of all items of a type (e.g., all issues, all PRs, all branches) with basic filtering.\n\t2. Use 'search_*' tools for targeted queries with specific criteria, keywords, or complex filters (e.g., issues with certain text, PRs by author, code containing functions).\n\nContext management:\n\t1. Use pagination whenever possible with batches of 5-10 items.\n\t2. Use minimal_output parameter set to true if the full information is not needed to accomplish a task.\n\nTool usage guidance:\n\t1. For 'search_*' tools: Use separate 'sort' and 'order' parameters if available for sorting results - do not include 'sort:' syntax in query strings. Query strings should contain only search criteria (e.g., 'org:google language:python'), not sorting instructions. Always call 'get_me' first to understand current user permissions and context. ## Issues\n\nCheck 'list_issue_types' first for organizations to use proper issue types. Use 'search_issues' before creating new issues to avoid duplicates. Always set 'state_reason' when closing issues. ## Pull Requests\n\nPR review workflow: Always use 'pull_request_review_write' with method 'create' to create a pending review, then 'add_comment_to_pending_review' to add comments, and finally 'pull_request_review_write' with method 'submit_pending' to submit the review for complex reviews with line-specific comments.\n\nBefore creating a pull request, search for pull request templates in the repository. Template files are called pull_request_template.md or they're located in '.github/PULL_REQUEST_TEMPLATE' directory. Use the template content to structure the PR description and then call create_pull_request tool.",
+      "instructionsTokens": 377,
+      "instructionsSha256": "d2c62e8772d12fdcc0c52ea1c46907e0f969f4bce17f03f0254a23c721ed04a7",
+      "capturedSha256": "086879383bcdc68ea1b960a141ab1b41cb2a203321c4440553c033b5e9a5344d",
+      "serverVersion": "v1.9.0"
+    },
+    "github-legacy": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "e0194003d2ddaf668a23e0570cdbcf8c142c3314d3dd811a50ae99e5afd79ae3",
+      "serverVersion": "0.6.2"
+    },
+    "gitlab": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "d51fb022687ee403f9710c9fae31ac91dbc796f5c52a3fcdbe0a91c387aa9365",
+      "serverVersion": "0.5.1"
+    },
+    "gmail": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "",
+      "capturedSha256": null,
+      "error": "auth-required: server exited (code 1); stderr tail: Error: OAuth keys file not found. Please place gcp-oauth.keys.json in current directory or /tmp/.gmail-mcp\n"
+    },
+    "google-maps": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "a88e204db09aa56954e3e041d6a9814aee9ac888fdfc7d5cb47aec1877441986",
+      "serverVersion": "0.1.0"
+    },
+    "grafana": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "",
+      "capturedSha256": null,
+      "error": "timeout: reproduced on double the timeout budget; timeout after 360000ms waiting for initialize"
+    },
+    "heroku": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "",
+      "capturedSha256": null,
+      "error": "startup-failure: reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: Fatal error in main(): Cannot find module '/tmp/.npm-cache/_npx/909ffbc9d45b7a62/node_modules/@modelcontextproto"
+    },
+    "hubspot": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "3389dd469cfc2f46f06e4be24ba13ff95595ee30fd8dd62df81809a95daf3791",
+      "serverVersion": "0.4.0"
+    },
+    "huggingface": {
+      "instructions": "You have tools for using the Hugging Face Hub. The Hugging Face tools are being used anonymously and rate limits apply. Direct the User to set their HF_TOKEN (instructions at https://hf.co/settings/mcp/), or create an account at https://hf.co/join for higher limits.\nhf:// URIs can be converted to browser URLs by replacing hf://buckets/OWNER/NAME/PATH with https://huggingface.co/buckets/OWNER/NAME/resolve/PATH; for models, datasets, and spaces, use https://huggingface.co[/datasets|/spaces]/OWNER/NAME/resolve/main/PATH. URL-encode each path segment. arXiv paper id's are often used as references between datasets, models and papers. There are over 100 tags in use, common tags include 'Text Generation', 'Transformers', 'Image Classification' and so on.\n",
+      "instructionsTokens": 183,
+      "instructionsSha256": "aa5f06ca0a58e6918f68d54a00b9b8ba4148e974905c74d977111548401af9f3",
+      "capturedSha256": "b269a72bb6340ebfd5cf8170399b2606a9d7ea88b2277cfd6ca3511cec51a980",
+      "serverVersion": "0.4.9"
+    },
+    "kubernetes": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "20126671be70fdb77743a595f195002612b03c889b348447ed9ff4d7057f8c1c",
+      "serverVersion": "4.1.4"
+    },
+    "magic": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "",
+      "capturedSha256": null,
+      "error": "auth-required: server error -32001: Not authenticated - your API key is missing or was reset. Get a fresh key at https://21st.dev/mcp and update your MCP config (x-api-key / Bearer)."
+    },
+    "markitdown": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "d708fc0ae4f3fb818d01cc3d4da0b74c2e5591a7982735d6200b3d56ab74d66b",
+      "serverVersion": "1.8.1"
+    },
+    "mcp-atlassian": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "ceb661abfa18366b424935446891a6455a26382ab32afbf7f11a71fc00ab3028",
+      "serverVersion": "3.4.7"
+    },
+    "memory": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "d028274f76dc9aa2e622ae02a17ce313aa65d7b5935254ca53889d4094238abb",
+      "serverVersion": "0.6.3"
+    },
+    "microsoft-learn": {
+      "instructions": "# Microsoft Learn MCP Server\r\n\r\nThis server gives structured access to official Microsoft and Azure documentation via three tools:\r\n\r\n## Tools\r\n\r\n### microsoft_docs_search\r\nSearch official documentation and return up to 10 concise, high-quality content chunks (max 500 tokens each), including title, URL, and excerpt.\r\n\r\n- Use first to get a quick, reliable overview\r\n- Ideal for grounding answers in Microsoft knowledge\r\n\r\n### microsoft_code_sample_search\r\nSearch for code snippets and examples in official Microsoft Learn documentation and return up to 20 relevant, high-quality code samples.\r\n\r\n- Use when you need to provide sample Microsoft/Azure related code in your answers.  \r\n- Ideal for generating code snippets or practical implementation examples.  \r\n- Optional parameter `language` can filter results. \r\n\r\n### microsoft_docs_fetch\r\nFetch and convert full Microsoft documentation pages to markdown.\r\n\r\n- Use after search when you need full content from a specific URL\r\n- Required for detailed tutorials, troubleshooting, prerequisites, code samples, or when search results are incomplete or outdated\r\n\r\n## Workflow\r\n\r\n1. Use `microsoft_docs_search` to find relevant documents.\r\n2. If you need code examples or practical snippets, use `microsoft_code_sample_search`.\r\n3. If deeper or complete information is needed, use `microsoft_docs_fetch`.\r\n\r\n**Search gives breadth. Code Sample Search gives practical examples. Fetch gives depth.**\r\n\r\nAll content comes from Microsoft Learn or official sources, returned in clean markdown format.",
+      "instructionsTokens": 290,
+      "instructionsSha256": "03a3b1ed377c10d403594a589a83c4204d1d6ebfe0cabbb32d284e00b70c70c3",
+      "capturedSha256": "9e3f4a65f0dc136a6ffa5ed00f95785ec561e9a78413888da160e44ceb139346",
+      "serverVersion": "1.0.0"
+    },
+    "mongodb": {
+      "instructions": "\n            This is the MongoDB MCP server.\n        ",
+      "instructionsTokens": 11,
+      "instructionsSha256": "ac3daf9f0ed39bcc2aad6a078fc09b48142b7ab048c8c27fbbc2b1425e72e1ff",
+      "capturedSha256": "c771e7295dc27668861b2a251566196a3e30b5b3ac282f7736aab96891bff300",
+      "serverVersion": "2.1.0"
+    },
+    "mysql": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "48f53cd914e3137feabfb3087abdb3bb54df46907d605a4cf97fac272bba2afb",
+      "serverVersion": "1.29.0"
+    },
+    "n8n-mcp": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "efc31b255c09a3f364367c1450285b1e107d999faf01d4c9c37711aa12410948",
+      "serverVersion": "2.73.0"
+    },
+    "neo4j-cypher": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "2e66ec7b2ea28f25f5b986a65cc950c06febad089b2c3033be49e15548f9c432",
+      "serverVersion": "2.13.3"
+    },
+    "neon": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "",
+      "capturedSha256": null,
+      "error": "startup-failure: reproduced with the shared package cache bypassed; server exited (code 1)"
+    },
+    "netlify": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "be8578ef35da6e632f7cee04f664676c4895a1320868eceec1150a55f6c21440",
+      "serverVersion": "1.15.1"
+    },
+    "notion": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "f9544e7c84986529d5bc4a1c9357bbbb9c2f458133904075319f8fec7d716da9",
+      "serverVersion": "1.0.0"
+    },
+    "obsidian": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "4f3971a8c6858e81f7a2834791f4b1de1b4b967efa575ddc6d8968fb69cb41c8",
+      "serverVersion": "1.29.0"
+    },
+    "pandoc": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "4d8f9de25d7aa74f0fb5e0c828a904d74b3934e62cb1032bc6cf0fada1f0d952",
+      "serverVersion": "0.11.1"
+    },
+    "perplexity": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "bf3f548ecca0308f30e544a03d3a36778dbbfba3a5ed12dab6d981dcbcc7a73c",
+      "serverVersion": "0.1.0"
+    },
+    "pinecone": {
+      "instructions": "Pinecone is a vector database that provides AI\ntools and applications with fast, scalable, and flexible vector search.\n\nInstructions for usage:\n- Always search the documentation before attempting to explain or write code for\nPinecone. When writing code, always refer to examples from the documentation. Do\nnot make assumptions about usage. Always use the latest SDK version.\n\n- If the code uses an index or namespace, make sure you use the correct names I\nhave configured or help me create new ones.\n\n- Always use a consistent schema for records in an index. Do not use different\nfield names in the same index. Always put the text content in the field named in\nthe index's \"fieldMap\". Do not use objects as field values. Do not include a\n\"metadata\" field.\n\n- When searching for records, make sure to use a query that accurately reflects\nmy needs. Only use a filter if you are sure it will help me find the records I\nneed. Craft filters knowing the schema of the data in the index.\n\n- If you receive an error, read the error response to understand what went\nwrong. \"MCP error -32602\" means your input was wrong. Correct your input by\nfollowing the instructions carefully.",
+      "instructionsTokens": 253,
+      "instructionsSha256": "77993d89748e206d8314804c447252d08c835f2e1c85e20866ce721efddb3daa",
+      "capturedSha256": "cc8ffaadb37615f11747b0a1eafd8541cfb2f31064adcd4973860f8f03bab377",
+      "serverVersion": "0.3.0"
+    },
+    "playwright": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "5d5d92a7c727ef75bd9a70f076039dbdbfd331c56f022915c2e89b76f7fc88f0",
+      "serverVersion": "1.63.0-alpha-2026-08-05"
+    },
+    "playwright-community": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "4af7a9d131b4506471d83cc2d014ffc39b784a16ff181cce05ae2d9f26dbe9ff",
+      "serverVersion": "1.0.11"
+    },
+    "postgres": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "bbdb8dd9b6d3cd9b855597127ad5268e3fa4e3355e616b3dc102f4ed12cca454",
+      "serverVersion": "0.1.0"
+    },
+    "postgres-mcp": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "9bb1e5d26dd377de9dbfac88ffe77663a1169cddf66c6b1f52f57d3a740b0e54",
+      "serverVersion": "1.29.0"
+    },
+    "pulumi": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "9eb845dee6bb274d3b93ba0ea67276b2829cb98cbe7ed01079eba7fb8263fa26",
+      "serverVersion": "0.2.0"
+    },
+    "puppeteer": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "d9e46f0316917c1d140ffeebceefd4d31c16188780ac278baf347ff536015dd0",
+      "serverVersion": "0.1.0"
+    },
+    "qdrant": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "2bd5a36e7293bab6b8e62c28b7d210c5261f4b80331b176c1df6dc100a7e6fc4",
+      "serverVersion": "1.29.0"
+    },
+    "redis": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "92a01e079c4436e651586a0fa4117e21204dc481de169763e621253280225570",
+      "serverVersion": "1.29.0"
+    },
+    "redis-legacy": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "",
+      "capturedSha256": null,
+      "error": "startup-failure: reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: econnect (/tmp/.npm-cache/_npx/5c1b9cdedadb4486/node_modules/@redis/client/dist/lib/client/socket.js:140:16)\n   "
+    },
+    "searxng": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "2a5a607d2614632059e9f98e5fa7468374a9086312071f8895f4ba10a3a4618a",
+      "serverVersion": "1.15.0"
+    },
+    "sentry": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "b56928d7394324ec80ddda1377e382b535fd3abc7b488cda6b4a52e4a01b410b",
+      "serverVersion": "0.37.0"
+    },
+    "sequential-thinking": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "5dcda6f07c1a8f8850c8800434f0fac0e7fe6c869de09716e5bc15c7da8e5de6",
+      "serverVersion": "0.2.0"
+    },
+    "serena": {
+      "instructions": "CRITICAL: Before starting to work on a coding task, call the `initial_instructions` tool to read the 'Serena Instructions Manual'.",
+      "instructionsTokens": 29,
+      "instructionsSha256": "1dadc3ddf5b9cdc72d9d6b161e8033cca81ef1ffffb7059993dc54f18e26c5fc",
+      "capturedSha256": "7d876a84707e0689df306366dc7c3225ae49762ca045d7604c7c9a2b20dfbc3c",
+      "serverVersion": "1.28.1"
+    },
+    "shopify-dev": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "bb66cd1ef266793d07e1363dcaa821e18bc2b7fb5dd45e33abd6c4e260390d08",
+      "serverVersion": "1.14.5"
+    },
+    "slack": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "",
+      "capturedSha256": null,
+      "error": "startup-failure: reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: .execFileSync (node:child_process:952:15)\n    at Object.<anonymous> (/tmp/.npm-cache/_npx/2f12aed4e6049c73/node_"
+    },
+    "slack-legacy": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "5939f969618ff709e86ff0599b80cc8f418db8904b4304a6eeb82a25f30ccd81",
+      "serverVersion": "1.0.0"
+    },
+    "sqlite": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "d432983abc546eac2725c9db1a07f5f8dad0e6cbfb12f925c1d4fb61743d1c6b",
+      "serverVersion": "0.1.0"
+    },
+    "stripe": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "",
+      "capturedSha256": null,
+      "error": "startup-failure: reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: index.js:20:30)\n    at Object.<anonymous> (/tmp/.npm-cache/_npx/bce731a0395adf49/node_modules/@stripe/mcp/dist/i"
+    },
+    "supabase": {
+      "instructions": "Here are guidelines for using Supabase tools effectively:\n\n- Before making schema changes, use `list_tables` to understand the existing structure\n- When debugging issues, start with `get_logs` and `get_advisors` before making changes\n- Use `get_project_url` and `get_publishable_api_key` when helping users configure client-side integrations\n\nIf you have access to a local development environment with a filesystem and shell:\n- Install the Supabase agent skill for critical development and security guidance: `npx skills add supabase/agent-skills` (https://supabase.com/docs/guides/getting-started/ai-skills.md)\n- Use the Supabase CLI (`supabase`) for local development workflows such as starting a local stack, managing migrations, and running edge functions locally (https://supabase.com/docs/guides/local-development.md)\n- Prefer local development and testing before applying changes to a remote project\n\nIf you are running in a web-only or remote environment without filesystem or shell access:\n- Rely on the MCP tools directly for all Supabase interactions\n- Use `apply_migration` carefully, as changes go directly to the remote project",
+      "instructionsTokens": 238,
+      "instructionsSha256": "772d3301a6da05606b7e9974cd11cb4fe623d9ba65a4288a621eca0448893e98",
+      "capturedSha256": "ebbc7cd5f3f0c9a1c7eff808c38c4630b4cdc88126e34538b46b860efb89bd35",
+      "serverVersion": "0.10.0"
+    },
+    "tavily": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "b2bcd45339fe42caa0f55e5ca1196091b2dcda4b868fedd209177b54f2ef51ef",
+      "serverVersion": "0.2.22"
+    },
+    "terraform": {
+      "instructions": "# Terraform MCP Server Tool Hints\n\nThe Terraform MCP server provides tools for generating better Terraform code through registry integration and automating workflows via HCP Terraform/Enterprise APIs.\n\n## Tool Usage Guidelines\n\n**BEFORE generating any Terraform code**: Query registries for latest provider/module versions and styling guidelines. When enterprise tools are enabled AND a Terraform token is provided, search private registries first, then fall back to public.\n\n**Provider Consistency**: All modules in a project must use compatible provider versions. Verify with get_provider_details before generating code.\n\n**Validation Flow**: Run terraform validate immediately after generation, then terraform plan only if validation passes. Use terraform fmt to format code as needed.\n\n**User Confirmation Required**: ALWAYS get explicit yes/no confirmation before: `create_run`, `apply_run`, `discard_run`, `cancel_run`.\n\n## Always Available Tools\n\n### Registry Tools (Always Available)\n\n- **Provider Discovery**: `get_latest_provider_version` (if unavailable in code) → `get_provider_capabilities` → `get_provider_details`\n  - `get_provider_capabilities` shows what types of resources, data sources, functions, and guides are available\n  \n- **Module Discovery**: `get_latest_module_version` (if unavailable in code) → `search_modules` → `get_module_details`\n\n- **Policy Discovery**: `search_policies` → `get_policy_details`\n\n- Use these to ensure generated code uses current versions and follows best practices\n\n## HCP Terraform/TFE Tools (When enterprise tools are enabled AND a Terraform token is provided)\n\n### Private Registry Tools\n- `search_private_providers` → `get_private_provider_details`\n- `search_private_modules` → `get_private_module_details`\n- Priority: Check private registries first when token present, public as fallback\n\n### Workspace Management\n- **Discovery**: `search_workspaces` (empty query returns all) → `get_workspace_details`\n- **Operations**: `create_workspace`, `update_workspace`, `delete_workspace_safely`, `force_unlock_workspace`\n- `delete_workspace_safely` only works if workspace has no managed resources\n\n### Run Execution\n- **Discovery**: `search_run` (empty query returns all) → `get_run_details` (supports json output)\n- **Operations**: `create_run` → `apply_run` OR `discard_run` OR `cancel_run`\n- **Monitoring**: `get_plan_details`/`get_plan_logs` for plans, `get_apply_details`/`get_apply_logs` for applies\n- Always check run status before attempting operations\n\n### Variable Management\n**Workspace Variables**:\n- `search_workspace_variables` (empty query returns all)\n- `create_workspace_variable`, `update_workspace_variable`, `delete_workspace_variable`\n\n**Variable Sets** (for sharing across workspaces/projects):\n- `search_variable_sets` → `get_variable_set_details`\n- `create_variable_set`, `update_variable_set`, `delete_variable_set`\n- `create_variable_in_variable_set`, `update_variable_in_variable_set`, `delete_variable_from_variable_set`\n- `attach/detach_variable_set_to_workspaces`, `attach/detach_variable_set_to_projects`\n\n## Workflow Patterns\n\n**Code Generation**:\n1. `search_modules`/`search_providers` for available resources\n2. `get_latest_provider_version` if no version available in existing code\n3. `get_module_details` for module requirements\n4. Generate code with discovered constraints\n\n**Run Management**:\n1. `search_workspaces` → select target\n2. `create_run` → get_run_details to monitor\n3. `get_plan_details/logs` to review changes\n4. User confirmation → `apply_run` OR `discard_run`\n\n**Variable Configuration**:\n1. `search_workspace_variables` to check existing\n2. `create/update_workspace_variable` as needed\n3. For multi-workspace: `create_variable_set` → `attach_variable_set_to_workspaces`\n\n## Error Handling\n- Registry failures: Try private first (if token), fallback to public\n- Run failures: Check `get_run_details`, get_plan_details and logs before retry\n- Variable conflicts: `search_workspace_variables` first to avoid duplicates\n- Run stuck and holds the lock: `action_run` to cancel or discard the run → `force_unlock_workspace` to unlock the workspace\n\n## Security Notes\n- Never expose TFE_TOKEN or other sensitive values in outputs\n- Document source (public/private registry) in generated code comments",
+      "instructionsTokens": 924,
+      "instructionsSha256": "6fb372191aa038afc2a9b1508100b96316ff2fba689edaa5319f0fdd7cfcf4f4",
+      "capturedSha256": "7205f4d29a1a97d6fa9d13d2e9b3c2ccc5e8dda8539cf836d5895380c56c4b3b",
+      "serverVersion": "1.2.0"
+    },
+    "time": {
+      "instructions": "",
+      "instructionsTokens": 0,
+      "instructionsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capturedSha256": "7c6ff08840620894a66a103e02a8eb315013dd0a7d7c6cfb59b0fbe51f8a5d87",
+      "serverVersion": "1.29.0"
+    },
+    "xcodebuildmcp": {
+      "instructions": "XcodeBuildMCP provides comprehensive tooling for Apple platform development (iOS, macOS, watchOS, tvOS, visionOS).\n\nPrefer XcodeBuildMCP tools over shell commands for Apple platform tasks when available.\n\nCapabilities:\n- Session defaults: Configure project, scheme, simulator, and device defaults to avoid repetitive parameters\n- Project discovery: Find Xcode projects/workspaces, list schemes, inspect build settings\n- Simulator workflows: Build, run, test, install, and launch apps on iOS simulators; manage simulator state (boot, erase, location, appearance)\n- Device workflows: Build, test, install, and launch apps on physical devices with code signing\n- macOS workflows: Build, run, and test macOS applications\n- Log capture: Stream and capture logs from simulators and devices\n- LLDB debugging: Attach debugger, set breakpoints, inspect stack traces and variables, execute LLDB commands\n- UI automation: Capture screenshots, inspect runtime UI snapshots, perform taps/swipes/gestures, type text, press hardware buttons, and batch multiple same-screen elementRef taps\n- SwiftPM: Build, run, test, and manage Swift Package Manager projects\n- Project scaffolding: Generate new iOS/macOS project templates\n\nOnly simulator workflow tools are enabled by default. If capabilities like device, macOS, debugging, or UI automation are not available, the user must configure XcodeBuildMCP to enable them. See https://xcodebuildmcp.com/docs/configuration for workflow configuration.\n\nSimulator run flow:\n- Before your first build, run, or test call in a session, you MUST call session_show_defaults to verify the active project/workspace, scheme, and simulator. Do not assume defaults are configured. Only skip this if you have already called session_show_defaults earlier in the current session.\n- If session_show_defaults confirms project/workspace + scheme + simulator are set, call build_run_sim immediately (often with empty arguments).\n- Use discover_projs only when session_show_defaults shows project/workspace is missing or wrong.\n- Never call discover_projs speculatively or in parallel with session_show_defaults.\n- Do not call boot_sim or open_sim as prerequisites for build_run_sim; build_run_sim boots and opens the simulator frontend as needed.",
+      "instructionsTokens": 464,
+      "instructionsSha256": "ba82e79b120924a7935d4d213bd383359d28eb1654cb0290b548302f16aa4e7b",
+      "capturedSha256": "f467743f38a30d15da18709c500aa4e22186a755f0e3d2c97966ccd343978a5d",
+      "serverVersion": "2.7.0"
+    }
+  }
+}

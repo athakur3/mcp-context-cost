@@ -31,6 +31,14 @@ export interface Measurement {
   canonicalSha256: string | null;
   /** The tools array exactly as returned by tools/list, all pages concatenated. */
   rawToolsCapture: unknown[] | null;
+  /**
+   * The `instructions` string returned by `initialize` — half of the
+   * session-start load (see core/session-start.ts). Three states, and they are
+   * different claims: a string (the server sent this), `null` (the server sent
+   * none), absent (never captured — every measurement predating this field).
+   * Absent is never read as zero.
+   */
+  serverInstructions?: string | null;
   measuredAt: string;
   serverName: string;
   serverVersion?: string;
