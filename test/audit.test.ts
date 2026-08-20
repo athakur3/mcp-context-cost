@@ -1444,6 +1444,45 @@ describe('deferral — a stack measured as fewer servers than it has', () => {
     }
   });
 
+  it('caveats the total in every mode, not only the one with a threshold', () => {
+    // What the threshold branch alone did not cover. `auto:1` is one of six
+    // modes and the rarest of them: the documented default is `defers-all`,
+    // and `loads-upfront` is reached three ways, one of them any gateway or
+    // proxy in ANTHROPIC_BASE_URL. In `loads-upfront` the total IS the whole
+    // cost claim — "every request carries these tokens" — so an unestablished
+    // one printed bare there is the worst place for it, not the safest.
+    const modes: [string, ToolSearchEnv][] = [
+      ['loads-upfront/setting', { ENABLE_TOOL_SEARCH: 'false' }],
+      ['loads-upfront/betas', { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '1' }],
+      ['loads-upfront/gateway', { ANTHROPIC_BASE_URL: 'https://proxy.example.com/v1' }],
+      ['defers-all', {}],
+      ['threshold', auto1],
+      ['setting-unrecognized', { ENABLE_TOOL_SEARCH: 'maybe' }],
+    ];
+    for (const [label, env] of modes) {
+      for (const m of [heavy, light]) {
+        const r = buildReport(configs, new Map([[serverKey(all), m]]), { generatedAt: 'T', env });
+        const out = formatReport(r).replace(/\s+/g, ' ');
+        expect(r.configs[0].deferral.sharedMeasurements, label).toBe(2);
+        expect(out, label).toContain('How big this stack is cannot be said here: 2 of the servers above');
+        expect(out, label).toContain('nothing is wrong with the config');
+      }
+    }
+  });
+
+  it('caveats it for a client with no deferral on record, and for an unknown one', () => {
+    // Both say the tokens are paid, from a total collapsed the same way.
+    for (const client of ['cursor', 'mystery-client']) {
+      const cfgs = [
+        { client, source: '/cfg.json', servers: [{ ...all, client }, { ...few, client }] },
+      ] as Parameters<typeof buildReport>[0];
+      const r = buildReport(cfgs, new Map([[serverKey(all), heavy]]), { generatedAt: 'T' });
+      const out = formatReport(r).replace(/\s+/g, ' ');
+      expect(r.configs[0].deferral.sharedMeasurements, client).toBe(2);
+      expect(out, client).toContain('How big this stack is cannot be said here: 2 of the servers above');
+    }
+  });
+
   it('survives --json, so a consumer sees the refusal too', () => {
     const round = JSON.parse(JSON.stringify(reportWith(heavy))) as AuditReport;
     expect(round.configs[0].deferral).toMatchObject({ sharedMeasurements: 2, crosses: null });

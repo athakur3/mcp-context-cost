@@ -414,6 +414,12 @@ export function evaluateDeferral(
     sources: scope.sources,
     wireTokens,
     isFloor,
+    // Carried by every mode, not just the one that returns early on it below.
+    // That early return withholds `clientTokens` and `crosses`, which only
+    // threshold mode ever computes; the other modes derive nothing from the
+    // total and so have nothing to withhold. What they do all do is PRINT it,
+    // so the caveat belongs in every branch of the report — see
+    // `sharedMeasurementLines` in audit.ts, which every mode calls.
     sharedMeasurements,
     mechanism: null,
     setting: null,

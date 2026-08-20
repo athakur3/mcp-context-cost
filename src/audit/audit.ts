@@ -244,7 +244,7 @@ const ONE_SESSION_PER_CLIENT = new Set(['claude-code']);
 
 /** Which configs share a deferral verdict. */
 function deferralScopeKey(client: string, source: string): string {
-  return ONE_SESSION_PER_CLIENT.has(client) ? client : `${client} ${source}`;
+  return ONE_SESSION_PER_CLIENT.has(client) ? client : `${client}\0${source}`;
 }
 
 /**
@@ -474,6 +474,51 @@ function settingPhrase(d: DeferralVerdict): string {
 }
 
 /**
+ * The total the lines around this one are about was summed from a measurement
+ * that stood for more than one entry, so it is not a number to reason from.
+ *
+ * Printed in EVERY mode, not only the one that weighs the total against a
+ * threshold. The other modes state what these tokens cost just as plainly —
+ * `loads-upfront` says every request carries them, and there the number IS the
+ * whole cost claim — so a total this report will not stand behind must not be
+ * left uncaveated in any of them. `evaluateDeferral` additionally withholds
+ * `clientTokens` and `crosses`, which only threshold mode derives; the other
+ * modes derive nothing from the total, so this paragraph is the whole of the
+ * rule there.
+ */
+function sharedMeasurementLines(
+  d: DeferralVerdict,
+  skippedNames: number,
+  consequence: readonly string[],
+): string[] {
+  const lines = [
+    `  How big this stack is cannot be said here: ${d.sharedMeasurements} of the servers above run`,
+    '  the same command as another entry and differ only in the environment they',
+    '  are given, so one launch was measured and its number counted for each of',
+    '  them. Environment decides what a server serves, so that sum can be wrong in',
+    ...consequence,
+  ];
+  if (d.isFloor) {
+    lines.push(`  ${skippedNames} server(s) here also produced no number — see "not measured" above.`);
+  }
+  return lines;
+}
+
+/** Where a threshold is in play, the unknown size is the whole verdict. */
+const SIDE_UNKNOWN = [
+  '  either direction — which side of the threshold this stack falls on cannot be',
+  '  read off it. Measurements here are keyed by command line alone; nothing is',
+  '  wrong with the config.',
+] as const;
+
+/** Where none is, the size is simply not a figure to quote. */
+const SIZE_UNKNOWN = [
+  '  either direction — how many tokens this stack costs cannot be read off it.',
+  '  Measurements here are keyed by command line alone; nothing is wrong with',
+  '  the config.',
+] as const;
+
+/**
  * Whether the tokens above are paid up front, and — only where the client
  * decides that by a threshold — which side of it this stack is on.
  *
@@ -498,6 +543,7 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
   if (d.mode === 'client-unknown') {
     lines.push('  Which client reads this config is not known here, so whether it defers');
     lines.push('  tool definitions by default is not known either. Read as loaded up front.');
+    if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
     return lines;
   }
 
@@ -505,6 +551,7 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
     lines.push(`  No default deferral is on record for ${d.client}, so every request`);
     lines.push('  carries these tokens before you type anything — an absence of a record');
     lines.push('  about the client, not a measurement of it.');
+    if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
     return lines;
   }
 
@@ -512,6 +559,7 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
     lines.push(`  ${d.setting?.variable} is set to "${d.setting?.value}" on this machine, which is not`);
     lines.push('  one of the values Claude Code documents (unset, true, false, auto, auto:N).');
     lines.push('  Whether these tokens are deferred cannot be said from it.');
+    if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
     return lines;
   }
 
@@ -519,6 +567,7 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
     lines.push(`  ${d.client} loads every tool definition up front here: ${d.mechanism} is off`);
     lines.push(`  because ${settingPhrase(d)}. Every request carries these`);
     lines.push('  tokens before you type anything.');
+    if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
     return lines;
   }
 
@@ -527,6 +576,7 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
     lines.push(`  ${settingPhrase(d)}. These tokens are NOT loaded`);
     lines.push('  up front at any size; they load when the model reaches for a tool. Size');
     lines.push('  decides nothing here, so none of the arithmetic above changes the answer.');
+    if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
     lines.push('  The full number is paid where deferral does not apply:');
     for (const e of d.exceptions) lines.push(`    ${e}`);
     return lines;
@@ -544,16 +594,7 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
     // say it with. Both are withheld together: printing the sum here and only
     // withholding the verdict would leave a figure a reader would compare
     // against the threshold themselves.
-    lines.push(`  How big this stack is cannot be said here: ${d.sharedMeasurements} of the servers above run`);
-    lines.push('  the same command as another entry and differ only in the environment they');
-    lines.push('  are given, so one launch was measured and its number counted for each of');
-    lines.push('  them. Environment decides what a server serves, so that sum can be wrong in');
-    lines.push('  either direction — which side of the threshold this stack falls on cannot be');
-    lines.push('  read off it. Measurements here are keyed by command line alone; nothing is');
-    lines.push('  wrong with the config.');
-    if (d.isFloor) {
-      lines.push(`  ${skippedNames} server(s) here also produced no number — see "not measured" above.`);
-    }
+    lines.push(...sharedMeasurementLines(d, skippedNames, SIDE_UNKNOWN));
     return lines;
   }
 
