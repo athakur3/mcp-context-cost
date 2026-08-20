@@ -1,0 +1,56 @@
+name: Publish
+
+# Trusted publishing. npm trusts THIS workflow in THIS repository over OIDC, so there is
+# no token here, in the repository secrets, or on the machine that dispatches it —
+# nothing to store, nothing to leak, and nothing that expires quietly between releases.
+#
+# Dispatched by the VibeCode release stage, which passes the version it cut. That version
+# is checked against package.json below rather than trusted: a publish of a version nobody
+# cut is exactly the thing the release queue exists to prevent.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'The version this run must publish (e.g. 0.5.0). Refused if package.json disagrees.'
+        required: true
+
+permissions:
+  contents: read
+  id-token: write          # the OIDC token npm exchanges for the right to publish
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      # Trusted publishing needs npm >= 11.5.1, and node 22 ships an older one. Without
+      # this the publish falls back to looking for a token and fails as if unauthorised.
+      - name: npm new enough to publish by OIDC
+        run: npm install -g npm@latest
+
+      - run: npm ci
+
+      - name: the version asked for is the version on disk
+        run: |
+          want='${{ inputs.version }}'
+          got="$(node -p "require('./package.json').version")"
+          if [ "$want" != "$got" ]; then
+            echo "asked to publish $want, package.json says $got — nothing published" >&2
+            exit 1
+          fi
+          echo "publishing $got"
+
+      - run: npx tsc --noEmit
+      - run: npm test
+
+      # No NODE_AUTH_TOKEN. With id-token: write and a trusted publisher configured on
+      # npmjs.com, npm authenticates by OIDC and attaches provenance on its own.
+      - run: npm publish
