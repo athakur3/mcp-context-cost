@@ -1,0 +1,300 @@
+{
+  "method": "badge-sightings/v1",
+  "checkedAt": "2026-08-20",
+  "source": {
+    "owner": "athakur3",
+    "repo": "mcp-context-cost",
+    "branch": "main"
+  },
+  "queries": [
+    {
+      "name": "badge-endpoint-encoded",
+      "q": "\"raw.githubusercontent.com%2Fathakur3%2Fmcp-context-cost%2Fmain%2Fbadges\"",
+      "why": "the form shields produces when the published snippet is used verbatim",
+      "state": "ok",
+      "hits": 0
+    },
+    {
+      "name": "badge-endpoint-plain",
+      "q": "\"raw.githubusercontent.com/athakur3/mcp-context-cost/main/badges\"",
+      "why": "a badge written without percent-encoding, which the encoded query cannot find",
+      "state": "ok",
+      "hits": 0
+    },
+    {
+      "name": "link-target",
+      "q": "\"athakur3.github.io/mcp-context-cost\"",
+      "why": "the measurement page a badge is required to link to, however the image is written",
+      "state": "ok",
+      "hits": 0
+    },
+    {
+      "name": "project-name",
+      "q": "\"mcp-context-cost\"",
+      "why": "the widest net: anything naming the project, judged by its contents rather than by the query",
+      "state": "ok",
+      "hits": 28
+    }
+  ],
+  "candidates": 28,
+  "sightings": [
+    {
+      "repo": "bbingz/engram",
+      "path": "macos/EngramMCPTests/EngramMCPExecutableTests.swift",
+      "url": "https://github.com/bbingz/engram/blob/d97d02575e1b6362b628c649a7e3337193942323/macos/EngramMCPTests/EngramMCPExecutableTests.swift",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "BrennonTWilliams/little-loops",
+      "path": ".issues/features/P3-FEAT-3137-ll-mcp-prompts-from-skills-surface.md",
+      "url": "https://github.com/BrennonTWilliams/little-loops/blob/a12b9397defccd53f12deafd9553884467465f24/.issues/features/P3-FEAT-3137-ll-mcp-prompts-from-skills-surface.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "jasonmichaelbell78-creator/sonash-v0",
+      "path": ".claude/state/rewrite-synthesis-v2.js",
+      "url": "https://github.com/jasonmichaelbell78-creator/sonash-v0/blob/7c950908bd2ca815a99bb376f2537018a35fe4cb/.claude/state/rewrite-synthesis-v2.js",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "jasonmichaelbell78-creator/sonash-v0",
+      "path": ".research/analysis/synthesis/synthesis.json",
+      "url": "https://github.com/jasonmichaelbell78-creator/sonash-v0/blob/7c950908bd2ca815a99bb376f2537018a35fe4cb/.research/analysis/synthesis/synthesis.json",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "jasonmichaelbell78-creator/sonash-v0",
+      "path": ".research/analysis/synthesis/synthesis.md",
+      "url": "https://github.com/jasonmichaelbell78-creator/sonash-v0/blob/7c950908bd2ca815a99bb376f2537018a35fe4cb/.research/analysis/synthesis/synthesis.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "OneZero-Network/mcp-threat-intel",
+      "path": "daily_owasp_flags.json",
+      "url": "https://github.com/OneZero-Network/mcp-threat-intel/blob/2dcf9ba4d5c85fbd3797f4aa346ff6373f5bce12/daily_owasp_flags.json",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/ai-agent-architecture",
+      "path": "docs/faq/mcp-vs-skills.md",
+      "url": "https://github.com/shuji-bonji/ai-agent-architecture/blob/adcf17010c1b51d60496774c6e96132001f6aff6/docs/faq/mcp-vs-skills.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/ai-agent-architecture",
+      "path": "docs/ja/faq/mcp-vs-skills.md",
+      "url": "https://github.com/shuji-bonji/ai-agent-architecture/blob/adcf17010c1b51d60496774c6e96132001f6aff6/docs/ja/faq/mcp-vs-skills.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/ai-agent-architecture",
+      "path": "docs/ja/skills/vs-mcp.md",
+      "url": "https://github.com/shuji-bonji/ai-agent-architecture/blob/adcf17010c1b51d60496774c6e96132001f6aff6/docs/ja/skills/vs-mcp.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/ai-agent-architecture",
+      "path": "docs/ja/strategy/mcp-family.md",
+      "url": "https://github.com/shuji-bonji/ai-agent-architecture/blob/adcf17010c1b51d60496774c6e96132001f6aff6/docs/ja/strategy/mcp-family.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/ai-agent-architecture",
+      "path": "docs/skills/vs-mcp.md",
+      "url": "https://github.com/shuji-bonji/ai-agent-architecture/blob/adcf17010c1b51d60496774c6e96132001f6aff6/docs/skills/vs-mcp.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/ai-agent-architecture",
+      "path": "docs/strategy/mcp-family.md",
+      "url": "https://github.com/shuji-bonji/ai-agent-architecture/blob/adcf17010c1b51d60496774c6e96132001f6aff6/docs/strategy/mcp-family.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/understanding-llm-through-claude-code",
+      "path": "docs/.vitepress/locales/en.ts",
+      "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/72dfb18a2fe7e34491494cbb12b6a47705c5ecdf/docs/.vitepress/locales/en.ts",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/understanding-llm-through-claude-code",
+      "path": "docs/.vitepress/locales/ja.ts",
+      "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/72dfb18a2fe7e34491494cbb12b6a47705c5ecdf/docs/.vitepress/locales/ja.ts",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/understanding-llm-through-claude-code",
+      "path": "docs/06-tool-context/index.md",
+      "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/72dfb18a2fe7e34491494cbb12b6a47705c5ecdf/docs/06-tool-context/index.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/understanding-llm-through-claude-code",
+      "path": "docs/06-tool-context/mcp-context-cost.md",
+      "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/72dfb18a2fe7e34491494cbb12b6a47705c5ecdf/docs/06-tool-context/mcp-context-cost.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/understanding-llm-through-claude-code",
+      "path": "docs/06-tool-context/tool-search.md",
+      "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/72dfb18a2fe7e34491494cbb12b6a47705c5ecdf/docs/06-tool-context/tool-search.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/understanding-llm-through-claude-code",
+      "path": "docs/09-code-intelligence/vs-grep-vs-read.md",
+      "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/72dfb18a2fe7e34491494cbb12b6a47705c5ecdf/docs/09-code-intelligence/vs-grep-vs-read.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/understanding-llm-through-claude-code",
+      "path": "docs/appendix/claude-code-config-reference.md",
+      "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/72dfb18a2fe7e34491494cbb12b6a47705c5ecdf/docs/appendix/claude-code-config-reference.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/understanding-llm-through-claude-code",
+      "path": "docs/ja/06-tool-context/index.md",
+      "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/72dfb18a2fe7e34491494cbb12b6a47705c5ecdf/docs/ja/06-tool-context/index.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/understanding-llm-through-claude-code",
+      "path": "docs/ja/06-tool-context/mcp-context-cost.md",
+      "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/72dfb18a2fe7e34491494cbb12b6a47705c5ecdf/docs/ja/06-tool-context/mcp-context-cost.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/understanding-llm-through-claude-code",
+      "path": "docs/ja/06-tool-context/tool-search.md",
+      "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/72dfb18a2fe7e34491494cbb12b6a47705c5ecdf/docs/ja/06-tool-context/tool-search.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/understanding-llm-through-claude-code",
+      "path": "docs/ja/09-code-intelligence/vs-grep-vs-read.md",
+      "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/72dfb18a2fe7e34491494cbb12b6a47705c5ecdf/docs/ja/09-code-intelligence/vs-grep-vs-read.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/understanding-llm-through-claude-code",
+      "path": "docs/ja/appendix/claude-code-config-reference.md",
+      "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/72dfb18a2fe7e34491494cbb12b6a47705c5ecdf/docs/ja/appendix/claude-code-config-reference.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/understanding-llm-through-claude-code",
+      "path": "docs/ja/topics/mcp.md",
+      "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/72dfb18a2fe7e34491494cbb12b6a47705c5ecdf/docs/ja/topics/mcp.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/understanding-llm-through-claude-code",
+      "path": "docs/topics/mcp.md",
+      "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/72dfb18a2fe7e34491494cbb12b6a47705c5ecdf/docs/topics/mcp.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/understanding-llm-through-claude-code",
+      "path": "README.ja.md",
+      "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/72dfb18a2fe7e34491494cbb12b6a47705c5ecdf/README.ja.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    },
+    {
+      "repo": "shuji-bonji/understanding-llm-through-claude-code",
+      "path": "README.md",
+      "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/72dfb18a2fe7e34491494cbb12b6a47705c5ecdf/README.md",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-08-20",
+      "lastSeenAt": "2026-08-20"
+    }
+  ],
+  "thirdPartyRepos": 0,
+  "unresolved": null,
+  "lastResolved": {
+    "checkedAt": "2026-08-20",
+    "thirdPartyRepos": 0
+  }
+}

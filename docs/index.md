@@ -14,6 +14,8 @@ more than a quarter of a 200K context window, before the agent takes a single ac
   lines, what it is not
 - **[Get the badge](https://github.com/athakur3/mcp-context-cost#measure-your-own-server)** —
   one line in your README, backed by a published measurement
+- **[Who displays the badge](adoption.md)** — how many projects outside this repository
+  carry it, the day someone last looked, and every file that was examined to say so
 
 ## The badge
 
