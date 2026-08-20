@@ -46,10 +46,13 @@ the same facts, without reading the capture by hand.
 ## What the number is not
 
 - **Not any client's exact context bill.** Clients (Claude Code, Cursor, ...) re-render tool
-  schemas into their own internal prompt formats, which are not publicly specified, and some
-  defer-load schemas entirely. The badge is a documented, reproducible **index of schema
-  payload cost** — a lower-bound proxy that ranks servers consistently — not a promise of
-  the number your client charges.
+  schemas into their own internal prompt formats, which are not publicly specified. The badge
+  is a documented, reproducible **index of schema payload cost** — a lower-bound proxy that
+  ranks servers consistently — not a promise of the number your client charges.
+- **Not what a deferring client loads at session start.** A client that defers definitions
+  until a tool is used puts only names and instructions in context up front, which is a
+  different and much smaller number. It is now measured and published beside the headline —
+  see [session-start load](#session-start-load).
 - **Not a Claude token count.** Anthropic's tokenizer differs and drifts across model
   releases. The gap is now measured and published rather than left to a critic — see
   [Claude divergence](#claude-divergence) below.
@@ -204,6 +207,45 @@ sent as `tools`. So most of the multiplier is the tokenizer and the remainder is
 That is one server on one date, not a constant — it is recorded here as the evidence for the
 causal claim above, not as a conversion factor.
 
+## Session-start load <a id="session-start-load"></a>
+
+Method `deferred-load/v1`. The headline number is what a client pays when it loads every tool
+definition into context up front. Increasingly, clients do not: they put a **list of tool
+names** in context and fetch the definition only when the model reaches for one. That client's
+session-start bill is a different quantity, and the headline number says nothing about it —
+so it is measured too, and published in the `session start` column of the
+[leaderboard](https://github.com/athakur3/mcp-context-cost/blob/main/results/leaderboard.md).
+
+**What it is.** Two parts, counted separately with the same `o200k_base` tokenizer and added:
+
+1. **Tool names** — `JSON.stringify` over the array of `name` values from the capture, in
+   server order. Same serialization discipline as the headline, over the same published bytes,
+   so it re-derives from `measurement.json` with the same five lines.
+2. **Server instructions** — the `instructions` string a server returns from `initialize`,
+   counted as ordinary text. Clients that support it place this in the system prompt whether
+   or not any tool is ever called.
+
+The two halves are counted separately and summed rather than tokenized as one joined string:
+joining lets tokens merge across the seam, and a published total that does not equal the parts
+printed beside it is a discrepancy no reader can account for.
+
+**`≥` means the instructions half is missing.** `instructions` is not part of `tools/list`, so
+no measurement taken before this method existed carries it. Those rows publish the names half
+alone, marked `≥`: a floor, not a figure. The distinction is the point — a floor printed as a
+figure would understate exactly the servers that ship the longest instructions. A row leaves
+the floor either by being re-measured (every sweep now records `serverInstructions` inside the
+measurement) or by a backfill capture in
+[`results/session-start.json`](https://github.com/athakur3/mcp-context-cost/blob/main/results/session-start.json),
+which is used only while its `capturedSha256` still matches the measurement on disk. When a
+re-sweep moves that hash the row drops back to its floor rather than keeping instructions
+captured against a tool set the server no longer serves.
+
+**What it is not.** Not any client's exact session-start bill either. Clients prefix tool names
+with a server identifier, wrap the list in their own framing, and choose independently whether
+to inject `instructions` at all. Like every number here it is a documented, reproducible index
+measured the same way for every server — the ratio between the two columns is the finding, not
+the absolute figure.
+
 ## Known divergences
 
 **sd2k/mcp-tokens** (the CLI our upstream GitHub Action contribution builds on) differs from
@@ -220,7 +262,8 @@ Details: [spec/upstream-notes.md](https://github.com/athakur3/mcp-context-cost/b
   value, o200k_base, bands frozen against first-sweep distribution, failure taxonomy,
   dual-run dynamic detection.
 
-The Claude divergence column (`tools-delta/v1`, added 2026-08-16) is versioned separately and
-deliberately: it adds a second published number without touching the definition above. Every
-badge, every `totalTokens`, and every canonical hash is byte-identical to before it existed,
-so bumping this page's version would have signalled a change that did not happen.
+The Claude divergence column (`tools-delta/v1`, added 2026-08-16) and the session-start column
+(`deferred-load/v1`, added 2026-08-20) are versioned separately and deliberately: each adds a
+published number without touching the definition above. Every badge, every `totalTokens`, and
+every canonical hash is byte-identical to before they existed, so bumping this page's version
+would have signalled a change that did not happen.
