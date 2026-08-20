@@ -709,6 +709,7 @@ function reportOf(
             sources: [c.source],
             servers: ok.map((s) => ({ tokens: s.tokens ?? 0 })),
             skippedCount: bad.length,
+            sharedMeasurements: 0,
           },
           { contextWindow: over.contextWindow ?? DEFAULT_CONTEXT_WINDOW, env: c.env },
         ),
@@ -1035,6 +1036,7 @@ describe('deferral — reading the mode that is actually in force', () => {
       sources?: string[];
       claude?: (number | null | undefined)[];
       contextWindow?: number;
+      shared?: number;
     } = {},
   ) =>
     evaluateDeferral(
@@ -1043,6 +1045,7 @@ describe('deferral — reading the mode that is actually in force', () => {
         sources: opts.sources ?? [CFG],
         servers: tokens.map((t, i) => ({ tokens: t, claudeTokens: opts.claude?.[i] })),
         skippedCount: opts.skipped ?? 0,
+        sharedMeasurements: opts.shared ?? 0,
       },
       { contextWindow: opts.contextWindow ?? cw, env: opts.env },
     );
@@ -1367,6 +1370,120 @@ describe('deferral — the configs one session reads together', () => {
     expect(out).toContain('These 2 config files are read into one claude-code session');
     expect(out).toContain('/home/.claude.json');
     expect(out).toContain('/proj/.mcp.json');
+  });
+});
+
+describe('deferral — a stack measured as fewer servers than it has', () => {
+  // Two entries that run the same command and differ only in the environment
+  // they are given. Measurements are cached per command line, so one of them is
+  // launched and its number is counted for both — and which one it is depends
+  // on the order the configs were read in. `github-mcp-server` with different
+  // GITHUB_TOOLSETS values is the published shape of this.
+  const twin = (name: string, toolsets: string, source = '/home/.claude.json') => ({
+    name,
+    client: 'claude-code',
+    source,
+    transport: 'stdio' as const,
+    command: 'node gh.js',
+    argv: ['node', 'gh.js'],
+    envVarNames: ['GITHUB_TOOLSETS'],
+    env: { GITHUB_TOOLSETS: toolsets },
+  });
+
+  const all = twin('gh-all', 'all');
+  const few = twin('gh-few', 'issues');
+  const heavy = measurement('gh-all', 480);
+  const light = measurement('gh-few');
+
+  // auto:1 puts the threshold at 2,000 tokens, which the two possible sums sit
+  // on opposite sides of: 2 × 6,917 is over it and 2 × 196 is well under.
+  const auto1 = { ENABLE_TOOL_SEARCH: 'auto:1' };
+  const configs = [
+    { client: 'claude-code', source: '/home/.claude.json', servers: [all, few] },
+  ] as Parameters<typeof buildReport>[0];
+  const reportWith = (m: Measurement) =>
+    buildReport(configs, new Map([[serverKey(all), m]]), { generatedAt: 'T', env: auto1 });
+
+  it('counts the entries whose number was measured for a twin', () => {
+    expect(reportWith(heavy).configs[0].deferral.sharedMeasurements).toBe(2);
+  });
+
+  it('claims no side of the threshold, because there is no total to hold against it', () => {
+    expect(reportWith(heavy).configs[0].deferral).toMatchObject({
+      mode: 'threshold',
+      thresholdTokens: 2_000,
+      clientTokens: null,
+      distanceTokens: null,
+      crosses: null,
+    });
+  });
+
+  it('answers the same whichever twin the cache happened to hold', () => {
+    // The defect this refuses: the same machine reported 13,834 wire tokens and
+    // "at or above the threshold" in one order, and 392 and "below the
+    // threshold — every request carries these tokens" in the other, against a
+    // true sum of 7,113 whose range straddles the line.
+    const verdicts = [heavy, light].map((m) => reportWith(m).configs[0].deferral);
+    expect(verdicts.map((d) => d.crosses)).toEqual([null, null]);
+    expect(verdicts.map((d) => d.clientTokens)).toEqual([null, null]);
+    expect(new Set(verdicts.map((d) => d.thresholdTokens)).size).toBe(1);
+  });
+
+  it('says so in words, and states neither side nor a size', () => {
+    for (const m of [heavy, light]) {
+      const out = formatReport(reportWith(m)).replace(/\s+/g, ' ');
+      expect(out).toContain('How big this stack is cannot be said here: 2 of the servers above');
+      expect(out).toContain('differ only in the environment they are given');
+      expect(out).toContain('nothing is wrong with the config');
+      // The threshold is still where it is; only this stack's side is withheld.
+      expect(out).toContain('deferral activates once the definitions reach 2,000 tokens');
+      expect(out).not.toContain('below the threshold');
+      expect(out).not.toContain('at or above the threshold');
+      expect(out).not.toContain('every request carries these tokens before you type anything');
+      expect(out).not.toContain('tokens on the wire');
+    }
+  });
+
+  it('survives --json, so a consumer sees the refusal too', () => {
+    const round = JSON.parse(JSON.stringify(reportWith(heavy))) as AuditReport;
+    expect(round.configs[0].deferral).toMatchObject({ sharedMeasurements: 2, crosses: null });
+    expect(round.configs[0].deferral.clientTokens ?? null).toBeNull();
+  });
+
+  it('still decides a stack whose entries share a measurement legitimately', () => {
+    // Same command AND same environment in two files one session reads: that is
+    // one server measured once, which is what the cache key is for.
+    const user = twin('gh', 'all');
+    const project = twin('gh', 'all', '/proj/.mcp.json');
+    const r = buildReport(
+      [
+        { client: 'claude-code', source: '/home/.claude.json', servers: [user] },
+        { client: 'claude-code', source: '/proj/.mcp.json', servers: [project] },
+      ] as Parameters<typeof buildReport>[0],
+      new Map([[serverKey(user), light]]),
+      { generatedAt: 'T', env: auto1 },
+    );
+    expect(r.configs[0].deferral).toMatchObject({
+      sharedMeasurements: 0,
+      crosses: false,
+      wireTokens: 2 * light.totalTokens!,
+    });
+  });
+
+  it('leaves a stack of distinct commands alone, however their environments differ', () => {
+    const a = { ...twin('a', 'all'), command: 'node a.js', argv: ['node', 'a.js'] };
+    const b = { ...twin('b', 'issues'), command: 'node b.js', argv: ['node', 'b.js'] };
+    const r = buildReport(
+      [{ client: 'claude-code', source: '/home/.claude.json', servers: [a, b] }] as Parameters<
+        typeof buildReport
+      >[0],
+      new Map([
+        [serverKey(a), light],
+        [serverKey(b), light],
+      ]),
+      { generatedAt: 'T', env: auto1 },
+    );
+    expect(r.configs[0].deferral).toMatchObject({ sharedMeasurements: 0, crosses: false });
   });
 });
 

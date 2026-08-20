@@ -273,6 +273,21 @@ export interface DeferralScope {
   servers: DeferralServer[];
   /** Entries discovered across those configs that produced no number. */
   skippedCount: number;
+  /**
+   * Entries here whose number came from a measurement shared with another entry
+   * that differs only in its environment.
+   *
+   * Measurements are cached per command line, so two entries running the same
+   * command under different environments are launched once and both carry the
+   * one number. Environment decides what a server serves — `GITHUB_TOOLSETS` on
+   * `github-mcp-server` selects which toolsets it lists — so that number belongs
+   * to at most one of them, and which one is not knowable from here.
+   *
+   * Counted rather than flagged so the report can say how much of the stack it
+   * covers. Every entry sharing such a measurement counts, including whichever
+   * one was really launched.
+   */
+  sharedMeasurements: number;
 }
 
 /** What the client would count for this stack, as a range. */
@@ -297,9 +312,15 @@ export interface DeferralVerdict {
   /** Null whenever no threshold applies — which includes the default case. */
   thresholdShare: number | null;
   thresholdTokens: number | null;
-  /** o200k tokens summed across the scope — what this audit measured. */
+  /**
+   * o200k tokens summed across the scope — what this audit measured.
+   *
+   * Read together with `sharedMeasurements`: where that is non-zero this sum
+   * counts one measurement for several entries, so it is not the stack's total
+   * and nothing here is derived from it.
+   */
   wireTokens: number;
-  /** Null when there is no threshold to compare against. */
+  /** Null when there is no threshold to compare against, or no total to convert. */
   clientTokens: ClientSideEstimate | null;
   ratio: WireToClientRatio | null;
   /**
@@ -312,11 +333,18 @@ export interface DeferralVerdict {
   distanceTokens: { low: number; high: number } | null;
   /**
    * true = deferral activates, false = it does not, null = cannot be said.
-   * Null has three causes, all of them real: there is no threshold rule to be
-   * on a side of, the unit conversion straddles the threshold, or an unmeasured
-   * server could carry an under-threshold stack over.
+   * Null has four causes, all of them real: there is no threshold rule to be
+   * on a side of, the unit conversion straddles the threshold, an unmeasured
+   * server could carry an under-threshold stack over, or the stack has no
+   * established total at all (`sharedMeasurements`).
    */
   crosses: boolean | null;
+  /**
+   * How many entries in this scope carry a number measured for a twin that
+   * differs only in environment. Non-zero means the sum above is not this
+   * stack's total, in either direction, so no side of the threshold is claimed.
+   */
+  sharedMeasurements: number;
   /** Conditions this cannot read, under which a deferring client pays in full. */
   exceptions: string[];
 }
@@ -377,6 +405,7 @@ export function evaluateDeferral(
 ): DeferralVerdict {
   const wireTokens = scope.servers.reduce((a, s) => a + s.tokens, 0);
   const isFloor = scope.skippedCount > 0;
+  const sharedMeasurements = scope.sharedMeasurements;
 
   // Every field a verdict carries, at its "nothing to say" value. Each mode
   // below overrides only what it can actually answer.
@@ -385,6 +414,7 @@ export function evaluateDeferral(
     sources: scope.sources,
     wireTokens,
     isFloor,
+    sharedMeasurements,
     mechanism: null,
     setting: null,
     thresholdShare: null,
@@ -424,6 +454,29 @@ export function evaluateDeferral(
 
   const thresholdShare = resolved.thresholdShare ?? TOOL_SEARCH_AUTO_SHARE;
   const thresholdTokens = Math.round(opts.contextWindow * thresholdShare);
+
+  if (sharedMeasurements > 0) {
+    // There is a threshold, and no total to hold against it. A shared
+    // measurement is not a floor: a twin can serve more tools than the one that
+    // was launched or fewer, so the sum can be wrong in either direction and
+    // neither side can be ruled out. The same machine has already been seen to
+    // report 13,834 wire tokens or 392 for one stack depending on which twin
+    // the cache happened to hold, and to print a confident — opposite — side
+    // each time. This is the rule `evaluateIncreaseGate` states and `crosses`
+    // already follows: an answer that could not be established fails rather
+    // than resolves. The threshold itself is still reported, because where the
+    // line sits is known even when this stack's distance from it is not.
+    return {
+      ...base,
+      mode: 'threshold',
+      mechanism: 'tool search',
+      setting,
+      thresholdShare,
+      thresholdTokens,
+      exceptions: EXCEPTIONS,
+    };
+  }
+
   const ratio = wireToClientRatio(opts.divergence);
   const clientTokens = estimate(scope.servers, ratio);
 
