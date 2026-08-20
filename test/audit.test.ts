@@ -1132,6 +1132,47 @@ describe('deferral — reading the mode that is actually in force', () => {
       expect(base('https://proxy.internal/v1', { ENABLE_TOOL_SEARCH: 'true' }).mode).toBe('defers-all');
     });
 
+    it('reports a base URL by hostname only, so a credential in it cannot reach a report', () => {
+      // A base URL routed through a proxy commonly carries a credential in its
+      // userinfo or query, and a report is shared (CI logs, a committed
+      // --baseline). The mode decision needs the hostname and nothing else.
+      const secret = 'https://svc:sk-secret-abc123@proxy.internal/v1?key=sk-live-9';
+      const resolved = resolveToolSearch({ ANTHROPIC_BASE_URL: secret });
+      expect(resolved).toMatchObject({ mode: 'loads-upfront', variable: 'ANTHROPIC_BASE_URL' });
+      expect(resolved.value).toBe('proxy.internal');
+
+      const servers = [
+        {
+          name: 'alpha',
+          client: 'claude-code',
+          source: CFG,
+          transport: 'stdio' as const,
+          command: 'node a.js',
+          argv: ['node', 'a.js'],
+          envVarNames: [],
+        },
+      ];
+      const report = buildReport(
+        [{ client: 'claude-code', source: CFG, servers }] as Parameters<typeof buildReport>[0],
+        new Map([[serverKey(servers[0]), measurement('alpha')]]),
+        { generatedAt: 'T', env: { ANTHROPIC_BASE_URL: secret } },
+      );
+      const text = formatReport(report);
+      expect(text).toContain('ANTHROPIC_BASE_URL points at proxy.internal on this machine');
+      for (const out of [text, JSON.stringify(report)]) {
+        expect(out).not.toContain('sk-secret-abc123');
+        expect(out).not.toContain('sk-live-9');
+        expect(out).not.toContain('svc:');
+      }
+    });
+
+    it('prints a marker, not the value, for a base URL that does not parse', () => {
+      // The unreadable case must not fall back to echoing what was set.
+      const resolved = resolveToolSearch({ ANTHROPIC_BASE_URL: 'not a url?key=sk-live-9' });
+      expect(resolved).toMatchObject({ mode: 'loads-upfront', value: '(unreadable URL)' });
+      expect(resolved.value).not.toContain('sk-live-9');
+    });
+
     it('reads only the three variables that decide this', () => {
       expect(toolSearchEnv({ ENABLE_TOOL_SEARCH: 'auto', PATH: '/bin', HOME: '/root' })).toEqual({
         ENABLE_TOOL_SEARCH: 'auto',

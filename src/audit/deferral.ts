@@ -82,7 +82,19 @@ export type DeferralMode =
 export interface ToolSearchSetting {
   /** The variable that decided it, or null when nothing was set and the default stands. */
   variable: string | null;
-  /** Its value as read. Null when the decision came from the documented default. */
+  /**
+   * What is printed for that variable. Null when the decision came from the
+   * documented default.
+   *
+   * This is the value as read for `ENABLE_TOOL_SEARCH` and
+   * `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`, whose values are settings and not
+   * secrets. For `ANTHROPIC_BASE_URL` it is the hostname alone — never the
+   * value — because a base URL routed through a proxy commonly carries a
+   * credential in its userinfo or query, and a report is a thing meant to be
+   * shared (`examples/github-actions.yml` runs it in CI, `--baseline` reads a
+   * committed one). Same rule as `config.ts`: values are read, never written to
+   * a report.
+   */
   value: string | null;
   /** True when a variable on the audited machine decided this, false for the default. */
   readFromMachine: boolean;
@@ -96,13 +108,22 @@ interface ResolvedToolSearch extends ToolSearchSetting {
 /** The one host Claude Code treats as first-party for the tool-search fallback. */
 const FIRST_PARTY_API_HOST = 'api.anthropic.com';
 
-function firstPartyBaseUrl(raw: string): boolean {
+/** What is printed for a base URL we could not parse — a marker, not the value. */
+const UNREADABLE_BASE_URL = '(unreadable URL)';
+
+/**
+ * The hostname of a base URL, or null if it does not parse.
+ *
+ * The hostname is the whole of what the mode decision needs, and it is also the
+ * whole of what may leave this function: the rest of the value can carry a
+ * credential. A value that does not parse is not first-party, which is the
+ * reading that says tokens are paid — never the one that says they are free.
+ */
+function baseUrlHost(raw: string): string | null {
   try {
-    return new URL(raw).hostname.toLowerCase() === FIRST_PARTY_API_HOST;
+    return new URL(raw).hostname.toLowerCase();
   } catch {
-    // Not a URL we can read. Treated as not-first-party, which is the reading
-    // that says tokens are paid — never the one that says they are free.
-    return false;
+    return null;
   }
 }
 
@@ -139,14 +160,18 @@ export function resolveToolSearch(env: ToolSearchEnv): ResolvedToolSearch {
 
   if (raw === undefined || raw === '') {
     const base = env.ANTHROPIC_BASE_URL?.trim();
-    if (base && !firstPartyBaseUrl(base)) {
-      return {
-        mode: 'loads-upfront',
-        thresholdShare: null,
-        variable: 'ANTHROPIC_BASE_URL',
-        value: base,
-        readFromMachine: true,
-      };
+    if (base) {
+      const host = baseUrlHost(base);
+      if (host !== FIRST_PARTY_API_HOST) {
+        return {
+          mode: 'loads-upfront',
+          thresholdShare: null,
+          variable: 'ANTHROPIC_BASE_URL',
+          // The hostname alone. `base` itself is never carried out of here.
+          value: host ?? UNREADABLE_BASE_URL,
+          readFromMachine: true,
+        };
+      }
     }
     return {
       mode: 'defers-all',
