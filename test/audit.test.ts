@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { parseJsonc, extractServers, configCandidates, loadConfigs } from '../src/audit/config.js';
 import { buildReport, formatReport, planBudgetFit, serverKey, DEFAULT_CONTEXT_WINDOW, type AuditReport } from '../src/audit/audit.js';
 import { buildDiff, evaluateIncreaseGate, formatDiff, formatGate, parseBaselineReport } from '../src/audit/diff.js';
+import { evaluateDeferral, TOOL_SEARCH_THRESHOLD_SHARE } from '../src/audit/deferral.js';
 import { runAudit, fetchDivergence } from '../src/audit/run.js';
 import { measureTools, failedMeasurement } from '../src/core/canonical.js';
 import type { Measurement } from '../src/core/types.js';
@@ -694,6 +695,10 @@ function reportOf(
         })),
         heaviestTools: [],
         trimAdvice: null,
+        deferral: evaluateDeferral(
+          { client: c.client ?? 'claude-desktop', totalTokens, skipped: bad },
+          over.contextWindow ?? DEFAULT_CONTEXT_WINDOW,
+        ),
       };
     }),
     ...over,
@@ -858,8 +863,12 @@ describe('formatReport with a diff attached', () => {
     after.increaseGate = evaluateIncreaseGate(after.diff, 100);
     const out = formatReport(after);
 
-    expect(out).toContain('every request in this client');
-    expect(out).not.toMatch(/request in explicit/);
+    // The closing verdict is still rendered, and still never puts the internal
+    // 'explicit' client label inside a claim — it appears once, as the config
+    // header, and nowhere else.
+    expect(out).toContain('tokens of tool schemas');
+    expect(out).toContain('Which client reads this config is not known here');
+    expect(out.match(/\bexplicit\b/g)).toHaveLength(1);
     expect(out.indexOf('diff vs baseline')).toBeGreaterThan(-1);
     expect(out.indexOf('INCREASE FAIL')).toBeGreaterThan(out.indexOf('diff vs baseline'));
     expect(out.indexOf('These are wire tokens')).toBeGreaterThan(out.indexOf('INCREASE FAIL'));
@@ -997,4 +1006,131 @@ describe('audit --baseline CLI', () => {
     expect(report.diff.configs[0]).toMatchObject({ delta: 0, exact: true, matchedBy: 'source' });
     expect(report.increaseGate).toMatchObject({ pass: true, increase: 0, limit: 0 });
   }, 300_000);
+});
+
+describe('deferral — whether this client loads the total up front', () => {
+  const cw = DEFAULT_CONTEXT_WINDOW;
+  const threshold = cw * TOOL_SEARCH_THRESHOLD_SHARE; // 20,000 for a 200,000-token window
+
+  const verdict = (client: string, totalTokens: number, skipped = 0, contextWindow = cw) =>
+    evaluateDeferral({ client, totalTokens, skipped: Array(skipped).fill(null) }, contextWindow);
+
+  it('places a Claude Code stack that is over the threshold on the deferred side', () => {
+    const d = verdict('claude-code', 84_455);
+    expect(d).toMatchObject({
+      posture: 'defers-by-default',
+      mechanism: 'tool search',
+      thresholdTokens: threshold,
+      distanceTokens: 84_455 - threshold,
+      crosses: true,
+      deferrableIsFloor: false,
+    });
+    expect(d.exceptions.length).toBeGreaterThan(0);
+  });
+
+  it('places a Claude Code stack that is under the threshold on the loaded-up-front side', () => {
+    expect(verdict('claude-code', 12_000)).toMatchObject({ crosses: false, distanceTokens: -8_000 });
+  });
+
+  it('activates at the threshold, not only above it', () => {
+    expect(verdict('claude-code', threshold).crosses).toBe(true);
+    expect(verdict('claude-code', threshold - 1).crosses).toBe(false);
+  });
+
+  it('moves the threshold with the context window it is given', () => {
+    // 50,000 crosses 10% of 200,000 and does not come close to 10% of 1,000,000.
+    expect(verdict('claude-code', 50_000).crosses).toBe(true);
+    const wide = verdict('claude-code', 50_000, 0, 1_000_000);
+    expect(wide).toMatchObject({ thresholdTokens: 100_000, crosses: false });
+  });
+
+  it('refuses to say "under" when an unmeasured server could carry it over', () => {
+    // Measured 12,000 is under 20,000 — but a server that produced no number
+    // still serves tools to a real session, so the total is a floor.
+    const d = verdict('claude-code', 12_000, 1);
+    expect(d).toMatchObject({ deferrableIsFloor: true, crosses: null });
+  });
+
+  it('still says "over" from a floor that is already over — more cannot take it back under', () => {
+    expect(verdict('claude-code', 84_455, 2)).toMatchObject({ deferrableIsFloor: true, crosses: true });
+  });
+
+  it('records the absence of a deferral rule for the other known clients, with no threshold', () => {
+    for (const client of ['claude-desktop', 'cursor', 'vscode', 'windsurf']) {
+      expect(verdict(client, 84_455)).toMatchObject({
+        posture: 'no-deferral-on-record',
+        mechanism: null,
+        thresholdTokens: null,
+        distanceTokens: null,
+        crosses: null,
+      });
+    }
+  });
+
+  it('says the client is unknown for a config named with --config', () => {
+    expect(verdict('explicit', 84_455).posture).toBe('client-unknown');
+    expect(verdict('some-client-shipped-after-this-was-written', 1).posture).toBe('client-unknown');
+  });
+
+  it('is attached to every config a report carries, and survives --json', () => {
+    const report = reportOf([
+      { source: CFG, client: 'claude-code', servers: [{ name: 'a', tokens: 84_455 }] },
+      { source: '/two.json', client: 'cursor', servers: [{ name: 'b', tokens: 84_455 }] },
+    ]);
+    const roundTripped = JSON.parse(JSON.stringify(report)) as AuditReport;
+    expect(roundTripped.configs.map((c) => c.deferral.posture).sort()).toEqual([
+      'defers-by-default',
+      'no-deferral-on-record',
+    ]);
+    expect(roundTripped.configs.find((c) => c.client === 'claude-code')!.deferral.thresholdTokens).toBe(threshold);
+  });
+});
+
+describe('formatReport states where the cost is paid', () => {
+  // Prose is asserted against the text with its line breaks flattened, so a
+  // re-wrap for terminal width is not a test failure — the sentence is.
+  const render = (client: string, tokens: number, servers: DiffSrv[] = []) =>
+    formatReport(
+      reportOf([{ source: CFG, client, servers: [{ name: 'a', tokens }, ...servers] }]),
+    ).replace(/\s+/g, ' ');
+
+  it('tells a Claude Code reader over the threshold that these tokens are not loaded up front', () => {
+    const out = render('claude-code', 84_455);
+    expect(out).toContain('claude-code defers tool definitions by default (tool search)');
+    expect(out).toContain('84,455 is 64,455 over the threshold of 20,000 (10.0% of the context window)');
+    expect(out).toContain('NOT loaded up front');
+    // ...and where it is paid in full anyway.
+    expect(out).toContain('ANTHROPIC_BASE_URL');
+    expect(out).not.toContain('every request carries these tokens before you');
+  });
+
+  it('tells a Claude Code reader under the threshold that every request still carries them', () => {
+    const out = render('claude-code', 12_000);
+    expect(out).toContain('does not reach it: 12,000 is 8,000 under the threshold of 20,000');
+    expect(out).toContain('deferral does not activate and every request carries these tokens before you type anything');
+    expect(out).not.toContain('NOT loaded up front');
+  });
+
+  it('prints an undecided stack as undecided, naming the servers that left it that way', () => {
+    const out = render('claude-code', 12_000, [{ name: 'broken', tokens: null }]);
+    expect(out).toContain('cannot be said');
+    expect(out).toContain('at least 12,000');
+    expect(out).toContain('1 server(s) here produced no number and what they serve counts toward it too');
+  });
+
+  it('tells a reader of a client with no deferral record that this is an absence, not a measurement', () => {
+    const out = render('cursor', 84_455);
+    expect(out).toContain('No default deferral is on record for cursor');
+    expect(out).toContain('every request carries these tokens');
+    expect(out).toContain('an absence of a record about the client, not a measurement of it');
+    expect(out).not.toContain('threshold');
+  });
+
+  it('keeps the measurement itself unconditional, and the claim about who pays it separate', () => {
+    for (const client of ['claude-code', 'cursor']) {
+      expect(render(client, 84_455)).toContain(
+        '84,455 tokens of tool schemas — 42.2% of a 200,000-token context window.',
+      );
+    }
+  });
 });

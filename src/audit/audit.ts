@@ -16,6 +16,7 @@ import { METHODOLOGY_VERSION } from '../core/canonical.js';
 import { isCurrent, type DivergenceRun } from '../core/divergence.js';
 import type { Measurement, MeasurementStatus, ToolMeasurement } from '../core/types.js';
 import type { ConfiguredServer, LoadedConfig } from './config.js';
+import { evaluateDeferral, TOOL_SEARCH_THRESHOLD_SHARE, type DeferralVerdict } from './deferral.js';
 import { formatDiff, formatGate, type AuditDiff, type IncreaseGate } from './diff.js';
 
 export const DEFAULT_CONTEXT_WINDOW = 200_000;
@@ -74,6 +75,12 @@ export interface AuditConfigResult {
   skipped: AuditServerResult[];
   heaviestTools: HeaviestTool[];
   trimAdvice: TrimAdvice | null;
+  /**
+   * Whether this client loads the total up front or defers it, and how far this
+   * stack sits from the threshold that decides. Every config carries one: the
+   * answer "no deferral is on record for this client" is a reading, not a gap.
+   */
+  deferral: DeferralVerdict;
 }
 
 const TRIM_TOOL_COUNT = 3;
@@ -257,7 +264,7 @@ export function buildReport(
     for (const s of ok) s.share = totalTokens > 0 ? (s.tokens ?? 0) / totalTokens : 0;
     tools.sort((a, b) => b.tokens - a.tokens);
 
-    results.push({
+    const result: AuditConfigResult = {
       client: cfg.client,
       source: cfg.source,
       totalTokens,
@@ -272,7 +279,11 @@ export function buildReport(
       skipped,
       heaviestTools: tools.slice(0, 5),
       trimAdvice: buildTrimAdvice(tools, totalTokens),
-    });
+      // Computed against the same context window the share above uses, so the
+      // threshold moves with `--context` instead of being pinned to 200,000.
+      deferral: evaluateDeferral({ client: cfg.client, totalTokens, skipped }, contextWindow),
+    };
+    results.push(result);
   }
 
   results.sort((a, b) => b.totalTokens - a.totalTokens);
@@ -308,6 +319,67 @@ export function buildReport(
 
 const n = (x: number) => x.toLocaleString('en-US');
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
+
+/**
+ * The closing verdict for one config: is this cost paid up front, and if the
+ * client decides that by a threshold, which side of it is this stack on.
+ *
+ * This used to be one unconditional sentence — "every request in this client
+ * carries N tokens ... before you type anything" — which is false for a client
+ * that defers, and that is the most common client this tool discovers. The
+ * sentence is now the measurement, and the claim about who pays it is separate
+ * and attributed to the client.
+ */
+function deferralLines(cfg: AuditConfigResult, contextWindow: number): string[] {
+  const d = cfg.deferral;
+  const lines: string[] = [];
+  lines.push(
+    `  ${n(cfg.totalTokens)} tokens of tool schemas — ${pct(cfg.contextShare)} of a ` +
+      `${n(contextWindow)}-token context window.`,
+  );
+
+  if (d.posture === 'client-unknown') {
+    // The path is already the header line above; repeating it here only makes
+    // the sentence wrap badly on a long one.
+    lines.push('  Which client reads this config is not known here, so whether it defers');
+    lines.push('  tool definitions by default is not known either. Read as loaded up front.');
+    return lines;
+  }
+
+  if (d.posture === 'no-deferral-on-record') {
+    lines.push(`  No default deferral is on record for ${cfg.client}, so every request`);
+    lines.push('  carries these tokens before you type anything — an absence of a record');
+    lines.push('  about the client, not a measurement of it.');
+    return lines;
+  }
+
+  const threshold = `threshold of ${n(d.thresholdTokens ?? 0)}`;
+  const share = `(${pct(TOOL_SEARCH_THRESHOLD_SHARE)} of the context window)`;
+  // A total standing in for servers that produced no number is a lower bound,
+  // and is said to be one every time it is printed.
+  const measured = d.deferrableIsFloor ? `at least ${n(d.deferrableTokens)}` : n(d.deferrableTokens);
+  const gap = n(Math.abs(d.distanceTokens ?? 0));
+
+  lines.push(`  ${cfg.client} defers tool definitions by default (${d.mechanism}).`);
+
+  if (d.crosses === true) {
+    lines.push(`  This stack activates it: ${measured} is ${gap} over the ${threshold}`);
+    lines.push(`  ${share}, so these tokens are NOT loaded up front — they load when`);
+    lines.push('  the model reaches for a tool. The full number is still paid where');
+    lines.push('  deferral does not apply:');
+    for (const e of d.exceptions) lines.push(`    ${e}`);
+  } else if (d.crosses === false) {
+    lines.push(`  This stack does not reach it: ${measured} is ${gap} under the ${threshold}`);
+    lines.push(`  ${share}, so deferral does not activate and every request carries`);
+    lines.push('  these tokens before you type anything.');
+  } else {
+    // Only reachable from a floor, so the number always reads "at least N".
+    lines.push(`  Which side this stack falls on cannot be said: ${measured} is ${gap} under the`);
+    lines.push(`  ${threshold} ${share}, but ${cfg.skipped.length} server(s) here produced no number`);
+    lines.push('  and what they serve counts toward it too. See "not measured" above.');
+  }
+  return lines;
+}
 
 /** Human output. JSON output is the report object itself. */
 export function formatReport(report: AuditReport): string {
@@ -345,10 +417,7 @@ export function formatReport(report: AuditReport): string {
     lines.push(line('total', String(cfg.toolCount), n(cfg.totalTokens), '', ''));
 
     lines.push('');
-    lines.push(
-      `  Every request in this client carries ${n(cfg.totalTokens)} tokens of tool schemas — ` +
-        `${pct(cfg.contextShare)} of a ${n(report.contextWindow)}-token context window, before you type anything.`,
-    );
+    for (const line of deferralLines(cfg, report.contextWindow)) lines.push(line);
 
     if (cfg.heaviestTools.length) {
       lines.push('');
