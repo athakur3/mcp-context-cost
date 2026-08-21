@@ -207,6 +207,14 @@ export interface LoadedConfig {
   servers: ConfiguredServer[];
   /** Set when the file exists but could not be read/parsed. */
   error?: string;
+  /**
+   * Set when the file was read and parsed cleanly and declares no servers at
+   * all. Such a config has nothing to total, but "this client declares nothing"
+   * and "no client is installed here" are different facts about a machine and
+   * only one of them is about the client, so the second is not reported as the
+   * first.
+   */
+  declaresNothing?: true;
 }
 
 /** Read + parse the candidates that exist. Unreadable files are reported, not thrown. */
@@ -218,8 +226,13 @@ export function loadConfigs(candidates: ConfigCandidate[], cwd: string): LoadedC
       const doc = parseJsonc(readFileSync(c.path, 'utf8'));
       const servers = extractServers(doc, { client: c.client, source: c.path, cwd });
       // A config with no MCP block at all (e.g. a ~/.claude.json holding only
-      // session history) is not worth a line in the report.
-      if (servers.length === 0) continue;
+      // session history) is not worth a line in the report — it has no total.
+      // It is still worth carrying: it is the evidence that a client is on this
+      // machine, which is what tells an empty client apart from no client.
+      if (servers.length === 0) {
+        out.push({ client: c.client, source: c.path, servers: [], declaresNothing: true });
+        continue;
+      }
       out.push({ client: c.client, source: c.path, servers });
     } catch (e) {
       out.push({ client: c.client, source: c.path, servers: [], error: (e as Error).message });

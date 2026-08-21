@@ -256,3 +256,52 @@ describe('CLI rejects unknown flags', () => {
     expect(run(['measure', '--name', 'x', '--command', 'true', '--bogus']).code).toBe(2);
   }, 60_000);
 });
+
+
+// ---------------------------------------------------------------------------
+// Two different machines used to get one sentence: one with a client installed
+// that declares no servers, and one with no client anywhere. The first was told
+// to go find an install it already has.
+// ---------------------------------------------------------------------------
+
+describe('audit tells an empty client apart from no client at all', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'mcp-context-cost-empty-'));
+  afterAll(() => rmSync(dir, { recursive: true, force: true }));
+
+  const run = (args: string[]) => {
+    try {
+      execFileSync('npx', ['tsx', 'src/cli.ts', ...args], { cwd: repoRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+      return { code: 0, stderr: '', stdout: '' };
+    } catch (e) {
+      const err = e as { status: number; stderr: string; stdout: string };
+      return { code: err.status, stderr: err.stderr ?? '', stdout: err.stdout ?? '' };
+    }
+  };
+
+  it('says the config declares no servers when the file is there and empty', () => {
+    const path = join(dir, 'empty.json');
+    writeFileSync(path, '{"otherKey":1}');
+    const r = run(['audit', '--config', path]);
+    expect(r.code).toBe(1);
+    expect(r.stderr).toContain('declares no servers');
+    expect(r.stderr).toContain(path);
+    expect(r.stderr).not.toContain('no MCP config found');
+  }, 60_000);
+
+  it('still says no config found when there is no file to read', () => {
+    const r = run(['audit', '--config', join(dir, 'nope.json')]);
+    expect(r.code).toBe(1);
+    expect(r.stderr).toContain('no MCP config found');
+    expect(r.stderr).not.toContain('declares no servers');
+  }, 60_000);
+
+  it('names the empty config in --json too, where it is a field and not prose', () => {
+    const path = join(dir, 'empty2.json');
+    writeFileSync(path, '{"otherKey":1}');
+    const r = run(['audit', '--config', path, '--json']);
+    expect(r.code).toBe(1);
+    const report = JSON.parse(r.stdout) as { configs: unknown[]; emptyConfigs: { source: string }[] };
+    expect(report.configs).toHaveLength(0);
+    expect(report.emptyConfigs.map((c) => c.source)).toEqual([path]);
+  }, 60_000);
+});

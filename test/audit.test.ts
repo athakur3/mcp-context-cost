@@ -146,7 +146,7 @@ describe('configCandidates', () => {
 });
 
 describe('loadConfigs', () => {
-  it('skips missing files, reports unparseable ones, ignores configs with no servers', () => {
+  it('skips missing files, reports unparseable ones, keeps a parsed config that declares nothing', () => {
     const dir = tempDir('mcp-audit-cfg-');
     writeFileSync(join(dir, 'good.json'), '{"mcpServers":{"a":{"command":"node","args":["a.js"]}}}');
     writeFileSync(join(dir, 'bad.json'), '{not json');
@@ -160,9 +160,16 @@ describe('loadConfigs', () => {
       ],
       dir,
     );
-    expect(loaded).toHaveLength(2);
+    expect(loaded).toHaveLength(3);
     expect(loaded[0].servers).toHaveLength(1);
+    expect(loaded[0].declaresNothing).toBeUndefined();
     expect(loaded[1].error).toBeDefined();
+    expect(loaded[1].declaresNothing).toBeUndefined(); // unreadable is not "declares nothing"
+    expect(loaded[2]).toMatchObject({ source: join(dir, 'empty.json'), declaresNothing: true });
+    expect(loaded[2].servers).toHaveLength(0);
+    // A file that is not on the machine leaves no trace at all: that is the
+    // direction the report must be able to tell apart from the one above.
+    expect(loaded.some((c) => c.source === join(dir, 'nope.json'))).toBe(false);
   });
 });
 
@@ -1870,5 +1877,41 @@ describe('the deferral posture is read from every place the machine sets it', ()
       expect(at('win32', 'D:\\PD')[0].path).toBe(join('D:\\PD', 'ClaudeCode', 'managed-settings.json'));
       expect(at('darwin')[3].path).toBe(join('/h', '.claude', 'settings.json'));
     });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// A machine with a client installed that declares no servers is not a machine
+// with no client. Before this, both ended up as the same empty report and the
+// same sentence — the one distinction this project keeps everywhere else (an
+// absence of a record is not a measurement) not kept here.
+// ---------------------------------------------------------------------------
+
+describe('a client that declares nothing vs no client at all', () => {
+  it('records a parsed-but-empty config as itself, and gives it no report line', () => {
+    const r = buildReport(
+      [{ client: 'claude-code', source: '/h/.claude.json', servers: [], declaresNothing: true }],
+      new Map(),
+      { generatedAt: 'T' },
+    );
+    expect(r.configs).toHaveLength(0); // nothing to total
+    expect(r.emptyConfigs).toEqual([{ client: 'claude-code', source: '/h/.claude.json' }]);
+    expect(r.problems).toEqual([]); // declaring nothing is not a fault
+  });
+
+  it('records nothing when no config exists anywhere', () => {
+    const r = buildReport([], new Map(), { generatedAt: 'T' });
+    expect(r.configs).toHaveLength(0);
+    expect(r.emptyConfigs).toEqual([]);
+  });
+
+  it('does not call an unreadable config empty', () => {
+    const r = buildReport(
+      [{ client: 'cursor', source: '/h/.cursor/mcp.json', servers: [], error: 'not json' }],
+      new Map(),
+      { generatedAt: 'T' },
+    );
+    expect(r.emptyConfigs).toEqual([]);
+    expect(r.problems.join(' ')).toContain('not json');
   });
 });
