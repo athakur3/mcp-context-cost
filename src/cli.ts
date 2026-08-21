@@ -185,11 +185,31 @@ if (cmd === 'audit') {
 
   if (report.configs.length === 0) {
     const where = report.problems.length ? `\n${report.problems.map((p) => `  ${p}`).join('\n')}` : '';
-    const empty = report.emptyConfigs ?? [];
+    const empty: { client: string; source: string; allDisabled?: string[] }[] = report.emptyConfigs ?? [];
     if (json) console.log(JSON.stringify(report));
-    // A machine whose client config was found, opened and parsed, and simply
-    // declares nothing, is told that — being told no client was found anywhere
-    // would send a reader looking for an install they already have.
+    // A machine whose client config was found, opened and parsed, and has
+    // nothing to total, is told that — being told no client was found anywhere
+    // would send a reader looking for an install they already have. Which of
+    // the two reasons it is gets said, because "declares nothing" is a false
+    // statement about a file that declares servers and switches them off.
+    else if (empty.some((c) => c.allDisabled?.length))
+      console.error(
+        `${empty.length === 1 ? 'an MCP client config was found' : `${empty.length} MCP client configs were found`}, ` +
+          `and ${empty.length === 1 ? 'it has no server' : 'none of them has a server'} to measure:\n` +
+          empty
+            .map((c) => {
+              const off = c.allDisabled ?? [];
+              if (!off.length) return `  ${c.client}: ${c.source} — declares no servers at all`;
+              return (
+                `  ${c.client}: ${c.source} — declares ${off.length} server${off.length === 1 ? '' : 's'}, ` +
+                `and ${off.length === 1 ? 'it is' : 'every one of them is'} switched off: ${off.join(', ')}`
+              );
+            })
+            .join('\n') +
+          `${where}\n` +
+          `${empty.length === 1 ? 'It was' : 'They were'} read and parsed; a switched-off server is not started, so it costs nothing to measure.\n` +
+          `Switch one back on, declare one, or point at a different config: mcp-context-cost audit --config <path/to/mcp.json>`,
+      );
     else if (empty.length)
       console.error(
         `${empty.length === 1 ? 'an MCP client config was found' : `${empty.length} MCP client configs were found`}, ` +

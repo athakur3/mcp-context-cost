@@ -8,6 +8,7 @@ import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import {
   parseJsonc,
+  extractDeclaration,
   extractServers,
   configCandidates,
   loadConfigs,
@@ -129,6 +130,40 @@ describe('extractServers', () => {
   });
 });
 
+describe('extractDeclaration', () => {
+  const meta = { client: 'claude-code', source: '/h/.claude.json' };
+
+  it('reports the switched-off entries a config declares, alongside the live ones', () => {
+    const d = extractDeclaration(
+      {
+        mcpServers: {
+          off2: { command: 'node', args: ['b.js'], disabled: true },
+          live: { command: 'node', args: ['a.js'] },
+          off1: { url: 'https://mcp.linear.app/sse', disabled: true },
+        },
+      },
+      meta,
+    );
+    expect(d.servers.map((s) => s.name)).toEqual(['live']);
+    expect(d.disabled).toEqual(['off1', 'off2']); // sorted, so the sentence is stable
+  });
+
+  it('does not call a name disabled when another block declares it live', () => {
+    const d = extractDeclaration(
+      { mcpServers: { fs: { command: 'node', args: ['a.js'] } }, servers: { fs: { command: 'x', disabled: true } } },
+      meta,
+    );
+    expect(d.servers.map((s) => s.name)).toEqual(['fs']);
+    expect(d.disabled).toEqual([]);
+  });
+
+  it('does not call a malformed or absent entry disabled', () => {
+    expect(extractDeclaration({ mcpServers: { a: null, b: 'nope', c: {} } }, meta).disabled).toEqual([]);
+    expect(extractDeclaration({ otherKey: 1 }, meta).disabled).toEqual([]);
+    expect(extractDeclaration(null, meta).disabled).toEqual([]);
+  });
+});
+
 describe('configCandidates', () => {
   it('points at the per-platform Claude Desktop location', () => {
     const mac = configCandidates({ home: '/Users/me', cwd: '/proj', platform: 'darwin' });
@@ -170,6 +205,30 @@ describe('loadConfigs', () => {
     // A file that is not on the machine leaves no trace at all: that is the
     // direction the report must be able to tell apart from the one above.
     expect(loaded.some((c) => c.source === join(dir, 'nope.json'))).toBe(false);
+    expect(loaded[2].allDisabled).toBeUndefined(); // declares nothing, not all-off
+  });
+
+  it('tells a config that switches every server off apart from one that declares none', () => {
+    const dir = tempDir('mcp-audit-off-');
+    writeFileSync(
+      join(dir, 'alloff.json'),
+      '{"mcpServers":{"redis":{"command":"node","args":["r.js"],"disabled":true},"linear":{"url":"https://x/sse","disabled":true}}}',
+    );
+    writeFileSync(join(dir, 'someoff.json'), '{"mcpServers":{"a":{"command":"node"},"b":{"command":"node","disabled":true}}}');
+    const loaded = loadConfigs(
+      [
+        { client: 'x', path: join(dir, 'alloff.json') },
+        { client: 'x', path: join(dir, 'someoff.json') },
+      ],
+      dir,
+    );
+    expect(loaded[0].servers).toHaveLength(0);
+    expect(loaded[0].allDisabled).toEqual(['linear', 'redis']);
+    expect(loaded[0].declaresNothing).toBeUndefined(); // it declares two; it does not declare nothing
+    // One left on is a config with something to measure, and gets neither mark.
+    expect(loaded[1].servers.map((s) => s.name)).toEqual(['a']);
+    expect(loaded[1].allDisabled).toBeUndefined();
+    expect(loaded[1].declaresNothing).toBeUndefined();
   });
 });
 
@@ -2021,6 +2080,28 @@ describe('a client that declares nothing vs no client at all', () => {
     expect(r.configs).toHaveLength(0); // nothing to total
     expect(r.emptyConfigs).toEqual([{ client: 'claude-code', source: '/h/.claude.json' }]);
     expect(r.problems).toEqual([]); // declaring nothing is not a fault
+  });
+
+  it('records a config whose every declared server is switched off as that, not as declaring nothing', () => {
+    const r = buildReport(
+      [{ client: 'claude-code', source: '/h/.claude.json', servers: [], allDisabled: ['linear', 'redis'] }],
+      new Map(),
+      { generatedAt: 'T' },
+    );
+    expect(r.configs).toHaveLength(0); // still nothing to total
+    expect(r.emptyConfigs).toEqual([
+      { client: 'claude-code', source: '/h/.claude.json', allDisabled: ['linear', 'redis'] },
+    ]);
+    expect(r.problems).toEqual([]); // switching a server off is not a fault either
+  });
+
+  it('does not put an allDisabled list on a config that really declares nothing', () => {
+    const r = buildReport(
+      [{ client: 'claude-code', source: '/h/.claude.json', servers: [], declaresNothing: true }],
+      new Map(),
+      { generatedAt: 'T' },
+    );
+    expect(r.emptyConfigs[0].allDisabled).toBeUndefined();
   });
 
   it('records nothing when no config exists anywhere', () => {

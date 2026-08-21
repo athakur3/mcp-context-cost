@@ -295,6 +295,31 @@ describe('audit tells an empty client apart from no client at all', () => {
     expect(r.stderr).not.toContain('declares no servers');
   }, 60_000);
 
+  it('tells a config that switches every server off what it found, not that it declares nothing', () => {
+    const path = join(dir, 'alloff.json');
+    writeFileSync(
+      path,
+      '{"mcpServers":{"redis":{"command":"node","args":["r.js"],"disabled":true},"linear":{"url":"https://x/sse","disabled":true}}}',
+    );
+    const r = run(['audit', '--config', path]);
+    expect(r.code).toBe(1);
+    // The false statement this must no longer make about a file it parsed.
+    expect(r.stderr).not.toContain('declares no servers');
+    expect(r.stderr).not.toContain('nothing declared to measure');
+    expect(r.stderr).toContain('an MCP client config was found, and it has no server to measure');
+    expect(r.stderr).toContain('declares 2 servers, and every one of them is switched off: linear, redis');
+    expect(r.stderr).toContain(path);
+  }, 60_000);
+
+  it('carries the switched-off names in --json too', () => {
+    const path = join(dir, 'alloff2.json');
+    writeFileSync(path, '{"mcpServers":{"redis":{"command":"node","disabled":true}}}');
+    const r = run(['audit', '--config', path, '--json']);
+    expect(r.code).toBe(1);
+    const report = JSON.parse(r.stdout) as { emptyConfigs: { source: string; allDisabled?: string[] }[] };
+    expect(report.emptyConfigs).toEqual([{ client: 'explicit', source: path, allDisabled: ['redis'] }]);
+  }, 60_000);
+
   it('names the empty config in --json too, where it is a field and not prose', () => {
     const path = join(dir, 'empty2.json');
     writeFileSync(path, '{"otherKey":1}');
