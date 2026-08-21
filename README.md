@@ -70,11 +70,12 @@ deferral off in a settings file is not a machine running the default:
 |---|---|
 | nothing set (the default) | every definition deferred, at any size — no threshold applies |
 | `ENABLE_TOOL_SEARCH=true` | same: every definition deferred |
-| `ENABLE_TOOL_SEARCH=false` | deferral off — every request carries the full total |
+| `ENABLE_TOOL_SEARCH=false` | deferral off — every request carries the full total. In a settings `env` block that is the **string** `"false"`; the JSON boolean `false` is the last row, not this one |
 | `ENABLE_TOOL_SEARCH=auto` / `auto:N` | deferred only once definitions reach 10% / N% of the context window |
 | `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` set | tool search off — read first, because `ENABLE_TOOL_SEARCH` cannot override it |
 | `ANTHROPIC_BASE_URL` off `api.anthropic.com` | falls back to loading up front — consulted only while `ENABLE_TOOL_SEARCH` is unset |
 | anything else in `ENABLE_TOOL_SEARCH` | not a documented value, so nothing is claimed from it |
+| any of the three set, in a settings `env` block, to something that is not a string — a JSON boolean, a number, `null` | it is set there and what it is set to is unknown, so no posture is claimed: the report says whether these tokens are deferred cannot be said from it |
 
 On a machine where none of them is set, the same stack reads:
 
@@ -105,11 +106,13 @@ costs **more** than loading the definitions would.
 Three things the report will not do: it will not convert between units silently (in
 threshold mode the stack is compared as a range, because the audit counts wire bytes and the
 threshold is counted in what the client sends to the API — measured at 0.20×–1.92× across 20
-servers); it will not pick a winner when two places on the machine set the same variable to
-different values, or when a settings file exists and cannot be read; and it will not pass an
-absence of a record off as a measurement. The first two print as unanswered questions. The
-third prints as an answer that names itself: for the four discovered clients with no default
-on record — `claude-desktop`, `cursor`, `vscode`, `windsurf` — the tokens are counted as
+servers); it will not claim a posture the machine did not state readably, which is four
+refusals and not one — when two places set the same variable to different values, when a
+settings file exists and cannot be read, when the place that would decide sets the variable
+to something that is not a string, and when `ENABLE_TOOL_SEARCH` holds a value Claude Code
+does not document; and it will not pass an absence of a record off as a measurement. The
+first two print as unanswered questions. The third prints as an answer that names
+itself: for the four discovered clients with no default on record — `claude-desktop`, `cursor`, `vscode`, `windsurf` — the tokens are counted as
 loaded up front, and the report says so in those words, "an absence of a record about the
 client, not a measurement of it".
 Full model, sources and dates: [METHODOLOGY §who pays the number](docs/METHODOLOGY.md#who-pays).
