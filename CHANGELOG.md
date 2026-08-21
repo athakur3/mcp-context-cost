@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.6.0 — 2026-08-21
+
+Two things `audit` says changed, and both are places where it used to state an answer it
+did not have.
+
+- **A client config that was found and declares no servers is told apart from no client at
+  all.** On a machine with Claude Code and Claude Desktop installed, both config files
+  present and parsing cleanly and both declaring nothing, `audit` printed the sentence
+  written for a machine with no MCP client anywhere — and sent the reader looking for an
+  install they already have. Such a config is now carried through as itself: it gets no
+  report line, because it has no total, but `audit` names each client and the file it read
+  and says they were read and parsed and there is simply nothing declared to measure. Still
+  exit 1, and still nothing measured. An unreadable config stays a problem, and a file that
+  is not on the machine still leaves no trace at all — that is the direction being told
+  apart. `--json` gains a top-level `emptyConfigs: [{client, source}]`.
+- **A deferral setting held as something the audit cannot read is an unknown, not an
+  unset.** The settings reader kept `ENABLE_TOOL_SEARCH` and its two companions only when
+  the value was a string. `"ENABLE_TOOL_SEARCH": false` — the JSON boolean, which is what
+  a person editing `settings.json` by hand writes — left a file that looked exactly like a
+  file setting none of them, so the report reached the documented default and said these
+  tokens are not loaded up front at any size. That was the one path in this model that
+  states a wrong answer rather than no answer. The variable is now carried as set here
+  unreadably: the report says the file sets it, says what it is set to is unknown, and
+  gives no verdict at all. Precedence still decides, so a readable value in a
+  higher-precedence file wins over an unreadable one beneath it, and an unreadable
+  `ANTHROPIC_BASE_URL` behind an explicit `ENABLE_TOOL_SEARCH` refuses nothing. `--json`
+  carries `unresolved: "value-unreadable"` and, per source, the variable **names** held
+  unreadably — values are still never published.
+
 ## 0.5.0 — 2026-08-20
 
 - **`audit` reads the deferral posture of each client it discovers.** For a Claude Code
