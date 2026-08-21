@@ -166,12 +166,16 @@ export interface AuditReport {
   contextWindow: number;
   configs: AuditConfigResult[];
   /**
-   * Client configs that were read and parsed but declare no servers. They get
-   * no report line — there is nothing to total — but they are the record that a
-   * client is installed here, which is not the same machine as one with no
-   * client at all.
+   * Client configs that were read and parsed and have nothing to total. They
+   * get no report line, but they are the record that a client is installed
+   * here, which is not the same machine as one with no client at all.
+   *
+   * `allDisabled`, when present, is why there is nothing to total: the file
+   * declares those servers and every one of them is switched off. A config
+   * without it declares no servers at all. The two are different facts about a
+   * file this opened, so they are not published as one.
    */
-  emptyConfigs: { client: string; source: string }[];
+  emptyConfigs: { client: string; source: string; allDisabled?: string[] }[];
   budget?: {
     limit: number;
     worstTotal: number;
@@ -343,7 +347,7 @@ export function buildReport(
 ): AuditReport {
   const contextWindow = opts.contextWindow ?? DEFAULT_CONTEXT_WINDOW;
   const problems: string[] = [];
-  const emptyConfigs: { client: string; source: string }[] = [];
+  const emptyConfigs: { client: string; source: string; allDisabled?: string[] }[] = [];
   const built: Omit<AuditConfigResult, 'deferral'>[] = [];
   // Across every config at once: a twin in one client's file is measured for
   // the other client's entry just the same.
@@ -355,10 +359,15 @@ export function buildReport(
       problems.push(`${cfg.source}: ${cfg.error}`);
       continue;
     }
-    // Parsed, and declares nothing. Not a problem and not a report line: it is
-    // recorded as itself, so a reader is told what this machine actually has.
+    // Parsed, and nothing to total. Not a problem and not a report line: it is
+    // recorded as itself, so a reader is told what this machine actually has —
+    // including, where that is the case, that what it has is servers turned off.
     if (cfg.declaresNothing || cfg.servers.length === 0) {
-      emptyConfigs.push({ client: cfg.client, source: cfg.source });
+      emptyConfigs.push(
+        cfg.allDisabled?.length
+          ? { client: cfg.client, source: cfg.source, allDisabled: cfg.allDisabled }
+          : { client: cfg.client, source: cfg.source },
+      );
       continue;
     }
     const ok: AuditServerResult[] = [];

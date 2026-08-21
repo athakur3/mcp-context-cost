@@ -146,14 +146,35 @@ export function extractServers(
   doc: unknown,
   meta: { client: string; source: string; cwd?: string },
 ): ConfiguredServer[] {
-  if (!doc || typeof doc !== 'object') return [];
+  return extractDeclaration(doc, meta).servers;
+}
+
+/**
+ * What one config document declares, servers and switched-off entries both.
+ *
+ * `extractServers` above answers "what is there to measure", which is the
+ * question almost every caller has. This answers the wider one, because a file
+ * that declares three servers and switches all three off has nothing to measure
+ * and is still not a file that declares nothing — and the only place that
+ * difference is still visible is here, before the off ones are dropped.
+ */
+export function extractDeclaration(
+  doc: unknown,
+  meta: { client: string; source: string; cwd?: string },
+): { servers: ConfiguredServer[]; disabled: string[] } {
+  if (!doc || typeof doc !== 'object') return { servers: [], disabled: [] };
   const d = doc as Record<string, unknown>;
   const out: ConfiguredServer[] = [];
+  const off: string[] = [];
 
   const addBlock = (block: unknown) => {
     if (!block || typeof block !== 'object') return;
     for (const [name, raw] of Object.entries(block as Record<string, unknown>)) {
       if (!raw || typeof raw !== 'object') continue;
+      // Recorded before `toServer` drops it, which is the only difference this
+      // can still see: an entry it returns null for because the person turned
+      // it off, rather than because it is malformed or absent.
+      if ((raw as RawEntry).disabled === true) off.push(name);
       const s = toServer(name, raw as RawEntry, meta.client, meta.source);
       if (s) out.push(s);
     }
@@ -168,7 +189,11 @@ export function extractServers(
 
   // A name can legitimately appear in both blocks of the same file; keep the first.
   const seen = new Set<string>();
-  return out.filter((s) => (seen.has(s.name) ? false : (seen.add(s.name), true)));
+  const servers = out.filter((s) => (seen.has(s.name) ? false : (seen.add(s.name), true)));
+  // A name that is off in one block and live in another is a live server, not a
+  // switched-off one, so it is not reported as both.
+  const disabled = [...new Set(off.filter((n) => !seen.has(n)))].sort();
+  return { servers, disabled };
 }
 
 export interface ConfigCandidate {
@@ -216,6 +241,14 @@ export interface LoadedConfig {
    * first.
    */
   declaresNothing?: true;
+  /**
+   * Set instead of `declaresNothing` when the file was read and parsed cleanly,
+   * declares servers, and every one of them is switched off — the names, in the
+   * file's own words. There is nothing to total either way, but a person who
+   * turned their servers off is not a person who declared none, and telling
+   * them the file declares nothing is a false statement about a file this read.
+   */
+  allDisabled?: string[];
 }
 
 /** Read + parse the candidates that exist. Unreadable files are reported, not thrown. */
@@ -225,12 +258,19 @@ export function loadConfigs(candidates: ConfigCandidate[], cwd: string): LoadedC
     if (!existsSync(c.path)) continue;
     try {
       const doc = parseJsonc(readFileSync(c.path, 'utf8'));
-      const servers = extractServers(doc, { client: c.client, source: c.path, cwd });
+      const { servers, disabled } = extractDeclaration(doc, { client: c.client, source: c.path, cwd });
       // A config with no MCP block at all (e.g. a ~/.claude.json holding only
       // session history) is not worth a line in the report — it has no total.
       // It is still worth carrying: it is the evidence that a client is on this
       // machine, which is what tells an empty client apart from no client.
       if (servers.length === 0) {
+        // ...and one whose every declared server is switched off is carried as
+        // that, not as one declaring nothing: the second is a claim about the
+        // file that the file itself contradicts.
+        if (disabled.length) {
+          out.push({ client: c.client, source: c.path, servers: [], allDisabled: disabled });
+          continue;
+        }
         out.push({ client: c.client, source: c.path, servers: [], declaresNothing: true });
         continue;
       }
