@@ -24,6 +24,17 @@ while reading it.
   and the closing list of what the report will not answer names all four refusals the
   resolver returns rather than two. README is the page inside the package, so this is a
   change to what an install carries.
+- **A published deferral table that stops describing the resolver now fails the suite.**
+  Both pages that tell a reader what `audit` will say about their machine have drifted from
+  `src/audit/deferral.ts` while every check reported success — the methodology table was
+  repaired by hand on 2026-08-21 and the front page's on 2026-08-22, and nothing in 425
+  tests had ever opened either page. Every row of both tables is now a case that names a
+  machine, quotes the page's own words for it, and puts that machine to `evaluateDeferral`:
+  the words have to be on the page as written and the resolver has to agree with them, so
+  either side moving alone is a red check. The row counts are asserted, so a table cannot
+  gain a row nothing checks, and the postures are read out of the union that declares them,
+  so a posture the resolver can return with nothing published about it fails too. No change
+  to the published package.
 
 ## 0.7.0 — 2026-08-21
 
