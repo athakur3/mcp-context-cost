@@ -279,8 +279,8 @@ reads that file is not knowable from the file.
 **Where it is deferred away.** Claude Code defers MCP tool definitions by default, through
 its **tool search**: the definitions are not in context at session start and load when the
 model reaches for one. Which posture is in force is decided by three environment variables on
-the audited machine, resolved in this order — a disagreement about a variable that would not
-have decided anything does not spoil the answer:
+the audited machine, resolved in this order — a disagreement about a variable, or an unknown
+in it, does not spoil an answer that variable would not have decided:
 
 | read | value | posture |
 |---|---|---|
@@ -290,6 +290,7 @@ have decided anything does not spoil the answer:
 | | `auto` / `auto:N` (N = 0–100) | deferred once the definitions reach 10% / N% of the context window |
 | | anything else | **unrecognized** — no posture is claimed from it |
 | 3. `ANTHROPIC_BASE_URL` | host other than `api.anthropic.com`, or a value that does not parse | loads up front. Consulted only while `ENABLE_TOOL_SEARCH` is unset |
+| at 1, 2 or 3 | set by the place that would decide, to something that is not a readable string — an `env` block holding a JSON boolean, a number or `null` | **unreadable** — the variable is set there and what it is set to is unknown, so no posture is claimed and the report says whether these tokens are deferred cannot be said from it. A settings file holding `false` rather than `"false"` is this row, not the `false` row above |
 | | otherwise / nothing set anywhere | the documented default: every definition deferred, no threshold |
 
 **Two places set them, and both are read.** Claude Code takes those variables from the shell
@@ -298,11 +299,16 @@ them: the managed settings file for the platform
 (`/Library/Application Support/ClaudeCode/managed-settings.json` on macOS,
 `/etc/claude-code/managed-settings.json` on Linux, `%ProgramData%\ClaudeCode\managed-settings.json` on Windows),
 `<cwd>/.claude/settings.local.json`, `<cwd>/.claude/settings.json`, then
-`~/.claude/settings.json`. Among the settings files the first that sets a variable wins.
-Every place consulted is published with what it set — **by name, never by value** — and each
-is marked read, absent, or unreadable, so a variable set nowhere can be told apart from a
-place this audit never opened. Reading only the shell is how an earlier version reported "NOT
-loaded up front at any size" on a machine that had switched deferral off in
+`~/.claude/settings.json`. Among the settings files the first that sets a variable wins —
+sets it at all, readably or not, so a readable value above an unreadable one is still the
+value in force, and an unreadable one beneath it decides nothing. Every place consulted is
+published with what it set — **by name, never by value** — and each is marked read, absent,
+or unreadable, so a variable set nowhere can be told apart from a place this audit never
+opened. That mark is the file's state, not the value's: a file that was read can still hold
+the deciding variable to something unreadable, which is published as the variable's own
+unknown rather than as a file this audit could not open. Reading only the shell is how an
+earlier version reported "NOT loaded up front at any size" on a machine that had switched
+deferral off in
 `~/.claude/settings.json`.
 
 **Configs one session loads together face the question together.** Claude Code reads
@@ -321,9 +327,11 @@ only when the high end does not.
 **What it refuses to answer.** Deferral has one honest non-answer and the report prints it
 rather than a guess: when two places set the same variable to different values and no order
 between them is on record; when a settings file exists and cannot be read, since what it sets
-is unknown rather than nothing; when `ENABLE_TOOL_SEARCH` holds an undocumented value; when
-the threshold range straddles the line; and when the stack's total could not be established
-because two configured entries collapsed onto one measurement.
+is unknown rather than nothing; when the place that would decide sets the variable to a value
+this cannot read, since it is set there and dropping it would argue from a silence that is
+not silent; when `ENABLE_TOOL_SEARCH` holds an undocumented value; when the threshold range
+straddles the line; and when the stack's total could not be established because two
+configured entries collapsed onto one measurement.
 
 **Deferral is not a blanket discount.** Even where the posture defers, the full number is
 paid on a Microsoft Foundry deployment hosted on Azure (which rejects tool search
