@@ -321,19 +321,14 @@ color bands are frozen against the observed distribution of the first full sweep
 
 ## Status
 
-Active. 46 of the 69 numbers come from the sweep of 2026-08-19 and 23 from 2026-08-18, and
-nothing is re-measuring them on a schedule. The two weekly jobs this repository carries — the
-`memory` reference server on Mondays, a rotating sixth of the list on Wednesdays — have been
-disabled at GitHub since 2026-08-19. Their cron lines are still in `.github/workflows/` and
-they do not fire, so `results/` does not re-date itself: these numbers move only when someone
-dispatches a sweep by hand. Treat the leaderboard as a dated snapshot rather than a live
-feed, and read each row's date as the date it means. Don't take that on trust — the build
-history is public, one click each:
+Active. 46 of the 69 numbers come from the sweep of 2026-08-19 and 23 from 2026-08-18. Two
+weekly jobs re-measure the set — the `memory` reference server on Mondays, and a rotating
+sixth of the list on Wednesdays, so every row comes round within six weeks; both schedules
+were re-enabled on 2026-08-21. Read each row's date as the date it means, and don't take the
+cadence on trust — the build history is public, one click each:
 [re-sweep runs](https://github.com/athakur3/mcp-context-cost/actions/workflows/resweep.yml)
-and [self-badge runs](https://github.com/athakur3/mcp-context-cost/actions/workflows/self-badge.yml)
-carry GitHub's disabled banner and list every run either job has ever had — one
-hand-dispatched run for the re-sweep, and for the self-badge one hand-dispatched run plus a
-single scheduled one on 2026-08-17. See [ROADMAP.md](ROADMAP.md) for what's next —
-contributions welcome, especially new `servers.yaml` entries.
+and [self-badge runs](https://github.com/athakur3/mcp-context-cost/actions/workflows/self-badge.yml).
+See [ROADMAP.md](ROADMAP.md) for what's next — contributions welcome, especially new
+`servers.yaml` entries.
 
 MIT © 2026
