@@ -165,6 +165,13 @@ export interface AuditReport {
   generatedAt: string;
   contextWindow: number;
   configs: AuditConfigResult[];
+  /**
+   * Client configs that were read and parsed but declare no servers. They get
+   * no report line — there is nothing to total — but they are the record that a
+   * client is installed here, which is not the same machine as one with no
+   * client at all.
+   */
+  emptyConfigs: { client: string; source: string }[];
   budget?: {
     limit: number;
     worstTotal: number;
@@ -336,6 +343,7 @@ export function buildReport(
 ): AuditReport {
   const contextWindow = opts.contextWindow ?? DEFAULT_CONTEXT_WINDOW;
   const problems: string[] = [];
+  const emptyConfigs: { client: string; source: string }[] = [];
   const built: Omit<AuditConfigResult, 'deferral'>[] = [];
   // Across every config at once: a twin in one client's file is measured for
   // the other client's entry just the same.
@@ -345,6 +353,12 @@ export function buildReport(
   for (const cfg of configs) {
     if (cfg.error) {
       problems.push(`${cfg.source}: ${cfg.error}`);
+      continue;
+    }
+    // Parsed, and declares nothing. Not a problem and not a report line: it is
+    // recorded as itself, so a reader is told what this machine actually has.
+    if (cfg.declaresNothing || cfg.servers.length === 0) {
+      emptyConfigs.push({ client: cfg.client, source: cfg.source });
       continue;
     }
     const ok: AuditServerResult[] = [];
@@ -439,6 +453,7 @@ export function buildReport(
     generatedAt: opts.generatedAt ?? new Date().toISOString(),
     contextWindow,
     configs: results,
+    emptyConfigs,
     problems,
   };
 
