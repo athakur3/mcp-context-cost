@@ -37,17 +37,6 @@ raw-wire canonical is expected; direction and size to be quantified in the sweep
    The CLI is a **cross-check column**, not the canonical source. Rationale: the wire bytes
    are the only implementation-independent ground truth; a canonical number defined by one
    Rust binary's struct layout can silently change with a struct refactor.
-2. The sweep records `cliTokens` alongside `totalTokens` where the CLI runs, always invoked
-   as `--provider tiktoken --model gpt-4o` (documented), so the divergence is published, not
-   discovered by critics.
-
-## Proposed upstream changes (DRAFT — do not send without user review)
-
-Issue/PR to sd2k/mcp-tokens (opens the maintainer relationship before the action PR):
-
-1. **`--encoding <name>` flag** (e.g. `o200k_base`) taking precedence over model mapping —
-   tiny diff, `tiktoken_rs::o200k_base()` already exists.
-2. Docs note: counted text is `serde_json::to_string` of deserialized tool structs (not wire
-   bytes) — one honest sentence prevents "your number is wrong" issues later.
-
-The action PR (badge output) is unaffected by either and proceeds independently.
+2. When the cross-check column is built, the sweep records `cliTokens` alongside
+   `totalTokens`, always invoking the CLI as `--provider tiktoken --model gpt-4o`, so the
+   divergence is published, not discovered by critics.

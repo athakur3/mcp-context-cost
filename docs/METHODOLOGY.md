@@ -143,14 +143,14 @@ existed read `not recorded`: unknown conditions are shown as unknown rather than
 with a guess, and because unknown is not evidence of a difference either, those rows still
 plot — with the page saying their conditions aren't on record.
 
-**How often a row gets a new point.** A scheduled job re-measures one deterministic slice of
-the server list each week, so the whole set is refreshed on a rolling six-week cycle rather
-than all at once — a fresh CI runner shares no package cache, and every server on it pays a
-cold install. The slice is derived from the date alone, so a week the job doesn't run leaves
-those servers to come round again next cycle; nothing is skipped permanently. Servers the
-week's slice doesn't include keep their most recent measurement, unchanged, on the
-leaderboard. One extra server, the reference server behind this project's own badge, is also
-re-measured weekly.
+**How often a row gets a new point.** Nothing re-measures on a schedule: both of this
+repository's measurement jobs have been disabled at the host since 2026-08-19, so a row gets
+a new point when someone dispatches a sweep by hand. A sweep covers one deterministic slice
+of the server list per run rather than the whole set at once — a fresh CI runner shares no
+package cache, so every server pays a cold install — and the slice is derived from the date
+alone, so runs come round to the same servers on a six-week cycle and a gap needs no repair.
+Servers outside a run's slice keep their most recent measurement, unchanged, on the
+leaderboard.
 
 ## Color bands (provisional)
 
@@ -347,7 +347,7 @@ this definition in two documented ways: its tiktoken provider selects the encodi
 `--model` argument with a **cl100k_base fallback** (pass `--model gpt-4o` for o200k), and it
 counts a `serde_json` re-serialization of deserialized tool structs rather than the parsed
 wire value (key order normalized to struct order; unmodeled fields dropped). Publishing the
-CLI's number alongside ours as a cross-check column is planned for the launch leaderboard.
+CLI's number alongside ours as a cross-check column is on the roadmap.
 Details: [spec/upstream-notes.md](https://github.com/athakur3/mcp-context-cost/blob/main/spec/upstream-notes.md).
 
 ## Changelog <a id="changelog"></a>

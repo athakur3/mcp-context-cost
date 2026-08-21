@@ -1,7 +1,8 @@
-# Proposed patch to sd2k/mcp-tokens-action (DRAFT — held for user review)
+# Badge output as a composite-action patch
 
-Adds opt-in badge output to the existing composite action. No measurement-logic changes,
-no new required inputs, no default-behavior changes.
+Adds opt-in badge output to a composite measurement action. No measurement-logic changes,
+no new required inputs, no default-behavior changes. Implemented by `badge.sh` beside this
+file; `tests/badge-test.sh` holds it byte-identical to the TypeScript reference.
 
 ## New inputs
 
@@ -72,13 +73,3 @@ Then in your README:
 Zero-token alternative: set `badge-path`, commit the JSON to a `badges` branch, and point
 shields at the raw.githubusercontent URL.
 ```
-
-## Notes for the PR body
-
-- Publish-on-success only: the step runs after the threshold check with `success()`, so a
-  failed analysis or a failed check never overwrites a badge — badges degrade to
-  last-known-good.
-- Tested: `upstream/tests/badge-test.sh` runs badge.sh against golden fixtures shared with
-  the TypeScript reference implementation (byte-identical output required).
-- Follow-up (separate issue, also drafted): `--encoding` flag on the CLI so tiktoken counts
-  can pin `o200k_base` explicitly instead of the cl100k_base model-fallback.
