@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { parse } from 'yaml';
 import { selectShard } from '../src/sweep/shard.js';
@@ -113,5 +113,21 @@ describe('rotating re-sweep workflow', () => {
 
   it('rebases before pushing, because it can run long enough for main to move', () => {
     expect(resweep).toContain('git pull --rebase origin main');
+  });
+});
+
+describe('the suite CI runs', () => {
+  it('spawns tools it already has, rather than whatever npx can fetch', () => {
+    // `npx tsx` resolves from the child's cwd. Several tests spawn the CLI from a
+    // temporary directory outside this repository, where the locked tsx is not on
+    // the resolution path, so npx installs one from the registry into the shared
+    // npx cache while the suite runs. Warm, that is invisible; cold, concurrent
+    // spawns race on the same cache entry and the run fails for a reason that has
+    // nothing to do with the product. A green check has to mean the code passed.
+    const dir = import.meta.dirname;
+    const offenders = readdirSync(dir)
+      .filter((f) => f.endsWith('.ts'))
+      .filter((f) => /execFile\w*\(\s*\n?\s*'npx'/.test(readFileSync(join(dir, f), 'utf8')));
+    expect(offenders).toEqual([]);
   });
 });
