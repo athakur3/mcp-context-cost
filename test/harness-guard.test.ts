@@ -13,6 +13,7 @@ import {
   type Snapshot,
 } from '../src/sweep/harness-guard.js';
 import type { Measurement, MeasurementStatus } from '../src/core/types.js';
+import { TSX_CLI } from './tsx.js';
 
 function measurement(over: Partial<Measurement> = {}): Measurement {
   return {
@@ -301,7 +302,7 @@ describe('sweep-all wiring (subprocess)', () => {
 
   function runSweep(): { code: number; out: string } {
     try {
-      const out = execFileSync('npx', ['tsx', sweepAll], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+      const out = execFileSync(process.execPath, [TSX_CLI, sweepAll], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
       return { code: 0, out };
     } catch (err) {
       const e = err as { status?: number; stdout?: string; stderr?: string };

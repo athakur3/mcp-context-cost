@@ -9,6 +9,7 @@ import { createServer } from 'node:http';
 import { verifyMeasurement, slugFromUrl, unknownFlags, cliVersion } from '../src/cli.js';
 import { measureTools } from '../src/core/canonical.js';
 import type { Measurement } from '../src/core/types.js';
+import { TSX_CLI } from './tsx.js';
 
 const execFileAsync = promisify(execFile);
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -52,7 +53,7 @@ describe('verify --json (CLI process)', () => {
     const m = measureTools(tools, { serverName: 'x' });
     const path = join(dir, 'ok.json');
     writeFileSync(path, JSON.stringify(m));
-    const out = execFileSync('npx', ['tsx', 'src/cli.ts', 'verify', path, '--json'], {
+    const out = execFileSync(process.execPath, [TSX_CLI, 'src/cli.ts', 'verify', path, '--json'], {
       cwd: repoRoot,
       encoding: 'utf8',
     });
@@ -69,7 +70,7 @@ describe('verify --json (CLI process)', () => {
     let out = '';
     let code = 0;
     try {
-      execFileSync('npx', ['tsx', 'src/cli.ts', 'verify', path, '--json'], { cwd: repoRoot, encoding: 'utf8' });
+      execFileSync(process.execPath, [TSX_CLI, 'src/cli.ts', 'verify', path, '--json'], { cwd: repoRoot, encoding: 'utf8' });
     } catch (e) {
       const err = e as { status: number; stdout: string };
       code = err.status;
@@ -85,7 +86,7 @@ describe('verify --json (CLI process)', () => {
   it('exits 2 on usage error', () => {
     let code = 0;
     try {
-      execFileSync('npx', ['tsx', 'src/cli.ts', 'verify'], { cwd: repoRoot, encoding: 'utf8' });
+      execFileSync(process.execPath, [TSX_CLI, 'src/cli.ts', 'verify'], { cwd: repoRoot, encoding: 'utf8' });
     } catch (e) {
       code = (e as { status: number }).status;
     }
@@ -109,7 +110,7 @@ describe('measure --remote (usage validation, no network)', () => {
     let code = 0;
     let stderr = '';
     try {
-      execFileSync('npx', ['tsx', 'src/cli.ts', 'measure', '--remote', 'not-a-url'], {
+      execFileSync(process.execPath, [TSX_CLI, 'src/cli.ts', 'measure', '--remote', 'not-a-url'], {
         cwd: repoRoot,
         encoding: 'utf8',
       });
@@ -125,7 +126,7 @@ describe('measure --remote (usage validation, no network)', () => {
   it('exits 2 when neither --command nor --remote is given', () => {
     let code = 0;
     try {
-      execFileSync('npx', ['tsx', 'src/cli.ts', 'measure', '--name', 'x'], { cwd: repoRoot, encoding: 'utf8' });
+      execFileSync(process.execPath, [TSX_CLI, 'src/cli.ts', 'measure', '--name', 'x'], { cwd: repoRoot, encoding: 'utf8' });
     } catch (e) {
       code = (e as { status: number }).status;
     }
@@ -160,7 +161,7 @@ describe('verify --remote', () => {
     await ready;
     // execFileSync would block this process's event loop while the child's fetch
     // tries to reach the server that lives in this same process — deadlock.
-    const { stdout } = await execFileAsync('npx', ['tsx', 'src/cli.ts', 'verify', '--remote', `${base}/ok.json`, '--json'], {
+    const { stdout } = await execFileAsync(process.execPath, [TSX_CLI, 'src/cli.ts', 'verify', '--remote', `${base}/ok.json`, '--json'], {
       cwd: repoRoot,
       encoding: 'utf8',
     });
@@ -174,7 +175,7 @@ describe('verify --remote', () => {
     let out = '';
     let code = 0;
     try {
-      await execFileAsync('npx', ['tsx', 'src/cli.ts', 'verify', '--remote', `${base}/missing.json`, '--json'], {
+      await execFileAsync(process.execPath, [TSX_CLI, 'src/cli.ts', 'verify', '--remote', `${base}/missing.json`, '--json'], {
         cwd: repoRoot,
         encoding: 'utf8',
       });
@@ -234,7 +235,7 @@ describe('unknownFlags', () => {
 describe('CLI rejects unknown flags', () => {
   const run = (args: string[]) => {
     try {
-      execFileSync('npx', ['tsx', 'src/cli.ts', ...args], { cwd: repoRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+      execFileSync(process.execPath, [TSX_CLI, 'src/cli.ts', ...args], { cwd: repoRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
       return { code: 0, stderr: '' };
     } catch (e) {
       const err = e as { status: number; stderr: string };
@@ -270,7 +271,7 @@ describe('audit tells an empty client apart from no client at all', () => {
 
   const run = (args: string[]) => {
     try {
-      execFileSync('npx', ['tsx', 'src/cli.ts', ...args], { cwd: repoRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+      execFileSync(process.execPath, [TSX_CLI, 'src/cli.ts', ...args], { cwd: repoRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
       return { code: 0, stderr: '', stdout: '' };
     } catch (e) {
       const err = e as { status: number; stderr: string; stdout: string };

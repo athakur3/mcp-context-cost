@@ -32,6 +32,7 @@ import {
 import { runAudit, fetchDivergence } from '../src/audit/run.js';
 import { measureTools, failedMeasurement } from '../src/core/canonical.js';
 import type { Measurement } from '../src/core/types.js';
+import { TSX_CLI } from './tsx.js';
 
 const execFileAsync = promisify(execFile);
 
@@ -585,8 +586,8 @@ describe('audit CLI', () => {
       }),
     );
     const out = execFileSync(
-      'npx',
-      ['tsx', join(repoRoot, 'src/cli.ts'), 'audit', '--config', join(dir, 'mcp.json'), '--json'],
+      process.execPath,
+      [TSX_CLI, join(repoRoot, 'src/cli.ts'), 'audit', '--config', join(dir, 'mcp.json'), '--json'],
       { cwd: dir, encoding: 'utf8', timeout: 180_000 },
     );
     const report = JSON.parse(out);
@@ -602,7 +603,7 @@ describe('audit CLI', () => {
     const dir = tempDir('mcp-audit-none-');
     let code = 0;
     try {
-      execFileSync('npx', ['tsx', join(repoRoot, 'src/cli.ts'), 'audit', '--config', join(dir, 'missing.json')], {
+      execFileSync(process.execPath, [TSX_CLI, join(repoRoot, 'src/cli.ts'), 'audit', '--config', join(dir, 'missing.json')], {
         cwd: dir,
         encoding: 'utf8',
         stdio: 'pipe',
@@ -616,7 +617,7 @@ describe('audit CLI', () => {
   it('exits 2 on a malformed --budget', () => {
     let code = 0;
     try {
-      execFileSync('npx', ['tsx', join(repoRoot, 'src/cli.ts'), 'audit', '--budget', 'lots'], {
+      execFileSync(process.execPath, [TSX_CLI, join(repoRoot, 'src/cli.ts'), 'audit', '--budget', 'lots'], {
         cwd: repoRoot,
         encoding: 'utf8',
         stdio: 'pipe',
@@ -706,8 +707,8 @@ describe('audit CLI --claude', () => {
       // execFileSync would block this process's event loop while the child's fetch tries
       // to reach the server that lives in this same process — deadlock. Use the async form.
       const { stdout } = await execFileAsync(
-        'npx',
-        ['tsx', join(repoRoot, 'src/cli.ts'), 'audit', '--config', configPath, '--claude', '--divergence-url', divergenceUrl, '--json'],
+        process.execPath,
+        [TSX_CLI, join(repoRoot, 'src/cli.ts'), 'audit', '--config', configPath, '--claude', '--divergence-url', divergenceUrl, '--json'],
         { cwd: dir, encoding: 'utf8', timeout: 180_000 },
       );
       const report = JSON.parse(stdout);
@@ -1047,7 +1048,7 @@ describe('evaluateIncreaseGate', () => {
 describe('audit --baseline CLI', () => {
   const cli = (args: string[], cwd: string) => {
     try {
-      const stdout = execFileSync('npx', ['tsx', join(repoRoot, 'src/cli.ts'), ...args], {
+      const stdout = execFileSync(process.execPath, [TSX_CLI, join(repoRoot, 'src/cli.ts'), ...args], {
         cwd,
         encoding: 'utf8',
         stdio: ['ignore', 'pipe', 'pipe'],
