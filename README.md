@@ -323,9 +323,9 @@ color bands are frozen against the observed distribution of the first full sweep
 
 Active. 46 of the 69 numbers come from the sweep of 2026-08-19 and 23 from 2026-08-18. Two
 weekly jobs re-measure the set — the `memory` reference server on Mondays, and a rotating
-sixth of the list on Wednesdays, so every row comes round within six weeks; both schedules
-were re-enabled on 2026-08-21. Read each row's date as the date it means, and don't take the
-cadence on trust — the build history is public, one click each:
+sixth of the list on Wednesdays, so every row comes round within six weeks. Read each row's
+date as the date it means, and don't take the cadence on trust — the build history is
+public, one click each:
 [re-sweep runs](https://github.com/athakur3/mcp-context-cost/actions/workflows/resweep.yml)
 and [self-badge runs](https://github.com/athakur3/mcp-context-cost/actions/workflows/self-badge.yml).
 See [ROADMAP.md](ROADMAP.md) for what's next — contributions welcome, especially new
