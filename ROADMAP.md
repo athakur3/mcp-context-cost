@@ -1,7 +1,7 @@
 # Roadmap
 
 Ordered by value-per-effort for users. Contributions welcome on any of these.
-Forward-looking only: what already shipped lives in the code and [CHANGELOG.md](CHANGELOG.md).
+Forward-looking only: what already shipped lives in the code and the git history.
 
 ## Next
 
