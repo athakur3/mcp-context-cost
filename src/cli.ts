@@ -185,7 +185,20 @@ if (cmd === 'audit') {
 
   if (report.configs.length === 0) {
     const where = report.problems.length ? `\n${report.problems.map((p) => `  ${p}`).join('\n')}` : '';
+    const empty = report.emptyConfigs ?? [];
     if (json) console.log(JSON.stringify(report));
+    // A machine whose client config was found, opened and parsed, and simply
+    // declares nothing, is told that — being told no client was found anywhere
+    // would send a reader looking for an install they already have.
+    else if (empty.length)
+      console.error(
+        `${empty.length === 1 ? 'an MCP client config was found' : `${empty.length} MCP client configs were found`}, ` +
+          `and ${empty.length === 1 ? 'it declares' : 'they declare'} no servers:\n` +
+          empty.map((c) => `  ${c.client}: ${c.source}`).join('\n') +
+          `${where}\n` +
+          `${empty.length === 1 ? 'It was' : 'They were'} read and parsed; there is simply nothing declared to measure.\n` +
+          `Declare a server in one of them, or point at a different config: mcp-context-cost audit --config <path/to/mcp.json>`,
+      );
     else
       console.error(
         `no MCP config found. Looked in the standard Claude Desktop / Claude Code / Cursor / VS Code / Windsurf locations.${where}\n` +

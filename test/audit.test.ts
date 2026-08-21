@@ -146,7 +146,7 @@ describe('configCandidates', () => {
 });
 
 describe('loadConfigs', () => {
-  it('skips missing files, reports unparseable ones, ignores configs with no servers', () => {
+  it('skips missing files, reports unparseable ones, keeps a parsed config that declares nothing', () => {
     const dir = tempDir('mcp-audit-cfg-');
     writeFileSync(join(dir, 'good.json'), '{"mcpServers":{"a":{"command":"node","args":["a.js"]}}}');
     writeFileSync(join(dir, 'bad.json'), '{not json');
@@ -160,9 +160,16 @@ describe('loadConfigs', () => {
       ],
       dir,
     );
-    expect(loaded).toHaveLength(2);
+    expect(loaded).toHaveLength(3);
     expect(loaded[0].servers).toHaveLength(1);
+    expect(loaded[0].declaresNothing).toBeUndefined();
     expect(loaded[1].error).toBeDefined();
+    expect(loaded[1].declaresNothing).toBeUndefined(); // unreadable is not "declares nothing"
+    expect(loaded[2]).toMatchObject({ source: join(dir, 'empty.json'), declaresNothing: true });
+    expect(loaded[2].servers).toHaveLength(0);
+    // A file that is not on the machine leaves no trace at all: that is the
+    // direction the report must be able to tell apart from the one above.
+    expect(loaded.some((c) => c.source === join(dir, 'nope.json'))).toBe(false);
   });
 });
 
@@ -1646,6 +1653,13 @@ describe('the deferral posture is read from every place the machine sets it', ()
   const shell = (vars: ToolSearchEnv): ToolSearchSource =>
     ({ scope: 'shell', source: SHELL_SOURCE, state: 'read', vars });
 
+  /** A settings file that parsed, and sets these to something unreadable. */
+  const held = (
+    scope: ToolSearchSource['scope'],
+    source: string,
+    unreadable: ToolSearchSource['unreadable'],
+  ): ToolSearchSource => ({ scope, source, state: 'read', vars: {}, unreadable });
+
   const srv = {
     name: 'alpha',
     client: 'claude-code',
@@ -1730,6 +1744,70 @@ describe('the deferral posture is read from every place the machine sets it', ()
         resolveToolSearchSources([shell({}), file('user-settings', USER, {}, 'absent')]),
       ).toMatchObject({ mode: 'defers-all', readFromMachine: false, source: null });
     });
+
+    // A settings file that sets the deciding variable to something this cannot
+    // read as a value is not a settings file that sets nothing. Read as the
+    // second, it produced the one verdict in this model that states a wrong
+    // answer instead of no answer: the documented default, "these tokens are
+    // NOT loaded up front at any size", at a machine whose own settings file
+    // holds ENABLE_TOOL_SEARCH.
+    it('refuses where a settings file sets the deciding variable to an unreadable value', () => {
+      expect(
+        resolveToolSearchSources([shell({}), held('user-settings', USER, ['ENABLE_TOOL_SEARCH'])]),
+      ).toMatchObject({
+        mode: 'setting-unresolved',
+        unresolved: 'value-unreadable',
+        variable: 'ENABLE_TOOL_SEARCH',
+        value: null,
+        readFromMachine: false,
+        source: null,
+      });
+    });
+
+    it('refuses the same way for the variable that is not overridable', () => {
+      expect(
+        resolveToolSearchSources([
+          shell({}),
+          held('user-settings', USER, ['CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS']),
+        ]),
+      ).toMatchObject({
+        mode: 'setting-unresolved',
+        unresolved: 'value-unreadable',
+        variable: 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS',
+      });
+    });
+
+    it('refuses rather than taking the shell, which it has no order against', () => {
+      expect(
+        resolveToolSearchSources([
+          shell({ ENABLE_TOOL_SEARCH: 'true' }),
+          held('user-settings', USER, ['ENABLE_TOOL_SEARCH']),
+        ]),
+      ).toMatchObject({ mode: 'setting-unresolved', unresolved: 'value-unreadable' });
+    });
+
+    // The other direction: an unknown that could not have decided anything must
+    // not refuse an answer the machine actually gives, or every one of these
+    // files becomes a refusal for a variable nothing was going to read.
+    it('lets a higher-precedence readable value decide over an unreadable one below it', () => {
+      expect(
+        resolveToolSearchSources([
+          shell({}),
+          file('local-settings', LOCAL, { ENABLE_TOOL_SEARCH: 'false' }),
+          held('user-settings', USER, ['ENABLE_TOOL_SEARCH']),
+        ]),
+      ).toMatchObject({ mode: 'loads-upfront', source: LOCAL, readFromMachine: true });
+    });
+
+    it('does not refuse over an unreadable value in a variable that decides nothing', () => {
+      // ANTHROPIC_BASE_URL is consulted only while ENABLE_TOOL_SEARCH is unset.
+      expect(
+        resolveToolSearchSources([
+          shell({ ENABLE_TOOL_SEARCH: 'true' }),
+          held('user-settings', USER, ['ANTHROPIC_BASE_URL']),
+        ]),
+      ).toMatchObject({ mode: 'defers-all', variable: 'ENABLE_TOOL_SEARCH', readFromMachine: true });
+    });
   });
 
   describe('the report', () => {
@@ -1785,6 +1863,20 @@ describe('the deferral posture is read from every place the machine sets it', ()
       expect(out).toContain('could not be read — what it sets is unknown');
       expect(out).not.toContain('NOT loaded up front at any size');
       expect(out).not.toContain('Every request carries these tokens before you type anything');
+    });
+
+    it('states no verdict where the deciding variable is set to an unreadable value', () => {
+      const out = text({ env: {}, settings: [held('user-settings', USER, ['ENABLE_TOOL_SEARCH'])] });
+      expect(out).toContain('ENABLE_TOOL_SEARCH is set by a settings file Claude Code reads');
+      expect(out).toContain('what it is set to is unknown');
+      // The place is named as holding it, not as a file that sets none of them.
+      expect(out).toContain(`${USER} — sets ENABLE_TOOL_SEARCH to a value this cannot read`);
+      expect(out).not.toContain(`${USER} — sets none of them`);
+      // Every sentence that would tell the reader an answer.
+      expect(out).not.toContain('NOT loaded up front at any size');
+      expect(out).not.toContain('is unset here, which is the documented default');
+      expect(out).not.toContain('Every request carries these tokens before you type anything');
+      expect(out).not.toContain('deferral activates once');
     });
   });
 
@@ -1846,6 +1938,45 @@ describe('the deferral posture is read from every place the machine sets it', ()
       expect(read.find((r) => r.scope === 'project-settings')).toMatchObject({ state: 'absent', vars: {} });
     });
 
+    it('carries a variable set to something that is not a string as unknown, not as unset', () => {
+      // `"ENABLE_TOOL_SEARCH": false` — the JSON boolean, which is what a person
+      // writing a settings file by hand reaches for — used to be dropped, and the
+      // file then looked identical to one that sets nothing at all.
+      const cwd = tempDir('mcc-proj-');
+      mkdirSync(join(cwd, '.claude'));
+      writeFileSync(
+        join(cwd, '.claude', 'settings.json'),
+        JSON.stringify({ env: { ENABLE_TOOL_SEARCH: false, ANTHROPIC_BASE_URL: null } }),
+      );
+      const read = loadSettingsSources(
+        settingsCandidates({ home: tempDir('mcc-home-'), cwd, platform: 'linux' }),
+      );
+      const project = read.find((r) => r.scope === 'project-settings')!;
+      expect(project).toMatchObject({ state: 'read', vars: {} });
+      expect(project.unreadable).toEqual(['ENABLE_TOOL_SEARCH', 'ANTHROPIC_BASE_URL']);
+
+      // End to end, off a real file: the report withholds instead of asserting.
+      const r = report({ env: {}, settings: read });
+      expect(r.configs[0].deferral).toMatchObject({
+        mode: 'setting-unresolved',
+        setting: { unresolved: 'value-unreadable' },
+      });
+      expect(formatReport(r)).not.toContain('NOT loaded up front at any size');
+    });
+
+    it('leaves a file whose env block sets none of them setting none of them', () => {
+      const cwd = tempDir('mcc-proj-');
+      mkdirSync(join(cwd, '.claude'));
+      writeFileSync(join(cwd, '.claude', 'settings.json'), JSON.stringify({ env: { OTHER: false } }));
+      const read = loadSettingsSources(
+        settingsCandidates({ home: tempDir('mcc-home-'), cwd, platform: 'linux' }),
+      );
+      const project = read.find((r) => r.scope === 'project-settings')!;
+      expect(project).toMatchObject({ state: 'read', vars: {} });
+      expect(project.unreadable).toBeUndefined();
+      expect(report({ env: {}, settings: read }).configs[0].deferral.mode).toBe('defers-all');
+    });
+
     it('calls a settings file it cannot parse unreadable, not a file that sets nothing', () => {
       const cwd = tempDir('mcc-proj-');
       mkdirSync(join(cwd, '.claude'));
@@ -1870,5 +2001,41 @@ describe('the deferral posture is read from every place the machine sets it', ()
       expect(at('win32', 'D:\\PD')[0].path).toBe(join('D:\\PD', 'ClaudeCode', 'managed-settings.json'));
       expect(at('darwin')[3].path).toBe(join('/h', '.claude', 'settings.json'));
     });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// A machine with a client installed that declares no servers is not a machine
+// with no client. Before this, both ended up as the same empty report and the
+// same sentence — the one distinction this project keeps everywhere else (an
+// absence of a record is not a measurement) not kept here.
+// ---------------------------------------------------------------------------
+
+describe('a client that declares nothing vs no client at all', () => {
+  it('records a parsed-but-empty config as itself, and gives it no report line', () => {
+    const r = buildReport(
+      [{ client: 'claude-code', source: '/h/.claude.json', servers: [], declaresNothing: true }],
+      new Map(),
+      { generatedAt: 'T' },
+    );
+    expect(r.configs).toHaveLength(0); // nothing to total
+    expect(r.emptyConfigs).toEqual([{ client: 'claude-code', source: '/h/.claude.json' }]);
+    expect(r.problems).toEqual([]); // declaring nothing is not a fault
+  });
+
+  it('records nothing when no config exists anywhere', () => {
+    const r = buildReport([], new Map(), { generatedAt: 'T' });
+    expect(r.configs).toHaveLength(0);
+    expect(r.emptyConfigs).toEqual([]);
+  });
+
+  it('does not call an unreadable config empty', () => {
+    const r = buildReport(
+      [{ client: 'cursor', source: '/h/.cursor/mcp.json', servers: [], error: 'not json' }],
+      new Map(),
+      { generatedAt: 'T' },
+    );
+    expect(r.emptyConfigs).toEqual([]);
+    expect(r.problems.join(' ')).toContain('not json');
   });
 });

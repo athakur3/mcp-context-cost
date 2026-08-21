@@ -165,6 +165,13 @@ export interface AuditReport {
   generatedAt: string;
   contextWindow: number;
   configs: AuditConfigResult[];
+  /**
+   * Client configs that were read and parsed but declare no servers. They get
+   * no report line — there is nothing to total — but they are the record that a
+   * client is installed here, which is not the same machine as one with no
+   * client at all.
+   */
+  emptyConfigs: { client: string; source: string }[];
   budget?: {
     limit: number;
     worstTotal: number;
@@ -336,6 +343,7 @@ export function buildReport(
 ): AuditReport {
   const contextWindow = opts.contextWindow ?? DEFAULT_CONTEXT_WINDOW;
   const problems: string[] = [];
+  const emptyConfigs: { client: string; source: string }[] = [];
   const built: Omit<AuditConfigResult, 'deferral'>[] = [];
   // Across every config at once: a twin in one client's file is measured for
   // the other client's entry just the same.
@@ -345,6 +353,12 @@ export function buildReport(
   for (const cfg of configs) {
     if (cfg.error) {
       problems.push(`${cfg.source}: ${cfg.error}`);
+      continue;
+    }
+    // Parsed, and declares nothing. Not a problem and not a report line: it is
+    // recorded as itself, so a reader is told what this machine actually has.
+    if (cfg.declaresNothing || cfg.servers.length === 0) {
+      emptyConfigs.push({ client: cfg.client, source: cfg.source });
       continue;
     }
     const ok: AuditServerResult[] = [];
@@ -439,6 +453,7 @@ export function buildReport(
     generatedAt: opts.generatedAt ?? new Date().toISOString(),
     contextWindow,
     configs: results,
+    emptyConfigs,
     problems,
   };
 
@@ -516,12 +531,17 @@ function postureSourceLines(d: DeferralVerdict): string[] {
       absent++;
       continue;
     }
+    // A place that sets one of them to something unreadable is neither a place
+    // that sets it nor a place that sets none of them, and printing it as the
+    // second is the silence this report would then argue from.
+    const unreadableVars = r.unreadable?.length
+      ? `sets ${r.unreadable.join(', ')} to a value this cannot read`
+      : '';
     const held =
       r.state === 'unreadable'
         ? 'could not be read — what it sets is unknown'
-        : r.sets.length
-          ? `sets ${r.sets.join(', ')}`
-          : 'sets none of them';
+        : [r.sets.length ? `sets ${r.sets.join(', ')}` : '', unreadableVars].filter(Boolean).join(', and ') ||
+          'sets none of them';
     // Which place the verdict came out of, said once rather than left to a
     // reader to work out from two lists.
     const decided = d.setting?.source === r.source ? ', which decided this' : '';
@@ -632,6 +652,12 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
       lines.push(`  ${d.setting.variable} is set to different values by more than one place this`);
       lines.push('  machine reads it from, and which one Claude Code takes is not on record');
       lines.push('  here. Whether these tokens are deferred cannot be said from them.');
+    } else if (d.setting?.unresolved === 'value-unreadable') {
+      lines.push(`  ${d.setting.variable} is set by a settings file Claude Code reads, to`);
+      lines.push('  something that is not a value this can read — an env block holds it as a');
+      lines.push('  JSON boolean, a number or null rather than a string. It is set there, and');
+      lines.push('  what it is set to is unknown, so whether these tokens are deferred cannot');
+      lines.push('  be said from it.');
     } else {
       lines.push('  A settings file Claude Code reads exists here and could not be read, so');
       lines.push('  what it sets is unknown — and it can set the variable that decides this.');

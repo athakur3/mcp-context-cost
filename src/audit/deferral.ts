@@ -105,6 +105,17 @@ export interface ToolSearchSource {
   state: 'read' | 'absent' | 'unreadable';
   /** What this place sets, of the three. Values are read here, never reported. */
   vars: ToolSearchEnv;
+  /**
+   * Variables this place sets to something that is not a value this audit can
+   * read — an env block holding a JSON boolean, a number, or null.
+   *
+   * The file parsed and the variable IS set in it; what it is set to is
+   * unknown. That is not the same as unset, and reading it as unset is how a
+   * machine whose `~/.claude/settings.json` held `"ENABLE_TOOL_SEARCH": false`
+   * — the boolean, not the string — was told the documented default stands and
+   * these tokens are never loaded up front.
+   */
+  unreadable?: ToolSearchVar[];
 }
 
 /**
@@ -120,15 +131,23 @@ export interface ToolSearchSourceRecord {
   state: ToolSearchSource['state'];
   /** Variable NAMES set here. A value can be a base URL carrying a credential. */
   sets: ToolSearchVar[];
+  /**
+   * Variable NAMES this place sets to something unreadable, when it does.
+   * Omitted otherwise, so the common source record keeps its shape — a reader
+   * meets this field only where there is an unknown to meet.
+   */
+  unreadable?: ToolSearchVar[];
 }
 
 /** A source as it is published: what it sets, by name. */
 export function toolSearchSourceRecord(s: ToolSearchSource): ToolSearchSourceRecord {
+  const unreadable = TOOL_SEARCH_VARS.filter((n) => (s.unreadable ?? []).includes(n));
   return {
     scope: s.scope,
     source: s.source,
     state: s.state,
     sets: TOOL_SEARCH_VARS.filter((n) => (s.vars[n] ?? '').trim() !== ''),
+    ...(unreadable.length ? { unreadable } : {}),
   };
 }
 
@@ -182,7 +201,7 @@ export interface ToolSearchSetting {
    */
   sources: ToolSearchSourceRecord[];
   /** Set only in `setting-unresolved`: why no mode could be read off them. */
-  unresolved?: 'sources-disagree' | 'source-unreadable';
+  unresolved?: 'sources-disagree' | 'source-unreadable' | 'value-unreadable';
 }
 
 interface ResolvedToolSearch extends Omit<ToolSearchSetting, 'sources'> {
@@ -309,14 +328,17 @@ export function resolveToolSearch(env: ToolSearchEnv): ResolvedToolSearch {
  * a disagreement is refused rather than resolved: `setting-unresolved` names the
  * variable and every place, and no verdict is given. A place that exists and
  * could not be read is the same refusal for the same reason — what it sets is
- * unknown, and an unknown that could flip the answer is not a default.
+ * unknown, and an unknown that could flip the answer is not a default. So is a
+ * place that parsed and sets the deciding variable to something that is not a
+ * readable value: the variable is set there, and dropping it leaves the report
+ * arguing from a silence that is not silent.
  *
  * Not visible from here at all, and so not claimed: a variable set on Claude
  * Code's own command line.
  */
 export function resolveToolSearchSources(sources: ToolSearchSource[]): ResolvedToolSearch {
   const unresolved = (
-    reason: 'sources-disagree' | 'source-unreadable',
+    reason: 'sources-disagree' | 'source-unreadable' | 'value-unreadable',
     variable: string | null,
   ): ResolvedToolSearch => ({
     mode: 'setting-unresolved',
@@ -333,14 +355,32 @@ export function resolveToolSearchSources(sources: ToolSearchSource[]): ResolvedT
   const settings = sources.filter((s) => s.scope !== 'shell');
   const shell = sources.find((s) => s.scope === 'shell');
 
-  /** The value that would win for one variable, or the fact that two places disagree. */
-  const read = (name: ToolSearchVar): { value: string; source: string } | 'conflict' | null => {
-    const winner = settings
-      .map((s) => ({ value: (s.vars[name] ?? '').trim(), source: s.source }))
-      .find((v) => v.value !== '');
+  /** Whether a place sets this variable at all — readably or not. */
+  const holds = (s: ToolSearchSource, name: ToolSearchVar): boolean =>
+    (s.vars[name] ?? '').trim() !== '' || (s.unreadable ?? []).includes(name);
+
+  /**
+   * The value that would win for one variable, or the fact that it cannot be
+   * had: two places disagree, or the place that would win sets it to something
+   * unreadable.
+   *
+   * Precedence is what makes the unreadable case worth separating from a blanket
+   * refusal. A higher-precedence file setting a value Claude Code documents is
+   * the value in force, and an unreadable one underneath it decides nothing —
+   * the same reasoning that keeps a disagreement over `ANTHROPIC_BASE_URL` from
+   * refusing an answer an explicit `ENABLE_TOOL_SEARCH` already gave.
+   */
+  const read = (
+    name: ToolSearchVar,
+  ): { value: string; source: string } | 'conflict' | 'unreadable' | null => {
+    const winner = settings.find((s) => holds(s, name));
     const shellValue = (shell?.vars[name] ?? '').trim();
-    if (winner && shellValue && winner.value !== shellValue) return 'conflict';
-    if (winner) return winner;
+    // Whichever place would decide holds an unknown: it could be any of the
+    // documented values or none of them, and the ones it could be do not agree.
+    if (winner && (winner.vars[name] ?? '').trim() === '') return 'unreadable';
+    if (shell && holds(shell, name) && shellValue === '') return 'unreadable';
+    if (winner && shellValue && (winner.vars[name] ?? '').trim() !== shellValue) return 'conflict';
+    if (winner) return { value: (winner.vars[name] ?? '').trim(), source: winner.source };
     if (shellValue && shell) return { value: shellValue, source: shell.source };
     return null;
   };
@@ -351,6 +391,8 @@ export function resolveToolSearchSources(sources: ToolSearchSource[]): ResolvedT
   // an answer the machine actually gives.
   const betas = read('CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS');
   if (betas === 'conflict') return unresolved('sources-disagree', 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS');
+  if (betas === 'unreadable')
+    return unresolved('value-unreadable', 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS');
   if (betas) {
     return {
       ...resolveToolSearch({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: betas.value }),
@@ -360,12 +402,14 @@ export function resolveToolSearchSources(sources: ToolSearchSource[]): ResolvedT
 
   const enable = read('ENABLE_TOOL_SEARCH');
   if (enable === 'conflict') return unresolved('sources-disagree', 'ENABLE_TOOL_SEARCH');
+  if (enable === 'unreadable') return unresolved('value-unreadable', 'ENABLE_TOOL_SEARCH');
   if (enable) {
     return { ...resolveToolSearch({ ENABLE_TOOL_SEARCH: enable.value }), source: enable.source };
   }
 
   const base = read('ANTHROPIC_BASE_URL');
   if (base === 'conflict') return unresolved('sources-disagree', 'ANTHROPIC_BASE_URL');
+  if (base === 'unreadable') return unresolved('value-unreadable', 'ANTHROPIC_BASE_URL');
   const resolved = resolveToolSearch(base ? { ANTHROPIC_BASE_URL: base.value } : {});
   return { ...resolved, source: resolved.readFromMachine ? (base?.source ?? null) : null };
 }

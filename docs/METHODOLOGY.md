@@ -342,12 +342,12 @@ have to change with it.
 
 ## Known divergences
 
-**sd2k/mcp-tokens** (the CLI our upstream GitHub Action contribution builds on) differs from
+**sd2k/mcp-tokens** (the CLI behind the planned cross-check column) differs from
 this definition in two documented ways: its tiktoken provider selects the encoding from a
 `--model` argument with a **cl100k_base fallback** (pass `--model gpt-4o` for o200k), and it
 counts a `serde_json` re-serialization of deserialized tool structs rather than the parsed
 wire value (key order normalized to struct order; unmodeled fields dropped). Publishing the
-CLI's number alongside ours as a cross-check column is planned for the launch leaderboard.
+CLI's number alongside ours as a cross-check column is on the roadmap.
 Details: [spec/upstream-notes.md](https://github.com/athakur3/mcp-context-cost/blob/main/spec/upstream-notes.md).
 
 ## Changelog <a id="changelog"></a>

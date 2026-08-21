@@ -23,6 +23,7 @@ import {
   type ToolSearchEnv,
   type ToolSearchScope,
   type ToolSearchSource,
+  type ToolSearchVar,
 } from './deferral.js';
 
 export interface ConfiguredServer {
@@ -207,6 +208,14 @@ export interface LoadedConfig {
   servers: ConfiguredServer[];
   /** Set when the file exists but could not be read/parsed. */
   error?: string;
+  /**
+   * Set when the file was read and parsed cleanly and declares no servers at
+   * all. Such a config has nothing to total, but "this client declares nothing"
+   * and "no client is installed here" are different facts about a machine and
+   * only one of them is about the client, so the second is not reported as the
+   * first.
+   */
+  declaresNothing?: true;
 }
 
 /** Read + parse the candidates that exist. Unreadable files are reported, not thrown. */
@@ -218,8 +227,13 @@ export function loadConfigs(candidates: ConfigCandidate[], cwd: string): LoadedC
       const doc = parseJsonc(readFileSync(c.path, 'utf8'));
       const servers = extractServers(doc, { client: c.client, source: c.path, cwd });
       // A config with no MCP block at all (e.g. a ~/.claude.json holding only
-      // session history) is not worth a line in the report.
-      if (servers.length === 0) continue;
+      // session history) is not worth a line in the report — it has no total.
+      // It is still worth carrying: it is the evidence that a client is on this
+      // machine, which is what tells an empty client apart from no client.
+      if (servers.length === 0) {
+        out.push({ client: c.client, source: c.path, servers: [], declaresNothing: true });
+        continue;
+      }
       out.push({ client: c.client, source: c.path, servers });
     } catch (e) {
       out.push({ client: c.client, source: c.path, servers: [], error: (e as Error).message });
@@ -289,13 +303,27 @@ export function loadSettingsSources(candidates: SettingsCandidate[]): ToolSearch
       if (!doc || typeof doc !== 'object' || Array.isArray(doc)) throw new Error('not a settings object');
       const block = (doc as { env?: unknown }).env;
       const vars: ToolSearchEnv = {};
+      const unreadable: ToolSearchVar[] = [];
       if (block && typeof block === 'object' && !Array.isArray(block)) {
         for (const name of TOOL_SEARCH_VARS) {
+          if (!(name in (block as Record<string, unknown>))) continue;
           const v = (block as Record<string, unknown>)[name];
           if (typeof v === 'string') vars[name] = v;
+          // The variable is set in this file, to something that is not a value
+          // this can read — `"ENABLE_TOOL_SEARCH": false`, the JSON boolean, is
+          // the one people write. Dropping it here made the file look like a
+          // file that sets nothing, and the report then stated the documented
+          // default at a machine whose settings say otherwise.
+          else unreadable.push(name);
         }
       }
-      return { scope: c.scope, source: c.path, state: 'read' as const, vars };
+      return {
+        scope: c.scope,
+        source: c.path,
+        state: 'read' as const,
+        vars,
+        ...(unreadable.length ? { unreadable } : {}),
+      };
     } catch {
       return { scope: c.scope, source: c.path, state: 'unreadable' as const, vars: {} };
     }

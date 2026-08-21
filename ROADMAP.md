@@ -1,13 +1,12 @@
 # Roadmap
 
-Ordered by value-per-effort for users. Contributions welcome on any of these. This is the
-user-facing view of what's shipped and coming next — it doesn't carry every internal
-planning note.
+Ordered by value-per-effort for users. Contributions welcome on any of these.
+Forward-looking only: what already shipped lives in the code and the git history.
 
 ## Next
 
 - [ ] **CLI cross-check column**: publish ours-vs-mcp-tokens divergence across the measured
-      set — closes the second "planned" promise.
+      set.
 - [ ] **Expand the sweep**: more servers from the registry long-tail; re-attempt current
       startup-failures as upstream fixes land.
 
@@ -16,106 +15,3 @@ planning note.
 - [ ] Schema-size suggestions (opt-in): turn per-tool breakdowns into concrete
       trim-this-description advice.
 - [ ] Periodic "state of MCP context cost" data summary, when the deltas tell a story.
-
-## Done
-
-- [x] **Every server's numbers keep getting refreshed, not just one**: the trend line under a
-      leaderboard row only grows when that server is measured again, and until now the only
-      thing measured on a schedule was the single reference server behind this project's own
-      badge — so every other row's history stopped at whatever date someone last swept by
-      hand. Re-measuring all 82 weekly isn't the fix either: a fresh CI runner shares no
-      package cache, so each server pays a cold install and the heaviest one on record took
-      over three minutes that way. A scheduled job now measures one deterministic slice of
-      the list each week and comes back round to the same servers six weeks later. Which
-      slice is a function of the date, so a week the job doesn't fire needs no repair, and
-      servers outside the week's slice keep their published number untouched (2026-08-19)
-
-- [x] **A broken measuring machine can't wipe out the leaderboard**: if the harness itself
-      breaks — a wedged Docker network stack has done exactly this here, returning uniform
-      timeouts for all 79 servers — every server it touches comes back failed, and the
-      per-server retries just confirm it, because they re-run through the same broken
-      harness. A sweep now records what was published before it starts, and a wave of
-      previously-working servers failing together reads as a broken harness rather than 60
-      simultaneously-broken servers: the leaderboard and history are left alone, the
-      previous measurements are put back exactly as they were, and the sweep exits
-      non-zero. A handful of servers breaking at once still publishes normally — that's
-      what a real upstream breakage looks like (2026-08-19)
-
-- [x] **Every published row is now measured the same way**: the weekly job that re-measures
-      the reference server ran on a bare runner while the other 68 rows are measured in an
-      isolated container, so each Monday one row of the leaderboard was quietly republished
-      under conditions none of its neighbours shared — and because a trend line refuses to
-      span a change in those conditions, that row was on course to be the only one that
-      could never draw a sparkline. It now runs in the same isolation as everything else,
-      verified on a real runner rather than assumed (2026-08-19)
-
-- [x] **A trend line never mixes measurement conditions**: every row of the published history
-      now records whether it was measured inside a container or on a bare machine, and the
-      sparkline only spans sweeps taken the same way. The same server can resolve a different
-      package, run on a different Node and see a different environment on the host than in a
-      clean container, so a step between those two numbers says the harness moved, not the
-      server — and that is exactly what a trend line was about to publish as a change. Rows
-      recorded before this existed read `not recorded` rather than being back-filled with a
-      guess (2026-08-19)
-
-- [x] **A slow server is no longer published as a broken one**: a measurement that times out
-      is now re-run on double the budget before anything is written down, because a server
-      that merely starts slowly while the sweep is busy looks exactly like one that never
-      starts — two servers were recorded as failures for that reason alone. If the retry
-      succeeds, that measurement is the published one; if it times out again, the note says
-      so and names the wider budget it survived (2026-08-19)
-
-- [x] **Whole-set re-sweep, and a trend line on nearly every row**: every server measured
-      again in Docker isolation, so 65 of the 69 measured rows now plot a real sparkline
-      instead of a single point. Two fixes came out of it: a server that fails only because
-      a cached package went bad is no longer published as a failure — the sweep re-measures
-      it from a clean cache first — and a failure that survives that retry now says so in
-      its note, so "broken upstream" reads differently from "broken here" (2026-08-19)
-
-- [x] **`regen` rewrites the dashboard too**: the leaderboard, the per-server pages and the
-      dashboard now refresh in one step, so the published page can no longer sit on the
-      previous sweep's numbers while everything around it updates (2026-08-19)
-
-- [x] **Cost-over-time sparklines**: leaderboard rows now carry a 12-point-max inline
-      trend line from `results/history.csv` (muted line, accent dot on the current
-      value), with the same delta spelled out in the row tooltip and a `trend` column
-      in the full data table; servers with only one sweep on record simply show no
-      line yet (2026-08-18)
-
-- [x] **`measure --remote <url>`**: one-off measurement of a remote MCP server via the
-      `mcp-remote` bridge, no servers.yaml entry needed — `--name` optional, defaulting to
-      a slug of the URL's hostname (2026-08-18)
-
-- [x] **Trim advice in `audit`**: each config's report now names the 3 heaviest tools and
-      what disabling them would recover — tokens and share of that config's total — for
-      clients that let you turn off individual tools rather than whole servers. `null` when
-      there's nothing to trim (one tool, or nothing measured) rather than a hollow 0%
-      (2026-08-17)
-
-- [x] **`audit --claude`**: annotates each audited server with its Anthropic-request cost
-      from the published `tools-delta/v1` divergence run — an exact number when the
-      published capture hash matches what's installed locally, silence (`—`) when it
-      doesn't. Fetches `results/divergence.json` from the published repo (`--divergence-url`
-      to override); a fetch failure degrades to no column plus a recorded problem, never a
-      crash (2026-08-17)
-
-- [x] **`audit`**: measure the servers in your own MCP config — Claude Desktop, Claude Code,
-      Cursor, VS Code, Windsurf — with per-config totals, context-window share, heaviest
-      tools, and a `--budget N` CI gate. The leaderboard answers "what does this server
-      cost?"; `audit` answers "what does my stack cost?" (2026-08-17)
-
-- [x] **`verify --remote <url>`**: fetch and verify a published measurement.json directly,
-      no clone required; 15s request timeout (2026-08-17)
-
-- [x] **Claude divergence column** (`tools-delta/v1`): top 15 servers measured via Anthropic's
-      count_tokens, model-pinned and dated, published in the leaderboard and decomposed per
-      server into field selection vs tokenizer/framing (2026-08-16)
-
-- [x] v0.1.0: measurement pipeline, 57-server leaderboard, methodology v1.0, shields
-      badges, verify CLI, npm publish (2026-08-16)
-- [x] `results/history.csv`: per-(date, server) token series, upserted by every sweep
-      (2026-08-16)
-- [x] Server detail pages: `docs/servers/<name>.md` per measured server — per-tool
-      breakdown, launch command, isolation, hash, `verify` command, and (once a second
-      sweep date exists) the over-time table; linked from the dashboard and leaderboard
-      (2026-08-16)

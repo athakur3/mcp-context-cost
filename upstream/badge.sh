@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # badge.sh — turn an mcp-tokens measurement into a shields.io endpoint badge JSON.
 #
-# Proposed addition to sd2k/mcp-tokens-action (composite step; see action-patch.md).
+# Badge output as a composite-action step (see action-patch.md).
 # Spec: byte-identical output to mcp-context-cost's TS reference (spec/fixtures).
 #
 # Inputs (env):
