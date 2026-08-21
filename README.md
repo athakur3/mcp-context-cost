@@ -180,8 +180,10 @@ INCREASE FAIL:
 Add `--claude` to annotate each server with its Anthropic-request cost from the published
 [Claude divergence](docs/METHODOLOGY.md#claude-divergence) run — an exact number when the
 published capture hash matches what you have installed, `—` (silence, not a stale guess)
-when it doesn't (today the run covers the top 20 measured servers, so most installs will
-show a mix):
+when it doesn't. The run holds 20 rows — the top 20 measured servers by tokens; 19 of them
+still match the capture on disk here, which is why
+[results/leaderboard.md](results/leaderboard.md) prints a claude number for 19 and leaves the
+twentieth blank rather than stale. Most installs will show a mix:
 
 ```
   server               tools  tokens   share   claude
@@ -198,13 +200,14 @@ Flags: `--json` (full report on stdout, progress on stderr), `--budget N`,
 The number `audit` gives you is the same measurement, run across a curated set of public
 servers — which is how you can tell it is a measurement and not this tool's opinion. It also
 shows what you are choosing between: across the 69 servers measured, cost spans **1,700×**,
-from the 32-token `postgres` reference server to github's 54,422. The table below starts at
-markitdown's 64 tokens, an 850× spread; the full range is in
+from the 32-token `postgres` reference server to github's 54,422. The table below is a
+sample of that range rather than its ends; the full range is in
 [results/leaderboard.md](results/leaderboard.md).
 
 | server | context cost | tools |
 |---|---:|---:|
 | github (official) | **54,422 tokens** | 44 |
+| xcodebuildmcp | 26,594 | 24 |
 | brave-search | 25,456 | 8 |
 | notion | 17,500 | 24 |
 | playwright *(4.8M installs/week)* | 4,024 | 24 |
