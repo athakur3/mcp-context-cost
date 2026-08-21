@@ -1,5 +1,78 @@
 # Changelog
 
+## Unreleased
+
+Where a change lands when it is made, rather than in the release after it. Cutting a version
+renames this heading to that version and dates it. Every other section here describes bytes
+someone can install; this one describes the trunk, which is the difference to hold in mind
+while reading it.
+
+- **The public check on the commit people install stops depending on what the machine
+  running it had cached.** Four test files spawned the built CLI through `npx tsx` from a
+  temporary directory outside the repository, so the `tsx` this project pins was off the
+  resolution path and npx fetched its own copy from the registry at test time; four such
+  spawns racing a cold shared cache is what turned CI red on the exact commit published as
+  0.7.0, with nothing about the product changed between the green run before it and that
+  one. They now run the `tsx` this repository locks, under the running node binary, and a
+  guard in the suite fails if any test file goes back through `npx`. No change to the
+  published package.
+- **The front page stops stating a posture for the one machine the command refuses to
+  answer for.** README's deferral table routed a settings `env` block holding the JSON
+  boolean `false` to its `ENABLE_TOOL_SEARCH=false` row and told that reader deferral was
+  off and every request carries the full total; `audit` on that machine says whether these
+  tokens are deferred cannot be said. The table now carries that machine as its own row,
+  and the closing list of what the report will not answer names all four refusals the
+  resolver returns rather than two. README is the page inside the package, so this is a
+  change to what an install carries.
+- **A published deferral table that stops describing the resolver now fails the suite.**
+  Both pages that tell a reader what `audit` will say about their machine have drifted from
+  `src/audit/deferral.ts` while every check reported success — the methodology table was
+  repaired by hand on 2026-08-21 and the front page's on 2026-08-22, and nothing in 425
+  tests had ever opened either page. Every row of both tables is now a case that names a
+  machine, quotes the page's own words for it, and puts that machine to `evaluateDeferral`:
+  the words have to be on the page as written and the resolver has to agree with them, so
+  either side moving alone is a red check. The row counts are asserted, so a table cannot
+  gain a row nothing checks, and the postures are read out of the union that declares them,
+  so a posture the resolver can return with nothing published about it fails too. No change
+  to the published package.
+
+## 0.7.0 — 2026-08-21
+
+Two places that answered for a machine they had not established, and both now say what they
+actually know.
+
+- **A config that declares servers and switches every one of them off is told that, not
+  that it declares nothing.** 0.6.0 dropped a `disabled: true` entry before anything counted
+  it, found no servers left, and printed the sentence written for a file with no MCP block
+  at all — a false statement about a file it had opened, parsed, and read the switched-off
+  entries out of. The difference is now recorded at the only point it is still visible,
+  before the off entries are dropped, and `audit` names per config either the servers it
+  declares and switched off or that it declares none at all. On the same two-server file,
+  0.6.0 prints `an MCP client config was found, and it declares no servers`; 0.7.0 prints
+  `an MCP client config was found, and it has no server to measure` followed by
+  `declares 2 servers, and every one of them is switched off: linear, redis`. `--json`
+  carries it as a field rather than as prose: the `emptyConfigs` entry gains
+  `allDisabled: [names]`. There is nothing to total either way, so neither gets a report
+  line and both still exit 1; a name switched off in one block and live in another is a live
+  server and is not reported as both; an unreadable config is still a problem rather than an
+  empty one, and a config that is not on the machine still leaves no trace at all. The
+  distinction is only reached when **no** config on the machine has a server — on a machine
+  holding one live config beside an all-off one, the off one is not mentioned.
+- **The published methodology stops predicting a posture for the machine the command
+  refuses to answer for.** `docs/METHODOLOGY.md` §who-pays routed a machine whose settings
+  hold the deciding variable as a JSON boolean straight past its decision table into
+  "otherwise / nothing set anywhere", and told the reader every definition was deferred by
+  default — the opposite of what 0.6.0's own refusal says when run there. The table now
+  carries the unreadable value as its own row, refused at whichever of the three reads
+  reaches it, and says in that row that a settings file holding `false` rather than
+  `"false"` is this row and not the `false` row above it. The precedence sentence says the
+  first place that sets a variable at all wins, readably or not, so a readable value above
+  an unreadable one still decides and one beneath it decides nothing; the read / absent /
+  unreadable mark is stated as the file's state rather than the value's; and the list of
+  honest non-answers names the fourth one the code returns. Documentation only — no code
+  moved, and this page is published on the docs site rather than inside the package, which
+  ships `dist/`, `README.md` and `LICENSE`.
+
 ## 0.6.0 — 2026-08-21
 
 Two things `audit` says changed, and both are places where it used to state an answer it

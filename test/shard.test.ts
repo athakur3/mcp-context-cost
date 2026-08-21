@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { weekIndex, shardIndexForDate, selectShard } from '../src/sweep/shard.js';
 import type { Measurement } from '../src/core/types.js';
+import { TSX_CLI } from './tsx.js';
 
 const day = (iso: string) => new Date(`${iso}T00:00:00Z`);
 
@@ -158,7 +159,7 @@ describe('sweep-all sharding (subprocess)', () => {
 
   function runSweep(args: string[]): { code: number; out: string } {
     try {
-      const out = execFileSync('npx', ['tsx', sweepAll, ...args], {
+      const out = execFileSync(process.execPath, [TSX_CLI, sweepAll, ...args], {
         cwd: root,
         encoding: 'utf8',
         stdio: ['ignore', 'pipe', 'pipe'],
