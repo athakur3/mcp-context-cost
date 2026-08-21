@@ -23,6 +23,7 @@ import {
   type ToolSearchEnv,
   type ToolSearchScope,
   type ToolSearchSource,
+  type ToolSearchVar,
 } from './deferral.js';
 
 export interface ConfiguredServer {
@@ -302,13 +303,27 @@ export function loadSettingsSources(candidates: SettingsCandidate[]): ToolSearch
       if (!doc || typeof doc !== 'object' || Array.isArray(doc)) throw new Error('not a settings object');
       const block = (doc as { env?: unknown }).env;
       const vars: ToolSearchEnv = {};
+      const unreadable: ToolSearchVar[] = [];
       if (block && typeof block === 'object' && !Array.isArray(block)) {
         for (const name of TOOL_SEARCH_VARS) {
+          if (!(name in (block as Record<string, unknown>))) continue;
           const v = (block as Record<string, unknown>)[name];
           if (typeof v === 'string') vars[name] = v;
+          // The variable is set in this file, to something that is not a value
+          // this can read — `"ENABLE_TOOL_SEARCH": false`, the JSON boolean, is
+          // the one people write. Dropping it here made the file look like a
+          // file that sets nothing, and the report then stated the documented
+          // default at a machine whose settings say otherwise.
+          else unreadable.push(name);
         }
       }
-      return { scope: c.scope, source: c.path, state: 'read' as const, vars };
+      return {
+        scope: c.scope,
+        source: c.path,
+        state: 'read' as const,
+        vars,
+        ...(unreadable.length ? { unreadable } : {}),
+      };
     } catch {
       return { scope: c.scope, source: c.path, state: 'unreadable' as const, vars: {} };
     }

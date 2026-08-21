@@ -531,12 +531,17 @@ function postureSourceLines(d: DeferralVerdict): string[] {
       absent++;
       continue;
     }
+    // A place that sets one of them to something unreadable is neither a place
+    // that sets it nor a place that sets none of them, and printing it as the
+    // second is the silence this report would then argue from.
+    const unreadableVars = r.unreadable?.length
+      ? `sets ${r.unreadable.join(', ')} to a value this cannot read`
+      : '';
     const held =
       r.state === 'unreadable'
         ? 'could not be read — what it sets is unknown'
-        : r.sets.length
-          ? `sets ${r.sets.join(', ')}`
-          : 'sets none of them';
+        : [r.sets.length ? `sets ${r.sets.join(', ')}` : '', unreadableVars].filter(Boolean).join(', and ') ||
+          'sets none of them';
     // Which place the verdict came out of, said once rather than left to a
     // reader to work out from two lists.
     const decided = d.setting?.source === r.source ? ', which decided this' : '';
@@ -647,6 +652,12 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
       lines.push(`  ${d.setting.variable} is set to different values by more than one place this`);
       lines.push('  machine reads it from, and which one Claude Code takes is not on record');
       lines.push('  here. Whether these tokens are deferred cannot be said from them.');
+    } else if (d.setting?.unresolved === 'value-unreadable') {
+      lines.push(`  ${d.setting.variable} is set by a settings file Claude Code reads, to`);
+      lines.push('  something that is not a value this can read — an env block holds it as a');
+      lines.push('  JSON boolean, a number or null rather than a string. It is set there, and');
+      lines.push('  what it is set to is unknown, so whether these tokens are deferred cannot');
+      lines.push('  be said from it.');
     } else {
       lines.push('  A settings file Claude Code reads exists here and could not be read, so');
       lines.push('  what it sets is unknown — and it can set the variable that decides this.');
