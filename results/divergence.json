@@ -1,7 +1,7 @@
 {
   "method": "tools-delta/v1",
   "model": "claude-opus-5",
-  "measuredAt": "2026-08-19",
+  "measuredAt": "2026-08-24",
   "baselineTokens": 7,
   "probeDelta": 328,
   "servers": {

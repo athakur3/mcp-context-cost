@@ -2,7 +2,7 @@
 
 Tokens = o200k_base count of the canonical `tools/list` bytes ([methodology v1.0](../docs/METHODOLOGY.md)). Measured 69/82 candidates; every candidate is listed — failures are findings, not omissions. Server names link to their per-tool breakdown.
 
-The **claude** column is the same tools measured through Anthropic's `count_tokens` on `claude-opus-5` (2026-08-19, method `tools-delta/v1`): the tokens the server's tools add to a request, measured for the top 19. It is not a rescaling of the o200k column — two effects pull in opposite directions, and the [per-server pages](../docs/servers/) break both out. See [Claude divergence](../docs/METHODOLOGY.md#claude-divergence).
+The **claude** column is the same tools measured through Anthropic's `count_tokens` on `claude-opus-5` (2026-08-24, method `tools-delta/v1`): the tokens the server's tools add to a request, measured for the top 19. It is not a rescaling of the o200k column — two effects pull in opposite directions, and the [per-server pages](../docs/servers/) break both out. See [Claude divergence](../docs/METHODOLOGY.md#claude-divergence).
 
 The **session start** column is what a client puts in context when it *defers* tool definitions until they are used: the server's tool names plus the `instructions` string it returns from `initialize` (method `deferred-load/v1`). The tokens column is what a client that loads every definition up front pays; this one is what the same server costs a client that does not. See [session-start load](../docs/METHODOLOGY.md#session-start-load).
 

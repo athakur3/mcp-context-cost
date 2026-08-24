@@ -55,7 +55,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 
 ## What this costs on Claude
 
-Measured 2026-08-19 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
+Measured 2026-08-24 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
 
 | | tokens | |
 |---|---:|---|

@@ -139,3 +139,4 @@ date,server,tokens,toolCount,status,isolation
 2026-08-19,slack-legacy,681,8,measured,docker
 2026-08-19,terraform,2061,9,measured,docker
 2026-08-19,xcodebuildmcp,26594,24,measured,docker
+2026-08-24,memory,2378,9,measured,docker
