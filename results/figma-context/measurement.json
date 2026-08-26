@@ -150,18 +150,19 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:06:28.428Z",
+  "measuredAt": "2026-08-26T04:00:20.988Z",
   "serverName": "Figma MCP Server",
   "serverVersion": "0.13.2",
   "launchCommand": "npx -y figma-developer-mcp --stdio",
   "envVarNames": [
     "FIGMA_API_KEY"
   ],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

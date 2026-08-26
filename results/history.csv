@@ -140,3 +140,15 @@ date,server,tokens,toolCount,status,isolation
 2026-08-19,terraform,2061,9,measured,docker
 2026-08-19,xcodebuildmcp,26594,24,measured,docker
 2026-08-24,memory,2378,9,measured,docker
+2026-08-26,figma-context,946,2,measured,docker
+2026-08-26,firecrawl,9561,27,measured,docker
+2026-08-26,gitlab,336,9,measured,docker
+2026-08-26,kubernetes,5268,23,measured,docker
+2026-08-26,mcp-atlassian,17311,63,dynamic,docker
+2026-08-26,mongodb,7926,27,measured,docker
+2026-08-26,netlify,2831,9,measured,docker
+2026-08-26,obsidian,2062,15,measured,docker
+2026-08-26,postgres,32,1,measured,docker
+2026-08-26,pulumi,2768,12,measured,docker
+2026-08-26,qdrant,188,2,measured,docker
+2026-08-26,terraform,2061,9,measured,docker

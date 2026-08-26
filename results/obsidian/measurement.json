@@ -3,8 +3,8 @@
   "provider": "tiktoken",
   "encoding": "o200k_base",
   "status": "measured",
-  "totalTokens": 1132,
-  "toolCount": 12,
+  "totalTokens": 2062,
+  "toolCount": 15,
   "tools": [
     {
       "name": "obsidian_list_files_in_dir",
@@ -32,15 +32,21 @@
     },
     {
       "name": "obsidian_patch_content",
-      "tokens": 167,
-      "descriptionTokens": 19,
-      "inputSchemaTokens": 136
+      "tokens": 263,
+      "descriptionTokens": 69,
+      "inputSchemaTokens": 182
     },
     {
       "name": "obsidian_append_content",
       "tokens": 78,
       "descriptionTokens": 12,
       "inputSchemaTokens": 54
+    },
+    {
+      "name": "obsidian_put_content",
+      "tokens": 146,
+      "descriptionTokens": 69,
+      "inputSchemaTokens": 65
     },
     {
       "name": "obsidian_delete_file",
@@ -50,9 +56,21 @@
     },
     {
       "name": "obsidian_complex_search",
-      "tokens": 129,
-      "descriptionTokens": 61,
-      "inputSchemaTokens": 51
+      "tokens": 492,
+      "descriptionTokens": 241,
+      "inputSchemaTokens": 198
+    },
+    {
+      "name": "obsidian_search_by_tag",
+      "tokens": 167,
+      "descriptionTokens": 82,
+      "inputSchemaTokens": 72
+    },
+    {
+      "name": "obsidian_get_frontmatter",
+      "tokens": 97,
+      "descriptionTokens": 48,
+      "inputSchemaTokens": 36
     },
     {
       "name": "obsidian_batch_get_file_contents",
@@ -62,9 +80,9 @@
     },
     {
       "name": "obsidian_get_periodic_note",
-      "tokens": 74,
+      "tokens": 135,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 51
+      "inputSchemaTokens": 112
     },
     {
       "name": "obsidian_get_recent_periodic_notes",
@@ -79,7 +97,7 @@
       "inputSchemaTokens": 72
     }
   ],
-  "canonicalSha256": "4f3971a8c6858e81f7a2834791f4b1de1b4b967efa575ddc6d8968fb69cb41c8",
+  "canonicalSha256": "6064f85a43ae17b2da72d1b87fd9435879e8b42bc320e1347e382f5c8a61b499",
   "rawToolsCapture": [
     {
       "name": "obsidian_list_files_in_dir",
@@ -146,7 +164,7 @@
     },
     {
       "name": "obsidian_patch_content",
-      "description": "Insert content into an existing note relative to a heading, block reference, or frontmatter field.",
+      "description": "Insert content into an existing note relative to a heading, block reference, or frontmatter field. For target_type='heading', target must be the fully qualified heading path joined with '::' (e.g. 'Outer::Inner'). Bare heading names (without '::') will be auto-qualified if they match exactly one heading in the file.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -175,7 +193,7 @@
           },
           "target": {
             "type": "string",
-            "description": "Target identifier (heading path, block reference, or frontmatter field)"
+            "description": "Target identifier. For target_type='heading': fully qualified path with '::' delimiter, e.g. 'Section::Subsection'. Bare names (no '::') are auto-qualified if unambiguous. For 'block': the block reference id. For 'frontmatter': the YAML field name."
           },
           "content": {
             "type": "string",
@@ -214,6 +232,28 @@
       }
     },
     {
+      "name": "obsidian_put_content",
+      "description": "Creates a new file, or COMPLETELY OVERWRITES the content of an existing file. The previous content is lost. Use `obsidian_append_content` to add content to a file without erasing what's already there. Use `obsidian_patch_content` to modify a specific heading, block or frontmatter field while keeping the rest intact.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "filepath": {
+            "type": "string",
+            "description": "Path to the relevant file (relative to your vault root)",
+            "format": "path"
+          },
+          "content": {
+            "type": "string",
+            "description": "Full file content. Replaces existing content entirely if the file already exists."
+          }
+        },
+        "required": [
+          "filepath",
+          "content"
+        ]
+      }
+    },
+    {
       "name": "obsidian_delete_file",
       "description": "Delete a file or directory from the vault.",
       "inputSchema": {
@@ -238,17 +278,54 @@
     },
     {
       "name": "obsidian_complex_search",
-      "description": "Complex search for documents using a JsonLogic query. \n           Supports standard JsonLogic operators plus 'glob' and 'regexp' for pattern matching. Results must be non-falsy.\n\n           Use this tool when you want to do a complex search, e.g. for all documents with certain tags etc.\n           ",
+      "description": "Complex search for documents using a JsonLogic query. \n           Supports standard JsonLogic operators plus 'glob' and 'regexp' for pattern matching. Results must be non-falsy.\n\n           Use this tool when you want to do a complex search, e.g. for all documents with certain tags etc.\n           ALWAYS follow query syntax in examples.\n\n           Examples\n            1. Match all markdown files\n            {\"glob\": [\"*.md\", {\"var\": \"path\"}]}\n\n            2. Match all markdown files with 1221 substring inside them\n            {\n              \"and\": [\n                { \"glob\": [\"*.md\", {\"var\": \"path\"}] },\n                { \"regexp\": [\".*1221.*\", {\"var\": \"content\"}] }\n              ]\n            }\n\n            3. Match all markdown files in Work folder containing name Keaton\n            {\n              \"and\": [\n                { \"glob\": [\"*.md\", {\"var\": \"path\"}] },\n                { \"regexp\": [\".*Work.*\", {\"var\": \"path\"}] },\n                { \"regexp\": [\"Keaton\", {\"var\": \"content\"}] }\n              ]\n            }\n           ",
       "inputSchema": {
         "type": "object",
         "properties": {
           "query": {
             "type": "object",
-            "description": "JsonLogic query object. Example: {\"glob\": [\"*.md\", {\"var\": \"path\"}]} matches all markdown files"
+            "description": "JsonLogic query object. ALWAYS follow query syntax in examples.                             Example 1: {\"glob\": [\"*.md\", {\"var\": \"path\"}]} matches all markdown files                             Example 2: {\"and\": [{\"glob\": [\"*.md\", {\"var\": \"path\"}]}, {\"regexp\": [\".*1221.*\", {\"var\": \"content\"}]}]} matches all markdown files with 1221 substring inside them                             Example 3: {\"and\": [{\"glob\": [\"*.md\", {\"var\": \"path\"}]}, {\"regexp\": [\".*Work.*\", {\"var\": \"path\"}]}, {\"regexp\": [\"Keaton\", {\"var\": \"content\"}]}]} matches all markdown files in Work folder containing name Keaton                         "
           }
         },
         "required": [
           "query"
+        ]
+      }
+    },
+    {
+      "name": "obsidian_search_by_tag",
+      "description": "Find all notes carrying a specific tag. Matches the note's parsed tag set (YAML frontmatter `tags:` plus inline `#tag` occurrences), so hits on the tag name inside ordinary prose are NOT returned. Pass the tag without the leading '#'. Hierarchical-tag matching is exact — searching for 'work' will not match notes tagged 'work/tasks'. Optionally scope to a vault subdirectory.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tag": {
+            "type": "string",
+            "description": "Tag name without the leading '#' (e.g. 'project', 'work/tasks')."
+          },
+          "dirpath": {
+            "type": "string",
+            "description": "Optional vault-relative directory to scope results to (e.g. 'work/projects'). Trailing slash is stripped."
+          }
+        },
+        "required": [
+          "tag"
+        ]
+      }
+    },
+    {
+      "name": "obsidian_get_frontmatter",
+      "description": "Return just the YAML frontmatter of a note as a parsed JSON object. Lighter than obsidian_get_file_contents when you only need metadata (tags, aliases, status fields, etc.). Returns an empty object for notes without frontmatter.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "filepath": {
+            "type": "string",
+            "description": "Path to the file (relative to vault root)",
+            "format": "path"
+          }
+        },
+        "required": [
+          "filepath"
         ]
       }
     },
@@ -288,6 +365,15 @@
               "monthly",
               "quarterly",
               "yearly"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of data to get ('content' or 'metadata'). 'content' returns just the content in Markdown format. 'metadata' includes note metadata (including paths, tags, etc.) and the content.",
+            "default": "content",
+            "enum": [
+              "content",
+              "metadata"
             ]
           }
         },
@@ -354,18 +440,19 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:07:18.272Z",
+  "measuredAt": "2026-08-26T04:00:24.924Z",
   "serverName": "mcp-obsidian",
-  "serverVersion": "1.29.0",
+  "serverVersion": "1.29.1",
   "launchCommand": "uvx --with \"mcp<2\" mcp-obsidian",
   "envVarNames": [
     "OBSIDIAN_API_KEY"
   ],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

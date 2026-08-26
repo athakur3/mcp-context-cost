@@ -1290,11 +1290,12 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:11:02.648Z",
+  "measuredAt": "2026-08-26T04:00:42.177Z",
   "serverName": "kubernetes",
   "serverVersion": "4.1.4",
   "launchCommand": "npx -y mcp-server-kubernetes",
   "envVarNames": [],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",

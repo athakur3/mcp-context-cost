@@ -971,16 +971,17 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:01:38.100Z",
+  "measuredAt": "2026-08-26T04:00:13.859Z",
   "serverName": "netlify-mcp",
   "serverVersion": "1.15.1",
   "launchCommand": "npx -y @netlify/mcp",
   "envVarNames": [],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

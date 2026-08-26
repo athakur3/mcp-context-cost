@@ -127,18 +127,19 @@
       }
     }
   ],
-  "measuredAt": "2026-08-18T23:57:34.378Z",
+  "measuredAt": "2026-08-26T03:59:29.033Z",
   "serverName": "gitlab-mcp-server",
   "serverVersion": "0.5.1",
   "launchCommand": "npx -y @modelcontextprotocol/server-gitlab",
   "envVarNames": [
     "GITLAB_PERSONAL_ACCESS_TOKEN"
   ],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }
