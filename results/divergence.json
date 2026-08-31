@@ -1,7 +1,7 @@
 {
   "method": "tools-delta/v1",
   "model": "claude-opus-5",
-  "measuredAt": "2026-08-24",
+  "measuredAt": "2026-08-31",
   "baselineTokens": 7,
   "probeDelta": 328,
   "servers": {
@@ -80,7 +80,7 @@
       "o200kMapped": 12823,
       "claudeDelta": 22234,
       "toolCount": 63,
-      "capturedSha256": "1ff1b32a4f6f0b8485b54314964e498d26ebe605e7f4871cd4f5cbba371bf3ac"
+      "capturedSha256": "eda97b575e5db545148aca37e956d9df338a6527fb7eaaed0b738293581ec6b2"
     },
     "mongodb": {
       "o200kFull": 7926,

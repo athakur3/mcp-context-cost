@@ -152,3 +152,4 @@ date,server,tokens,toolCount,status,isolation
 2026-08-26,pulumi,2768,12,measured,docker
 2026-08-26,qdrant,188,2,measured,docker
 2026-08-26,terraform,2061,9,measured,docker
+2026-08-31,memory,2378,9,measured,docker
