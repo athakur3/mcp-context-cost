@@ -43,7 +43,7 @@ One page per measured server: the per-tool breakdown behind the badge, the exact
 | 37 | [terraform](terraform.html) | 2,061 | 9 | light |
 | 38 | [everything](everything.html) | 1,708 | 13 | light |
 | 39 | [tavily](tavily.html) | 1,653 | 5 | light |
-| 40 | [searxng](searxng.html) | 1,481 | 4 | light |
+| 40 | [searxng](searxng.html) | 1,537 | 4 | light |
 | 41 | [git](git.html) | 1,455 | 12 | light |
 | 42 | [pandoc](pandoc.html) | 1,425 | 1 | light |
 | 43 | [context7](context7.html) | 1,052 | 2 | light |
@@ -51,8 +51,8 @@ One page per measured server: the per-tool breakdown behind the badge, the exact
 | 45 | [microsoft-learn](microsoft-learn.html) | 972 | 3 | lean |
 | 46 | [figma-context](figma-context.html) | 946 | 2 | lean |
 | 47 | [duckduckgo](duckduckgo.html) | 724 | 2 | lean |
-| 48 | [slack-legacy](slack-legacy.html) | 681 | 8 | lean |
-| 49 | [clickhouse](clickhouse.html) | 581 | 3 | lean |
+| 48 | [clickhouse](clickhouse.html) | 694 | 3 | lean |
+| 49 | [slack-legacy](slack-legacy.html) | 681 | 8 | lean |
 | 50 | [google-maps](google-maps.html) | 549 | 7 | lean |
 | 51 | [puppeteer](puppeteer.html) | 540 | 7 | lean |
 | 52 | [neo4j-cypher](neo4j-cypher.html) | 523 | 3 | lean |

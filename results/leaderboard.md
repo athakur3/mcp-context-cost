@@ -51,7 +51,7 @@ The **session start** column is what a client puts in context when it *defers* t
 | 37 | [terraform](../docs/servers/terraform.md) | 2,061 | 963 | — | 9 | search_providers (484) | measured | vendor-official |
 | 38 | [everything](../docs/servers/everything.md) | 1,708 | 374 | — | 13 | gzip-file-as-resource (247) | measured | official-reference |
 | 39 | [tavily](../docs/servers/tavily.md) | 1,653 | 28 | — | 5 | tavily_search (615) | measured | vendor-official |
-| 40 | [searxng](../docs/servers/searxng.md) | 1,481 | 27 | — | 4 | searxng_web_search (770) | measured | community |
+| 40 | [searxng](../docs/servers/searxng.md) | 1,537 | 27 | — | 4 | searxng_web_search (825) | measured | community |
 | 41 | [git](../docs/servers/git.md) | 1,455 | 43 | — | 12 | git_log (289) | measured | official-reference |
 | 42 | [pandoc](../docs/servers/pandoc.md) | 1,425 | 5 | — | 1 | convert-contents (1,423) | measured | community |
 | 43 | [context7](../docs/servers/context7.md) | 1,052 | 135 | — | 2 | resolve-library-id (643) | measured | vendor-official |
@@ -59,8 +59,8 @@ The **session start** column is what a client puts in context when it *defers* t
 | 45 | [microsoft-learn](../docs/servers/microsoft-learn.md) | 972 | 307 | — | 3 | microsoft_code_sample_search (396) | measured | vendor-official |
 | 46 | [figma-context](../docs/servers/figma-context.md) | 946 | 11 | — | 2 | download_figma_images (646) | measured | community |
 | 47 | [duckduckgo](../docs/servers/duckduckgo.md) | 724 | 6 | — | 2 | fetch_content (387) | measured | community |
-| 48 | [slack-legacy](../docs/servers/slack-legacy.md) | 681 | 47 | — | 8 | slack_reply_to_thread (124) | measured | official-reference |
-| 49 | [clickhouse](../docs/servers/clickhouse.md) | 581 | 72 | — | 3 | list_tables (370) | measured | vendor-official |
+| 48 | [clickhouse](../docs/servers/clickhouse.md) | 694 | 72 | — | 3 | list_tables (413) | measured | vendor-official |
+| 49 | [slack-legacy](../docs/servers/slack-legacy.md) | 681 | 47 | — | 8 | slack_reply_to_thread (124) | measured | official-reference |
 | 50 | [google-maps](../docs/servers/google-maps.md) | 549 | 30 | — | 7 | maps_distance_matrix (124) | measured | official-reference |
 | 51 | [puppeteer](../docs/servers/puppeteer.md) | 540 | 39 | — | 7 | puppeteer_screenshot (142) | measured | official-reference |
 | 52 | [neo4j-cypher](../docs/servers/neo4j-cypher.md) | 523 | 26 | — | 3 | get_neo4j_schema (238) | measured | vendor-official |
@@ -92,7 +92,7 @@ The **session start** column is what a client puts in context when it *defers* t
 | magic | auth-required | server error -32001: Not authenticated - your API key is missing or was reset. Get a fresh key at https://21st.dev/mcp and update your MCP config (x-api-key / B |
 | stripe | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: index.js:20:30)     at Object.\<anonymous\> (/tmp/.npm-cache/_npx/bce731 |
 | heroku | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: Fatal error in main(): Cannot find module '/tmp/.npm-cache/_npx/909ffbc9 |
-| grafana | timeout | timeout after 180000ms waiting for initialize |
+| grafana | timeout | reproduced on double the timeout budget; timeout after 360000ms waiting for initialize |
 | neon | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1) |
 | linear | remote-auth-wall |  |
 | zapier | remote-auth-wall |  |

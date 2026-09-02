@@ -89,18 +89,19 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:00:02.114Z",
+  "measuredAt": "2026-09-02T07:51:43.731Z",
   "serverName": "exa-search-server",
   "serverVersion": "3.4.1",
   "launchCommand": "npx -y exa-mcp-server",
   "envVarNames": [
     "EXA_API_KEY"
   ],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

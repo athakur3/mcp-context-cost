@@ -3,7 +3,7 @@
   "provider": "tiktoken",
   "encoding": "o200k_base",
   "status": "measured",
-  "totalTokens": 581,
+  "totalTokens": 694,
   "toolCount": 3,
   "tools": [
     {
@@ -14,18 +14,18 @@
     },
     {
       "name": "list_tables",
-      "tokens": 370,
-      "descriptionTokens": 191,
-      "inputSchemaTokens": 104
+      "tokens": 413,
+      "descriptionTokens": 227,
+      "inputSchemaTokens": 109
     },
     {
       "name": "run_query",
-      "tokens": 133,
-      "descriptionTokens": 50,
+      "tokens": 203,
+      "descriptionTokens": 121,
       "inputSchemaTokens": 19
     }
   ],
-  "canonicalSha256": "d266049ab550225c0ca1055960d43f29c64b3e7cf03fa1241e633f9b2049f240",
+  "canonicalSha256": "1f68f3e76c71c7c8c4c6cf537ed857231daacdf9cd6ebb95e30ac482cc218b89",
   "rawToolsCapture": [
     {
       "name": "list_databases",
@@ -55,7 +55,7 @@
     },
     {
       "name": "list_tables",
-      "description": "List available ClickHouse tables in a database, including schema, comment,\nrow count, and column count.\n\nArgs:\n    database: The database to list tables from\n    like: Optional LIKE pattern to filter table names\n    not_like: Optional NOT LIKE pattern to exclude table names\n    page_token: Token for pagination, obtained from a previous call\n    page_size: Number of tables to return per page (default: 50)\n    include_detailed_columns: Whether to include detailed column metadata (default: True).\n        When False, the columns array will be empty but create_table_query still contains\n        all column information. This reduces payload size for large schemas.\n\nReturns:\n    A JSON-encoded string of an object containing:\n    - tables: List of table information (as dictionaries)\n    - next_page_token: Token for the next page, or None if no more pages\n    - total_tables: Total number of tables matching the filters",
+      "description": "List available ClickHouse tables in a database, including schema, comment,\nrow count, and column count.\n\nIntegers outside [-9007199254740991, 9007199254740991] in table metadata are\nreturned as decimal strings.\n\nArgs:\n    database: The database to list tables from\n    like: Optional LIKE pattern to filter table names\n    not_like: Optional NOT LIKE pattern to exclude table names\n    page_token: Token for pagination, obtained from a previous call\n    page_size: Number of tables to return per page (default: 50, must be greater than 0)\n    include_detailed_columns: Whether to include detailed column metadata (default: True).\n        When False, the columns array will be empty but create_table_query still contains\n        all column information. This reduces payload size for large schemas.\n\nReturns:\n    A JSON-encoded string of an object containing:\n    - tables: List of table information (as dictionaries)\n    - next_page_token: Token for the next page, or None if no more pages\n    - total_tables: Total number of tables matching the filters",
       "inputSchema": {
         "properties": {
           "database": {
@@ -96,6 +96,7 @@
           },
           "page_size": {
             "default": 50,
+            "exclusiveMinimum": 0,
             "type": "integer"
           },
           "include_detailed_columns": {
@@ -129,7 +130,7 @@
     },
     {
       "name": "run_query",
-      "description": "Execute SQL queries in ClickHouse. Queries run in read-only mode by default. Set CLICKHOUSE_ALLOW_WRITE_ACCESS=true to allow DDL and DML operations. Set CLICKHOUSE_ALLOW_DROP=true to additionally allow destructive operations (DROP, TRUNCATE).",
+      "description": "Execute SQL queries in ClickHouse. Queries run in read-only mode by default. Set CLICKHOUSE_ALLOW_WRITE_ACCESS=true to allow DDL and DML operations. Set CLICKHOUSE_ALLOW_DROP=true to additionally allow destructive operations (DROP, TRUNCATE, DELETE, UPDATE, REPLACE TABLE/PARTITION, CREATE OR REPLACE, CLEAR COLUMN/INDEX/PROJECTION, DETACH PERMANENTLY). That gate is a best-effort accident guard, not a security boundary. Integers outside [-9007199254740991, 9007199254740991] are returned as decimal strings.",
       "inputSchema": {
         "properties": {
           "query": {
@@ -161,7 +162,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-18T23:59:13.360Z",
+  "measuredAt": "2026-09-02T07:51:36.632Z",
   "serverName": "mcp-clickhouse",
   "serverVersion": "2.14.7",
   "launchCommand": "uvx mcp-clickhouse",
@@ -170,11 +171,12 @@
     "CLICKHOUSE_USER",
     "CLICKHOUSE_PASSWORD"
   ],
+  "serverInstructions": "When working on ClickHouse-related coding, schema design, SQL/query optimization,\ndata migrations, or troubleshooting, consider using the official ClickHouse Agent\nSkills: https://github.com/ClickHouse/agent-skills\n\nInstall with:\nnpx -y skills add clickhouse/agent-skills --all\n",
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

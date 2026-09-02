@@ -3,14 +3,14 @@
   "provider": "tiktoken",
   "encoding": "o200k_base",
   "status": "measured",
-  "totalTokens": 1481,
+  "totalTokens": 1537,
   "toolCount": 4,
   "tools": [
     {
       "name": "searxng_web_search",
-      "tokens": 770,
-      "descriptionTokens": 114,
-      "inputSchemaTokens": 627
+      "tokens": 825,
+      "descriptionTokens": 153,
+      "inputSchemaTokens": 643
     },
     {
       "name": "searxng_search_suggestions",
@@ -20,7 +20,7 @@
     },
     {
       "name": "searxng_instance_info",
-      "tokens": 162,
+      "tokens": 163,
       "descriptionTokens": 34,
       "inputSchemaTokens": 100
     },
@@ -31,15 +31,11 @@
       "inputSchemaTokens": 145
     }
   ],
-  "canonicalSha256": "2a5a607d2614632059e9f98e5fa7468374a9086312071f8895f4ba10a3a4618a",
+  "canonicalSha256": "277906d8ed722cfce33b345e34effdc0a2c37c8effc4fc85c9f5d13888d6ea7f",
   "rawToolsCapture": [
     {
       "name": "searxng_web_search",
-      "description": "Searches the web using SearXNG and returns a list of results, each with a title, URL, and content snippet. CRITICAL: The required parameter name is exactly `query` (not `prompt`, `q`, or any other name). Calls an external SearXNG instance; availability depends on the `SEARXNG_URL` configuration. Use `pageno` to paginate results; combine `time_range` and `language` to narrow scope. To read the full text of a result URL, follow up with `web_url_read`.",
-      "annotations": {
-        "readOnlyHint": true,
-        "openWorldHint": true
-      },
+      "description": "Searches the web using SearXNG and returns a list of results, each with a title, URL, and content snippet. CRITICAL: The required parameter name is exactly `query` (not `prompt`, `q`, or any other name). Calls an external SearXNG instance; availability depends on the `SEARXNG_URL` configuration. Use `pageno` to paginate results; combine `time_range` and `language` to narrow scope. When `engines` and `time_range` are both provided, every selected engine must explicitly advertise time-range support via SearXNG /config; otherwise the request is rejected before search. To read the full text of a result URL, follow up with `web_url_read`.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -55,7 +51,7 @@
           },
           "time_range": {
             "type": "string",
-            "description": "Time range of search (day, week, month, year)",
+            "description": "Time range of search (day, week, month, year). With explicit engines, all selected engines must confirm time_range_support=true via /config.",
             "enum": [
               "day",
               "week",
@@ -117,15 +113,15 @@
         "required": [
           "query"
         ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true
       }
     },
     {
       "name": "searxng_search_suggestions",
       "description": "Returns autocomplete suggestions from the configured SearXNG instance. Use this to refine vague or partial queries before searching.",
-      "annotations": {
-        "readOnlyHint": true,
-        "openWorldHint": true
-      },
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -142,15 +138,15 @@
         "required": [
           "query"
         ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true
       }
     },
     {
       "name": "searxng_instance_info",
       "description": "Discovers capabilities from all reachable configured SearXNG instances via /config, including categories.common/available, engines.common/available, defaults, locales, and plugins.",
-      "annotations": {
-        "readOnlyHint": true,
-        "openWorldHint": true
-      },
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -175,15 +171,15 @@
           }
         },
         "required": []
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true
       }
     },
     {
       "name": "web_url_read",
       "description": "Fetches a URL and returns readable content as markdown. Content-type aware: HTML is converted to markdown; JSON is pretty-printed; plain text, YAML, TOML, and XML are returned as fenced readable text. PDF text extraction is supported with bounded input, output, page count, time, concurrency, and memory; OCR is not supported. Binary, media, archive, and octet-stream downloads other than PDFs are intentionally rejected instead of being returned as raw bytes. When the operator configures browser solvers, mcp-searxng attempts FlareSolverr first and then Byparr only after a busy or transient-unavailable acquisition; cache hits bypass acquisition and a final busy or unavailable provider uses one uncached direct-fetch fallback. Three modes: (1) Full content — omit filtering params; use `startChar`/`maxLength` to paginate large pages. (2) Section extraction — set `section` to return content under a specific heading. (3) Headings only — set `readHeadings: true` to list all headings (mutually exclusive with other filtering params). Returns an error string if the URL is unreachable or content cannot be extracted. Use after `searxng_web_search` to read the full content of individual result URLs.",
-      "annotations": {
-        "readOnlyHint": true,
-        "openWorldHint": true
-      },
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -217,21 +213,26 @@
         "required": [
           "url"
         ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:07:46.973Z",
+  "measuredAt": "2026-09-02T07:53:52.133Z",
   "serverName": "ihor-sokoliuk/mcp-searxng",
-  "serverVersion": "1.15.0",
+  "serverVersion": "2.1.0",
   "launchCommand": "npx -y mcp-searxng",
   "envVarNames": [
     "SEARXNG_URL"
   ],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

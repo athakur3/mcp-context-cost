@@ -58,16 +58,17 @@
       }
     }
   ],
-  "measuredAt": "2026-08-18T23:56:50.680Z",
+  "measuredAt": "2026-09-02T07:51:08.692Z",
   "serverName": "mcp-fetch",
-  "serverVersion": "1.29.0",
+  "serverVersion": "1.29.1",
   "launchCommand": "uvx --with \"mcp<2\" mcp-server-fetch",
   "envVarNames": [],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

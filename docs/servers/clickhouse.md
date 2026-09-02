@@ -1,6 +1,6 @@
 # clickhouse — context cost
 
-**581 tokens** across 3 tools — *lean* (< 1K). Measured 2026-08-18 under [methodology v1.0](../METHODOLOGY.html).
+**694 tokens** across 3 tools — *lean* (< 1K). Measured 2026-09-02 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -10,7 +10,7 @@
 | launch command | `uvx mcp-clickhouse` |
 | isolation | docker · ghcr.io/astral-sh/uv:python3.12-bookworm-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | CLICKHOUSE_HOST, CLICKHOUSE_USER, CLICKHOUSE_PASSWORD |
-| canonical SHA-256 | `d266049ab550225c0ca1055960d43f29c64b3e7cf03fa1241e633f9b2049f240` |
+| canonical SHA-256 | `1f68f3e76c71c7c8c4c6cf537ed857231daacdf9cd6ebb95e30ac482cc218b89` |
 | category | vendor-official |
 | source | https://github.com/ClickHouse/mcp-clickhouse |
 
@@ -18,9 +18,9 @@
 
 | tool | tokens | share | description | schema |
 |---|---:|---:|---:|---:|
-| list_tables | 370 | 63.7% | 191 | 104 |
-| run_query | 133 | 22.9% | 50 | 19 |
-| list_databases | 79 | 13.6% | 5 | 9 |
+| list_tables | 413 | 59.5% | 227 | 109 |
+| run_query | 203 | 29.3% | 121 | 19 |
+| list_databases | 79 | 11.4% | 5 | 9 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
 
@@ -30,6 +30,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 |---|---:|---:|---|---:|
 | 2026-08-16 | 581 | 3 | not recorded | — |
 | 2026-08-18 | 581 | 3 | docker | no change |
+| 2026-09-02 | 694 | 3 | docker | +113 |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

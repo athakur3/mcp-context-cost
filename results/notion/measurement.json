@@ -6564,18 +6564,19 @@
       }
     }
   ],
-  "measuredAt": "2026-08-18T23:58:30.464Z",
+  "measuredAt": "2026-09-02T07:51:28.744Z",
   "serverName": "Notion API",
   "serverVersion": "1.0.0",
   "launchCommand": "npx -y @notionhq/notion-mcp-server",
   "envVarNames": [
     "NOTION_TOKEN"
   ],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

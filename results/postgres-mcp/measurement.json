@@ -3059,13 +3059,14 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:05:59.044Z",
+  "measuredAt": "2026-09-02T07:53:42.768Z",
   "serverName": "postgres-mcp",
-  "serverVersion": "1.29.0",
+  "serverVersion": "1.29.1",
   "launchCommand": "uvx --with \"mcp<2\" postgres-mcp --access-mode=restricted",
   "envVarNames": [
     "DATABASE_URI"
   ],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",

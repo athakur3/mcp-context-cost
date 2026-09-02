@@ -27,7 +27,7 @@ supabase,5013,29,measured,vendor-official,89662,https://api.npmjs.org/downloads/
 sentry,6455,9,measured,vendor-official,85640,https://api.npmjs.org/downloads/point/last-week/@sentry/mcp-server (npm weekly; remote alt https://mcp.sentry.dev/mcp),10463,claude-opus-5,40,false,40,0
 markitdown,64,1,measured,vendor-official,75650,https://pypistats.org/packages/markitdown-mcp (PyPI weekly),,,6,false,6,0
 mongodb,7926,27,measured,vendor-official,72789,https://api.npmjs.org/downloads/point/last-week/mongodb-mcp-server (npm weekly),8765,claude-opus-5,103,false,92,11
-clickhouse,581,3,measured,vendor-official,46090,https://pypistats.org/packages/mcp-clickhouse (PyPI weekly),,,72,false,11,61
+clickhouse,694,3,measured,vendor-official,46090,https://pypistats.org/packages/mcp-clickhouse (PyPI weekly),,,72,false,11,61
 chroma,2837,13,measured,vendor-official,44689,https://pypistats.org/packages/chroma-mcp (PyPI weekly),,,71,false,71,0
 circleci,11912,13,measured,vendor-official,30882,https://api.npmjs.org/downloads/point/last-week/@circleci/mcp-server-circleci (npm weekly),19164,claude-opus-5,61,false,61,0
 tavily,1653,5,measured,vendor-official,24471,https://api.npmjs.org/downloads/point/last-week/tavily-mcp (npm weekly),,,28,false,28,0
@@ -72,7 +72,7 @@ serena,8204,29,measured,community,28084,https://api.github.com/repos/oraios/sere
 gmail,,,auth-required,community,26678,https://api.npmjs.org/downloads/point/last-week/@gongrzhe/server-gmail-autoauth-mcp (npm weekly; needs OAuth keys file),,,,,,
 pandoc,1425,1,measured,community,23590,https://pypistats.org/packages/mcp-pandoc (PyPI weekly),,,5,false,5,0
 obsidian,2062,15,measured,community,23503,https://pypistats.org/packages/mcp-obsidian (PyPI weekly),,,92,false,92,0
-searxng,1481,4,measured,community,22508,https://api.npmjs.org/downloads/point/last-week/mcp-searxng (npm weekly),,,27,false,27,0
+searxng,1537,4,measured,community,22508,https://api.npmjs.org/downloads/point/last-week/mcp-searxng (npm weekly),,,27,false,27,0
 slack,,,startup-failure,community,16956,https://api.npmjs.org/downloads/point/last-week/slack-mcp-server (npm weekly),,,,,,
 playwright-community,2920,33,measured,community,16066,https://api.npmjs.org/downloads/point/last-week/@executeautomation/playwright-mcp-server (npm weekly),,,158,false,158,0
 arxiv,3228,14,measured,community,13984,https://pypistats.org/packages/arxiv-mcp-server (PyPI weekly),,,61,false,61,0

@@ -2280,16 +2280,17 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:08:59.684Z",
+  "measuredAt": "2026-09-02T07:54:10.237Z",
   "serverName": "Basic Memory",
   "serverVersion": "3.3.1",
   "launchCommand": "uvx basic-memory mcp",
   "envVarNames": [],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

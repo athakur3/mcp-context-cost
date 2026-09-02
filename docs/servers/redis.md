@@ -1,10 +1,10 @@
 # redis — context cost
 
-**9,246 tokens** across 53 tools — *moderate* (5–15K). Measured 2026-08-19 under [methodology v1.0](../METHODOLOGY.html).
+**9,246 tokens** across 53 tools — *moderate* (5–15K). Measured 2026-09-02 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
-| server (self-reported) | Redis MCP Server v1.29.0 |
+| server (self-reported) | Redis MCP Server v1.29.1 |
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `uvx --from git+https://github.com/redis/mcp-redis.git redis-mcp-server --url redis://localhost:6379/0` |
@@ -71,6 +71,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 |---|---:|---:|---|---:|
 | 2026-08-17 | 9,246 | 53 | not recorded | — |
 | 2026-08-19 | 9,246 | 53 | docker | no change |
+| 2026-09-02 | 9,246 | 53 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

@@ -198,11 +198,12 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:10:07.695Z",
+  "measuredAt": "2026-09-02T07:51:23.520Z",
   "serverName": "example-servers/puppeteer",
   "serverVersion": "0.1.0",
   "launchCommand": "npx -y @modelcontextprotocol/server-puppeteer",
   "envVarNames": [],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",

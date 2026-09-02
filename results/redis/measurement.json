@@ -2443,11 +2443,12 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:04:13.989Z",
+  "measuredAt": "2026-09-02T07:52:36.554Z",
   "serverName": "Redis MCP Server",
-  "serverVersion": "1.29.0",
+  "serverVersion": "1.29.1",
   "launchCommand": "uvx --from git+https://github.com/redis/mcp-redis.git redis-mcp-server --url redis://localhost:6379/0",
   "envVarNames": [],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",

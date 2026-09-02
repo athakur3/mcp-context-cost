@@ -153,3 +153,13 @@ date,server,tokens,toolCount,status,isolation
 2026-08-26,qdrant,188,2,measured,docker
 2026-08-26,terraform,2061,9,measured,docker
 2026-08-31,memory,2378,9,measured,docker
+2026-09-02,basic-memory,9188,23,measured,docker
+2026-09-02,clickhouse,694,3,measured,docker
+2026-09-02,duckduckgo,724,2,measured,docker
+2026-09-02,exa,486,2,measured,docker
+2026-09-02,fetch,238,1,measured,docker
+2026-09-02,notion,17500,24,measured,docker
+2026-09-02,postgres-mcp,8632,9,measured,docker
+2026-09-02,puppeteer,540,7,measured,docker
+2026-09-02,redis,9246,53,measured,docker
+2026-09-02,searxng,1537,4,measured,docker
