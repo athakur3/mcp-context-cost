@@ -50,8 +50,14 @@ export interface PublishedStats {
     /** Rows the leaderboard prints a claude number for: measured AND capture-current. */
     currentCount: number;
     heaviestClaudeName: string | null;
-    github: { badgeTokens: number; claudeTokens: number; droppedPct: number };
+    github: { badgeTokens: number; mappedTokens: number; claudeTokens: number; droppedPct: number };
     notion: { badgeTokens: number; claudeTokens: number };
+    /** Field-selection share across the run's rows, as fractions of the payload. */
+    shareMin: number;
+    shareMax: number;
+    /** claudeDelta / o200kFull across the run's rows that carry a number. */
+    ratioMin: number;
+    ratioMax: number;
   };
   deferralCostlierCount: number;
   verify: { serverName: string; tokens: number };
@@ -110,6 +116,14 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
   const notion = divRow('notion');
   const githubShare = fieldSelectionShare(github);
   if (githubShare === null) throw new Error('divergence run carries no o200k counts for github');
+  const runRows = Object.values(div.servers);
+  const shares = runRows.map((r) => fieldSelectionShare(r)).filter((s): s is number => s !== null);
+  const ratios = runRows
+    .filter((r) => typeof r.claudeDelta === 'number' && r.claudeDelta > 0 && r.o200kFull > 0)
+    .map((r) => r.claudeDelta / r.o200kFull);
+  if (shares.length === 0 || ratios.length === 0) {
+    throw new Error('divergence run carries no usable rows — METHODOLOGY states its ranges');
+  }
   const withClaude = measured.filter((r) => isCurrent(div.servers[r.entry.name], r.m.canonicalSha256));
   const heaviest = [...withClaude].sort(
     (a, b) => div.servers[b.entry.name].claudeDelta - div.servers[a.entry.name].claudeDelta,
@@ -140,10 +154,15 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
       heaviestClaudeName: heaviest?.entry.name ?? null,
       github: {
         badgeTokens: github.o200kFull,
+        mappedTokens: github.o200kMapped,
         claudeTokens: github.claudeDelta,
         droppedPct: Math.round(githubShare * 100),
       },
       notion: { badgeTokens: notion.o200kFull, claudeTokens: notion.claudeDelta },
+      shareMin: Math.min(...shares),
+      shareMax: Math.max(...shares),
+      ratioMin: Math.min(...ratios),
+      ratioMax: Math.max(...ratios),
     },
     deferralCostlierCount: costlier.length,
     verify: {
@@ -153,13 +172,14 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
   };
 }
 
-export type PageFile = 'README.md' | 'docs/index.md';
-export const PAGE_FILES: PageFile[] = ['README.md', 'docs/index.md'];
+export type PageFile = 'README.md' | 'docs/index.md' | 'docs/METHODOLOGY.md';
+export const PAGE_FILES: PageFile[] = ['README.md', 'docs/index.md', 'docs/METHODOLOGY.md'];
 
 /**
  * One maintained sentence. `template` is its exact words with slots — `{n}` a
- * comma-formatted count, `{d}` a bare integer, `{w}` a server or package name —
- * and `values` is what the slots must hold for the data on disk.
+ * comma-formatted count, `{d}` a bare integer, `{f}` a decimal, `{w}` a server
+ * or package name — and `values` is what the slots must hold for the data on
+ * disk.
  */
 export interface Claim {
   file: PageFile;
@@ -274,6 +294,34 @@ export const PAGE_CLAIMS: Claim[] = [
     template: 'Second-heaviest is `{w}` at {n}.',
     values: (s) => [s.second.name, fmt(s.second.tokens)],
   },
+  {
+    file: 'docs/METHODOLOGY.md',
+    id: 'divergence:share-range',
+    template: 'this removes between {f}% and **{f}%** of the payload (github: {n} → {n} tokens).',
+    values: (s) => [
+      (s.claude.shareMin * 100).toFixed(1),
+      (s.claude.shareMax * 100).toFixed(1),
+      fmt(s.claude.github.badgeTokens),
+      fmt(s.claude.github.mappedTokens),
+    ],
+  },
+  {
+    file: 'docs/METHODOLOGY.md',
+    id: 'divergence:ratio-range',
+    template: 'it ranged from {f}× to {f}× across the top {n},',
+    values: (s) => [s.claude.ratioMin.toFixed(2), s.claude.ratioMax.toFixed(2), fmt(s.claude.runSize)],
+  },
+  {
+    file: 'docs/METHODOLOGY.md',
+    id: 'divergence:heaviest-pair',
+    template: '{w} is the heaviest server on o200k and {w} is the heaviest on Claude.',
+    values: (s) => {
+      if (!s.claude.heaviestClaudeName) {
+        throw new Error('no row has a current claude number — the heaviest-on-Claude sentence cannot be maintained');
+      }
+      return [s.max.name, s.claude.heaviestClaudeName];
+    },
+  },
 ];
 
 /**
@@ -319,9 +367,16 @@ const escapeLiteral = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').re
 export function compileTemplate(template: string): RegExp {
   let source = '';
   let last = 0;
-  for (const slot of template.matchAll(/\{[ndw]\}/g)) {
+  for (const slot of template.matchAll(/\{[ndwf]\}/g)) {
     source += escapeLiteral(template.slice(last, slot.index));
-    source += slot[0] === '{n}' ? '([\\d,]+)' : slot[0] === '{d}' ? '(\\d+)' : '([A-Za-z0-9._-]+)';
+    source +=
+      slot[0] === '{n}'
+        ? '([\\d,]+)'
+        : slot[0] === '{d}'
+          ? '(\\d+)'
+          : slot[0] === '{f}'
+            ? '(\\d+\\.\\d+)'
+            : '([A-Za-z0-9._-]+)';
     last = slot.index + slot[0].length;
   }
   source += escapeLiteral(template.slice(last));

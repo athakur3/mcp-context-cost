@@ -40,6 +40,19 @@ while reading it.
   the published Claude run had moved 19 → 18 with the 2026-09-03 re-measurement of
   `mcp-atlassian`, and only the leaderboard had been told. README is the page inside the
   package, so this changes what an install carries.
+- **The weekly divergence refresh covers the run it publishes, and METHODOLOGY's divergence
+  prose is maintained like the front pages' numbers.** `npm run divergence` defaulted to
+  re-measuring the top 15 while the published run holds 20 rows, so ranks 16–20 were carried
+  forward from the original run and never refreshed on the Monday cadence — `blender`, rank
+  19, sat blank behind its 2026-08-26 capture while the 15 rows above it refreshed twice.
+  Run bare, the tool now writes the whole run — the top 20 by tokens today, exactly, so the
+  file never holds a row the refresh no longer covers — and a count argument stays a
+  touch-up that preserves the rest. The ranges METHODOLOGY quotes from that run had drifted
+  the same way the front pages' counts had: it said the field-selection effect tops out at
+  80.6% when the run says 89.9% (`xcodebuildmcp`), and that the ratio ranged 0.34×–1.92×
+  "across the top 15" when it ranges 0.20×–1.92× across the 20. Those sentences are claims
+  now — patched by regen, asserted by the suite — alongside the heaviest-on-each-tokenizer
+  pair.
 - **Publishing refuses a version the changelog has no section for.** This file's convention
   is that cutting a version renames the `Unreleased` heading to that version and dates it;
   0.8.0 was cut and published on 2026-08-21 with the rename skipped, so npm served bytes

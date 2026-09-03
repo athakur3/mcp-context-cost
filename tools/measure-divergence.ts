@@ -5,8 +5,9 @@
  *
  * This is the one part of the pipeline that talks to a network API, so it lives
  * outside src/ (and outside the published package): the library, the CLI, and
- * every generated artifact stay offline and dependency-free. Re-running it
- * updates only the servers it measured; rows for other servers are preserved.
+ * every generated artifact stay offline and dependency-free. Run bare it writes
+ * THE run — the top 20 by tokens today, whole; with a count it is a touch-up
+ * that measures that many from the top and preserves every other row.
  *
  * The key is read from MCP_CTX_ANTHROPIC_KEY, deliberately not ANTHROPIC_API_KEY:
  * that name is picked up by other Anthropic tooling in the same shell.
@@ -38,7 +39,21 @@ const PROBE_TOOL = {
 };
 
 const root = process.cwd();
-const topN = Number(process.argv[2] ?? 15);
+
+/**
+ * Bare, this writes the whole run: the top RUN_SIZE by tokens today, exactly —
+ * never a preserved row the refresh no longer covers, so the published claim
+ * "the top N when it ran" cannot rot as ranks shift. With a count argument it
+ * is a touch-up: measure that many from the top, preserve the rest of the run.
+ *
+ * The bare default used to be 15 against a published run of 20, so ranks 16–20
+ * were carried forward from the original run and never refreshed on the weekly
+ * cadence — observed 2026-09-03: `blender`, rank 19, blank behind its
+ * 2026-08-26 capture while the 15 rows above it refreshed twice.
+ */
+const RUN_SIZE = 20;
+const touchUp = process.argv[2] !== undefined;
+const topN = touchUp ? Number(process.argv[2]) : RUN_SIZE;
 
 const apiKey = process.env.MCP_CTX_ANTHROPIC_KEY;
 if (!apiKey) {
@@ -85,7 +100,8 @@ console.log(`baseline ${baselineTokens} tokens; probe delta ${probeDelta} (upper
 
 const outPath = join(root, 'results', 'divergence.json');
 const previous = existsSync(outPath) ? parseDivergence(readFileSync(outPath, 'utf8')) : null;
-const servers: Record<string, DivergenceRow> = { ...(previous?.servers ?? {}) };
+// A touch-up edits the previous run in place; a bare run replaces it whole.
+const servers: Record<string, DivergenceRow> = touchUp ? { ...(previous?.servers ?? {}) } : {};
 
 for (const { name, m } of selected) {
   const raw = m.rawToolsCapture as unknown[];

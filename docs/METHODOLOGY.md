@@ -189,13 +189,13 @@ opposite directions, and a single ratio hides the larger one:
 1. **Field selection.** `title`, `annotations`, `outputSchema`, `execution`, and `icons` are
    real bytes the server ships and the canonical form counts them — but an Anthropic `tools`
    array has nowhere to put them. Across the measured set this removes between 0.7% and
-   **80.6%** of the payload (github: 54,422 → 10,535 tokens).
+   **89.9%** of the payload (github: 54,422 → 10,535 tokens).
 2. **Tokenizer and framing.** Anthropic's tokenizer is denser on schema text than o200k_base,
    and the API adds its own framing around the tools channel. A single minimal tool costs
    328 tokens more than no tools at all, which is an upper bound on the fixed part.
 
 Because the effects can cancel or compound, the Claude number is **not** a fixed multiple of
-the badge — it ranged from 0.34× to 1.92× across the top 15, and it reorders the leaderboard:
+the badge — it ranged from 0.20× to 1.92× across the top 20, and it reorders the leaderboard:
 github is the heaviest server on o200k and notion is the heaviest on Claude.
 
 **What it is not.** It is not any client's context bill either. `count_tokens` is Anthropic's

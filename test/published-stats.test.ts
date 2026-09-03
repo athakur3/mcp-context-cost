@@ -84,6 +84,12 @@ describe('the patch engine', () => {
     expect([...'| filesystem Xreference) | 2,823 | 14 |'.matchAll(row)]).toHaveLength(0);
   });
 
+  it('reads a decimal as one slot', () => {
+    const m = [...'between 0.7% and **89.9%**'.matchAll(compileTemplate('between {f}% and **{f}%**'))];
+    expect(m).toHaveLength(1);
+    expect(m[0].slice(1)).toEqual(['0.7', '89.9']);
+  });
+
   it('splices only the slots, leaving words and wrapping untouched', () => {
     const stale = 'lead-in\ncost spans **1,500×**,\nfrom `mysql` at 40 tokens\ntrail-out';
     const applied = applyClaim(stale, claim, ['1,700', 'postgres', '32']);
@@ -124,7 +130,7 @@ describe('the patch engine', () => {
 
   it('every claim template has as many slots as its values function returns', () => {
     for (const c of PAGE_CLAIMS) {
-      const slots = [...c.template.matchAll(/\{[ndw]\}/g)].length;
+      const slots = [...c.template.matchAll(/\{[ndwf]\}/g)].length;
       expect(c.values(stats), `claim '${c.id}'`).toHaveLength(slots);
     }
   });
