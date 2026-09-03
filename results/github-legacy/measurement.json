@@ -1210,18 +1210,19 @@
       }
     }
   ],
-  "measuredAt": "2026-08-18T23:57:01.800Z",
+  "measuredAt": "2026-09-03T19:22:51.008Z",
   "serverName": "github-mcp-server",
   "serverVersion": "0.6.2",
   "launchCommand": "npx -y @modelcontextprotocol/server-github",
   "envVarNames": [
     "GITHUB_PERSONAL_ACCESS_TOKEN"
   ],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

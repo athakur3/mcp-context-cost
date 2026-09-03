@@ -89,7 +89,7 @@
 </style>
 <div class="wrap">
   <header>
-    <p class="eyebrow">methodology v1.0 · o200k_base · generated 2026-09-03 16:19 UTC</p>
+    <p class="eyebrow">methodology v1.0 · o200k_base · generated 2026-09-03 19:25 UTC</p>
     <h1>mcp-context-cost</h1>
     <p class="sub">What popular MCP servers cost in context tokens before the agent does any work — measured from raw <code>tools/list</code> captures, every number re-derivable from its published measurement file.</p>
   </header>
@@ -97,27 +97,27 @@
   <div class="stats">
     <div class="stat"><span class="n">69<span style="font-size:0.9rem;color:var(--muted)">/82</span></span><span class="l">servers measured</span></div>
     <div class="stat"><span class="n">2,378</span><span class="l">median tokens</span></div>
-    <div class="stat"><span class="n">54,422</span><span class="l">priciest (github)</span></div>
+    <div class="stat"><span class="n">54,622</span><span class="l">priciest (github)</span></div>
     <div class="stat"><span class="n">0</span><span class="l">pending sweep</span></div>
   </div>
 
   <h2>Leaderboard</h2>
   <p class="h2sub">Tokens = o200k_base count of the canonical <code>tools/list</code> bytes — the wire payload. What a <em>Claude request</em> actually carries can differ sharply (github: 54,422 on the wire, 18,406 in a request — 80% of its schema bytes are fields no Anthropic request sends). The trend line plots tokens across every sweep date on record (oldest→newest, dot = current); servers with one sweep so far show no line yet, and a sweep taken under different isolation than the current one is left out rather than drawn as a change in the server. Hover a row for exact numbers; <a href="METHODOLOGY.html#claude-divergence">method</a>.</p>
   <div class="board">
-<a class="row" href="servers/github.html" data-tip="44 tools · largest: issue_write (1,890 tok) · in a Claude request: 18,406 tok · 2-sweep trend: 54,422 → 54,422 · vendor-official · measured · v1.9.0">
+<a class="row" href="servers/github.html" data-tip="44 tools · largest: issue_write (2,050 tok) · in a Claude request: 18,406 tok · 3-sweep trend: 54,422 → 54,622 · vendor-official · measured · v1.11.0">
   <span class="rank">1</span>
   <span class="name">github</span>
   <span class="track"><span class="bar" style="width:100.0%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
-    <polyline points="3.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
+    <polyline points="3.0,15.0 28.0,15.0 53.0,3.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="53.0" cy="3.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
   </svg></span>
-  <span class="val"><span class="dot dot-red" aria-hidden="true"></span>54,422<span class="bandname">very heavy</span></span>
+  <span class="val"><span class="dot dot-red" aria-hidden="true"></span>54,622<span class="bandname">very heavy</span></span>
 </a>
 <a class="row" href="servers/xcodebuildmcp.html" data-tip="24 tools · largest: snapshot_ui (2,139 tok) · in a Claude request: 5,335 tok · 2-sweep trend: 26,594 → 26,594 · community · measured · v2.7.0">
   <span class="rank">2</span>
   <span class="name">xcodebuildmcp</span>
-  <span class="track"><span class="bar" style="width:48.9%"></span></span>
+  <span class="track"><span class="bar" style="width:48.7%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
     <polyline points="3.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
@@ -127,7 +127,7 @@
 <a class="row" href="servers/brave-search.html" data-tip="8 tools · largest: brave_place_search (17,282 tok) · in a Claude request: 13,746 tok · 2-sweep trend: 25,456 → 25,456 · vendor-official · measured · v2.1.0">
   <span class="rank">3</span>
   <span class="name">brave-search</span>
-  <span class="track"><span class="bar" style="width:46.8%"></span></span>
+  <span class="track"><span class="bar" style="width:46.6%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
     <polyline points="3.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
@@ -137,7 +137,7 @@
 <a class="row" href="servers/notion.html" data-tip="24 tools · largest: API-update-page-markdown (1,282 tok) · in a Claude request: 33,560 tok · 3-sweep trend: 17,500 → 17,500 · vendor-official · measured · v1.0.0">
   <span class="rank">4</span>
   <span class="name">notion</span>
-  <span class="track"><span class="bar" style="width:32.2%"></span></span>
+  <span class="track"><span class="bar" style="width:32.0%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
     <polyline points="3.0,9.0 28.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
@@ -147,7 +147,7 @@
 <a class="row" href="servers/mcp-atlassian.html" data-tip="63 tools · largest: jira_update_proforma_form_answers (800 tok) · in a Claude request: 22,234 tok · 4-sweep trend: 17,311 → 17,311 · community · dynamic · v3.4.7">
   <span class="rank">5</span>
   <span class="name">mcp-atlassian</span>
-  <span class="track"><span class="bar" style="width:31.8%"></span></span>
+  <span class="track"><span class="bar" style="width:31.7%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
     <polyline points="3.0,9.0 19.7,9.0 36.3,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
@@ -157,7 +157,7 @@
 <a class="row" href="servers/circleci.html" data-tip="13 tools · largest: run_rollback_pipeline (1,391 tok) · in a Claude request: 19,164 tok · 2-sweep trend: 11,912 → 11,912 · vendor-official · measured · v1.0.0">
   <span class="rank">6</span>
   <span class="name">circleci</span>
-  <span class="track"><span class="bar" style="width:21.9%"></span></span>
+  <span class="track"><span class="bar" style="width:21.8%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
     <polyline points="3.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
@@ -177,7 +177,7 @@
 <a class="row" href="servers/apify.html" data-tip="10 tools · largest: search-actors (2,200 tok) · in a Claude request: 8,313 tok · 2-sweep trend: 10,426 → 10,426 · vendor-official · measured · v0.14.3">
   <span class="rank">8</span>
   <span class="name">apify</span>
-  <span class="track"><span class="bar" style="width:19.2%"></span></span>
+  <span class="track"><span class="bar" style="width:19.1%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
     <polyline points="3.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
@@ -187,7 +187,7 @@
 <a class="row" href="servers/firecrawl.html" data-tip="27 tools · largest: firecrawl_search (1,391 tok) · in a Claude request: 16,428 tok · 4-sweep trend: 9,561 → 9,561 · vendor-official · measured · v3.24.0">
   <span class="rank">9</span>
   <span class="name">firecrawl</span>
-  <span class="track"><span class="bar" style="width:17.6%"></span></span>
+  <span class="track"><span class="bar" style="width:17.5%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
     <polyline points="3.0,9.0 19.7,9.0 36.3,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
@@ -197,7 +197,7 @@
 <a class="row" href="servers/redis.html" data-tip="53 tools · largest: hybrid_search (510 tok) · in a Claude request: 13,221 tok · 3-sweep trend: 9,246 → 9,246 · vendor-official · measured · v1.29.1">
   <span class="rank">10</span>
   <span class="name">redis</span>
-  <span class="track"><span class="bar" style="width:17.0%"></span></span>
+  <span class="track"><span class="bar" style="width:16.9%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
     <polyline points="3.0,9.0 28.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
@@ -207,7 +207,7 @@
 <a class="row" href="servers/basic-memory.html" data-tip="23 tools · largest: search_notes (970 tok) · in a Claude request: 12,426 tok · 3-sweep trend: 9,188 → 9,188 · community · measured · v3.3.1">
   <span class="rank">11</span>
   <span class="name">basic-memory</span>
-  <span class="track"><span class="bar" style="width:16.9%"></span></span>
+  <span class="track"><span class="bar" style="width:16.8%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
     <polyline points="3.0,9.0 28.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
@@ -227,7 +227,7 @@
 <a class="row" href="servers/postgres-mcp.html" data-tip="9 tools · largest: explain_query (1,147 tok) · in a Claude request: 2,381 tok · 3-sweep trend: 8,632 → 8,632 · community · measured · v1.29.1">
   <span class="rank">13</span>
   <span class="name">postgres-mcp</span>
-  <span class="track"><span class="bar" style="width:15.9%"></span></span>
+  <span class="track"><span class="bar" style="width:15.8%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
     <polyline points="3.0,9.0 28.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
@@ -237,7 +237,7 @@
 <a class="row" href="servers/serena.html" data-tip="29 tools · largest: find_symbol (883 tok) · in a Claude request: 11,494 tok · 2-sweep trend: 8,204 → 8,204 · community · measured · v1.28.1">
   <span class="rank">14</span>
   <span class="name">serena</span>
-  <span class="track"><span class="bar" style="width:15.1%"></span></span>
+  <span class="track"><span class="bar" style="width:15.0%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
     <polyline points="3.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
@@ -247,25 +247,45 @@
 <a class="row" href="servers/mongodb.html" data-tip="27 tools · largest: explain (813 tok) · in a Claude request: 8,765 tok · 4-sweep trend: 7,926 → 7,926 · vendor-official · measured · v2.1.0">
   <span class="rank">15</span>
   <span class="name">mongodb</span>
-  <span class="track"><span class="bar" style="width:14.6%"></span></span>
+  <span class="track"><span class="bar" style="width:14.5%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
     <polyline points="3.0,9.0 19.7,9.0 36.3,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
   </svg></span>
   <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>7,926<span class="bandname">moderate</span></span>
 </a>
-<a class="row" href="servers/sentry.html" data-tip="9 tools · largest: update_issue (1,306 tok) · in a Claude request: 10,463 tok · 2-sweep trend: 6,455 → 6,455 · vendor-official · measured · v0.37.0">
+<a class="row" href="servers/blender.html" data-tip="28 tools · largest: download_polypizza_model (490 tok) · in a Claude request: 8,409 tok · 3-sweep trend: 5,258 → 6,928 · community · measured · v1.29.1">
   <span class="rank">16</span>
-  <span class="name">sentry</span>
-  <span class="track"><span class="bar" style="width:11.9%"></span></span>
+  <span class="name">blender</span>
+  <span class="track"><span class="bar" style="width:12.7%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
-    <polyline points="3.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
+    <polyline points="3.0,15.0 28.0,13.5 53.0,3.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="53.0" cy="3.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
   </svg></span>
-  <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>6,455<span class="bandname">moderate</span></span>
+  <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>6,928<span class="bandname">moderate</span></span>
+</a>
+<a class="row" href="servers/shopify-dev.html" data-tip="6 tools · largest: learn_shopify_api (2,847 tok) · in a Claude request: 9,805 tok · 3-sweep trend: 5,624 → 6,841 · vendor-official · measured · v1.15.0">
+  <span class="rank">17</span>
+  <span class="name">shopify-dev</span>
+  <span class="track"><span class="bar" style="width:12.5%"></span></span>
+  <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
+    <polyline points="3.0,15.0 28.0,15.0 53.0,3.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="53.0" cy="3.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
+  </svg></span>
+  <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>6,841<span class="bandname">moderate</span></span>
+</a>
+<a class="row" href="servers/sentry.html" data-tip="9 tools · largest: update_issue (1,248 tok) · in a Claude request: 10,463 tok · 3-sweep trend: 6,455 → 6,086 · vendor-official · measured · v0.39.0">
+  <span class="rank">18</span>
+  <span class="name">sentry</span>
+  <span class="track"><span class="bar" style="width:11.1%"></span></span>
+  <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
+    <polyline points="3.0,3.0 28.0,3.0 53.0,15.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="53.0" cy="15.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
+  </svg></span>
+  <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>6,086<span class="bandname">moderate</span></span>
 </a>
 <a class="row" href="servers/pinecone.html" data-tip="9 tools · largest: search-records (1,179 tok) · in a Claude request: 9,184 tok · 2-sweep trend: 5,903 → 5,903 · vendor-official · measured · v0.3.0">
-  <span class="rank">17</span>
+  <span class="rank">19</span>
   <span class="name">pinecone</span>
   <span class="track"><span class="bar" style="width:10.8%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
@@ -274,30 +294,10 @@
   </svg></span>
   <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>5,903<span class="bandname">moderate</span></span>
 </a>
-<a class="row" href="servers/shopify-dev.html" data-tip="5 tools · largest: learn_shopify_api (2,518 tok) · in a Claude request: 9,805 tok · 2-sweep trend: 5,624 → 5,624 · vendor-official · measured · v1.14.4">
-  <span class="rank">18</span>
-  <span class="name">shopify-dev</span>
-  <span class="track"><span class="bar" style="width:10.3%"></span></span>
-  <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
-    <polyline points="3.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
-  </svg></span>
-  <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>5,624<span class="bandname">moderate</span></span>
-</a>
-<a class="row" href="servers/blender.html" data-tip="25 tools · largest: generate_hyper3d_model_via_images (454 tok) · in a Claude request: 8,409 tok · 2-sweep trend: 5,258 → 5,462 · community · measured · v1.29.0">
-  <span class="rank">19</span>
-  <span class="name">blender</span>
-  <span class="track"><span class="bar" style="width:10.0%"></span></span>
-  <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
-    <polyline points="3.0,15.0 53.0,3.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="53.0" cy="3.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
-  </svg></span>
-  <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>5,462<span class="bandname">moderate</span></span>
-</a>
 <a class="row" href="servers/kubernetes.html" data-tip="23 tools · largest: kubectl_create (945 tok) · in a Claude request: 9,165 tok · 4-sweep trend: 5,268 → 5,268 · community · measured · v4.1.6">
   <span class="rank">20</span>
   <span class="name">kubernetes</span>
-  <span class="track"><span class="bar" style="width:9.7%"></span></span>
+  <span class="track"><span class="bar" style="width:9.6%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
     <polyline points="3.0,9.0 19.7,9.0 36.3,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
@@ -364,30 +364,30 @@
   </svg></span>
   <span class="val"><span class="dot dot-green" aria-hidden="true"></span>4,024<span class="bandname">light</span></span>
 </a>
-<a class="row" href="servers/github-legacy.html" data-tip="26 tools · largest: create_pull_request_review (360 tok) · 2-sweep trend: 3,548 → 3,548 · official-reference · measured · v0.6.2">
+<a class="row" href="servers/arxiv.html" data-tip="19 tools · largest: search_papers (516 tok) · 3-sweep trend: 3,228 → 3,960 · community · measured · v0.7.2">
   <span class="rank">27</span>
+  <span class="name">arxiv</span>
+  <span class="track"><span class="bar" style="width:7.2%"></span></span>
+  <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
+    <polyline points="3.0,15.0 28.0,15.0 53.0,3.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="53.0" cy="3.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
+  </svg></span>
+  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>3,960<span class="bandname">light</span></span>
+</a>
+<a class="row" href="servers/github-legacy.html" data-tip="26 tools · largest: create_pull_request_review (360 tok) · 3-sweep trend: 3,548 → 3,548 · official-reference · measured · v0.6.2">
+  <span class="rank">28</span>
   <span class="name">github-legacy</span>
   <span class="track"><span class="bar" style="width:6.5%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
-    <polyline points="3.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="3.0,9.0 28.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
   </svg></span>
   <span class="val"><span class="dot dot-green" aria-hidden="true"></span>3,548<span class="bandname">light</span></span>
 </a>
-<a class="row" href="servers/arxiv.html" data-tip="14 tools · largest: search_papers (1,154 tok) · 2-sweep trend: 3,228 → 3,228 · community · measured · v0.6.3">
-  <span class="rank">28</span>
-  <span class="name">arxiv</span>
-  <span class="track"><span class="bar" style="width:5.9%"></span></span>
-  <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
-    <polyline points="3.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
-  </svg></span>
-  <span class="val"><span class="dot dot-green" aria-hidden="true"></span>3,228<span class="bandname">light</span></span>
-</a>
 <a class="row" href="servers/playwright-community.html" data-tip="33 tools · largest: playwright_get_visible_html (228 tok) · 2-sweep trend: 2,920 → 2,920 · community · measured · v1.0.11">
   <span class="rank">29</span>
   <span class="name">playwright-community</span>
-  <span class="track"><span class="bar" style="width:5.4%"></span></span>
+  <span class="track"><span class="bar" style="width:5.3%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
     <polyline points="3.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
@@ -484,12 +484,12 @@
   </svg></span>
   <span class="val"><span class="dot dot-green" aria-hidden="true"></span>1,708<span class="bandname">light</span></span>
 </a>
-<a class="row" href="servers/tavily.html" data-tip="5 tools · largest: tavily_search (615 tok) · 2-sweep trend: 1,653 → 1,653 · vendor-official · measured · v0.2.22">
+<a class="row" href="servers/tavily.html" data-tip="5 tools · largest: tavily_search (615 tok) · 3-sweep trend: 1,653 → 1,653 · vendor-official · measured · v0.2.22">
   <span class="rank">39</span>
   <span class="name">tavily</span>
   <span class="track"><span class="bar" style="width:3.0%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
-    <polyline points="3.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="3.0,9.0 28.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
   </svg></span>
   <span class="val"><span class="dot dot-green" aria-hidden="true"></span>1,653<span class="bandname">light</span></span>
@@ -541,12 +541,12 @@
   </svg></span>
   <span class="val"><span class="dot dot-green" aria-hidden="true"></span>1,003<span class="bandname">light</span></span>
 </a>
-<a class="row" href="servers/bright-data.html" data-tip="5 tools · largest: discover (347 tok) · 2-sweep trend: 978 → 978 · vendor-official · measured · v2.11.1">
+<a class="row" href="servers/bright-data.html" data-tip="5 tools · largest: discover (347 tok) · 3-sweep trend: 978 → 978 · vendor-official · measured · v2.11.1">
   <span class="rank">45</span>
   <span class="name">bright-data</span>
   <span class="track"><span class="bar" style="width:1.8%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
-    <polyline points="3.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="3.0,9.0 28.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
   </svg></span>
   <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>978<span class="bandname">lean</span></span>
@@ -594,19 +594,19 @@
 <a class="row" href="servers/slack-legacy.html" data-tip="8 tools · largest: slack_reply_to_thread (124 tok) · 3-sweep trend: 681 → 681 · official-reference · measured · v1.0.0">
   <span class="rank">50</span>
   <span class="name">slack-legacy</span>
-  <span class="track"><span class="bar" style="width:1.3%"></span></span>
+  <span class="track"><span class="bar" style="width:1.2%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
     <polyline points="3.0,9.0 28.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
   </svg></span>
   <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>681<span class="bandname">lean</span></span>
 </a>
-<a class="row" href="servers/google-maps.html" data-tip="7 tools · largest: maps_distance_matrix (124 tok) · 2-sweep trend: 549 → 549 · official-reference · measured · v0.1.0">
+<a class="row" href="servers/google-maps.html" data-tip="7 tools · largest: maps_distance_matrix (124 tok) · 3-sweep trend: 549 → 549 · official-reference · measured · v0.1.0">
   <span class="rank">51</span>
   <span class="name">google-maps</span>
   <span class="track"><span class="bar" style="width:1.2%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
-    <polyline points="3.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="3.0,9.0 28.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
   </svg></span>
   <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>549<span class="bandname">lean</span></span>
@@ -691,12 +691,12 @@
   </svg></span>
   <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>364<span class="bandname">lean</span></span>
 </a>
-<a class="row" href="servers/deepwiki.html" data-tip="3 tools · largest: ask_question (148 tok) · 2-sweep trend: 359 → 359 · vendor-official · measured · v2.14.3">
+<a class="row" href="servers/deepwiki.html" data-tip="3 tools · largest: ask_question (148 tok) · 3-sweep trend: 359 → 359 · vendor-official · measured · v2.14.3">
   <span class="rank">60</span>
   <span class="name">deepwiki</span>
   <span class="track"><span class="bar" style="width:1.2%"></span></span>
   <span class="spark-cell"><svg class="spark" width="56" height="18" viewBox="0 0 56 18" aria-hidden="true" focusable="false">
-    <polyline points="3.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="3.0,9.0 28.0,9.0 53.0,9.0" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="53.0" cy="9.0" r="2.2" fill="var(--accent)" stroke="var(--surface)" stroke-width="1"/>
   </svg></span>
   <span class="val"><span class="dot dot-brightgreen" aria-hidden="true"></span>359<span class="bandname">lean</span></span>
@@ -807,12 +807,12 @@
     at Object.&lt;anonymous&gt; (/tmp/.npm-cache/_npx/bc</td></tr>
 <tr><td>heroku</td><td><span class="chip">startup-failure</span></td><td class="note">reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: Fatal error in main(): Cannot find module '/tmp/.npm-cache/_npx/909ffbc9</td></tr>
 <tr><td>grafana</td><td><span class="chip">timeout</span></td><td class="note">reproduced on double the timeout budget; timeout after 360000ms waiting for initialize</td></tr>
-<tr><td>neon</td><td><span class="chip">startup-failure</span></td><td class="note">reproduced with the shared package cache bypassed; server exited (code 1)</td></tr>
+<tr><td>neon</td><td><span class="chip">startup-failure</span></td><td class="note">reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: npm warn deprecated @neondatabase/mcp-server-neon@0.6.5: This package is</td></tr>
 <tr><td>linear</td><td><span class="chip">remote-auth-wall</span></td><td class="note">OAuth-gated remote server; listed, not measured</td></tr>
 <tr><td>zapier</td><td><span class="chip">remote-auth-wall</span></td><td class="note">OAuth-gated remote server; listed, not measured</td></tr>
 <tr><td>vercel</td><td><span class="chip">remote-auth-wall</span></td><td class="note">OAuth-gated remote server; listed, not measured</td></tr>
-<tr><td>gmail</td><td><span class="chip">auth-required</span></td><td class="note">server exited (code 1); stderr tail: Error: OAuth keys file not found. Please place gcp-oauth.keys.json in current directory or /tmp/.gmail-mcp
-</td></tr>
+<tr><td>gmail</td><td><span class="chip">auth-required</span></td><td class="note">server exited (code 1); stderr tail: npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+npm warn deprecated uuid@9.0.1</td></tr>
 <tr><td>slack</td><td><span class="chip">startup-failure</span></td><td class="note">reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: .execFileSync (node:child_process:952:15)
     at Object.&lt;anonymous&gt</td></tr></tbody>
   </table></div>
@@ -820,13 +820,13 @@
   <h2>The badge</h2>
   <p class="h2sub">A shields.io endpoint badge backed by a reproducible measurement — merge one line into a README.</p>
   <div class="specimen"><span class="badge"><span class="badge-l">context cost</span><span class="badge-r badge-brightgreen">32 tokens</span></span><code>badges/postgres.json</code></div>
-<div class="specimen"><span class="badge"><span class="badge-l">context cost</span><span class="badge-r badge-red">54,422 tokens</span></span><code>badges/github.json</code></div>
+<div class="specimen"><span class="badge"><span class="badge-l">context cost</span><span class="badge-r badge-red">54,622 tokens</span></span><code>badges/github.json</code></div>
   <pre>[![context cost](https://img.shields.io/endpoint?url=&lt;raw badges/&lt;server&gt;.json URL&gt;)](&lt;methodology URL&gt;)</pre>
 
   <details><summary>Full data table</summary>
   <div class="tablewrap" style="margin-top:10px"><table>
     <thead><tr><th>#</th><th>server</th><th>tokens (o200k)</th><th>claude req</th><th>tools</th><th>band</th><th>category</th><th>trend</th></tr></thead>
-    <tbody><tr><td>1</td><td>github</td><td class="num">54,422</td><td class="num">18,406</td><td class="num">44</td><td>very heavy</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
+    <tbody><tr><td>1</td><td>github</td><td class="num">54,622</td><td class="num">18,406</td><td class="num">44</td><td>very heavy</td><td>vendor-official</td><td class="num">+200 / 3d</td></tr>
 <tr><td>2</td><td>xcodebuildmcp</td><td class="num">26,594</td><td class="num">5,335</td><td class="num">24</td><td>heavy</td><td>community</td><td class="num">+0 / 2d</td></tr>
 <tr><td>3</td><td>brave-search</td><td class="num">25,456</td><td class="num">13,746</td><td class="num">8</td><td>heavy</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
 <tr><td>4</td><td>notion</td><td class="num">17,500</td><td class="num">33,560</td><td class="num">24</td><td>heavy</td><td>vendor-official</td><td class="num">+0 / 3d</td></tr>
@@ -841,10 +841,10 @@
 <tr><td>13</td><td>postgres-mcp</td><td class="num">8,632</td><td class="num">2,381</td><td class="num">9</td><td>moderate</td><td>community</td><td class="num">+0 / 3d</td></tr>
 <tr><td>14</td><td>serena</td><td class="num">8,204</td><td class="num">11,494</td><td class="num">29</td><td>moderate</td><td>community</td><td class="num">+0 / 2d</td></tr>
 <tr><td>15</td><td>mongodb</td><td class="num">7,926</td><td class="num">8,765</td><td class="num">27</td><td>moderate</td><td>vendor-official</td><td class="num">+0 / 4d</td></tr>
-<tr><td>16</td><td>sentry</td><td class="num">6,455</td><td class="num">10,463</td><td class="num">9</td><td>moderate</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
-<tr><td>17</td><td>pinecone</td><td class="num">5,903</td><td class="num">9,184</td><td class="num">9</td><td>moderate</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
-<tr><td>18</td><td>shopify-dev</td><td class="num">5,624</td><td class="num">9,805</td><td class="num">5</td><td>moderate</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
-<tr><td>19</td><td>blender</td><td class="num">5,462</td><td class="num">8,409</td><td class="num">25</td><td>moderate</td><td>community</td><td class="num">+204 / 2d</td></tr>
+<tr><td>16</td><td>blender</td><td class="num">6,928</td><td class="num">8,409</td><td class="num">28</td><td>moderate</td><td>community</td><td class="num">+1,670 / 3d</td></tr>
+<tr><td>17</td><td>shopify-dev</td><td class="num">6,841</td><td class="num">9,805</td><td class="num">6</td><td>moderate</td><td>vendor-official</td><td class="num">+1,217 / 3d</td></tr>
+<tr><td>18</td><td>sentry</td><td class="num">6,086</td><td class="num">10,463</td><td class="num">9</td><td>moderate</td><td>vendor-official</td><td class="num">-369 / 3d</td></tr>
+<tr><td>19</td><td>pinecone</td><td class="num">5,903</td><td class="num">9,184</td><td class="num">9</td><td>moderate</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
 <tr><td>20</td><td>kubernetes</td><td class="num">5,268</td><td class="num">9,165</td><td class="num">23</td><td>moderate</td><td>community</td><td class="num">+0 / 4d</td></tr>
 <tr><td>21</td><td>aws-documentation</td><td class="num">5,074</td><td class="num">—</td><td class="num">5</td><td>moderate</td><td>vendor-official</td><td class="num">+0 / 3d</td></tr>
 <tr><td>22</td><td>supabase</td><td class="num">5,013</td><td class="num">—</td><td class="num">29</td><td>moderate</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
@@ -852,8 +852,8 @@
 <tr><td>24</td><td>excel</td><td class="num">4,266</td><td class="num">—</td><td class="num">25</td><td>light</td><td>community</td><td class="num">+0 / 2d</td></tr>
 <tr><td>25</td><td>airtable</td><td class="num">4,207</td><td class="num">—</td><td class="num">16</td><td>light</td><td>community</td><td class="num">+0 / 2d</td></tr>
 <tr><td>26</td><td>playwright</td><td class="num">4,024</td><td class="num">—</td><td class="num">24</td><td>light</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
-<tr><td>27</td><td>github-legacy</td><td class="num">3,548</td><td class="num">—</td><td class="num">26</td><td>light</td><td>official-reference</td><td class="num">+0 / 2d</td></tr>
-<tr><td>28</td><td>arxiv</td><td class="num">3,228</td><td class="num">—</td><td class="num">14</td><td>light</td><td>community</td><td class="num">+0 / 2d</td></tr>
+<tr><td>27</td><td>arxiv</td><td class="num">3,960</td><td class="num">—</td><td class="num">19</td><td>light</td><td>community</td><td class="num">+732 / 3d</td></tr>
+<tr><td>28</td><td>github-legacy</td><td class="num">3,548</td><td class="num">—</td><td class="num">26</td><td>light</td><td>official-reference</td><td class="num">+0 / 3d</td></tr>
 <tr><td>29</td><td>playwright-community</td><td class="num">2,920</td><td class="num">—</td><td class="num">33</td><td>light</td><td>community</td><td class="num">+0 / 2d</td></tr>
 <tr><td>30</td><td>chroma</td><td class="num">2,837</td><td class="num">—</td><td class="num">13</td><td>light</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
 <tr><td>31</td><td>netlify</td><td class="num">2,831</td><td class="num">—</td><td class="num">9</td><td>light</td><td>vendor-official</td><td class="num">+0 / 4d</td></tr>
@@ -864,19 +864,19 @@
 <tr><td>36</td><td>obsidian</td><td class="num">2,062</td><td class="num">—</td><td class="num">15</td><td>light</td><td>community</td><td class="num">+930 / 4d</td></tr>
 <tr><td>37</td><td>terraform</td><td class="num">2,061</td><td class="num">—</td><td class="num">9</td><td>light</td><td>vendor-official</td><td class="num">+0 / 4d</td></tr>
 <tr><td>38</td><td>everything</td><td class="num">1,708</td><td class="num">—</td><td class="num">13</td><td>light</td><td>official-reference</td><td class="num">+0 / 3d</td></tr>
-<tr><td>39</td><td>tavily</td><td class="num">1,653</td><td class="num">—</td><td class="num">5</td><td>light</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
+<tr><td>39</td><td>tavily</td><td class="num">1,653</td><td class="num">—</td><td class="num">5</td><td>light</td><td>vendor-official</td><td class="num">+0 / 3d</td></tr>
 <tr><td>40</td><td>searxng</td><td class="num">1,537</td><td class="num">—</td><td class="num">4</td><td>light</td><td>community</td><td class="num">+56 / 3d</td></tr>
 <tr><td>41</td><td>git</td><td class="num">1,455</td><td class="num">—</td><td class="num">12</td><td>light</td><td>official-reference</td><td class="num">—</td></tr>
 <tr><td>42</td><td>pandoc</td><td class="num">1,425</td><td class="num">—</td><td class="num">1</td><td>light</td><td>community</td><td class="num">+0 / 2d</td></tr>
 <tr><td>43</td><td>context7</td><td class="num">1,052</td><td class="num">—</td><td class="num">2</td><td>light</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
 <tr><td>44</td><td>sequential-thinking</td><td class="num">1,003</td><td class="num">—</td><td class="num">1</td><td>light</td><td>official-reference</td><td class="num">+11 / 3d</td></tr>
-<tr><td>45</td><td>bright-data</td><td class="num">978</td><td class="num">—</td><td class="num">5</td><td>lean</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
+<tr><td>45</td><td>bright-data</td><td class="num">978</td><td class="num">—</td><td class="num">5</td><td>lean</td><td>vendor-official</td><td class="num">+0 / 3d</td></tr>
 <tr><td>46</td><td>microsoft-learn</td><td class="num">972</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
 <tr><td>47</td><td>figma-context</td><td class="num">946</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>community</td><td class="num">+0 / 4d</td></tr>
 <tr><td>48</td><td>duckduckgo</td><td class="num">724</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>community</td><td class="num">+0 / 3d</td></tr>
 <tr><td>49</td><td>clickhouse</td><td class="num">694</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>vendor-official</td><td class="num">+113 / 3d</td></tr>
 <tr><td>50</td><td>slack-legacy</td><td class="num">681</td><td class="num">—</td><td class="num">8</td><td>lean</td><td>official-reference</td><td class="num">+0 / 3d</td></tr>
-<tr><td>51</td><td>google-maps</td><td class="num">549</td><td class="num">—</td><td class="num">7</td><td>lean</td><td>official-reference</td><td class="num">+0 / 2d</td></tr>
+<tr><td>51</td><td>google-maps</td><td class="num">549</td><td class="num">—</td><td class="num">7</td><td>lean</td><td>official-reference</td><td class="num">+0 / 3d</td></tr>
 <tr><td>52</td><td>puppeteer</td><td class="num">540</td><td class="num">—</td><td class="num">7</td><td>lean</td><td>official-reference</td><td class="num">+0 / 3d</td></tr>
 <tr><td>53</td><td>neo4j-cypher</td><td class="num">523</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
 <tr><td>54</td><td>exa</td><td class="num">486</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>vendor-official</td><td class="num">+0 / 3d</td></tr>
@@ -885,7 +885,7 @@
 <tr><td>57</td><td>mysql</td><td class="num">393</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>community</td><td class="num">+0 / 2d</td></tr>
 <tr><td>58</td><td>elasticsearch</td><td class="num">374</td><td class="num">—</td><td class="num">4</td><td>lean</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
 <tr><td>59</td><td>browserbase</td><td class="num">364</td><td class="num">—</td><td class="num">6</td><td>lean</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
-<tr><td>60</td><td>deepwiki</td><td class="num">359</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
+<tr><td>60</td><td>deepwiki</td><td class="num">359</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>vendor-official</td><td class="num">+0 / 3d</td></tr>
 <tr><td>61</td><td>gitlab</td><td class="num">336</td><td class="num">—</td><td class="num">9</td><td>lean</td><td>official-reference</td><td class="num">+0 / 4d</td></tr>
 <tr><td>62</td><td>brave-search-legacy</td><td class="num">319</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>official-reference</td><td class="num">+0 / 2d</td></tr>
 <tr><td>63</td><td>time</td><td class="num">293</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>official-reference</td><td class="num">—</td></tr>

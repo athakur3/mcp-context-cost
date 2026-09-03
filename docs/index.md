@@ -4,7 +4,7 @@
 
 We measure 82 popular MCP servers; 69 have a number today, and every failure is listed
 with its reason. The spread is 1,700×: from `postgres` at 32 tokens to `github` at
-**54,422 tokens** — 27% of a 200K context window, before the agent takes a single action.
+**54,622 tokens** — 27% of a 200K context window, before the agent takes a single action.
 Second-heaviest is `xcodebuildmcp` at 26,594.
 
 - **[The dashboard](dashboard.html)** — the ranked chart; open any row for its breakdown

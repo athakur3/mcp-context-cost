@@ -8,15 +8,15 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-08-19T00:24:33.609Z",
+  "measuredAt": "2026-09-03T19:23:46.400Z",
   "serverName": "neon",
   "launchCommand": "npx -y @neondatabase/mcp-server-neon start",
-  "notes": "reproduced with the shared package cache bypassed; server exited (code 1)",
+  "notes": "reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: npm warn deprecated @neondatabase/mcp-server-neon@0.6.5: This package is deprecated. Use the remote MCP server at mcp.neon.tech instead. See https://neon.tech/docs/ai/neon-mcp-server for more details.\nnpm warn deprecated next@15.3.3: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/CVE-2025-66478 for more details.\n",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

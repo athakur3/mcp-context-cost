@@ -184,7 +184,7 @@ Add `--claude` to annotate each server with its Anthropic-request cost from the 
 [Claude divergence](docs/METHODOLOGY.md#claude-divergence) run — an exact number when the
 published capture hash matches what you have installed, `—` (silence, not a stale guess)
 when it doesn't. The run holds 20 rows — the top 20 measured servers by tokens when it ran —
-and [results/leaderboard.md](results/leaderboard.md) prints a claude number for the 20 that
+and [results/leaderboard.md](results/leaderboard.md) prints a claude number for the 16 that
 still match today and silence for the rest. Most installs will show a mix:
 
 ```
@@ -202,13 +202,13 @@ Flags: `--json` (full report on stdout, progress on stderr), `--budget N`,
 The number `audit` gives you is the same measurement, run across a curated set of public
 servers — which is how you can tell it is a measurement and not this tool's opinion. It also
 shows what you are choosing between: across the 69 servers measured, cost spans **1,700×**,
-from `postgres` at 32 tokens to `github` at 54,422. The table below is a
+from `postgres` at 32 tokens to `github` at 54,622. The table below is a
 sample of that range; the full range is in
 [results/leaderboard.md](results/leaderboard.md).
 
 | server | context cost | tools |
 |---|---:|---:|
-| github (official) | **54,422 tokens** | 44 |
+| github (official) | **54,622 tokens** | 44 |
 | xcodebuildmcp | 26,594 | 24 |
 | brave-search | 25,456 | 8 |
 | notion | 17,500 | 24 |
@@ -251,7 +251,7 @@ exact launch command. Disputes reduce to a byte-level diff:
 
 ```bash
 npx -y mcp-context-cost verify results/github/measurement.json
-# OK github-mcp-server: 54422 tokens (o200k_base, methodology 1.0) — capture, hash, and count all agree
+# OK github-mcp-server: 54622 tokens (o200k_base, methodology 1.0) — capture, hash, and count all agree
 
 # or point it at a published measurement.json directly, no clone required
 npx -y mcp-context-cost verify --remote https://raw.githubusercontent.com/athakur3/mcp-context-cost/main/results/github/measurement.json

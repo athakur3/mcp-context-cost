@@ -1,16 +1,16 @@
 # sentry — context cost
 
-**6,455 tokens** across 9 tools — *moderate* (5–15K). Measured 2026-08-18 under [methodology v1.0](../METHODOLOGY.html).
+**6,086 tokens** across 9 tools — *moderate* (5–15K). Measured 2026-09-03 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
-| server (self-reported) | Sentry MCP v0.37.0 |
+| server (self-reported) | Sentry MCP v0.39.0 |
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @sentry/mcp-server@latest` |
 | isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | SENTRY_ACCESS_TOKEN |
-| canonical SHA-256 | `b56928d7394324ec80ddda1377e382b535fd3abc7b488cda6b4a52e4a01b410b` |
+| canonical SHA-256 | `11ef5fbfa5440a29377fedcd23abb764cf640ba03762911c8bfcd5b11a53aebd` |
 | category | vendor-official |
 | source | https://github.com/getsentry/sentry-mcp |
 
@@ -18,29 +18,17 @@
 
 | tool | tokens | share | description | schema |
 |---|---:|---:|---:|---:|
-| update_issue | 1,306 | 20.2% | 455 | 767 |
-| search_events | 1,243 | 19.3% | 459 | 718 |
-| search_issues | 932 | 14.4% | 377 | 496 |
-| get_sentry_resource | 752 | 11.6% | 397 | 287 |
-| analyze_issue_with_seer | 726 | 11.2% | 331 | 324 |
-| search_sentry_tools | 584 | 9.0% | 247 | 107 |
-| find_projects | 421 | 6.5% | 66 | 318 |
-| execute_sentry_tool | 285 | 4.4% | 138 | 90 |
-| find_organizations | 204 | 3.2% | 70 | 96 |
+| update_issue | 1,248 | 20.5% | 455 | 710 |
+| search_events | 1,127 | 18.5% | 459 | 597 |
+| search_issues | 853 | 14.0% | 377 | 412 |
+| analyze_issue_with_seer | 641 | 10.5% | 331 | 240 |
+| get_sentry_resource | 632 | 10.4% | 346 | 218 |
+| search_sentry_tools | 592 | 9.7% | 247 | 102 |
+| find_projects | 397 | 6.5% | 66 | 211 |
+| find_organizations | 308 | 5.1% | 70 | 68 |
+| execute_sentry_tool | 286 | 4.7% | 138 | 92 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
-
-## What this costs on Claude
-
-Measured 2026-09-03 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
-
-| | tokens | |
-|---|---:|---|
-| o200k, full capture | 6,455 | the badge number — every byte `tools/list` returned |
-| o200k, Anthropic fields only | 6,051 | 6.3% of the capture is MCP-only metadata |
-| **Claude, same fields** | **10,463** | 1.62× the badge number |
-
-An Anthropic tool definition carries `name`, `description`, and `input_schema` and nothing else, so `title`, `annotations`, `outputSchema`, `execution`, and `icons` are dropped before the request — that is the second row. The third row is the same tools counted by Anthropic, which is larger than the second because Anthropic's tokenizer is denser on this content than o200k_base *and* the API adds its own framing (at most 328 tokens of it fixed, measured against a single minimal tool). The two effects run in opposite directions, which is why the Claude number is not a fixed multiple of the badge.
 
 ## Over time
 
@@ -48,6 +36,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 |---|---:|---:|---|---:|
 | 2026-08-16 | 6,455 | 9 | not recorded | — |
 | 2026-08-18 | 6,455 | 9 | docker | no change |
+| 2026-09-03 | 6,086 | 9 | docker | -369 |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

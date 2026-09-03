@@ -251,18 +251,19 @@
       "name": "discover"
     }
   ],
-  "measuredAt": "2026-08-19T00:01:54.043Z",
+  "measuredAt": "2026-09-03T19:23:17.742Z",
   "serverName": "Bright Data",
   "serverVersion": "2.11.1",
   "launchCommand": "npx -y @brightdata/mcp",
   "envVarNames": [
     "API_TOKEN"
   ],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

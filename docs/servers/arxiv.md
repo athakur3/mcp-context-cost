@@ -1,16 +1,16 @@
 # arxiv — context cost
 
-**3,228 tokens** across 14 tools — *light* (1–5K). Measured 2026-08-19 under [methodology v1.0](../METHODOLOGY.html).
+**3,960 tokens** across 19 tools — *light* (1–5K). Measured 2026-09-03 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
-| server (self-reported) | arxiv-mcp-server v0.6.3 |
+| server (self-reported) | arxiv-mcp-server v0.7.2 |
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `uvx arxiv-mcp-server` |
 | isolation | docker · ghcr.io/astral-sh/uv:python3.12-bookworm-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | none |
-| canonical SHA-256 | `969f351ffcbb3a5e5b5e0d4c3cf79eae4e232df55e04828edb57befbd84e343d` |
+| canonical SHA-256 | `2ee361441efca1de3e296a572bbe2d20fa88d5565c9d4f54a8a1523ee7f54251` |
 | category | community |
 | source | https://github.com/blazickjp/arxiv-mcp-server |
 
@@ -18,20 +18,25 @@
 
 | tool | tokens | share | description | schema |
 |---|---:|---:|---:|---:|
-| search_papers | 1,154 | 35.7% | 770 | 315 |
-| watch_topic | 298 | 9.2% | 114 | 152 |
-| semantic_search | 204 | 6.3% | 102 | 76 |
-| export_citations | 193 | 6.0% | 86 | 82 |
-| read_paper | 177 | 5.5% | 67 | 91 |
-| download_paper | 175 | 5.4% | 48 | 102 |
-| get_paper_latex_section | 170 | 5.3% | 14 | 128 |
-| check_alerts | 157 | 4.9% | 82 | 50 |
-| get_abstract | 156 | 4.8% | 77 | 54 |
-| get_paper_latex | 147 | 4.6% | 23 | 97 |
-| list_paper_latex_sections | 135 | 4.2% | 13 | 94 |
-| list_papers | 96 | 3.0% | 60 | 17 |
-| citation_graph | 88 | 2.7% | 20 | 44 |
-| reindex | 76 | 2.4% | 10 | 36 |
+| search_papers | 516 | 13.0% | 211 | 273 |
+| watch_topic | 354 | 8.9% | 150 | 172 |
+| download_paper | 353 | 8.9% | 125 | 202 |
+| read_paper | 275 | 6.9% | 115 | 141 |
+| check_alerts | 246 | 6.2% | 164 | 50 |
+| semantic_search | 226 | 5.7% | 125 | 76 |
+| get_paper_latex_section | 213 | 5.4% | 22 | 162 |
+| export_citations | 193 | 4.9% | 86 | 82 |
+| read_paper_section | 184 | 4.6% | 21 | 143 |
+| get_paper_latex | 181 | 4.6% | 23 | 131 |
+| search_paper_text | 180 | 4.5% | 35 | 125 |
+| citation_graph | 171 | 4.3% | 72 | 75 |
+| list_papers | 157 | 4.0% | 81 | 57 |
+| get_paper_outline | 141 | 3.6% | 27 | 94 |
+| get_abstract | 137 | 3.5% | 58 | 54 |
+| list_paper_latex_sections | 135 | 3.4% | 13 | 94 |
+| unwatch_topic | 120 | 3.0% | 44 | 45 |
+| list_watches | 100 | 2.5% | 61 | 14 |
+| reindex | 76 | 1.9% | 10 | 36 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
 
@@ -41,6 +46,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 |---|---:|---:|---|---:|
 | 2026-08-16 | 3,228 | 14 | not recorded | — |
 | 2026-08-19 | 3,228 | 14 | docker | no change |
+| 2026-09-03 | 3,960 | 19 | docker | +732 |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

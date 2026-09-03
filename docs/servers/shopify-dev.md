@@ -1,16 +1,16 @@
 # shopify-dev — context cost
 
-**5,624 tokens** across 5 tools — *moderate* (5–15K). Measured 2026-08-19 under [methodology v1.0](../METHODOLOGY.html).
+**6,841 tokens** across 6 tools — *moderate* (5–15K). Measured 2026-09-03 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
-| server (self-reported) | shopify-dev-mcp v1.14.4 |
+| server (self-reported) | shopify-dev-mcp v1.15.0 |
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @shopify/dev-mcp@latest` |
-| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials, shared package cache by |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | none |
-| canonical SHA-256 | `6c863ee06d8d4d8fb2ade2e07673c087b75cc1482b3e521e9c9375151860c659` |
+| canonical SHA-256 | `6817cd262c23cdfbac2ac9e04b037d307d7d21907f9028707ae6dbac3f0a284d` |
 | category | vendor-official |
 | source | https://shopify.dev/docs/apps/build/devmcp (GitHub repo not public) |
 
@@ -18,25 +18,14 @@
 
 | tool | tokens | share | description | schema |
 |---|---:|---:|---:|---:|
-| learn_shopify_api | 2,518 | 44.8% | 2,102 | 344 |
-| validate_graphql_codeblocks | 1,179 | 21.0% | 202 | 949 |
-| validate_component_codeblocks | 1,173 | 20.9% | 547 | 550 |
-| validate_theme | 451 | 8.0% | 194 | 236 |
-| search_docs_chunks | 301 | 5.4% | 29 | 253 |
+| learn_shopify_api | 2,847 | 41.6% | 2,425 | 348 |
+| validate_graphql_codeblocks | 1,273 | 18.6% | 202 | 1,043 |
+| validate_component_codeblocks | 1,173 | 17.1% | 547 | 550 |
+| feedback | 794 | 11.6% | 421 | 345 |
+| validate_theme | 451 | 6.6% | 194 | 236 |
+| search_docs_chunks | 301 | 4.4% | 29 | 253 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
-
-## What this costs on Claude
-
-Measured 2026-09-03 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
-
-| | tokens | |
-|---|---:|---|
-| o200k, full capture | 5,624 | the badge number — every byte `tools/list` returned |
-| o200k, Anthropic fields only | 5,584 | 0.7% of the capture is MCP-only metadata |
-| **Claude, same fields** | **9,805** | 1.74× the badge number |
-
-An Anthropic tool definition carries `name`, `description`, and `input_schema` and nothing else, so `title`, `annotations`, `outputSchema`, `execution`, and `icons` are dropped before the request — that is the second row. The third row is the same tools counted by Anthropic, which is larger than the second because Anthropic's tokenizer is denser on this content than o200k_base *and* the API adds its own framing (at most 328 tokens of it fixed, measured against a single minimal tool). The two effects run in opposite directions, which is why the Claude number is not a fixed multiple of the badge.
 
 ## Over time
 
@@ -44,6 +33,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 |---|---:|---:|---|---:|
 | 2026-08-16 | 5,624 | 5 | not recorded | — |
 | 2026-08-19 | 5,624 | 5 | docker | no change |
+| 2026-09-03 | 6,841 | 6 | docker | +1,217 |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

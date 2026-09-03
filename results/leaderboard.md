@@ -2,19 +2,19 @@
 
 Tokens = o200k_base count of the canonical `tools/list` bytes ([methodology v1.0](../docs/METHODOLOGY.md)). Measured 69/82 candidates; every candidate is listed — failures are findings, not omissions. Server names link to their per-tool breakdown.
 
-The **claude** column is the same tools measured through Anthropic's `count_tokens` on `claude-opus-5` (2026-09-03, method `tools-delta/v1`): the tokens the server's tools add to a request, measured for the top 20. It is not a rescaling of the o200k column — two effects pull in opposite directions, and the [per-server pages](../docs/servers/) break both out. See [Claude divergence](../docs/METHODOLOGY.md#claude-divergence).
+The **claude** column is the same tools measured through Anthropic's `count_tokens` on `claude-opus-5` (2026-09-03, method `tools-delta/v1`): the tokens the server's tools add to a request, measured for the top 16. It is not a rescaling of the o200k column — two effects pull in opposite directions, and the [per-server pages](../docs/servers/) break both out. See [Claude divergence](../docs/METHODOLOGY.md#claude-divergence).
 
-The **mcp-tokens** column is the other CLI's count of the same server — `sd2k/mcp-tokens` `v0.2.5` (2026-09-03, method `cli-cross-check/v1`), invoked with `--model gpt-4o` so both columns count o200k tokens. Its structs model the three request fields (name/description/input\_schema), so its number sits below the tokens column wherever a server ships metadata those fields do not carry — that gap is each server's field-selection share, published on its page, not a disagreement of counters. The parenthesized percentage is the disagreement of counters: the CLI's count against ours of the same three-field projection, −0.8% to +1.4% across the 55 rows where both tools saw the same tool set. A row prints only while the comparison is between like and like: the same tool names on both sides, and our capture unchanged since the run. See [CLI cross-check](../docs/METHODOLOGY.md#cli-cross-check).
+The **mcp-tokens** column is the other CLI's count of the same server — `sd2k/mcp-tokens` `v0.2.5` (2026-09-03, method `cli-cross-check/v1`), invoked with `--model gpt-4o` so both columns count o200k tokens. Its structs model the three request fields (name/description/input\_schema), so its number sits below the tokens column wherever a server ships metadata those fields do not carry — that gap is each server's field-selection share, published on its page, not a disagreement of counters. The parenthesized percentage is the disagreement of counters: the CLI's count against ours of the same three-field projection, −0.8% to +1.4% across the 59 rows where both tools saw the same tool set. A row prints only while the comparison is between like and like: the same tool names on both sides, and our capture unchanged since the run. See [CLI cross-check](../docs/METHODOLOGY.md#cli-cross-check).
 
 The **session start** column is what a client puts in context when it *defers* tool definitions until they are used: the server's tool names plus the `instructions` string it returns from `initialize` (method `deferred-load/v1`). The tokens column is what a client that loads every definition up front pays; this one is what the same server costs a client that does not. See [session-start load](../docs/METHODOLOGY.md#session-start-load).
 
-**`≥` marks a floor, on 3 of 69 rows.** Tool names are counted exactly from the published capture, but `instructions` is not part of `tools/list` and has not been captured for these servers — so the figure is the names half alone and the true number is that or higher. A row stops being a floor the first time the server is measured with its instructions.
+**`≥` marks a floor, on 2 of 69 rows.** Tool names are counted exactly from the published capture, but `instructions` is not part of `tools/list` and has not been captured for these servers — so the figure is the names half alone and the true number is that or higher. A row stops being a floor the first time the server is measured with its instructions.
 
-**Deferring costs more than it saves on 1 of 69 rows.** `deepwiki` pays 521 at session start against 359 of definitions. The names half is always a fraction of the headline, but `instructions` are bytes the tokens column never counted and their length is independent of the tool set — so a server that re-lists its tools in its instructions makes a deferring client pay for a prose copy of the schemas it just skipped. A client that defers definitions is better off on every other measured row and worse off on this one.
+**Deferring costs more than it saves on 1 of 69 rows.** `deepwiki` pays 580 at session start against 359 of definitions. The names half is always a fraction of the headline, but `instructions` are bytes the tokens column never counted and their length is independent of the tool set — so a server that re-lists its tools in its instructions makes a deferring client pay for a prose copy of the schemas it just skipped. A client that defers definitions is better off on every other measured row and worse off on this one.
 
 | # | server | tokens | session start | claude | mcp-tokens | tools | largest tool | status | category |
 |---:|---|---:|---:|---:|---:|---:|---|---|---|
-| 1 | [github](../docs/servers/github.md) | 54,422 | 556 | 18,406 | 10,600 (+0.6%) | 44 | issue_write (1,890) | measured | vendor-official |
+| 1 | [github](../docs/servers/github.md) | 54,622 | 556 | — | 10,803 (+0.6%) | 44 | issue_write (2,050) | measured | vendor-official |
 | 2 | [xcodebuildmcp](../docs/servers/xcodebuildmcp.md) | 26,594 | 559 | 5,335 | 2,704 (+1.0%) | 24 | snapshot_ui (2,139) | measured | community |
 | 3 | [brave-search](../docs/servers/brave-search.md) | 25,456 | 61 | 13,746 | — | 8 | brave_place_search (17,282) | measured | vendor-official |
 | 4 | [notion](../docs/servers/notion.md) | 17,500 | 135 | 33,560 | 17,408 (+1.4%) | 24 | API-update-page-markdown (1,282) | measured | vendor-official |
@@ -29,10 +29,10 @@ The **session start** column is what a client puts in context when it *defers* t
 | 13 | [postgres-mcp](../docs/servers/postgres-mcp.md) | 8,632 | 39 | 2,381 | 1,178 (+0.0%) | 9 | explain_query (1,147) | measured | community |
 | 14 | [serena](../docs/servers/serena.md) | 8,204 | 138 | 11,494 | 6,528 (−0.3%) | 29 | find_symbol (883) | measured | community |
 | 15 | [mongodb](../docs/servers/mongodb.md) | 7,926 | 103 | 8,765 | 4,519 (+0.4%) | 27 | explain (813) | measured | vendor-official |
-| 16 | [sentry](../docs/servers/sentry.md) | 6,455 | 40 | 10,463 | — | 9 | update_issue (1,306) | measured | vendor-official |
-| 17 | [pinecone](../docs/servers/pinecone.md) | 5,903 | 294 | 9,184 | 5,680 (+0.0%) | 9 | search-records (1,179) | measured | vendor-official |
-| 18 | [shopify-dev](../docs/servers/shopify-dev.md) | 5,624 | ≥24 | 9,805 | — | 5 | learn_shopify_api (2,518) | measured | vendor-official |
-| 19 | [blender](../docs/servers/blender.md) | 5,462 | 151 | 8,409 | — | 25 | generate_hyper3d_model_via_images (454) | measured | community |
+| 16 | [blender](../docs/servers/blender.md) | 6,928 | 169 | — | 6,162 (+0.0%) | 28 | download_polypizza_model (490) | measured | community |
+| 17 | [shopify-dev](../docs/servers/shopify-dev.md) | 6,841 | 26 | — | 6,804 (+0.2%) | 6 | learn_shopify_api (2,847) | measured | vendor-official |
+| 18 | [sentry](../docs/servers/sentry.md) | 6,086 | 40 | — | 5,432 (−0.2%) | 9 | update_issue (1,248) | measured | vendor-official |
+| 19 | [pinecone](../docs/servers/pinecone.md) | 5,903 | 294 | 9,184 | 5,680 (+0.0%) | 9 | search-records (1,179) | measured | vendor-official |
 | 20 | [kubernetes](../docs/servers/kubernetes.md) | 5,268 | 95 | 9,165 | 5,089 (+0.0%) | 23 | kubectl_create (945) | measured | community |
 | 21 | [aws-documentation](../docs/servers/aws-documentation.md) | 5,074 | 425 | — | — | 5 | search_documentation (1,956) | measured | vendor-official |
 | 22 | [supabase](../docs/servers/supabase.md) | 5,013 | 342 | — | — | 29 | query_logs (800) | measured | vendor-official |
@@ -40,8 +40,8 @@ The **session start** column is what a client puts in context when it *defers* t
 | 24 | [excel](../docs/servers/excel.md) | 4,266 | 106 | — | 3,080 (+0.0%) | 25 | format_range (472) | measured | community |
 | 25 | [airtable](../docs/servers/airtable.md) | 4,207 | 50 | — | 2,533 (+0.1%) | 16 | list_records (395) | measured | community |
 | 26 | [playwright](../docs/servers/playwright.md) | 4,024 | 91 | — | 3,409 (+0.2%) | 24 | browser_take_screenshot (329) | measured | vendor-official |
-| 27 | [github-legacy](../docs/servers/github-legacy.md) | 3,548 | 103 | — | 3,564 (+0.5%) | 26 | create_pull_request_review (360) | measured | official-reference |
-| 28 | [arxiv](../docs/servers/arxiv.md) | 3,228 | 61 | — | — | 14 | search_papers (1,154) | measured | community |
+| 27 | [arxiv](../docs/servers/arxiv.md) | 3,960 | 84 | — | 3,696 (−0.1%) | 19 | search_papers (516) | measured | community |
+| 28 | [github-legacy](../docs/servers/github-legacy.md) | 3,548 | 103 | — | 3,564 (+0.5%) | 26 | create_pull_request_review (360) | measured | official-reference |
 | 29 | [playwright-community](../docs/servers/playwright-community.md) | 2,920 | 158 | — | 2,925 (+0.2%) | 33 | playwright_get_visible_html (228) | measured | community |
 | 30 | [chroma](../docs/servers/chroma.md) | 2,837 | 71 | — | 2,837 (+0.0%) | 13 | chroma_get_documents (610) | measured | vendor-official |
 | 31 | [netlify](../docs/servers/netlify.md) | 2,831 | 61 | — | 2,707 (+1.1%) | 9 | netlify-project-services-updater (896) | measured | vendor-official |
@@ -73,7 +73,7 @@ The **session start** column is what a client puts in context when it *defers* t
 | 57 | [mysql](../docs/servers/mysql.md) | 393 | 12 | — | 332 (−0.6%) | 3 | get_table_sample (139) | measured | community |
 | 58 | [elasticsearch](../docs/servers/elasticsearch.md) | 374 | 14 | — | — | 4 | search (159) | measured | vendor-official |
 | 59 | [browserbase](../docs/servers/browserbase.md) | 364 | 13 | — | 310 (+0.0%) | 6 | act (69) | measured | vendor-official |
-| 60 | [deepwiki](../docs/servers/deepwiki.md) | 359 | 521 | — | 234 (+0.4%) | 3 | ask_question (148) | measured | vendor-official |
+| 60 | [deepwiki](../docs/servers/deepwiki.md) | 359 | 580 | — | 234 (+0.4%) | 3 | ask_question (148) | measured | vendor-official |
 | 61 | [gitlab](../docs/servers/gitlab.md) | 336 | 33 | — | 336 (+0.0%) | 9 | get_file_contents (41) | measured | official-reference |
 | 62 | [brave-search-legacy](../docs/servers/brave-search-legacy.md) | 319 | 11 | — | 320 (+0.3%) | 2 | brave_web_search (161) | measured | official-reference |
 | 63 | [time](../docs/servers/time.md) | 293 | 8 | — | 237 (−0.8%) | 2 | convert_time (186) | measured | official-reference |
@@ -95,10 +95,10 @@ The **session start** column is what a client puts in context when it *defers* t
 | stripe | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: index.js:20:30)     at Object.\<anonymous\> (/tmp/.npm-cache/_npx/bce731 |
 | heroku | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: Fatal error in main(): Cannot find module '/tmp/.npm-cache/_npx/909ffbc9 |
 | grafana | timeout | reproduced on double the timeout budget; timeout after 360000ms waiting for initialize |
-| neon | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1) |
+| neon | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: npm warn deprecated @neondatabase/mcp-server-neon@0.6.5: This package is |
 | linear | remote-auth-wall |  |
 | zapier | remote-auth-wall |  |
 | vercel | remote-auth-wall |  |
-| gmail | auth-required | server exited (code 1); stderr tail: Error: OAuth keys file not found. Please place gcp-oauth.keys.json in current directory or /tmp/.gmail-mcp  |
+| gmail | auth-required | server exited (code 1); stderr tail: npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead npm warn deprecated uuid@9.0.1 |
 | slack | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: .execFileSync (node:child_process:952:15)     at Object.\<anonymous\> (/ |
 

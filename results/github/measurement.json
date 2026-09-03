@@ -3,7 +3,7 @@
   "provider": "tiktoken",
   "encoding": "o200k_base",
   "status": "measured",
-  "totalTokens": 54422,
+  "totalTokens": 54622,
   "toolCount": 44,
   "tools": [
     {
@@ -14,9 +14,9 @@
     },
     {
       "name": "add_issue_comment",
-      "tokens": 1513,
+      "tokens": 1517,
       "descriptionTokens": 65,
-      "inputSchemaTokens": 190
+      "inputSchemaTokens": 194
     },
     {
       "name": "add_reply_to_pull_request_comment",
@@ -38,9 +38,9 @@
     },
     {
       "name": "create_or_update_file",
-      "tokens": 987,
+      "tokens": 1019,
       "descriptionTokens": 94,
-      "inputSchemaTokens": 177
+      "inputSchemaTokens": 209
     },
     {
       "name": "create_pull_request",
@@ -128,9 +128,9 @@
     },
     {
       "name": "issue_write",
-      "tokens": 1890,
+      "tokens": 2050,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 619
+      "inputSchemaTokens": 779
     },
     {
       "name": "list_branches",
@@ -158,9 +158,9 @@
     },
     {
       "name": "list_issues",
-      "tokens": 1783,
+      "tokens": 1787,
       "descriptionTokens": 33,
-      "inputSchemaTokens": 497
+      "inputSchemaTokens": 501
     },
     {
       "name": "list_pull_requests",
@@ -271,7 +271,7 @@
       "inputSchemaTokens": 91
     }
   ],
-  "canonicalSha256": "086879383bcdc68ea1b960a141ab1b41cb2a203321c4440553c033b5e9a5344d",
+  "canonicalSha256": "40d73048f0112cd8282ee61d586632738f6746678ece24f8f61f4dcc4b8b2135",
   "rawToolsCapture": [
     {
       "annotations": {
@@ -373,10 +373,11 @@
         "properties": {
           "body": {
             "type": "string",
-            "description": "Comment content. Required unless reaction is provided."
+            "description": "Comment content. Required unless reaction is provided.",
+            "minLength": 1
           },
           "comment_id": {
-            "type": "number",
+            "type": "integer",
             "description": "The numeric ID of the issue or pull request comment to react to. Use this for reactions to comments; omit it to react to the issue or pull request itself. Cannot be combined with body.",
             "minimum": 1
           },
@@ -609,6 +610,11 @@
       "inputSchema": {
         "type": "object",
         "properties": {
+          "allow_symlink_write": {
+            "type": "boolean",
+            "description": "Set true to update a symbolic link itself; content must be its new target path.",
+            "default": false
+          },
           "branch": {
             "type": "string",
             "description": "Branch to create/update the file in"
@@ -1392,10 +1398,7 @@
               "properties": {
                 "delete": {
                   "type": "boolean",
-                  "description": "Set to true to clear this field's current value on the issue. Cannot be combined with 'value' or 'field_option_name'.",
-                  "enum": [
-                    true
-                  ]
+                  "description": "Set to true to clear this field's current value on the issue. When false or omitted, this property is ignored. Cannot be true when 'value' or 'field_option_name' is provided."
                 },
                 "field_name": {
                   "type": "string",
@@ -1403,7 +1406,7 @@
                 },
                 "field_option_name": {
                   "type": "string",
-                  "description": "Option name for single-select fields. Validated against the field's options before the API call. Cannot be combined with 'value' or 'delete'."
+                  "description": "Option name for single-select fields. Validated against the field's options before the API call. Cannot be combined with 'value' or 'delete: true'."
                 },
                 "value": {
                   "type": [
@@ -1411,7 +1414,7 @@
                     "number",
                     "boolean"
                   ],
-                  "description": "Value to set. Use for text, number, and date fields (date as YYYY-MM-DD). For single-select fields, prefer 'field_option_name' so the option is validated before the API call. Cannot be combined with 'field_option_name' or 'delete'."
+                  "description": "Value to set. Use for text, number, and date fields (date as YYYY-MM-DD). For single-select fields, prefer 'field_option_name' so the option is validated before the API call. Cannot be combined with 'field_option_name' or 'delete: true'."
                 }
               },
               "required": [
@@ -1448,6 +1451,19 @@
             "type": "string",
             "description": "Repository owner",
             "x-mcp-header": "owner"
+          },
+          "parent_issue_number": {
+            "type": "number",
+            "description": "Issue number of the parent issue. Only used when method is 'create' and cannot be combined with issue_fields. The new issue is created and attached to this parent in the same operation.",
+            "minimum": 1
+          },
+          "parent_owner": {
+            "type": "string",
+            "description": "Repository owner of the parent issue. Must be provided with parent_repo. Omit both to use owner and repo. Only used when method is 'create' and parent_issue_number is provided."
+          },
+          "parent_repo": {
+            "type": "string",
+            "description": "Repository name of the parent issue. Must be provided with parent_owner. Omit both to use owner and repo. Only used when method is 'create' and parent_issue_number is provided."
           },
           "repo": {
             "type": "string",
@@ -1776,6 +1792,7 @@
                 "state",
                 "user",
                 "labels",
+                "assignees",
                 "comments",
                 "created_at",
                 "updated_at",
@@ -3159,13 +3176,14 @@
       ]
     }
   ],
-  "measuredAt": "2026-08-18T23:58:08.698Z",
+  "measuredAt": "2026-09-03T19:22:56.906Z",
   "serverName": "github-mcp-server",
-  "serverVersion": "v1.9.0",
+  "serverVersion": "v1.11.0",
   "launchCommand": "docker run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN=dummy ghcr.io/github/github-mcp-server",
   "envVarNames": [
     "GITHUB_PERSONAL_ACCESS_TOKEN"
   ],
+  "serverInstructions": "The GitHub MCP Server provides tools to interact with GitHub platform.\n\nTool selection guidance:\n\t1. Use 'list_*' tools for broad, simple retrieval and pagination of all items of a type (e.g., all issues, all PRs, all branches) with basic filtering.\n\t2. Use 'search_*' tools for targeted queries with specific criteria, keywords, or complex filters (e.g., issues with certain text, PRs by author, code containing functions).\n\nContext management:\n\t1. Use pagination whenever possible with batches of 5-10 items.\n\t2. Use minimal_output parameter set to true if the full information is not needed to accomplish a task.\n\nTool usage guidance:\n\t1. For 'search_*' tools: Use separate 'sort' and 'order' parameters if available for sorting results - do not include 'sort:' syntax in query strings. Query strings should contain only search criteria (e.g., 'org:google language:python'), not sorting instructions. Always call 'get_me' first to understand current user permissions and context. ## Issues\n\nCheck 'list_issue_types' first for organizations to use proper issue types. Use 'search_issues' before creating new issues to avoid duplicates. Always set 'state_reason' when closing issues. ## Pull Requests\n\nPR review workflow: Always use 'pull_request_review_write' with method 'create' to create a pending review, then 'add_comment_to_pending_review' to add comments, and finally 'pull_request_review_write' with method 'submit_pending' to submit the review for complex reviews with line-specific comments.\n\nBefore creating a pull request, search for pull request templates in the repository. Template files are called pull_request_template.md or they're located in '.github/PULL_REQUEST_TEMPLATE' directory. Use the template content to structure the PR description and then call create_pull_request tool.",
   "isolation": {
     "docker": true,
     "note": "command is itself a docker run (host-spawned container)"

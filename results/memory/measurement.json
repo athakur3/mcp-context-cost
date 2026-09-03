@@ -766,10 +766,10 @@
       }
     }
   ],
-  "measuredAt": "2026-09-03T14:48:12.459Z",
+  "measuredAt": "2026-09-03T19:22:51.550Z",
   "serverName": "memory-server",
   "serverVersion": "0.6.3",
-  "launchCommand": "npx -y @modelcontextprotocol/server-memory@2026.7.4",
+  "launchCommand": "npx -y @modelcontextprotocol/server-memory",
   "envVarNames": [],
   "serverInstructions": null,
   "isolation": {

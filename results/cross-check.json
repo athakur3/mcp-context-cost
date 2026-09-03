@@ -48,6 +48,7 @@
       "ourToolCount": 19,
       "cliToolCount": 19,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "2ee361441efca1de3e296a572bbe2d20fa88d5565c9d4f54a8a1523ee7f54251"
     },
     "aws-documentation": {
@@ -75,6 +76,7 @@
       "ourToolCount": 28,
       "cliToolCount": 28,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "5d8045af01c1eaf81a5931cfc5aa814fe0928f66cf1e176962bd3a97aff0a62f"
     },
     "brave-search": {
@@ -102,6 +104,7 @@
       "ourToolCount": 5,
       "cliToolCount": 5,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "bd26660364200a7866906bbfecc185e41ea6a42e43ed5d6380b1c3b77a699eae"
     },
     "browserbase": {
@@ -165,6 +168,7 @@
       "ourToolCount": 3,
       "cliToolCount": 3,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "3735162916165ab23696fc91fbf626bd99a36ddcd1e15746e91e16c7e336b379"
     },
     "desktop-commander": {
@@ -269,13 +273,14 @@
       "capturedSha256": "9710fb8f79f50348c138ee513e344f7fc9ac0e912a728d8aeda847cd04ed64f1"
     },
     "github": {
-      "ourTokens": 54422,
-      "ourMappedTokens": 10535,
-      "cliTokens": 10600,
+      "ourTokens": 54622,
+      "ourMappedTokens": 10735,
+      "cliTokens": 10803,
       "ourToolCount": 44,
       "cliToolCount": 44,
       "toolSetMatches": true,
-      "capturedSha256": "086879383bcdc68ea1b960a141ab1b41cb2a203321c4440553c033b5e9a5344d"
+      "dynamic": false,
+      "capturedSha256": "40d73048f0112cd8282ee61d586632738f6746678ece24f8f61f4dcc4b8b2135"
     },
     "github-legacy": {
       "ourTokens": 3548,
@@ -284,6 +289,7 @@
       "ourToolCount": 26,
       "cliToolCount": 26,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "e0194003d2ddaf668a23e0570cdbcf8c142c3314d3dd811a50ae99e5afd79ae3"
     },
     "gitlab": {
@@ -302,6 +308,7 @@
       "ourToolCount": 7,
       "cliToolCount": 7,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "a88e204db09aa56954e3e041d6a9814aee9ac888fdfc7d5cb47aec1877441986"
     },
     "hubspot": {
@@ -357,6 +364,7 @@
       "ourToolCount": 9,
       "cliToolCount": 9,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "d028274f76dc9aa2e622ae02a17ce313aa65d7b5935254ca53889d4094238abb"
     },
     "microsoft-learn": {
@@ -547,6 +555,7 @@
       "ourToolCount": 9,
       "cliToolCount": 9,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "11ef5fbfa5440a29377fedcd23abb764cf640ba03762911c8bfcd5b11a53aebd"
     },
     "sequential-thinking": {
@@ -570,13 +579,12 @@
     "shopify-dev": {
       "ourTokens": 6841,
       "ourMappedTokens": 6793,
-      "cliTokens": 0,
+      "cliTokens": 6804,
       "ourToolCount": 6,
-      "cliToolCount": 0,
-      "toolSetMatches": false,
+      "cliToolCount": 6,
+      "toolSetMatches": true,
       "dynamic": false,
-      "capturedSha256": "6817cd262c23cdfbac2ac9e04b037d307d7d21907f9028707ae6dbac3f0a284d",
-      "error": "cli: exited 1: Error: connection closed: initialize response\n"
+      "capturedSha256": "6817cd262c23cdfbac2ac9e04b037d307d7d21907f9028707ae6dbac3f0a284d"
     },
     "slack-legacy": {
       "ourTokens": 681,
@@ -612,6 +620,7 @@
       "ourToolCount": 5,
       "cliToolCount": 5,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "b2bcd45339fe42caa0f55e5ca1196091b2dcda4b868fedd209177b54f2ef51ef"
     },
     "terraform": {

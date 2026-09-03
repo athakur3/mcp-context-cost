@@ -3,43 +3,43 @@
   "provider": "tiktoken",
   "encoding": "o200k_base",
   "status": "measured",
-  "totalTokens": 3228,
-  "toolCount": 14,
+  "totalTokens": 3960,
+  "toolCount": 19,
   "tools": [
     {
       "name": "search_papers",
-      "tokens": 1154,
-      "descriptionTokens": 770,
-      "inputSchemaTokens": 315
+      "tokens": 516,
+      "descriptionTokens": 211,
+      "inputSchemaTokens": 273
     },
     {
       "name": "download_paper",
-      "tokens": 175,
-      "descriptionTokens": 48,
-      "inputSchemaTokens": 102
+      "tokens": 353,
+      "descriptionTokens": 125,
+      "inputSchemaTokens": 202
     },
     {
       "name": "list_papers",
-      "tokens": 96,
-      "descriptionTokens": 60,
-      "inputSchemaTokens": 17
+      "tokens": 157,
+      "descriptionTokens": 81,
+      "inputSchemaTokens": 57
     },
     {
       "name": "read_paper",
-      "tokens": 177,
-      "descriptionTokens": 67,
-      "inputSchemaTokens": 91
+      "tokens": 275,
+      "descriptionTokens": 115,
+      "inputSchemaTokens": 141
     },
     {
       "name": "get_abstract",
-      "tokens": 156,
-      "descriptionTokens": 77,
+      "tokens": 137,
+      "descriptionTokens": 58,
       "inputSchemaTokens": 54
     },
     {
       "name": "semantic_search",
-      "tokens": 204,
-      "descriptionTokens": 102,
+      "tokens": 226,
+      "descriptionTokens": 125,
       "inputSchemaTokens": 76
     },
     {
@@ -50,9 +50,9 @@
     },
     {
       "name": "citation_graph",
-      "tokens": 88,
-      "descriptionTokens": 20,
-      "inputSchemaTokens": 44
+      "tokens": 171,
+      "descriptionTokens": 72,
+      "inputSchemaTokens": 75
     },
     {
       "name": "export_citations",
@@ -62,21 +62,33 @@
     },
     {
       "name": "watch_topic",
-      "tokens": 298,
-      "descriptionTokens": 114,
-      "inputSchemaTokens": 152
+      "tokens": 354,
+      "descriptionTokens": 150,
+      "inputSchemaTokens": 172
     },
     {
       "name": "check_alerts",
-      "tokens": 157,
-      "descriptionTokens": 82,
+      "tokens": 246,
+      "descriptionTokens": 164,
       "inputSchemaTokens": 50
     },
     {
+      "name": "list_watches",
+      "tokens": 100,
+      "descriptionTokens": 61,
+      "inputSchemaTokens": 14
+    },
+    {
+      "name": "unwatch_topic",
+      "tokens": 120,
+      "descriptionTokens": 44,
+      "inputSchemaTokens": 45
+    },
+    {
       "name": "get_paper_latex",
-      "tokens": 147,
+      "tokens": 181,
       "descriptionTokens": 23,
-      "inputSchemaTokens": 97
+      "inputSchemaTokens": 131
     },
     {
       "name": "list_paper_latex_sections",
@@ -86,41 +98,73 @@
     },
     {
       "name": "get_paper_latex_section",
-      "tokens": 170,
-      "descriptionTokens": 14,
-      "inputSchemaTokens": 128
+      "tokens": 213,
+      "descriptionTokens": 22,
+      "inputSchemaTokens": 162
+    },
+    {
+      "name": "get_paper_outline",
+      "tokens": 141,
+      "descriptionTokens": 27,
+      "inputSchemaTokens": 94
+    },
+    {
+      "name": "read_paper_section",
+      "tokens": 184,
+      "descriptionTokens": 21,
+      "inputSchemaTokens": 143
+    },
+    {
+      "name": "search_paper_text",
+      "tokens": 180,
+      "descriptionTokens": 35,
+      "inputSchemaTokens": 125
     }
   ],
-  "canonicalSha256": "969f351ffcbb3a5e5b5e0d4c3cf79eae4e232df55e04828edb57befbd84e343d",
+  "canonicalSha256": "2ee361441efca1de3e296a572bbe2d20fa88d5565c9d4f54a8a1523ee7f54251",
   "rawToolsCapture": [
     {
       "name": "search_papers",
-      "description": "Search for papers on arXiv with advanced filtering and query optimization.\n\nQUERY CONSTRUCTION GUIDELINES:\n- Use QUOTED PHRASES for exact matches: \"multi-agent systems\", \"neural networks\", \"machine learning\"\n- Combine related concepts with OR: \"AI agents\" OR \"software agents\" OR \"intelligent agents\"  \n- Use field-specific searches for precision:\n  - ti:\"exact title phrase\" - search in titles only\n  - au:\"author name\" - search by author\n  - abs:\"keyword\" - search in abstracts only\n- Use ANDNOT to exclude unwanted results: \"machine learning\" ANDNOT \"survey\"\n- For best results, use 2-4 core concepts rather than long keyword lists\n\nADVANCED SEARCH PATTERNS:\n- Field + phrase: ti:\"transformer architecture\" for papers with exact title phrase\n- Multiple fields: au:\"Smith\" AND ti:\"quantum\" for author Smith's quantum papers  \n- Exclusions: \"deep learning\" ANDNOT (\"survey\" OR \"review\") to exclude survey papers\n- Broad + narrow: \"artificial intelligence\" AND (robotics OR \"computer vision\")\n\nCATEGORY FILTERING (highly recommended for relevance):\nComputer Science:\n- cs.AI: Artificial Intelligence\n- cs.LG: Machine Learning\n- cs.CL: Computation and Language (NLP)\n- cs.CV: Computer Vision\n- cs.MA: Multi-Agent Systems\n- cs.RO: Robotics\n- cs.NE: Neural and Evolutionary Computing\n- cs.IR: Information Retrieval\n- cs.HC: Human-Computer Interaction\n- cs.CR: Cryptography and Security\n- cs.DB: Databases\nStatistics & Math:\n- stat.ML: Machine Learning (Statistics)\n- stat.AP: Applications\n- math.OC: Optimization and Control\n- math.ST: Statistics Theory\nPhysics & Other:\n- quant-ph: Quantum Physics\n- eess.SP: Signal Processing\n- eess.AS: Audio and Speech Processing\n- physics.data-an: Data Analysis and Statistics\n\nEXAMPLES OF EFFECTIVE QUERIES:\n- ti:\"reinforcement learning\" with categories: [\"cs.LG\", \"cs.AI\"] - for RL papers by title\n- au:\"Hinton\" AND \"deep learning\" with categories: [\"cs.LG\"] - for Hinton's deep learning work\n- \"multi-agent\" ANDNOT \"survey\" with categories: [\"cs.MA\"] - exclude survey papers\n- abs:\"transformer\" AND ti:\"attention\" with categories: [\"cs.CL\"] - attention papers with transformer abstracts\n\nDATE FILTERING: Use YYYY-MM-DD format for historical research:\n- date_to: \"2015-12-31\" - for foundational/classic work (pre-2016)\n- date_from: \"2020-01-01\" - for recent developments (post-2020)\n- Both together for specific time periods\n\nRESULT QUALITY: Default sort is RELEVANCE (most pertinent results first). Use sort_by: \"date\" to get newest papers first.\nChoose relevance for focused topic searches; choose date for monitoring recent developments.\n\nRATE LIMITING: arXiv enforces a 3-second minimum between requests. This server handles that automatically.\nIf you see a rate limit error, wait 60 seconds before retrying — do not call the tool repeatedly in a loop.\n\nTIPS FOR FOUNDATIONAL RESEARCH:\n- Use date_to: \"2010-12-31\" to find classic papers on BDI, SOAR, ACT-R\n- Combine with field searches: ti:\"BDI\" AND abs:\"belief desire intention\"  \n- Try author searches: au:\"Rao\" AND \"BDI\" for Anand Rao's foundational BDI work",
+      "description": "Search arXiv by query with optional categories, date range, sort, and pagination.\n\nQuery: prefer quoted phrases; ti:/au:/abs:/cat:; AND/OR/ANDNOT. Unprefixed terms match title+abstract (not authors). Use categories (cs.AI, cs.LG, cs.CL, cs.CV, cs.MA, cs.RO, stat.ML, quant-ph). Catalog/examples: README 'search_papers query guide'.\n\nDates YYYY-MM-DD (date_from/date_to). sort_by relevance|date. max_results default 5 (cap 50). abstract_mode none|snippet|full (default snippet). start default 0; response: total_results, returned, has_more, next_start, abstract_mode. Pass next_start with same abstract_mode. Use get_abstract after compact search — not after abstract_mode=full.\n\narXiv ~3s between requests (server-side). Transient 429/503 are retried with backoff; persistent rate limits return status=rate_limited.",
       "inputSchema": {
         "type": "object",
         "properties": {
           "query": {
             "type": "string",
-            "description": "Search query using quoted phrases for exact matches (e.g., '\"machine learning\" OR \"deep learning\"') or specific technical terms. Avoid overly broad or generic terms."
+            "description": "arXiv query string. Prefer quoted phrases and ti:/au:/abs:/cat: field prefixes; AND/OR/ANDNOT supported."
           },
           "max_results": {
             "type": "integer",
-            "description": "Maximum number of results to return (default: 10, max: 50). Use 15-20 for comprehensive searches."
+            "description": "Maximum results to return (default: 5, max: 50)."
+          },
+          "start": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Zero-based result offset (default: 0). Pass next_start from a previous response to fetch the next page."
+          },
+          "abstract_mode": {
+            "type": "string",
+            "enum": [
+              "none",
+              "snippet",
+              "full"
+            ],
+            "description": "Abstract projection (default snippet ~280 chars, marked if truncated; full=complete; none=omit)."
           },
           "date_from": {
             "type": "string",
-            "description": "Start date for papers (YYYY-MM-DD format). Use to find recent work, e.g., '2023-01-01' for last 2 years."
+            "description": "Inclusive start date (YYYY-MM-DD)."
           },
           "date_to": {
             "type": "string",
-            "description": "End date for papers (YYYY-MM-DD format). Use with date_from to find historical work, e.g., '2020-12-31' for older research."
+            "description": "Inclusive end date (YYYY-MM-DD)."
           },
           "categories": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "Strongly recommended: arXiv categories to focus search (e.g., ['cs.AI', 'cs.MA'] for agent research, ['cs.LG'] for ML, ['cs.CL'] for NLP, ['cs.CV'] for vision). Greatly improves relevance."
+            "description": "arXiv category filters (e.g. ['cs.LG', 'cs.AI']). Strongly improves relevance."
           },
           "sort_by": {
             "type": "string",
@@ -128,7 +172,7 @@
               "relevance",
               "date"
             ],
-            "description": "Sort results by 'relevance' (most relevant first, default) or 'date' (newest first). Use 'relevance' for focused searches, 'date' for recent developments."
+            "description": "Sort by 'relevance' (default) or 'date' (newest first)."
           }
         },
         "required": [
@@ -143,7 +187,7 @@
     },
     {
       "name": "download_paper",
-      "description": "Download a paper from arXiv and return its text content. Tries the HTML version first for clean extraction; falls back to PDF conversion if HTML is unavailable. Stores the paper locally and supports start/max_chars pagination for very large papers.",
+      "description": "Download a paper from arXiv and return its text content. Tries the HTML version first for clean extraction; falls back to PDF conversion if HTML is unavailable. Stores the paper locally. Returned text is bounded to roughly 12,000 characters by default so one call cannot return an unbounded paper body. When is_truncated is true, call again with start=next_start (see next_retrieval) to continue, or pass return_full_text=true for the entire remaining paper. Set force=true to re-fetch and overwrite a cached paper (required to replace a newer stored arXiv version with an older one).",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -154,12 +198,20 @@
           "start": {
             "type": "integer",
             "minimum": 0,
-            "description": "Zero-based character offset for returning large papers in chunks"
+            "description": "Zero-based character offset for returning large papers in chunks; pass next_start from a prior truncated response to continue"
           },
           "max_chars": {
             "type": "integer",
             "minimum": 1,
-            "description": "Maximum raw paper characters to return from start; omit for full content"
+            "description": "Maximum raw paper characters to return from start; omit for the bounded default (12,000 chars)"
+          },
+          "return_full_text": {
+            "type": "boolean",
+            "description": "Set true to opt out of the bounded default and return the entire remaining paper from start in one call"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "If true, re-download and overwrite the local markdown and metadata sidecar even if the paper is already cached, including when replacing a newer stored arXiv version with an older one. Default false."
           }
         },
         "required": [
@@ -174,10 +226,15 @@
     },
     {
       "name": "list_papers",
-      "description": "List all papers that have been downloaded and stored locally via download_paper. Returns arXiv IDs only — use read_paper to access content. Returns an empty list if no papers have been downloaded yet. Workflow: search_papers -> download_paper -> list_papers -> read_paper.",
+      "description": "List all papers that have been downloaded and stored locally via download_paper. Returns id, title, authors, published, and arxiv_version/versioned_id from local metadata — no live re-fetch. Set compact=true to return arXiv IDs only. Returns an empty list if no papers have been downloaded yet. Workflow: search_papers -> download_paper -> list_papers -> read_paper.",
       "inputSchema": {
         "type": "object",
-        "properties": {},
+        "properties": {
+          "compact": {
+            "type": "boolean",
+            "description": "If true, return arXiv IDs only. Default is full local metadata (id, title, authors, published, arxiv_version, versioned_id)."
+          }
+        },
         "required": [],
         "additionalProperties": false
       },
@@ -187,7 +244,7 @@
     },
     {
       "name": "read_paper",
-      "description": "Read the text content of a paper that was previously downloaded via download_paper. Returns the paper in markdown format and supports start/max_chars pagination for large papers. Will fail with a clear error if the paper has not been downloaded yet — call download_paper first. Workflow: search_papers -> download_paper -> read_paper.",
+      "description": "Read the text content of a paper that was previously downloaded via download_paper. Returns the paper in markdown format, bounded to roughly 12,000 characters by default so one call cannot return an unbounded paper body. When is_truncated is true, call again with start=next_start (see next_retrieval) to continue, or pass return_full_text=true for the entire remaining paper. Will fail with a clear error if the paper has not been downloaded yet — call download_paper first. Workflow: search_papers -> download_paper -> read_paper.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -198,12 +255,16 @@
           "start": {
             "type": "integer",
             "minimum": 0,
-            "description": "Zero-based character offset for reading large papers in chunks"
+            "description": "Zero-based character offset for reading large papers in chunks; pass next_start from a prior truncated response to continue"
           },
           "max_chars": {
             "type": "integer",
             "minimum": 1,
-            "description": "Maximum raw paper characters to return from start; omit for full content"
+            "description": "Maximum raw paper characters to return from start; omit for the bounded default (12,000 chars)"
+          },
+          "return_full_text": {
+            "type": "boolean",
+            "description": "Set true to opt out of the bounded default and return the entire remaining paper from start in one call"
           }
         },
         "required": [
@@ -217,7 +278,7 @@
     },
     {
       "name": "get_abstract",
-      "description": "Fetch the abstract and metadata of an arXiv paper by ID, WITHOUT downloading the full paper. Use this before download_paper to assess relevance and save tokens. Returns: title, authors, abstract, categories, published date, and PDF URL. Workflow tip: search_papers -> get_abstract (check relevance) -> download_paper (if needed) -> read_paper.",
+      "description": "Fetch abstract and metadata by arXiv ID without downloading the paper. Use before download_paper to assess relevance. Returns title, authors, abstract, categories, published date, and PDF URL. After compact search, use for one full abstract; skip if search used abstract_mode=full.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -238,7 +299,7 @@
     },
     {
       "name": "semantic_search",
-      "description": "Semantic similarity search over papers you have already downloaded locally via download_paper. Supports free-text queries (e.g. 'attention mechanisms for long sequences') or finding papers similar to a given paper_id. IMPORTANT: only searches your local downloaded collection — will return empty results if no papers have been downloaded yet. Use search_papers to find papers on arXiv, then download_paper to add them to the local index before using this tool. Requires pro dependencies: uv pip install -e \".[pro]\"",
+      "description": "Semantic similarity search over papers you have already downloaded locally via download_paper. Supports free-text queries (e.g. 'attention mechanisms for long sequences') or finding papers similar to a given paper_id. IMPORTANT: only searches your local downloaded collection — will return empty results if no papers have been downloaded yet. Use search_papers to find papers on arXiv, then download_paper to add them to the local index before using this tool. Requires pro dependencies: uvx --from 'arxiv-mcp-server[pro]' arxiv-mcp-server (or uv tool install 'arxiv-mcp-server[pro]').",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -285,13 +346,19 @@
     },
     {
       "name": "citation_graph",
-      "description": "Return papers citing an arXiv paper and papers that it references using Semantic Scholar's citation graph.",
+      "description": "Return papers citing an arXiv paper and papers that it references using Semantic Scholar's citation graph. Results are bounded (default 50) to stay within the unauthenticated quota. Under load, export SEMANTIC_SCHOLAR_API_KEY for a higher limit; without a key, persistent rate limits return status=rate_limited instead of failing hard.",
       "inputSchema": {
         "type": "object",
         "properties": {
           "paper_id": {
             "type": "string",
             "description": "arXiv ID (for example: 2401.12345)."
+          },
+          "max_citations": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200,
+            "description": "Maximum citations and references to return (default 50)."
           }
         },
         "required": [
@@ -332,7 +399,7 @@
     },
     {
       "name": "watch_topic",
-      "description": "Save or update a persistent research topic watch. When checked via check_alerts, returns only papers published since the last check — acting as a standing alert for new work on a topic. The topic string uses the same query syntax as search_papers (quoted phrases, field specifiers, boolean operators). Examples: '\"diffusion models\" AND ti:\"video generation\"', 'au:\"LeCun\" AND cs.LG'. Calling watch_topic with the same topic string updates the existing watch rather than creating a duplicate. Pair with check_alerts to poll for new papers.",
+      "description": "Save or update a persistent research topic watch. When checked via check_alerts, returns only papers published since the last check — acting as a standing alert for new work on a topic. New watches seed last_checked to creation time so the first check does not dump historical matches. The topic string uses the same query syntax as search_papers (quoted phrases, field specifiers, boolean operators). Examples: '\"diffusion models\" AND ti:\"video generation\"', 'au:\"LeCun\" AND cs.LG'. Calling watch_topic with the same topic string updates the existing watch rather than creating a duplicate. On update, omit categories to preserve existing filters; pass categories: [] to clear them. Pair with check_alerts to poll for new papers.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -345,7 +412,7 @@
             "items": {
               "type": "string"
             },
-            "description": "Optional arXiv category filter (e.g. ['cs.LG', 'cs.AI']). Narrows results to specific fields."
+            "description": "Optional arXiv category filter (e.g. ['cs.LG', 'cs.AI']). Narrows results to specific fields. On update, omit this field to preserve existing categories; pass an empty array [] to clear them."
           },
           "max_results": {
             "type": "integer",
@@ -366,7 +433,7 @@
     },
     {
       "name": "check_alerts",
-      "description": "Check all saved topic watches for newly published papers since the last check. Omitting the topic parameter runs ALL saved watches and returns new papers for each. Passing a topic string checks only that specific watch. Updates each watch's last_checked timestamp after running, so subsequent calls only return newer papers. Use watch_topic to register topics before calling this. Returns a summary with new paper counts and full paper metadata per topic.",
+      "description": "Check all saved topic watches for newly published papers since the last check. Omitting the topic parameter runs ALL saved watches and returns new papers for each. Passing a topic string checks only that specific watch. Advances each watch's drain cursor after running: when a page is truncated by max_results, has_more=true and check_start advances so later calls return the next papers in the same window (Atom date bounds alone are day-granular and would otherwise re-hit the boundary); last_checked tracks the newest returned paper. When the page is not full, last_checked becomes now and the drain cursor resets. Use watch_topic to register topics before calling this. Returns a clear not-found error if a topic is provided but no matching watch exists. Returns a summary with new paper counts, has_more, and full paper metadata per topic.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -378,8 +445,44 @@
         "additionalProperties": false
       },
       "annotations": {
-        "readOnlyHint": true,
+        "readOnlyHint": false,
+        "idempotentHint": false,
         "openWorldHint": true
+      }
+    },
+    {
+      "name": "list_watches",
+      "description": "List all saved topic watches without checking for new papers. Returns each watch's topic, categories, last_checked timestamp, and other stored fields. Does not update last_checked — use this to inspect what is saved. Use unwatch_topic to remove a watch, or check_alerts to poll for new papers.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "unwatch_topic",
+      "description": "Delete a saved topic watch by exact topic string. The topic must match the stored watch_topic value exactly. Returns a clear not-found error if no matching watch exists. Use list_watches to inspect saved watches before deleting.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "topic": {
+            "type": "string",
+            "description": "Exact topic string of the watch to remove. Must match the topic used in watch_topic."
+          }
+        },
+        "required": [
+          "topic"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": false
       }
     },
     {
@@ -403,6 +506,10 @@
             "minimum": 1,
             "maximum": 50000,
             "description": "Maximum source characters to return (default 12000)"
+          },
+          "return_full_text": {
+            "type": "boolean",
+            "description": "Set true to opt out of the bounded default and return the entire remaining source or section from start in one call"
           }
         },
         "required": [
@@ -450,7 +557,7 @@
     },
     {
       "name": "get_paper_latex_section",
-      "description": "Return one bounded LaTeX section by outline ID or exact title.",
+      "description": "Return one bounded LaTeX section by outline ID or title (whitespace/case normalized; macros expanded).",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -462,7 +569,7 @@
           "section_id": {
             "type": "string",
             "maxLength": 200,
-            "description": "Section ID from list_paper_latex_sections or exact title"
+            "description": "Section ID from list_paper_latex_sections or section title"
           },
           "start": {
             "type": "integer",
@@ -474,6 +581,10 @@
             "minimum": 1,
             "maximum": 50000,
             "description": "Maximum source characters to return (default 12000)"
+          },
+          "return_full_text": {
+            "type": "boolean",
+            "description": "Set true to opt out of the bounded default and return the entire remaining source or section from start in one call"
           }
         },
         "required": [
@@ -486,18 +597,131 @@
         "readOnlyHint": false,
         "openWorldHint": true
       }
+    },
+    {
+      "name": "get_paper_outline",
+      "description": "Return a paginated heading outline for a downloaded paper (markdown). Stable hierarchical section IDs; use read_paper_section to fetch one.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "paper_id": {
+            "type": "string",
+            "maxLength": 40,
+            "description": "Validated modern or legacy arXiv paper ID"
+          },
+          "start": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Zero-based section index (default 0)"
+          },
+          "max_sections": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200,
+            "description": "Maximum headings to return (default 100)"
+          }
+        },
+        "required": [
+          "paper_id"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "read_paper_section",
+      "description": "Return one bounded markdown section by outline ID (or unique title). Does not include sibling or parent sections.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "paper_id": {
+            "type": "string",
+            "maxLength": 40,
+            "description": "Validated modern or legacy arXiv paper ID"
+          },
+          "section_id": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Section ID from get_paper_outline, or unique title"
+          },
+          "start": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Zero-based character offset within this section"
+          },
+          "max_chars": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Maximum section characters to return (default 12,000)"
+          },
+          "return_full_text": {
+            "type": "boolean",
+            "description": "If true, return the entire remaining section from start"
+          }
+        },
+        "required": [
+          "paper_id",
+          "section_id"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "search_paper_text",
+      "description": "Search a downloaded paper for bounded matching passages with section/source offsets. Suppresses high-overlap near-duplicates and prefers section-diverse hits. Lightweight substring search; no Torch.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "paper_id": {
+            "type": "string",
+            "maxLength": 40,
+            "description": "Validated modern or legacy arXiv paper ID"
+          },
+          "query": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Case-insensitive substring to find"
+          },
+          "max_passages": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 25,
+            "description": "Maximum passages to return (default 8)"
+          },
+          "passage_chars": {
+            "type": "integer",
+            "minimum": 64,
+            "maximum": 2000,
+            "description": "Max characters per excerpt (default 800)"
+          }
+        },
+        "required": [
+          "paper_id",
+          "query"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
     }
   ],
-  "measuredAt": "2026-08-19T00:08:01.318Z",
+  "measuredAt": "2026-09-03T19:24:17.914Z",
   "serverName": "arxiv-mcp-server",
-  "serverVersion": "0.6.3",
+  "serverVersion": "0.7.2",
   "launchCommand": "uvx arxiv-mcp-server",
   "envVarNames": [],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

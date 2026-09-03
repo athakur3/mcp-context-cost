@@ -4,7 +4,7 @@ One page per measured server: the per-tool breakdown behind the badge, the exact
 
 | # | server | tokens | tools | band |
 |---:|---|---:|---:|---|
-| 1 | [github](github.html) | 54,422 | 44 | very heavy |
+| 1 | [github](github.html) | 54,622 | 44 | very heavy |
 | 2 | [xcodebuildmcp](xcodebuildmcp.html) | 26,594 | 24 | heavy |
 | 3 | [brave-search](brave-search.html) | 25,456 | 8 | heavy |
 | 4 | [notion](notion.html) | 17,500 | 24 | heavy |
@@ -19,10 +19,10 @@ One page per measured server: the per-tool breakdown behind the badge, the exact
 | 13 | [postgres-mcp](postgres-mcp.html) | 8,632 | 9 | moderate |
 | 14 | [serena](serena.html) | 8,204 | 29 | moderate |
 | 15 | [mongodb](mongodb.html) | 7,926 | 27 | moderate |
-| 16 | [sentry](sentry.html) | 6,455 | 9 | moderate |
-| 17 | [pinecone](pinecone.html) | 5,903 | 9 | moderate |
-| 18 | [shopify-dev](shopify-dev.html) | 5,624 | 5 | moderate |
-| 19 | [blender](blender.html) | 5,462 | 25 | moderate |
+| 16 | [blender](blender.html) | 6,928 | 28 | moderate |
+| 17 | [shopify-dev](shopify-dev.html) | 6,841 | 6 | moderate |
+| 18 | [sentry](sentry.html) | 6,086 | 9 | moderate |
+| 19 | [pinecone](pinecone.html) | 5,903 | 9 | moderate |
 | 20 | [kubernetes](kubernetes.html) | 5,268 | 23 | moderate |
 | 21 | [aws-documentation](aws-documentation.html) | 5,074 | 5 | moderate |
 | 22 | [supabase](supabase.html) | 5,013 | 29 | moderate |
@@ -30,8 +30,8 @@ One page per measured server: the per-tool breakdown behind the badge, the exact
 | 24 | [excel](excel.html) | 4,266 | 25 | light |
 | 25 | [airtable](airtable.html) | 4,207 | 16 | light |
 | 26 | [playwright](playwright.html) | 4,024 | 24 | light |
-| 27 | [github-legacy](github-legacy.html) | 3,548 | 26 | light |
-| 28 | [arxiv](arxiv.html) | 3,228 | 14 | light |
+| 27 | [arxiv](arxiv.html) | 3,960 | 19 | light |
+| 28 | [github-legacy](github-legacy.html) | 3,548 | 26 | light |
 | 29 | [playwright-community](playwright-community.html) | 2,920 | 33 | light |
 | 30 | [chroma](chroma.html) | 2,837 | 13 | light |
 | 31 | [netlify](netlify.html) | 2,831 | 9 | light |

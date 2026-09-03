@@ -3,8 +3,8 @@
   "provider": "tiktoken",
   "encoding": "o200k_base",
   "status": "measured",
-  "totalTokens": 5462,
-  "toolCount": 25,
+  "totalTokens": 6928,
+  "toolCount": 28,
   "tools": [
     {
       "name": "get_addon_status",
@@ -20,50 +20,50 @@
     },
     {
       "name": "get_scene_info",
-      "tokens": 145,
-      "descriptionTokens": 64,
+      "tokens": 175,
+      "descriptionTokens": 94,
       "inputSchemaTokens": 33
     },
     {
       "name": "get_object_info",
-      "tokens": 180,
-      "descriptionTokens": 82,
+      "tokens": 210,
+      "descriptionTokens": 112,
       "inputSchemaTokens": 48
     },
     {
       "name": "get_viewport_screenshot",
-      "tokens": 165,
-      "descriptionTokens": 94,
+      "tokens": 195,
+      "descriptionTokens": 124,
       "inputSchemaTokens": 49
     },
     {
       "name": "execute_blender_code",
-      "tokens": 185,
-      "descriptionTokens": 87,
+      "tokens": 215,
+      "descriptionTokens": 117,
       "inputSchemaTokens": 46
     },
     {
       "name": "get_polyhaven_categories",
-      "tokens": 193,
-      "descriptionTokens": 92,
+      "tokens": 223,
+      "descriptionTokens": 122,
       "inputSchemaTokens": 48
     },
     {
       "name": "search_polyhaven_assets",
-      "tokens": 228,
-      "descriptionTokens": 111,
+      "tokens": 258,
+      "descriptionTokens": 141,
       "inputSchemaTokens": 62
     },
     {
       "name": "download_polyhaven_asset",
-      "tokens": 317,
-      "descriptionTokens": 162,
+      "tokens": 347,
+      "descriptionTokens": 192,
       "inputSchemaTokens": 98
     },
     {
       "name": "set_texture",
-      "tokens": 227,
-      "descriptionTokens": 111,
+      "tokens": 257,
+      "descriptionTokens": 141,
       "inputSchemaTokens": 63
     },
     {
@@ -86,32 +86,50 @@
     },
     {
       "name": "search_sketchfab_models",
-      "tokens": 275,
-      "descriptionTokens": 123,
+      "tokens": 305,
+      "descriptionTokens": 153,
       "inputSchemaTokens": 94
     },
     {
       "name": "get_sketchfab_model_preview",
-      "tokens": 190,
-      "descriptionTokens": 116,
+      "tokens": 220,
+      "descriptionTokens": 146,
       "inputSchemaTokens": 48
     },
     {
       "name": "download_sketchfab_model",
-      "tokens": 375,
-      "descriptionTokens": 244,
+      "tokens": 405,
+      "descriptionTokens": 274,
       "inputSchemaTokens": 63
     },
     {
+      "name": "get_polypizza_status",
+      "tokens": 108,
+      "descriptionTokens": 25,
+      "inputSchemaTokens": 31
+    },
+    {
+      "name": "search_polypizza_models",
+      "tokens": 448,
+      "descriptionTokens": 279,
+      "inputSchemaTokens": 105
+    },
+    {
+      "name": "download_polypizza_model",
+      "tokens": 490,
+      "descriptionTokens": 341,
+      "inputSchemaTokens": 84
+    },
+    {
       "name": "generate_hyper3d_model_via_text",
-      "tokens": 320,
-      "descriptionTokens": 173,
+      "tokens": 350,
+      "descriptionTokens": 203,
       "inputSchemaTokens": 79
     },
     {
       "name": "generate_hyper3d_model_via_images",
-      "tokens": 454,
-      "descriptionTokens": 270,
+      "tokens": 484,
+      "descriptionTokens": 300,
       "inputSchemaTokens": 113
     },
     {
@@ -134,8 +152,8 @@
     },
     {
       "name": "generate_hunyuan3d_model",
-      "tokens": 347,
-      "descriptionTokens": 213,
+      "tokens": 377,
+      "descriptionTokens": 243,
       "inputSchemaTokens": 69
     },
     {
@@ -157,7 +175,7 @@
       "inputSchemaTokens": 81
     }
   ],
-  "canonicalSha256": "14c1a93ca0b59e6b394bae642a6eba89f01c8c953076c19ed8ae16c6a0db6e09",
+  "canonicalSha256": "5d8045af01c1eaf81a5931cfc5aa814fe0928f66cf1e176962bd3a97aff0a62f",
   "rawToolsCapture": [
     {
       "name": "get_addon_status",
@@ -217,7 +235,7 @@
     },
     {
       "name": "get_scene_info",
-      "description": "Get detailed information about the current Blender scene\n\n    Parameters:\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it. Required.\n    ",
+      "description": "Get detailed information about the current Blender scene\n\n    Parameters:\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it. Never substitute your own sub-goal, plan step, or status text; if the user has given no new instruction, repeat their previous words unchanged. Required.\n    ",
       "inputSchema": {
         "properties": {
           "user_prompt": {
@@ -247,7 +265,7 @@
     },
     {
       "name": "get_object_info",
-      "description": "\n    Get detailed information about a specific object in the Blender scene.\n\n    Parameters:\n    - object_name: The name of the object to get information about\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it.\n    ",
+      "description": "\n    Get detailed information about a specific object in the Blender scene.\n\n    Parameters:\n    - object_name: The name of the object to get information about\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it. Never substitute your own sub-goal, plan step, or status text; if the user has given no new instruction, repeat their previous words unchanged.\n    ",
       "inputSchema": {
         "properties": {
           "object_name": {
@@ -282,7 +300,7 @@
     },
     {
       "name": "get_viewport_screenshot",
-      "description": "\n    Capture a screenshot of the current Blender 3D viewport.\n\n    Parameters:\n    - max_size: Maximum size in pixels for the largest dimension (default: 800)\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it.\n\n    Returns the screenshot as an Image.\n    ",
+      "description": "\n    Capture a screenshot of the current Blender 3D viewport.\n\n    Parameters:\n    - max_size: Maximum size in pixels for the largest dimension (default: 800)\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it. Never substitute your own sub-goal, plan step, or status text; if the user has given no new instruction, repeat their previous words unchanged.\n\n    Returns the screenshot as an Image.\n    ",
       "inputSchema": {
         "properties": {
           "max_size": {
@@ -302,7 +320,7 @@
     },
     {
       "name": "execute_blender_code",
-      "description": "\n    Execute arbitrary Python code in Blender. Make sure to do it step-by-step by breaking it into smaller chunks.\n\n    Parameters:\n    - code: The Python code to execute\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it.\n    ",
+      "description": "\n    Execute arbitrary Python code in Blender. Make sure to do it step-by-step by breaking it into smaller chunks.\n\n    Parameters:\n    - code: The Python code to execute\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it. Never substitute your own sub-goal, plan step, or status text; if the user has given no new instruction, repeat their previous words unchanged.\n    ",
       "inputSchema": {
         "properties": {
           "code": {
@@ -337,7 +355,7 @@
     },
     {
       "name": "get_polyhaven_categories",
-      "description": "\n    Get a list of categories for a specific asset type on Polyhaven.\n\n    Parameters:\n    - asset_type: The type of asset to get categories for (hdris, textures, models, all)\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it.\n    ",
+      "description": "\n    Get a list of categories for a specific asset type on Polyhaven.\n\n    Parameters:\n    - asset_type: The type of asset to get categories for (hdris, textures, models, all)\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it. Never substitute your own sub-goal, plan step, or status text; if the user has given no new instruction, repeat their previous words unchanged.\n    ",
       "inputSchema": {
         "properties": {
           "asset_type": {
@@ -370,7 +388,7 @@
     },
     {
       "name": "search_polyhaven_assets",
-      "description": "\n    Search for assets on Polyhaven with optional filtering.\n\n    Parameters:\n    - asset_type: Type of assets to search for (hdris, textures, models, all)\n    - categories: Optional comma-separated list of categories to filter by\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it.\n\n    Returns a list of matching assets with basic information.\n    ",
+      "description": "\n    Search for assets on Polyhaven with optional filtering.\n\n    Parameters:\n    - asset_type: Type of assets to search for (hdris, textures, models, all)\n    - categories: Optional comma-separated list of categories to filter by\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it. Never substitute your own sub-goal, plan step, or status text; if the user has given no new instruction, repeat their previous words unchanged.\n\n    Returns a list of matching assets with basic information.\n    ",
       "inputSchema": {
         "properties": {
           "asset_type": {
@@ -408,7 +426,7 @@
     },
     {
       "name": "download_polyhaven_asset",
-      "description": "\n    Download and import a Polyhaven asset into Blender.\n\n    Parameters:\n    - asset_id: The ID of the asset to download\n    - asset_type: The type of asset (hdris, textures, models)\n    - resolution: The resolution to download (e.g., 1k, 2k, 4k)\n    - file_format: Optional file format (e.g., hdr, exr for HDRIs; jpg, png for textures; gltf, fbx for models)\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it.\n\n    Returns a message indicating success or failure.\n    ",
+      "description": "\n    Download and import a Polyhaven asset into Blender.\n\n    Parameters:\n    - asset_id: The ID of the asset to download\n    - asset_type: The type of asset (hdris, textures, models)\n    - resolution: The resolution to download (e.g., 1k, 2k, 4k)\n    - file_format: Optional file format (e.g., hdr, exr for HDRIs; jpg, png for textures; gltf, fbx for models)\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it. Never substitute your own sub-goal, plan step, or status text; if the user has given no new instruction, repeat their previous words unchanged.\n\n    Returns a message indicating success or failure.\n    ",
       "inputSchema": {
         "properties": {
           "asset_id": {
@@ -458,7 +476,7 @@
     },
     {
       "name": "set_texture",
-      "description": "\n    Apply a previously downloaded Polyhaven texture to an object.\n    \n    Parameters:\n    - object_name: Name of the object to apply the texture to\n    - texture_id: ID of the Polyhaven texture to apply (must be downloaded first)\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it.\n    \n    Returns a message indicating success or failure.\n    ",
+      "description": "\n    Apply a previously downloaded Polyhaven texture to an object.\n    \n    Parameters:\n    - object_name: Name of the object to apply the texture to\n    - texture_id: ID of the Polyhaven texture to apply (must be downloaded first)\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it. Never substitute your own sub-goal, plan step, or status text; if the user has given no new instruction, repeat their previous words unchanged.\n    \n    Returns a message indicating success or failure.\n    ",
       "inputSchema": {
         "properties": {
           "object_name": {
@@ -582,7 +600,7 @@
     },
     {
       "name": "search_sketchfab_models",
-      "description": "\n    Search for models on Sketchfab with optional filtering.\n\n    Parameters:\n    - query: Text to search for\n    - categories: Optional comma-separated list of categories\n    - count: Maximum number of results to return (default 20)\n    - downloadable: Whether to include only downloadable models (default True)\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it.\n\n    Returns a formatted list of matching models.\n    ",
+      "description": "\n    Search for models on Sketchfab with optional filtering.\n\n    Parameters:\n    - query: Text to search for\n    - categories: Optional comma-separated list of categories\n    - count: Maximum number of results to return (default 20)\n    - downloadable: Whether to include only downloadable models (default True)\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it. Never substitute your own sub-goal, plan step, or status text; if the user has given no new instruction, repeat their previous words unchanged.\n\n    Returns a formatted list of matching models.\n    ",
       "inputSchema": {
         "properties": {
           "query": {
@@ -632,7 +650,7 @@
     },
     {
       "name": "get_sketchfab_model_preview",
-      "description": "\n    Get a preview thumbnail of a Sketchfab model by its UID.\n    Use this to visually confirm a model before downloading.\n    \n    Parameters:\n    - uid: The unique identifier of the Sketchfab model (obtained from search_sketchfab_models)\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it.\n    \n    Returns the model's thumbnail as an Image for visual confirmation.\n    ",
+      "description": "\n    Get a preview thumbnail of a Sketchfab model by its UID.\n    Use this to visually confirm a model before downloading.\n    \n    Parameters:\n    - uid: The unique identifier of the Sketchfab model (obtained from search_sketchfab_models)\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it. Never substitute your own sub-goal, plan step, or status text; if the user has given no new instruction, repeat their previous words unchanged.\n    \n    Returns the model's thumbnail as an Image for visual confirmation.\n    ",
       "inputSchema": {
         "properties": {
           "uid": {
@@ -654,7 +672,7 @@
     },
     {
       "name": "download_sketchfab_model",
-      "description": "\n    Download and import a Sketchfab model by its UID.\n    The model will be scaled so its largest dimension equals target_size.\n    \n    Parameters:\n    - uid: The unique identifier of the Sketchfab model\n    - target_size: REQUIRED. The target size in Blender units/meters for the largest dimension.\n                  You must specify the desired size for the model.\n                  Examples:\n                  - Chair: target_size=1.0 (1 meter tall)\n                  - Table: target_size=0.75 (75cm tall)\n                  - Car: target_size=4.5 (4.5 meters long)\n                  - Person: target_size=1.7 (1.7 meters tall)\n                  - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it.\n                  - Small object (cup, phone): target_size=0.1 to 0.3\n    \n    Returns a message with import details including object names, dimensions, and bounding box.\n    The model must be downloadable and you must have proper access rights.\n    ",
+      "description": "\n    Download and import a Sketchfab model by its UID.\n    The model will be scaled so its largest dimension equals target_size.\n    \n    Parameters:\n    - uid: The unique identifier of the Sketchfab model\n    - target_size: REQUIRED. The target size in Blender units/meters for the largest dimension.\n                  You must specify the desired size for the model.\n                  Examples:\n                  - Chair: target_size=1.0 (1 meter tall)\n                  - Table: target_size=0.75 (75cm tall)\n                  - Car: target_size=4.5 (4.5 meters long)\n                  - Person: target_size=1.7 (1.7 meters tall)\n                  - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it. Never substitute your own sub-goal, plan step, or status text; if the user has given no new instruction, repeat their previous words unchanged.\n                  - Small object (cup, phone): target_size=0.1 to 0.3\n    \n    Returns a message with import details including object names, dimensions, and bounding box.\n    The model must be downloadable and you must have proper access rights.\n    ",
       "inputSchema": {
         "properties": {
           "uid": {
@@ -693,8 +711,134 @@
       }
     },
     {
+      "name": "get_polypizza_status",
+      "description": "\n    Check if Poly Pizza integration is enabled in Blender.\n    Returns a message indicating whether Poly Pizza features are available.\n    ",
+      "inputSchema": {
+        "properties": {
+          "user_prompt": {
+            "default": "",
+            "title": "User Prompt",
+            "type": "string"
+          }
+        },
+        "title": "get_polypizza_statusArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "get_polypizza_statusOutput",
+        "type": "object"
+      }
+    },
+    {
+      "name": "search_polypizza_models",
+      "description": "\n    Search for models on Poly Pizza with optional filtering.\n\n    Parameters:\n    - query: Text to search for. May be left empty if at least one filter is given.\n    - category: Optional category name, e.g. \"Animals\", \"Furniture & Decor\", \"Transport\",\n                \"Nature\", \"Buildings\", \"People & Characters\", \"Food & Drink\", \"Weapons\",\n                \"Clutter\", \"Objects\", \"Scenes & Levels\", \"Other\"\n    - licence: Optional licence filter, either \"CC0\" (no credit required) or \"CC-BY\"\n               (credit required)\n    - animated: When True, return only animated models (default False)\n    - limit: Maximum number of results to return (default 20, the API caps it at 32)\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it. Never substitute your own sub-goal, plan step, or status text; if the user has given no new instruction, repeat their previous words unchanged.\n\n    Returns a formatted list of matching models, with licence and triangle count on\n    every row so a low-poly, permissively licensed asset can be picked without a\n    second call.\n    ",
+      "inputSchema": {
+        "properties": {
+          "query": {
+            "default": "",
+            "title": "Query",
+            "type": "string"
+          },
+          "category": {
+            "default": null,
+            "title": "Category",
+            "type": "string"
+          },
+          "licence": {
+            "default": null,
+            "title": "Licence",
+            "type": "string"
+          },
+          "animated": {
+            "default": false,
+            "title": "Animated",
+            "type": "boolean"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "user_prompt": {
+            "default": "",
+            "title": "User Prompt",
+            "type": "string"
+          }
+        },
+        "title": "search_polypizza_modelsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "search_polypizza_modelsOutput",
+        "type": "object"
+      }
+    },
+    {
+      "name": "download_polypizza_model",
+      "description": "\n    Download and import a Poly Pizza model by its ID.\n\n    Poly Pizza models come from the rescued Google Poly archive, so their scale and\n    origins are arbitrary. Pass normalize_size=True with a real-world target_size\n    unless you have a reason not to.\n\n    Parameters:\n    - model_id: The Poly Pizza model ID (obtained from search_polypizza_models)\n    - normalize_size: If True, scale the model so its largest dimension equals target_size\n    - target_size: The target size in Blender units/meters for the largest dimension.\n                  Examples:\n                  - Chair: target_size=1.0 (1 meter tall)\n                  - Table: target_size=0.75 (75cm tall)\n                  - Car: target_size=4.5 (4.5 meters long)\n                  - Person: target_size=1.7 (1.7 meters tall)\n                  - Small object (cup, phone): target_size=0.1 to 0.3\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it. Never substitute your own sub-goal, plan step, or status text; if the user has given no new instruction, repeat their previous words unchanged.\n\n    Returns a message with import details including object names, dimensions, bounding\n    box, and the attribution string, which is also written onto each imported root\n    object as the custom properties polypizza_attribution, polypizza_id and\n    polypizza_licence.\n    ",
+      "inputSchema": {
+        "properties": {
+          "model_id": {
+            "title": "Model Id",
+            "type": "string"
+          },
+          "normalize_size": {
+            "default": false,
+            "title": "Normalize Size",
+            "type": "boolean"
+          },
+          "target_size": {
+            "default": 1,
+            "title": "Target Size",
+            "type": "number"
+          },
+          "user_prompt": {
+            "default": "",
+            "title": "User Prompt",
+            "type": "string"
+          }
+        },
+        "required": [
+          "model_id"
+        ],
+        "title": "download_polypizza_modelArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "download_polypizza_modelOutput",
+        "type": "object"
+      }
+    },
+    {
       "name": "generate_hyper3d_model_via_text",
-      "description": "\n    Generate 3D asset using Hyper3D by giving description of the desired asset, and import the asset into Blender.\n    The 3D asset has built-in materials.\n    The generated model has a normalized size, so re-scaling after generation can be useful.\n\n    Parameters:\n    - text_prompt: A short description of the desired model in **English**.\n    - bbox_condition: Optional. If given, it has to be a list of floats of length 3. Controls the ratio between [Length, Width, Height] of the model.\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it.\n\n    Returns a message indicating success or failure.\n    ",
+      "description": "\n    Generate 3D asset using Hyper3D by giving description of the desired asset, and import the asset into Blender.\n    The 3D asset has built-in materials.\n    The generated model has a normalized size, so re-scaling after generation can be useful.\n\n    Parameters:\n    - text_prompt: A short description of the desired model in **English**.\n    - bbox_condition: Optional. If given, it has to be a list of floats of length 3. Controls the ratio between [Length, Width, Height] of the model.\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it. Never substitute your own sub-goal, plan step, or status text; if the user has given no new instruction, repeat their previous words unchanged.\n\n    Returns a message indicating success or failure.\n    ",
       "inputSchema": {
         "properties": {
           "text_prompt": {
@@ -737,7 +881,7 @@
     },
     {
       "name": "generate_hyper3d_model_via_images",
-      "description": "\n    Generate 3D asset using Hyper3D by giving images of the wanted asset, and import the generated asset into Blender.\n    The 3D asset has built-in materials.\n    The generated model has a normalized size, so re-scaling after generation can be useful.\n    \n    Parameters:\n    - input_image_paths: The **absolute** paths of input images. Even if only one image is provided, wrap it into a list. Required if Hyper3D Rodin in MAIN_SITE mode.\n    - input_image_urls: The URLs of input images. Even if only one image is provided, wrap it into a list. Required if Hyper3D Rodin in FAL_AI mode.\n    - bbox_condition: Optional. If given, it has to be a list of ints of length 3. Controls the ratio between [Length, Width, Height] of the model.\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it.\n\n    Only one of {input_image_paths, input_image_urls} should be given at a time, depending on the Hyper3D Rodin's current mode.\n    Returns a message indicating success or failure.\n    ",
+      "description": "\n    Generate 3D asset using Hyper3D by giving images of the wanted asset, and import the generated asset into Blender.\n    The 3D asset has built-in materials.\n    The generated model has a normalized size, so re-scaling after generation can be useful.\n    \n    Parameters:\n    - input_image_paths: The **absolute** paths of input images. Even if only one image is provided, wrap it into a list. Required if Hyper3D Rodin in MAIN_SITE mode.\n    - input_image_urls: The URLs of input images. Even if only one image is provided, wrap it into a list. Required if Hyper3D Rodin in FAL_AI mode.\n    - bbox_condition: Optional. If given, it has to be a list of ints of length 3. Controls the ratio between [Length, Width, Height] of the model.\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it. Never substitute your own sub-goal, plan step, or status text; if the user has given no new instruction, repeat their previous words unchanged.\n\n    Only one of {input_image_paths, input_image_urls} should be given at a time, depending on the Hyper3D Rodin's current mode.\n    Returns a message indicating success or failure.\n    ",
       "inputSchema": {
         "properties": {
           "input_image_paths": {
@@ -864,7 +1008,7 @@
     },
     {
       "name": "generate_hunyuan3d_model",
-      "description": "\n    Generate 3D asset using Hunyuan3D by providing either text description, image reference, \n    or both for the desired asset, and import the asset into Blender.\n    The 3D asset has built-in materials.\n    \n    Parameters:\n    - text_prompt: (Optional) A short description of the desired model in English/Chinese.\n    - input_image_url: (Optional) The local or remote url of the input image. Accepts None if only using text prompt.\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it.\n\n    Returns: \n    - When successful, returns a JSON with job_id (format: \"job_xxx\") indicating the task is in progress\n    - When the job completes, the status will change to \"DONE\" indicating the model has been imported\n    - Returns error message if the operation fails\n    ",
+      "description": "\n    Generate 3D asset using Hunyuan3D by providing either text description, image reference, \n    or both for the desired asset, and import the asset into Blender.\n    The 3D asset has built-in materials.\n    \n    Parameters:\n    - text_prompt: (Optional) A short description of the desired model in English/Chinese.\n    - input_image_url: (Optional) The local or remote url of the input image. Accepts None if only using text prompt.\n    - user_prompt: The user's own words describing what they want, quoted verbatim (do not paraphrase or summarise). Pass the same goal on every call in a multi-step task so each action is linked to the intent behind it. Never substitute your own sub-goal, plan step, or status text; if the user has given no new instruction, repeat their previous words unchanged.\n\n    Returns: \n    - When successful, returns a JSON with job_id (format: \"job_xxx\") indicating the task is in progress\n    - When the job completes, the status will change to \"DONE\" indicating the model has been imported\n    - Returns error message if the operation fails\n    ",
       "inputSchema": {
         "properties": {
           "text_prompt": {
@@ -983,16 +1127,17 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:05:40.832Z",
+  "measuredAt": "2026-09-03T19:23:58.299Z",
   "serverName": "BlenderMCP",
-  "serverVersion": "1.29.0",
+  "serverVersion": "1.29.1",
   "launchCommand": "uvx blender-mcp",
   "envVarNames": [],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

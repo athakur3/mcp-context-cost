@@ -1,6 +1,6 @@
 # bright-data — context cost
 
-**978 tokens** across 5 tools — *lean* (< 1K). Measured 2026-08-19 under [methodology v1.0](../METHODOLOGY.html).
+**978 tokens** across 5 tools — *lean* (< 1K). Measured 2026-09-03 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -32,6 +32,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 |---|---:|---:|---|---:|
 | 2026-08-16 | 978 | 5 | not recorded | — |
 | 2026-08-19 | 978 | 5 | docker | no change |
+| 2026-09-03 | 978 | 5 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

@@ -236,18 +236,19 @@
       }
     }
   ],
-  "measuredAt": "2026-08-18T23:57:26.420Z",
+  "measuredAt": "2026-09-03T19:22:54.083Z",
   "serverName": "mcp-server/google-maps",
   "serverVersion": "0.1.0",
   "launchCommand": "npx -y @modelcontextprotocol/server-google-maps",
   "envVarNames": [
     "GOOGLE_MAPS_API_KEY"
   ],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }
