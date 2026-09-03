@@ -1,0 +1,22 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "auth-required",
+  "totalTokens": null,
+  "toolCount": null,
+  "tools": [],
+  "canonicalSha256": null,
+  "rawToolsCapture": null,
+  "measuredAt": "2026-09-03T21:37:52.947Z",
+  "serverName": "yandex-tracker",
+  "launchCommand": "uvx yandex-tracker-mcp",
+  "notes": "server exited (code 1); stderr tail: Downloading grpcio-tools (2.5MiB)\n Downloaded grpcio-tools\nDownloading yandexcloud (6.3MiB)\n Downloaded yandexcloud\nInstalled 61 packages in 178ms\n1 validation error for Settings\n  Value error, tracker_token or tracker_iam_token or tracker_sa_* must be set when oauth_enabled is False [type=value_error, input_value={}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error\n",
+  "isolation": {
+    "docker": true,
+    "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  },
+  "timeoutMs": 240000
+}

@@ -1,0 +1,136 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "measured",
+  "totalTokens": 585,
+  "toolCount": 3,
+  "tools": [
+    {
+      "name": "render",
+      "tokens": 227,
+      "descriptionTokens": 65,
+      "inputSchemaTokens": 138
+    },
+    {
+      "name": "lint",
+      "tokens": 196,
+      "descriptionTokens": 64,
+      "inputSchemaTokens": 108
+    },
+    {
+      "name": "read_docs",
+      "tokens": 160,
+      "descriptionTokens": 58,
+      "inputSchemaTokens": 77
+    }
+  ],
+  "canonicalSha256": "991fa59036ab1d4a4c1270ba14025668cd37bad41d9a804544a5e6aa23564365",
+  "rawToolsCapture": [
+    {
+      "name": "render",
+      "title": "Render an email",
+      "description": "Render emailmd markdown into email-safe HTML. Returns html (the complete email document), text (the plain-text MIME part), meta (frontmatter), warnings (non-fatal repairs made while rendering; aim for none), htmlBytes, and previewUrl (a live browser preview of this exact document to share with the user).",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "markdown": {
+            "type": "string",
+            "maxLength": 262144,
+            "description": "The emailmd markdown document, optionally starting with YAML frontmatter."
+          },
+          "minify": {
+            "description": "Minify the HTML. Recommended for sending; helps stay under Gmail's 102KB clip limit.",
+            "type": "boolean"
+          },
+          "partials": {
+            "description": "Named markdown partials spliced in wherever the document says \"::: include <name>\".",
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 262144
+            }
+          }
+        },
+        "required": [
+          "markdown"
+        ]
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "lint",
+      "title": "Lint an email",
+      "description": "Check emailmd markdown for deliverability, accessibility, and readability problems without rendering it: missing alt text, http:// links, Gmail's 102KB clip limit, generic link text, spam-trigger phrases, and more. Fix warnings before sending; suggestions are sometimes intentional (e.g. transactional emails without an unsubscribe link).",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "markdown": {
+            "type": "string",
+            "maxLength": 262144,
+            "description": "The emailmd markdown document, optionally starting with YAML frontmatter."
+          },
+          "partials": {
+            "description": "Named markdown partials spliced in wherever the document says \"::: include <name>\".",
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 262144
+            }
+          }
+        },
+        "required": [
+          "markdown"
+        ]
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "read_docs",
+      "title": "Read emailmd docs",
+      "description": "Fetch emailmd documentation from emailmd.dev. Call with no arguments for the index of all pages; pass page to read one (e.g. 'buttons', 'frontmatter', 'theme', 'directives/hero'). Read the relevant page before using syntax you are not sure about.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "page": {
+            "description": "Docs page path, e.g. 'buttons' or 'directives/hero'. Omit for the index.",
+            "type": "string",
+            "maxLength": 200,
+            "pattern": "^[a-z0-9][a-z0-9/-]*$"
+          }
+        }
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    }
+  ],
+  "measuredAt": "2026-09-03T21:39:45.951Z",
+  "serverName": "emailmd",
+  "serverVersion": "0.11.0",
+  "launchCommand": "npx -y emailmd mcp",
+  "envVarNames": [],
+  "serverInstructions": "emailmd turns markdown into responsive, email-safe HTML that renders correctly across Gmail, Outlook, Apple Mail, and the rest.\n\nTypical workflow:\n1. Write emailmd markdown. Standard markdown works; email-specific features are opt-in:\n   - YAML frontmatter: preheader, theme (light|dark|auto), fonts, a dark: override map, and theme keys like accent_color or font_family.\n   - Buttons: [Get Started](https://example.com){button} (variants: {button.secondary}, {button.success}, ...).\n   - Layout directives: ::: hero, ::: columns with ::: column (outer block uses ::::), ::: callout, ::: highlight, ::: header, ::: footer, ::: divider, ::: spacer, ::: social, ::: accordion, ::: centered, and ::: include <partial>.\n   - Data directives, each written as a \"Label: value\" line or markdown list and drawn from table cells and text glyphs rather than images: ::: chart (bars), ::: progress (one value against a maximum), ::: sparkline and ::: trend (a series, and its change on its own), ::: stats (KPI tiles), ::: steps and ::: timeline (an ordered walk, or a status tracker when items are ticked off), ::: rating (a score on a fixed scale). Read their docs pages before using their parameters.\n2. Call lint and fix what it finds (deliverability, accessibility, readability).\n3. Call render for the final html, the plain-text MIME part, and previewUrl. Share previewUrl with the user so they can open the email in a live preview.\n\nCall read_docs with no arguments for the docs index, and read the specific page (e.g. 'directives/hero', 'frontmatter', 'theme') before using syntax you have not already seen this session.",
+  "isolation": {
+    "docker": true,
+    "image": "public.ecr.aws/docker/library/node:22-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  },
+  "timeoutMs": 240000
+}

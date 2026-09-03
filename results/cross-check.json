@@ -14,6 +14,16 @@
   "measuredAt": "2026-09-03",
   "isolation": "docker (same images, limits and package caches as a sweep)",
   "servers": {
+    "agentphone": {
+      "ourTokens": 6134,
+      "ourMappedTokens": 5582,
+      "cliTokens": 5613,
+      "ourToolCount": 28,
+      "cliToolCount": 28,
+      "toolSetMatches": true,
+      "dynamic": false,
+      "capturedSha256": "eec89a7ec71ac3e9e65fb8477bf594b4ce9af01b572bcc5d7e9fbbcc85f4e813"
+    },
     "airbnb": {
       "ourTokens": 486,
       "ourMappedTokens": 486,
@@ -260,6 +270,16 @@
       "capturedSha256": "76a005f840c738f5788e7b5801fdc12194713fce1ed435ad500f891a2b2dd13c",
       "error": "cli: exited 1: Error: connection closed: initialize response\n"
     },
+    "emailmd": {
+      "ourTokens": 585,
+      "ourMappedTokens": 542,
+      "cliTokens": 546,
+      "ourToolCount": 3,
+      "cliToolCount": 3,
+      "toolSetMatches": true,
+      "dynamic": false,
+      "capturedSha256": "991fa59036ab1d4a4c1270ba14025668cd37bad41d9a804544a5e6aa23564365"
+    },
     "everything": {
       "ourTokens": 1708,
       "ourMappedTokens": 1082,
@@ -331,6 +351,16 @@
       "cliToolCount": 12,
       "toolSetMatches": true,
       "capturedSha256": "9710fb8f79f50348c138ee513e344f7fc9ac0e912a728d8aeda847cd04ed64f1"
+    },
+    "githits": {
+      "ourTokens": 12600,
+      "ourMappedTokens": 12151,
+      "cliTokens": 12183,
+      "ourToolCount": 16,
+      "cliToolCount": 16,
+      "toolSetMatches": true,
+      "dynamic": false,
+      "capturedSha256": "1de63e2beef41e0f618a1b41e1ead6a82fbce11d6e0c9652466884a2c74e10f0"
     },
     "github": {
       "ourTokens": 54622,
@@ -683,6 +713,16 @@
       "cliToolCount": 6,
       "toolSetMatches": true,
       "capturedSha256": "d432983abc546eac2725c9db1a07f5f8dad0e6cbfb12f925c1d4fb61743d1c6b"
+    },
+    "ssh-manager": {
+      "ourTokens": 8446,
+      "ourMappedTokens": 8149,
+      "cliTokens": 8162,
+      "ourToolCount": 37,
+      "cliToolCount": 37,
+      "toolSetMatches": true,
+      "dynamic": false,
+      "capturedSha256": "22ce75f27b9a8bf50f1cb77824b5769d6041d1f3c25032916b5201b1be31f5d7"
     },
     "supabase": {
       "ourTokens": 5007,

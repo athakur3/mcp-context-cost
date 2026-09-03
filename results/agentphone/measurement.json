@@ -1,0 +1,1324 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "measured",
+  "totalTokens": 6134,
+  "toolCount": 28,
+  "tools": [
+    {
+      "name": "account_overview",
+      "tokens": 81,
+      "descriptionTokens": 22,
+      "inputSchemaTokens": 24
+    },
+    {
+      "name": "list_numbers",
+      "tokens": 128,
+      "descriptionTokens": 21,
+      "inputSchemaTokens": 74
+    },
+    {
+      "name": "buy_number",
+      "tokens": 223,
+      "descriptionTokens": 48,
+      "inputSchemaTokens": 149
+    },
+    {
+      "name": "send_message",
+      "tokens": 594,
+      "descriptionTokens": 117,
+      "inputSchemaTokens": 448
+    },
+    {
+      "name": "get_messages",
+      "tokens": 128,
+      "descriptionTokens": 24,
+      "inputSchemaTokens": 71
+    },
+    {
+      "name": "list_calls",
+      "tokens": 276,
+      "descriptionTokens": 56,
+      "inputSchemaTokens": 184
+    },
+    {
+      "name": "get_call",
+      "tokens": 175,
+      "descriptionTokens": 29,
+      "inputSchemaTokens": 113
+    },
+    {
+      "name": "make_call",
+      "tokens": 220,
+      "descriptionTokens": 45,
+      "inputSchemaTokens": 146
+    },
+    {
+      "name": "make_conversation_call",
+      "tokens": 400,
+      "descriptionTokens": 86,
+      "inputSchemaTokens": 282
+    },
+    {
+      "name": "list_agents",
+      "tokens": 112,
+      "descriptionTokens": 31,
+      "inputSchemaTokens": 48
+    },
+    {
+      "name": "create_agent",
+      "tokens": 763,
+      "descriptionTokens": 64,
+      "inputSchemaTokens": 678
+    },
+    {
+      "name": "update_agent",
+      "tokens": 721,
+      "descriptionTokens": 44,
+      "inputSchemaTokens": 649
+    },
+    {
+      "name": "delete_agent",
+      "tokens": 91,
+      "descriptionTokens": 21,
+      "inputSchemaTokens": 44
+    },
+    {
+      "name": "get_agent",
+      "tokens": 93,
+      "descriptionTokens": 18,
+      "inputSchemaTokens": 42
+    },
+    {
+      "name": "attach_number",
+      "tokens": 117,
+      "descriptionTokens": 28,
+      "inputSchemaTokens": 62
+    },
+    {
+      "name": "detach_number",
+      "tokens": 114,
+      "descriptionTokens": 20,
+      "inputSchemaTokens": 67
+    },
+    {
+      "name": "list_voices",
+      "tokens": 79,
+      "descriptionTokens": 20,
+      "inputSchemaTokens": 24
+    },
+    {
+      "name": "list_conversations",
+      "tokens": 173,
+      "descriptionTokens": 45,
+      "inputSchemaTokens": 92
+    },
+    {
+      "name": "get_conversation",
+      "tokens": 119,
+      "descriptionTokens": 16,
+      "inputSchemaTokens": 69
+    },
+    {
+      "name": "update_conversation",
+      "tokens": 145,
+      "descriptionTokens": 28,
+      "inputSchemaTokens": 89
+    },
+    {
+      "name": "list_contacts",
+      "tokens": 145,
+      "descriptionTokens": 22,
+      "inputSchemaTokens": 90
+    },
+    {
+      "name": "manage_contact",
+      "tokens": 311,
+      "descriptionTokens": 61,
+      "inputSchemaTokens": 220
+    },
+    {
+      "name": "get_usage",
+      "tokens": 208,
+      "descriptionTokens": 36,
+      "inputSchemaTokens": 139
+    },
+    {
+      "name": "get_webhook",
+      "tokens": 105,
+      "descriptionTokens": 23,
+      "inputSchemaTokens": 48
+    },
+    {
+      "name": "set_webhook",
+      "tokens": 212,
+      "descriptionTokens": 55,
+      "inputSchemaTokens": 126
+    },
+    {
+      "name": "delete_webhook",
+      "tokens": 105,
+      "descriptionTokens": 31,
+      "inputSchemaTokens": 47
+    },
+    {
+      "name": "test_webhook",
+      "tokens": 122,
+      "descriptionTokens": 39,
+      "inputSchemaTokens": 47
+    },
+    {
+      "name": "list_webhook_deliveries",
+      "tokens": 172,
+      "descriptionTokens": 37,
+      "inputSchemaTokens": 96
+    }
+  ],
+  "canonicalSha256": "eec89a7ec71ac3e9e65fb8477bf594b4ce9af01b572bcc5d7e9fbbcc85f4e813",
+  "rawToolsCapture": [
+    {
+      "name": "account_overview",
+      "description": "Get a complete snapshot of your AgentPhone account: agents, phone numbers, webhook status, and usage limits.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "list_numbers",
+      "description": "List all phone numbers in your account, each with its ID, status, country, and assigned agent.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "limit": {
+            "default": 20,
+            "description": "Max results to return",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "offset": {
+            "default": 0,
+            "description": "Number of results to skip (for pagination)",
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "buy_number",
+      "description": "Purchase a new phone number. This is a paid purchase that charges the account's balance. area_code requests a specific region (e.g. '415' for San Francisco); agent_id attaches it on purchase. Requires confirm=true to proceed.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "country": {
+            "default": "US",
+            "description": "2-letter ISO country code (e.g. US, CA, GB)",
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2
+          },
+          "area_code": {
+            "description": "3-digit area code for a specific region (e.g. '415', '212', '310')",
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 3
+          },
+          "agent_id": {
+            "description": "Agent ID to attach this number to immediately",
+            "type": "string"
+          },
+          "confirm": {
+            "default": false,
+            "description": "Must be true to complete the purchase. When false, no number is bought.",
+            "type": "boolean"
+          }
+        }
+      },
+      "annotations": {
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "send_message",
+      "description": "Send an SMS or iMessage from one of your agent's phone numbers, or react to a message.\n\nThe agent must have at least one phone number attached. If the agent has multiple numbers, number_id or from_number selects which one to send from.\niMessage extras (silently ignored on SMS): reply_to_message_id threads the reply under an earlier message, and send_style adds an expressive screen/bubble effect.\nTo react to a message instead of sending one, set reaction and react_to_message_id (iMessage only); to_number and body are not needed in that case.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "agent_id": {
+            "description": "The agent ID to send from (the agent must have a phone number attached). Optional if you pass from_number or number_id instead.",
+            "type": "string"
+          },
+          "to_number": {
+            "description": "Recipient: a phone number in E.164 format (e.g. +14155551234), a US short code, or a group ID (grp_...) to post into an iMessage group chat. Required when sending a message (not needed for a reaction).",
+            "type": "string"
+          },
+          "body": {
+            "default": "",
+            "description": "The message text to send (may be empty when sending media only)",
+            "type": "string"
+          },
+          "media_url": {
+            "description": "URL of a single image/media file to attach",
+            "type": "string",
+            "format": "uri"
+          },
+          "media_urls": {
+            "description": "Multiple media URLs to attach (delivered as an image carousel on iMessage)",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "number_id": {
+            "description": "Specific phone number ID to send from (if agent has multiple numbers)",
+            "type": "string"
+          },
+          "from_number": {
+            "description": "Exact number to send from in E.164 format (alternative to number_id)",
+            "type": "string"
+          },
+          "reply_to_message_id": {
+            "description": "iMessage only. ID of an earlier message to reply to inline (threaded reply)",
+            "type": "string"
+          },
+          "send_style": {
+            "description": "iMessage only. Expressive screen/bubble effect to send with the message",
+            "type": "string",
+            "enum": [
+              "celebration",
+              "fireworks",
+              "lasers",
+              "love",
+              "confetti",
+              "balloons",
+              "spotlight",
+              "echo",
+              "invisible",
+              "gentle",
+              "loud",
+              "slam"
+            ]
+          },
+          "react_to_message_id": {
+            "description": "iMessage only. ID of a message to react to. Set together with `reaction`.",
+            "type": "string"
+          },
+          "reaction": {
+            "description": "iMessage only. Tapback or single emoji applied to react_to_message_id: one of love, like, dislike, laugh, emphasize, question, or a single emoji (e.g. '🔥'). When set, this reacts instead of sending a message.",
+            "type": "string"
+          }
+        }
+      },
+      "annotations": {
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "get_messages",
+      "description": "Get SMS messages for a specific phone number, identified by its number ID. Returns individual messages rather than grouped conversation threads.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "number_id": {
+            "type": "string",
+            "description": "The ID of the phone number"
+          },
+          "limit": {
+            "default": 50,
+            "description": "Max messages to return",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 200
+          }
+        },
+        "required": [
+          "number_id"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "list_calls",
+      "description": "List recent calls. Scope by agent_id or number_id, or use status/direction/search to filter globally.\n\nWhen agent_id or number_id is passed, status/direction/search filters are not applied.\nReturns call summaries including each call's ID, direction, participants, and status.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "agent_id": {
+            "description": "Filter to calls for a specific agent",
+            "type": "string"
+          },
+          "number_id": {
+            "description": "Filter to calls for a specific phone number",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Max results to return",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "offset": {
+            "default": 0,
+            "description": "Number of results to skip (for pagination)",
+            "type": "number",
+            "minimum": 0
+          },
+          "status": {
+            "description": "Filter by status: ringing, in-progress, completed, failed, busy, no-answer",
+            "type": "string"
+          },
+          "direction": {
+            "description": "Filter by direction: 'inbound' or 'outbound'",
+            "type": "string",
+            "enum": [
+              "inbound",
+              "outbound"
+            ]
+          },
+          "search": {
+            "description": "Search by phone number or keyword",
+            "type": "string"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "get_call",
+      "description": "Get details and transcript for a specific call, identified by its call ID. Pass wait=true to block until an in-progress call finishes before returning.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "call_id": {
+            "type": "string",
+            "description": "The call ID"
+          },
+          "wait": {
+            "default": false,
+            "description": "When true, long-polls until the call completes before returning. Useful for checking back on a call you initiated earlier.",
+            "type": "boolean"
+          },
+          "timeout": {
+            "default": 120,
+            "description": "Max seconds to wait when wait=true. Defaults to 120.",
+            "type": "number",
+            "minimum": 10,
+            "maximum": 300
+          }
+        },
+        "required": [
+          "call_id"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "make_call",
+      "description": "Initiate an outbound, webhook-driven phone call where your backend handles the conversation logic.\n\nThe agent must have a phone number attached and a webhook configured. The call always opens by identifying itself as an AI assistant (added automatically).",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "agent_id": {
+            "type": "string",
+            "description": "The agent ID (the agent must have a phone number attached)"
+          },
+          "to_number": {
+            "type": "string",
+            "description": "Recipient phone number in E.164 format (e.g. +14155551234)"
+          },
+          "initial_greeting": {
+            "description": "What the agent says when the call connects",
+            "type": "string"
+          },
+          "from_number_id": {
+            "description": "Specific phone number ID to call from (if agent has multiple numbers)",
+            "type": "string"
+          },
+          "voice": {
+            "description": "Voice ID override for this call",
+            "type": "string"
+          }
+        },
+        "required": [
+          "agent_id",
+          "to_number"
+        ]
+      },
+      "annotations": {
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "make_conversation_call",
+      "description": "Place a phone call where the AI has an autonomous conversation about a given topic — scheduling, surveys, follow-ups, etc. No webhook setup needed.\n\nThe agent must have a phone number attached.\nEvery call opens by identifying itself as an AI assistant (added automatically and cannot be disabled via topic or initial_greeting).\nBy default this blocks until the call finishes and returns the full transcript. Set wait=false for fire-and-forget.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "agent_id": {
+            "type": "string",
+            "description": "The agent ID (must have a phone number attached)"
+          },
+          "to_number": {
+            "type": "string",
+            "description": "Recipient phone number in E.164 format (e.g. +14155551234)"
+          },
+          "topic": {
+            "type": "string",
+            "description": "The conversation goal for the AI to pursue. Embedded as the call objective inside a locked system prompt that always enforces AI self-identification (identity rules can't be overridden). Be specific about what to discuss and any goals."
+          },
+          "initial_greeting": {
+            "description": "What the AI says when the call connects. If not set, the AI will generate one from the topic.",
+            "type": "string"
+          },
+          "wait": {
+            "default": true,
+            "description": "When true (default), blocks until the call ends and returns the full transcript.",
+            "type": "boolean"
+          },
+          "max_wait_seconds": {
+            "default": 300,
+            "description": "Maximum seconds to wait for the call to complete. Defaults to 300 (5 minutes).",
+            "type": "number",
+            "minimum": 10,
+            "maximum": 600
+          },
+          "from_number_id": {
+            "description": "Specific phone number ID to call from (if agent has multiple numbers)",
+            "type": "string"
+          },
+          "voice": {
+            "description": "Voice ID override for this call",
+            "type": "string"
+          }
+        },
+        "required": [
+          "agent_id",
+          "to_number",
+          "topic"
+        ]
+      },
+      "annotations": {
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "list_agents",
+      "description": "List all agents with their phone numbers and voice configuration. An agent is required before you can make calls — it owns phone numbers and handles voice/SMS.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "limit": {
+            "default": 20,
+            "description": "Max results to return",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "create_agent",
+      "description": "Create a new agent. An agent owns phone numbers and handles calls/SMS.\n\nA newly created agent has no phone number until one is attached.\nSet voice_mode to 'hosted' with a system_prompt for autonomous AI voice calls, or 'webhook' (default) to forward call transcripts to your webhook URL.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name for the agent (e.g. 'Customer Support', 'Sales Bot')"
+          },
+          "description": {
+            "description": "Description of what this agent does",
+            "type": "string"
+          },
+          "voice_mode": {
+            "description": "'webhook' (default) forwards transcripts to your webhook. 'hosted' uses built-in AI with system_prompt.",
+            "type": "string",
+            "enum": [
+              "webhook",
+              "hosted"
+            ]
+          },
+          "system_prompt": {
+            "description": "Required when voice_mode is 'hosted'. The AI's personality and instructions for voice calls.",
+            "type": "string"
+          },
+          "begin_message": {
+            "description": "What the AI says when a call connects. Only used in 'hosted' mode.",
+            "type": "string"
+          },
+          "voice": {
+            "description": "Voice ID for the agent. Defaults to 'Skylar - Friendly Guide'.",
+            "type": "string"
+          },
+          "model_tier": {
+            "description": "Model quality/speed tier for hosted-mode agents. 'turbo' = fastest/cheapest, 'balanced' (default) = general use, 'max' = highest quality.",
+            "type": "string",
+            "enum": [
+              "turbo",
+              "balanced",
+              "max"
+            ]
+          },
+          "transfer_number": {
+            "description": "Phone number to transfer calls to (E.164 format). Enables call transfer during conversations.",
+            "type": "string"
+          },
+          "voicemail_message": {
+            "description": "Voicemail greeting text. When set, unanswered calls hear this message and can leave a voicemail.",
+            "type": "string"
+          },
+          "voice_speed": {
+            "description": "Speech speed multiplier. 1.0 = normal, 0.5 = half speed, 2.0 = double.",
+            "type": "number",
+            "minimum": 0.5,
+            "maximum": 2
+          },
+          "interruption_sensitivity": {
+            "description": "How easily callers can interrupt (barge in). 0 = never, 1 = at first sound. Default 0.8.",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "enable_backchannel": {
+            "description": "Whether the agent interjects 'uh-huh'/'mhmm' while the caller speaks. Default true.",
+            "type": "boolean"
+          },
+          "enable_messaging": {
+            "description": "Whether a hosted agent can send and read texts during a call. Default true.",
+            "type": "boolean"
+          },
+          "stt_mode": {
+            "description": "Speech-to-text mode: 'fast' (default) lowest latency, 'accurate' for exact names/numbers (~200ms slower).",
+            "type": "string",
+            "enum": [
+              "fast",
+              "accurate"
+            ]
+          },
+          "ambient_sound": {
+            "description": "Optional background ambience for call audio. Not a substitute for the AI self-identification, which is always disclosed.",
+            "type": "string",
+            "enum": [
+              "none",
+              "office",
+              "coffee-shop",
+              "outdoor"
+            ]
+          },
+          "denoising_mode": {
+            "description": "Audio denoising. The aggressive mode helps callers in cars/cafes (small surcharge).",
+            "type": "string",
+            "enum": [
+              "noise-cancellation",
+              "noise-and-background-speech-cancellation"
+            ]
+          },
+          "max_silence_ms": {
+            "description": "Hang up after this many ms of caller silence. Default 600000 (10 min).",
+            "type": "number",
+            "minimum": 10000,
+            "maximum": 3600000
+          },
+          "language": {
+            "description": "BCP-47 locale for speech recognition and synthesis, e.g. 'en-US', 'es-ES', 'ja-JP'.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "update_agent",
+      "description": "Update an agent's configuration — name, description, voice settings, system prompt, greeting, call transfer, or voicemail. Only provided fields are updated.\nSwitching voice_mode to 'hosted' requires a system_prompt.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "agent_id": {
+            "type": "string",
+            "description": "The agent ID to update"
+          },
+          "name": {
+            "description": "New name for the agent",
+            "type": "string"
+          },
+          "description": {
+            "description": "New description",
+            "type": "string"
+          },
+          "voice_mode": {
+            "description": "'webhook' forwards transcripts to your webhook. 'hosted' uses built-in AI with system_prompt.",
+            "type": "string",
+            "enum": [
+              "webhook",
+              "hosted"
+            ]
+          },
+          "system_prompt": {
+            "description": "The AI's personality and instructions. Required when voice_mode is 'hosted'.",
+            "type": "string"
+          },
+          "begin_message": {
+            "description": "What the AI says when a call connects (hosted mode only).",
+            "type": "string"
+          },
+          "voice": {
+            "description": "Voice ID for the agent.",
+            "type": "string"
+          },
+          "model_tier": {
+            "description": "Model quality/speed tier for hosted-mode agents. 'turbo' = fastest/cheapest, 'balanced' = general use, 'max' = highest quality.",
+            "type": "string",
+            "enum": [
+              "turbo",
+              "balanced",
+              "max"
+            ]
+          },
+          "transfer_number": {
+            "description": "Phone number to transfer calls to (E.164 format), or empty string to remove.",
+            "type": "string"
+          },
+          "voicemail_message": {
+            "description": "Voicemail greeting text, or empty string to disable voicemail.",
+            "type": "string"
+          },
+          "voice_speed": {
+            "description": "Speech speed multiplier. 1.0 = normal, 0.5 = half speed, 2.0 = double.",
+            "type": "number",
+            "minimum": 0.5,
+            "maximum": 2
+          },
+          "interruption_sensitivity": {
+            "description": "How easily callers can interrupt (barge in). 0 = never, 1 = at first sound. Default 0.8.",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "enable_backchannel": {
+            "description": "Whether the agent interjects 'uh-huh'/'mhmm' while the caller speaks. Default true.",
+            "type": "boolean"
+          },
+          "enable_messaging": {
+            "description": "Whether a hosted agent can send and read texts during a call. Default true.",
+            "type": "boolean"
+          },
+          "stt_mode": {
+            "description": "Speech-to-text mode: 'fast' lowest latency, 'accurate' for exact names/numbers (~200ms slower).",
+            "type": "string",
+            "enum": [
+              "fast",
+              "accurate"
+            ]
+          },
+          "ambient_sound": {
+            "description": "Optional background ambience for call audio. Not a substitute for the AI self-identification, which is always disclosed.",
+            "type": "string",
+            "enum": [
+              "none",
+              "office",
+              "coffee-shop",
+              "outdoor"
+            ]
+          },
+          "denoising_mode": {
+            "description": "Audio denoising. The aggressive mode helps callers in cars/cafes (small surcharge).",
+            "type": "string",
+            "enum": [
+              "noise-cancellation",
+              "noise-and-background-speech-cancellation"
+            ]
+          },
+          "max_silence_ms": {
+            "description": "Hang up after this many ms of caller silence. Default 600000 (10 min).",
+            "type": "number",
+            "minimum": 10000,
+            "maximum": 3600000
+          },
+          "language": {
+            "description": "BCP-47 locale for speech recognition and synthesis, e.g. 'en-US', 'es-ES', 'ja-JP'.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "agent_id"
+        ]
+      },
+      "annotations": {
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "delete_agent",
+      "description": "Delete an agent permanently. Phone numbers attached to it are kept but unassigned. This cannot be undone.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "agent_id": {
+            "type": "string",
+            "description": "The agent ID to delete"
+          }
+        },
+        "required": [
+          "agent_id"
+        ]
+      },
+      "annotations": {
+        "destructiveHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "get_agent",
+      "description": "Get details for a specific agent including its phone numbers, voice configuration, and system prompt.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "agent_id": {
+            "type": "string",
+            "description": "The agent ID"
+          }
+        },
+        "required": [
+          "agent_id"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "attach_number",
+      "description": "Attach a phone number to an agent so the agent handles calls/SMS on that number. Takes an agent ID and a phone number ID.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "agent_id": {
+            "type": "string",
+            "description": "The agent ID"
+          },
+          "number_id": {
+            "type": "string",
+            "description": "The phone number ID to attach"
+          }
+        },
+        "required": [
+          "agent_id",
+          "number_id"
+        ]
+      },
+      "annotations": {
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "detach_number",
+      "description": "Detach a phone number from an agent. The number is kept in your account but becomes unassigned.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "agent_id": {
+            "type": "string",
+            "description": "The agent ID that currently owns the number"
+          },
+          "number_id": {
+            "type": "string",
+            "description": "The phone number ID to detach"
+          }
+        },
+        "required": [
+          "agent_id",
+          "number_id"
+        ]
+      },
+      "annotations": {
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "list_voices",
+      "description": "List available voices for agents. Each voice has a voice_id used in an agent's voice field.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "list_conversations",
+      "description": "List SMS conversations. Optionally filter by agent_id to see conversations for a specific agent.\n\nEach conversation is a thread between your number and an external contact, with its ID, participant, message count, and last-message preview.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "agent_id": {
+            "description": "Filter to conversations for a specific agent",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Max results to return",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "offset": {
+            "default": 0,
+            "description": "Number of results to skip (for pagination)",
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "get_conversation",
+      "description": "Get a specific SMS conversation with full message history, identified by its conversation ID.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "conversation_id": {
+            "type": "string",
+            "description": "The conversation ID"
+          },
+          "message_limit": {
+            "default": 50,
+            "description": "Max messages to include",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "required": [
+          "conversation_id"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "update_conversation",
+      "description": "Set metadata on a conversation. Use this to store custom state, tags, or context that persists between messages. Pass null to clear metadata.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "conversation_id": {
+            "type": "string",
+            "description": "The conversation ID"
+          },
+          "metadata": {
+            "anyOf": [
+              {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "JSON metadata object to store on the conversation, or null to clear"
+          }
+        },
+        "required": [
+          "conversation_id",
+          "metadata"
+        ]
+      },
+      "annotations": {
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "list_contacts",
+      "description": "List saved contacts (your address book). Optionally filter with a search term that matches name or phone number.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "search": {
+            "description": "Filter by name or phone number",
+            "type": "string"
+          },
+          "limit": {
+            "default": 50,
+            "description": "Max results to return",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "offset": {
+            "default": 0,
+            "description": "Number of results to skip (for pagination)",
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "manage_contact",
+      "description": "Create, update, or delete a saved contact. Set `action` to choose the operation.\n\n- create: requires phone_number and name\n- update: requires contact_id; only the fields you pass are changed\n- delete: requires contact_id (permanent)\n\ncontact_id refers to a saved contact.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "create",
+              "update",
+              "delete"
+            ],
+            "description": "The operation to perform"
+          },
+          "contact_id": {
+            "description": "Contact ID. Required for 'update' and 'delete'.",
+            "type": "string"
+          },
+          "phone_number": {
+            "description": "Phone number in E.164 format (e.g. +14155551234). Required for 'create'.",
+            "type": "string"
+          },
+          "name": {
+            "description": "Contact name. Required for 'create'.",
+            "type": "string"
+          },
+          "email": {
+            "description": "Contact email address",
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "notes": {
+            "description": "Freeform notes about the contact",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "annotations": {
+        "destructiveHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "get_usage",
+      "description": "Get account usage statistics. By default returns a summary with number usage plus message, call, and webhook volume. Use breakdown='daily' or 'monthly' for time-series data.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "breakdown": {
+            "default": "summary",
+            "description": "'summary' for number usage and totals, 'daily' for per-day breakdown, 'monthly' for per-month breakdown",
+            "type": "string",
+            "enum": [
+              "summary",
+              "daily",
+              "monthly"
+            ]
+          },
+          "days": {
+            "default": 30,
+            "description": "Number of days to look back (only used with breakdown='daily')",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 365
+          },
+          "months": {
+            "default": 12,
+            "description": "Number of months to look back (only used with breakdown='monthly')",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 24
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "get_webhook",
+      "description": "Get the webhook configuration. Pass agent_id to get an agent-specific webhook, or omit for the project-level default.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "agent_id": {
+            "description": "Agent ID to get that agent's webhook. Omit for project-level webhook.",
+            "type": "string"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "set_webhook",
+      "description": "Set a webhook URL to receive inbound messages and call events.\n\nPass agent_id to set a webhook for a specific agent (overrides project default). Omit agent_id to set the project-level webhook for all agents.\nThe webhook secret is returned — use it to verify signatures.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "The publicly accessible webhook URL (must be HTTPS in production)"
+          },
+          "agent_id": {
+            "description": "Agent ID to set webhook for that agent only. Omit for project-level.",
+            "type": "string"
+          },
+          "context_limit": {
+            "description": "Number of recent messages to include as conversation context (0-50)",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 50
+          },
+          "timeout": {
+            "description": "Webhook response timeout in seconds",
+            "type": "number"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "annotations": {
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "delete_webhook",
+      "description": "Remove a webhook. Pass agent_id to remove an agent's webhook (falls back to project default). Omit agent_id to remove the project-level webhook.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "agent_id": {
+            "description": "Agent ID to delete that agent's webhook. Omit for project-level.",
+            "type": "string"
+          }
+        }
+      },
+      "annotations": {
+        "destructiveHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "test_webhook",
+      "description": "Send a test event to verify a webhook is working. Returns the HTTP status code and response time.\n\nPass agent_id to test that agent's webhook. Omit to test the project-level webhook.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "agent_id": {
+            "description": "Agent ID to test that agent's webhook. Omit for project-level.",
+            "type": "string"
+          }
+        }
+      },
+      "annotations": {
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "list_webhook_deliveries",
+      "description": "View recent webhook delivery history. Shows which events were delivered, HTTP status codes, and timing.\n\nPass agent_id to see deliveries for that agent's webhook. Omit for project-level.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "agent_id": {
+            "description": "Agent ID to see deliveries for that agent's webhook. Omit for project-level.",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Max results to return",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "hours": {
+            "description": "Only show deliveries from the last N hours",
+            "type": "number",
+            "minimum": 1
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    }
+  ],
+  "measuredAt": "2026-09-03T21:25:55.053Z",
+  "serverName": "agentphone",
+  "serverVersion": "0.7.0",
+  "launchCommand": "npx -y agentphone-mcp",
+  "envVarNames": [
+    "AGENTPHONE_API_KEY"
+  ],
+  "serverInstructions": null,
+  "isolation": {
+    "docker": true,
+    "image": "public.ecr.aws/docker/library/node:22-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  },
+  "timeoutMs": 240000
+}

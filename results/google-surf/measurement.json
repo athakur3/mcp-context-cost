@@ -1,0 +1,22 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "startup-failure",
+  "totalTokens": null,
+  "toolCount": null,
+  "tools": [],
+  "canonicalSha256": null,
+  "rawToolsCapture": null,
+  "measuredAt": "2026-09-03T21:38:20.846Z",
+  "serverName": "google-surf",
+  "launchCommand": "npx -y google-surf-mcp",
+  "notes": "reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: arn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.\nnpm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me\nnpm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported\n",
+  "isolation": {
+    "docker": true,
+    "image": "public.ecr.aws/docker/library/node:22-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  },
+  "timeoutMs": 240000
+}

@@ -1,0 +1,22 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "startup-failure",
+  "totalTokens": null,
+  "toolCount": null,
+  "tools": [],
+  "canonicalSha256": null,
+  "rawToolsCapture": null,
+  "measuredAt": "2026-09-03T21:37:55.238Z",
+  "serverName": "safari-mcp",
+  "launchCommand": "npx -y safari-mcp",
+  "notes": "reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: npm error code EBADPLATFORM\nnpm error notsup Unsupported platform for safari-mcp@2.17.1: wanted {\"os\":\"darwin\"} (current: {\"os\":\"linux\"})\nnpm error notsup Valid os:  darwin\nnpm error notsup Actual os: linux\nnpm error A complete log of this run can be found in: /tmp/.npm-cache/_logs/2026-09-03T21_37_53_272Z-debug-0.log\n",
+  "isolation": {
+    "docker": true,
+    "image": "public.ecr.aws/docker/library/node:22-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  },
+  "timeoutMs": 240000
+}

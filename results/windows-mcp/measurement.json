@@ -1,0 +1,22 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "startup-failure",
+  "totalTokens": null,
+  "toolCount": null,
+  "tools": [],
+  "canonicalSha256": null,
+  "rawToolsCapture": null,
+  "measuredAt": "2026-09-03T21:37:53.111Z",
+  "serverName": "windows-mcp",
+  "launchCommand": "uvx windows-mcp",
+  "notes": "reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: hen resolving tool dependencies:\n  ╰─▶ Because only the following versions of pywin32 are available:\n          pywin32<=311\n          pywin32==312\n      and pywin32>=311 has no wheels with a matching platform tag (e.g.,\n      `manylinux_2_36_aarch64`), we can conclude that pywin32>=311 cannot\n      be used.\n      And because all versions of windows-mcp depend on pywin32>=311 and\n      you require windows-mcp, we can conclude that your requirements are\n      unsatisfiable.\n\n      hint: Wheels are available for `pywin32` (v312) on the following\n      platforms: `win32`, `win_amd64`, `win_arm64`\n",
+  "isolation": {
+    "docker": true,
+    "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  },
+  "timeoutMs": 240000
+}

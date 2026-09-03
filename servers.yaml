@@ -812,3 +812,86 @@ servers:
     metricSource: https://api.npmjs.org/downloads/point/last-week/@ankimcp/anki-mcp-server (npm weekly)
     category: community
     repo: https://github.com/ankimcp/anki-mcp-server
+  # Second slice of the same batch: credible projects expected to record as
+  # auth-required or platform startup-failures under docker — findings, not
+  # omissions, per the leaderboard's rule that every candidate is listed.
+  - name: agentphone
+    command: npx -y agentphone-mcp
+    package: agentphone-mcp
+    env: [AGENTPHONE_API_KEY]
+    metric: 7395
+    metricSource: https://api.npmjs.org/downloads/point/last-week/agentphone-mcp (npm weekly)
+    category: community
+    repo: https://github.com/AgentPhone-AI/agentphone-mcp
+  - name: hevy
+    command: npx -y hevy-mcp
+    package: hevy-mcp
+    env: [HEVY_API_KEY]
+    metric: 6107
+    metricSource: https://api.npmjs.org/downloads/point/last-week/hevy-mcp (npm weekly)
+    category: community
+    repo: https://github.com/chrisdoc/hevy-mcp
+  - name: local-mcp
+    command: npx -y local-mcp
+    package: local-mcp
+    env: []
+    metric: 5122
+    metricSource: https://api.npmjs.org/downloads/point/last-week/local-mcp (npm weekly; macOS host integration)
+    category: community
+    repo: https://github.com/lanchuske/local-mcp
+  - name: emailmd
+    command: npx -y emailmd mcp
+    package: emailmd
+    env: []
+    metric: 4582
+    metricSource: https://api.npmjs.org/downloads/point/last-week/emailmd (npm weekly)
+    category: community
+    repo: https://github.com/anypost/emailmd
+  - name: githits
+    command: npx -y githits mcp start
+    package: githits
+    env: []
+    metric: 3790
+    metricSource: https://api.npmjs.org/downloads/point/last-week/githits (npm weekly)
+    category: community
+    repo: https://github.com/githits-com/githits-cli
+  - name: windows-mcp
+    command: uvx windows-mcp
+    package: windows-mcp (PyPI)
+    env: []
+    metric: 2818
+    metricSource: https://pypistats.org/packages/windows-mcp (PyPI weekly; Windows host integration)
+    category: community
+    repo: https://github.com/CursorTouch/Windows-MCP
+  - name: yandex-tracker
+    command: uvx yandex-tracker-mcp
+    package: yandex-tracker-mcp (PyPI)
+    env: []
+    metric: 2275
+    metricSource: https://pypistats.org/packages/yandex-tracker-mcp (PyPI weekly)
+    category: community
+    repo: https://github.com/aikts/yandex-tracker-mcp
+  - name: ssh-manager
+    command: npx -y mcp-ssh-manager
+    package: mcp-ssh-manager
+    env: []
+    metric: 2117
+    metricSource: https://api.npmjs.org/downloads/point/last-week/mcp-ssh-manager (npm weekly)
+    category: community
+    repo: https://github.com/bvisible/mcp-ssh-manager
+  - name: google-surf
+    command: npx -y google-surf-mcp
+    package: google-surf-mcp
+    env: []
+    metric: 2016
+    metricSource: https://api.npmjs.org/downloads/point/last-week/google-surf-mcp (npm weekly)
+    category: community
+    repo: https://github.com/HarimxChoi/google-surf-mcp
+  - name: safari-mcp
+    command: npx -y safari-mcp
+    package: safari-mcp
+    env: []
+    metric: 1772
+    metricSource: https://api.npmjs.org/downloads/point/last-week/safari-mcp (npm weekly; macOS host integration)
+    category: community
+    repo: https://github.com/achiya-automation/safari-mcp

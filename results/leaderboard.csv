@@ -95,3 +95,13 @@ accessibility-scanner,,,startup-failure,community,3068,https://api.npmjs.org/dow
 keboola,,,auth-required,vendor-official,2907,https://pypistats.org/packages/keboola-mcp-server (PyPI weekly),,,,,,,,
 octocode,13552,14,measured,community,1797,https://api.npmjs.org/downloads/point/last-week/octocode-mcp (npm weekly),,,791,false,64,727,13122,v0.2.5
 anki,,,timeout,community,1716,https://api.npmjs.org/downloads/point/last-week/@ankimcp/anki-mcp-server (npm weekly),,,,,,,,
+agentphone,6134,28,measured,community,7395,https://api.npmjs.org/downloads/point/last-week/agentphone-mcp (npm weekly),,,100,false,100,0,5613,v0.2.5
+hevy,,,startup-failure,community,6107,https://api.npmjs.org/downloads/point/last-week/hevy-mcp (npm weekly),,,,,,,,
+local-mcp,,,startup-failure,community,5122,https://api.npmjs.org/downloads/point/last-week/local-mcp (npm weekly; macOS host integration),,,,,,,,
+emailmd,585,3,measured,community,4582,https://api.npmjs.org/downloads/point/last-week/emailmd (npm weekly),,,377,false,8,369,546,v0.2.5
+githits,12600,16,measured,community,3790,https://api.npmjs.org/downloads/point/last-week/githits (npm weekly),,,53,false,53,0,12183,v0.2.5
+windows-mcp,,,startup-failure,community,2818,https://pypistats.org/packages/windows-mcp (PyPI weekly; Windows host integration),,,,,,,,
+yandex-tracker,,,auth-required,community,2275,https://pypistats.org/packages/yandex-tracker-mcp (PyPI weekly),,,,,,,,
+ssh-manager,8446,37,measured,community,2117,https://api.npmjs.org/downloads/point/last-week/mcp-ssh-manager (npm weekly),,,143,false,143,0,8162,v0.2.5
+google-surf,,,startup-failure,community,2016,https://api.npmjs.org/downloads/point/last-week/google-surf-mcp (npm weekly),,,,,,,,
+safari-mcp,,,startup-failure,community,1772,https://api.npmjs.org/downloads/point/last-week/safari-mcp (npm weekly; macOS host integration),,,,,,,,

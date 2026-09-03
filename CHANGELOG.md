@@ -78,21 +78,24 @@ while reading it.
   the rotating re-sweep cross-checks each week's shard minutes after re-measuring it,
   best-effort, so a CLI outage costs a week of silence and never a stale number.
 
-- **The sweep grows by the registry long-tail's first slice: 96 candidates, 77 measured.**
-  The official registry was scanned whole — 14,283 distinct active servers, 5,785 npm/PyPI
-  stdio packages not yet tracked, 1,995 of those with a live weekly-download metric — and
-  its top curated by provenance rather than counts alone: download counts are gameable, the
-  scan surfaced a cluster that pattern-matches inflation, and that cluster was left out with
-  its reasons recorded. Fourteen entries landed, appended so no existing row changes
-  rotation slot. Eight measured on arrival — `comfyui-mcp` straight in at #2 (50,640
-  tokens; 141k installs/week), and `chrome-devtools-mcp`, the original curation's biggest
-  omission at 3.3M installs/week, costing a modest 5,717 — every one cross-checked within
-  ±1.2% on arrival. Six are findings with their reasons on the leaderboard: two packages
-  broken as published (ESM resolution fails from a cold cache), one blocking on a companion
-  app through a doubled timeout budget, one dumping usage without a kubeconfig, one device
-  runtime a container cannot offer, one validating credentials before it will name its
-  tools. A fifteenth candidate was dropped at the doorstep: AWS's SigV4 proxy serves a
-  remote endpoint's tools, not its own, so there is nothing of its to measure.
+- **The sweep grows by the registry long-tail: 106 candidates, 81 measured.** The official
+  registry was scanned whole — 14,283 distinct active servers, 5,785 npm/PyPI stdio
+  packages not yet tracked, 1,995 of those with a live weekly-download metric — and its top
+  curated by provenance rather than counts alone: download counts are gameable, the scan
+  surfaced a cluster that pattern-matches inflation, and that cluster was left out with its
+  reasons recorded. Twenty-four entries landed, appended so no existing row changes
+  rotation slot. Twelve measured on arrival — `comfyui-mcp` straight in at #2 (50,640
+  tokens; 141k installs/week), `chrome-devtools-mcp`, the original curation's biggest
+  omission at 3.3M installs/week, costing a modest 5,717, and `githits` and `emailmd`
+  measurable only after their commands were corrected to the `mcp` subcommands their
+  packages actually serve from — every one cross-checked within ±1.2% on arrival. Twelve
+  are findings with their reasons on the leaderboard: packages broken as published (ESM
+  resolution failing from a cold cache, a fatal on launch that survives one), hosts a
+  container cannot be (two macOS integrations, one Windows), servers that block on a
+  companion app through a doubled budget or dump usage without a kubeconfig, and services
+  that validate credentials before naming their tools. A twenty-fifth candidate was dropped
+  at the doorstep: AWS's SigV4 proxy serves a remote endpoint's tools, not its own, so
+  there is nothing of its to measure.
 
 ## 0.8.0 — 2026-08-21
 
