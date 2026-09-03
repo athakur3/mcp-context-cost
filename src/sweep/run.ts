@@ -8,7 +8,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { captureTools } from './client.js';
-import { dockerize } from './docker.js';
+import { DockerHarnessFault, defaultImageFor, dockerize, ensureImage, isDockerRunFailure } from './docker.js';
 import { measureTools, failedMeasurement, canonicalString } from '../core/canonical.js';
 import { toBadge } from '../core/badge.js';
 import type { Measurement } from '../core/types.js';
@@ -107,6 +107,9 @@ export async function measureServer(
     throw new Error(`invalid server name '${name}' — letters/digits/dot/dash/underscore only`);
   }
   const root = opts.root ?? process.cwd();
+  // True only when THIS code wraps the command in `docker run` — a command that
+  // is already its own `docker run` owns its exit codes and its image.
+  const dockerWrapped = opts.docker === true && !command.trimStart().startsWith('docker ');
   const hostSpec: string | { command: string; argv: string[] } =
     opts.argv && opts.argv.length ? { command: opts.argv[0], argv: opts.argv.slice(1) } : command;
   let isolation: Measurement['isolation'] = { docker: false };
@@ -164,7 +167,14 @@ export async function measureServer(
         r.notes = 'tools/list differed between two runs; value is for the first capture';
       }
     } catch (err) {
+      if (err instanceof DockerHarnessFault) throw err;
       const msg = err instanceof Error ? err.message : String(err);
+      // `docker run` failing as docker (exit 125, docker's own stderr) never
+      // launched the server — classifying it would publish a fact about this
+      // machine as a fact about the server, so it is thrown instead of returned.
+      if (dockerWrapped && isDockerRunFailure(msg)) {
+        throw new DockerHarnessFault(`docker could not run the container for ${name}: ${msg.slice(0, 400)}`);
+      }
       const status = msg.includes('timeout')
         ? 'timeout'
         : /auth|unauthorized|401|forbidden|credential|api.?key|token/i.test(msg)
@@ -176,6 +186,12 @@ export async function measureServer(
     r.timeoutMs = attemptOpts.timeoutMs ?? 60_000;
     return r;
   }
+
+  // The base image is fetched before anything is measured: `--pull=missing`
+  // pulls lazily, so a registry hiccup would otherwise land mid-measurement and
+  // read as the server refusing to start. Throws DockerHarnessFault when the
+  // machine cannot produce the image at all — before any record is written.
+  if (dockerWrapped) await ensureImage(opts.dockerImage ?? defaultImageFor(command));
 
   let m: Measurement;
   try {
@@ -231,11 +247,22 @@ if (isMain) {
     console.error('usage: npm run sweep -- --name <slug> --command "<launch command>"');
     process.exit(2);
   }
-  const m = await measureServer(name, command, {
-    timeoutMs: Number(arg('timeout') ?? 60_000),
-    docker: process.argv.includes('--docker'),
-    dockerImage: arg('docker-image'),
-  });
+  let m: Measurement;
+  try {
+    m = await measureServer(name, command, {
+      timeoutMs: Number(arg('timeout') ?? 60_000),
+      docker: process.argv.includes('--docker'),
+      dockerImage: arg('docker-image'),
+    });
+  } catch (err) {
+    if (err instanceof DockerHarnessFault) {
+      // Nothing was measured and nothing was written — exiting non-zero here is
+      // what keeps a scheduled job from reaching its commit step.
+      console.error(`HARNESS FAULT: ${err.message}`);
+      process.exit(1);
+    }
+    throw err;
+  }
   // CLI path only — measureServer itself stays history-free so concurrent
   // sweep-all workers never race on the same file.
   const { appendHistory } = await import('./history.js');

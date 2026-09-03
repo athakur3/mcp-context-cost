@@ -50,6 +50,112 @@ export interface DockerOptions {
 export const DEFAULT_NODE_IMAGE = 'public.ecr.aws/docker/library/node:22-slim';
 export const DEFAULT_PYTHON_IMAGE = 'ghcr.io/astral-sh/uv:python3.12-bookworm-slim';
 
+/** The image a launch command gets when the entry does not name one. */
+export function defaultImageFor(commandLine: string): string {
+  return commandLine.trimStart().startsWith('uvx') ? DEFAULT_PYTHON_IMAGE : DEFAULT_NODE_IMAGE;
+}
+
+/**
+ * Docker failed, not the server. A measurement that ends this way is a
+ * statement about this machine — the daemon, the registry, the network — and
+ * must never be recorded as the server's startup-failure: the 2026-08-26
+ * re-sweep published exactly that lie about `sequential-thinking` when the
+ * runner could not pull the base image, and the harness guard never saw it
+ * because it watches for populations of regressions, not single rows.
+ */
+export class DockerHarnessFault extends Error {}
+
+/**
+ * Whether a capture-failure message describes `docker run` failing as docker
+ * rather than the contained server failing as itself.
+ *
+ * Docker reserves exit code 125 for its own failures, but a contained process
+ * that exits 125 passes that code through indistinguishably — so the code alone
+ * is not enough, and docker's own stderr voice ("Unable to find image …",
+ * "docker: Error response from daemon: …", "docker: Cannot connect …") is
+ * required alongside it. Only meaningful for a command this code wrapped in
+ * `docker run` itself; a config whose command is already `docker run …` owns
+ * its exit codes.
+ */
+export function isDockerRunFailure(message: string): boolean {
+  return /server exited \(code 125\)/.test(message) && /Unable to find image|docker: /.test(message);
+}
+
+export interface EnsureImageOptions {
+  /** Run one docker invocation — injectable so tests never need a daemon. */
+  run?: (args: string[]) => Promise<{ code: number | null; stderr: string }>;
+  /** Waits between pull attempts; attempts = delays + 1. */
+  delaysMs?: number[];
+  sleep?: (ms: number) => Promise<void>;
+}
+
+function runDocker(args: string[]): Promise<{ code: number | null; stderr: string }> {
+  return import('node:child_process').then(
+    ({ spawn }) =>
+      new Promise((resolve) => {
+        const child = spawn('docker', args, { stdio: ['ignore', 'ignore', 'pipe'] });
+        let stderr = '';
+        child.stderr.setEncoding('utf8');
+        child.stderr.on('data', (chunk: string) => (stderr = (stderr + chunk).slice(-4000)));
+        child.on('error', (err) => resolve({ code: null, stderr: String(err.message) }));
+        child.on('exit', (code) => resolve({ code, stderr }));
+      }),
+  );
+}
+
+async function ensureImageOnce(image: string, opts: EnsureImageOptions): Promise<void> {
+  const run = opts.run ?? runDocker;
+  const sleep = opts.sleep ?? ((ms: number) => new Promise<void>((r) => setTimeout(r, ms)));
+  const delays = opts.delaysMs ?? [2_000, 8_000];
+  const noDocker = (stderr: string) =>
+    new DockerHarnessFault(`docker is not runnable on this machine: ${stderr.trim() || 'spawn docker failed'}`);
+
+  const inspect = await run(['image', 'inspect', image]);
+  if (inspect.code === 0) return;
+  if (inspect.code === null && /ENOENT/i.test(inspect.stderr)) throw noDocker(inspect.stderr);
+
+  let lastStderr = '';
+  for (let attempt = 1; attempt <= delays.length + 1; attempt++) {
+    const pull = await run(['pull', image]);
+    if (pull.code === 0) return;
+    lastStderr = pull.stderr;
+    // A missing docker binary cannot appear on a later attempt.
+    if (pull.code === null && /ENOENT/i.test(pull.stderr)) throw noDocker(pull.stderr);
+    if (attempt <= delays.length) await sleep(delays[attempt - 1]);
+  }
+  throw new DockerHarnessFault(
+    `could not pull ${image} after ${delays.length + 1} attempts — ` +
+      `a statement about this machine and its registry path, not about any server: ${lastStderr.slice(-300).trim()}`,
+  );
+}
+
+const ensured = new Map<string, Promise<void>>();
+
+/**
+ * Make sure a base image is present before any container needs it, retrying the
+ * pull. `docker run --pull=missing` pulls lazily, so a transient registry
+ * failure lands mid-measurement and gets read as the server refusing to start —
+ * pulling up front, with retries, is what keeps a registry hiccup from ever
+ * reaching a measurement. Failures throw `DockerHarnessFault`.
+ *
+ * Results are memoized per image for the life of the process (only on the real
+ * docker path — injected runners are for tests), so concurrent sweep workers
+ * share one pull, and an image that could not be pulled after retries is not
+ * re-attempted by every remaining server in the sweep.
+ */
+export function ensureImage(image: string, opts: EnsureImageOptions = {}): Promise<void> {
+  if (opts.run) return ensureImageOnce(image, opts);
+  let p = ensured.get(image);
+  if (!p) {
+    p = ensureImageOnce(image, opts);
+    // Mark handled so a memoized rejection never trips unhandled-rejection
+    // before the next caller awaits it.
+    p.catch(() => {});
+    ensured.set(image, p);
+  }
+  return p;
+}
+
 export interface IsolationRecord {
   docker: boolean;
   image?: string;
@@ -65,7 +171,7 @@ export function dockerize(
   commandLine: string,
   opts: DockerOptions = {},
 ): { command: string; argv: string[]; isolation: IsolationRecord } {
-  const image = opts.image ?? (commandLine.trimStart().startsWith('uvx') ? DEFAULT_PYTHON_IMAGE : DEFAULT_NODE_IMAGE);
+  const image = opts.image ?? defaultImageFor(commandLine);
   const argv = [
     'run',
     '--rm',

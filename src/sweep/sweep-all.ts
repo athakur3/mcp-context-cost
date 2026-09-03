@@ -14,9 +14,10 @@
 import { readFileSync } from 'node:fs';
 import { parse } from 'yaml';
 import { measureServer } from './run.js';
+import { DockerHarnessFault } from './docker.js';
 import { writeLeaderboard, type ServerEntry } from './report.js';
 import { appendHistory } from './history.js';
-import { snapshot, verdict, restore } from './harness-guard.js';
+import { FAULT_RATIO, MIN_REGRESSIONS, snapshot, verdict, restore } from './harness-guard.js';
 import { selectShard, shardIndexForDate } from './shard.js';
 import type { MeasurementStatus } from '../core/types.js';
 
@@ -76,18 +77,30 @@ const prior = snapshot(entries.map((e) => e.name));
 const queue = [...entries];
 const summary: Record<string, string> = {};
 const statuses = new Map<string, MeasurementStatus>();
+// Servers docker itself failed to run — never a measurement (measureServer
+// throws before persisting), so each one's previous record simply stands.
+const dockerFaults = new Map<string, string>();
 
 async function worker() {
   for (let e = queue.shift(); e; e = queue.shift()) {
     const started = Date.now();
-    const m = await measureServer(e.name, e.command, {
-      timeoutMs: (e.timeoutSeconds ?? defaultTimeout) * 1000,
-      docker,
-      dockerImage: e.dockerImage,
-      dummyEnv: e.env ?? [],
-      dummyEnvValues: e.envValues,
-      needsGit: e.needsGit,
-    });
+    let m;
+    try {
+      m = await measureServer(e.name, e.command, {
+        timeoutMs: (e.timeoutSeconds ?? defaultTimeout) * 1000,
+        docker,
+        dockerImage: e.dockerImage,
+        dummyEnv: e.env ?? [],
+        dummyEnvValues: e.envValues,
+        needsGit: e.needsGit,
+      });
+    } catch (err) {
+      if (!(err instanceof DockerHarnessFault)) throw err;
+      dockerFaults.set(e.name, err.message);
+      summary[e.name] = 'docker harness fault — not measured; previous record untouched';
+      console.log(`  ${e.name}: ${summary[e.name]}`);
+      continue;
+    }
     const secs = ((Date.now() - started) / 1000).toFixed(0);
     statuses.set(e.name, m.status);
     summary[e.name] =
@@ -99,6 +112,22 @@ async function worker() {
 }
 
 await Promise.all(Array.from({ length: Math.max(1, concurrency) }, () => worker()));
+
+// A docker fault on most of the slice is the harness-fault story with an
+// earlier symptom — the guard below can't see it (nothing regressed on disk;
+// the throws happened before anything was written), so it is judged here by
+// the guard's own thresholds. Below them, the sweep publishes what it did
+// measure and the faulted servers wait for the next cycle.
+if (dockerFaults.size >= MIN_REGRESSIONS && dockerFaults.size / entries.length >= FAULT_RATIO) {
+  console.error(
+    `\nHARNESS FAULT — docker could not run for ${dockerFaults.size} of ${entries.length} servers; ` +
+      `refusing to publish this sweep.\n` +
+      [...dockerFaults].map(([n, msg]) => `  ${n}: ${msg}`).join('\n') +
+      `\n  Nothing was overwritten — every previous record stands. ` +
+      `Check the Docker daemon and registry path, then re-run.`,
+  );
+  process.exit(1);
+}
 
 // Before publishing anything: is this sweep a statement about the servers, or
 // about the machine that measured them?
@@ -123,4 +152,10 @@ if (v.fault) {
 writeLeaderboard(doc.servers);
 const h = appendHistory();
 const measured = Object.values(summary).filter((s) => s.includes('tokens')).length;
+if (dockerFaults.size > 0) {
+  console.warn(
+    `\nDOCKER FAULT on ${[...dockerFaults.keys()].join(', ')} — not measured this sweep; ` +
+      `previous records untouched. The next cycle re-attempts ${dockerFaults.size === 1 ? 'it' : 'them'}.`,
+  );
+}
 console.log(`done: ${measured}/${entries.length} measured; leaderboard + history (${h.rows} rows) regenerated`);

@@ -170,18 +170,32 @@ if (cmd === 'audit') {
 
   const { runAudit } = await import('./audit/run.js');
   const { formatReport } = await import('./audit/audit.js');
-  const report = await runAudit({
-    configPaths: all('config'),
-    budget,
-    contextWindow: numeric('context'),
-    timeoutMs: numeric('timeout'),
-    concurrency: numeric('concurrency'),
-    docker: rest.includes('--docker'),
-    claude: rest.includes('--claude'),
-    divergenceUrl: argOf('divergence-url'),
-    // Progress goes to stderr so `--json` stdout stays a single parseable object.
-    onProgress: json ? undefined : (name, done, total) => process.stderr.write(`  [${done}/${total}] ${name}\n`),
-  });
+  const { DockerHarnessFault } = await import('./sweep/docker.js');
+  let report;
+  try {
+    report = await runAudit({
+      configPaths: all('config'),
+      budget,
+      contextWindow: numeric('context'),
+      timeoutMs: numeric('timeout'),
+      concurrency: numeric('concurrency'),
+      docker: rest.includes('--docker'),
+      claude: rest.includes('--claude'),
+      divergenceUrl: argOf('divergence-url'),
+      // Progress goes to stderr so `--json` stdout stays a single parseable object.
+      onProgress: json ? undefined : (name, done, total) => process.stderr.write(`  [${done}/${total}] ${name}\n`),
+    });
+  } catch (e) {
+    // Docker failing as docker means every measurement through it would be a
+    // statement about this machine, so the audit refuses whole rather than
+    // reporting each server as broken.
+    if (e instanceof DockerHarnessFault) {
+      console.error(`audit --docker cannot answer for this machine: ${e.message}`);
+      console.error('Fix Docker here, or run without --docker.');
+      process.exit(1);
+    }
+    throw e;
+  }
 
   if (report.configs.length === 0) {
     const where = report.problems.length ? `\n${report.problems.map((p) => `  ${p}`).join('\n')}` : '';
