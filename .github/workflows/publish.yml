@@ -40,7 +40,7 @@ jobs:
       # Pinned to the 11.x major rather than latest: this line quietly became
       # npm 12 between 0.8.0 and 0.9.0, and both 0.9.0 attempts through 12.0.2
       # passed every gate, signed provenance, and then died at the registry PUT
-      # with E401 "token is invalid" — the OIDC exchange behind `npm publish`
+      # with E401 "token is invalid" — the OIDC exchange behind the publish
       # changed under a workflow no commit had touched. 0.8.0 shipped through
       # 11.x; the publish path does not float across npm majors on its own.
       - name: npm new enough to publish by OIDC
