@@ -1,83 +1,83 @@
-name,tokens,toolCount,status,category,metric,metricSource,claudeTokens,claudeModel,sessionStartTokens,sessionStartIsFloor,toolNameTokens,instructionsTokens
-filesystem,2823,14,measured,official-reference,443780,"https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-filesystem (npm weekly, 2026-08-09..15)",,,51,false,51,0
-memory,2378,9,measured,official-reference,78102,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-memory (npm weekly),,,34,false,34,0
-everything,1708,13,measured,official-reference,128884,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-everything (npm weekly),,,374,false,62,312
-sequential-thinking,1003,1,measured,official-reference,103839,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-sequential-thinking (npm weekly),,,5,false,5,0
-fetch,238,1,measured,official-reference,502017,https://pypistats.org/packages/mcp-server-fetch (PyPI weekly),,,3,false,3,0
-git,1455,12,measured,official-reference,42975,https://pypistats.org/packages/mcp-server-git (PyPI weekly),,,43,false,43,0
-time,293,2,measured,official-reference,229101,https://pypistats.org/packages/mcp-server-time (PyPI weekly),,,8,false,8,0
-github-legacy,3548,26,measured,official-reference,99704,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-github (npm weekly),,,103,false,103,0
-slack-legacy,681,8,measured,official-reference,87506,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-slack (npm weekly),,,47,false,47,0
-postgres,32,1,measured,official-reference,66136,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-postgres (npm weekly),,,3,false,3,0
-puppeteer,540,7,measured,official-reference,23406,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-puppeteer (npm weekly),,,39,false,39,0
-brave-search-legacy,319,2,measured,official-reference,15795,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-brave-search (npm weekly),,,11,false,11,0
-sqlite,268,6,measured,official-reference,14798,https://pypistats.org/packages/mcp-server-sqlite (PyPI weekly),,,20,false,20,0
-google-maps,549,7,measured,official-reference,5204,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-google-maps (npm weekly),,,30,false,30,0
-gdrive,,,auth-required,official-reference,4907,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-gdrive (npm weekly),,,,,,
-gitlab,336,9,measured,official-reference,4666,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-gitlab (npm weekly),,,33,false,33,0
-redis-legacy,,,startup-failure,official-reference,1464,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-redis (npm weekly),,,,,,
-playwright,4024,24,measured,vendor-official,4819822,https://api.npmjs.org/downloads/point/last-week/@playwright/mcp (npm weekly),,,91,false,91,0
-context7,1052,2,measured,vendor-official,1169818,https://api.npmjs.org/downloads/point/last-week/@upstash/context7-mcp (npm weekly),,,135,false,9,126
-github,54422,44,measured,vendor-official,32282,"https://api.github.com/repos/github/github-mcp-server (GitHub stars; Go binary/docker, no npm)",18406,claude-opus-5,556,false,179,377
-aws-documentation,5074,5,measured,vendor-official,248642,https://pypistats.org/packages/awslabs-aws-documentation-mcp-server (PyPI weekly),,,425,false,17,408
-firecrawl,9561,27,measured,vendor-official,167934,https://api.npmjs.org/downloads/point/last-week/firecrawl-mcp (npm weekly),16428,claude-opus-5,342,false,150,192
-notion,17500,24,measured,vendor-official,141622,https://api.npmjs.org/downloads/point/last-week/@notionhq/notion-mcp-server (npm weekly),33560,claude-opus-5,135,false,135,0
-azure,,,auth-required,vendor-official,105959,https://api.npmjs.org/downloads/point/last-week/@azure/mcp (npm weekly),,,,,,
-supabase,5013,29,measured,vendor-official,89662,https://api.npmjs.org/downloads/point/last-week/@supabase/mcp-server-supabase (npm weekly),,,342,false,104,238
-sentry,6455,9,measured,vendor-official,85640,https://api.npmjs.org/downloads/point/last-week/@sentry/mcp-server (npm weekly; remote alt https://mcp.sentry.dev/mcp),10463,claude-opus-5,40,false,40,0
-markitdown,64,1,measured,vendor-official,75650,https://pypistats.org/packages/markitdown-mcp (PyPI weekly),,,6,false,6,0
-mongodb,7926,27,measured,vendor-official,72789,https://api.npmjs.org/downloads/point/last-week/mongodb-mcp-server (npm weekly),8765,claude-opus-5,103,false,92,11
-clickhouse,694,3,measured,vendor-official,46090,https://pypistats.org/packages/mcp-clickhouse (PyPI weekly),,,72,false,11,61
-chroma,2837,13,measured,vendor-official,44689,https://pypistats.org/packages/chroma-mcp (PyPI weekly),,,71,false,71,0
-circleci,11912,13,measured,vendor-official,30882,https://api.npmjs.org/downloads/point/last-week/@circleci/mcp-server-circleci (npm weekly),19164,claude-opus-5,61,false,61,0
-tavily,1653,5,measured,vendor-official,24471,https://api.npmjs.org/downloads/point/last-week/tavily-mcp (npm weekly),,,28,false,28,0
-magic,,,auth-required,vendor-official,21727,https://api.npmjs.org/downloads/point/last-week/@21st-dev/magic (npm weekly),,,,,,
-qdrant,188,2,measured,vendor-official,19415,https://pypistats.org/packages/mcp-server-qdrant (PyPI weekly),,,11,false,11,0
-exa,486,2,measured,vendor-official,18221,https://api.npmjs.org/downloads/point/last-week/exa-mcp-server (npm weekly),,,11,false,11,0
-brave-search,25456,8,measured,vendor-official,15777,https://api.npmjs.org/downloads/point/last-week/@brave/brave-search-mcp-server (npm weekly),13746,claude-opus-5,61,false,43,18
-apify,10426,10,measured,vendor-official,14351,https://api.npmjs.org/downloads/point/last-week/@apify/actors-mcp-server (npm weekly),8313,claude-opus-5,51,true,51,
-shopify-dev,5624,5,measured,vendor-official,13956,https://api.npmjs.org/downloads/point/last-week/@shopify/dev-mcp (npm weekly),9805,claude-opus-5,24,true,24,
-hubspot,9158,21,measured,vendor-official,12712,https://api.npmjs.org/downloads/point/last-week/@hubspot/mcp-server (npm weekly),14398,claude-opus-5,133,false,133,0
-netlify,2831,9,measured,vendor-official,11850,https://api.npmjs.org/downloads/point/last-week/@netlify/mcp (npm weekly),,,61,false,61,0
-stripe,,,startup-failure,vendor-official,10572,https://api.npmjs.org/downloads/point/last-week/@stripe/mcp (npm weekly),,,,,,
-pinecone,5903,9,measured,vendor-official,8982,https://api.npmjs.org/downloads/point/last-week/@pinecone-database/mcp (npm weekly),9184,claude-opus-5,294,false,41,253
-heroku,,,startup-failure,vendor-official,7890,https://api.npmjs.org/downloads/point/last-week/@heroku/mcp-server (npm weekly),,,,,,
-bright-data,978,5,measured,vendor-official,6103,https://api.npmjs.org/downloads/point/last-week/@brightdata/mcp (npm weekly),,,20,false,20,0
-neo4j-cypher,523,3,measured,vendor-official,5914,https://pypistats.org/packages/mcp-neo4j-cypher (PyPI weekly),,,26,false,26,0
-pulumi,2768,12,measured,vendor-official,4343,https://api.npmjs.org/downloads/point/last-week/@pulumi/mcp-server (npm weekly),,,73,false,73,0
-grafana,,,timeout,vendor-official,3358,https://api.github.com/repos/grafana/mcp-grafana (GitHub stars; Go binary/docker),,,,,,
-browserbase,364,6,measured,vendor-official,3231,https://api.npmjs.org/downloads/point/last-week/@browserbasehq/mcp (npm weekly),,,13,false,13,0
-cloudflare-docs,422,2,measured,vendor-official,2119,https://api.npmjs.org/downloads/point/last-week/@cloudflare/mcp-server-cloudflare (npm weekly; current offering is remote suite),,,15,false,15,0
-neon,,,startup-failure,vendor-official,2012,https://api.npmjs.org/downloads/point/last-week/@neondatabase/mcp-server-neon (npm weekly),,,,,,
-elasticsearch,374,4,measured,vendor-official,1599,https://api.npmjs.org/downloads/point/last-week/@elastic/mcp-server-elasticsearch (npm weekly),,,14,false,14,0
-terraform,2061,9,measured,vendor-official,1503,https://api.github.com/repos/hashicorp/terraform-mcp-server (GitHub stars; Go binary/docker),,,963,false,39,924
-redis,9246,53,measured,vendor-official,568,https://api.github.com/repos/redis/mcp-redis (GitHub stars; not on PyPI),13221,claude-opus-5,169,false,169,0
-perplexity,133,1,measured,vendor-official,921,https://api.npmjs.org/downloads/point/last-week/server-perplexity-ask (npm weekly),,,7,false,7,0
-microsoft-learn,972,3,measured,vendor-official,1838,https://api.github.com/repos/MicrosoftDocs/mcp (GitHub stars),,,307,false,17,290
-deepwiki,359,3,measured,vendor-official,65000,https://www.pulsemcp.com/servers/deepwiki (estimated visitors),,,521,false,14,507
-huggingface,4691,4,measured,vendor-official,274,https://api.github.com/repos/huggingface/hf-mcp-server (GitHub stars),,,200,false,17,183
-linear,,,remote-auth-wall,vendor-official,2100000,https://www.pulsemcp.com/servers/linear (estimated visitors),,,,,,
-zapier,,,remote-auth-wall,vendor-official,6100000,https://www.pulsemcp.com/servers/zapier (estimated visitors),,,,,,
-vercel,,,remote-auth-wall,vendor-official,542000,https://www.pulsemcp.com/servers/vercel (estimated visitors),,,,,,
-mcp-atlassian,17311,63,dynamic,community,353572,https://pypistats.org/packages/mcp-atlassian (PyPI weekly),22234,claude-opus-5,347,false,347,0
-postgres-mcp,8632,9,measured,community,234706,https://pypistats.org/packages/postgres-mcp (PyPI weekly),2381,claude-opus-5,39,false,39,0
-xcodebuildmcp,26594,24,measured,community,149200,https://api.npmjs.org/downloads/point/last-week/xcodebuildmcp (npm weekly),5335,claude-opus-5,559,false,95,464
-n8n-mcp,2636,7,measured,community,114676,https://api.npmjs.org/downloads/point/last-week/n8n-mcp (npm weekly),,,24,false,24,0
-blender,5462,25,measured,community,71408,https://pypistats.org/packages/blender-mcp (PyPI weekly),8409,claude-opus-5,151,false,151,0
-excel,4266,25,measured,community,57839,https://pypistats.org/packages/excel-mcp-server (PyPI weekly),,,106,false,99,7
-figma-context,946,2,measured,community,57771,https://api.npmjs.org/downloads/point/last-week/figma-developer-mcp (npm weekly),,,11,false,11,0
-duckduckgo,724,2,measured,community,41360,https://pypistats.org/packages/duckduckgo-mcp-server (PyPI weekly),,,6,false,6,0
-desktop-commander,11836,26,dynamic,community,38626,https://api.npmjs.org/downloads/point/last-week/@wonderwhy-er/desktop-commander (npm weekly),19305,claude-opus-5,99,true,99,
-serena,8204,29,measured,community,28084,https://api.github.com/repos/oraios/serena (GitHub stars; installed from git),11494,claude-opus-5,138,false,109,29
-gmail,,,auth-required,community,26678,https://api.npmjs.org/downloads/point/last-week/@gongrzhe/server-gmail-autoauth-mcp (npm weekly; needs OAuth keys file),,,,,,
-pandoc,1425,1,measured,community,23590,https://pypistats.org/packages/mcp-pandoc (PyPI weekly),,,5,false,5,0
-obsidian,2062,15,measured,community,23503,https://pypistats.org/packages/mcp-obsidian (PyPI weekly),,,92,false,92,0
-searxng,1537,4,measured,community,22508,https://api.npmjs.org/downloads/point/last-week/mcp-searxng (npm weekly),,,27,false,27,0
-slack,,,startup-failure,community,16956,https://api.npmjs.org/downloads/point/last-week/slack-mcp-server (npm weekly),,,,,,
-playwright-community,2920,33,measured,community,16066,https://api.npmjs.org/downloads/point/last-week/@executeautomation/playwright-mcp-server (npm weekly),,,158,false,158,0
-arxiv,3228,14,measured,community,13984,https://pypistats.org/packages/arxiv-mcp-server (PyPI weekly),,,61,false,61,0
-mysql,393,3,measured,community,13634,https://pypistats.org/packages/mysql-mcp-server (PyPI weekly),,,12,false,12,0
-kubernetes,5268,23,measured,community,12374,https://api.npmjs.org/downloads/point/last-week/mcp-server-kubernetes (npm weekly; uses ~/.kube/config),9165,claude-opus-5,95,false,95,0
-basic-memory,9188,23,measured,community,10460,https://pypistats.org/packages/basic-memory (PyPI weekly),12426,claude-opus-5,71,false,71,0
-airtable,4207,16,measured,community,3022,https://api.npmjs.org/downloads/point/last-week/airtable-mcp-server (npm weekly),,,50,false,50,0
-airbnb,486,2,measured,community,2599,https://api.npmjs.org/downloads/point/last-week/@openbnb/mcp-server-airbnb (npm weekly),,,10,false,10,0
+name,tokens,toolCount,status,category,metric,metricSource,claudeTokens,claudeModel,sessionStartTokens,sessionStartIsFloor,toolNameTokens,instructionsTokens,crossCheckTokens,crossCheckCliVersion
+filesystem,2823,14,measured,official-reference,443780,"https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-filesystem (npm weekly, 2026-08-09..15)",,,51,false,51,0,1667,v0.2.5
+memory,2378,9,measured,official-reference,78102,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-memory (npm weekly),,,34,false,34,0,906,v0.2.5
+everything,1708,13,measured,official-reference,128884,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-everything (npm weekly),,,374,false,62,312,1083,v0.2.5
+sequential-thinking,1003,1,measured,official-reference,103839,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-sequential-thinking (npm weekly),,,5,false,5,0,,
+fetch,238,1,measured,official-reference,502017,https://pypistats.org/packages/mcp-server-fetch (PyPI weekly),,,3,false,3,0,238,v0.2.5
+git,1455,12,measured,official-reference,42975,https://pypistats.org/packages/mcp-server-git (PyPI weekly),,,43,false,43,0,1119,v0.2.5
+time,293,2,measured,official-reference,229101,https://pypistats.org/packages/mcp-server-time (PyPI weekly),,,8,false,8,0,237,v0.2.5
+github-legacy,3548,26,measured,official-reference,99704,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-github (npm weekly),,,103,false,103,0,3564,v0.2.5
+slack-legacy,681,8,measured,official-reference,87506,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-slack (npm weekly),,,47,false,47,0,681,v0.2.5
+postgres,32,1,measured,official-reference,66136,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-postgres (npm weekly),,,3,false,3,0,32,v0.2.5
+puppeteer,540,7,measured,official-reference,23406,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-puppeteer (npm weekly),,,39,false,39,0,538,v0.2.5
+brave-search-legacy,319,2,measured,official-reference,15795,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-brave-search (npm weekly),,,11,false,11,0,320,v0.2.5
+sqlite,268,6,measured,official-reference,14798,https://pypistats.org/packages/mcp-server-sqlite (PyPI weekly),,,20,false,20,0,268,v0.2.5
+google-maps,549,7,measured,official-reference,5204,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-google-maps (npm weekly),,,30,false,30,0,550,v0.2.5
+gdrive,,,auth-required,official-reference,4907,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-gdrive (npm weekly),,,,,,,,
+gitlab,336,9,measured,official-reference,4666,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-gitlab (npm weekly),,,33,false,33,0,336,v0.2.5
+redis-legacy,,,startup-failure,official-reference,1464,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-redis (npm weekly),,,,,,,,
+playwright,4024,24,measured,vendor-official,4819822,https://api.npmjs.org/downloads/point/last-week/@playwright/mcp (npm weekly),,,91,false,91,0,3409,v0.2.5
+context7,1052,2,measured,vendor-official,1169818,https://api.npmjs.org/downloads/point/last-week/@upstash/context7-mcp (npm weekly),,,135,false,9,126,983,v0.2.5
+github,54422,44,measured,vendor-official,32282,"https://api.github.com/repos/github/github-mcp-server (GitHub stars; Go binary/docker, no npm)",18406,claude-opus-5,556,false,179,377,10600,v0.2.5
+aws-documentation,5074,5,measured,vendor-official,248642,https://pypistats.org/packages/awslabs-aws-documentation-mcp-server (PyPI weekly),,,425,false,17,408,,
+firecrawl,9561,27,measured,vendor-official,167934,https://api.npmjs.org/downloads/point/last-week/firecrawl-mcp (npm weekly),16428,claude-opus-5,342,false,150,192,8993,v0.2.5
+notion,17500,24,measured,vendor-official,141622,https://api.npmjs.org/downloads/point/last-week/@notionhq/notion-mcp-server (npm weekly),33560,claude-opus-5,135,false,135,0,17408,v0.2.5
+azure,,,auth-required,vendor-official,105959,https://api.npmjs.org/downloads/point/last-week/@azure/mcp (npm weekly),,,,,,,,
+supabase,5013,29,measured,vendor-official,89662,https://api.npmjs.org/downloads/point/last-week/@supabase/mcp-server-supabase (npm weekly),,,342,false,104,238,,
+sentry,6455,9,measured,vendor-official,85640,https://api.npmjs.org/downloads/point/last-week/@sentry/mcp-server (npm weekly; remote alt https://mcp.sentry.dev/mcp),10463,claude-opus-5,40,false,40,0,,
+markitdown,64,1,measured,vendor-official,75650,https://pypistats.org/packages/markitdown-mcp (PyPI weekly),,,6,false,6,0,64,v0.2.5
+mongodb,7926,27,measured,vendor-official,72789,https://api.npmjs.org/downloads/point/last-week/mongodb-mcp-server (npm weekly),8765,claude-opus-5,103,false,92,11,4519,v0.2.5
+clickhouse,694,3,measured,vendor-official,46090,https://pypistats.org/packages/mcp-clickhouse (PyPI weekly),,,72,false,11,61,,
+chroma,2837,13,measured,vendor-official,44689,https://pypistats.org/packages/chroma-mcp (PyPI weekly),,,71,false,71,0,2837,v0.2.5
+circleci,11912,13,measured,vendor-official,30882,https://api.npmjs.org/downloads/point/last-week/@circleci/mcp-server-circleci (npm weekly),19164,claude-opus-5,61,false,61,0,11750,v0.2.5
+tavily,1653,5,measured,vendor-official,24471,https://api.npmjs.org/downloads/point/last-week/tavily-mcp (npm weekly),,,28,false,28,0,1665,v0.2.5
+magic,,,auth-required,vendor-official,21727,https://api.npmjs.org/downloads/point/last-week/@21st-dev/magic (npm weekly),,,,,,,,
+qdrant,188,2,measured,vendor-official,19415,https://pypistats.org/packages/mcp-server-qdrant (PyPI weekly),,,11,false,11,0,188,v0.2.5
+exa,486,2,measured,vendor-official,18221,https://api.npmjs.org/downloads/point/last-week/exa-mcp-server (npm weekly),,,11,false,11,0,414,v0.2.5
+brave-search,25456,8,measured,vendor-official,15777,https://api.npmjs.org/downloads/point/last-week/@brave/brave-search-mcp-server (npm weekly),13746,claude-opus-5,61,false,43,18,,
+apify,10426,10,measured,vendor-official,14351,https://api.npmjs.org/downloads/point/last-week/@apify/actors-mcp-server (npm weekly),8313,claude-opus-5,51,true,51,,,
+shopify-dev,5624,5,measured,vendor-official,13956,https://api.npmjs.org/downloads/point/last-week/@shopify/dev-mcp (npm weekly),9805,claude-opus-5,24,true,24,,,
+hubspot,9158,21,measured,vendor-official,12712,https://api.npmjs.org/downloads/point/last-week/@hubspot/mcp-server (npm weekly),14398,claude-opus-5,133,false,133,0,8446,v0.2.5
+netlify,2831,9,measured,vendor-official,11850,https://api.npmjs.org/downloads/point/last-week/@netlify/mcp (npm weekly),,,61,false,61,0,2707,v0.2.5
+stripe,,,startup-failure,vendor-official,10572,https://api.npmjs.org/downloads/point/last-week/@stripe/mcp (npm weekly),,,,,,,,
+pinecone,5903,9,measured,vendor-official,8982,https://api.npmjs.org/downloads/point/last-week/@pinecone-database/mcp (npm weekly),9184,claude-opus-5,294,false,41,253,5680,v0.2.5
+heroku,,,startup-failure,vendor-official,7890,https://api.npmjs.org/downloads/point/last-week/@heroku/mcp-server (npm weekly),,,,,,,,
+bright-data,978,5,measured,vendor-official,6103,https://api.npmjs.org/downloads/point/last-week/@brightdata/mcp (npm weekly),,,20,false,20,0,880,v0.2.5
+neo4j-cypher,523,3,measured,vendor-official,5914,https://pypistats.org/packages/mcp-neo4j-cypher (PyPI weekly),,,26,false,26,0,354,v0.2.5
+pulumi,2768,12,measured,vendor-official,4343,https://api.npmjs.org/downloads/point/last-week/@pulumi/mcp-server (npm weekly),,,73,false,73,0,2650,v0.2.5
+grafana,,,timeout,vendor-official,3358,https://api.github.com/repos/grafana/mcp-grafana (GitHub stars; Go binary/docker),,,,,,,,
+browserbase,364,6,measured,vendor-official,3231,https://api.npmjs.org/downloads/point/last-week/@browserbasehq/mcp (npm weekly),,,13,false,13,0,310,v0.2.5
+cloudflare-docs,422,2,measured,vendor-official,2119,https://api.npmjs.org/downloads/point/last-week/@cloudflare/mcp-server-cloudflare (npm weekly; current offering is remote suite),,,15,false,15,0,252,v0.2.5
+neon,,,startup-failure,vendor-official,2012,https://api.npmjs.org/downloads/point/last-week/@neondatabase/mcp-server-neon (npm weekly),,,,,,,,
+elasticsearch,374,4,measured,vendor-official,1599,https://api.npmjs.org/downloads/point/last-week/@elastic/mcp-server-elasticsearch (npm weekly),,,14,false,14,0,,
+terraform,2061,9,measured,vendor-official,1503,https://api.github.com/repos/hashicorp/terraform-mcp-server (GitHub stars; Go binary/docker),,,963,false,39,924,1718,v0.2.5
+redis,9246,53,measured,vendor-official,568,https://api.github.com/repos/redis/mcp-redis (GitHub stars; not on PyPI),13221,claude-opus-5,169,false,169,0,7489,v0.2.5
+perplexity,133,1,measured,vendor-official,921,https://api.npmjs.org/downloads/point/last-week/server-perplexity-ask (npm weekly),,,7,false,7,0,134,v0.2.5
+microsoft-learn,972,3,measured,vendor-official,1838,https://api.github.com/repos/MicrosoftDocs/mcp (GitHub stars),,,307,false,17,290,726,v0.2.5
+deepwiki,359,3,measured,vendor-official,65000,https://www.pulsemcp.com/servers/deepwiki (estimated visitors),,,521,false,14,507,234,v0.2.5
+huggingface,4691,4,measured,vendor-official,274,https://api.github.com/repos/huggingface/hf-mcp-server (GitHub stars),,,200,false,17,183,,
+linear,,,remote-auth-wall,vendor-official,2100000,https://www.pulsemcp.com/servers/linear (estimated visitors),,,,,,,,
+zapier,,,remote-auth-wall,vendor-official,6100000,https://www.pulsemcp.com/servers/zapier (estimated visitors),,,,,,,,
+vercel,,,remote-auth-wall,vendor-official,542000,https://www.pulsemcp.com/servers/vercel (estimated visitors),,,,,,,,
+mcp-atlassian,17311,63,dynamic,community,353572,https://pypistats.org/packages/mcp-atlassian (PyPI weekly),22234,claude-opus-5,347,false,347,0,,
+postgres-mcp,8632,9,measured,community,234706,https://pypistats.org/packages/postgres-mcp (PyPI weekly),2381,claude-opus-5,39,false,39,0,,
+xcodebuildmcp,26594,24,measured,community,149200,https://api.npmjs.org/downloads/point/last-week/xcodebuildmcp (npm weekly),5335,claude-opus-5,559,false,95,464,2704,v0.2.5
+n8n-mcp,2636,7,measured,community,114676,https://api.npmjs.org/downloads/point/last-week/n8n-mcp (npm weekly),,,24,false,24,0,2031,v0.2.5
+blender,5462,25,measured,community,71408,https://pypistats.org/packages/blender-mcp (PyPI weekly),8409,claude-opus-5,151,false,151,0,,
+excel,4266,25,measured,community,57839,https://pypistats.org/packages/excel-mcp-server (PyPI weekly),,,106,false,99,7,3080,v0.2.5
+figma-context,946,2,measured,community,57771,https://api.npmjs.org/downloads/point/last-week/figma-developer-mcp (npm weekly),,,11,false,11,0,898,v0.2.5
+duckduckgo,724,2,measured,community,41360,https://pypistats.org/packages/duckduckgo-mcp-server (PyPI weekly),,,6,false,6,0,661,v0.2.5
+desktop-commander,11836,26,dynamic,community,38626,https://api.npmjs.org/downloads/point/last-week/@wonderwhy-er/desktop-commander (npm weekly),19305,claude-opus-5,99,true,99,,,
+serena,8204,29,measured,community,28084,https://api.github.com/repos/oraios/serena (GitHub stars; installed from git),11494,claude-opus-5,138,false,109,29,6528,v0.2.5
+gmail,,,auth-required,community,26678,https://api.npmjs.org/downloads/point/last-week/@gongrzhe/server-gmail-autoauth-mcp (npm weekly; needs OAuth keys file),,,,,,,,
+pandoc,1425,1,measured,community,23590,https://pypistats.org/packages/mcp-pandoc (PyPI weekly),,,5,false,5,0,1426,v0.2.5
+obsidian,2062,15,measured,community,23503,https://pypistats.org/packages/mcp-obsidian (PyPI weekly),,,92,false,92,0,2064,v0.2.5
+searxng,1537,4,measured,community,22508,https://api.npmjs.org/downloads/point/last-week/mcp-searxng (npm weekly),,,27,false,27,0,1490,v0.2.5
+slack,,,startup-failure,community,16956,https://api.npmjs.org/downloads/point/last-week/slack-mcp-server (npm weekly),,,,,,,,
+playwright-community,2920,33,measured,community,16066,https://api.npmjs.org/downloads/point/last-week/@executeautomation/playwright-mcp-server (npm weekly),,,158,false,158,0,2925,v0.2.5
+arxiv,3228,14,measured,community,13984,https://pypistats.org/packages/arxiv-mcp-server (PyPI weekly),,,61,false,61,0,,
+mysql,393,3,measured,community,13634,https://pypistats.org/packages/mysql-mcp-server (PyPI weekly),,,12,false,12,0,332,v0.2.5
+kubernetes,5268,23,measured,community,12374,https://api.npmjs.org/downloads/point/last-week/mcp-server-kubernetes (npm weekly; uses ~/.kube/config),9165,claude-opus-5,95,false,95,0,5089,v0.2.5
+basic-memory,9188,23,measured,community,10460,https://pypistats.org/packages/basic-memory (PyPI weekly),12426,claude-opus-5,71,false,71,0,7113,v0.2.5
+airtable,4207,16,measured,community,3022,https://api.npmjs.org/downloads/point/last-week/airtable-mcp-server (npm weekly),,,50,false,50,0,2533,v0.2.5
+airbnb,486,2,measured,community,2599,https://api.npmjs.org/downloads/point/last-week/@openbnb/mcp-server-airbnb (npm weekly),,,10,false,10,0,486,v0.2.5
