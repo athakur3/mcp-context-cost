@@ -384,6 +384,30 @@ against wire order. Measured at first run, that residual is a fraction of a perc
 independent implementations agreeing on the fields both count — and the run's aggregate
 range is stated in the leaderboard header, derived on every write.
 
+## Tool shape <a id="tool-shape"></a>
+
+`audit --suggest` (method `tool-shape/v1`) places each of your tools in the measured set's
+distribution of tool *composition* — every published measurement already splits every tool
+into whole / description / input-schema token counts, and the baseline is a nearest-rank
+quantile table (101 points per metric) over all complete tool measurements, published at
+[results/tool-shape.json](https://github.com/athakur3/mcp-context-cost/blob/main/results/tool-shape.json)
+and regenerated from the same measurement files as the leaderboard. The table is published
+whole so every percentile claim the tool makes can be re-read off the same JSON by anyone.
+
+**What draws advice, and what never does.** Only descriptions: a schema is functional
+surface, and trimming it changes what the tool can do; a description is prose about the
+tool, and trimming it changes only what every request pays to carry it. A description earns
+a suggestion only at or above the **90th percentile** of the measured distribution, the
+suggestion names the exact percentile it fired at, and the recovery figure — description
+minus the measured median — is marked approximate, because component counts sum only
+approximately across token boundaries and a rewritten description tokenizes as itself. A
+config where nothing is measurably unusual is told that in those words; no advice is
+invented to have some. A baseline that cannot be fetched is a named problem in the report,
+never a silently skipped check.
+
+Versioned independently of the o200k methodology, like the columns before it: an advisory
+reading, no `totalTokens` and no canonical hash moves.
+
 ## Known divergences
 
 **sd2k/mcp-tokens** (the CLI behind the [cross-check column](#cli-cross-check)) differs from
@@ -401,8 +425,9 @@ Details: [spec/upstream-notes.md](https://github.com/athakur3/mcp-context-cost/b
   dual-run dynamic detection.
 
 The Claude divergence column (`tools-delta/v1`, added 2026-08-16), the session-start column
-(`deferred-load/v1`, added 2026-08-20) and the CLI cross-check column (`cli-cross-check/v1`,
-added 2026-09-03) are versioned separately and deliberately: each adds a published number
+(`deferred-load/v1`, added 2026-08-20), the CLI cross-check column (`cli-cross-check/v1`,
+added 2026-09-03) and the tool-shape baseline (`tool-shape/v1`, added 2026-09-04) are
+versioned separately and deliberately: each adds a published number
 without touching the definition above. Every badge, every `totalTokens`, and every canonical
 hash is byte-identical to before they existed, so bumping this page's version would have
 signalled a change that did not happen.

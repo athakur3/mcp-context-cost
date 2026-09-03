@@ -14,6 +14,12 @@
  */
 import { METHODOLOGY_VERSION } from '../core/canonical.js';
 import { isCurrent, type DivergenceRun } from '../core/divergence.js';
+import {
+  SUGGEST_DESCRIPTION_PERCENTILE,
+  suggestFor,
+  type ToolShapeBaseline,
+  type ToolSuggestion,
+} from '../core/tool-shape.js';
 import type { Measurement, MeasurementStatus, ToolMeasurement } from '../core/types.js';
 import type { ConfiguredServer, LoadedConfig } from './config.js';
 import {
@@ -71,6 +77,20 @@ export interface TrimAdvice {
   recoverableShare: number;
 }
 
+/**
+ * `--suggest`: this config's tools placed in the measured set's tool-shape
+ * distribution. Only descriptions draw advice (schemas are functional surface;
+ * descriptions are prose every request carries), and only descriptions the
+ * baseline puts at or above the threshold percentile — a config where nothing
+ * is measurably unusual gets that said in those words, not advice invented to
+ * have some.
+ */
+export interface ConfigSuggestions {
+  /** Heaviest-recovery first. */
+  outOfDistribution: ToolSuggestion[];
+  checkedTools: number;
+}
+
 export interface AuditConfigResult {
   client: string;
   source: string;
@@ -82,6 +102,8 @@ export interface AuditConfigResult {
   skipped: AuditServerResult[];
   heaviestTools: HeaviestTool[];
   trimAdvice: TrimAdvice | null;
+  /** Present only when `--suggest` ran with a usable baseline. */
+  suggestions?: ConfigSuggestions;
   /**
    * Whether this client loads the total up front or defers it, and — when the
    * client decides that by a threshold — which side of it this stack is on.
@@ -95,6 +117,19 @@ export interface AuditConfigResult {
 }
 
 const TRIM_TOOL_COUNT = 3;
+
+function buildSuggestions(
+  pool: { server: string; t: ToolMeasurement }[],
+  baseline: ToolShapeBaseline,
+): ConfigSuggestions {
+  const outOfDistribution: ToolSuggestion[] = [];
+  for (const { server, t } of pool) {
+    const s = suggestFor(server, t, baseline);
+    if (s) outOfDistribution.push(s);
+  }
+  outOfDistribution.sort((a, b) => b.approxRecoverableTokens - a.approxRecoverableTokens);
+  return { outOfDistribution, checkedTools: pool.length };
+}
 
 function buildTrimAdvice(sortedTools: HeaviestTool[], totalTokens: number): TrimAdvice | null {
   if (totalTokens <= 0 || sortedTools.length < 2) return null;
@@ -186,6 +221,8 @@ export interface AuditReport {
   };
   /** Present only when a divergence run was supplied (`--claude`). */
   claudeDivergence?: { model: string; measuredAt: string };
+  /** Which published tool-shape baseline `--suggest` read its percentiles from. */
+  toolShape?: { generatedAt: string; toolCount: number; serverCount: number };
   /** Present only when a baseline report was supplied (`--baseline`). */
   diff?: AuditDiff;
   /** Present only when `--max-increase` was supplied alongside a baseline. */
@@ -329,6 +366,8 @@ export function buildReport(
     generatedAt?: string;
     /** Published `tools-delta/v1` run to join against (`--claude`); omit to skip the join. */
     divergence?: DivergenceRun | null;
+    /** Published `tool-shape/v1` baseline (`--suggest`); omit to skip suggestions. */
+    toolShape?: ToolShapeBaseline | null;
     /**
      * The audited machine's SHELL tool-search variables. Passed in rather than
      * read here so this stays pure and a report is reproducible from its
@@ -373,6 +412,7 @@ export function buildReport(
     const ok: AuditServerResult[] = [];
     const skipped: AuditServerResult[] = [];
     const tools: HeaviestTool[] = [];
+    const shapePool: { server: string; t: ToolMeasurement }[] = [];
     // Counted only for servers that put a number into the total: a twin that
     // failed to launch is already a floor, and adds nothing to a sum.
     let sharedHere = 0;
@@ -424,7 +464,10 @@ export function buildReport(
         claudeTokens: opts.divergence ? (isCurrent(divRow, m.canonicalSha256 ?? null) ? divRow.claudeDelta : null) : undefined,
         notes: m.status === 'dynamic' ? m.notes : undefined,
       });
-      for (const t of m.tools) tools.push({ server: s.name, tool: t.name, tokens: t.tokens });
+      for (const t of m.tools) {
+        tools.push({ server: s.name, tool: t.name, tokens: t.tokens });
+        if (opts.toolShape) shapePool.push({ server: s.name, t });
+      }
     }
 
     const totalTokens = ok.reduce((a, s) => a + (s.tokens ?? 0), 0);
@@ -448,6 +491,7 @@ export function buildReport(
       skipped,
       heaviestTools: tools.slice(0, 5),
       trimAdvice: buildTrimAdvice(tools, totalTokens),
+      suggestions: opts.toolShape ? buildSuggestions(shapePool, opts.toolShape) : undefined,
     };
     built.push(result);
     shared.set(result, sharedHere);
@@ -468,6 +512,14 @@ export function buildReport(
 
   if (opts.divergence) {
     report.claudeDivergence = { model: opts.divergence.model, measuredAt: opts.divergence.measuredAt };
+  }
+
+  if (opts.toolShape) {
+    report.toolShape = {
+      generatedAt: opts.toolShape.generatedAt,
+      toolCount: opts.toolShape.toolCount,
+      serverCount: opts.toolShape.serverCount,
+    };
   }
 
   if (typeof opts.budget === 'number') {
@@ -829,6 +881,45 @@ export function formatReport(report: AuditReport): string {
           `(${names}) would recover ${n(cfg.trimAdvice.recoverableTokens)} tokens ` +
           `(${pct(cfg.trimAdvice.recoverableShare)} of this config) — if your client supports per-tool filtering.`,
       );
+    }
+
+    if (cfg.suggestions) {
+      const sg = cfg.suggestions;
+      const base = report.toolShape
+        ? `baseline ${report.toolShape.generatedAt}: ${n(report.toolShape.toolCount)} tools across ` +
+          `${report.toolShape.serverCount} measured servers`
+        : 'published baseline';
+      lines.push('');
+      if (sg.outOfDistribution.length === 0) {
+        lines.push(
+          `  suggest: every description in this config sits inside the measured distribution — ` +
+            `nothing the data can point at (${sg.checkedTools} tools against ${base}).`,
+        );
+      } else {
+        lines.push(
+          `  suggest — descriptions at or above the ${SUGGEST_DESCRIPTION_PERCENTILE}th percentile of ` +
+            `measured tools (${base}):`,
+        );
+        const shown = sg.outOfDistribution.slice(0, 8);
+        for (const s of shown) {
+          lines.push(
+            `    ${s.server} · ${s.tool} — ${n(s.tokens)} tokens: description ${n(s.descriptionTokens)} ` +
+              `(p${s.descriptionPercentile}), schema ${n(s.inputSchemaTokens)}`,
+          );
+          lines.push(
+            `      rewriting the description toward the measured median (${n(s.medianDescriptionTokens)}) ` +
+              `would recover ≈${n(s.approxRecoverableTokens)} tokens on every request`,
+          );
+        }
+        if (sg.outOfDistribution.length > shown.length) {
+          lines.push(`    …and ${sg.outOfDistribution.length - shown.length} more above the threshold.`);
+        }
+        const within = sg.checkedTools - sg.outOfDistribution.length;
+        lines.push(
+          `    ${within} of ${sg.checkedTools} tools sit inside the distribution — ` +
+            `no advice where nothing is measurably unusual.`,
+        );
+      }
     }
 
     if (cfg.skipped.length) {

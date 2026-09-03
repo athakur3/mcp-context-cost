@@ -6,6 +6,7 @@ import { appendHistory } from './history.js';
 import { writeServerPages } from './server-pages.js';
 import { writeDashboard } from './dashboard.js';
 import { applyPublishedStats } from './published-stats.js';
+import { writeToolShapeBaseline } from './tool-shape.js';
 
 const doc = parse(readFileSync('servers.yaml', 'utf8')) as { servers: ServerEntry[] };
 writeLeaderboard(doc.servers);
@@ -15,6 +16,10 @@ const p = writeServerPages(doc.servers);
 // The dashboard reads the same results/ and history.csv as the pages do, so it
 // belongs in the same refresh — see writeDashboard's note on why it wasn't.
 const d = writeDashboard();
+// The tool-shape baseline is a quantile table over every measured tool — the
+// distribution `audit --suggest` reads percentile claims from. Derived from
+// the same measurement files as the leaderboard, in the same refresh.
+const ts = writeToolShapeBaseline(doc.servers);
 // The front pages state numbers the sweep just changed; they are patched from
 // the same results/ the leaderboard was. A missing anchor is a page regen can
 // no longer maintain — refuse loudly rather than leave one number stale.
@@ -27,6 +32,7 @@ console.log('leaderboard:', JSON.stringify(percentiles(doc.servers)));
 console.log(`history: ${h.rows} rows (${h.added >= 0 ? '+' : ''}${h.added})`);
 console.log(`server pages: ${p.pages}`);
 console.log(`dashboard: ${d.out} (${(d.bytes / 1024).toFixed(0)}KB)`);
+console.log(`tool shape: ${ts.toolCount} tools across ${ts.serverCount} servers (median description ${ts.quantiles.descriptionTokens[50]})`);
 console.log(
   `published stats: ${
     stats.changedFiles.length > 0

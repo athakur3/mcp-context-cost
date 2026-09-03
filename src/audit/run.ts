@@ -8,6 +8,7 @@ import { homedir } from 'node:os';
 import { measureServer } from '../sweep/run.js';
 import type { Measurement } from '../core/types.js';
 import { parseDivergence, type DivergenceRun } from '../core/divergence.js';
+import { parseToolShapeBaseline, type ToolShapeBaseline } from '../core/tool-shape.js';
 import { buildReport, serverKey, type AuditReport } from './audit.js';
 import { toolSearchEnv, type ToolSearchEnv, type ToolSearchSource } from './deferral.js';
 import {
@@ -23,6 +24,10 @@ import {
 export const DEFAULT_DIVERGENCE_URL =
   'https://raw.githubusercontent.com/athakur3/mcp-context-cost/main/results/divergence.json';
 
+/** Where the published `tool-shape/v1` baseline lives when `--suggest` doesn't override it. */
+export const DEFAULT_TOOL_SHAPE_URL =
+  'https://raw.githubusercontent.com/athakur3/mcp-context-cost/main/results/tool-shape.json';
+
 export interface AuditOptions {
   /** Explicit config path(s); when empty, every known client location is tried. */
   configPaths?: string[];
@@ -37,6 +42,10 @@ export interface AuditOptions {
   claude?: boolean;
   /** Override the divergence.json source — mainly for tests and self-hosted mirrors. */
   divergenceUrl?: string;
+  /** Place this config's tools in the published tool-shape distribution and advise where the data can. */
+  suggest?: boolean;
+  /** Override the tool-shape.json source — mainly for tests and self-hosted mirrors. */
+  toolShapeUrl?: string;
   /**
    * The tool-search variables as this process's SHELL has them. Defaults to
    * this process's environment. Overridable so a test can state a machine
@@ -50,6 +59,18 @@ export interface AuditOptions {
    */
   settings?: ToolSearchSource[];
   onProgress?: (name: string, done: number, total: number) => void;
+}
+
+/** Fetch and parse the published tool-shape baseline. Never throws: a failure is a report problem, not a crash. */
+export async function fetchToolShape(url: string): Promise<{ baseline: ToolShapeBaseline | null; problem?: string }> {
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(15_000) });
+    if (!res.ok) return { baseline: null, problem: `tool shape: HTTP ${res.status} fetching ${url}` };
+    const baseline = parseToolShapeBaseline(await res.text());
+    return baseline ? { baseline } : { baseline: null, problem: `tool shape: malformed data at ${url}` };
+  } catch (e) {
+    return { baseline: null, problem: `tool shape: failed to fetch ${url}: ${(e as Error).message}` };
+  }
 }
 
 /** Fetch and parse the published divergence run. Never throws: a failure is a report problem, not a crash. */
@@ -140,13 +161,23 @@ export async function runAudit(opts: AuditOptions = {}): Promise<AuditReport> {
     divergenceProblem = fetched.problem;
   }
 
+  let toolShape: ToolShapeBaseline | null = null;
+  let toolShapeProblem: string | undefined;
+  if (opts.suggest) {
+    const fetched = await fetchToolShape(opts.toolShapeUrl ?? DEFAULT_TOOL_SHAPE_URL);
+    toolShape = fetched.baseline;
+    toolShapeProblem = fetched.problem;
+  }
+
   const report = buildReport(configs, measured, {
     contextWindow: opts.contextWindow,
     budget: opts.budget,
     divergence,
+    toolShape,
     env: opts.env ?? toolSearchEnv(process.env),
     settings: opts.settings ?? discoverSettings(opts),
   });
   if (divergenceProblem) report.problems.push(divergenceProblem);
+  if (toolShapeProblem) report.problems.push(toolShapeProblem);
   return report;
 }

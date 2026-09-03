@@ -10,6 +10,5 @@ Forward-looking only: what already shipped lives in the code and the git history
 
 ## Later
 
-- [ ] Schema-size suggestions (opt-in): turn per-tool breakdowns into concrete
-      trim-this-description advice.
-- [ ] Periodic "state of MCP context cost" data summary, when the deltas tell a story.
+- [ ] Periodic "state of MCP context cost" data summary, when the deltas tell a story
+      again (September 2026's is published).

@@ -193,9 +193,26 @@ still match today and silence for the rest. Most installs will show a mix:
   memory                   9   2,378    4.2%       —
 ```
 
+Add `--suggest` to place each of your tools in the measured set's tool-shape distribution
+([method](docs/METHODOLOGY.md#tool-shape)) and get advice only where the data can point at
+something. Only descriptions draw advice — schemas are functional surface; descriptions are
+prose every request carries — and only descriptions at or above the 90th percentile of the
+1,150 measured tools:
+
+```
+  suggest — descriptions at or above the 90th percentile of measured tools
+  (baseline 2026-09-03: 1,150 tools across 81 measured servers):
+    stub · wordy — 345 tokens: description 321 (p92), schema 14
+      rewriting the description toward the measured median (27) would recover ≈294 tokens on every request
+    1 of 2 tools sit inside the distribution — no advice where nothing is measurably unusual.
+```
+
+A config where nothing is out of distribution is told that in those words, and a baseline
+that cannot be fetched is a named problem, never a silently skipped check.
+
 Flags: `--json` (full report on stdout, progress on stderr), `--budget N`,
 `--baseline <report.json>`, `--max-increase N`, `--context N` (default 200,000),
-`--timeout ms`, `--concurrency N`, `--docker`, `--claude`.
+`--timeout ms`, `--concurrency N`, `--docker`, `--claude`, `--suggest`.
 
 ## Where the numbers come from
 

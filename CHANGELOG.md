@@ -7,6 +7,20 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **`audit --suggest`: trim advice with a measured distribution behind it.** The roadmap's
+  schema-size suggestions, built the only way this project gives advice — with a number
+  attached and a population to place it in. Every published measurement already splits each
+  tool into whole/description/schema token counts; a nearest-rank quantile table over all
+  1,150 complete tool measurements is now published as `results/tool-shape.json`
+  (`tool-shape/v1`, regenerated with the leaderboard, re-derivable from the same files —
+  the suite asserts the committed baseline equals its own re-derivation). `--suggest`
+  fetches it and advises only on descriptions — schemas are functional surface;
+  descriptions are prose every request carries — and only at or above the 90th percentile,
+  naming the exact percentile it fired at, the measured median it suggests trimming toward,
+  and an explicitly approximate recovery. A config where nothing is measurably unusual is
+  told that in those words; a baseline that cannot be fetched is a named problem, never a
+  silently skipped check. README is the page inside the package, so this changes what an
+  install carries.
 - **The data gets its first state-of report.** The roadmap's "periodic data summary, when
   the deltas tell a story" — the deltas now do. Six findings, every number read from the
   data of 2026-09-04 and linked to its measurement, published as a dated reading at
