@@ -346,6 +346,58 @@ Then in your README:
 [![context cost](https://img.shields.io/endpoint?url=<raw URL of badges/my-server.json>)](<link target>)
 ```
 
+### Defend the number, don't just display it
+
+A badge says what your server costs today; it does nothing about the release
+that adds 1,200 tokens to every user's context next month. Across the servers
+measured here, that release is the norm rather than the exception — the
+[movement report](results/regressions.md) has nine servers ratcheting upward
+against one that got cheaper, and none of those maintainers had a check that
+would have said so first. `measure` takes the same gate flags `audit` does, so
+your own CI can be that check:
+
+```bash
+# on your default branch, once — commit the result
+npx -y mcp-context-cost measure --name my-server --command "node dist/index.js"
+cp results/my-server/measurement.json .context-cost/baseline.json
+
+# on every pull request
+npx -y mcp-context-cost measure --name my-server --command "node dist/index.js" \
+  --baseline .context-cost/baseline.json --max-increase 500
+```
+
+```
+diff vs baseline .context-cost/baseline.json
+  my-server: 61 → 182  +121 tokens  (2 → 3 tools)
+    added:   bulk_export (43)
+    grew:    search 30 → 108 (+78)
+
+INCREASE FAIL: +121 tokens, over the 100 allowed — this change adds that to every request of every install.
+```
+
+Both sides are single measurements carrying per-tool counts, so an established
+change is attributed exactly: which tools arrived, which grew, and by how much.
+And `--max-increase` fails on more than the number — a server that stops
+starting on the branch makes the total go *down*, and reporting that as an
+improvement is the one mistake a gate like this must not make, so a change that
+could not be established fails too.
+
+As a GitHub Action, that whole workflow is five lines
+([full example](examples/server-author-ci.yml)):
+
+```yaml
+- uses: athakur3/mcp-context-cost@v1
+  with:
+    name: my-server
+    command: node dist/index.js
+    baseline: .context-cost/baseline.json
+    max-increase: 500
+```
+
+It exposes `tokens`, `tools`, `status`, `measurement` and `badge` as outputs —
+available whether the gate passed or not — so a later step can comment the
+number on the pull request or publish the badge.
+
 Point the link at the measurement behind the number — for servers in this sweep that is
 `https://athakur3.github.io/mcp-context-cost/servers/<name>.html`; otherwise the
 methodology page. A badge nobody can audit is decoration.

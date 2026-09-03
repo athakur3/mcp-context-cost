@@ -29,6 +29,7 @@ import {
   latestChange,
   parseToolVectorFile,
   summarize,
+  vectorEntryOf,
   type CostChange,
   type Mechanism,
   type RegressionSummary,
@@ -62,20 +63,13 @@ export function appendToolVectors(root = process.cwd()): { servers: number; appe
     } catch {
       continue; // a half-written measurement should not abort the whole fold
     }
-    if (m.status !== 'measured' && m.status !== 'dynamic') continue;
-    if (typeof m.totalTokens !== 'number' || !m.canonicalSha256 || !Array.isArray(m.tools)) continue;
-    const date = String(m.measuredAt ?? '').slice(0, 10);
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) continue;
+    const entry = vectorEntryOf(m);
+    if (!entry) continue;
 
     const path = join(resultsDir, server, 'tool-vectors.json');
     const existing = existsSync(path) ? parseToolVectorFile(readFileSync(path, 'utf8')) : null;
     const before: ToolVectorFile = existing ?? { method: REGRESSION_METHOD, server, entries: [] };
-    const after = appendVector(before, {
-      date,
-      canonicalSha256: m.canonicalSha256,
-      totalTokens: m.totalTokens,
-      tools: m.tools.map((t) => ({ name: t.name, tokens: t.tokens })),
-    });
+    const after = appendVector(before, entry);
     servers++;
     if (after !== before) {
       appended++;

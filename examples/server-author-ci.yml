@@ -1,0 +1,43 @@
+# Gate your own MCP server's context cost on every pull request.
+#
+# Every tool definition your server ships rides in the model's context on every
+# request your users send, whether or not the tool is called. This fails the
+# build when a change adds more of that than you meant to — the same move
+# bundlesize makes for a JavaScript bundle.
+#
+# The baseline is a measurement.json you commit on your default branch. Refresh
+# it deliberately, in a PR of its own, so the number it holds is one somebody
+# decided to accept.
+name: Context cost
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  context-cost:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - run: npm ci && npm run build
+
+      - uses: athakur3/mcp-context-cost@v1
+        id: cost
+        with:
+          name: my-server
+          command: node dist/index.js
+          # Committed on the default branch; see the note above.
+          baseline: .context-cost/baseline.json
+          max-increase: 500
+          # Optional absolute ceiling, independent of the diff.
+          # budget: 20000
+
+      # The measurement is available to later steps whether the gate passed or
+      # not — comment it on the PR, publish the badge, keep it as an artifact.
+      - name: Show what it costs
+        if: always()
+        run: echo "${{ steps.cost.outputs.tokens }} tokens across ${{ steps.cost.outputs.tools }} tools"

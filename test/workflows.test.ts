@@ -174,6 +174,46 @@ describe('every scheduled job that publishes data also publishes the front page'
  * served bytes the changelog said were unreleased for thirteen days — so the
  * convention is enforced at the one seam that can refuse: the publish job.
  */
+/**
+ * The composite action drives the CLI through a shell script, so nothing in the
+ * type system connects the two: a flag renamed in `measure` would leave the
+ * action assembling a command line that no published version accepts, and the
+ * action's own users would be the ones to find out. These assert the seam.
+ */
+describe('the published composite action', () => {
+  const action = parse(readFileSync(join(import.meta.dirname, '..', 'action.yml'), 'utf8')) as {
+    inputs: Record<string, { required?: boolean; default?: string }>;
+    outputs: Record<string, { value: string }>;
+    runs: { using: string; steps: { run: string; env: Record<string, string> }[] };
+  };
+  const script = action.runs.steps[0].run;
+
+  it('passes every flag the gate needs, spelled as the CLI spells it', () => {
+    for (const flag of ['--name', '--command', '--remote', '--baseline', '--max-increase', '--budget', '--timeout']) {
+      expect(script, flag).toContain(flag);
+    }
+  });
+
+  it('sends the CLI exit code on to the job, so a failed gate fails the build', () => {
+    // The whole point of the action: a gate that cannot fail the build is a
+    // green check on a check that never ran.
+    expect(script).toMatch(/exit "\$\{status\}"/);
+  });
+
+  it('never interpolates an input into the shell', () => {
+    // Inputs are untrusted text; `${{ }}` inside a run block would execute it.
+    expect(script).not.toMatch(/\$\{\{/);
+    for (const key of Object.keys(action.inputs)) {
+      const wired = Object.values(action.runs.steps[0].env).some((v) => v.includes(`inputs.${key}`) || v.includes(`inputs['${key}']`));
+      expect(wired, `input ${key} reaches the step through env`).toBe(true);
+    }
+  });
+
+  it('declares the outputs a caller needs after the gate has run', () => {
+    expect(Object.keys(action.outputs).sort()).toEqual(['badge', 'measurement', 'status', 'tokens', 'tools']);
+  });
+});
+
 describe('publish workflow', () => {
   const publish = readFileSync(join(wfDir, 'publish.yml'), 'utf8');
 

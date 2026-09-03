@@ -1,0 +1,129 @@
+# Measure an MCP server's context cost in CI, and fail the build when a change
+# adds too much of it.
+#
+# The consumer half of this project gates a *config* (`audit --baseline`); this
+# is the author half, for the repository that publishes the server. Five lines
+# in a workflow instead of a hand-written one, because the friction between
+# "I should measure this" and "I measure this on every PR" is where the habit
+# is won or lost.
+name: MCP context cost
+description: Measure what an MCP server costs in context tokens, and fail the build when a change adds too much
+author: mcp-context-cost
+
+branding:
+  icon: bar-chart-2
+  color: green
+
+inputs:
+  name:
+    description: 'Slug for this server — names the measurement and badge files'
+    required: true
+  command:
+    description: 'How to start the server over stdio, e.g. "node dist/index.js". Required unless `remote` is set.'
+    required: false
+  remote:
+    description: 'Measure a remote server at this URL through the mcp-remote bridge, instead of `command`'
+    required: false
+  baseline:
+    description: 'Path to an earlier measurement.json to diff against — usually the one committed on your default branch'
+    required: false
+  max-increase:
+    description: >-
+      Fail when the change adds more than this many tokens. Needs `baseline`.
+      Fails on more than the number: a run that cannot establish the change
+      (the server stopped starting, no baseline) fails too, because a gate whose
+      answer is unknown has not passed.
+    required: false
+  budget:
+    description: 'Fail when the server costs more than this many tokens in total'
+    required: false
+  timeout:
+    description: 'Milliseconds to wait for the server to start and answer'
+    required: false
+    default: '60000'
+  version:
+    description: >-
+      Which published mcp-context-cost to run. `latest` keeps the gate working
+      as the tool improves; pin an exact version for a build that cannot change
+      underneath you. The gate flags need 0.11.0 or newer — older versions
+      reject unknown flags with exit 2 rather than ignoring them, so a version
+      too old fails loudly instead of passing a gate that never ran.
+    required: false
+    default: 'latest'
+
+outputs:
+  tokens:
+    description: 'Total context-cost tokens measured'
+    value: ${{ steps.measure.outputs.tokens }}
+  tools:
+    description: 'Number of tools the server listed'
+    value: ${{ steps.measure.outputs.tools }}
+  status:
+    description: 'measured | dynamic | or the failure taxonomy entry'
+    value: ${{ steps.measure.outputs.status }}
+  measurement:
+    description: 'Path to the measurement.json this run wrote'
+    value: ${{ steps.measure.outputs.measurement }}
+  badge:
+    description: 'The shields.io endpoint badge JSON for this measurement'
+    value: ${{ steps.measure.outputs.badge }}
+
+runs:
+  using: composite
+  steps:
+    - name: Measure context cost
+      id: measure
+      shell: bash
+      env:
+        # Passed through the environment rather than interpolated into the
+        # command line: an input is untrusted text, and `${{ }}` inside a shell
+        # step would let a crafted value run as script.
+        MCC_NAME: ${{ inputs.name }}
+        MCC_COMMAND: ${{ inputs.command }}
+        MCC_REMOTE: ${{ inputs.remote }}
+        MCC_BASELINE: ${{ inputs.baseline }}
+        MCC_MAX_INCREASE: ${{ inputs['max-increase'] }}
+        MCC_BUDGET: ${{ inputs.budget }}
+        MCC_TIMEOUT: ${{ inputs.timeout }}
+        MCC_VERSION: ${{ inputs.version }}
+      run: |
+        set -euo pipefail
+
+        if [ -z "${MCC_COMMAND}" ] && [ -z "${MCC_REMOTE}" ]; then
+          echo '::error::give this action either command (a stdio launch) or remote (a URL)' >&2
+          exit 2
+        fi
+
+        args=(measure --name "${MCC_NAME}" --timeout "${MCC_TIMEOUT}")
+        if [ -n "${MCC_REMOTE}" ]; then args+=(--remote "${MCC_REMOTE}"); else args+=(--command "${MCC_COMMAND}"); fi
+        if [ -n "${MCC_BASELINE}" ]; then args+=(--baseline "${MCC_BASELINE}"); fi
+        if [ -n "${MCC_MAX_INCREASE}" ]; then args+=(--max-increase "${MCC_MAX_INCREASE}"); fi
+        if [ -n "${MCC_BUDGET}" ]; then args+=(--budget "${MCC_BUDGET}"); fi
+
+        # The CLI's own exit code is the gate's verdict and must reach the job:
+        # 0 ok, 1 measurement or gate failed, 2 usage error. Captured rather than
+        # `set -e`-aborted so the outputs below are still written for a reader.
+        status=0
+        npx -y "mcp-context-cost@${MCC_VERSION}" "${args[@]}" || status=$?
+
+        measurement="results/${MCC_NAME}/measurement.json"
+        if [ -f "${measurement}" ]; then
+          {
+            echo "measurement=${measurement}"
+            node -e '
+              const fs = require("fs");
+              const m = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
+              const out = [
+                ["tokens", m.totalTokens ?? ""],
+                ["tools", m.toolCount ?? ""],
+                ["status", m.status ?? ""],
+              ];
+              const badgePath = `badges/${process.argv[2]}.json`;
+              if (fs.existsSync(badgePath)) out.push(["badge", fs.readFileSync(badgePath, "utf8").trim()]);
+              // Single-line values only; a badge JSON is one line by construction.
+              process.stdout.write(out.map(([k, v]) => `${k}=${String(v).replace(/\r?\n/g, " ")}`).join("\n") + "\n");
+            ' "${measurement}" "${MCC_NAME}"
+          } >> "$GITHUB_OUTPUT"
+        fi
+
+        exit "${status}"

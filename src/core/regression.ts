@@ -31,6 +31,8 @@
  * Versioned independently of the o200k methodology, like every reading before
  * it: no `totalTokens` and no canonical hash moves.
  */
+import type { Measurement } from './types.js';
+
 /**
  * The history fields a diff needs. Declared structurally rather than imported
  * from `src/sweep/history.ts`: `core` is the offline spec and never reaches
@@ -114,6 +116,24 @@ export function parseToolVectorFile(text: string): ToolVectorFile | null {
     });
   }
   return { method: typeof f.method === 'string' ? f.method : REGRESSION_METHOD, server: f.server, entries };
+}
+
+/**
+ * The vector form of a measurement, or null when it did not produce one. The
+ * single place a `Measurement` becomes comparable per-tool, so the sweep's
+ * accrual and the author-side gate read the same fields the same way.
+ */
+export function vectorEntryOf(m: Measurement): ToolVectorEntry | null {
+  if (m.status !== 'measured' && m.status !== 'dynamic') return null;
+  if (typeof m.totalTokens !== 'number' || !m.canonicalSha256 || !Array.isArray(m.tools)) return null;
+  const date = String(m.measuredAt ?? '').slice(0, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
+  return {
+    date,
+    canonicalSha256: m.canonicalSha256,
+    totalTokens: m.totalTokens,
+    tools: m.tools.map((t) => ({ name: t.name, tokens: t.tokens })),
+  };
 }
 
 /** Append a capture, unless the newest stored entry is already that capture. */

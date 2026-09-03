@@ -307,7 +307,7 @@ if (cmd === 'audit') {
   process.exit(1);
 } else if (cmd === 'measure') {
   rejectUnknownFlags('measure', rest, {
-    value: ['name', 'command', 'remote', 'timeout', 'docker-image'],
+    value: ['name', 'command', 'remote', 'timeout', 'docker-image', 'baseline', 'max-increase', 'budget'],
     boolean: ['docker'],
   });
   const argOf = (name: string) => {
@@ -330,6 +330,51 @@ if (cmd === 'audit') {
     console.error('usage: mcp-context-cost measure --name <slug> --command "npx -y <server>" [--timeout ms] [--docker]');
     process.exit(2);
   }
+  const {
+    diffServer,
+    evaluateServerGate,
+    formatServerDiff,
+    parseBaselineMeasurement,
+  } = await import('./core/server-diff.js');
+
+  // Gate limits are read before anything is measured: an unusable number is a
+  // usage error, and finding that out after a two-minute container launch is
+  // the wrong time to find it out.
+  const numericFlag = (flag: string): number | undefined => {
+    const raw = argOf(flag);
+    if (raw === undefined) return undefined;
+    const v = Number(raw);
+    if (!Number.isFinite(v) || v < 0) {
+      console.error(`--${flag} must be a non-negative number, got '${raw}'`);
+      process.exit(2);
+    }
+    return v;
+  };
+  const maxIncrease = numericFlag('max-increase');
+  const budget = numericFlag('budget');
+  const baselinePath = argOf('baseline');
+  if (maxIncrease !== undefined && !baselinePath) {
+    console.error('--max-increase needs --baseline <measurement.json> to compare against');
+    process.exit(2);
+  }
+
+  let baseline: Measurement | null = null;
+  if (baselinePath) {
+    let raw: string;
+    try {
+      raw = readFileSync(baselinePath, 'utf8');
+    } catch (e) {
+      console.error(`cannot read baseline ${baselinePath}: ${(e as Error).message}`);
+      process.exit(2);
+    }
+    const parsed = parseBaselineMeasurement(raw);
+    if (!parsed.measurement) {
+      console.error(`${baselinePath}: ${parsed.problem}`);
+      process.exit(2);
+    }
+    baseline = parsed.measurement;
+  }
+
   const { measureServer } = await import('./sweep/run.js');
   const m = await measureServer(name, remoteUrl ? `npx -y mcp-remote ${remoteUrl}` : command!, {
     timeoutMs: Number(argOf('timeout') ?? 60_000),
@@ -343,6 +388,22 @@ if (cmd === 'audit') {
       ? `${name}: ${m.totalTokens} tokens across ${m.toolCount} tools (${m.status}) — results/${name}/measurement.json, badges/${name}.json`
       : `${name}: ${m.status} — ${m.notes ?? ''}`,
   );
+
+  if (baseline || budget !== undefined || maxIncrease !== undefined) {
+    const diff = diffServer(name, baseline, m);
+    if (baseline) {
+      console.log('');
+      console.log(`diff vs baseline ${baselinePath}`);
+      console.log(formatServerDiff(diff));
+    }
+    const gate = evaluateServerGate(diff, { budget, maxIncrease });
+    if (!gate.pass) {
+      console.log('');
+      console.error(gate.failure);
+      process.exit(1);
+    }
+  }
+
   process.exit(ok ? 0 : 1);
 } else if (cmd !== undefined && cmd !== '--help' && cmd !== '-h') {
   console.error(`unknown command: ${cmd}`);
@@ -358,5 +419,8 @@ if (cmd === 'audit') {
   console.log('  verify --remote <url> [--json]        same, fetched from a measurement URL');
   console.log('  measure --name x --command "npx -y <server>"   run a one-off measurement');
   console.log('  measure --remote <url> [--name x]      measure a remote server via mcp-remote');
+  console.log('        [--baseline <measurement.json>] [--max-increase N] [--budget N]');
+  console.log('                                              gate your own server in CI: fail the');
+  console.log('                                              build when a change adds too much');
   console.log('exit codes: 0 ok, 1 verification/measurement/budget failed, 2 usage error');
 }

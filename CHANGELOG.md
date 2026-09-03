@@ -7,6 +7,24 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **`measure --baseline --max-increase --budget`, and a composite action: server authors can
+  now defend the number they publish.** The front page has always offered two halves — audit
+  your own config, *or badge the server you publish* — and only the first half had a gate. A
+  maintainer could display a cost and had no way to notice the release that added 1,200 tokens
+  to every user's context, which the movement report shows is the norm and not the exception:
+  nine servers ratcheting upward, none of them with a check that would have said so first.
+  `measure` now takes the same flags `audit` does. Because both sides are single measurements
+  carrying per-tool counts, an established change is attributed exactly — `added: bulk_export
+  (43), grew: search 30 → 108 (+78)` — which the config-level diff cannot do. And it inherits
+  the refusal that matters: a server that stops starting on the branch makes the total go
+  *down*, so a change that could not be established fails the gate rather than passing as an
+  improvement, and a budget that could not be checked fails rather than being skipped.
+  `action.yml` wraps it as a composite action (`athakur3/mcp-context-cost@v1`), so adopting the
+  gate is five lines instead of a hand-written workflow; inputs reach the shell through the
+  environment rather than `${{ }}` interpolation, the CLI's exit code is the job's verdict, and
+  `tokens` / `tools` / `status` / `measurement` / `badge` are exposed as outputs whether the
+  gate passed or not. Guard tests assert the seam between the action's command line and the
+  CLI's flags, which nothing in the type system connects.
 - **`audit --changed`: which published version you actually have, decided by bytes.** The
   movement report says the ecosystem ratchets; this says whether *your* config is carrying it.
   The whole question is the join, and joining by name would be a confident false statement —
