@@ -20,6 +20,7 @@ import {
   type ToolShapeBaseline,
   type ToolSuggestion,
 } from '../core/tool-shape.js';
+import { identify, type CaptureIndex, type CaptureVerdict } from '../core/capture-index.js';
 import type { Measurement, MeasurementStatus, ToolMeasurement } from '../core/types.js';
 import type { ConfiguredServer, LoadedConfig } from './config.js';
 import {
@@ -91,6 +92,19 @@ export interface ConfigSuggestions {
   checkedTools: number;
 }
 
+/**
+ * `--changed`: one locally measured server placed against the published capture
+ * history, joined by canonical hash rather than by name. The local label is
+ * carried alongside the published server the bytes identify, because they need
+ * not agree — a config may call the official GitHub server anything at all, and
+ * a name that disagrees with the bytes is information rather than noise.
+ */
+export interface ServerCaptureVerdict {
+  /** The name this config gave the server. */
+  name: string;
+  verdict: CaptureVerdict;
+}
+
 export interface AuditConfigResult {
   client: string;
   source: string;
@@ -104,6 +118,8 @@ export interface AuditConfigResult {
   trimAdvice: TrimAdvice | null;
   /** Present only when `--suggest` ran with a usable baseline. */
   suggestions?: ConfigSuggestions;
+  /** Present only when `--changed` ran with a usable capture index. */
+  captureVerdicts?: ServerCaptureVerdict[];
   /**
    * Whether this client loads the total up front or defers it, and — when the
    * client decides that by a threshold — which side of it this stack is on.
@@ -223,6 +239,8 @@ export interface AuditReport {
   claudeDivergence?: { model: string; measuredAt: string };
   /** Which published tool-shape baseline `--suggest` read its percentiles from. */
   toolShape?: { generatedAt: string; toolCount: number; serverCount: number };
+  /** Which published capture index `--changed` joined against. */
+  captureIndex?: { generatedAt: string; captureCount: number };
   /** Present only when a baseline report was supplied (`--baseline`). */
   diff?: AuditDiff;
   /** Present only when `--max-increase` was supplied alongside a baseline. */
@@ -368,6 +386,8 @@ export function buildReport(
     divergence?: DivergenceRun | null;
     /** Published `tool-shape/v1` baseline (`--suggest`); omit to skip suggestions. */
     toolShape?: ToolShapeBaseline | null;
+    /** Published `capture-index/v1` (`--changed`); omit to skip the version join. */
+    captureIndex?: CaptureIndex | null;
     /**
      * The audited machine's SHELL tool-search variables. Passed in rather than
      * read here so this stays pure and a report is reproducible from its
@@ -492,6 +512,9 @@ export function buildReport(
       heaviestTools: tools.slice(0, 5),
       trimAdvice: buildTrimAdvice(tools, totalTokens),
       suggestions: opts.toolShape ? buildSuggestions(shapePool, opts.toolShape) : undefined,
+      captureVerdicts: opts.captureIndex
+        ? ok.map((s) => ({ name: s.name, verdict: identify(s.canonicalSha256, opts.captureIndex!) }))
+        : undefined,
     };
     built.push(result);
     shared.set(result, sharedHere);
@@ -519,6 +542,13 @@ export function buildReport(
       generatedAt: opts.toolShape.generatedAt,
       toolCount: opts.toolShape.toolCount,
       serverCount: opts.toolShape.serverCount,
+    };
+  }
+
+  if (opts.captureIndex) {
+    report.captureIndex = {
+      generatedAt: opts.captureIndex.generatedAt,
+      captureCount: Object.keys(opts.captureIndex.captures).length,
     };
   }
 
@@ -881,6 +911,51 @@ export function formatReport(report: AuditReport): string {
           `(${names}) would recover ${n(cfg.trimAdvice.recoverableTokens)} tokens ` +
           `(${pct(cfg.trimAdvice.recoverableShare)} of this config) — if your client supports per-tool filtering.`,
       );
+    }
+
+    if (cfg.captureVerdicts) {
+      const behind = cfg.captureVerdicts.filter(
+        (v): v is { name: string; verdict: Extract<CaptureVerdict, { kind: 'behind' }> } => v.verdict.kind === 'behind',
+      );
+      const current = cfg.captureVerdicts.filter((v) => v.verdict.kind === 'current');
+      const unknown = cfg.captureVerdicts.length - behind.length - current.length;
+      const idx = report.captureIndex
+        ? `index ${report.captureIndex.generatedAt}, ${n(report.captureIndex.captureCount)} published captures`
+        : 'the published capture index';
+      lines.push('');
+      if (behind.length === 0) {
+        lines.push(
+          `  changed: no server here is running a published capture that has since moved ` +
+            `(${idx}; matched by canonical hash, never by name).`,
+        );
+      } else {
+        const total = behind.reduce((a, v) => a + v.verdict.deltaTokens, 0);
+        lines.push(
+          `  changed — published versions of your servers that have moved since ` +
+            `(${idx}; matched by canonical hash, never by name):`,
+        );
+        for (const { name, verdict: v } of behind) {
+          // The local label and the published server are printed together: the
+          // bytes decide which server this is, and a name that disagrees is a
+          // fact worth seeing rather than one to smooth over.
+          const alias = name === v.server ? name : `${name} (published as ${v.server})`;
+          lines.push(
+            `    ${alias} — you have the capture published ${v.yourDate} at ${n(v.yourTokens)} tokens; ` +
+              `the current one is ${n(v.currentTokens)} (${v.deltaTokens >= 0 ? '+' : '−'}${n(Math.abs(v.deltaTokens))}, ${v.currentDate})`,
+          );
+        }
+        lines.push(
+          `    updating all ${behind.length} would ${total >= 0 ? 'add' : 'remove'} ${n(Math.abs(total))} tokens ` +
+            `${total >= 0 ? 'to' : 'from'} every request in this client.`,
+        );
+      }
+      if (unknown > 0) {
+        lines.push(
+          `    ${unknown} server${unknown === 1 ? '' : 's'} could not be identified: the installed bytes match no ` +
+            `published capture — a version never measured here, or one published before the index began. ` +
+            `Nothing is claimed about ${unknown === 1 ? 'it' : 'them'}.`,
+        );
+      }
     }
 
     if (cfg.suggestions) {

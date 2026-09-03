@@ -210,9 +210,26 @@ prose every request carries — and only descriptions at or above the 90th perce
 A config where nothing is out of distribution is told that in those words, and a baseline
 that cannot be fetched is a named problem, never a silently skipped check.
 
+Add `--changed` to ask the other question — *did the servers I already have get heavier?*
+Each installed server is identified against the published capture history by its canonical
+hash, never by its name, because the name in your config is a label you chose and the bytes
+are not:
+
+```
+  changed — published versions of your servers that have moved since
+  (index 2026-09-04, 2 published captures; matched by canonical hash, never by name):
+    notes (published as obsidian) — you have the capture published 2026-08-19 at 1,132 tokens;
+      the current one is 2,062 (+930, 2026-08-26)
+    updating all 1 would add 930 tokens to every request in this client.
+```
+
+A server whose bytes match no published capture — a version never measured here, a fork, a
+pin — is reported as unidentified with nothing claimed about it.
+Method: [capture index](docs/METHODOLOGY.md#capture-index).
+
 Flags: `--json` (full report on stdout, progress on stderr), `--budget N`,
 `--baseline <report.json>`, `--max-increase N`, `--context N` (default 200,000),
-`--timeout ms`, `--concurrency N`, `--docker`, `--claude`, `--suggest`.
+`--timeout ms`, `--concurrency N`, `--docker`, `--claude`, `--suggest`, `--changed`.
 
 ## Where the numbers come from
 

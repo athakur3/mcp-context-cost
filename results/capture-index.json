@@ -1,0 +1,575 @@
+{
+  "method": "capture-index/v1",
+  "generatedAt": "2026-09-03",
+  "captures": {
+    "01a1bd0f450ccf86b0bf36b2b63749c70dc4add7b0a4d9621ce69e29c9db7b27": {
+      "server": "codebase-memory-mcp",
+      "date": "2026-09-03",
+      "totalTokens": 5258,
+      "toolCount": 15
+    },
+    "03d94c1d9bbcaf8fcaf375d1d6f14b975f108724d76ebe3d70ea7ce72eed13ac": {
+      "server": "aws-documentation",
+      "date": "2026-08-19",
+      "totalTokens": 5074,
+      "toolCount": 5
+    },
+    "0ba9e9185e3d5c167bbaf0dcfeb499f27020c307f1387a3b85374f849f0a38a7": {
+      "server": "basic-memory",
+      "date": "2026-09-02",
+      "totalTokens": 9188,
+      "toolCount": 23
+    },
+    "11ef5fbfa5440a29377fedcd23abb764cf640ba03762911c8bfcd5b11a53aebd": {
+      "server": "sentry",
+      "date": "2026-09-03",
+      "totalTokens": 6086,
+      "toolCount": 9
+    },
+    "151a59215c20049ea5934809670996c1d73977d468a65fa6b5624c2e24ca3ef4": {
+      "server": "chrome-devtools",
+      "date": "2026-09-03",
+      "totalTokens": 5717,
+      "toolCount": 29
+    },
+    "17bae5bf5a76df127b4ddba609724a2a52b86400700daa315562e18f1082304f": {
+      "server": "octocode",
+      "date": "2026-09-03",
+      "totalTokens": 13552,
+      "toolCount": 14
+    },
+    "1dc53461369d7cb64ea8151f33283db371951cf44289471f6156e35cd1ae28bb": {
+      "server": "browserbase",
+      "date": "2026-08-19",
+      "totalTokens": 364,
+      "toolCount": 6
+    },
+    "1de63e2beef41e0f618a1b41e1ead6a82fbce11d6e0c9652466884a2c74e10f0": {
+      "server": "githits",
+      "date": "2026-09-03",
+      "totalTokens": 12600,
+      "toolCount": 16
+    },
+    "1f68f3e76c71c7c8c4c6cf537ed857231daacdf9cd6ebb95e30ac482cc218b89": {
+      "server": "clickhouse",
+      "date": "2026-09-02",
+      "totalTokens": 694,
+      "toolCount": 3
+    },
+    "20126671be70fdb77743a595f195002612b03c889b348447ed9ff4d7057f8c1c": {
+      "server": "kubernetes",
+      "date": "2026-09-03",
+      "totalTokens": 5268,
+      "toolCount": 23
+    },
+    "22ce75f27b9a8bf50f1cb77824b5769d6041d1f3c25032916b5201b1be31f5d7": {
+      "server": "ssh-manager",
+      "date": "2026-09-03",
+      "totalTokens": 8446,
+      "toolCount": 37
+    },
+    "245b04832111268c3fcc72543af89fb2f8c109d8306c1b5b8c49dc45977e41e1": {
+      "server": "filesystem",
+      "date": "2026-08-18",
+      "totalTokens": 2823,
+      "toolCount": 14
+    },
+    "277906d8ed722cfce33b345e34effdc0a2c37c8effc4fc85c9f5d13888d6ea7f": {
+      "server": "searxng",
+      "date": "2026-09-02",
+      "totalTokens": 1537,
+      "toolCount": 4
+    },
+    "2bd5a36e7293bab6b8e62c28b7d210c5261f4b80331b176c1df6dc100a7e6fc4": {
+      "server": "qdrant",
+      "date": "2026-09-03",
+      "totalTokens": 188,
+      "toolCount": 2
+    },
+    "2e66ec7b2ea28f25f5b986a65cc950c06febad089b2c3033be49e15548f9c432": {
+      "server": "neo4j-cypher",
+      "date": "2026-08-19",
+      "totalTokens": 523,
+      "toolCount": 3
+    },
+    "2ee361441efca1de3e296a572bbe2d20fa88d5565c9d4f54a8a1523ee7f54251": {
+      "server": "arxiv",
+      "date": "2026-09-03",
+      "totalTokens": 3960,
+      "toolCount": 19
+    },
+    "3389dd469cfc2f46f06e4be24ba13ff95595ee30fd8dd62df81809a95daf3791": {
+      "server": "hubspot",
+      "date": "2026-08-19",
+      "totalTokens": 9158,
+      "toolCount": 21
+    },
+    "3735162916165ab23696fc91fbf626bd99a36ddcd1e15746e91e16c7e336b379": {
+      "server": "deepwiki",
+      "date": "2026-09-03",
+      "totalTokens": 359,
+      "toolCount": 3
+    },
+    "3b7694bcedabac9706eba0c497c1fb4591121db0fd25e4e87e4802a001e34cd6": {
+      "server": "firecrawl",
+      "date": "2026-09-03",
+      "totalTokens": 9561,
+      "toolCount": 27
+    },
+    "40d73048f0112cd8282ee61d586632738f6746678ece24f8f61f4dcc4b8b2135": {
+      "server": "github",
+      "date": "2026-09-03",
+      "totalTokens": 54622,
+      "toolCount": 44
+    },
+    "45e69bb7d3ab57903ca84555f5bb3851cbc806ae35ce9398eb88eea7f587ec91": {
+      "server": "apify",
+      "date": "2026-08-19",
+      "totalTokens": 10426,
+      "toolCount": 10
+    },
+    "48f53cd914e3137feabfb3087abdb3bb54df46907d605a4cf97fac272bba2afb": {
+      "server": "mysql",
+      "date": "2026-08-19",
+      "totalTokens": 393,
+      "toolCount": 3
+    },
+    "4af7a9d131b4506471d83cc2d014ffc39b784a16ff181cce05ae2d9f26dbe9ff": {
+      "server": "playwright-community",
+      "date": "2026-08-19",
+      "totalTokens": 2920,
+      "toolCount": 33
+    },
+    "4d8f9de25d7aa74f0fb5e0c828a904d74b3934e62cb1032bc6cf0fada1f0d952": {
+      "server": "pandoc",
+      "date": "2026-08-19",
+      "totalTokens": 1425,
+      "toolCount": 1
+    },
+    "55e4c41338722ccc0672def6b5462f1dee664bf168cfd01172c4e96d344a1c2e": {
+      "server": "sequential-thinking",
+      "date": "2026-09-03",
+      "totalTokens": 1003,
+      "toolCount": 1
+    },
+    "5939f969618ff709e86ff0599b80cc8f418db8904b4304a6eeb82a25f30ccd81": {
+      "server": "slack-legacy",
+      "date": "2026-08-19",
+      "totalTokens": 681,
+      "toolCount": 8
+    },
+    "5d0a1b56f6c08786d7d764b6f4376fba201015e5a5995b6b39c14350bd4aeeb3": {
+      "server": "fetch",
+      "date": "2026-09-02",
+      "totalTokens": 238,
+      "toolCount": 1
+    },
+    "5d5d92a7c727ef75bd9a70f076039dbdbfd331c56f022915c2e89b76f7fc88f0": {
+      "server": "playwright",
+      "date": "2026-08-18",
+      "totalTokens": 4024,
+      "toolCount": 24
+    },
+    "5d8045af01c1eaf81a5931cfc5aa814fe0928f66cf1e176962bd3a97aff0a62f": {
+      "server": "blender",
+      "date": "2026-09-03",
+      "totalTokens": 6928,
+      "toolCount": 28
+    },
+    "6064f85a43ae17b2da72d1b87fd9435879e8b42bc320e1347e382f5c8a61b499": {
+      "server": "obsidian",
+      "date": "2026-09-03",
+      "totalTokens": 2062,
+      "toolCount": 15
+    },
+    "61f82494284ccb413e9cb213ed93d7b79f43769229713b2748056a7f1018db14": {
+      "server": "duckduckgo",
+      "date": "2026-09-02",
+      "totalTokens": 724,
+      "toolCount": 2
+    },
+    "6817cd262c23cdfbac2ac9e04b037d307d7d21907f9028707ae6dbac3f0a284d": {
+      "server": "shopify-dev",
+      "date": "2026-09-03",
+      "totalTokens": 6841,
+      "toolCount": 6
+    },
+    "699d8b33d6d2d90ce7deb777994bb408e1e07bb08fa997042b7cce19e6c1ecec": {
+      "server": "context7",
+      "date": "2026-08-18",
+      "totalTokens": 1052,
+      "toolCount": 2
+    },
+    "6ae170e7625e0fa953f2981d005a89ee2b7c80d94830c81a9e5e03d3e5de59e6": {
+      "server": "airtable",
+      "date": "2026-08-19",
+      "totalTokens": 4207,
+      "toolCount": 16
+    },
+    "7205f4d29a1a97d6fa9d13d2e9b3c2ccc5e8dda8539cf836d5895380c56c4b3b": {
+      "server": "terraform",
+      "date": "2026-09-03",
+      "totalTokens": 2061,
+      "toolCount": 9
+    },
+    "727577fbcd5fe4e811453a32d9c9852ea877c90b8acf56e0cdf5eda15e97d803": {
+      "server": "brave-search-legacy",
+      "date": "2026-08-18",
+      "totalTokens": 319,
+      "toolCount": 2
+    },
+    "76a005f840c738f5788e7b5801fdc12194713fce1ed435ad500f891a2b2dd13c": {
+      "server": "elasticsearch",
+      "date": "2026-08-19",
+      "totalTokens": 374,
+      "toolCount": 4
+    },
+    "79c3109b4fa4e4735ba1071cacbd98948c6aba20b70c9a4295a78e84850a81e0": {
+      "server": "airbnb",
+      "date": "2026-08-19",
+      "totalTokens": 486,
+      "toolCount": 2
+    },
+    "7c6ff08840620894a66a103e02a8eb315013dd0a7d7c6cfb59b0fbe51f8a5d87": {
+      "server": "time",
+      "date": "2026-08-18",
+      "totalTokens": 293,
+      "toolCount": 2
+    },
+    "7d876a84707e0689df306366dc7c3225ae49762ca045d7604c7c9a2b20dfbc3c": {
+      "server": "serena",
+      "date": "2026-08-19",
+      "totalTokens": 8204,
+      "toolCount": 29
+    },
+    "85d23a7fa63923641625701d0c5fff39249eb8b379c3c1a7a444fef6437d6bc4": {
+      "server": "obsidian-rest",
+      "date": "2026-09-03",
+      "totalTokens": 10173,
+      "toolCount": 12
+    },
+    "8623f9de377963b97d6e8294e16ac107c445e29b3ad97fbe78f18c1971dde6f5": {
+      "server": "desktop-commander",
+      "date": "2026-08-19",
+      "totalTokens": 11836,
+      "toolCount": 26
+    },
+    "8c3c954e5a791807875357bc783cc67385bd7bb53ee31b659e83015b36ed99a9": {
+      "server": "exa",
+      "date": "2026-09-02",
+      "totalTokens": 486,
+      "toolCount": 2
+    },
+    "92a01e079c4436e651586a0fa4117e21204dc481de169763e621253280225570": {
+      "server": "redis",
+      "date": "2026-09-02",
+      "totalTokens": 9246,
+      "toolCount": 53
+    },
+    "9710fb8f79f50348c138ee513e344f7fc9ac0e912a728d8aeda847cd04ed64f1": {
+      "server": "git",
+      "date": "2026-08-18",
+      "totalTokens": 1455,
+      "toolCount": 12
+    },
+    "991fa59036ab1d4a4c1270ba14025668cd37bad41d9a804544a5e6aa23564365": {
+      "server": "emailmd",
+      "date": "2026-09-03",
+      "totalTokens": 585,
+      "toolCount": 3
+    },
+    "9bb1e5d26dd377de9dbfac88ffe77663a1169cddf66c6b1f52f57d3a740b0e54": {
+      "server": "postgres-mcp",
+      "date": "2026-09-02",
+      "totalTokens": 8632,
+      "toolCount": 9
+    },
+    "9e3f4a65f0dc136a6ffa5ed00f95785ec561e9a78413888da160e44ceb139346": {
+      "server": "microsoft-learn",
+      "date": "2026-08-19",
+      "totalTokens": 972,
+      "toolCount": 3
+    },
+    "9eb845dee6bb274d3b93ba0ea67276b2829cb98cbe7ed01079eba7fb8263fa26": {
+      "server": "pulumi",
+      "date": "2026-09-03",
+      "totalTokens": 2768,
+      "toolCount": 12
+    },
+    "a65649ac29928ffde9e8bf8796482b5aaeb17e79d02ea2f3b8b96f11ac32b604": {
+      "server": "cloudflare-docs",
+      "date": "2026-08-19",
+      "totalTokens": 422,
+      "toolCount": 2
+    },
+    "a88e204db09aa56954e3e041d6a9814aee9ac888fdfc7d5cb47aec1877441986": {
+      "server": "google-maps",
+      "date": "2026-09-03",
+      "totalTokens": 549,
+      "toolCount": 7
+    },
+    "acdc9b99e581c7493a98e8c0fac919bbe384ac3205227c15891b94d6ddcf4825": {
+      "server": "clinicaltrialsgov",
+      "date": "2026-09-03",
+      "totalTokens": 5134,
+      "toolCount": 7
+    },
+    "af7eaa380b99a67fc49ab075c762cd2686f108acc4ba21d001ce922554f7510a": {
+      "server": "comfyui-mcp",
+      "date": "2026-09-03",
+      "totalTokens": 50640,
+      "toolCount": 41
+    },
+    "b269a72bb6340ebfd5cf8170399b2606a9d7ea88b2277cfd6ca3511cec51a980": {
+      "server": "huggingface",
+      "date": "2026-08-19",
+      "totalTokens": 4691,
+      "toolCount": 4
+    },
+    "b2bcd45339fe42caa0f55e5ca1196091b2dcda4b868fedd209177b54f2ef51ef": {
+      "server": "tavily",
+      "date": "2026-09-03",
+      "totalTokens": 1653,
+      "toolCount": 5
+    },
+    "bbdb8dd9b6d3cd9b855597127ad5268e3fa4e3355e616b3dc102f4ed12cca454": {
+      "server": "postgres",
+      "date": "2026-09-03",
+      "totalTokens": 32,
+      "toolCount": 1
+    },
+    "bd26660364200a7866906bbfecc185e41ea6a42e43ed5d6380b1c3b77a699eae": {
+      "server": "bright-data",
+      "date": "2026-09-03",
+      "totalTokens": 978,
+      "toolCount": 5
+    },
+    "be8578ef35da6e632f7cee04f664676c4895a1320868eceec1150a55f6c21440": {
+      "server": "netlify",
+      "date": "2026-09-03",
+      "totalTokens": 2831,
+      "toolCount": 9
+    },
+    "bf3f548ecca0308f30e544a03d3a36778dbbfba3a5ed12dab6d981dcbcc7a73c": {
+      "server": "perplexity",
+      "date": "2026-08-19",
+      "totalTokens": 133,
+      "toolCount": 1
+    },
+    "c1409e496bb0262b3dd4d78de8da42d1b79d5704fcf693e1455c5b3dff0f2604": {
+      "server": "figma-context",
+      "date": "2026-09-03",
+      "totalTokens": 946,
+      "toolCount": 2
+    },
+    "c771e7295dc27668861b2a251566196a3e30b5b3ac282f7736aab96891bff300": {
+      "server": "mongodb",
+      "date": "2026-09-03",
+      "totalTokens": 7926,
+      "toolCount": 27
+    },
+    "cc8ffaadb37615f11747b0a1eafd8541cfb2f31064adcd4973860f8f03bab377": {
+      "server": "pinecone",
+      "date": "2026-08-19",
+      "totalTokens": 5903,
+      "toolCount": 9
+    },
+    "cf374a8866847f36b743f5b59176d3908466f40c2d5d9b3cb0462ea47af40999": {
+      "server": "excel",
+      "date": "2026-08-19",
+      "totalTokens": 4266,
+      "toolCount": 25
+    },
+    "d024ca5b97d52d5442da395ed92d1d107b6728db57cf1295bb87c5d3624c0e53": {
+      "server": "appium-mcp",
+      "date": "2026-09-03",
+      "totalTokens": 10267,
+      "toolCount": 31
+    },
+    "d028274f76dc9aa2e622ae02a17ce313aa65d7b5935254ca53889d4094238abb": {
+      "server": "memory",
+      "date": "2026-09-03",
+      "totalTokens": 2378,
+      "toolCount": 9
+    },
+    "d432983abc546eac2725c9db1a07f5f8dad0e6cbfb12f925c1d4fb61743d1c6b": {
+      "server": "sqlite",
+      "date": "2026-08-18",
+      "totalTokens": 268,
+      "toolCount": 6
+    },
+    "d51fb022687ee403f9710c9fae31ac91dbc796f5c52a3fcdbe0a91c387aa9365": {
+      "server": "gitlab",
+      "date": "2026-09-03",
+      "totalTokens": 336,
+      "toolCount": 9
+    },
+    "d708fc0ae4f3fb818d01cc3d4da0b74c2e5591a7982735d6200b3d56ab74d66b": {
+      "server": "markitdown",
+      "date": "2026-08-19",
+      "totalTokens": 64,
+      "toolCount": 1
+    },
+    "d9e46f0316917c1d140ffeebceefd4d31c16188780ac278baf347ff536015dd0": {
+      "server": "puppeteer",
+      "date": "2026-09-02",
+      "totalTokens": 540,
+      "toolCount": 7
+    },
+    "e0194003d2ddaf668a23e0570cdbcf8c142c3314d3dd811a50ae99e5afd79ae3": {
+      "server": "github-legacy",
+      "date": "2026-09-03",
+      "totalTokens": 3548,
+      "toolCount": 26
+    },
+    "e131b1d46e30c0d05f07995aa167fa323ec1003719d861dbe27c82c94ad803cf": {
+      "server": "bitbucket-mcp",
+      "date": "2026-09-03",
+      "totalTokens": 6156,
+      "toolCount": 47
+    },
+    "e5a8f43437056e6e89bb8f5167f5b8d471ba42de915ede953ce5968a84471582": {
+      "server": "brave-search",
+      "date": "2026-08-19",
+      "totalTokens": 25456,
+      "toolCount": 8
+    },
+    "e61b2e1761ff2f931d030faf1dc192ca70247e52ff31d8633431b69ba6e00b7e": {
+      "server": "everything",
+      "date": "2026-08-19",
+      "totalTokens": 1708,
+      "toolCount": 13
+    },
+    "eb0b416a1586989ce3f646259f9f96d0ae6d7b62342aa30393b10ecb7c03c707": {
+      "server": "chroma",
+      "date": "2026-08-18",
+      "totalTokens": 2837,
+      "toolCount": 13
+    },
+    "ebbc7cd5f3f0c9a1c7eff808c38c4630b4cdc88126e34538b46b860efb89bd35": {
+      "server": "supabase",
+      "date": "2026-08-18",
+      "totalTokens": 5013,
+      "toolCount": 29
+    },
+    "eec89a7ec71ac3e9e65fb8477bf594b4ce9af01b572bcc5d7e9fbbcc85f4e813": {
+      "server": "agentphone",
+      "date": "2026-09-03",
+      "totalTokens": 6134,
+      "toolCount": 28
+    },
+    "efc31b255c09a3f364367c1450285b1e107d999faf01d4c9c37711aa12410948": {
+      "server": "n8n-mcp",
+      "date": "2026-08-19",
+      "totalTokens": 2636,
+      "toolCount": 7
+    },
+    "f467743f38a30d15da18709c500aa4e22186a755f0e3d2c97966ccd343978a5d": {
+      "server": "xcodebuildmcp",
+      "date": "2026-08-19",
+      "totalTokens": 26594,
+      "toolCount": 24
+    },
+    "f4d995111363bc9a5c220871fb9e4c2d81372ef647572f5f4f19cb5d4bd08bbe": {
+      "server": "circleci",
+      "date": "2026-08-18",
+      "totalTokens": 11912,
+      "toolCount": 13
+    },
+    "f9544e7c84986529d5bc4a1c9357bbbb9c2f458133904075319f8fec7d716da9": {
+      "server": "notion",
+      "date": "2026-09-02",
+      "totalTokens": 17500,
+      "toolCount": 24
+    },
+    "fa9df2701a0250cd546422d5d629d4af411b5c359e92bd710fc7aa4ada7ccc4e": {
+      "server": "mcp-atlassian",
+      "date": "2026-09-03",
+      "totalTokens": 17311,
+      "toolCount": 63
+    }
+  },
+  "current": {
+    "agentphone": "eec89a7ec71ac3e9e65fb8477bf594b4ce9af01b572bcc5d7e9fbbcc85f4e813",
+    "airbnb": "79c3109b4fa4e4735ba1071cacbd98948c6aba20b70c9a4295a78e84850a81e0",
+    "airtable": "6ae170e7625e0fa953f2981d005a89ee2b7c80d94830c81a9e5e03d3e5de59e6",
+    "apify": "45e69bb7d3ab57903ca84555f5bb3851cbc806ae35ce9398eb88eea7f587ec91",
+    "appium-mcp": "d024ca5b97d52d5442da395ed92d1d107b6728db57cf1295bb87c5d3624c0e53",
+    "arxiv": "2ee361441efca1de3e296a572bbe2d20fa88d5565c9d4f54a8a1523ee7f54251",
+    "aws-documentation": "03d94c1d9bbcaf8fcaf375d1d6f14b975f108724d76ebe3d70ea7ce72eed13ac",
+    "basic-memory": "0ba9e9185e3d5c167bbaf0dcfeb499f27020c307f1387a3b85374f849f0a38a7",
+    "bitbucket-mcp": "e131b1d46e30c0d05f07995aa167fa323ec1003719d861dbe27c82c94ad803cf",
+    "blender": "5d8045af01c1eaf81a5931cfc5aa814fe0928f66cf1e176962bd3a97aff0a62f",
+    "brave-search": "e5a8f43437056e6e89bb8f5167f5b8d471ba42de915ede953ce5968a84471582",
+    "brave-search-legacy": "727577fbcd5fe4e811453a32d9c9852ea877c90b8acf56e0cdf5eda15e97d803",
+    "bright-data": "bd26660364200a7866906bbfecc185e41ea6a42e43ed5d6380b1c3b77a699eae",
+    "browserbase": "1dc53461369d7cb64ea8151f33283db371951cf44289471f6156e35cd1ae28bb",
+    "chroma": "eb0b416a1586989ce3f646259f9f96d0ae6d7b62342aa30393b10ecb7c03c707",
+    "chrome-devtools": "151a59215c20049ea5934809670996c1d73977d468a65fa6b5624c2e24ca3ef4",
+    "circleci": "f4d995111363bc9a5c220871fb9e4c2d81372ef647572f5f4f19cb5d4bd08bbe",
+    "clickhouse": "1f68f3e76c71c7c8c4c6cf537ed857231daacdf9cd6ebb95e30ac482cc218b89",
+    "clinicaltrialsgov": "acdc9b99e581c7493a98e8c0fac919bbe384ac3205227c15891b94d6ddcf4825",
+    "cloudflare-docs": "a65649ac29928ffde9e8bf8796482b5aaeb17e79d02ea2f3b8b96f11ac32b604",
+    "codebase-memory-mcp": "01a1bd0f450ccf86b0bf36b2b63749c70dc4add7b0a4d9621ce69e29c9db7b27",
+    "comfyui-mcp": "af7eaa380b99a67fc49ab075c762cd2686f108acc4ba21d001ce922554f7510a",
+    "context7": "699d8b33d6d2d90ce7deb777994bb408e1e07bb08fa997042b7cce19e6c1ecec",
+    "deepwiki": "3735162916165ab23696fc91fbf626bd99a36ddcd1e15746e91e16c7e336b379",
+    "desktop-commander": "8623f9de377963b97d6e8294e16ac107c445e29b3ad97fbe78f18c1971dde6f5",
+    "duckduckgo": "61f82494284ccb413e9cb213ed93d7b79f43769229713b2748056a7f1018db14",
+    "elasticsearch": "76a005f840c738f5788e7b5801fdc12194713fce1ed435ad500f891a2b2dd13c",
+    "emailmd": "991fa59036ab1d4a4c1270ba14025668cd37bad41d9a804544a5e6aa23564365",
+    "everything": "e61b2e1761ff2f931d030faf1dc192ca70247e52ff31d8633431b69ba6e00b7e",
+    "exa": "8c3c954e5a791807875357bc783cc67385bd7bb53ee31b659e83015b36ed99a9",
+    "excel": "cf374a8866847f36b743f5b59176d3908466f40c2d5d9b3cb0462ea47af40999",
+    "fetch": "5d0a1b56f6c08786d7d764b6f4376fba201015e5a5995b6b39c14350bd4aeeb3",
+    "figma-context": "c1409e496bb0262b3dd4d78de8da42d1b79d5704fcf693e1455c5b3dff0f2604",
+    "filesystem": "245b04832111268c3fcc72543af89fb2f8c109d8306c1b5b8c49dc45977e41e1",
+    "firecrawl": "3b7694bcedabac9706eba0c497c1fb4591121db0fd25e4e87e4802a001e34cd6",
+    "git": "9710fb8f79f50348c138ee513e344f7fc9ac0e912a728d8aeda847cd04ed64f1",
+    "githits": "1de63e2beef41e0f618a1b41e1ead6a82fbce11d6e0c9652466884a2c74e10f0",
+    "github": "40d73048f0112cd8282ee61d586632738f6746678ece24f8f61f4dcc4b8b2135",
+    "github-legacy": "e0194003d2ddaf668a23e0570cdbcf8c142c3314d3dd811a50ae99e5afd79ae3",
+    "gitlab": "d51fb022687ee403f9710c9fae31ac91dbc796f5c52a3fcdbe0a91c387aa9365",
+    "google-maps": "a88e204db09aa56954e3e041d6a9814aee9ac888fdfc7d5cb47aec1877441986",
+    "hubspot": "3389dd469cfc2f46f06e4be24ba13ff95595ee30fd8dd62df81809a95daf3791",
+    "huggingface": "b269a72bb6340ebfd5cf8170399b2606a9d7ea88b2277cfd6ca3511cec51a980",
+    "kubernetes": "20126671be70fdb77743a595f195002612b03c889b348447ed9ff4d7057f8c1c",
+    "markitdown": "d708fc0ae4f3fb818d01cc3d4da0b74c2e5591a7982735d6200b3d56ab74d66b",
+    "mcp-atlassian": "fa9df2701a0250cd546422d5d629d4af411b5c359e92bd710fc7aa4ada7ccc4e",
+    "memory": "d028274f76dc9aa2e622ae02a17ce313aa65d7b5935254ca53889d4094238abb",
+    "microsoft-learn": "9e3f4a65f0dc136a6ffa5ed00f95785ec561e9a78413888da160e44ceb139346",
+    "mongodb": "c771e7295dc27668861b2a251566196a3e30b5b3ac282f7736aab96891bff300",
+    "mysql": "48f53cd914e3137feabfb3087abdb3bb54df46907d605a4cf97fac272bba2afb",
+    "n8n-mcp": "efc31b255c09a3f364367c1450285b1e107d999faf01d4c9c37711aa12410948",
+    "neo4j-cypher": "2e66ec7b2ea28f25f5b986a65cc950c06febad089b2c3033be49e15548f9c432",
+    "netlify": "be8578ef35da6e632f7cee04f664676c4895a1320868eceec1150a55f6c21440",
+    "notion": "f9544e7c84986529d5bc4a1c9357bbbb9c2f458133904075319f8fec7d716da9",
+    "obsidian": "6064f85a43ae17b2da72d1b87fd9435879e8b42bc320e1347e382f5c8a61b499",
+    "obsidian-rest": "85d23a7fa63923641625701d0c5fff39249eb8b379c3c1a7a444fef6437d6bc4",
+    "octocode": "17bae5bf5a76df127b4ddba609724a2a52b86400700daa315562e18f1082304f",
+    "pandoc": "4d8f9de25d7aa74f0fb5e0c828a904d74b3934e62cb1032bc6cf0fada1f0d952",
+    "perplexity": "bf3f548ecca0308f30e544a03d3a36778dbbfba3a5ed12dab6d981dcbcc7a73c",
+    "pinecone": "cc8ffaadb37615f11747b0a1eafd8541cfb2f31064adcd4973860f8f03bab377",
+    "playwright": "5d5d92a7c727ef75bd9a70f076039dbdbfd331c56f022915c2e89b76f7fc88f0",
+    "playwright-community": "4af7a9d131b4506471d83cc2d014ffc39b784a16ff181cce05ae2d9f26dbe9ff",
+    "postgres": "bbdb8dd9b6d3cd9b855597127ad5268e3fa4e3355e616b3dc102f4ed12cca454",
+    "postgres-mcp": "9bb1e5d26dd377de9dbfac88ffe77663a1169cddf66c6b1f52f57d3a740b0e54",
+    "pulumi": "9eb845dee6bb274d3b93ba0ea67276b2829cb98cbe7ed01079eba7fb8263fa26",
+    "puppeteer": "d9e46f0316917c1d140ffeebceefd4d31c16188780ac278baf347ff536015dd0",
+    "qdrant": "2bd5a36e7293bab6b8e62c28b7d210c5261f4b80331b176c1df6dc100a7e6fc4",
+    "redis": "92a01e079c4436e651586a0fa4117e21204dc481de169763e621253280225570",
+    "searxng": "277906d8ed722cfce33b345e34effdc0a2c37c8effc4fc85c9f5d13888d6ea7f",
+    "sentry": "11ef5fbfa5440a29377fedcd23abb764cf640ba03762911c8bfcd5b11a53aebd",
+    "sequential-thinking": "55e4c41338722ccc0672def6b5462f1dee664bf168cfd01172c4e96d344a1c2e",
+    "serena": "7d876a84707e0689df306366dc7c3225ae49762ca045d7604c7c9a2b20dfbc3c",
+    "shopify-dev": "6817cd262c23cdfbac2ac9e04b037d307d7d21907f9028707ae6dbac3f0a284d",
+    "slack-legacy": "5939f969618ff709e86ff0599b80cc8f418db8904b4304a6eeb82a25f30ccd81",
+    "sqlite": "d432983abc546eac2725c9db1a07f5f8dad0e6cbfb12f925c1d4fb61743d1c6b",
+    "ssh-manager": "22ce75f27b9a8bf50f1cb77824b5769d6041d1f3c25032916b5201b1be31f5d7",
+    "supabase": "ebbc7cd5f3f0c9a1c7eff808c38c4630b4cdc88126e34538b46b860efb89bd35",
+    "tavily": "b2bcd45339fe42caa0f55e5ca1196091b2dcda4b868fedd209177b54f2ef51ef",
+    "terraform": "7205f4d29a1a97d6fa9d13d2e9b3c2ccc5e8dda8539cf836d5895380c56c4b3b",
+    "time": "7c6ff08840620894a66a103e02a8eb315013dd0a7d7c6cfb59b0fbe51f8a5d87",
+    "xcodebuildmcp": "f467743f38a30d15da18709c500aa4e22186a755f0e3d2c97966ccd343978a5d"
+  }
+}

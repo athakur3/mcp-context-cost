@@ -34,6 +34,11 @@ import {
   type RegressionSummary,
   type ToolVectorFile,
 } from '../core/regression.js';
+import {
+  CAPTURE_INDEX_METHOD,
+  type CaptureIndex,
+  type IndexedCapture,
+} from '../core/capture-index.js';
 import { parseHistory, plottableSeries, type HistoryRow } from './history.js';
 import { mdCell, type ServerEntry } from './report.js';
 import type { Measurement } from '../core/types.js';
@@ -83,6 +88,39 @@ export function appendToolVectors(root = process.cwd()): { servers: number; appe
 export function loadToolVectors(server: string, root = process.cwd()): ToolVectorFile | null {
   const p = join(root, 'results', server, 'tool-vectors.json');
   return existsSync(p) ? parseToolVectorFile(readFileSync(p, 'utf8')) : null;
+}
+
+/**
+ * Fold every server's tool vectors into results/capture-index.json — the
+ * hash → (server, date) lookup `audit --changed` joins against. Derived from
+ * the vectors, so it can only see as far back as they do, and written in the
+ * same pass that appends them.
+ */
+export function writeCaptureIndex(entries: ServerEntry[], root = process.cwd()): CaptureIndex {
+  const captures: Record<string, IndexedCapture> = {};
+  const current: Record<string, string> = {};
+  for (const entry of entries) {
+    const vectors = loadToolVectors(entry.name, root);
+    if (!vectors || vectors.entries.length === 0) continue;
+    for (const e of vectors.entries) {
+      captures[e.canonicalSha256] = {
+        server: entry.name,
+        date: e.date,
+        totalTokens: e.totalTokens,
+        toolCount: e.tools.length,
+      };
+    }
+    current[entry.name] = vectors.entries[vectors.entries.length - 1]!.canonicalSha256;
+  }
+  const index: CaptureIndex = {
+    method: CAPTURE_INDEX_METHOD,
+    generatedAt: new Date().toISOString().slice(0, 10),
+    // Key order sorted so a re-run over unchanged vectors produces no diff noise.
+    captures: Object.fromEntries(Object.entries(captures).sort(([a], [b]) => a.localeCompare(b))),
+    current: Object.fromEntries(Object.entries(current).sort(([a], [b]) => a.localeCompare(b))),
+  };
+  writeFileSync(join(root, 'results', 'capture-index.json'), JSON.stringify(index, null, 2) + '\n');
+  return index;
 }
 
 const MECHANISM_WORDS: Record<Mechanism, string> = {

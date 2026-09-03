@@ -107,8 +107,19 @@ const [, , cmd, ...rest] = process.argv;
 
 if (cmd === 'audit') {
   rejectUnknownFlags('audit', rest, {
-    value: ['config', 'budget', 'baseline', 'max-increase', 'context', 'timeout', 'concurrency', 'divergence-url', 'tool-shape-url'],
-    boolean: ['json', 'docker', 'claude', 'suggest'],
+    value: [
+      'config',
+      'budget',
+      'baseline',
+      'max-increase',
+      'context',
+      'timeout',
+      'concurrency',
+      'divergence-url',
+      'tool-shape-url',
+      'capture-index-url',
+    ],
+    boolean: ['json', 'docker', 'claude', 'suggest', 'changed'],
   });
   const argOf = (name: string) => {
     const i = rest.indexOf(`--${name}`);
@@ -184,6 +195,8 @@ if (cmd === 'audit') {
       divergenceUrl: argOf('divergence-url'),
       suggest: rest.includes('--suggest'),
       toolShapeUrl: argOf('tool-shape-url'),
+      changed: rest.includes('--changed'),
+      captureIndexUrl: argOf('capture-index-url'),
       // Progress goes to stderr so `--json` stdout stays a single parseable object.
       onProgress: json ? undefined : (name, done, total) => process.stderr.write(`  [${done}/${total}] ${name}\n`),
     });

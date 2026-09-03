@@ -416,6 +416,33 @@ least 5% *and* at least 25 tokens. Relative alone would headline a fifth of a ch
 absolute alone would headline drift on an expensive one. Everything comparable is listed
 either way, which is the same rule the leaderboard applies to failures.
 
+## Capture index <a id="capture-index"></a>
+
+`audit --changed` answers "did the servers in my config get heavier?" — which turns entirely on
+joining an installed server to the published history. It joins by **canonical hash**, never by
+name: a config's keys are arbitrary local labels, so a server a user calls `github` may be a
+fork, a pin, or something else, and reporting the official server's movement against it would
+be a confident false statement. `results/capture-index.json` (method `capture-index/v1`) maps
+every published capture's `canonicalSha256` to the server and date it belongs to, plus each
+server's current capture, and is derived from the per-server tool vectors in the same regen
+pass that appends them.
+
+A local measurement therefore lands in exactly one of three states, and there is no fourth to
+be fuzzy about:
+
+| the installed bytes | reported as |
+|---|---|
+| a published capture that is no longer current | **behind** — with the exact tokens moving to current would add to every request, and both dates |
+| the server's current published capture | **current** — identified, nothing to update |
+| anything else | **unidentified** — a version never measured here, or one published before the index began. Nothing is claimed about it |
+
+When the local label and the published server disagree, the report prints both
+(`my-alias (published as github)`): the bytes decide which server it is, and a name that
+disagrees with them is a fact worth seeing rather than one to smooth over. Because the index
+is derived from the tool vectors, it can only see as far back as they go — a version published
+before the vectors existed reads as unidentified, which is an absence of a record about that
+version, not a statement that it never moved.
+
 ## Tool shape <a id="tool-shape"></a>
 
 `audit --suggest` (method `tool-shape/v1`) places each of your tools in the measured set's
@@ -459,7 +486,8 @@ Details: [spec/upstream-notes.md](https://github.com/athakur3/mcp-context-cost/b
 The Claude divergence column (`tools-delta/v1`, added 2026-08-16), the session-start column
 (`deferred-load/v1`, added 2026-08-20), the CLI cross-check column (`cli-cross-check/v1`,
 added 2026-09-03), the tool-shape baseline (`tool-shape/v1`, added 2026-09-04) and the
-cost-movement report (`cost-regression/v1`, added 2026-09-04) are
+cost-movement report (`cost-regression/v1`, added 2026-09-04) and the capture index
+(`capture-index/v1`, added 2026-09-04) are
 versioned separately and deliberately: each adds a published number
 without touching the definition above. Every badge, every `totalTokens`, and every canonical
 hash is byte-identical to before they existed, so bumping this page's version would have

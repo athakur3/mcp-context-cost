@@ -7,6 +7,20 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **`audit --changed`: which published version you actually have, decided by bytes.** The
+  movement report says the ecosystem ratchets; this says whether *your* config is carrying it.
+  The whole question is the join, and joining by name would be a confident false statement —
+  a config's keys are labels a user chose, so a server called `github` may be a fork or a pin.
+  So `results/capture-index.json` (`capture-index/v1`, derived from the tool vectors in the
+  same regen pass) maps every published capture's `canonicalSha256` to the server and date it
+  belongs to, and an installed server lands in exactly one of three states: **behind** a
+  published capture that has since moved, carrying the exact tokens updating would add to
+  every request and both dates; **current**; or **unidentified**, which is a version never
+  measured here or one published before the index began, and about which nothing is claimed.
+  Where the local label and the identified server disagree the report prints both
+  (`notes (published as obsidian)`), because a name that disagrees with the bytes is a fact
+  worth seeing. An index that cannot be fetched is a named problem, never a silently skipped
+  check. README is the page inside the package, so this changes what an install carries.
 - **The history stops being decoration: what the measured set's cost has *done* is published.**
   Every row's number was already re-measured on a rotation, and most entries launch unpinned,
   so the series has been recording real upstream releases landing in real context windows —

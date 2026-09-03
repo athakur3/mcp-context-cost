@@ -7,7 +7,7 @@ import { writeServerPages } from './server-pages.js';
 import { writeDashboard } from './dashboard.js';
 import { applyPublishedStats } from './published-stats.js';
 import { writeToolShapeBaseline } from './tool-shape.js';
-import { appendToolVectors, writeRegressions } from './regressions.js';
+import { appendToolVectors, writeCaptureIndex, writeRegressions } from './regressions.js';
 
 const doc = parse(readFileSync('servers.yaml', 'utf8')) as { servers: ServerEntry[] };
 // History and tool vectors first: the server pages read history.csv for their
@@ -15,6 +15,7 @@ const doc = parse(readFileSync('servers.yaml', 'utf8')) as { servers: ServerEntr
 // series — generating it before the fold would describe the previous sweep.
 const h = appendHistory();
 const tv = appendToolVectors();
+const ci = writeCaptureIndex(doc.servers);
 const regressions = writeRegressions(doc.servers);
 writeLeaderboard(doc.servers, process.cwd(), regressions.summary);
 const p = writeServerPages(doc.servers);
@@ -41,7 +42,8 @@ console.log(`tool shape: ${ts.toolCount} tools across ${ts.serverCount} servers 
 console.log(
   `regressions: ${regressions.summary.changes.length} movement(s), ${regressions.summary.grew} heavier / ` +
     `${regressions.summary.shrank} cheaper, net ${regressions.summary.netTokens >= 0 ? '+' : ''}` +
-    `${regressions.summary.netTokens} tokens; tool vectors ${tv.appended} appended across ${tv.servers} servers`,
+    `${regressions.summary.netTokens} tokens; tool vectors ${tv.appended} appended across ${tv.servers} servers; ` +
+    `capture index ${Object.keys(ci.captures).length} captures`,
 );
 console.log(
   `published stats: ${
