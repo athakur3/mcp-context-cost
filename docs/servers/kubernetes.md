@@ -1,10 +1,10 @@
 # kubernetes — context cost
 
-**5,268 tokens** across 23 tools — *moderate* (5–15K). Measured 2026-08-26 under [methodology v1.0](../METHODOLOGY.html).
+**5,268 tokens** across 23 tools — *moderate* (5–15K). Measured 2026-09-03 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
-| server (self-reported) | kubernetes v4.1.4 |
+| server (self-reported) | kubernetes v4.1.6 |
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y mcp-server-kubernetes` |
@@ -63,6 +63,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-08-16 | 5,268 | 23 | not recorded | — |
 | 2026-08-19 | 5,268 | 23 | docker | no change |
 | 2026-08-26 | 5,268 | 23 | docker | no change |
+| 2026-09-03 | 5,268 | 23 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

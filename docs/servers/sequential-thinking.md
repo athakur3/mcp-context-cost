@@ -1,16 +1,16 @@
 # sequential-thinking — context cost
 
-**992 tokens** across 1 tools — *lean* (< 1K). Measured 2026-08-18 under [methodology v1.0](../METHODOLOGY.html).
+**1,003 tokens** across 1 tools — *light* (1–5K). Measured 2026-09-03 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
-| server (self-reported) | sequential-thinking-server v0.2.0 |
+| server (self-reported) | sequential-thinking-server v2026.8.31 |
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @modelcontextprotocol/server-sequential-thinking` |
 | isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | none |
-| canonical SHA-256 | `5dcda6f07c1a8f8850c8800434f0fac0e7fe6c869de09716e5bc15c7da8e5de6` |
+| canonical SHA-256 | `55e4c41338722ccc0672def6b5462f1dee664bf168cfd01172c4e96d344a1c2e` |
 | category | official-reference |
 | source | https://github.com/modelcontextprotocol/servers |
 
@@ -18,7 +18,7 @@
 
 | tool | tokens | share | description | schema |
 |---|---:|---:|---:|---:|
-| sequentialthinking | 990 | 99.8% | 565 | 259 |
+| sequentialthinking | 1,001 | 99.8% | 565 | 270 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
 
@@ -28,6 +28,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 |---|---:|---:|---|---:|
 | 2026-08-16 | 992 | 1 | not recorded | — |
 | 2026-08-18 | 992 | 1 | docker | no change |
+| 2026-09-03 | 1,003 | 1 | docker | +11 |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

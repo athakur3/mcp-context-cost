@@ -440,7 +440,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-26T04:00:24.924Z",
+  "measuredAt": "2026-09-03T13:48:28.382Z",
   "serverName": "mcp-obsidian",
   "serverVersion": "1.29.1",
   "launchCommand": "uvx --with \"mcp<2\" mcp-obsidian",

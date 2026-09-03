@@ -1,6 +1,6 @@
 # Server pages
 
-One page per measured server: the per-tool breakdown behind the badge, the exact launch command, and the command that re-derives the number. 68 of 82 candidates measured.
+One page per measured server: the per-tool breakdown behind the badge, the exact launch command, and the command that re-derives the number. 69 of 82 candidates measured.
 
 | # | server | tokens | tools | band |
 |---:|---|---:|---:|---|
@@ -47,31 +47,32 @@ One page per measured server: the per-tool breakdown behind the badge, the exact
 | 41 | [git](git.html) | 1,455 | 12 | light |
 | 42 | [pandoc](pandoc.html) | 1,425 | 1 | light |
 | 43 | [context7](context7.html) | 1,052 | 2 | light |
-| 44 | [bright-data](bright-data.html) | 978 | 5 | lean |
-| 45 | [microsoft-learn](microsoft-learn.html) | 972 | 3 | lean |
-| 46 | [figma-context](figma-context.html) | 946 | 2 | lean |
-| 47 | [duckduckgo](duckduckgo.html) | 724 | 2 | lean |
-| 48 | [clickhouse](clickhouse.html) | 694 | 3 | lean |
-| 49 | [slack-legacy](slack-legacy.html) | 681 | 8 | lean |
-| 50 | [google-maps](google-maps.html) | 549 | 7 | lean |
-| 51 | [puppeteer](puppeteer.html) | 540 | 7 | lean |
-| 52 | [neo4j-cypher](neo4j-cypher.html) | 523 | 3 | lean |
-| 53 | [exa](exa.html) | 486 | 2 | lean |
-| 54 | [airbnb](airbnb.html) | 486 | 2 | lean |
-| 55 | [cloudflare-docs](cloudflare-docs.html) | 422 | 2 | lean |
-| 56 | [mysql](mysql.html) | 393 | 3 | lean |
-| 57 | [elasticsearch](elasticsearch.html) | 374 | 4 | lean |
-| 58 | [browserbase](browserbase.html) | 364 | 6 | lean |
-| 59 | [deepwiki](deepwiki.html) | 359 | 3 | lean |
-| 60 | [gitlab](gitlab.html) | 336 | 9 | lean |
-| 61 | [brave-search-legacy](brave-search-legacy.html) | 319 | 2 | lean |
-| 62 | [time](time.html) | 293 | 2 | lean |
-| 63 | [sqlite](sqlite.html) | 268 | 6 | lean |
-| 64 | [fetch](fetch.html) | 238 | 1 | lean |
-| 65 | [qdrant](qdrant.html) | 188 | 2 | lean |
-| 66 | [perplexity](perplexity.html) | 133 | 1 | lean |
-| 67 | [markitdown](markitdown.html) | 64 | 1 | lean |
-| 68 | [postgres](postgres.html) | 32 | 1 | lean |
+| 44 | [sequential-thinking](sequential-thinking.html) | 1,003 | 1 | light |
+| 45 | [bright-data](bright-data.html) | 978 | 5 | lean |
+| 46 | [microsoft-learn](microsoft-learn.html) | 972 | 3 | lean |
+| 47 | [figma-context](figma-context.html) | 946 | 2 | lean |
+| 48 | [duckduckgo](duckduckgo.html) | 724 | 2 | lean |
+| 49 | [clickhouse](clickhouse.html) | 694 | 3 | lean |
+| 50 | [slack-legacy](slack-legacy.html) | 681 | 8 | lean |
+| 51 | [google-maps](google-maps.html) | 549 | 7 | lean |
+| 52 | [puppeteer](puppeteer.html) | 540 | 7 | lean |
+| 53 | [neo4j-cypher](neo4j-cypher.html) | 523 | 3 | lean |
+| 54 | [exa](exa.html) | 486 | 2 | lean |
+| 55 | [airbnb](airbnb.html) | 486 | 2 | lean |
+| 56 | [cloudflare-docs](cloudflare-docs.html) | 422 | 2 | lean |
+| 57 | [mysql](mysql.html) | 393 | 3 | lean |
+| 58 | [elasticsearch](elasticsearch.html) | 374 | 4 | lean |
+| 59 | [browserbase](browserbase.html) | 364 | 6 | lean |
+| 60 | [deepwiki](deepwiki.html) | 359 | 3 | lean |
+| 61 | [gitlab](gitlab.html) | 336 | 9 | lean |
+| 62 | [brave-search-legacy](brave-search-legacy.html) | 319 | 2 | lean |
+| 63 | [time](time.html) | 293 | 2 | lean |
+| 64 | [sqlite](sqlite.html) | 268 | 6 | lean |
+| 65 | [fetch](fetch.html) | 238 | 1 | lean |
+| 66 | [qdrant](qdrant.html) | 188 | 2 | lean |
+| 67 | [perplexity](perplexity.html) | 133 | 1 | lean |
+| 68 | [markitdown](markitdown.html) | 64 | 1 | lean |
+| 69 | [postgres](postgres.html) | 32 | 1 | lean |
 
 ## Not measured
 
@@ -79,7 +80,6 @@ No page: there is no number to show. The reason is recorded per candidate.
 
 | server | status |
 |---|---|
-| sequential-thinking | startup-failure |
 | gdrive | auth-required |
 | redis-legacy | startup-failure |
 | azure | auth-required |

@@ -163,3 +163,16 @@ date,server,tokens,toolCount,status,isolation
 2026-09-02,puppeteer,540,7,measured,docker
 2026-09-02,redis,9246,53,measured,docker
 2026-09-02,searxng,1537,4,measured,docker
+2026-09-03,figma-context,946,2,measured,docker
+2026-09-03,firecrawl,9561,27,measured,docker
+2026-09-03,gitlab,336,9,measured,docker
+2026-09-03,kubernetes,5268,23,measured,docker
+2026-09-03,mcp-atlassian,17311,63,dynamic,docker
+2026-09-03,mongodb,7926,27,measured,docker
+2026-09-03,netlify,2831,9,measured,docker
+2026-09-03,obsidian,2062,15,measured,docker
+2026-09-03,postgres,32,1,measured,docker
+2026-09-03,pulumi,2768,12,measured,docker
+2026-09-03,qdrant,188,2,measured,docker
+2026-09-03,sequential-thinking,1003,1,measured,docker
+2026-09-03,terraform,2061,9,measured,docker

@@ -1,6 +1,6 @@
 # mcp-atlassian — context cost
 
-**17,311 tokens** across 63 tools — *heavy* (15–30K). Measured 2026-08-26 under [methodology v1.0](../METHODOLOGY.html).
+**17,311 tokens** across 63 tools — *heavy* (15–30K). Measured 2026-09-03 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -10,7 +10,7 @@
 | launch command | `uvx mcp-atlassian` |
 | isolation | docker · ghcr.io/astral-sh/uv:python3.12-bookworm-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | JIRA_URL, JIRA_USERNAME, JIRA_API_TOKEN |
-| canonical SHA-256 | `eda97b575e5db545148aca37e956d9df338a6527fb7eaaed0b738293581ec6b2` |
+| canonical SHA-256 | `fa9df2701a0250cd546422d5d629d4af411b5c359e92bd710fc7aa4ada7ccc4e` |
 | category | community |
 | source | https://github.com/sooperset/mcp-atlassian |
 
@@ -55,18 +55,6 @@
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
 
-## What this costs on Claude
-
-Measured 2026-08-31 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
-
-| | tokens | |
-|---|---:|---|
-| o200k, full capture | 17,311 | the badge number — every byte `tools/list` returned |
-| o200k, Anthropic fields only | 12,823 | 25.9% of the capture is MCP-only metadata |
-| **Claude, same fields** | **22,234** | 1.28× the badge number |
-
-An Anthropic tool definition carries `name`, `description`, and `input_schema` and nothing else, so `title`, `annotations`, `outputSchema`, `execution`, and `icons` are dropped before the request — that is the second row. The third row is the same tools counted by Anthropic, which is larger than the second because Anthropic's tokenizer is denser on this content than o200k_base *and* the API adds its own framing (at most 328 tokens of it fixed, measured against a single minimal tool). The two effects run in opposite directions, which is why the Claude number is not a fixed multiple of the badge.
-
 ## Over time
 
 | date | tokens | tools | measured in | change |
@@ -74,6 +62,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-08-16 | 17,311 | 63 | not recorded | — |
 | 2026-08-19 | 17,311 | 63 | docker | no change |
 | 2026-08-26 | 17,311 | 63 | docker | no change |
+| 2026-09-03 | 17,311 | 63 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

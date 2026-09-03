@@ -1290,9 +1290,9 @@
       }
     }
   ],
-  "measuredAt": "2026-08-26T04:00:42.177Z",
+  "measuredAt": "2026-09-03T13:48:41.108Z",
   "serverName": "kubernetes",
-  "serverVersion": "4.1.4",
+  "serverVersion": "4.1.6",
   "launchCommand": "npx -y mcp-server-kubernetes",
   "envVarNames": [],
   "serverInstructions": null,

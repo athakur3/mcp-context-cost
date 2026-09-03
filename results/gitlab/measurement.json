@@ -127,7 +127,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-26T03:59:29.033Z",
+  "measuredAt": "2026-09-03T13:47:26.482Z",
   "serverName": "gitlab-mcp-server",
   "serverVersion": "0.5.1",
   "launchCommand": "npx -y @modelcontextprotocol/server-gitlab",

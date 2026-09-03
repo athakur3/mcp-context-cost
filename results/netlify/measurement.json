@@ -971,7 +971,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-26T04:00:13.859Z",
+  "measuredAt": "2026-09-03T13:48:06.191Z",
   "serverName": "netlify-mcp",
   "serverVersion": "1.15.1",
   "launchCommand": "npx -y @netlify/mcp",

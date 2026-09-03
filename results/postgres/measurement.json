@@ -28,7 +28,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-26T03:59:27.394Z",
+  "measuredAt": "2026-09-03T13:47:21.529Z",
   "serverName": "example-servers/postgres",
   "serverVersion": "0.1.0",
   "launchCommand": "npx -y @modelcontextprotocol/server-postgres postgresql://localhost/postgres",

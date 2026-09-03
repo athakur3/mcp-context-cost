@@ -418,7 +418,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-26T04:00:12.331Z",
+  "measuredAt": "2026-09-03T13:48:16.368Z",
   "serverName": "@pulumi/mcp-server",
   "serverVersion": "0.2.0",
   "launchCommand": "npx -y @pulumi/mcp-server@latest stdio",

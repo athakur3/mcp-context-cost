@@ -385,7 +385,7 @@
       "inputSchemaTokens": 91
     }
   ],
-  "canonicalSha256": "eda97b575e5db545148aca37e956d9df338a6527fb7eaaed0b738293581ec6b2",
+  "canonicalSha256": "fa9df2701a0250cd546422d5d629d4af411b5c359e92bd710fc7aa4ada7ccc4e",
   "rawToolsCapture": [
     {
       "name": "jira_get_user_profile",
@@ -650,7 +650,7 @@
             "type": "string"
           },
           "fields": {
-            "default": "labels,summary,priority,status,reporter,versions,assignee,issuetype,description,created,updated",
+            "default": "labels,assignee,issuetype,priority,description,updated,summary,versions,created,status,reporter",
             "description": "(Optional) Comma-separated list of fields to return (e.g., 'summary,status,customfield_10010'). You may also provide a single field as a string (e.g., 'duedate'). Use '*all' for all fields (including custom fields), or omit for essential fields only.",
             "type": "string"
           },
@@ -730,7 +730,7 @@
             "type": "string"
           },
           "fields": {
-            "default": "labels,summary,priority,status,reporter,versions,assignee,issuetype,description,created,updated",
+            "default": "labels,assignee,issuetype,priority,description,updated,summary,versions,created,status,reporter",
             "description": "(Optional) Comma-separated fields to return in the results. Use '*all' for all fields, or specify individual fields like 'summary,status,assignee,priority'",
             "type": "string"
           },
@@ -1215,7 +1215,7 @@
             "type": "string"
           },
           "fields": {
-            "default": "labels,summary,priority,status,reporter,versions,assignee,issuetype,description,created,updated",
+            "default": "labels,assignee,issuetype,priority,description,updated,summary,versions,created,status,reporter",
             "description": "Comma-separated fields to return in the results. Use '*all' for all fields, or specify individual fields like 'summary,status,assignee,priority'",
             "type": "string"
           },
@@ -1343,7 +1343,7 @@
             "type": "string"
           },
           "fields": {
-            "default": "labels,summary,priority,status,reporter,versions,assignee,issuetype,description,created,updated",
+            "default": "labels,assignee,issuetype,priority,description,updated,summary,versions,created,status,reporter",
             "description": "Comma-separated fields to return in the results. Use '*all' for all fields, or specify individual fields like 'summary,status,assignee,priority'",
             "type": "string"
           },
@@ -3833,7 +3833,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-26T04:00:25.092Z",
+  "measuredAt": "2026-09-03T13:48:24.748Z",
   "serverName": "Atlassian MCP",
   "serverVersion": "3.4.7",
   "launchCommand": "uvx mcp-atlassian",

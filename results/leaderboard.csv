@@ -2,7 +2,7 @@ name,tokens,toolCount,status,category,metric,metricSource,claudeTokens,claudeMod
 filesystem,2823,14,measured,official-reference,443780,"https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-filesystem (npm weekly, 2026-08-09..15)",,,51,false,51,0
 memory,2378,9,measured,official-reference,78102,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-memory (npm weekly),,,34,false,34,0
 everything,1708,13,measured,official-reference,128884,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-everything (npm weekly),,,374,false,62,312
-sequential-thinking,,,startup-failure,official-reference,103839,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-sequential-thinking (npm weekly),,,,,,
+sequential-thinking,1003,1,measured,official-reference,103839,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-sequential-thinking (npm weekly),,,5,false,5,0
 fetch,238,1,measured,official-reference,502017,https://pypistats.org/packages/mcp-server-fetch (PyPI weekly),,,3,false,3,0
 git,1455,12,measured,official-reference,42975,https://pypistats.org/packages/mcp-server-git (PyPI weekly),,,43,false,43,0
 time,293,2,measured,official-reference,229101,https://pypistats.org/packages/mcp-server-time (PyPI weekly),,,8,false,8,0
@@ -59,7 +59,7 @@ huggingface,4691,4,measured,vendor-official,274,https://api.github.com/repos/hug
 linear,,,remote-auth-wall,vendor-official,2100000,https://www.pulsemcp.com/servers/linear (estimated visitors),,,,,,
 zapier,,,remote-auth-wall,vendor-official,6100000,https://www.pulsemcp.com/servers/zapier (estimated visitors),,,,,,
 vercel,,,remote-auth-wall,vendor-official,542000,https://www.pulsemcp.com/servers/vercel (estimated visitors),,,,,,
-mcp-atlassian,17311,63,dynamic,community,353572,https://pypistats.org/packages/mcp-atlassian (PyPI weekly),22234,claude-opus-5,347,false,347,0
+mcp-atlassian,17311,63,dynamic,community,353572,https://pypistats.org/packages/mcp-atlassian (PyPI weekly),,,347,false,347,0
 postgres-mcp,8632,9,measured,community,234706,https://pypistats.org/packages/postgres-mcp (PyPI weekly),2381,claude-opus-5,39,false,39,0
 xcodebuildmcp,26594,24,measured,community,149200,https://api.npmjs.org/downloads/point/last-week/xcodebuildmcp (npm weekly),5335,claude-opus-5,559,false,95,464
 n8n-mcp,2636,7,measured,community,114676,https://api.npmjs.org/downloads/point/last-week/n8n-mcp (npm weekly),,,24,false,24,0

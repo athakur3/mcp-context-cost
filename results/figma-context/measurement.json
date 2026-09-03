@@ -150,7 +150,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-26T04:00:20.988Z",
+  "measuredAt": "2026-09-03T13:48:22.556Z",
   "serverName": "Figma MCP Server",
   "serverVersion": "0.13.2",
   "launchCommand": "npx -y figma-developer-mcp --stdio",
