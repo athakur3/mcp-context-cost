@@ -168,6 +168,7 @@ date,server,tokens,toolCount,status,isolation
 2026-09-03,gitlab,336,9,measured,docker
 2026-09-03,kubernetes,5268,23,measured,docker
 2026-09-03,mcp-atlassian,17311,63,dynamic,docker
+2026-09-03,memory,2378,9,measured,docker
 2026-09-03,mongodb,7926,27,measured,docker
 2026-09-03,netlify,2831,9,measured,docker
 2026-09-03,obsidian,2062,15,measured,docker

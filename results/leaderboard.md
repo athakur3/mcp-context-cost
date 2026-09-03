@@ -2,7 +2,7 @@
 
 Tokens = o200k_base count of the canonical `tools/list` bytes ([methodology v1.0](../docs/METHODOLOGY.md)). Measured 69/82 candidates; every candidate is listed — failures are findings, not omissions. Server names link to their per-tool breakdown.
 
-The **claude** column is the same tools measured through Anthropic's `count_tokens` on `claude-opus-5` (2026-08-31, method `tools-delta/v1`): the tokens the server's tools add to a request, measured for the top 18. It is not a rescaling of the o200k column — two effects pull in opposite directions, and the [per-server pages](../docs/servers/) break both out. See [Claude divergence](../docs/METHODOLOGY.md#claude-divergence).
+The **claude** column is the same tools measured through Anthropic's `count_tokens` on `claude-opus-5` (2026-09-03, method `tools-delta/v1`): the tokens the server's tools add to a request, measured for the top 19. It is not a rescaling of the o200k column — two effects pull in opposite directions, and the [per-server pages](../docs/servers/) break both out. See [Claude divergence](../docs/METHODOLOGY.md#claude-divergence).
 
 The **session start** column is what a client puts in context when it *defers* tool definitions until they are used: the server's tool names plus the `instructions` string it returns from `initialize` (method `deferred-load/v1`). The tokens column is what a client that loads every definition up front pays; this one is what the same server costs a client that does not. See [session-start load](../docs/METHODOLOGY.md#session-start-load).
 
@@ -16,7 +16,7 @@ The **session start** column is what a client puts in context when it *defers* t
 | 2 | [xcodebuildmcp](../docs/servers/xcodebuildmcp.md) | 26,594 | 559 | 5,335 | 24 | snapshot_ui (2,139) | measured | community |
 | 3 | [brave-search](../docs/servers/brave-search.md) | 25,456 | 61 | 13,746 | 8 | brave_place_search (17,282) | measured | vendor-official |
 | 4 | [notion](../docs/servers/notion.md) | 17,500 | 135 | 33,560 | 24 | API-update-page-markdown (1,282) | measured | vendor-official |
-| 5 | [mcp-atlassian](../docs/servers/mcp-atlassian.md) | 17,311 | 347 | — | 63 | jira_update_proforma_form_answers (800) | dynamic | community |
+| 5 | [mcp-atlassian](../docs/servers/mcp-atlassian.md) | 17,311 | 347 | 22,234 | 63 | jira_update_proforma_form_answers (800) | dynamic | community |
 | 6 | [circleci](../docs/servers/circleci.md) | 11,912 | 61 | 19,164 | 13 | run_rollback_pipeline (1,391) | measured | vendor-official |
 | 7 | [desktop-commander](../docs/servers/desktop-commander.md) | 11,836 | ≥99 | 19,305 | 26 | start_search (1,351) | dynamic | community |
 | 8 | [apify](../docs/servers/apify.md) | 10,426 | ≥51 | 8,313 | 10 | search-actors (2,200) | measured | vendor-official |
