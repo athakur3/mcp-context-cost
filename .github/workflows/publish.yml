@@ -48,6 +48,17 @@ jobs:
           fi
           echo "publishing $got"
 
+      - name: the changelog has a section for this version
+        # CHANGELOG's convention is that cutting a version renames its
+        # "Unreleased" heading to that version, dated. 0.8.0 was published with
+        # the rename skipped, so npm served bytes the changelog said were
+        # unreleased. The convention now lives where it can refuse.
+        run: |
+          if ! grep -qF "## ${{ inputs.version }} — " CHANGELOG.md; then
+            echo "CHANGELOG.md has no '## ${{ inputs.version }} — <date>' section — rename its Unreleased heading before publishing" >&2
+            exit 1
+          fi
+
       - run: npx tsc --noEmit
       - run: npm test
 

@@ -116,6 +116,47 @@ describe('rotating re-sweep workflow', () => {
   });
 });
 
+/**
+ * Regen patches the numbers the front page states (published-stats.ts), so a
+ * scheduled job that commits fresh data without committing README.md publishes
+ * a leaderboard the README then contradicts — the drift the patching exists to
+ * end. Asserted here because it is only observable on a real Monday/Wednesday.
+ */
+describe('every scheduled job that publishes data also publishes the front page', () => {
+  const addLines = (yaml: string) =>
+    yaml
+      .split('\n')
+      .map((l) => l.trim())
+      .filter((l) => l.startsWith('git add '));
+
+  for (const [name, yaml] of [
+    ['self-badge', workflow],
+    ['resweep', resweep],
+  ] as const) {
+    it(`${name} commits README.md beside the data regen just patched it from`, () => {
+      const adds = addLines(yaml);
+      expect(adds.length).toBeGreaterThan(0);
+      for (const line of adds) expect(line).toContain('README.md');
+    });
+  }
+});
+
+/**
+ * CHANGELOG's own preamble: cutting a version renames the `Unreleased` heading
+ * to that version and dates it. 0.8.0 shipped with the rename skipped — npm
+ * served bytes the changelog said were unreleased for thirteen days — so the
+ * convention is enforced at the one seam that can refuse: the publish job.
+ */
+describe('publish workflow', () => {
+  const publish = readFileSync(join(wfDir, 'publish.yml'), 'utf8');
+
+  it('refuses a version the changelog has no section for', () => {
+    expect(publish).toContain('CHANGELOG.md');
+    // The check must run before `npm publish` does.
+    expect(publish.indexOf('CHANGELOG.md')).toBeLessThan(publish.indexOf('npm publish'));
+  });
+});
+
 describe('the suite CI runs', () => {
   it('spawns tools it already has, rather than whatever npx can fetch', () => {
     // `npx tsx` resolves from the child's cwd. Several tests spawn the CLI from a

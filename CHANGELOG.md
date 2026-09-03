@@ -7,6 +7,48 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **A Docker failure on the measuring machine can no longer be published as a server's
+  failure.** The 2026-08-26 re-sweep recorded `sequential-thinking` — 992 tokens on both
+  prior sweeps — as a startup-failure because the runner's pull of the base image failed:
+  `docker run` exited 125 without ever launching the server, both per-server retries re-ran
+  through the same missing image and read as confirmation, and the harness guard stayed
+  quiet because five servers must regress before it will blame the machine. Three changes
+  close that seam. The base image is pulled, with retries, before any measurement depends on
+  it; a `docker run` that fails as docker — exit 125 in docker's own stderr voice, which a
+  contained server exiting 125 does not have — raises a harness fault instead of returning a
+  measurement, so nothing is written and the previous record stands; and each runner handles
+  the fault as its own honesty requires — the batch sweep names the servers it could not
+  measure and publishes the rest, refusing the whole sweep when the faults reach the guard's
+  own thresholds; the single-server sweep exits non-zero before a scheduled job can reach
+  its commit step; `audit --docker` refuses the run whole rather than reporting every server
+  in the config broken. The row the 2026-08-26 sweep got wrong was re-measured on 2026-09-03
+  and stands at 1,003 tokens.
+- **The numbers the front pages state are written by the regeneration that writes the
+  leaderboard, and read against the data by the suite.** README and docs/index.md carried
+  counts and dates as hand-written prose — "69 of 82", "sweeps of 2026-08-18 and
+  2026-08-19", "46 of the 69 numbers come from…" — true the day they were written and
+  drifting with every scheduled re-sweep: by 2026-09-03 the leaderboard said 68 measured
+  while both pages said 69, the front-page-contradicts-the-data failure already repaired by
+  hand once (2026-08-20). The deferral tables' fix — a test quoting the page against the
+  code — is not enough here, because these numbers move when data moves, on a schedule, with
+  nobody in the loop: a check alone would schedule its own red main. So the sentences that
+  dated themselves are gone (each row carries its own date), and every number either page
+  still states — the counts, the span, the sample tables, the Claude pair, the verify
+  transcript — is a claim `regen` patches in place from `results/` and the suite asserts
+  already agrees on the committed pages; the scheduled jobs commit README.md beside the data
+  they change. The first verification caught a live drift: the count of rows still matching
+  the published Claude run had moved 19 → 18 with the 2026-09-03 re-measurement of
+  `mcp-atlassian`, and only the leaderboard had been told. README is the page inside the
+  package, so this changes what an install carries.
+- **Publishing refuses a version the changelog has no section for.** This file's convention
+  is that cutting a version renames the `Unreleased` heading to that version and dates it;
+  0.8.0 was cut and published on 2026-08-21 with the rename skipped, so npm served bytes
+  this file said were unreleased for thirteen days. The `0.8.0` heading below is that
+  rename, made late, and the publish workflow now looks for the section of the version it
+  was asked to publish and exits before `npm publish` when it is missing.
+
+## 0.8.0 — 2026-08-21
+
 - **The public check on the commit people install stops depending on what the machine
   running it had cached.** Four test files spawned the built CLI through `npx tsx` from a
   temporary directory outside the repository, so the `tsx` this project pins was off the
