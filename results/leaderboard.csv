@@ -60,7 +60,7 @@ linear,,,remote-auth-wall,vendor-official,2100000,https://www.pulsemcp.com/serve
 zapier,,,remote-auth-wall,vendor-official,6100000,https://www.pulsemcp.com/servers/zapier (estimated visitors),,,,,,,,
 vercel,,,remote-auth-wall,vendor-official,542000,https://www.pulsemcp.com/servers/vercel (estimated visitors),,,,,,,,
 mcp-atlassian,17311,63,dynamic,community,353572,https://pypistats.org/packages/mcp-atlassian (PyPI weekly),22234,claude-opus-5,347,false,347,0,,
-postgres-mcp,8632,9,measured,community,234706,https://pypistats.org/packages/postgres-mcp (PyPI weekly),2381,claude-opus-5,39,false,39,0,,
+postgres-mcp,8632,9,measured,community,234706,https://pypistats.org/packages/postgres-mcp (PyPI weekly),2381,claude-opus-5,39,false,39,0,1178,v0.2.5
 xcodebuildmcp,26594,24,measured,community,149200,https://api.npmjs.org/downloads/point/last-week/xcodebuildmcp (npm weekly),5335,claude-opus-5,559,false,95,464,2704,v0.2.5
 n8n-mcp,2636,7,measured,community,114676,https://api.npmjs.org/downloads/point/last-week/n8n-mcp (npm weekly),,,24,false,24,0,2031,v0.2.5
 blender,5462,25,measured,community,71408,https://pypistats.org/packages/blender-mcp (PyPI weekly),8409,claude-opus-5,151,false,151,0,,

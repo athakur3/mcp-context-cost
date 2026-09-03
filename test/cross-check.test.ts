@@ -209,8 +209,12 @@ describe('the runner pieces, against a shim CLI', () => {
     expect(parseCliReport(out.stdout).report?.total).toBe(120);
   });
 
-  it('kills and marks a CLI that outlives its budget', async () => {
-    const out = await runCli(join(dir, 'mcp-tokens-slow'), { name: 'stub', command: 'node -e ""' }, { docker: false, timeoutMs: 300 });
+  it('kills and marks a CLI that outlives its budget and its grace', async () => {
+    const out = await runCli(
+      join(dir, 'mcp-tokens-slow'),
+      { name: 'stub', command: 'node -e ""' },
+      { docker: false, timeoutMs: 300, graceMs: 0 },
+    );
     expect(out.timedOut).toBe(true);
   });
 });

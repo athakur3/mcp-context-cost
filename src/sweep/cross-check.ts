@@ -158,9 +158,13 @@ interface CliOutcome {
 export function runCli(
   binPath: string,
   entry: ServerEntry,
-  opts: { docker: boolean; timeoutMs: number },
+  opts: { docker: boolean; timeoutMs: number; graceMs?: number },
 ): Promise<CliOutcome> {
-  const cliArgs = [...CROSS_CHECK_CLI_ARGS];
+  // The CLI's own deadline gets the entry's budget — its default is 30s, which
+  // published as a failure for a server (postgres-mcp) that legitimately takes
+  // longer to start and measures fine on the same budget our client gets. Its
+  // --timeout is in seconds, for server startup.
+  const cliArgs = [...CROSS_CHECK_CLI_ARGS, '--timeout', String(Math.ceil(opts.timeoutMs / 1000))];
   let command = binPath;
   let argv: string[] = [...cliArgs, '--', ...splitCommand(entry.command)];
   let containerName: string | null = null;
@@ -200,11 +204,14 @@ export function runCli(
     child.stdout.on('data', (chunk: string) => (stdout += chunk));
     child.stderr.setEncoding('utf8');
     child.stderr.on('data', (chunk: string) => (stderr = (stderr + chunk).slice(-4000)));
+    // Grace beyond the CLI's own deadline: startup is what its timeout covers,
+    // and the counting that follows deserves to finish rather than be killed
+    // at the exact same instant.
     const timer = setTimeout(() => {
       timedOut = true;
       child.kill('SIGKILL');
       if (containerName) spawn('docker', ['rm', '-f', containerName], { stdio: 'ignore' }).on('error', () => {});
-    }, opts.timeoutMs);
+    }, opts.timeoutMs + (opts.graceMs ?? 30_000));
     child.on('error', (err) => {
       clearTimeout(timer);
       resolvePromise({ code: null, stdout, stderr: String(err.message), timedOut });

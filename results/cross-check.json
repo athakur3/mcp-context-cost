@@ -488,12 +488,12 @@
     "postgres-mcp": {
       "ourTokens": 8632,
       "ourMappedTokens": 1178,
-      "cliTokens": 0,
+      "cliTokens": 1178,
       "ourToolCount": 9,
-      "cliToolCount": 0,
-      "toolSetMatches": false,
-      "capturedSha256": "9bb1e5d26dd377de9dbfac88ffe77663a1169cddf66c6b1f52f57d3a740b0e54",
-      "error": "cli: exited 1:          \n                             connection info string                             \n                                                                                \nError: deadline ha"
+      "cliToolCount": 9,
+      "toolSetMatches": true,
+      "dynamic": false,
+      "capturedSha256": "9bb1e5d26dd377de9dbfac88ffe77663a1169cddf66c6b1f52f57d3a740b0e54"
     },
     "pulumi": {
       "ourTokens": 2768,
@@ -574,6 +574,7 @@
       "ourToolCount": 6,
       "cliToolCount": 0,
       "toolSetMatches": false,
+      "dynamic": false,
       "capturedSha256": "6817cd262c23cdfbac2ac9e04b037d307d7d21907f9028707ae6dbac3f0a284d",
       "error": "cli: exited 1: Error: connection closed: initialize response\n"
     },
