@@ -329,7 +329,10 @@ color bands are frozen against the observed distribution of the first full sweep
 
 ## Status
 
-Active. Every row carries the date of its own most recent measurement. Two
+Active. Every row carries the date of its own most recent measurement, and what the data
+says as a whole is written up, dated, in
+[The State of MCP Context Cost](https://athakur3.github.io/mcp-context-cost/state-of-mcp-context-cost)
+(September 2026). Two
 weekly jobs re-measure the set — the `memory` reference server on Mondays, and a rotating
 sixth of the list on Wednesdays, so every row comes round within six weeks. Read each row's
 date as the date it means, and don't take the cadence on trust — the build history is

@@ -7,6 +7,13 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **The data gets its first state-of report.** The roadmap's "periodic data summary, when
+  the deltas tell a story" — the deltas now do. Six findings, every number read from the
+  data of 2026-09-04 and linked to its measurement, published as a dated reading at
+  [docs/state-of-mcp-context-cost.md](docs/state-of-mcp-context-cost.md) and linked from the
+  front page and README's status section. A dated essay is allowed to be a snapshot for the
+  same reason adoption.md is: it says its date, and the live numbers stay the leaderboard's.
+
 ## 0.9.0 — 2026-09-04
 
 - **A Docker failure on the measuring machine can no longer be published as a server's
