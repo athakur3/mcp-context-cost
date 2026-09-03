@@ -7,6 +7,8 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+## 0.10.0 — 2026-09-04
+
 - **`audit --suggest`: trim advice with a measured distribution behind it.** The roadmap's
   schema-size suggestions, built the only way this project gives advice — with a number
   attached and a population to place it in. Every published measurement already splits each
