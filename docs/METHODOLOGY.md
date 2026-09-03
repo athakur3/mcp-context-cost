@@ -384,6 +384,38 @@ against wire order. Measured at first run, that residual is a fraction of a perc
 independent implementations agreeing on the fields both count — and the run's aggregate
 range is stated in the leaderboard header, derived on every write.
 
+## Cost movement <a id="cost-movement"></a>
+
+[results/regressions.md](https://github.com/athakur3/mcp-context-cost/blob/main/results/regressions.md)
+(method `cost-regression/v1`) reports each server's **most recent movement**: the change that
+produced the cost it carries today. Most entries launch unpinned (`npx -y <pkg>`), so a
+movement between two measurements is a real upstream release landing in real context windows.
+
+**What may be compared.** Only measurements within the run a trend line may be drawn across —
+the isolation rule above, applied once by `plottableSeries` and inherited here, so a change of
+harness can never read as a change of server. A failed measurement contributes no row to the
+series at all, so a server that stopped starting reads as a gap, never as a drop to zero.
+
+**Which pair.** Not the newest one. A server that grew once and has held that cost since has a
+newest pair of zero, and reporting only that would hide the largest movement in the set behind
+a week of stability. The walk goes back through the trailing run of identical measurements to
+the change that produced the current cost, so the window is **when the change happened**
+(`2026-08-19 → 2026-08-26`), and how long the new cost has held is reported separately.
+
+**What is claimed about it.** From the totals alone: the *mechanism* — whether the server
+shipped more tools or made the tools it already had heavier, with a movement where count and
+cost went opposite ways left as `mixed` rather than guessed. Per-tool attribution needs both
+sides' captures, and `results/<server>/measurement.json` holds only the newest, so
+`results/<server>/tool-vectors.json` accrues a short, hash-deduped history of per-tool token
+vectors from the sweep that introduced this method onward. A change older than that file says
+its breakdown is unavailable, in those words. Where attribution is available, the remainder
+that belongs to no single tool is published as `unattributed` rather than distributed.
+
+**What is called out.** A movement is emphasised only when it clears both thresholds — at
+least 5% *and* at least 25 tokens. Relative alone would headline a fifth of a cheap server;
+absolute alone would headline drift on an expensive one. Everything comparable is listed
+either way, which is the same rule the leaderboard applies to failures.
+
 ## Tool shape <a id="tool-shape"></a>
 
 `audit --suggest` (method `tool-shape/v1`) places each of your tools in the measured set's
@@ -426,7 +458,8 @@ Details: [spec/upstream-notes.md](https://github.com/athakur3/mcp-context-cost/b
 
 The Claude divergence column (`tools-delta/v1`, added 2026-08-16), the session-start column
 (`deferred-load/v1`, added 2026-08-20), the CLI cross-check column (`cli-cross-check/v1`,
-added 2026-09-03) and the tool-shape baseline (`tool-shape/v1`, added 2026-09-04) are
+added 2026-09-03), the tool-shape baseline (`tool-shape/v1`, added 2026-09-04) and the
+cost-movement report (`cost-regression/v1`, added 2026-09-04) are
 versioned separately and deliberately: each adds a published number
 without touching the definition above. Every badge, every `totalTokens`, and every canonical
 hash is byte-identical to before they existed, so bumping this page's version would have

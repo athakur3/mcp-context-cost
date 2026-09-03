@@ -1,0 +1,61 @@
+{
+  "method": "cost-regression/v1",
+  "server": "pulumi",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "9eb845dee6bb274d3b93ba0ea67276b2829cb98cbe7ed01079eba7fb8263fa26",
+      "totalTokens": 2768,
+      "tools": [
+        {
+          "name": "pulumi-registry-get-type",
+          "tokens": 220
+        },
+        {
+          "name": "pulumi-registry-get-resource",
+          "tokens": 214
+        },
+        {
+          "name": "pulumi-registry-get-function",
+          "tokens": 217
+        },
+        {
+          "name": "pulumi-registry-list-resources",
+          "tokens": 174
+        },
+        {
+          "name": "pulumi-registry-list-functions",
+          "tokens": 173
+        },
+        {
+          "name": "pulumi-cli-preview",
+          "tokens": 104
+        },
+        {
+          "name": "pulumi-cli-up",
+          "tokens": 104
+        },
+        {
+          "name": "pulumi-cli-stack-output",
+          "tokens": 123
+        },
+        {
+          "name": "pulumi-cli-refresh",
+          "tokens": 104
+        },
+        {
+          "name": "deploy-to-aws",
+          "tokens": 96
+        },
+        {
+          "name": "pulumi-resource-search",
+          "tokens": 1011
+        },
+        {
+          "name": "neo-task-launcher",
+          "tokens": 226
+        }
+      ]
+    }
+  ]
+}

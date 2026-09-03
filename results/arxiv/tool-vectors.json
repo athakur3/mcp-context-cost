@@ -1,0 +1,89 @@
+{
+  "method": "cost-regression/v1",
+  "server": "arxiv",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "2ee361441efca1de3e296a572bbe2d20fa88d5565c9d4f54a8a1523ee7f54251",
+      "totalTokens": 3960,
+      "tools": [
+        {
+          "name": "search_papers",
+          "tokens": 516
+        },
+        {
+          "name": "download_paper",
+          "tokens": 353
+        },
+        {
+          "name": "list_papers",
+          "tokens": 157
+        },
+        {
+          "name": "read_paper",
+          "tokens": 275
+        },
+        {
+          "name": "get_abstract",
+          "tokens": 137
+        },
+        {
+          "name": "semantic_search",
+          "tokens": 226
+        },
+        {
+          "name": "reindex",
+          "tokens": 76
+        },
+        {
+          "name": "citation_graph",
+          "tokens": 171
+        },
+        {
+          "name": "export_citations",
+          "tokens": 193
+        },
+        {
+          "name": "watch_topic",
+          "tokens": 354
+        },
+        {
+          "name": "check_alerts",
+          "tokens": 246
+        },
+        {
+          "name": "list_watches",
+          "tokens": 100
+        },
+        {
+          "name": "unwatch_topic",
+          "tokens": 120
+        },
+        {
+          "name": "get_paper_latex",
+          "tokens": 181
+        },
+        {
+          "name": "list_paper_latex_sections",
+          "tokens": 135
+        },
+        {
+          "name": "get_paper_latex_section",
+          "tokens": 213
+        },
+        {
+          "name": "get_paper_outline",
+          "tokens": 141
+        },
+        {
+          "name": "read_paper_section",
+          "tokens": 184
+        },
+        {
+          "name": "search_paper_text",
+          "tokens": 180
+        }
+      ]
+    }
+  ]
+}

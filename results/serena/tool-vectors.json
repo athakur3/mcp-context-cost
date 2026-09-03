@@ -1,0 +1,129 @@
+{
+  "method": "cost-regression/v1",
+  "server": "serena",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "7d876a84707e0689df306366dc7c3225ae49762ca045d7604c7c9a2b20dfbc3c",
+      "totalTokens": 8204,
+      "tools": [
+        {
+          "name": "create_text_file",
+          "tokens": 162
+        },
+        {
+          "name": "replace_content",
+          "tokens": 479
+        },
+        {
+          "name": "replace_in_files",
+          "tokens": 801
+        },
+        {
+          "name": "replace_symbol_body",
+          "tokens": 246
+        },
+        {
+          "name": "insert_after_symbol",
+          "tokens": 205
+        },
+        {
+          "name": "insert_before_symbol",
+          "tokens": 231
+        },
+        {
+          "name": "read_file",
+          "tokens": 291
+        },
+        {
+          "name": "list_dir",
+          "tokens": 277
+        },
+        {
+          "name": "find_file",
+          "tokens": 180
+        },
+        {
+          "name": "search_for_pattern",
+          "tokens": 524
+        },
+        {
+          "name": "get_symbols_overview",
+          "tokens": 301
+        },
+        {
+          "name": "find_symbol",
+          "tokens": 883
+        },
+        {
+          "name": "find_referencing_symbols",
+          "tokens": 310
+        },
+        {
+          "name": "find_implementations",
+          "tokens": 346
+        },
+        {
+          "name": "find_declaration",
+          "tokens": 355
+        },
+        {
+          "name": "get_diagnostics_for_file",
+          "tokens": 338
+        },
+        {
+          "name": "rename_symbol",
+          "tokens": 223
+        },
+        {
+          "name": "safe_delete_symbol",
+          "tokens": 175
+        },
+        {
+          "name": "write_memory",
+          "tokens": 232
+        },
+        {
+          "name": "read_memory",
+          "tokens": 123
+        },
+        {
+          "name": "list_memories",
+          "tokens": 101
+        },
+        {
+          "name": "delete_memory",
+          "tokens": 114
+        },
+        {
+          "name": "rename_memory",
+          "tokens": 174
+        },
+        {
+          "name": "edit_memory",
+          "tokens": 325
+        },
+        {
+          "name": "execute_shell_command",
+          "tokens": 330
+        },
+        {
+          "name": "activate_project",
+          "tokens": 124
+        },
+        {
+          "name": "get_current_config",
+          "tokens": 105
+        },
+        {
+          "name": "onboarding",
+          "tokens": 112
+        },
+        {
+          "name": "initial_instructions",
+          "tokens": 135
+        }
+      ]
+    }
+  ]
+}

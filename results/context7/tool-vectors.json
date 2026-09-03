@@ -1,0 +1,21 @@
+{
+  "method": "cost-regression/v1",
+  "server": "context7",
+  "entries": [
+    {
+      "date": "2026-08-18",
+      "canonicalSha256": "699d8b33d6d2d90ce7deb777994bb408e1e07bb08fa997042b7cce19e6c1ecec",
+      "totalTokens": 1052,
+      "tools": [
+        {
+          "name": "resolve-library-id",
+          "tokens": 643
+        },
+        {
+          "name": "query-docs",
+          "tokens": 407
+        }
+      ]
+    }
+  ]
+}

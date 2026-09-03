@@ -1,0 +1,25 @@
+{
+  "method": "cost-regression/v1",
+  "server": "deepwiki",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "3735162916165ab23696fc91fbf626bd99a36ddcd1e15746e91e16c7e336b379",
+      "totalTokens": 359,
+      "tools": [
+        {
+          "name": "ask_question",
+          "tokens": 148
+        },
+        {
+          "name": "read_wiki_contents",
+          "tokens": 104
+        },
+        {
+          "name": "read_wiki_structure",
+          "tokens": 108
+        }
+      ]
+    }
+  ]
+}

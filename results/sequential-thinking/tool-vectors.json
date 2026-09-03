@@ -1,0 +1,17 @@
+{
+  "method": "cost-regression/v1",
+  "server": "sequential-thinking",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "55e4c41338722ccc0672def6b5462f1dee664bf168cfd01172c4e96d344a1c2e",
+      "totalTokens": 1003,
+      "tools": [
+        {
+          "name": "sequentialthinking",
+          "tokens": 1001
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "method": "cost-regression/v1",
+  "server": "mysql",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "48f53cd914e3137feabfb3087abdb3bb54df46907d605a4cf97fac272bba2afb",
+      "totalTokens": 393,
+      "tools": [
+        {
+          "name": "execute_sql",
+          "tokens": 119
+        },
+        {
+          "name": "get_schema_info",
+          "tokens": 133
+        },
+        {
+          "name": "get_table_sample",
+          "tokens": 139
+        }
+      ]
+    }
+  ]
+}

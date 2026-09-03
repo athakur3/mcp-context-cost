@@ -1,0 +1,109 @@
+{
+  "method": "cost-regression/v1",
+  "server": "notion",
+  "entries": [
+    {
+      "date": "2026-09-02",
+      "canonicalSha256": "f9544e7c84986529d5bc4a1c9357bbbb9c2f458133904075319f8fec7d716da9",
+      "totalTokens": 17500,
+      "tools": [
+        {
+          "name": "API-get-user",
+          "tokens": 604
+        },
+        {
+          "name": "API-get-users",
+          "tokens": 663
+        },
+        {
+          "name": "API-get-self",
+          "tokens": 595
+        },
+        {
+          "name": "API-post-search",
+          "tokens": 1097
+        },
+        {
+          "name": "API-get-block-children",
+          "tokens": 693
+        },
+        {
+          "name": "API-patch-block-children",
+          "tokens": 713
+        },
+        {
+          "name": "API-retrieve-a-block",
+          "tokens": 612
+        },
+        {
+          "name": "API-update-a-block",
+          "tokens": 727
+        },
+        {
+          "name": "API-delete-a-block",
+          "tokens": 611
+        },
+        {
+          "name": "API-retrieve-a-page",
+          "tokens": 680
+        },
+        {
+          "name": "API-patch-page",
+          "tokens": 889
+        },
+        {
+          "name": "API-post-page",
+          "tokens": 819
+        },
+        {
+          "name": "API-retrieve-a-page-property",
+          "tokens": 704
+        },
+        {
+          "name": "API-retrieve-a-comment",
+          "tokens": 687
+        },
+        {
+          "name": "API-create-a-comment",
+          "tokens": 725
+        },
+        {
+          "name": "API-query-data-source",
+          "tokens": 770
+        },
+        {
+          "name": "API-retrieve-a-data-source",
+          "tokens": 618
+        },
+        {
+          "name": "API-update-a-data-source",
+          "tokens": 721
+        },
+        {
+          "name": "API-create-a-data-source",
+          "tokens": 688
+        },
+        {
+          "name": "API-list-data-source-templates",
+          "tokens": 640
+        },
+        {
+          "name": "API-retrieve-a-database",
+          "tokens": 613
+        },
+        {
+          "name": "API-move-page",
+          "tokens": 641
+        },
+        {
+          "name": "API-retrieve-page-markdown",
+          "tokens": 706
+        },
+        {
+          "name": "API-update-page-markdown",
+          "tokens": 1282
+        }
+      ]
+    }
+  ]
+}

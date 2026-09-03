@@ -1,0 +1,49 @@
+{
+  "method": "cost-regression/v1",
+  "server": "postgres-mcp",
+  "entries": [
+    {
+      "date": "2026-09-02",
+      "canonicalSha256": "9bb1e5d26dd377de9dbfac88ffe77663a1169cddf66c6b1f52f57d3a740b0e54",
+      "totalTokens": 8632,
+      "tools": [
+        {
+          "name": "list_schemas",
+          "tokens": 862
+        },
+        {
+          "name": "list_objects",
+          "tokens": 916
+        },
+        {
+          "name": "get_object_details",
+          "tokens": 942
+        },
+        {
+          "name": "explain_query",
+          "tokens": 1147
+        },
+        {
+          "name": "analyze_workload_indexes",
+          "tokens": 934
+        },
+        {
+          "name": "analyze_query_indexes",
+          "tokens": 968
+        },
+        {
+          "name": "analyze_db_health",
+          "tokens": 1026
+        },
+        {
+          "name": "get_top_queries",
+          "tokens": 957
+        },
+        {
+          "name": "execute_sql",
+          "tokens": 878
+        }
+      ]
+    }
+  ]
+}

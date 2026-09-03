@@ -1,0 +1,73 @@
+{
+  "method": "cost-regression/v1",
+  "server": "codebase-memory-mcp",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "01a1bd0f450ccf86b0bf36b2b63749c70dc4add7b0a4d9621ce69e29c9db7b27",
+      "totalTokens": 5258,
+      "tools": [
+        {
+          "name": "index_repository",
+          "tokens": 510
+        },
+        {
+          "name": "search_graph",
+          "tokens": 905
+        },
+        {
+          "name": "query_graph",
+          "tokens": 577
+        },
+        {
+          "name": "trace_path",
+          "tokens": 732
+        },
+        {
+          "name": "get_code_snippet",
+          "tokens": 205
+        },
+        {
+          "name": "get_graph_schema",
+          "tokens": 78
+        },
+        {
+          "name": "get_architecture",
+          "tokens": 324
+        },
+        {
+          "name": "search_code",
+          "tokens": 473
+        },
+        {
+          "name": "list_projects",
+          "tokens": 135
+        },
+        {
+          "name": "delete_project",
+          "tokens": 68
+        },
+        {
+          "name": "index_status",
+          "tokens": 307
+        },
+        {
+          "name": "check_index_coverage",
+          "tokens": 291
+        },
+        {
+          "name": "detect_changes",
+          "tokens": 411
+        },
+        {
+          "name": "manage_adr",
+          "tokens": 121
+        },
+        {
+          "name": "ingest_traces",
+          "tokens": 119
+        }
+      ]
+    }
+  ]
+}

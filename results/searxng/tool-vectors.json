@@ -1,0 +1,29 @@
+{
+  "method": "cost-regression/v1",
+  "server": "searxng",
+  "entries": [
+    {
+      "date": "2026-09-02",
+      "canonicalSha256": "277906d8ed722cfce33b345e34effdc0a2c37c8effc4fc85c9f5d13888d6ea7f",
+      "totalTokens": 1537,
+      "tools": [
+        {
+          "name": "searxng_web_search",
+          "tokens": 825
+        },
+        {
+          "name": "searxng_search_suggestions",
+          "tokens": 118
+        },
+        {
+          "name": "searxng_instance_info",
+          "tokens": 163
+        },
+        {
+          "name": "web_url_read",
+          "tokens": 429
+        }
+      ]
+    }
+  ]
+}

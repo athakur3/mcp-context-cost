@@ -1,0 +1,17 @@
+{
+  "method": "cost-regression/v1",
+  "server": "perplexity",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "bf3f548ecca0308f30e544a03d3a36778dbbfba3a5ed12dab6d981dcbcc7a73c",
+      "totalTokens": 133,
+      "tools": [
+        {
+          "name": "perplexity_ask",
+          "tokens": 131
+        }
+      ]
+    }
+  ]
+}

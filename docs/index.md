@@ -10,6 +10,8 @@ Second-heaviest is `comfyui-mcp` at 50,640.
 - **[The State of MCP Context Cost](state-of-mcp-context-cost)** — six findings from the
   data, September 2026: the spread, the tokenizer reversal, the deferral exception, and why
   two independent counters agreeing matters
+- **[What moved](https://github.com/athakur3/mcp-context-cost/blob/main/results/regressions.md)**
+  — each server's most recent cost movement, dated, and which half of the server moved
 - **[The dashboard](dashboard.html)** — the ranked chart; open any row for its breakdown
 - **[Server pages](servers/)** — per-server: where the tokens are, tool by tool
 - **[The leaderboard](https://github.com/athakur3/mcp-context-cost/blob/main/results/leaderboard.md)**

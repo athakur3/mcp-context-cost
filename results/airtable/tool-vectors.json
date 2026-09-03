@@ -1,0 +1,77 @@
+{
+  "method": "cost-regression/v1",
+  "server": "airtable",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "6ae170e7625e0fa953f2981d005a89ee2b7c80d94830c81a9e5e03d3e5de59e6",
+      "totalTokens": 4207,
+      "tools": [
+        {
+          "name": "list_records",
+          "tokens": 395
+        },
+        {
+          "name": "search_records",
+          "tokens": 277
+        },
+        {
+          "name": "list_bases",
+          "tokens": 151
+        },
+        {
+          "name": "list_tables",
+          "tokens": 340
+        },
+        {
+          "name": "describe_table",
+          "tokens": 354
+        },
+        {
+          "name": "get_record",
+          "tokens": 186
+        },
+        {
+          "name": "create_record",
+          "tokens": 205
+        },
+        {
+          "name": "update_records",
+          "tokens": 265
+        },
+        {
+          "name": "delete_records",
+          "tokens": 202
+        },
+        {
+          "name": "create_table",
+          "tokens": 212
+        },
+        {
+          "name": "update_table",
+          "tokens": 195
+        },
+        {
+          "name": "create_field",
+          "tokens": 206
+        },
+        {
+          "name": "update_field",
+          "tokens": 214
+        },
+        {
+          "name": "create_comment",
+          "tokens": 317
+        },
+        {
+          "name": "list_comments",
+          "tokens": 339
+        },
+        {
+          "name": "upload_attachment",
+          "tokens": 347
+        }
+      ]
+    }
+  ]
+}

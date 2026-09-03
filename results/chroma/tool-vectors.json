@@ -1,0 +1,65 @@
+{
+  "method": "cost-regression/v1",
+  "server": "chroma",
+  "entries": [
+    {
+      "date": "2026-08-18",
+      "canonicalSha256": "eb0b416a1586989ce3f646259f9f96d0ae6d7b62342aa30393b10ecb7c03c707",
+      "totalTokens": 2837,
+      "tools": [
+        {
+          "name": "chroma_list_collections",
+          "tokens": 151
+        },
+        {
+          "name": "chroma_create_collection",
+          "tokens": 185
+        },
+        {
+          "name": "chroma_peek_collection",
+          "tokens": 104
+        },
+        {
+          "name": "chroma_get_collection_info",
+          "tokens": 79
+        },
+        {
+          "name": "chroma_get_collection_count",
+          "tokens": 80
+        },
+        {
+          "name": "chroma_modify_collection",
+          "tokens": 156
+        },
+        {
+          "name": "chroma_fork_collection",
+          "tokens": 120
+        },
+        {
+          "name": "chroma_delete_collection",
+          "tokens": 73
+        },
+        {
+          "name": "chroma_add_documents",
+          "tokens": 194
+        },
+        {
+          "name": "chroma_query_documents",
+          "tokens": 546
+        },
+        {
+          "name": "chroma_get_documents",
+          "tokens": 610
+        },
+        {
+          "name": "chroma_update_documents",
+          "tokens": 382
+        },
+        {
+          "name": "chroma_delete_documents",
+          "tokens": 155
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "method": "cost-regression/v1",
+  "server": "figma-context",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "c1409e496bb0262b3dd4d78de8da42d1b79d5704fcf693e1455c5b3dff0f2604",
+      "totalTokens": 946,
+      "tools": [
+        {
+          "name": "get_figma_data",
+          "tokens": 298
+        },
+        {
+          "name": "download_figma_images",
+          "tokens": 646
+        }
+      ]
+    }
+  ]
+}

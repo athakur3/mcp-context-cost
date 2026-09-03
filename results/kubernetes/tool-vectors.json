@@ -1,0 +1,105 @@
+{
+  "method": "cost-regression/v1",
+  "server": "kubernetes",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "20126671be70fdb77743a595f195002612b03c889b348447ed9ff4d7057f8c1c",
+      "totalTokens": 5268,
+      "tools": [
+        {
+          "name": "cleanup",
+          "tokens": 32
+        },
+        {
+          "name": "kubectl_get",
+          "tokens": 286
+        },
+        {
+          "name": "kubectl_describe",
+          "tokens": 161
+        },
+        {
+          "name": "kubectl_apply",
+          "tokens": 224
+        },
+        {
+          "name": "kubectl_delete",
+          "tokens": 322
+        },
+        {
+          "name": "kubectl_create",
+          "tokens": 945
+        },
+        {
+          "name": "kubectl_logs",
+          "tokens": 308
+        },
+        {
+          "name": "kubectl_scale",
+          "tokens": 148
+        },
+        {
+          "name": "kubectl_patch",
+          "tokens": 287
+        },
+        {
+          "name": "kubectl_rollout",
+          "tokens": 292
+        },
+        {
+          "name": "kubectl_context",
+          "tokens": 178
+        },
+        {
+          "name": "kubectl_reconnect",
+          "tokens": 76
+        },
+        {
+          "name": "explain_resource",
+          "tokens": 177
+        },
+        {
+          "name": "install_helm_chart",
+          "tokens": 291
+        },
+        {
+          "name": "upgrade_helm_chart",
+          "tokens": 226
+        },
+        {
+          "name": "uninstall_helm_chart",
+          "tokens": 106
+        },
+        {
+          "name": "node_management",
+          "tokens": 341
+        },
+        {
+          "name": "port_forward",
+          "tokens": 91
+        },
+        {
+          "name": "stop_port_forward",
+          "tokens": 45
+        },
+        {
+          "name": "exec_in_pod",
+          "tokens": 256
+        },
+        {
+          "name": "list_api_resources",
+          "tokens": 159
+        },
+        {
+          "name": "kubectl_generic",
+          "tokens": 272
+        },
+        {
+          "name": "ping",
+          "tokens": 43
+        }
+      ]
+    }
+  ]
+}

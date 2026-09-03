@@ -1,0 +1,137 @@
+{
+  "method": "cost-regression/v1",
+  "server": "appium-mcp",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "d024ca5b97d52d5442da395ed92d1d107b6728db57cf1295bb87c5d3624c0e53",
+      "totalTokens": 10267,
+      "tools": [
+        {
+          "name": "select_device",
+          "tokens": 434
+        },
+        {
+          "name": "appium_session_management",
+          "tokens": 971
+        },
+        {
+          "name": "appium_mobile_device_control",
+          "tokens": 221
+        },
+        {
+          "name": "appium_geolocation",
+          "tokens": 384
+        },
+        {
+          "name": "appium_mobile_device_info",
+          "tokens": 216
+        },
+        {
+          "name": "appium_mobile_file",
+          "tokens": 255
+        },
+        {
+          "name": "appium_driver_settings",
+          "tokens": 261
+        },
+        {
+          "name": "prepare_ios_simulator",
+          "tokens": 348
+        },
+        {
+          "name": "appium_prepare_ios_real_device",
+          "tokens": 356
+        },
+        {
+          "name": "appium_gesture",
+          "tokens": 1308
+        },
+        {
+          "name": "appium_drag_and_drop",
+          "tokens": 416
+        },
+        {
+          "name": "appium_perform_actions",
+          "tokens": 623
+        },
+        {
+          "name": "appium_find_element",
+          "tokens": 533
+        },
+        {
+          "name": "appium_mobile_press_key",
+          "tokens": 267
+        },
+        {
+          "name": "appium_set_value",
+          "tokens": 179
+        },
+        {
+          "name": "appium_mobile_keyboard",
+          "tokens": 222
+        },
+        {
+          "name": "appium_get_text",
+          "tokens": 106
+        },
+        {
+          "name": "appium_get_element_attribute",
+          "tokens": 222
+        },
+        {
+          "name": "appium_mobile_clipboard",
+          "tokens": 172
+        },
+        {
+          "name": "appium_get_active_element",
+          "tokens": 115
+        },
+        {
+          "name": "appium_get_page_source",
+          "tokens": 109
+        },
+        {
+          "name": "appium_orientation",
+          "tokens": 158
+        },
+        {
+          "name": "appium_alert",
+          "tokens": 154
+        },
+        {
+          "name": "appium_screenshot",
+          "tokens": 277
+        },
+        {
+          "name": "appium_get_window_size",
+          "tokens": 103
+        },
+        {
+          "name": "appium_screen_recording",
+          "tokens": 513
+        },
+        {
+          "name": "appium_app_lifecycle",
+          "tokens": 444
+        },
+        {
+          "name": "appium_mobile_permissions",
+          "tokens": 479
+        },
+        {
+          "name": "appium_context",
+          "tokens": 166
+        },
+        {
+          "name": "generate_locators",
+          "tokens": 132
+        },
+        {
+          "name": "appium_generate_tests",
+          "tokens": 151
+        }
+      ]
+    }
+  ]
+}

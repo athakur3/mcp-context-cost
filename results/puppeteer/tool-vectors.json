@@ -1,0 +1,41 @@
+{
+  "method": "cost-regression/v1",
+  "server": "puppeteer",
+  "entries": [
+    {
+      "date": "2026-09-02",
+      "canonicalSha256": "d9e46f0316917c1d140ffeebceefd4d31c16188780ac278baf347ff536015dd0",
+      "totalTokens": 540,
+      "tools": [
+        {
+          "name": "puppeteer_navigate",
+          "tokens": 129
+        },
+        {
+          "name": "puppeteer_screenshot",
+          "tokens": 142
+        },
+        {
+          "name": "puppeteer_click",
+          "tokens": 47
+        },
+        {
+          "name": "puppeteer_fill",
+          "tokens": 60
+        },
+        {
+          "name": "puppeteer_select",
+          "tokens": 65
+        },
+        {
+          "name": "puppeteer_hover",
+          "tokens": 47
+        },
+        {
+          "name": "puppeteer_evaluate",
+          "tokens": 48
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "method": "cost-regression/v1",
+  "server": "pandoc",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "4d8f9de25d7aa74f0fb5e0c828a904d74b3934e62cb1032bc6cf0fada1f0d952",
+      "totalTokens": 1425,
+      "tools": [
+        {
+          "name": "convert-contents",
+          "tokens": 1423
+        }
+      ]
+    }
+  ]
+}

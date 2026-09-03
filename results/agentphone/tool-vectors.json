@@ -1,0 +1,125 @@
+{
+  "method": "cost-regression/v1",
+  "server": "agentphone",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "eec89a7ec71ac3e9e65fb8477bf594b4ce9af01b572bcc5d7e9fbbcc85f4e813",
+      "totalTokens": 6134,
+      "tools": [
+        {
+          "name": "account_overview",
+          "tokens": 81
+        },
+        {
+          "name": "list_numbers",
+          "tokens": 128
+        },
+        {
+          "name": "buy_number",
+          "tokens": 223
+        },
+        {
+          "name": "send_message",
+          "tokens": 594
+        },
+        {
+          "name": "get_messages",
+          "tokens": 128
+        },
+        {
+          "name": "list_calls",
+          "tokens": 276
+        },
+        {
+          "name": "get_call",
+          "tokens": 175
+        },
+        {
+          "name": "make_call",
+          "tokens": 220
+        },
+        {
+          "name": "make_conversation_call",
+          "tokens": 400
+        },
+        {
+          "name": "list_agents",
+          "tokens": 112
+        },
+        {
+          "name": "create_agent",
+          "tokens": 763
+        },
+        {
+          "name": "update_agent",
+          "tokens": 721
+        },
+        {
+          "name": "delete_agent",
+          "tokens": 91
+        },
+        {
+          "name": "get_agent",
+          "tokens": 93
+        },
+        {
+          "name": "attach_number",
+          "tokens": 117
+        },
+        {
+          "name": "detach_number",
+          "tokens": 114
+        },
+        {
+          "name": "list_voices",
+          "tokens": 79
+        },
+        {
+          "name": "list_conversations",
+          "tokens": 173
+        },
+        {
+          "name": "get_conversation",
+          "tokens": 119
+        },
+        {
+          "name": "update_conversation",
+          "tokens": 145
+        },
+        {
+          "name": "list_contacts",
+          "tokens": 145
+        },
+        {
+          "name": "manage_contact",
+          "tokens": 311
+        },
+        {
+          "name": "get_usage",
+          "tokens": 208
+        },
+        {
+          "name": "get_webhook",
+          "tokens": 105
+        },
+        {
+          "name": "set_webhook",
+          "tokens": 212
+        },
+        {
+          "name": "delete_webhook",
+          "tokens": 105
+        },
+        {
+          "name": "test_webhook",
+          "tokens": 122
+        },
+        {
+          "name": "list_webhook_deliveries",
+          "tokens": 172
+        }
+      ]
+    }
+  ]
+}

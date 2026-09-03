@@ -1,0 +1,65 @@
+{
+  "method": "cost-regression/v1",
+  "server": "circleci",
+  "entries": [
+    {
+      "date": "2026-08-18",
+      "canonicalSha256": "f4d995111363bc9a5c220871fb9e4c2d81372ef647572f5f4f19cb5d4bd08bbe",
+      "totalTokens": 11912,
+      "tools": [
+        {
+          "name": "get_build_failure_logs",
+          "tokens": 1193
+        },
+        {
+          "name": "find_flaky_tests",
+          "tokens": 910
+        },
+        {
+          "name": "get_latest_pipeline_status",
+          "tokens": 1048
+        },
+        {
+          "name": "get_job_test_results",
+          "tokens": 1283
+        },
+        {
+          "name": "config_helper",
+          "tokens": 369
+        },
+        {
+          "name": "run_pipeline",
+          "tokens": 1103
+        },
+        {
+          "name": "list_followed_projects",
+          "tokens": 433
+        },
+        {
+          "name": "rerun_workflow",
+          "tokens": 585
+        },
+        {
+          "name": "download_usage_api_data",
+          "tokens": 995
+        },
+        {
+          "name": "find_underused_resource_classes",
+          "tokens": 488
+        },
+        {
+          "name": "run_rollback_pipeline",
+          "tokens": 1391
+        },
+        {
+          "name": "list_component_versions",
+          "tokens": 1242
+        },
+        {
+          "name": "list_artifacts",
+          "tokens": 870
+        }
+      ]
+    }
+  ]
+}

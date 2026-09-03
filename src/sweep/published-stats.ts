@@ -32,6 +32,7 @@ import { fieldSelectionShare, isCurrent } from '../core/divergence.js';
 import { sessionStartLoad } from '../core/session-start.js';
 import { isGood } from './harness-guard.js';
 import { loadDivergence, loadRows, loadSessionStartRun, type Row, type ServerEntry } from './report.js';
+import { collectChanges } from './regressions.js';
 
 export interface PublishedStats {
   candidateTotal: number;
@@ -60,6 +61,8 @@ export interface PublishedStats {
     ratioMax: number;
   };
   deferralCostlierCount: number;
+  /** Servers whose most recent cost movement went up / down (cost-regression/v1). */
+  movement: { grew: number; shrank: number };
   verify: { serverName: string; tokens: number };
 }
 
@@ -134,6 +137,8 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
     return load !== null && load.totalTokens >= r.m.totalTokens!;
   });
 
+  const { summary: movement } = collectChanges(entries, root);
+
   const githubRow = rows.find((r) => r.entry.name === 'github');
   if (!githubRow?.m || typeof githubRow.m.totalTokens !== 'number') {
     throw new Error('README quotes `verify` on results/github, which has no current measurement');
@@ -165,6 +170,7 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
       ratioMax: Math.max(...ratios),
     },
     deferralCostlierCount: costlier.length,
+    movement: { grew: movement.grew, shrank: movement.shrank },
     verify: {
       serverName: githubRow.m.serverName ?? 'github',
       tokens: githubRow.m.totalTokens,
@@ -268,6 +274,12 @@ export const PAGE_CLAIMS: Claim[] = [
     id: 'claude-table:notion',
     template: '| notion | {n} | **{n}** | almost no metadata to drop, so the tokenizer difference dominates |',
     values: (s) => [fmt(s.claude.notion.badgeTokens), fmt(s.claude.notion.claudeTokens)],
+  },
+  {
+    file: 'README.md',
+    id: 'cost-movement',
+    template: 'cost has moved at all, {n} moved up against {n} that moved down.',
+    values: (s) => [fmt(s.movement.grew), fmt(s.movement.shrank)],
   },
   {
     file: 'README.md',

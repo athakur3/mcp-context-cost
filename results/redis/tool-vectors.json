@@ -1,0 +1,225 @@
+{
+  "method": "cost-regression/v1",
+  "server": "redis",
+  "entries": [
+    {
+      "date": "2026-09-02",
+      "canonicalSha256": "92a01e079c4436e651586a0fa4117e21204dc481de169763e621253280225570",
+      "totalTokens": 9246,
+      "tools": [
+        {
+          "name": "hset",
+          "tokens": 220
+        },
+        {
+          "name": "hget",
+          "tokens": 138
+        },
+        {
+          "name": "hdel",
+          "tokens": 135
+        },
+        {
+          "name": "hgetall",
+          "tokens": 86
+        },
+        {
+          "name": "hexists",
+          "tokens": 138
+        },
+        {
+          "name": "set_vector_in_hash",
+          "tokens": 207
+        },
+        {
+          "name": "get_vector_from_hash",
+          "tokens": 136
+        },
+        {
+          "name": "json_set",
+          "tokens": 228
+        },
+        {
+          "name": "json_get",
+          "tokens": 151
+        },
+        {
+          "name": "json_del",
+          "tokens": 150
+        },
+        {
+          "name": "lpush",
+          "tokens": 146
+        },
+        {
+          "name": "rpush",
+          "tokens": 146
+        },
+        {
+          "name": "lpop",
+          "tokens": 82
+        },
+        {
+          "name": "rpop",
+          "tokens": 82
+        },
+        {
+          "name": "lrange",
+          "tokens": 149
+        },
+        {
+          "name": "llen",
+          "tokens": 76
+        },
+        {
+          "name": "lrem",
+          "tokens": 191
+        },
+        {
+          "name": "delete",
+          "tokens": 108
+        },
+        {
+          "name": "type",
+          "tokens": 125
+        },
+        {
+          "name": "expire",
+          "tokens": 139
+        },
+        {
+          "name": "rename",
+          "tokens": 201
+        },
+        {
+          "name": "scan_keys",
+          "tokens": 482
+        },
+        {
+          "name": "scan_all_keys",
+          "tokens": 267
+        },
+        {
+          "name": "search_redis_documents",
+          "tokens": 345
+        },
+        {
+          "name": "publish",
+          "tokens": 132
+        },
+        {
+          "name": "subscribe",
+          "tokens": 122
+        },
+        {
+          "name": "psubscribe",
+          "tokens": 125
+        },
+        {
+          "name": "read_messages",
+          "tokens": 202
+        },
+        {
+          "name": "unsubscribe",
+          "tokens": 128
+        },
+        {
+          "name": "get_indexes",
+          "tokens": 89
+        },
+        {
+          "name": "get_index_info",
+          "tokens": 134
+        },
+        {
+          "name": "get_indexed_keys_number",
+          "tokens": 133
+        },
+        {
+          "name": "create_vector_index_hash",
+          "tokens": 352
+        },
+        {
+          "name": "vector_search_hash",
+          "tokens": 319
+        },
+        {
+          "name": "hybrid_search",
+          "tokens": 510
+        },
+        {
+          "name": "dbsize",
+          "tokens": 68
+        },
+        {
+          "name": "info",
+          "tokens": 88
+        },
+        {
+          "name": "client_list",
+          "tokens": 36
+        },
+        {
+          "name": "sadd",
+          "tokens": 184
+        },
+        {
+          "name": "srem",
+          "tokens": 136
+        },
+        {
+          "name": "smembers",
+          "tokens": 131
+        },
+        {
+          "name": "zadd",
+          "tokens": 207
+        },
+        {
+          "name": "zrange",
+          "tokens": 203
+        },
+        {
+          "name": "zrem",
+          "tokens": 139
+        },
+        {
+          "name": "xadd",
+          "tokens": 193
+        },
+        {
+          "name": "xrange",
+          "tokens": 143
+        },
+        {
+          "name": "xdel",
+          "tokens": 144
+        },
+        {
+          "name": "xgroup_create",
+          "tokens": 215
+        },
+        {
+          "name": "xgroup_destroy",
+          "tokens": 145
+        },
+        {
+          "name": "xreadgroup",
+          "tokens": 317
+        },
+        {
+          "name": "xack",
+          "tokens": 182
+        },
+        {
+          "name": "set",
+          "tokens": 214
+        },
+        {
+          "name": "get",
+          "tokens": 125
+        }
+      ]
+    }
+  ]
+}

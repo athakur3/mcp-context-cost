@@ -7,6 +7,33 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **The history stops being decoration: what the measured set's cost has *done* is published.**
+  Every row's number was already re-measured on a rotation, and most entries launch unpinned,
+  so the series has been recording real upstream releases landing in real context windows —
+  and nothing read it back except a sparkline. `results/regressions.md`
+  (`cost-regression/v1`, regenerated with the leaderboard) reports each server's most recent
+  movement, and the first reading is a finding: **9 servers moved up against 1 that moved
+  down, a net +4,357 tokens**, with `obsidian` +82% in a week, `blender` +27%, `arxiv` +23%.
+  MCP servers ratchet, and nobody was counting.
+  Three rules keep a delta a claim about a server rather than about the harness, and two are
+  inherited rather than invented: comparisons happen only inside the run a trend line may be
+  drawn across, so a change of isolation can never read as a change of server; a failed
+  measurement contributes no row, so a server that stopped starting is a gap and never a drop
+  to zero; and the pair compared is deliberately **not** the newest one — a server that grew
+  once and held that cost since has a newest pair of zero, which would have hidden the largest
+  movement in the set behind a week of stability, so the walk goes back to the change that
+  produced today's cost and dates the window to when it happened. What the totals support on
+  their own is the mechanism — *shipped more tools* versus *same tools, rewritten*, with a
+  movement whose count and cost went opposite ways left as `mixed` rather than guessed.
+  Per-tool attribution needs both captures and `measurement.json` keeps only the newest, so
+  `results/<server>/tool-vectors.json` now accrues a short hash-deduped history (a server that
+  has not changed writes nothing); until it covers both sides, the report says the breakdown is
+  unavailable in those words rather than estimating one. A movement is called out only when it
+  clears 5% *and* 25 tokens — relative alone would headline a fifth of a cheap server, absolute
+  alone would headline drift on an expensive one — and everything comparable is listed either
+  way. The leaderboard carries the aggregate, README states it as a maintained claim, and the
+  regen order now folds history before generating the pages that describe it.
+
 ## 0.10.0 — 2026-09-04
 
 - **`audit --suggest`: trim advice with a measured distribution behind it.** The roadmap's

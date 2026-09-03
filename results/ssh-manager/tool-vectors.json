@@ -1,0 +1,161 @@
+{
+  "method": "cost-regression/v1",
+  "server": "ssh-manager",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "22ce75f27b9a8bf50f1cb77824b5769d6041d1f3c25032916b5201b1be31f5d7",
+      "totalTokens": 8446,
+      "tools": [
+        {
+          "name": "ssh_execute",
+          "tokens": 233
+        },
+        {
+          "name": "ssh_upload",
+          "tokens": 185
+        },
+        {
+          "name": "ssh_download",
+          "tokens": 176
+        },
+        {
+          "name": "ssh_sync",
+          "tokens": 477
+        },
+        {
+          "name": "ssh_tail",
+          "tokens": 230
+        },
+        {
+          "name": "ssh_monitor",
+          "tokens": 221
+        },
+        {
+          "name": "ssh_history",
+          "tokens": 200
+        },
+        {
+          "name": "ssh_session_start",
+          "tokens": 163
+        },
+        {
+          "name": "ssh_session_send",
+          "tokens": 193
+        },
+        {
+          "name": "ssh_session_list",
+          "tokens": 135
+        },
+        {
+          "name": "ssh_session_close",
+          "tokens": 152
+        },
+        {
+          "name": "ssh_execute_group",
+          "tokens": 291
+        },
+        {
+          "name": "ssh_group_manage",
+          "tokens": 297
+        },
+        {
+          "name": "ssh_list_servers",
+          "tokens": 138
+        },
+        {
+          "name": "ssh_deploy",
+          "tokens": 333
+        },
+        {
+          "name": "ssh_execute_sudo",
+          "tokens": 242
+        },
+        {
+          "name": "ssh_command_alias",
+          "tokens": 192
+        },
+        {
+          "name": "ssh_hooks",
+          "tokens": 170
+        },
+        {
+          "name": "ssh_profile",
+          "tokens": 159
+        },
+        {
+          "name": "ssh_connection_status",
+          "tokens": 166
+        },
+        {
+          "name": "ssh_tunnel_create",
+          "tokens": 253
+        },
+        {
+          "name": "ssh_tunnel_list",
+          "tokens": 132
+        },
+        {
+          "name": "ssh_tunnel_close",
+          "tokens": 150
+        },
+        {
+          "name": "ssh_key_manage",
+          "tokens": 196
+        },
+        {
+          "name": "ssh_alias",
+          "tokens": 182
+        },
+        {
+          "name": "ssh_backup_create",
+          "tokens": 387
+        },
+        {
+          "name": "ssh_backup_list",
+          "tokens": 187
+        },
+        {
+          "name": "ssh_backup_restore",
+          "tokens": 286
+        },
+        {
+          "name": "ssh_backup_schedule",
+          "tokens": 279
+        },
+        {
+          "name": "ssh_health_check",
+          "tokens": 162
+        },
+        {
+          "name": "ssh_service_status",
+          "tokens": 176
+        },
+        {
+          "name": "ssh_process_manager",
+          "tokens": 309
+        },
+        {
+          "name": "ssh_alert_setup",
+          "tokens": 275
+        },
+        {
+          "name": "ssh_db_dump",
+          "tokens": 316
+        },
+        {
+          "name": "ssh_db_import",
+          "tokens": 292
+        },
+        {
+          "name": "ssh_db_list",
+          "tokens": 239
+        },
+        {
+          "name": "ssh_db_query",
+          "tokens": 270
+        }
+      ]
+    }
+  ]
+}

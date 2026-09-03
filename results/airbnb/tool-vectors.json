@@ -1,0 +1,21 @@
+{
+  "method": "cost-regression/v1",
+  "server": "airbnb",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "79c3109b4fa4e4735ba1071cacbd98948c6aba20b70c9a4295a78e84850a81e0",
+      "totalTokens": 486,
+      "tools": [
+        {
+          "name": "airbnb_search",
+          "tokens": 319
+        },
+        {
+          "name": "airbnb_listing_details",
+          "tokens": 165
+        }
+      ]
+    }
+  ]
+}

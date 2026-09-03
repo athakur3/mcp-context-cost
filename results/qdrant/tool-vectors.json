@@ -1,0 +1,21 @@
+{
+  "method": "cost-regression/v1",
+  "server": "qdrant",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "2bd5a36e7293bab6b8e62c28b7d210c5261f4b80331b176c1df6dc100a7e6fc4",
+      "totalTokens": 188,
+      "tools": [
+        {
+          "name": "qdrant-find",
+          "tokens": 85
+        },
+        {
+          "name": "qdrant-store",
+          "tokens": 101
+        }
+      ]
+    }
+  ]
+}

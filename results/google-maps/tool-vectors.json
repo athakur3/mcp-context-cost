@@ -1,0 +1,41 @@
+{
+  "method": "cost-regression/v1",
+  "server": "google-maps",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "a88e204db09aa56954e3e041d6a9814aee9ac888fdfc7d5cb47aec1877441986",
+      "totalTokens": 549,
+      "tools": [
+        {
+          "name": "maps_geocode",
+          "tokens": 45
+        },
+        {
+          "name": "maps_reverse_geocode",
+          "tokens": 56
+        },
+        {
+          "name": "maps_search_places",
+          "tokens": 95
+        },
+        {
+          "name": "maps_place_details",
+          "tokens": 50
+        },
+        {
+          "name": "maps_distance_matrix",
+          "tokens": 124
+        },
+        {
+          "name": "maps_elevation",
+          "tokens": 78
+        },
+        {
+          "name": "maps_directions",
+          "tokens": 99
+        }
+      ]
+    }
+  ]
+}

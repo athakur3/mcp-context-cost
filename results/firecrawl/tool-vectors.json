@@ -1,0 +1,121 @@
+{
+  "method": "cost-regression/v1",
+  "server": "firecrawl",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "3b7694bcedabac9706eba0c497c1fb4591121db0fd25e4e87e4802a001e34cd6",
+      "totalTokens": 9561,
+      "tools": [
+        {
+          "name": "firecrawl_scrape",
+          "tokens": 874
+        },
+        {
+          "name": "firecrawl_map",
+          "tokens": 240
+        },
+        {
+          "name": "firecrawl_search",
+          "tokens": 1391
+        },
+        {
+          "name": "firecrawl_search_feedback",
+          "tokens": 501
+        },
+        {
+          "name": "firecrawl_feedback",
+          "tokens": 565
+        },
+        {
+          "name": "firecrawl_crawl",
+          "tokens": 911
+        },
+        {
+          "name": "firecrawl_check_crawl_status",
+          "tokens": 115
+        },
+        {
+          "name": "firecrawl_extract",
+          "tokens": 189
+        },
+        {
+          "name": "firecrawl_agent",
+          "tokens": 253
+        },
+        {
+          "name": "firecrawl_agent_status",
+          "tokens": 186
+        },
+        {
+          "name": "firecrawl_interact",
+          "tokens": 819
+        },
+        {
+          "name": "firecrawl_interact_stop",
+          "tokens": 109
+        },
+        {
+          "name": "firecrawl_parse",
+          "tokens": 630
+        },
+        {
+          "name": "firecrawl_monitor_create",
+          "tokens": 380
+        },
+        {
+          "name": "firecrawl_monitor_list",
+          "tokens": 129
+        },
+        {
+          "name": "firecrawl_monitor_get",
+          "tokens": 102
+        },
+        {
+          "name": "firecrawl_monitor_update",
+          "tokens": 150
+        },
+        {
+          "name": "firecrawl_monitor_delete",
+          "tokens": 104
+        },
+        {
+          "name": "firecrawl_monitor_run",
+          "tokens": 109
+        },
+        {
+          "name": "firecrawl_monitor_checks",
+          "tokens": 172
+        },
+        {
+          "name": "firecrawl_monitor_check",
+          "tokens": 242
+        },
+        {
+          "name": "firecrawl_research_search_papers",
+          "tokens": 346
+        },
+        {
+          "name": "firecrawl_research_inspect_paper",
+          "tokens": 191
+        },
+        {
+          "name": "firecrawl_research_related_papers",
+          "tokens": 247
+        },
+        {
+          "name": "firecrawl_research_read_paper",
+          "tokens": 236
+        },
+        {
+          "name": "firecrawl_research_search_github",
+          "tokens": 135
+        },
+        {
+          "name": "firecrawl_developer_search",
+          "tokens": 259
+        }
+      ]
+    }
+  ]
+}

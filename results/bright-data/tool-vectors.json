@@ -1,0 +1,33 @@
+{
+  "method": "cost-regression/v1",
+  "server": "bright-data",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "bd26660364200a7866906bbfecc185e41ea6a42e43ed5d6380b1c3b77a699eae",
+      "totalTokens": 978,
+      "tools": [
+        {
+          "name": "search_engine",
+          "tokens": 186
+        },
+        {
+          "name": "scrape_as_markdown",
+          "tokens": 115
+        },
+        {
+          "name": "search_engine_batch",
+          "tokens": 191
+        },
+        {
+          "name": "scrape_batch",
+          "tokens": 141
+        },
+        {
+          "name": "discover",
+          "tokens": 347
+        }
+      ]
+    }
+  ]
+}

@@ -238,6 +238,14 @@ sample of that range; the full range is in
 Each measured server also has a [detail page](https://athakur3.github.io/mcp-context-cost/servers/)
 showing which tools its tokens are in.)*
 
+Because the set is re-measured on a rotation and most entries launch unpinned, the same data
+answers a question no client asks: **what did this server cost last month?**
+[results/regressions.md](results/regressions.md) reports each server's most recent movement —
+dated to when it happened, separated into *shipped more tools* versus *same tools, rewritten*,
+and compared only within one isolation. The ecosystem ratchets upward: of the servers whose
+cost has moved at all, 9 moved up against 1 that moved down. Method:
+[cost movement](docs/METHODOLOGY.md#cost-movement).
+
 If you publish a server, the same measurement is available as a badge, so your users can see
 the cost before they install rather than after:
 

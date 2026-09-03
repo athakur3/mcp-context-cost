@@ -1,0 +1,49 @@
+{
+  "method": "cost-regression/v1",
+  "server": "gitlab",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "d51fb022687ee403f9710c9fae31ac91dbc796f5c52a3fcdbe0a91c387aa9365",
+      "totalTokens": 336,
+      "tools": [
+        {
+          "name": "create_or_update_file",
+          "tokens": 40
+        },
+        {
+          "name": "search_repositories",
+          "tokens": 33
+        },
+        {
+          "name": "create_repository",
+          "tokens": 33
+        },
+        {
+          "name": "get_file_contents",
+          "tokens": 41
+        },
+        {
+          "name": "push_files",
+          "tokens": 39
+        },
+        {
+          "name": "create_issue",
+          "tokens": 36
+        },
+        {
+          "name": "create_merge_request",
+          "tokens": 38
+        },
+        {
+          "name": "fork_repository",
+          "tokens": 38
+        },
+        {
+          "name": "create_branch",
+          "tokens": 36
+        }
+      ]
+    }
+  ]
+}

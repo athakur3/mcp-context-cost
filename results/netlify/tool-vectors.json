@@ -1,0 +1,49 @@
+{
+  "method": "cost-regression/v1",
+  "server": "netlify",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "be8578ef35da6e632f7cee04f664676c4895a1320868eceec1150a55f6c21440",
+      "totalTokens": 2831,
+      "tools": [
+        {
+          "name": "netlify-coding-rules",
+          "tokens": 124
+        },
+        {
+          "name": "netlify-user-services-reader",
+          "tokens": 147
+        },
+        {
+          "name": "netlify-deploy-services-reader",
+          "tokens": 261
+        },
+        {
+          "name": "netlify-deploy-services-updater",
+          "tokens": 254
+        },
+        {
+          "name": "netlify-team-services-reader",
+          "tokens": 231
+        },
+        {
+          "name": "netlify-project-services-reader",
+          "tokens": 349
+        },
+        {
+          "name": "netlify-project-services-updater",
+          "tokens": 896
+        },
+        {
+          "name": "netlify-extension-services-reader",
+          "tokens": 265
+        },
+        {
+          "name": "netlify-extension-services-updater",
+          "tokens": 302
+        }
+      ]
+    }
+  ]
+}

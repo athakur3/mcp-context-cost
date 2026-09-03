@@ -1,0 +1,21 @@
+{
+  "method": "cost-regression/v1",
+  "server": "time",
+  "entries": [
+    {
+      "date": "2026-08-18",
+      "canonicalSha256": "7c6ff08840620894a66a103e02a8eb315013dd0a7d7c6cfb59b0fbe51f8a5d87",
+      "totalTokens": 293,
+      "tools": [
+        {
+          "name": "get_current_time",
+          "tokens": 105
+        },
+        {
+          "name": "convert_time",
+          "tokens": 186
+        }
+      ]
+    }
+  ]
+}

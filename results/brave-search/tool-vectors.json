@@ -1,0 +1,45 @@
+{
+  "method": "cost-regression/v1",
+  "server": "brave-search",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "e5a8f43437056e6e89bb8f5167f5b8d471ba42de915ede953ce5968a84471582",
+      "totalTokens": 25456,
+      "tools": [
+        {
+          "name": "brave_web_search",
+          "tokens": 1396
+        },
+        {
+          "name": "brave_local_search",
+          "tokens": 1415
+        },
+        {
+          "name": "brave_video_search",
+          "tokens": 688
+        },
+        {
+          "name": "brave_image_search",
+          "tokens": 814
+        },
+        {
+          "name": "brave_news_search",
+          "tokens": 1002
+        },
+        {
+          "name": "brave_summarizer",
+          "tokens": 307
+        },
+        {
+          "name": "brave_llm_context",
+          "tokens": 2550
+        },
+        {
+          "name": "brave_place_search",
+          "tokens": 17282
+        }
+      ]
+    }
+  ]
+}

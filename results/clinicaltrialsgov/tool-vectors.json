@@ -1,0 +1,41 @@
+{
+  "method": "cost-regression/v1",
+  "server": "clinicaltrialsgov",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "acdc9b99e581c7493a98e8c0fac919bbe384ac3205227c15891b94d6ddcf4825",
+      "totalTokens": 5134,
+      "tools": [
+        {
+          "name": "clinicaltrials_search_studies",
+          "tokens": 1257
+        },
+        {
+          "name": "clinicaltrials_get_study_record",
+          "tokens": 279
+        },
+        {
+          "name": "clinicaltrials_get_study_count",
+          "tokens": 677
+        },
+        {
+          "name": "clinicaltrials_get_field_values",
+          "tokens": 527
+        },
+        {
+          "name": "clinicaltrials_get_field_definitions",
+          "tokens": 737
+        },
+        {
+          "name": "clinicaltrials_get_study_results",
+          "tokens": 928
+        },
+        {
+          "name": "clinicaltrials_find_eligible",
+          "tokens": 727
+        }
+      ]
+    }
+  ]
+}

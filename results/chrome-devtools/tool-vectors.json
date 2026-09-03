@@ -1,0 +1,129 @@
+{
+  "method": "cost-regression/v1",
+  "server": "chrome-devtools",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "151a59215c20049ea5934809670996c1d73977d468a65fa6b5624c2e24ca3ef4",
+      "totalTokens": 5717,
+      "tools": [
+        {
+          "name": "click",
+          "tokens": 156
+        },
+        {
+          "name": "close_page",
+          "tokens": 106
+        },
+        {
+          "name": "drag",
+          "tokens": 154
+        },
+        {
+          "name": "emulate",
+          "tokens": 418
+        },
+        {
+          "name": "evaluate_script",
+          "tokens": 320
+        },
+        {
+          "name": "fill",
+          "tokens": 186
+        },
+        {
+          "name": "fill_form",
+          "tokens": 265
+        },
+        {
+          "name": "get_console_message",
+          "tokens": 131
+        },
+        {
+          "name": "get_network_request",
+          "tokens": 215
+        },
+        {
+          "name": "handle_dialog",
+          "tokens": 141
+        },
+        {
+          "name": "hover",
+          "tokens": 135
+        },
+        {
+          "name": "lighthouse_audit",
+          "tokens": 197
+        },
+        {
+          "name": "list_console_messages",
+          "tokens": 333
+        },
+        {
+          "name": "list_network_requests",
+          "tokens": 277
+        },
+        {
+          "name": "list_pages",
+          "tokens": 70
+        },
+        {
+          "name": "navigate_page",
+          "tokens": 266
+        },
+        {
+          "name": "new_page",
+          "tokens": 205
+        },
+        {
+          "name": "performance_analyze_insight",
+          "tokens": 188
+        },
+        {
+          "name": "performance_start_trace",
+          "tokens": 249
+        },
+        {
+          "name": "performance_stop_trace",
+          "tokens": 143
+        },
+        {
+          "name": "press_key",
+          "tokens": 190
+        },
+        {
+          "name": "resize_page",
+          "tokens": 124
+        },
+        {
+          "name": "select_page",
+          "tokens": 125
+        },
+        {
+          "name": "take_heapsnapshot",
+          "tokens": 137
+        },
+        {
+          "name": "take_screenshot",
+          "tokens": 278
+        },
+        {
+          "name": "take_snapshot",
+          "tokens": 211
+        },
+        {
+          "name": "type_text",
+          "tokens": 137
+        },
+        {
+          "name": "upload_file",
+          "tokens": 197
+        },
+        {
+          "name": "wait_for",
+          "tokens": 161
+        }
+      ]
+    }
+  ]
+}

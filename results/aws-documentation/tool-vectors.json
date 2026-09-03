@@ -1,0 +1,33 @@
+{
+  "method": "cost-regression/v1",
+  "server": "aws-documentation",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "03d94c1d9bbcaf8fcaf375d1d6f14b975f108724d76ebe3d70ea7ce72eed13ac",
+      "totalTokens": 5074,
+      "tools": [
+        {
+          "name": "read_documentation",
+          "tokens": 571
+        },
+        {
+          "name": "read_sections",
+          "tokens": 634
+        },
+        {
+          "name": "search_table",
+          "tokens": 1361
+        },
+        {
+          "name": "search_documentation",
+          "tokens": 1956
+        },
+        {
+          "name": "recommend",
+          "tokens": 550
+        }
+      ]
+    }
+  ]
+}

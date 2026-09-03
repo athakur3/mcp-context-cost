@@ -1,0 +1,97 @@
+{
+  "method": "cost-regression/v1",
+  "server": "hubspot",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "3389dd469cfc2f46f06e4be24ba13ff95595ee30fd8dd62df81809a95daf3791",
+      "totalTokens": 9158,
+      "tools": [
+        {
+          "name": "hubspot-get-user-details",
+          "tokens": 250
+        },
+        {
+          "name": "hubspot-list-objects",
+          "tokens": 505
+        },
+        {
+          "name": "hubspot-search-objects",
+          "tokens": 964
+        },
+        {
+          "name": "hubspot-batch-create-associations",
+          "tokens": 628
+        },
+        {
+          "name": "hubspot-get-association-definitions",
+          "tokens": 339
+        },
+        {
+          "name": "hubspot-list-associations",
+          "tokens": 491
+        },
+        {
+          "name": "hubspot-batch-create-objects",
+          "tokens": 563
+        },
+        {
+          "name": "hubspot-batch-update-objects",
+          "tokens": 498
+        },
+        {
+          "name": "hubspot-batch-read-objects",
+          "tokens": 348
+        },
+        {
+          "name": "hubspot-list-properties",
+          "tokens": 322
+        },
+        {
+          "name": "hubspot-get-property",
+          "tokens": 245
+        },
+        {
+          "name": "hubspot-create-property",
+          "tokens": 879
+        },
+        {
+          "name": "hubspot-update-property",
+          "tokens": 669
+        },
+        {
+          "name": "hubspot-create-engagement",
+          "tokens": 569
+        },
+        {
+          "name": "hubspot-get-engagement",
+          "tokens": 127
+        },
+        {
+          "name": "hubspot-update-engagement",
+          "tokens": 530
+        },
+        {
+          "name": "hubspot-generate-feedback-link",
+          "tokens": 173
+        },
+        {
+          "name": "hubspot-get-schemas",
+          "tokens": 184
+        },
+        {
+          "name": "hubspot-get-link",
+          "tokens": 422
+        },
+        {
+          "name": "hubspot-list-workflows",
+          "tokens": 250
+        },
+        {
+          "name": "hubspot-get-workflow",
+          "tokens": 200
+        }
+      ]
+    }
+  ]
+}

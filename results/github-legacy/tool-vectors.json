@@ -1,0 +1,117 @@
+{
+  "method": "cost-regression/v1",
+  "server": "github-legacy",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "e0194003d2ddaf668a23e0570cdbcf8c142c3314d3dd811a50ae99e5afd79ae3",
+      "totalTokens": 3548,
+      "tools": [
+        {
+          "name": "create_or_update_file",
+          "tokens": 178
+        },
+        {
+          "name": "search_repositories",
+          "tokens": 115
+        },
+        {
+          "name": "create_repository",
+          "tokens": 107
+        },
+        {
+          "name": "get_file_contents",
+          "tokens": 121
+        },
+        {
+          "name": "push_files",
+          "tokens": 178
+        },
+        {
+          "name": "create_issue",
+          "tokens": 120
+        },
+        {
+          "name": "create_pull_request",
+          "tokens": 200
+        },
+        {
+          "name": "fork_repository",
+          "tokens": 108
+        },
+        {
+          "name": "create_branch",
+          "tokens": 127
+        },
+        {
+          "name": "list_commits",
+          "tokens": 94
+        },
+        {
+          "name": "list_issues",
+          "tokens": 149
+        },
+        {
+          "name": "update_issue",
+          "tokens": 143
+        },
+        {
+          "name": "add_issue_comment",
+          "tokens": 87
+        },
+        {
+          "name": "search_code",
+          "tokens": 96
+        },
+        {
+          "name": "search_issues",
+          "tokens": 151
+        },
+        {
+          "name": "search_users",
+          "tokens": 110
+        },
+        {
+          "name": "get_issue",
+          "tokens": 81
+        },
+        {
+          "name": "get_pull_request",
+          "tokens": 99
+        },
+        {
+          "name": "list_pull_requests",
+          "tokens": 226
+        },
+        {
+          "name": "create_pull_request_review",
+          "tokens": 360
+        },
+        {
+          "name": "merge_pull_request",
+          "tokens": 159
+        },
+        {
+          "name": "get_pull_request_files",
+          "tokens": 103
+        },
+        {
+          "name": "get_pull_request_status",
+          "tokens": 105
+        },
+        {
+          "name": "update_pull_request_branch",
+          "tokens": 128
+        },
+        {
+          "name": "get_pull_request_comments",
+          "tokens": 101
+        },
+        {
+          "name": "get_pull_request_reviews",
+          "tokens": 100
+        }
+      ]
+    }
+  ]
+}

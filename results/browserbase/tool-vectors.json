@@ -1,0 +1,37 @@
+{
+  "method": "cost-regression/v1",
+  "server": "browserbase",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "1dc53461369d7cb64ea8151f33283db371951cf44289471f6156e35cd1ae28bb",
+      "totalTokens": 364,
+      "tools": [
+        {
+          "name": "start",
+          "tokens": 50
+        },
+        {
+          "name": "end",
+          "tokens": 49
+        },
+        {
+          "name": "navigate",
+          "tokens": 67
+        },
+        {
+          "name": "act",
+          "tokens": 69
+        },
+        {
+          "name": "observe",
+          "tokens": 69
+        },
+        {
+          "name": "extract",
+          "tokens": 58
+        }
+      ]
+    }
+  ]
+}

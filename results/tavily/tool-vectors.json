@@ -1,0 +1,33 @@
+{
+  "method": "cost-regression/v1",
+  "server": "tavily",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "b2bcd45339fe42caa0f55e5ca1196091b2dcda4b868fedd209177b54f2ef51ef",
+      "totalTokens": 1653,
+      "tools": [
+        {
+          "name": "tavily_search",
+          "tokens": 615
+        },
+        {
+          "name": "tavily_extract",
+          "tokens": 178
+        },
+        {
+          "name": "tavily_crawl",
+          "tokens": 412
+        },
+        {
+          "name": "tavily_map",
+          "tokens": 288
+        },
+        {
+          "name": "tavily_research",
+          "tokens": 158
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "method": "cost-regression/v1",
+  "server": "github",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "40d73048f0112cd8282ee61d586632738f6746678ece24f8f61f4dcc4b8b2135",
+      "totalTokens": 54622,
+      "tools": [
+        {
+          "name": "add_comment_to_pending_review",
+          "tokens": 1534
+        },
+        {
+          "name": "add_issue_comment",
+          "tokens": 1517
+        },
+        {
+          "name": "add_reply_to_pull_request_comment",
+          "tokens": 1454
+        },
+        {
+          "name": "assign_copilot_to_issue",
+          "tokens": 1549
+        },
+        {
+          "name": "create_branch",
+          "tokens": 801
+        },
+        {
+          "name": "create_or_update_file",
+          "tokens": 1019
+        },
+        {
+          "name": "create_pull_request",
+          "tokens": 1391
+        },
+        {
+          "name": "create_repository",
+          "tokens": 821
+        },
+        {
+          "name": "delete_file",
+          "tokens": 826
+        },
+        {
+          "name": "fork_repository",
+          "tokens": 1242
+        },
+        {
+          "name": "get_commit",
+          "tokens": 937
+        },
+        {
+          "name": "get_file_contents",
+          "tokens": 966
+        },
+        {
+          "name": "get_label",
+          "tokens": 1337
+        },
+        {
+          "name": "get_latest_release",
+          "tokens": 768
+        },
+        {
+          "name": "get_me",
+          "tokens": 1096
+        },
+        {
+          "name": "get_release_by_tag",
+          "tokens": 802
+        },
+        {
+          "name": "get_tag",
+          "tokens": 784
+        },
+        {
+          "name": "get_team_members",
+          "tokens": 1117
+        },
+        {
+          "name": "get_teams",
+          "tokens": 1102
+        },
+        {
+          "name": "issue_read",
+          "tokens": 1575
+        },
+        {
+          "name": "issue_write",
+          "tokens": 2050
+        },
+        {
+          "name": "list_branches",
+          "tokens": 819
+        },
+        {
+          "name": "list_commits",
+          "tokens": 1092
+        },
+        {
+          "name": "list_issue_fields",
+          "tokens": 1394
+        },
+        {
+          "name": "list_issue_types",
+          "tokens": 1359
+        },
+        {
+          "name": "list_issues",
+          "tokens": 1787
+        },
+        {
+          "name": "list_pull_requests",
+          "tokens": 1569
+        },
+        {
+          "name": "list_releases",
+          "tokens": 904
+        },
+        {
+          "name": "list_repository_collaborators",
+          "tokens": 936
+        },
+        {
+          "name": "list_tags",
+          "tokens": 819
+        },
+        {
+          "name": "merge_pull_request",
+          "tokens": 1259
+        },
+        {
+          "name": "pull_request_read",
+          "tokens": 1737
+        },
+        {
+          "name": "pull_request_review_write",
+          "tokens": 1681
+        },
+        {
+          "name": "push_files",
+          "tokens": 878
+        },
+        {
+          "name": "request_copilot_review",
+          "tokens": 1426
+        },
+        {
+          "name": "search_code",
+          "tokens": 1075
+        },
+        {
+          "name": "search_commits",
+          "tokens": 1069
+        },
+        {
+          "name": "search_issues",
+          "tokens": 1678
+        },
+        {
+          "name": "search_pull_requests",
+          "tokens": 1595
+        },
+        {
+          "name": "search_repositories",
+          "tokens": 938
+        },
+        {
+          "name": "search_users",
+          "tokens": 1566
+        },
+        {
+          "name": "sub_issue_write",
+          "tokens": 1617
+        },
+        {
+          "name": "update_pull_request",
+          "tokens": 1419
+        },
+        {
+          "name": "update_pull_request_branch",
+          "tokens": 1315
+        }
+      ]
+    }
+  ]
+}

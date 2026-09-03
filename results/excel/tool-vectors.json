@@ -1,0 +1,113 @@
+{
+  "method": "cost-regression/v1",
+  "server": "excel",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "cf374a8866847f36b743f5b59176d3908466f40c2d5d9b3cb0462ea47af40999",
+      "totalTokens": 4266,
+      "tools": [
+        {
+          "name": "apply_formula",
+          "tokens": 151
+        },
+        {
+          "name": "validate_formula_syntax",
+          "tokens": 143
+        },
+        {
+          "name": "format_range",
+          "tokens": 472
+        },
+        {
+          "name": "read_data_from_excel",
+          "tokens": 293
+        },
+        {
+          "name": "write_data_to_excel",
+          "tokens": 244
+        },
+        {
+          "name": "create_workbook",
+          "tokens": 94
+        },
+        {
+          "name": "create_worksheet",
+          "tokens": 111
+        },
+        {
+          "name": "create_chart",
+          "tokens": 198
+        },
+        {
+          "name": "create_pivot_table",
+          "tokens": 219
+        },
+        {
+          "name": "create_table",
+          "tokens": 176
+        },
+        {
+          "name": "copy_worksheet",
+          "tokens": 126
+        },
+        {
+          "name": "delete_worksheet",
+          "tokens": 110
+        },
+        {
+          "name": "rename_worksheet",
+          "tokens": 126
+        },
+        {
+          "name": "get_workbook_metadata",
+          "tokens": 122
+        },
+        {
+          "name": "merge_cells",
+          "tokens": 140
+        },
+        {
+          "name": "unmerge_cells",
+          "tokens": 145
+        },
+        {
+          "name": "get_merged_cells",
+          "tokens": 117
+        },
+        {
+          "name": "copy_range",
+          "tokens": 185
+        },
+        {
+          "name": "delete_range",
+          "tokens": 161
+        },
+        {
+          "name": "validate_excel_range",
+          "tokens": 158
+        },
+        {
+          "name": "get_data_validation_info",
+          "tokens": 191
+        },
+        {
+          "name": "insert_rows",
+          "tokens": 144
+        },
+        {
+          "name": "insert_columns",
+          "tokens": 144
+        },
+        {
+          "name": "delete_sheet_rows",
+          "tokens": 147
+        },
+        {
+          "name": "delete_sheet_columns",
+          "tokens": 147
+        }
+      ]
+    }
+  ]
+}

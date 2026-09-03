@@ -7,6 +7,10 @@ import { join } from 'node:path';
 import type { Measurement } from '../core/types.js';
 import { isCurrent, parseDivergence, type DivergenceRun } from '../core/divergence.js';
 import { divergencePct, isComparable, parseCrossCheck, type CrossCheckRun } from '../core/cross-check.js';
+// Type-only, and from core rather than ./regressions.js: the regression report
+// imports this module for its markdown escaping, so importing it back at
+// runtime would close a cycle. The summary is handed in by the caller instead.
+import type { RegressionSummary } from '../core/regression.js';
 import {
   SESSION_START_METHOD,
   parseSessionStart,
@@ -91,7 +95,11 @@ export function sessionStartCell(load: SessionStartLoad | null): string {
   return `${load.isFloor ? '≥' : ''}${load.totalTokens.toLocaleString('en-US')}`;
 }
 
-export function writeLeaderboard(entries: ServerEntry[], root = process.cwd()): void {
+export function writeLeaderboard(
+  entries: ServerEntry[],
+  root = process.cwd(),
+  regressions?: RegressionSummary | null,
+): void {
   const rows = loadRows(entries, root);
   const div = loadDivergence(root);
   const ss = loadSessionStartRun(root);
@@ -160,6 +168,21 @@ export function writeLeaderboard(entries: ServerEntry[], root = process.cwd()): 
         ` A row prints only while the comparison is between like and like: the same tool names on both ` +
         `sides, and our capture unchanged since the run. ` +
         `See [CLI cross-check](../docs/METHODOLOGY.md#cli-cross-check).`,
+    );
+    md.push('');
+  }
+  // Derived on every write from the movements actually on record, and the
+  // paragraph disappears when nothing has moved — the same rule the
+  // deferral-costs-more note follows, rather than asserting a stale count.
+  if (regressions && regressions.changes.length > 0) {
+    const net = regressions.netTokens;
+    const sign = (v: number) => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toLocaleString('en-US')}`;
+    md.push(
+      `**Of the servers whose cost has moved at all, ${regressions.grew} moved upward and ` +
+        `${regressions.shrank} moved down** — a net ${sign(net)} tokens across the set. Most entries here ` +
+        `launch unpinned, so a movement is a real upstream release landing in real context windows, and ` +
+        `only measurements taken under the same isolation are compared. Every movement, which half of the ` +
+        `server moved, and where the tokens went: [regressions.md](regressions.md).`,
     );
     md.push('');
   }

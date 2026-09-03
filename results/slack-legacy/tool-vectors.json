@@ -1,0 +1,45 @@
+{
+  "method": "cost-regression/v1",
+  "server": "slack-legacy",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "5939f969618ff709e86ff0599b80cc8f418db8904b4304a6eeb82a25f30ccd81",
+      "totalTokens": 681,
+      "tools": [
+        {
+          "name": "slack_list_channels",
+          "tokens": 76
+        },
+        {
+          "name": "slack_post_message",
+          "tokens": 70
+        },
+        {
+          "name": "slack_reply_to_thread",
+          "tokens": 124
+        },
+        {
+          "name": "slack_add_reaction",
+          "tokens": 95
+        },
+        {
+          "name": "slack_get_channel_history",
+          "tokens": 73
+        },
+        {
+          "name": "slack_get_thread_replies",
+          "tokens": 110
+        },
+        {
+          "name": "slack_get_users",
+          "tokens": 80
+        },
+        {
+          "name": "slack_get_user_profile",
+          "tokens": 51
+        }
+      ]
+    }
+  ]
+}

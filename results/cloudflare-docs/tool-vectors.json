@@ -1,0 +1,21 @@
+{
+  "method": "cost-regression/v1",
+  "server": "cloudflare-docs",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "a65649ac29928ffde9e8bf8796482b5aaeb17e79d02ea2f3b8b96f11ac32b604",
+      "totalTokens": 422,
+      "tools": [
+        {
+          "name": "search_cloudflare_documentation",
+          "tokens": 351
+        },
+        {
+          "name": "migrate_pages_to_workers_guide",
+          "tokens": 69
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "method": "cost-regression/v1",
+  "server": "neo4j-cypher",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "2e66ec7b2ea28f25f5b986a65cc950c06febad089b2c3033be49e15548f9c432",
+      "totalTokens": 523,
+      "tools": [
+        {
+          "name": "get_neo4j_schema",
+          "tokens": 238
+        },
+        {
+          "name": "read_neo4j_cypher",
+          "tokens": 143
+        },
+        {
+          "name": "write_neo4j_cypher",
+          "tokens": 143
+        }
+      ]
+    }
+  ]
+}

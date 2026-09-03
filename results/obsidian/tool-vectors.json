@@ -1,0 +1,73 @@
+{
+  "method": "cost-regression/v1",
+  "server": "obsidian",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "6064f85a43ae17b2da72d1b87fd9435879e8b42bc320e1347e382f5c8a61b499",
+      "totalTokens": 2062,
+      "tools": [
+        {
+          "name": "obsidian_list_files_in_dir",
+          "tokens": 74
+        },
+        {
+          "name": "obsidian_list_files_in_vault",
+          "tokens": 43
+        },
+        {
+          "name": "obsidian_get_file_contents",
+          "tokens": 62
+        },
+        {
+          "name": "obsidian_simple_search",
+          "tokens": 105
+        },
+        {
+          "name": "obsidian_patch_content",
+          "tokens": 263
+        },
+        {
+          "name": "obsidian_append_content",
+          "tokens": 78
+        },
+        {
+          "name": "obsidian_put_content",
+          "tokens": 146
+        },
+        {
+          "name": "obsidian_delete_file",
+          "tokens": 87
+        },
+        {
+          "name": "obsidian_complex_search",
+          "tokens": 492
+        },
+        {
+          "name": "obsidian_search_by_tag",
+          "tokens": 167
+        },
+        {
+          "name": "obsidian_get_frontmatter",
+          "tokens": 97
+        },
+        {
+          "name": "obsidian_batch_get_file_contents",
+          "tokens": 84
+        },
+        {
+          "name": "obsidian_get_periodic_note",
+          "tokens": 135
+        },
+        {
+          "name": "obsidian_get_recent_periodic_notes",
+          "tokens": 134
+        },
+        {
+          "name": "obsidian_get_recent_changes",
+          "tokens": 93
+        }
+      ]
+    }
+  ]
+}

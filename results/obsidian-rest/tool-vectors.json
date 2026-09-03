@@ -1,0 +1,61 @@
+{
+  "method": "cost-regression/v1",
+  "server": "obsidian-rest",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "85d23a7fa63923641625701d0c5fff39249eb8b379c3c1a7a444fef6437d6bc4",
+      "totalTokens": 10173,
+      "tools": [
+        {
+          "name": "obsidian_get_note",
+          "tokens": 1523
+        },
+        {
+          "name": "obsidian_list_notes",
+          "tokens": 774
+        },
+        {
+          "name": "obsidian_list_tags",
+          "tokens": 249
+        },
+        {
+          "name": "obsidian_search_notes",
+          "tokens": 1369
+        },
+        {
+          "name": "obsidian_open_in_ui",
+          "tokens": 298
+        },
+        {
+          "name": "obsidian_write_note",
+          "tokens": 933
+        },
+        {
+          "name": "obsidian_append_to_note",
+          "tokens": 817
+        },
+        {
+          "name": "obsidian_patch_note",
+          "tokens": 1028
+        },
+        {
+          "name": "obsidian_replace_in_note",
+          "tokens": 812
+        },
+        {
+          "name": "obsidian_manage_frontmatter",
+          "tokens": 878
+        },
+        {
+          "name": "obsidian_manage_tags",
+          "tokens": 1052
+        },
+        {
+          "name": "obsidian_delete_note",
+          "tokens": 438
+        }
+      ]
+    }
+  ]
+}

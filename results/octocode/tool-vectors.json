@@ -1,0 +1,69 @@
+{
+  "method": "cost-regression/v1",
+  "server": "octocode",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "17bae5bf5a76df127b4ddba609724a2a52b86400700daa315562e18f1082304f",
+      "totalTokens": 13552,
+      "tools": [
+        {
+          "name": "ghSearchCode",
+          "tokens": 725
+        },
+        {
+          "name": "ghGetFileContent",
+          "tokens": 1054
+        },
+        {
+          "name": "ghViewRepoStructure",
+          "tokens": 544
+        },
+        {
+          "name": "ghSearchRepos",
+          "tokens": 877
+        },
+        {
+          "name": "ghSearchPullRequests",
+          "tokens": 1799
+        },
+        {
+          "name": "ghSearchIssues",
+          "tokens": 1189
+        },
+        {
+          "name": "ghSearchCommits",
+          "tokens": 1003
+        },
+        {
+          "name": "npmSearch",
+          "tokens": 393
+        },
+        {
+          "name": "localSearchCode",
+          "tokens": 1755
+        },
+        {
+          "name": "localViewStructure",
+          "tokens": 810
+        },
+        {
+          "name": "localFindFiles",
+          "tokens": 979
+        },
+        {
+          "name": "localFindDeadCode",
+          "tokens": 746
+        },
+        {
+          "name": "localGetFileContent",
+          "tokens": 858
+        },
+        {
+          "name": "lspGetSemantics",
+          "tokens": 818
+        }
+      ]
+    }
+  ]
+}

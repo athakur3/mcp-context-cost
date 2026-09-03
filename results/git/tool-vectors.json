@@ -1,0 +1,61 @@
+{
+  "method": "cost-regression/v1",
+  "server": "git",
+  "entries": [
+    {
+      "date": "2026-08-18",
+      "canonicalSha256": "9710fb8f79f50348c138ee513e344f7fc9ac0e912a728d8aeda847cd04ed64f1",
+      "totalTokens": 1455,
+      "tools": [
+        {
+          "name": "git_status",
+          "tokens": 75
+        },
+        {
+          "name": "git_diff_unstaged",
+          "tokens": 104
+        },
+        {
+          "name": "git_diff_staged",
+          "tokens": 98
+        },
+        {
+          "name": "git_diff",
+          "tokens": 106
+        },
+        {
+          "name": "git_commit",
+          "tokens": 88
+        },
+        {
+          "name": "git_add",
+          "tokens": 97
+        },
+        {
+          "name": "git_reset",
+          "tokens": 76
+        },
+        {
+          "name": "git_log",
+          "tokens": 289
+        },
+        {
+          "name": "git_create_branch",
+          "tokens": 123
+        },
+        {
+          "name": "git_checkout",
+          "tokens": 89
+        },
+        {
+          "name": "git_show",
+          "tokens": 89
+        },
+        {
+          "name": "git_branch",
+          "tokens": 219
+        }
+      ]
+    }
+  ]
+}

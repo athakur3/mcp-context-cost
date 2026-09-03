@@ -1,0 +1,41 @@
+{
+  "method": "cost-regression/v1",
+  "server": "n8n-mcp",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "efc31b255c09a3f364367c1450285b1e107d999faf01d4c9c37711aa12410948",
+      "totalTokens": 2636,
+      "tools": [
+        {
+          "name": "tools_documentation",
+          "tokens": 151
+        },
+        {
+          "name": "search_nodes",
+          "tokens": 297
+        },
+        {
+          "name": "get_node",
+          "tokens": 470
+        },
+        {
+          "name": "validate_node",
+          "tokens": 522
+        },
+        {
+          "name": "get_template",
+          "tokens": 134
+        },
+        {
+          "name": "search_templates",
+          "tokens": 628
+        },
+        {
+          "name": "validate_workflow",
+          "tokens": 432
+        }
+      ]
+    }
+  ]
+}

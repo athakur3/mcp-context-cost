@@ -1,0 +1,145 @@
+{
+  "method": "cost-regression/v1",
+  "server": "playwright-community",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "4af7a9d131b4506471d83cc2d014ffc39b784a16ff181cce05ae2d9f26dbe9ff",
+      "totalTokens": 2920,
+      "tools": [
+        {
+          "name": "start_codegen_session",
+          "tokens": 125
+        },
+        {
+          "name": "end_codegen_session",
+          "tokens": 52
+        },
+        {
+          "name": "get_codegen_session",
+          "tokens": 49
+        },
+        {
+          "name": "clear_codegen_session",
+          "tokens": 51
+        },
+        {
+          "name": "playwright_navigate",
+          "tokens": 174
+        },
+        {
+          "name": "playwright_screenshot",
+          "tokens": 193
+        },
+        {
+          "name": "playwright_click",
+          "tokens": 47
+        },
+        {
+          "name": "playwright_iframe_click",
+          "tokens": 76
+        },
+        {
+          "name": "playwright_iframe_fill",
+          "tokens": 91
+        },
+        {
+          "name": "playwright_fill",
+          "tokens": 59
+        },
+        {
+          "name": "playwright_select",
+          "tokens": 64
+        },
+        {
+          "name": "playwright_hover",
+          "tokens": 46
+        },
+        {
+          "name": "playwright_upload_file",
+          "tokens": 77
+        },
+        {
+          "name": "playwright_evaluate",
+          "tokens": 47
+        },
+        {
+          "name": "playwright_console_logs",
+          "tokens": 138
+        },
+        {
+          "name": "playwright_resize",
+          "tokens": 205
+        },
+        {
+          "name": "playwright_close",
+          "tokens": 31
+        },
+        {
+          "name": "playwright_get",
+          "tokens": 82
+        },
+        {
+          "name": "playwright_post",
+          "tokens": 100
+        },
+        {
+          "name": "playwright_put",
+          "tokens": 100
+        },
+        {
+          "name": "playwright_patch",
+          "tokens": 100
+        },
+        {
+          "name": "playwright_delete",
+          "tokens": 82
+        },
+        {
+          "name": "playwright_expect_response",
+          "tokens": 99
+        },
+        {
+          "name": "playwright_assert_response",
+          "tokens": 99
+        },
+        {
+          "name": "playwright_custom_user_agent",
+          "tokens": 55
+        },
+        {
+          "name": "playwright_get_visible_text",
+          "tokens": 35
+        },
+        {
+          "name": "playwright_get_visible_html",
+          "tokens": 228
+        },
+        {
+          "name": "playwright_go_back",
+          "tokens": 30
+        },
+        {
+          "name": "playwright_go_forward",
+          "tokens": 30
+        },
+        {
+          "name": "playwright_drag",
+          "tokens": 70
+        },
+        {
+          "name": "playwright_press_key",
+          "tokens": 74
+        },
+        {
+          "name": "playwright_save_as_pdf",
+          "tokens": 155
+        },
+        {
+          "name": "playwright_click_and_switch_tab",
+          "tokens": 54
+        }
+      ]
+    }
+  ]
+}

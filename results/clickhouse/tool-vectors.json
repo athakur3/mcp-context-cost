@@ -1,0 +1,25 @@
+{
+  "method": "cost-regression/v1",
+  "server": "clickhouse",
+  "entries": [
+    {
+      "date": "2026-09-02",
+      "canonicalSha256": "1f68f3e76c71c7c8c4c6cf537ed857231daacdf9cd6ebb95e30ac482cc218b89",
+      "totalTokens": 694,
+      "tools": [
+        {
+          "name": "list_databases",
+          "tokens": 79
+        },
+        {
+          "name": "list_tables",
+          "tokens": 413
+        },
+        {
+          "name": "run_query",
+          "tokens": 203
+        }
+      ]
+    }
+  ]
+}

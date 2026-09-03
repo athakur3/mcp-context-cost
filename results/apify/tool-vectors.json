@@ -1,0 +1,53 @@
+{
+  "method": "cost-regression/v1",
+  "server": "apify",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "45e69bb7d3ab57903ca84555f5bb3851cbc806ae35ce9398eb88eea7f587ec91",
+      "totalTokens": 10426,
+      "tools": [
+        {
+          "name": "search-actors",
+          "tokens": 2200
+        },
+        {
+          "name": "fetch-actor-details",
+          "tokens": 1480
+        },
+        {
+          "name": "call-actor",
+          "tokens": 1884
+        },
+        {
+          "name": "get-actor-run",
+          "tokens": 1314
+        },
+        {
+          "name": "get-dataset-items",
+          "tokens": 685
+        },
+        {
+          "name": "get-key-value-store-record",
+          "tokens": 351
+        },
+        {
+          "name": "abort-actor-run",
+          "tokens": 1151
+        },
+        {
+          "name": "search-apify-docs",
+          "tokens": 726
+        },
+        {
+          "name": "fetch-apify-docs",
+          "tokens": 286
+        },
+        {
+          "name": "report-problem",
+          "tokens": 347
+        }
+      ]
+    }
+  ]
+}

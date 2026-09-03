@@ -1,0 +1,49 @@
+{
+  "method": "cost-regression/v1",
+  "server": "memory",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "d028274f76dc9aa2e622ae02a17ce313aa65d7b5935254ca53889d4094238abb",
+      "totalTokens": 2378,
+      "tools": [
+        {
+          "name": "create_entities",
+          "tokens": 294
+        },
+        {
+          "name": "create_relations",
+          "tokens": 294
+        },
+        {
+          "name": "add_observations",
+          "tokens": 249
+        },
+        {
+          "name": "delete_entities",
+          "tokens": 166
+        },
+        {
+          "name": "delete_observations",
+          "tokens": 212
+        },
+        {
+          "name": "delete_relations",
+          "tokens": 225
+        },
+        {
+          "name": "read_graph",
+          "tokens": 291
+        },
+        {
+          "name": "search_nodes",
+          "tokens": 323
+        },
+        {
+          "name": "open_nodes",
+          "tokens": 322
+        }
+      ]
+    }
+  ]
+}

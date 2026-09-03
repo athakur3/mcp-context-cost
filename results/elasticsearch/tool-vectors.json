@@ -1,0 +1,29 @@
+{
+  "method": "cost-regression/v1",
+  "server": "elasticsearch",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "76a005f840c738f5788e7b5801fdc12194713fce1ed435ad500f891a2b2dd13c",
+      "totalTokens": 374,
+      "tools": [
+        {
+          "name": "list_indices",
+          "tokens": 72
+        },
+        {
+          "name": "get_mappings",
+          "tokens": 76
+        },
+        {
+          "name": "search",
+          "tokens": 159
+        },
+        {
+          "name": "get_shards",
+          "tokens": 65
+        }
+      ]
+    }
+  ]
+}

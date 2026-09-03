@@ -1,0 +1,77 @@
+{
+  "method": "cost-regression/v1",
+  "server": "githits",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "1de63e2beef41e0f618a1b41e1ead6a82fbce11d6e0c9652466884a2c74e10f0",
+      "totalTokens": 12600,
+      "tools": [
+        {
+          "name": "quick_start",
+          "tokens": 122
+        },
+        {
+          "name": "get_example",
+          "tokens": 474
+        },
+        {
+          "name": "search_language",
+          "tokens": 241
+        },
+        {
+          "name": "feedback",
+          "tokens": 428
+        },
+        {
+          "name": "search",
+          "tokens": 2270
+        },
+        {
+          "name": "search_status",
+          "tokens": 448
+        },
+        {
+          "name": "code_files",
+          "tokens": 1424
+        },
+        {
+          "name": "code_read",
+          "tokens": 1170
+        },
+        {
+          "name": "code_grep",
+          "tokens": 1681
+        },
+        {
+          "name": "docs_list",
+          "tokens": 404
+        },
+        {
+          "name": "docs_read",
+          "tokens": 410
+        },
+        {
+          "name": "pkg_info",
+          "tokens": 404
+        },
+        {
+          "name": "pkg_vulns",
+          "tokens": 778
+        },
+        {
+          "name": "pkg_deps",
+          "tokens": 677
+        },
+        {
+          "name": "pkg_changelog",
+          "tokens": 967
+        },
+        {
+          "name": "pkg_upgrade_review",
+          "tokens": 700
+        }
+      ]
+    }
+  ]
+}

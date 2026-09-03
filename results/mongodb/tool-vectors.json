@@ -1,0 +1,121 @@
+{
+  "method": "cost-regression/v1",
+  "server": "mongodb",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "c771e7295dc27668861b2a251566196a3e30b5b3ac282f7736aab96891bff300",
+      "totalTokens": 7926,
+      "tools": [
+        {
+          "name": "aggregate-db",
+          "tokens": 256
+        },
+        {
+          "name": "aggregate",
+          "tokens": 524
+        },
+        {
+          "name": "collection-indexes",
+          "tokens": 338
+        },
+        {
+          "name": "collection-schema",
+          "tokens": 223
+        },
+        {
+          "name": "collection-storage-size",
+          "tokens": 183
+        },
+        {
+          "name": "connect",
+          "tokens": 195
+        },
+        {
+          "name": "count",
+          "tokens": 202
+        },
+        {
+          "name": "create-collection",
+          "tokens": 205
+        },
+        {
+          "name": "create-index",
+          "tokens": 761
+        },
+        {
+          "name": "db-stats",
+          "tokens": 183
+        },
+        {
+          "name": "delete-many",
+          "tokens": 215
+        },
+        {
+          "name": "disconnect",
+          "tokens": 166
+        },
+        {
+          "name": "drop-collection",
+          "tokens": 209
+        },
+        {
+          "name": "drop-database",
+          "tokens": 181
+        },
+        {
+          "name": "drop-index",
+          "tokens": 233
+        },
+        {
+          "name": "explain",
+          "tokens": 813
+        },
+        {
+          "name": "export",
+          "tokens": 657
+        },
+        {
+          "name": "find",
+          "tokens": 375
+        },
+        {
+          "name": "insert-many",
+          "tokens": 260
+        },
+        {
+          "name": "list-collections",
+          "tokens": 202
+        },
+        {
+          "name": "list-connections",
+          "tokens": 270
+        },
+        {
+          "name": "list-databases",
+          "tokens": 207
+        },
+        {
+          "name": "mongodb-logs",
+          "tokens": 217
+        },
+        {
+          "name": "rename-collection",
+          "tokens": 233
+        },
+        {
+          "name": "update-many",
+          "tokens": 295
+        },
+        {
+          "name": "list-knowledge-sources",
+          "tokens": 132
+        },
+        {
+          "name": "search-knowledge",
+          "tokens": 189
+        }
+      ]
+    }
+  ]
+}

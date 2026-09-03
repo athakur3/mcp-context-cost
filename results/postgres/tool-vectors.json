@@ -1,0 +1,17 @@
+{
+  "method": "cost-regression/v1",
+  "server": "postgres",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "bbdb8dd9b6d3cd9b855597127ad5268e3fa4e3355e616b3dc102f4ed12cca454",
+      "totalTokens": 32,
+      "tools": [
+        {
+          "name": "query",
+          "tokens": 30
+        }
+      ]
+    }
+  ]
+}

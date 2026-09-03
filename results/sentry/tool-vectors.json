@@ -1,0 +1,49 @@
+{
+  "method": "cost-regression/v1",
+  "server": "sentry",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "11ef5fbfa5440a29377fedcd23abb764cf640ba03762911c8bfcd5b11a53aebd",
+      "totalTokens": 6086,
+      "tools": [
+        {
+          "name": "find_organizations",
+          "tokens": 308
+        },
+        {
+          "name": "find_projects",
+          "tokens": 397
+        },
+        {
+          "name": "update_issue",
+          "tokens": 1248
+        },
+        {
+          "name": "search_events",
+          "tokens": 1127
+        },
+        {
+          "name": "analyze_issue_with_seer",
+          "tokens": 641
+        },
+        {
+          "name": "search_issues",
+          "tokens": 853
+        },
+        {
+          "name": "get_sentry_resource",
+          "tokens": 632
+        },
+        {
+          "name": "search_sentry_tools",
+          "tokens": 592
+        },
+        {
+          "name": "execute_sentry_tool",
+          "tokens": 286
+        }
+      ]
+    }
+  ]
+}

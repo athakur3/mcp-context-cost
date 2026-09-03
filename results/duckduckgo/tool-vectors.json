@@ -1,0 +1,21 @@
+{
+  "method": "cost-regression/v1",
+  "server": "duckduckgo",
+  "entries": [
+    {
+      "date": "2026-09-02",
+      "canonicalSha256": "61f82494284ccb413e9cb213ed93d7b79f43769229713b2748056a7f1018db14",
+      "totalTokens": 724,
+      "tools": [
+        {
+          "name": "search",
+          "tokens": 335
+        },
+        {
+          "name": "fetch_content",
+          "tokens": 387
+        }
+      ]
+    }
+  ]
+}

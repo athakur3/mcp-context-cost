@@ -1,0 +1,21 @@
+{
+  "method": "cost-regression/v1",
+  "server": "brave-search-legacy",
+  "entries": [
+    {
+      "date": "2026-08-18",
+      "canonicalSha256": "727577fbcd5fe4e811453a32d9c9852ea877c90b8acf56e0cdf5eda15e97d803",
+      "totalTokens": 319,
+      "tools": [
+        {
+          "name": "brave_web_search",
+          "tokens": 161
+        },
+        {
+          "name": "brave_local_search",
+          "tokens": 156
+        }
+      ]
+    }
+  ]
+}

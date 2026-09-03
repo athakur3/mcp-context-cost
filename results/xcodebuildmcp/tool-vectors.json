@@ -1,0 +1,109 @@
+{
+  "method": "cost-regression/v1",
+  "server": "xcodebuildmcp",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "f467743f38a30d15da18709c500aa4e22186a755f0e3d2c97966ccd343978a5d",
+      "totalTokens": 26594,
+      "tools": [
+        {
+          "name": "session_show_defaults",
+          "tokens": 1092
+        },
+        {
+          "name": "session_use_defaults_profile",
+          "tokens": 598
+        },
+        {
+          "name": "session_set_defaults",
+          "tokens": 1616
+        },
+        {
+          "name": "session_clear_defaults",
+          "tokens": 1197
+        },
+        {
+          "name": "list_sims",
+          "tokens": 585
+        },
+        {
+          "name": "boot_sim",
+          "tokens": 1019
+        },
+        {
+          "name": "open_sim",
+          "tokens": 1019
+        },
+        {
+          "name": "build_sim",
+          "tokens": 1081
+        },
+        {
+          "name": "build_run_sim",
+          "tokens": 1115
+        },
+        {
+          "name": "test_sim",
+          "tokens": 1391
+        },
+        {
+          "name": "get_sim_app_path",
+          "tokens": 842
+        },
+        {
+          "name": "install_app_sim",
+          "tokens": 739
+        },
+        {
+          "name": "launch_app_sim",
+          "tokens": 839
+        },
+        {
+          "name": "stop_app_sim",
+          "tokens": 737
+        },
+        {
+          "name": "record_sim_video",
+          "tokens": 2123
+        },
+        {
+          "name": "clean",
+          "tokens": 1004
+        },
+        {
+          "name": "discover_projs",
+          "tokens": 870
+        },
+        {
+          "name": "list_schemes",
+          "tokens": 736
+        },
+        {
+          "name": "show_build_settings",
+          "tokens": 717
+        },
+        {
+          "name": "get_app_bundle_id",
+          "tokens": 685
+        },
+        {
+          "name": "screenshot",
+          "tokens": 2099
+        },
+        {
+          "name": "snapshot_ui",
+          "tokens": 2139
+        },
+        {
+          "name": "get_coverage_report",
+          "tokens": 1173
+        },
+        {
+          "name": "get_file_coverage",
+          "tokens": 1176
+        }
+      ]
+    }
+  ]
+}

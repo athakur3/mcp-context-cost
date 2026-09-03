@@ -1,0 +1,25 @@
+{
+  "method": "cost-regression/v1",
+  "server": "emailmd",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "991fa59036ab1d4a4c1270ba14025668cd37bad41d9a804544a5e6aa23564365",
+      "totalTokens": 585,
+      "tools": [
+        {
+          "name": "render",
+          "tokens": 227
+        },
+        {
+          "name": "lint",
+          "tokens": 196
+        },
+        {
+          "name": "read_docs",
+          "tokens": 160
+        }
+      ]
+    }
+  ]
+}

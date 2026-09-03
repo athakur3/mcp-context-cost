@@ -1,0 +1,105 @@
+{
+  "method": "cost-regression/v1",
+  "server": "basic-memory",
+  "entries": [
+    {
+      "date": "2026-09-02",
+      "canonicalSha256": "0ba9e9185e3d5c167bbaf0dcfeb499f27020c307f1387a3b85374f849f0a38a7",
+      "totalTokens": 9188,
+      "tools": [
+        {
+          "name": "delete_note",
+          "tokens": 398
+        },
+        {
+          "name": "read_content",
+          "tokens": 257
+        },
+        {
+          "name": "build_context",
+          "tokens": 687
+        },
+        {
+          "name": "recent_activity",
+          "tokens": 636
+        },
+        {
+          "name": "search_notes",
+          "tokens": 970
+        },
+        {
+          "name": "read_note",
+          "tokens": 501
+        },
+        {
+          "name": "view_note",
+          "tokens": 242
+        },
+        {
+          "name": "write_note",
+          "tokens": 780
+        },
+        {
+          "name": "cloud_info",
+          "tokens": 97
+        },
+        {
+          "name": "release_notes",
+          "tokens": 98
+        },
+        {
+          "name": "canvas",
+          "tokens": 381
+        },
+        {
+          "name": "list_directory",
+          "tokens": 352
+        },
+        {
+          "name": "edit_note",
+          "tokens": 722
+        },
+        {
+          "name": "move_note",
+          "tokens": 531
+        },
+        {
+          "name": "list_workspaces",
+          "tokens": 161
+        },
+        {
+          "name": "list_memory_projects",
+          "tokens": 234
+        },
+        {
+          "name": "create_memory_project",
+          "tokens": 365
+        },
+        {
+          "name": "delete_project",
+          "tokens": 241
+        },
+        {
+          "name": "search",
+          "tokens": 133
+        },
+        {
+          "name": "fetch",
+          "tokens": 135
+        },
+        {
+          "name": "schema_validate",
+          "tokens": 710
+        },
+        {
+          "name": "schema_infer",
+          "tokens": 314
+        },
+        {
+          "name": "schema_diff",
+          "tokens": 264
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "method": "cost-regression/v1",
+  "server": "filesystem",
+  "entries": [
+    {
+      "date": "2026-08-18",
+      "canonicalSha256": "245b04832111268c3fcc72543af89fb2f8c109d8306c1b5b8c49dc45977e41e1",
+      "totalTokens": 2823,
+      "tools": [
+        {
+          "name": "read_file",
+          "tokens": 179
+        },
+        {
+          "name": "read_text_file",
+          "tokens": 256
+        },
+        {
+          "name": "read_media_file",
+          "tokens": 290
+        },
+        {
+          "name": "read_multiple_files",
+          "tokens": 210
+        },
+        {
+          "name": "write_file",
+          "tokens": 174
+        },
+        {
+          "name": "edit_file",
+          "tokens": 245
+        },
+        {
+          "name": "create_directory",
+          "tokens": 177
+        },
+        {
+          "name": "list_directory",
+          "tokens": 166
+        },
+        {
+          "name": "list_directory_with_sizes",
+          "tokens": 201
+        },
+        {
+          "name": "directory_tree",
+          "tokens": 202
+        },
+        {
+          "name": "move_file",
+          "tokens": 192
+        },
+        {
+          "name": "search_files",
+          "tokens": 218
+        },
+        {
+          "name": "get_file_info",
+          "tokens": 162
+        },
+        {
+          "name": "list_allowed_directories",
+          "tokens": 149
+        }
+      ]
+    }
+  ]
+}

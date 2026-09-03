@@ -1,0 +1,201 @@
+{
+  "method": "cost-regression/v1",
+  "server": "bitbucket-mcp",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "e131b1d46e30c0d05f07995aa167fa323ec1003719d861dbe27c82c94ad803cf",
+      "totalTokens": 6156,
+      "tools": [
+        {
+          "name": "listRepositories",
+          "tokens": 177
+        },
+        {
+          "name": "getRepository",
+          "tokens": 56
+        },
+        {
+          "name": "getPullRequests",
+          "tokens": 211
+        },
+        {
+          "name": "createPullRequest",
+          "tokens": 190
+        },
+        {
+          "name": "getPullRequest",
+          "tokens": 178
+        },
+        {
+          "name": "updatePullRequest",
+          "tokens": 105
+        },
+        {
+          "name": "getPullRequestActivity",
+          "tokens": 179
+        },
+        {
+          "name": "approvePullRequest",
+          "tokens": 175
+        },
+        {
+          "name": "unapprovePullRequest",
+          "tokens": 178
+        },
+        {
+          "name": "declinePullRequest",
+          "tokens": 92
+        },
+        {
+          "name": "mergePullRequest",
+          "tokens": 116
+        },
+        {
+          "name": "getPullRequestComments",
+          "tokens": 178
+        },
+        {
+          "name": "getPullRequestDiff",
+          "tokens": 80
+        },
+        {
+          "name": "getPullRequestCommits",
+          "tokens": 179
+        },
+        {
+          "name": "addPullRequestComment",
+          "tokens": 220
+        },
+        {
+          "name": "addPendingPullRequestComment",
+          "tokens": 202
+        },
+        {
+          "name": "publishPendingComments",
+          "tokens": 81
+        },
+        {
+          "name": "getRepositoryBranchingModel",
+          "tokens": 63
+        },
+        {
+          "name": "getRepositoryBranchingModelSettings",
+          "tokens": 65
+        },
+        {
+          "name": "updateRepositoryBranchingModelSettings",
+          "tokens": 235
+        },
+        {
+          "name": "getEffectiveRepositoryBranchingModel",
+          "tokens": 65
+        },
+        {
+          "name": "getProjectBranchingModel",
+          "tokens": 63
+        },
+        {
+          "name": "getProjectBranchingModelSettings",
+          "tokens": 65
+        },
+        {
+          "name": "updateProjectBranchingModelSettings",
+          "tokens": 235
+        },
+        {
+          "name": "createDraftPullRequest",
+          "tokens": 173
+        },
+        {
+          "name": "publishDraftPullRequest",
+          "tokens": 85
+        },
+        {
+          "name": "convertTodraft",
+          "tokens": 81
+        },
+        {
+          "name": "getPendingReviewPRs",
+          "tokens": 114
+        },
+        {
+          "name": "listPipelineRuns",
+          "tokens": 258
+        },
+        {
+          "name": "getPipelineRun",
+          "tokens": 175
+        },
+        {
+          "name": "runPipeline",
+          "tokens": 256
+        },
+        {
+          "name": "stopPipeline",
+          "tokens": 73
+        },
+        {
+          "name": "getPipelineSteps",
+          "tokens": 76
+        },
+        {
+          "name": "getPipelineStep",
+          "tokens": 93
+        },
+        {
+          "name": "getPipelineStepLogs",
+          "tokens": 226
+        },
+        {
+          "name": "getPullRequestComment",
+          "tokens": 98
+        },
+        {
+          "name": "updatePullRequestComment",
+          "tokens": 112
+        },
+        {
+          "name": "resolveComment",
+          "tokens": 96
+        },
+        {
+          "name": "reopenComment",
+          "tokens": 99
+        },
+        {
+          "name": "getPullRequestDiffStat",
+          "tokens": 82
+        },
+        {
+          "name": "getPullRequestPatch",
+          "tokens": 80
+        },
+        {
+          "name": "getPullRequestTasks",
+          "tokens": 80
+        },
+        {
+          "name": "createPullRequestTask",
+          "tokens": 134
+        },
+        {
+          "name": "getPullRequestTask",
+          "tokens": 98
+        },
+        {
+          "name": "updatePullRequestTask",
+          "tokens": 132
+        },
+        {
+          "name": "getPullRequestStatuses",
+          "tokens": 82
+        },
+        {
+          "name": "getEffectiveDefaultReviewers",
+          "tokens": 63
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "method": "cost-regression/v1",
+  "server": "pinecone",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "cc8ffaadb37615f11747b0a1eafd8541cfb2f31064adcd4973860f8f03bab377",
+      "totalTokens": 5903,
+      "tools": [
+        {
+          "name": "search-docs",
+          "tokens": 108
+        },
+        {
+          "name": "list-indexes",
+          "tokens": 371
+        },
+        {
+          "name": "describe-index",
+          "tokens": 423
+        },
+        {
+          "name": "describe-index-stats",
+          "tokens": 424
+        },
+        {
+          "name": "create-index-for-model",
+          "tokens": 856
+        },
+        {
+          "name": "upsert-records",
+          "tokens": 593
+        },
+        {
+          "name": "search-records",
+          "tokens": 1179
+        },
+        {
+          "name": "rerank-documents",
+          "tokens": 793
+        },
+        {
+          "name": "cascading-search",
+          "tokens": 1154
+        }
+      ]
+    }
+  ]
+}

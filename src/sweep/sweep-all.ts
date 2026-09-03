@@ -17,6 +17,7 @@ import { measureServer } from './run.js';
 import { DockerHarnessFault } from './docker.js';
 import { writeLeaderboard, type ServerEntry } from './report.js';
 import { appendHistory } from './history.js';
+import { appendToolVectors, writeRegressions } from './regressions.js';
 import { FAULT_RATIO, MIN_REGRESSIONS, snapshot, verdict, restore } from './harness-guard.js';
 import { selectShard, shardIndexForDate } from './shard.js';
 import type { MeasurementStatus } from '../core/types.js';
@@ -149,8 +150,12 @@ if (v.fault) {
 // Always the full set: the leaderboard is regenerated from what is on disk, so
 // a shard sweep republishes every server's most recent measurement rather than
 // dropping the servers this week did not touch.
-writeLeaderboard(doc.servers);
+// History and tool vectors before the leaderboard: its movement note is derived
+// from the same series, so folding after it would describe the previous sweep.
 const h = appendHistory();
+appendToolVectors();
+const regressions = writeRegressions(doc.servers);
+writeLeaderboard(doc.servers, process.cwd(), regressions.summary);
 const measured = Object.values(summary).filter((s) => s.includes('tokens')).length;
 if (dockerFaults.size > 0) {
   console.warn(

@@ -1,0 +1,29 @@
+{
+  "method": "cost-regression/v1",
+  "server": "huggingface",
+  "entries": [
+    {
+      "date": "2026-08-19",
+      "canonicalSha256": "b269a72bb6340ebfd5cf8170399b2606a9d7ea88b2277cfd6ca3511cec51a980",
+      "totalTokens": 4691,
+      "tools": [
+        {
+          "name": "hf_whoami",
+          "tokens": 1948
+        },
+        {
+          "name": "hub_repo_search",
+          "tokens": 364
+        },
+        {
+          "name": "hub_repo_details",
+          "tokens": 453
+        },
+        {
+          "name": "hf_fs",
+          "tokens": 1924
+        }
+      ]
+    }
+  ]
+}

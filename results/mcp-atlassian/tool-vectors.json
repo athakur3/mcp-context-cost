@@ -1,0 +1,265 @@
+{
+  "method": "cost-regression/v1",
+  "server": "mcp-atlassian",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "fa9df2701a0250cd546422d5d629d4af411b5c359e92bd710fc7aa4ada7ccc4e",
+      "totalTokens": 17311,
+      "tools": [
+        {
+          "name": "jira_get_user_profile",
+          "tokens": 157
+        },
+        {
+          "name": "jira_search_assignable_users",
+          "tokens": 434
+        },
+        {
+          "name": "jira_get_issue_watchers",
+          "tokens": 166
+        },
+        {
+          "name": "jira_add_watcher",
+          "tokens": 203
+        },
+        {
+          "name": "jira_remove_watcher",
+          "tokens": 211
+        },
+        {
+          "name": "jira_get_issue",
+          "tokens": 567
+        },
+        {
+          "name": "jira_search",
+          "tokens": 555
+        },
+        {
+          "name": "jira_search_fields",
+          "tokens": 178
+        },
+        {
+          "name": "jira_get_field_options",
+          "tokens": 402
+        },
+        {
+          "name": "jira_get_project_issues",
+          "tokens": 214
+        },
+        {
+          "name": "jira_get_transitions",
+          "tokens": 169
+        },
+        {
+          "name": "jira_get_worklog",
+          "tokens": 169
+        },
+        {
+          "name": "jira_download_attachments",
+          "tokens": 232
+        },
+        {
+          "name": "jira_get_issue_images",
+          "tokens": 232
+        },
+        {
+          "name": "jira_get_agile_boards",
+          "tokens": 280
+        },
+        {
+          "name": "jira_get_board_issues",
+          "tokens": 437
+        },
+        {
+          "name": "jira_get_sprints_from_board",
+          "tokens": 228
+        },
+        {
+          "name": "jira_get_sprint_issues",
+          "tokens": 261
+        },
+        {
+          "name": "jira_get_link_types",
+          "tokens": 132
+        },
+        {
+          "name": "jira_create_issue",
+          "tokens": 550
+        },
+        {
+          "name": "jira_batch_create_issues",
+          "tokens": 308
+        },
+        {
+          "name": "jira_batch_get_changelogs",
+          "tokens": 264
+        },
+        {
+          "name": "jira_update_issue",
+          "tokens": 602
+        },
+        {
+          "name": "jira_assign_issue",
+          "tokens": 256
+        },
+        {
+          "name": "jira_delete_issue",
+          "tokens": 163
+        },
+        {
+          "name": "jira_move_issue",
+          "tokens": 312
+        },
+        {
+          "name": "jira_add_comment",
+          "tokens": 340
+        },
+        {
+          "name": "jira_edit_comment",
+          "tokens": 242
+        },
+        {
+          "name": "jira_add_worklog",
+          "tokens": 363
+        },
+        {
+          "name": "jira_link_to_epic",
+          "tokens": 230
+        },
+        {
+          "name": "jira_create_issue_link",
+          "tokens": 391
+        },
+        {
+          "name": "jira_create_remote_issue_link",
+          "tokens": 377
+        },
+        {
+          "name": "jira_remove_issue_link",
+          "tokens": 128
+        },
+        {
+          "name": "jira_transition_issue",
+          "tokens": 355
+        },
+        {
+          "name": "jira_create_sprint",
+          "tokens": 227
+        },
+        {
+          "name": "jira_update_sprint",
+          "tokens": 251
+        },
+        {
+          "name": "jira_add_issues_to_sprint",
+          "tokens": 167
+        },
+        {
+          "name": "jira_move_issues_to_backlog",
+          "tokens": 152
+        },
+        {
+          "name": "jira_get_project_issue_types",
+          "tokens": 204
+        },
+        {
+          "name": "jira_get_create_fields",
+          "tokens": 242
+        },
+        {
+          "name": "jira_get_project_versions",
+          "tokens": 155
+        },
+        {
+          "name": "jira_get_project_components",
+          "tokens": 154
+        },
+        {
+          "name": "jira_get_all_projects",
+          "tokens": 130
+        },
+        {
+          "name": "jira_search_projects",
+          "tokens": 205
+        },
+        {
+          "name": "jira_get_project_fields",
+          "tokens": 168
+        },
+        {
+          "name": "jira_get_service_desk_for_project",
+          "tokens": 172
+        },
+        {
+          "name": "jira_get_service_desk_queues",
+          "tokens": 215
+        },
+        {
+          "name": "jira_get_queue_issues",
+          "tokens": 229
+        },
+        {
+          "name": "jira_get_request_types",
+          "tokens": 198
+        },
+        {
+          "name": "jira_get_request_type_fields",
+          "tokens": 169
+        },
+        {
+          "name": "jira_create_customer_request",
+          "tokens": 464
+        },
+        {
+          "name": "jira_create_version",
+          "tokens": 230
+        },
+        {
+          "name": "jira_batch_create_versions",
+          "tokens": 290
+        },
+        {
+          "name": "jira_update_version",
+          "tokens": 306
+        },
+        {
+          "name": "jira_get_issue_proforma_forms",
+          "tokens": 158
+        },
+        {
+          "name": "jira_get_proforma_form_details",
+          "tokens": 208
+        },
+        {
+          "name": "jira_update_proforma_form_answers",
+          "tokens": 800
+        },
+        {
+          "name": "jira_get_issue_dates",
+          "tokens": 248
+        },
+        {
+          "name": "jira_get_issue_sla",
+          "tokens": 463
+        },
+        {
+          "name": "jira_get_issue_development_info",
+          "tokens": 288
+        },
+        {
+          "name": "jira_get_issues_development_info",
+          "tokens": 274
+        },
+        {
+          "name": "jira_get_project_epic_hierarchy",
+          "tokens": 261
+        },
+        {
+          "name": "jira_get_cross_project_dependencies",
+          "tokens": 236
+        }
+      ]
+    }
+  ]
+}

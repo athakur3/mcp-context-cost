@@ -1,0 +1,177 @@
+{
+  "method": "cost-regression/v1",
+  "server": "comfyui-mcp",
+  "entries": [
+    {
+      "date": "2026-09-03",
+      "canonicalSha256": "af7eaa380b99a67fc49ab075c762cd2686f108acc4ba21d001ce922554f7510a",
+      "totalTokens": 50640,
+      "tools": [
+        {
+          "name": "comfy_cli",
+          "tokens": 2032
+        },
+        {
+          "name": "enqueue_workflow",
+          "tokens": 1536
+        },
+        {
+          "name": "get_system_stats",
+          "tokens": 625
+        },
+        {
+          "name": "visualize_workflow",
+          "tokens": 804
+        },
+        {
+          "name": "create_workflow",
+          "tokens": 1478
+        },
+        {
+          "name": "queue",
+          "tokens": 1351
+        },
+        {
+          "name": "search_custom_nodes",
+          "tokens": 515
+        },
+        {
+          "name": "download_model",
+          "tokens": 3986
+        },
+        {
+          "name": "list_local_models",
+          "tokens": 1731
+        },
+        {
+          "name": "get_history",
+          "tokens": 1040
+        },
+        {
+          "name": "runpod",
+          "tokens": 1570
+        },
+        {
+          "name": "runpod_watch",
+          "tokens": 530
+        },
+        {
+          "name": "get_workflow",
+          "tokens": 2385
+        },
+        {
+          "name": "save_workflow",
+          "tokens": 808
+        },
+        {
+          "name": "restart_comfyui",
+          "tokens": 435
+        },
+        {
+          "name": "get_image",
+          "tokens": 2642
+        },
+        {
+          "name": "upload_image",
+          "tokens": 1431
+        },
+        {
+          "name": "clear_vram",
+          "tokens": 142
+        },
+        {
+          "name": "get_defaults",
+          "tokens": 1102
+        },
+        {
+          "name": "generate_image",
+          "tokens": 3899
+        },
+        {
+          "name": "node_snapshot",
+          "tokens": 344
+        },
+        {
+          "name": "bisect",
+          "tokens": 438
+        },
+        {
+          "name": "install_custom_node",
+          "tokens": 1614
+        },
+        {
+          "name": "report_issue",
+          "tokens": 750
+        },
+        {
+          "name": "install_comfyui",
+          "tokens": 2501
+        },
+        {
+          "name": "model_metadata",
+          "tokens": 1022
+        },
+        {
+          "name": "workspace",
+          "tokens": 359
+        },
+        {
+          "name": "list_api_nodes",
+          "tokens": 557
+        },
+        {
+          "name": "node_pack",
+          "tokens": 2961
+        },
+        {
+          "name": "apply_manifest",
+          "tokens": 625
+        },
+        {
+          "name": "list_packs",
+          "tokens": 2314
+        },
+        {
+          "name": "calculate",
+          "tokens": 656
+        },
+        {
+          "name": "train_prepare_dataset",
+          "tokens": 1516
+        },
+        {
+          "name": "train_start",
+          "tokens": 1736
+        },
+        {
+          "name": "train_doctor",
+          "tokens": 560
+        },
+        {
+          "name": "apps",
+          "tokens": 898
+        },
+        {
+          "name": "batch",
+          "tokens": 742
+        },
+        {
+          "name": "kitchen",
+          "tokens": 623
+        },
+        {
+          "name": "list_tools",
+          "tokens": 126
+        },
+        {
+          "name": "describe_tool",
+          "tokens": 102
+        },
+        {
+          "name": "call_tool",
+          "tokens": 152
+        }
+      ]
+    }
+  ]
+}
