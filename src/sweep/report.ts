@@ -6,6 +6,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Measurement } from '../core/types.js';
 import { isCurrent, parseDivergence, type DivergenceRun } from '../core/divergence.js';
+import { divergencePct, isComparable, parseCrossCheck, type CrossCheckRun } from '../core/cross-check.js';
 import {
   SESSION_START_METHOD,
   parseSessionStart,
@@ -73,6 +74,12 @@ export function loadSessionStartRun(root = process.cwd()): SessionStartRun | nul
   return existsSync(p) ? parseSessionStart(readFileSync(p, 'utf8')) : null;
 }
 
+/** results/cross-check.json if a CLI cross-check run has been recorded, else null. */
+export function loadCrossCheckRun(root = process.cwd()): CrossCheckRun | null {
+  const p = join(root, 'results', 'cross-check.json');
+  return existsSync(p) ? parseCrossCheck(readFileSync(p, 'utf8')) : null;
+}
+
 /**
  * A session-start figure that is a floor reads `>= N`, never a bare `N`. The
  * marker is half the point of publishing the number: the names half is measured,
@@ -88,6 +95,7 @@ export function writeLeaderboard(entries: ServerEntry[], root = process.cwd()): 
   const rows = loadRows(entries, root);
   const div = loadDivergence(root);
   const ss = loadSessionStartRun(root);
+  const xc = loadCrossCheckRun(root);
   /** Session-start load for a row, or null when there is no capture to read. */
   const session = (r: Row): SessionStartLoad | null =>
     r.m ? sessionStartLoad(r.m, ss?.servers[r.entry.name]) : null;
@@ -97,6 +105,13 @@ export function writeLeaderboard(entries: ServerEntry[], root = process.cwd()): 
     const d = div.servers[r.entry.name];
     return isCurrent(d, r.m.canonicalSha256) ? d.claudeDelta : null;
   };
+  /** The other CLI's row, or null when the comparison is not like-with-like. */
+  const crossCheck = (r: Row) => {
+    if (!xc || !r.m) return null;
+    const row = xc.servers[r.entry.name];
+    return isComparable(row, r.m.canonicalSha256) ? row : null;
+  };
+  const signedPct = (p: number) => `${p >= 0 ? '+' : '−'}${Math.abs(p).toFixed(1)}%`;
   const measured = rows
     .filter((r) => r.m && (r.m.status === 'measured' || r.m.status === 'dynamic'))
     .sort((a, b) => (b.m!.totalTokens ?? 0) - (a.m!.totalTokens ?? 0));
@@ -119,6 +134,32 @@ export function writeLeaderboard(entries: ServerEntry[], root = process.cwd()): 
         `tools add to a request, measured for the top ${n}. It is not a rescaling of the o200k column — ` +
         `two effects pull in opposite directions, and the [per-server pages](../docs/servers/) break both out. ` +
         `See [Claude divergence](../docs/METHODOLOGY.md#claude-divergence).`,
+    );
+    md.push('');
+  }
+  if (xc) {
+    const pcts = measured
+      .map((r) => {
+        const row = crossCheck(r);
+        return row ? divergencePct(row) : null;
+      })
+      .filter((p): p is number => p !== null);
+    md.push(
+      `The **mcp-tokens** column is the other CLI's count of the same server — ` +
+        `\`${mdCell(xc.cli)}\` \`${mdCell(xc.cliVersion)}\` (${mdCell(xc.measuredAt)}, method \`${mdCell(xc.method)}\`), ` +
+        `invoked with \`--model gpt-4o\` so both columns count o200k tokens. Its structs model the three ` +
+        `request fields (name/description/input\\_schema), so its number sits below the tokens column ` +
+        `wherever a server ships metadata those fields do not carry — that gap is each server's ` +
+        `field-selection share, published on its page, not a disagreement of counters. The parenthesized ` +
+        `percentage is the disagreement of counters: the CLI's count against ours of the same three-field ` +
+        `projection` +
+        (pcts.length > 0
+          ? `, ${signedPct(Math.min(...pcts))} to ${signedPct(Math.max(...pcts))} across the ` +
+            `${pcts.length} row${pcts.length === 1 ? '' : 's'} where both tools saw the same tool set.`
+          : `. No row currently compares like with like.`) +
+        ` A row prints only while the comparison is between like and like: the same tool names on both ` +
+        `sides, and our capture unchanged since the run. ` +
+        `See [CLI cross-check](../docs/METHODOLOGY.md#cli-cross-check).`,
     );
     md.push('');
   }
@@ -174,17 +215,22 @@ export function writeLeaderboard(entries: ServerEntry[], root = process.cwd()): 
     );
     md.push('');
   }
-  md.push(`| # | server | tokens | session start |${div ? ' claude |' : ''} tools | largest tool | status | category |`);
-  md.push(`|---:|---|---:|---:|${div ? '---:|' : ''}---:|---|---|---|`);
+  md.push(
+    `| # | server | tokens | session start |${div ? ' claude |' : ''}${xc ? ' mcp-tokens |' : ''} tools | largest tool | status | category |`,
+  );
+  md.push(`|---:|---|---:|---:|${div ? '---:|' : ''}${xc ? '---:|' : ''}---:|---|---|---|`);
   measured.forEach((r, i) => {
     const m = r.m!;
     const largest = [...m.tools].sort((a, b) => b.tokens - a.tokens)[0];
     const link = `[${mdCell(r.entry.name)}](../docs/servers/${encodeURIComponent(r.entry.name)}.md)`;
     const c = claude(r);
+    const x = crossCheck(r);
+    const xCell = x === null ? '—' : `${x.cliTokens.toLocaleString('en-US')} (${signedPct(divergencePct(x)!)})`;
     md.push(
       `| ${i + 1} | ${link} | ${m.totalTokens!.toLocaleString('en-US')} |` +
         ` ${sessionStartCell(session(r))} |` +
         (div ? ` ${c === null ? '—' : c.toLocaleString('en-US')} |` : '') +
+        (xc ? ` ${xCell} |` : '') +
         ` ${m.toolCount} | ` +
         `${largest ? `${mdCell(largest.name)} (${largest.tokens.toLocaleString('en-US')})` : '—'} | ${m.status} | ${mdCell(r.entry.category)} |`,
     );
@@ -208,12 +254,14 @@ export function writeLeaderboard(entries: ServerEntry[], root = process.cwd()): 
   // every existing parser working.
   const csv: string[] = [
     'name,tokens,toolCount,status,category,metric,metricSource,claudeTokens,claudeModel,' +
-      'sessionStartTokens,sessionStartIsFloor,toolNameTokens,instructionsTokens',
+      'sessionStartTokens,sessionStartIsFloor,toolNameTokens,instructionsTokens,' +
+      'crossCheckTokens,crossCheckCliVersion',
   ];
   for (const r of rows) {
     const m = r.m;
     const c = claude(r);
     const ssl = session(r);
+    const x = crossCheck(r);
     csv.push(
       [
         csvCell(r.entry.name),
@@ -231,6 +279,8 @@ export function writeLeaderboard(entries: ServerEntry[], root = process.cwd()): 
         ssl ? String(ssl.isFloor) : '',
         ssl?.toolNameTokens ?? '',
         ssl?.instructionsTokens ?? '',
+        x?.cliTokens ?? '',
+        x === null ? '' : csvCell(xc!.cliVersion),
       ].join(','),
     );
   }

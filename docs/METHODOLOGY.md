@@ -348,14 +348,50 @@ search", read **2026-08-20**. Nothing here measured Claude Code deferring or not
 anything. If that documentation changes, this section and `src/audit/deferral.ts` are what
 have to change with it.
 
+## CLI cross-check <a id="cli-cross-check"></a>
+
+The leaderboard's **mcp-tokens** column (method `cli-cross-check/v1`) publishes what the
+other CLI that measures this — [`sd2k/mcp-tokens`](https://github.com/sd2k/mcp-tokens),
+release pinned per run and recorded in `results/cross-check.json` — counts for the same
+server.
+
+**How a row is made.** In one sitting, the server is measured by our client exactly as a
+sweep measures it (same isolation, dummy env and retries), then launched again by the CLI,
+invoked as `analyze --provider tiktoken --model gpt-4o --format json`. `--model gpt-4o` is
+load-bearing: it selects o200k_base in tiktoken-rs, and without it the CLI falls back to
+cl100k_base — a systematic difference that would swamp the one being measured. The CLI
+binary is fetched from its release and verified against the release's own SHA-256 before it
+is ever executed; in docker mode it is bind-mounted read-only into the same image, limits
+and package caches the measurement ran under. The row records both counts, both tool sets,
+the `canonicalSha256` of our fresh capture, and our o200k count of that capture's
+name/description/input\_schema projection (`mappedTokens` — the same projection the Claude
+divergence starts from).
+
+**When a row prints.** Only while the comparison is between like and like: the CLI saw the
+same tool names our capture holds — the CLI launches the server itself, so a server that
+changed between the two launches, or lists dynamically, handed the two tools different
+schemas, and their difference would not be a divergence of counters — and our capture is
+still the published one. Everything else stays in the run file as data and prints silence,
+the same staleness rule the claude column follows.
+
+**What the divergence is.** Two layers, and the column separates them. The CLI's structs
+model the three request fields, so against the full capture its number sits low by exactly
+each server's field-selection share — a documented modeling choice, published per server on
+its page, not a disagreement of counters. The published percentage is the disagreement of
+counters: the CLI's count against ours of the same three-field projection, where the only
+remaining differences are serialization details (struct-order keys, `serde_json` bytes)
+against wire order. Measured at first run, that residual is a fraction of a percent — two
+independent implementations agreeing on the fields both count — and the run's aggregate
+range is stated in the leaderboard header, derived on every write.
+
 ## Known divergences
 
-**sd2k/mcp-tokens** (the CLI behind the planned cross-check column) differs from
+**sd2k/mcp-tokens** (the CLI behind the [cross-check column](#cli-cross-check)) differs from
 this definition in two documented ways: its tiktoken provider selects the encoding from a
 `--model` argument with a **cl100k_base fallback** (pass `--model gpt-4o` for o200k), and it
 counts a `serde_json` re-serialization of deserialized tool structs rather than the parsed
-wire value (key order normalized to struct order; unmodeled fields dropped). Publishing the
-CLI's number alongside ours as a cross-check column is on the roadmap.
+wire value (key order normalized to struct order; unmodeled fields dropped). The CLI's
+number is published beside ours in the leaderboard's **mcp-tokens** column.
 Details: [spec/upstream-notes.md](https://github.com/athakur3/mcp-context-cost/blob/main/spec/upstream-notes.md).
 
 ## Changelog <a id="changelog"></a>
@@ -364,8 +400,9 @@ Details: [spec/upstream-notes.md](https://github.com/athakur3/mcp-context-cost/b
   value, o200k_base, bands frozen against first-sweep distribution, failure taxonomy,
   dual-run dynamic detection.
 
-The Claude divergence column (`tools-delta/v1`, added 2026-08-16) and the session-start column
-(`deferred-load/v1`, added 2026-08-20) are versioned separately and deliberately: each adds a
-published number without touching the definition above. Every badge, every `totalTokens`, and
-every canonical hash is byte-identical to before they existed, so bumping this page's version
-would have signalled a change that did not happen.
+The Claude divergence column (`tools-delta/v1`, added 2026-08-16), the session-start column
+(`deferred-load/v1`, added 2026-08-20) and the CLI cross-check column (`cli-cross-check/v1`,
+added 2026-09-03) are versioned separately and deliberately: each adds a published number
+without touching the definition above. Every badge, every `totalTokens`, and every canonical
+hash is byte-identical to before they existed, so bumping this page's version would have
+signalled a change that did not happen.

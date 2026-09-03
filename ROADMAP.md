@@ -5,8 +5,6 @@ Forward-looking only: what already shipped lives in the code and the git history
 
 ## Next
 
-- [ ] **CLI cross-check column**: publish ours-vs-mcp-tokens divergence across the measured
-      set.
 - [ ] **Expand the sweep**: more servers from the registry long-tail; re-attempt current
       startup-failures as upstream fixes land.
 

@@ -59,6 +59,24 @@ while reading it.
   this file said were unreleased for thirteen days. The `0.8.0` heading below is that
   rename, made late, and the publish workflow now looks for the section of the version it
   was asked to publish and exits before `npm publish` when it is missing.
+- **The leaderboard carries the other CLI's number beside ours.** The roadmap's cross-check
+  column, built the way spec/upstream-notes.md specified on day one: the divergence is
+  published, not discovered by critics. Each server is measured twice in one sitting — once
+  by our client exactly as a sweep measures it, once by `sd2k/mcp-tokens` (release pinned,
+  fetched and verified against the release's own SHA-256 before it is ever executed,
+  bind-mounted read-only into the same container image, limits and package caches the
+  measurement ran under), invoked with `--model gpt-4o` so both columns count o200k tokens
+  rather than the CLI's cl100k fallback. The first rows settled the open question in the
+  notes: the CLI's count lands within a fraction of a percent of our count of the
+  name/description/input\_schema projection — not of the full capture — so its "unmodeled
+  fields dropped" is, in practice, everything outside the three request fields, and the
+  published percentage compares it against our `mappedTokens` of the same fresh capture:
+  the disagreement of counters, with the field-selection gap already published per server.
+  A row prints only while it compares like with like — the CLI saw the same tool names our
+  fresh capture holds, and that capture is still the published one — everything else stays
+  in `results/cross-check.json` as data and prints silence. Method `cli-cross-check/v1`;
+  the rotating re-sweep cross-checks each week's shard minutes after re-measuring it,
+  best-effort, so a CLI outage costs a week of silence and never a stale number.
 
 ## 0.8.0 — 2026-08-21
 

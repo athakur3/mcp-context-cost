@@ -117,6 +117,33 @@ describe('rotating re-sweep workflow', () => {
 });
 
 /**
+ * The cross-check column's staleness rule assumes each row is re-made in the
+ * same sitting as the measurement it is filed under. That only holds if the
+ * re-sweep cross-checks the exact slice it just measured, under the same
+ * isolation — a property only observable on a real Wednesday.
+ */
+describe('the re-sweep cross-checks the slice it just measured', () => {
+  const runLine = (needle: string) =>
+    resweep
+      .split('\n')
+      .map((l) => l.trim())
+      .find((l) => l.startsWith('run:') && l.includes(needle));
+
+  it('same slice, same isolation, same budget as the sweep above it', () => {
+    const sweep = runLine('sweep:all');
+    const cross = runLine('cross-check.ts');
+    expect(cross).toBeDefined();
+    expect(cross).toContain('--docker');
+    expect(/--shards (\d+)/.exec(cross!)![1]).toBe(/--shards (\d+)/.exec(sweep!)![1]);
+  });
+
+  it('is best-effort — a CLI release outage must not block the sweep commit', () => {
+    // A missed week reads as silence, not a stale number, so the step may fail.
+    expect(resweep).toMatch(/Cross-check[^]*?continue-on-error: true[^]*?cross-check\.ts/);
+  });
+});
+
+/**
  * Regen patches the numbers the front page states (published-stats.ts), so a
  * scheduled job that commits fresh data without committing README.md publishes
  * a leaderboard the README then contradicts — the drift the patching exists to

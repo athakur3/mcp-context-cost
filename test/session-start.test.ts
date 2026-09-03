@@ -329,7 +329,8 @@ describe('the leaderboard shows both figures for every measured server', () => {
     const csv = readFileSync(join(root, 'results', 'leaderboard.csv'), 'utf8').trim().split('\n');
     expect(csv[0]).toBe(
       'name,tokens,toolCount,status,category,metric,metricSource,claudeTokens,claudeModel,' +
-        'sessionStartTokens,sessionStartIsFloor,toolNameTokens,instructionsTokens',
+        'sessionStartTokens,sessionStartIsFloor,toolNameTokens,instructionsTokens,' +
+        'crossCheckTokens,crossCheckCliVersion',
     );
     const cols = (name: string) => csv.find((l) => l.startsWith(`${name},`))!.split(',');
     expect(cols('known').slice(9, 13)).toEqual([

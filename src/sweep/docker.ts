@@ -31,6 +31,13 @@ export interface DockerOptions {
    */
   needsGit?: boolean;
   /**
+   * Extra `-v` bind mounts, verbatim (`host:container:ro`). Used to hand a
+   * host-verified binary into the container (the cross-check CLI); mounts here
+   * should be read-only so the isolation claim — clean FS, no host credentials
+   * — survives them.
+   */
+  binds?: string[];
+  /**
    * Skip the shared npm/uv cache volumes, paying a cold install for a clean one.
    *
    * The caches are what make a re-sweep minutes instead of hours, but a cache
@@ -200,6 +207,9 @@ export function dockerize(
           'UV_CACHE_DIR=/tmp/.uv-cache',
         ]),
   ];
+  for (const bind of opts.binds ?? []) {
+    argv.push('-v', bind);
+  }
   for (const name of opts.dummyEnv ?? []) {
     argv.push('-e', `${name}=${opts.dummyEnvValues?.[name] ?? 'dummy'}`);
   }

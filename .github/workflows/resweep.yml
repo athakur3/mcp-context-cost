@@ -66,6 +66,13 @@ jobs:
         # broken Docker daemon on the runner stops the job here rather than
         # pushing a leaderboard full of failures.
         run: npm run sweep:all -- --docker --shards 6 --concurrency 2 --default-timeout 240 ${{ inputs.shard_index && format('--shard-index {0}', inputs.shard_index) || '' }}
+      - name: Cross-check this week's shard against mcp-tokens
+        # Same slice, same isolation, minutes after the measurements above, so
+        # each cross-check row is filed under the capture it sat beside.
+        # Best-effort: a CLI release outage must not block the sweep's own
+        # commit — a row that misses a week reads silence, not a stale number.
+        continue-on-error: true
+        run: npx tsx src/sweep/cross-check.ts --docker --shards 6 --concurrency 2 --default-timeout 240 ${{ inputs.shard_index && format('--shard-index {0}', inputs.shard_index) || '' }}
       - name: Regenerate leaderboard, server pages and dashboard
         run: npx tsx src/sweep/regen.ts
       - name: Commit refreshed measurements

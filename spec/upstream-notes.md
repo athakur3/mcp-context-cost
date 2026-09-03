@@ -40,3 +40,15 @@ raw-wire canonical is expected; direction and size to be quantified in the sweep
 2. When the cross-check column is built, the sweep records `cliTokens` alongside
    `totalTokens`, always invoking the CLI as `--provider tiktoken --model gpt-4o`, so the
    divergence is published, not discovered by critics.
+
+## Addendum (2026-09-03) — finding 2, quantified
+
+The cross-check column shipped, and the first rows answered the open question above.
+The CLI's count lands within a fraction of a percent of **`mappedTokens`** — our o200k
+count of the name/description/input_schema projection — not of the full capture:
+`memory` 906 vs mapped 901 (full 2,378), `filesystem` 1,667 vs 1,665 (full 2,823),
+`postgres` 32 vs 32 vs 32. So "fields the struct doesn't model" is the dominant term and
+it is, in practice, everything outside the three request fields; the serialization
+difference itself is noise-sized. The published comparison is therefore against
+`mappedTokens` of the same fresh capture (`cli-cross-check/v1`), with the field-selection
+gap already published per server as its field-selection share.

@@ -266,6 +266,12 @@ failed, `2` usage error.
 to the one that was published — which is exactly what `--claude` uses to decide whether it is
 allowed to show you a number.
 
+The number is also cross-checked against the other CLI that measures this,
+[`sd2k/mcp-tokens`](https://github.com/sd2k/mcp-tokens): the leaderboard's **mcp-tokens**
+column publishes its count beside ours wherever both tools saw the same tool set — same
+o200k encoding, differences documented, the divergence published rather than left to be
+discovered. Method: [CLI cross-check](docs/METHODOLOGY.md#cli-cross-check).
+
 Full definition: [docs/METHODOLOGY.md](docs/METHODOLOGY.md) — what is counted, what the
 number is *not*, config policy, failure taxonomy, frozen color bands, known divergences.
 
