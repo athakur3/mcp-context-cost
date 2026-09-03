@@ -7,6 +7,8 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+## 0.9.0 — 2026-09-04
+
 - **A Docker failure on the measuring machine can no longer be published as a server's
   failure.** The 2026-08-26 re-sweep recorded `sequential-thinking` — 992 tokens on both
   prior sweeps — as a startup-failure because the runner's pull of the base image failed:
