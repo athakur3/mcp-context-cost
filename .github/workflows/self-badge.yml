@@ -48,9 +48,12 @@ jobs:
         # this must run after the sweep above or that table goes stale.
         run: npx tsx src/sweep/regen.ts
       - name: Commit refreshed badge
+        # README.md is included because regen patches the numbers the front page
+        # states (src/sweep/published-stats.ts) — this job refreshes the Claude
+        # divergence run, which moves the count of rows that still match it.
         run: |
           git config user.name "mcp-context-cost bot"
           git config user.email "actions@users.noreply.github.com"
-          git add badges/ results/ docs/
+          git add badges/ results/ docs/ README.md
           git diff --cached --quiet || git commit -m "chore: refresh self-badge measurement"
           git push

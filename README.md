@@ -183,10 +183,9 @@ INCREASE FAIL:
 Add `--claude` to annotate each server with its Anthropic-request cost from the published
 [Claude divergence](docs/METHODOLOGY.md#claude-divergence) run — an exact number when the
 published capture hash matches what you have installed, `—` (silence, not a stale guess)
-when it doesn't. The run holds 20 rows — the top 20 measured servers by tokens; 19 of them
-still match the capture on disk here, which is why
-[results/leaderboard.md](results/leaderboard.md) prints a claude number for 19 and leaves the
-twentieth blank rather than stale. Most installs will show a mix:
+when it doesn't. The run holds 20 rows — the top 20 measured servers by tokens when it ran —
+and [results/leaderboard.md](results/leaderboard.md) prints a claude number for the 18 that
+still match today and silence for the rest. Most installs will show a mix:
 
 ```
   server               tools  tokens   share   claude
@@ -203,7 +202,7 @@ Flags: `--json` (full report on stdout, progress on stderr), `--budget N`,
 The number `audit` gives you is the same measurement, run across a curated set of public
 servers — which is how you can tell it is a measurement and not this tool's opinion. It also
 shows what you are choosing between: across the 69 servers measured, cost spans **1,700×**,
-from the 32-token `postgres` reference server to github's 54,422. The table below is a
+from `postgres` at 32 tokens to `github` at 54,422. The table below is a
 sample of that range; the full range is in
 [results/leaderboard.md](results/leaderboard.md).
 
@@ -217,7 +216,7 @@ sample of that range; the full range is in
 | filesystem (reference) | 2,823 | 14 |
 | markitdown | 64 | 1 |
 
-*(69 of 82 popular servers measured, sweeps of 2026-08-18 and 2026-08-19 — full table in
+*(69 of 82 popular servers measured, each row dated by its own most recent sweep — full table in
 [results/leaderboard.md](results/leaderboard.md); every failure is listed with its reason.
 Each measured server also has a [detail page](https://athakur3.github.io/mcp-context-cost/servers/)
 showing which tools its tokens are in.)*
@@ -324,7 +323,7 @@ color bands are frozen against the observed distribution of the first full sweep
 
 ## Status
 
-Active. 46 of the 69 numbers come from the sweep of 2026-08-19 and 23 from 2026-08-18. Two
+Active. Every row carries the date of its own most recent measurement. Two
 weekly jobs re-measure the set — the `memory` reference server on Mondays, and a rotating
 sixth of the list on Wednesdays, so every row comes round within six weeks. Read each row's
 date as the date it means, and don't take the cadence on trust — the build history is

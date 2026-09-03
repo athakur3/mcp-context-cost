@@ -1,0 +1,131 @@
+import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { parse } from 'yaml';
+import {
+  CHECK_CLAIMS,
+  PAGE_CLAIMS,
+  SAMPLE_SERVERS,
+  applyClaim,
+  compileTemplate,
+  computePublishedStats,
+  floorToTwoSignificant,
+  verifyPublishedPages,
+} from '../src/sweep/published-stats.js';
+import type { ServerEntry } from '../src/sweep/report.js';
+
+/**
+ * The published pages' numbers, read against the data they describe.
+ *
+ * README and docs/index.md state counts, the span, sample tables, the Claude
+ * pair — numbers that change when a scheduled sweep lands, with no human in the
+ * loop. Regen patches them from results/ (published-stats.ts); this suite is
+ * the other half of that arrangement: the committed pages must already agree
+ * with the committed data, so the check fires exactly when someone changes data
+ * without running regen, or rewords a sentence regen maintains. The deferral
+ * tables bought this property first (published-deferral.test.ts); the front
+ * page's numbers had drifted the same way twice — repaired by hand 2026-08-20,
+ * wrong again by 2026-09-03 — before getting the same treatment.
+ */
+
+const repoRoot = join(import.meta.dirname, '..');
+const entries = (parse(readFileSync(join(repoRoot, 'servers.yaml'), 'utf8')) as { servers: ServerEntry[] }).servers;
+const stats = computePublishedStats(entries, repoRoot);
+
+describe('published pages agree with the data on disk', () => {
+  it('regen would rewrite nothing and refuse nothing', () => {
+    const v = verifyPublishedPages(entries, repoRoot);
+    // A failure here names the claim: run `npx tsx src/sweep/regen.ts` for a
+    // drifted number; a missing anchor means a maintained sentence was reworded
+    // and the claim in published-stats.ts has to be reworded with it.
+    expect(v.problems).toEqual([]);
+    expect(v.updated).toEqual([]);
+    expect(v.changedFiles).toEqual([]);
+  });
+
+  it('counts the same measured/candidate split as the leaderboard header', () => {
+    const header = readFileSync(join(repoRoot, 'results', 'leaderboard.md'), 'utf8');
+    const m = /Measured (\d+)\/(\d+) candidates/.exec(header);
+    expect(m).not.toBeNull();
+    expect(Number(m![1])).toBe(stats.measuredCount);
+    expect(Number(m![2])).toBe(stats.candidateTotal);
+  });
+
+  for (const claim of CHECK_CLAIMS) {
+    it(`'${claim.id}' — the words are on the page and the data still agrees`, () => {
+      const page = readFileSync(join(repoRoot, claim.file), 'utf8');
+      expect([...page.matchAll(compileTemplate(claim.words))]).toHaveLength(1);
+      expect(claim.holds(stats)).toBeNull();
+    });
+  }
+
+  it('derives the numbers the pages state from the same rules the leaderboard uses', () => {
+    expect(Object.keys(stats.sample).sort()).toEqual([...SAMPLE_SERVERS].sort());
+    expect(stats.spanTimes).toBe(floorToTwoSignificant(stats.max.tokens / stats.min.tokens));
+    expect(stats.max.tokens).toBeGreaterThan(stats.second.tokens);
+    expect(stats.second.tokens).toBeGreaterThan(stats.min.tokens);
+    expect(stats.claude.currentCount).toBeLessThanOrEqual(stats.claude.runSize);
+    // The verify transcript quotes the same measurement the sample table shows.
+    expect(stats.verify.tokens).toBe(stats.sample.github.tokens);
+  });
+});
+
+describe('the patch engine', () => {
+  const claim = { file: 'README.md', id: 'unit', template: 'cost spans **{n}×**, from `{w}` at {n} tokens' } as const;
+
+  it('matches a sentence across the line wraps prose actually has', () => {
+    const wrapped = 'cost spans **1,700×**,\nfrom `postgres` at 32 tokens';
+    expect([...wrapped.matchAll(compileTemplate(claim.template))]).toHaveLength(1);
+  });
+
+  it('escapes markdown punctuation so a table row anchors literally', () => {
+    const row = compileTemplate('| filesystem (reference) | {n} | {n} |');
+    expect([...'| filesystem (reference) | 2,823 | 14 |'.matchAll(row)]).toHaveLength(1);
+    expect([...'| filesystem Xreference) | 2,823 | 14 |'.matchAll(row)]).toHaveLength(0);
+  });
+
+  it('splices only the slots, leaving words and wrapping untouched', () => {
+    const stale = 'lead-in\ncost spans **1,500×**,\nfrom `mysql` at 40 tokens\ntrail-out';
+    const applied = applyClaim(stale, claim, ['1,700', 'postgres', '32']);
+    expect(applied.changed).toBe(true);
+    expect(applied.problem).toBeNull();
+    expect(applied.text).toBe('lead-in\ncost spans **1,700×**,\nfrom `postgres` at 32 tokens\ntrail-out');
+  });
+
+  it('reports agreement as no change at all', () => {
+    const current = 'cost spans **1,700×**, from `postgres` at 32 tokens';
+    const applied = applyClaim(current, claim, ['1,700', 'postgres', '32']);
+    expect(applied.changed).toBe(false);
+    expect(applied.problem).toBeNull();
+    expect(applied.text).toBe(current);
+  });
+
+  it('refuses a page that dropped the sentence, naming the claim', () => {
+    const applied = applyClaim('a page about something else entirely', claim, ['1,700', 'postgres', '32']);
+    expect(applied.changed).toBe(false);
+    expect(applied.problem).toContain("'unit' not found");
+  });
+
+  it('refuses an ambiguous anchor rather than patching the wrong one', () => {
+    const twice = 'cost spans **9×**, from `a` at 1 tokens … cost spans **9×**, from `a` at 1 tokens';
+    const applied = applyClaim(twice, claim, ['1,700', 'postgres', '32']);
+    expect(applied.changed).toBe(false);
+    expect(applied.problem).toContain('matches 2 places');
+  });
+
+  it('never overstates a span: floors, to two significant digits', () => {
+    expect(floorToTwoSignificant(1700.6875)).toBe(1700);
+    expect(floorToTwoSignificant(1799)).toBe(1700);
+    expect(floorToTwoSignificant(1800)).toBe(1800);
+    expect(floorToTwoSignificant(999)).toBe(990);
+    expect(floorToTwoSignificant(99.9)).toBe(99);
+    expect(floorToTwoSignificant(7)).toBe(7);
+  });
+
+  it('every claim template has as many slots as its values function returns', () => {
+    for (const c of PAGE_CLAIMS) {
+      const slots = [...c.template.matchAll(/\{[ndw]\}/g)].length;
+      expect(c.values(stats), `claim '${c.id}'`).toHaveLength(slots);
+    }
+  });
+});

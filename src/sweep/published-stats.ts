@@ -1,0 +1,428 @@
+/**
+ * The front pages' numbers, written by the same regeneration that writes the
+ * leaderboard — and checked against the same data in the suite.
+ *
+ * README and docs/index.md state numbers as prose: how many candidates, how
+ * many measured, the span, the sample tables, the Claude pair, the verify
+ * transcript. Those sentences were written by hand, so they were true on the
+ * day they were written and drifted with every scheduled re-sweep — by
+ * 2026-09-03 the leaderboard said 68 measured while both pages said 69, the
+ * exact front-page-contradicts-the-data failure repaired by hand once before
+ * (2026-08-20) and re-created by the first sweep after it.
+ *
+ * The deferral tables got the durable fix first: a test reads the page's own
+ * words against the resolver, so either side moving alone is a red check. That
+ * works there because the tables change only when code changes. These numbers
+ * change when *data* changes, on a schedule, with no human in the loop — a
+ * check alone would schedule its own red main. So the numbers get the
+ * leaderboard's treatment instead: regen patches them from results/, the
+ * scheduled jobs commit the pages beside the data, and the suite asserts the
+ * committed pages already agree — which fires only when someone changes data
+ * without running regen, or rewords a sentence regen maintains.
+ *
+ * Each claim is a template: fixed words with slots. The words have to be on
+ * the page as written (a missing anchor is a loud failure naming the claim,
+ * never a silent skip), and only the slots are ever rewritten — spliced in
+ * place, so the page's own line wrapping survives.
+ */
+import { readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { DEFAULT_CONTEXT_WINDOW } from '../audit/audit.js';
+import { fieldSelectionShare, isCurrent } from '../core/divergence.js';
+import { sessionStartLoad } from '../core/session-start.js';
+import { isGood } from './harness-guard.js';
+import { loadDivergence, loadRows, loadSessionStartRun, type Row, type ServerEntry } from './report.js';
+
+export interface PublishedStats {
+  candidateTotal: number;
+  measuredCount: number;
+  max: { name: string; tokens: number };
+  second: { name: string; tokens: number };
+  min: { name: string; tokens: number };
+  /** max/min, floored to two significant digits — a span claim must not overstate. */
+  spanTimes: number;
+  /** The heaviest server's share of the default context window, rounded %. */
+  maxContextSharePct: number;
+  /** The servers README's sample table names, with their current numbers. */
+  sample: Record<string, { tokens: number; tools: number }>;
+  claude: {
+    runSize: number;
+    /** Rows the leaderboard prints a claude number for: measured AND capture-current. */
+    currentCount: number;
+    heaviestClaudeName: string | null;
+    github: { badgeTokens: number; claudeTokens: number; droppedPct: number };
+    notion: { badgeTokens: number; claudeTokens: number };
+  };
+  deferralCostlierCount: number;
+  verify: { serverName: string; tokens: number };
+}
+
+/** Named in README's sample table — the choice is editorial, the numbers are not. */
+export const SAMPLE_SERVERS = [
+  'github',
+  'xcodebuildmcp',
+  'brave-search',
+  'notion',
+  'playwright',
+  'filesystem',
+  'markitdown',
+] as const;
+
+export function floorToTwoSignificant(n: number): number {
+  const whole = Math.floor(n);
+  if (whole < 100) return whole;
+  const magnitude = 10 ** (Math.floor(Math.log10(whole)) - 1);
+  return Math.floor(whole / magnitude) * magnitude;
+}
+
+export function computePublishedStats(entries: ServerEntry[], root = process.cwd()): PublishedStats {
+  const rows = loadRows(entries, root);
+  const div = loadDivergence(root);
+  const ss = loadSessionStartRun(root);
+
+  const measured = rows
+    .filter((r): r is Row & { m: NonNullable<Row['m']> } => r.m !== null && isGood(r.m.status))
+    .filter((r) => typeof r.m.totalTokens === 'number')
+    .sort((a, b) => b.m.totalTokens! - a.m.totalTokens!);
+  if (measured.length < 2) throw new Error('fewer than two measured servers on disk — published stats cannot be computed');
+
+  const asPair = (r: (typeof measured)[number]) => ({ name: r.entry.name, tokens: r.m.totalTokens! });
+  const max = asPair(measured[0]);
+  const min = asPair(measured[measured.length - 1]);
+  if (min.tokens <= 0) throw new Error(`cheapest measured server (${min.name}) has no positive token count`);
+
+  const sample: PublishedStats['sample'] = {};
+  for (const name of SAMPLE_SERVERS) {
+    const r = measured.find((x) => x.entry.name === name);
+    if (!r || typeof r.m.toolCount !== 'number') {
+      throw new Error(`README's sample table names ${name}, which has no current measurement`);
+    }
+    sample[name] = { tokens: r.m.totalTokens!, tools: r.m.toolCount };
+  }
+
+  if (!div) throw new Error('results/divergence.json is missing — README states its numbers');
+  const divRow = (name: string) => {
+    const d = div.servers[name];
+    if (!d) throw new Error(`README's Claude table names ${name}, which is not in the divergence run`);
+    return d;
+  };
+  const github = divRow('github');
+  const notion = divRow('notion');
+  const githubShare = fieldSelectionShare(github);
+  if (githubShare === null) throw new Error('divergence run carries no o200k counts for github');
+  const withClaude = measured.filter((r) => isCurrent(div.servers[r.entry.name], r.m.canonicalSha256));
+  const heaviest = [...withClaude].sort(
+    (a, b) => div.servers[b.entry.name].claudeDelta - div.servers[a.entry.name].claudeDelta,
+  )[0];
+
+  const costlier = measured.filter((r) => {
+    const load = sessionStartLoad(r.m, ss?.servers[r.entry.name]);
+    return load !== null && load.totalTokens >= r.m.totalTokens!;
+  });
+
+  const githubRow = rows.find((r) => r.entry.name === 'github');
+  if (!githubRow?.m || typeof githubRow.m.totalTokens !== 'number') {
+    throw new Error('README quotes `verify` on results/github, which has no current measurement');
+  }
+
+  return {
+    candidateTotal: rows.length,
+    measuredCount: measured.length,
+    max,
+    second: asPair(measured[1]),
+    min,
+    spanTimes: floorToTwoSignificant(max.tokens / min.tokens),
+    maxContextSharePct: Math.round((max.tokens / DEFAULT_CONTEXT_WINDOW) * 100),
+    sample,
+    claude: {
+      runSize: Object.keys(div.servers).length,
+      currentCount: withClaude.length,
+      heaviestClaudeName: heaviest?.entry.name ?? null,
+      github: {
+        badgeTokens: github.o200kFull,
+        claudeTokens: github.claudeDelta,
+        droppedPct: Math.round(githubShare * 100),
+      },
+      notion: { badgeTokens: notion.o200kFull, claudeTokens: notion.claudeDelta },
+    },
+    deferralCostlierCount: costlier.length,
+    verify: {
+      serverName: githubRow.m.serverName ?? 'github',
+      tokens: githubRow.m.totalTokens,
+    },
+  };
+}
+
+export type PageFile = 'README.md' | 'docs/index.md';
+export const PAGE_FILES: PageFile[] = ['README.md', 'docs/index.md'];
+
+/**
+ * One maintained sentence. `template` is its exact words with slots — `{n}` a
+ * comma-formatted count, `{d}` a bare integer, `{w}` a server or package name —
+ * and `values` is what the slots must hold for the data on disk.
+ */
+export interface Claim {
+  file: PageFile;
+  id: string;
+  template: string;
+  values(stats: PublishedStats): string[];
+}
+
+const fmt = (n: number) => n.toLocaleString('en-US');
+
+export const PAGE_CLAIMS: Claim[] = [
+  {
+    file: 'README.md',
+    id: 'span',
+    template: 'across the {n} servers measured, cost spans **{n}×**, from `{w}` at {n} tokens to `{w}` at {n}.',
+    values: (s) => [fmt(s.measuredCount), fmt(s.spanTimes), s.min.name, fmt(s.min.tokens), s.max.name, fmt(s.max.tokens)],
+  },
+  {
+    file: 'README.md',
+    id: 'sample:github',
+    template: '| github (official) | **{n} tokens** | {n} |',
+    values: (s) => [fmt(s.sample.github.tokens), fmt(s.sample.github.tools)],
+  },
+  {
+    file: 'README.md',
+    id: 'sample:xcodebuildmcp',
+    template: '| xcodebuildmcp | {n} | {n} |',
+    values: (s) => [fmt(s.sample.xcodebuildmcp.tokens), fmt(s.sample.xcodebuildmcp.tools)],
+  },
+  {
+    file: 'README.md',
+    id: 'sample:brave-search',
+    template: '| brave-search | {n} | {n} |',
+    values: (s) => [fmt(s.sample['brave-search'].tokens), fmt(s.sample['brave-search'].tools)],
+  },
+  {
+    file: 'README.md',
+    id: 'sample:notion',
+    template: '| notion | {n} | {n} |',
+    values: (s) => [fmt(s.sample.notion.tokens), fmt(s.sample.notion.tools)],
+  },
+  {
+    file: 'README.md',
+    id: 'sample:playwright',
+    template: '| playwright *(4.8M installs/week)* | {n} | {n} |',
+    values: (s) => [fmt(s.sample.playwright.tokens), fmt(s.sample.playwright.tools)],
+  },
+  {
+    file: 'README.md',
+    id: 'sample:filesystem',
+    template: '| filesystem (reference) | {n} | {n} |',
+    values: (s) => [fmt(s.sample.filesystem.tokens), fmt(s.sample.filesystem.tools)],
+  },
+  {
+    file: 'README.md',
+    id: 'sample:markitdown',
+    template: '| markitdown | {n} | {n} |',
+    values: (s) => [fmt(s.sample.markitdown.tokens), fmt(s.sample.markitdown.tools)],
+  },
+  {
+    file: 'README.md',
+    id: 'measured-of-candidates',
+    template: '*({n} of {n} popular servers measured, each row dated by its own most recent sweep — full table in',
+    values: (s) => [fmt(s.measuredCount), fmt(s.candidateTotal)],
+  },
+  {
+    file: 'README.md',
+    id: 'divergence-run-size',
+    template: 'The run holds {n} rows — the top {n} measured servers by tokens when it ran',
+    values: (s) => [fmt(s.claude.runSize), fmt(s.claude.runSize)],
+  },
+  {
+    file: 'README.md',
+    id: 'divergence-current-count',
+    template: 'prints a claude number for the {n} that still match today and silence for the rest',
+    values: (s) => [fmt(s.claude.currentCount)],
+  },
+  {
+    file: 'README.md',
+    id: 'claude-table:github',
+    template: '| github | {n} | **{n}** | {d}% of the capture is `annotations`/`outputSchema` metadata Claude never sees |',
+    values: (s) => [fmt(s.claude.github.badgeTokens), fmt(s.claude.github.claudeTokens), String(s.claude.github.droppedPct)],
+  },
+  {
+    file: 'README.md',
+    id: 'claude-table:notion',
+    template: '| notion | {n} | **{n}** | almost no metadata to drop, so the tokenizer difference dominates |',
+    values: (s) => [fmt(s.claude.notion.badgeTokens), fmt(s.claude.notion.claudeTokens)],
+  },
+  {
+    file: 'README.md',
+    id: 'verify-transcript',
+    template: '# OK {w}: {d} tokens (o200k_base, methodology 1.0) — capture, hash, and count all agree',
+    values: (s) => [s.verify.serverName, String(s.verify.tokens)],
+  },
+  {
+    file: 'docs/index.md',
+    id: 'index:counts',
+    template: 'We measure {n} popular MCP servers; {n} have a number today, and every failure is listed with its reason.',
+    values: (s) => [fmt(s.candidateTotal), fmt(s.measuredCount)],
+  },
+  {
+    file: 'docs/index.md',
+    id: 'index:span',
+    template:
+      'The spread is {n}×: from `{w}` at {n} tokens to `{w}` at **{n} tokens** — {d}% of a 200K context window, before the agent takes a single action.',
+    values: (s) => [fmt(s.spanTimes), s.min.name, fmt(s.min.tokens), s.max.name, fmt(s.max.tokens), String(s.maxContextSharePct)],
+  },
+  {
+    file: 'docs/index.md',
+    id: 'index:second-heaviest',
+    template: 'Second-heaviest is `{w}` at {n}.',
+    values: (s) => [s.second.name, fmt(s.second.tokens)],
+  },
+];
+
+/**
+ * Claims whose truth the data decides but whose words no template can rewrite —
+ * prose whose shape would have to change with the answer. These are asserted in
+ * the suite, never patched: if one goes false a person rewrites the sentence.
+ */
+export interface CheckClaim {
+  file: PageFile;
+  id: string;
+  /** The page's words, template-escaped like any claim (wrapping-tolerant). */
+  words: string;
+  /** null when the data agrees with the words; otherwise why it does not. */
+  holds(stats: PublishedStats): string | null;
+}
+
+export const CHECK_CLAIMS: CheckClaim[] = [
+  {
+    file: 'README.md',
+    id: 'heaviest-differs-on-claude',
+    words: 'the heaviest server on the badge is not the heaviest server on Claude',
+    holds: (s) =>
+      s.claude.heaviestClaudeName === null
+        ? 'no row has a current claude number, so there is no heaviest server on Claude'
+        : s.claude.heaviestClaudeName === s.max.name
+          ? `the heaviest server on the badge (${s.max.name}) IS the heaviest on Claude now`
+          : null,
+  },
+  {
+    file: 'README.md',
+    id: 'deferring-costlier-somewhere',
+    words: 'for at least one server in the published set it costs **more** than loading the definitions would',
+    holds: (s) =>
+      s.deferralCostlierCount >= 1
+        ? null
+        : 'no measured server currently costs more at session start than its definitions',
+  },
+];
+
+const escapeLiteral = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
+
+/** Fixed words with `\s+` for every gap (prose wraps; a claim is its words, not its layout). */
+export function compileTemplate(template: string): RegExp {
+  let source = '';
+  let last = 0;
+  for (const slot of template.matchAll(/\{[ndw]\}/g)) {
+    source += escapeLiteral(template.slice(last, slot.index));
+    source += slot[0] === '{n}' ? '([\\d,]+)' : slot[0] === '{d}' ? '(\\d+)' : '([A-Za-z0-9._-]+)';
+    last = slot.index + slot[0].length;
+  }
+  source += escapeLiteral(template.slice(last));
+  return new RegExp(source, 'dg');
+}
+
+export interface ClaimApplication {
+  text: string;
+  /** Why the claim could not be applied — a missing or ambiguous anchor. */
+  problem: string | null;
+  /** True when a slot was rewritten. */
+  changed: boolean;
+}
+
+/** Apply one claim: find its anchor exactly once, splice the slots to `want`, touch nothing else. */
+export function applyClaim(
+  text: string,
+  claim: Pick<Claim, 'file' | 'id' | 'template'>,
+  want: string[],
+): ClaimApplication {
+  const matches = [...text.matchAll(compileTemplate(claim.template))];
+  if (matches.length !== 1) {
+    return {
+      text,
+      changed: false,
+      problem:
+        matches.length === 0
+          ? `${claim.file}: claim '${claim.id}' not found — the sentence regen maintains is gone or reworded`
+          : `${claim.file}: claim '${claim.id}' matches ${matches.length} places — the anchor is ambiguous`,
+    };
+  }
+  const match = matches[0];
+  const got = match.slice(1);
+  if (got.length !== want.length) {
+    return {
+      text,
+      changed: false,
+      problem: `${claim.file}: claim '${claim.id}' has ${got.length} slots but ${want.length} values — the claim itself is broken`,
+    };
+  }
+  if (got.every((g, i) => g === want[i])) return { text, problem: null, changed: false };
+  // Right-to-left so earlier slot offsets stay valid; the `d` flag supplies indices.
+  const indices = match.indices!;
+  for (let g = want.length; g >= 1; g--) {
+    const [start, end] = indices[g]!;
+    text = text.slice(0, start) + want[g - 1] + text.slice(end);
+  }
+  return { text, problem: null, changed: true };
+}
+
+export interface PagePatch {
+  text: string;
+  problems: string[];
+  /** Claim ids whose slots were rewritten. */
+  updated: string[];
+}
+
+/** Apply every claim for one page to its text. Slots are spliced in place; anchors are never rewritten. */
+export function patchPageText(file: PageFile, text: string, stats: PublishedStats): PagePatch {
+  const problems: string[] = [];
+  const updated: string[] = [];
+  for (const claim of PAGE_CLAIMS.filter((c) => c.file === file)) {
+    const applied = applyClaim(text, claim, claim.values(stats));
+    text = applied.text;
+    if (applied.problem) problems.push(applied.problem);
+    else if (applied.changed) updated.push(claim.id);
+  }
+  return { text, problems, updated };
+}
+
+export interface PublishedStatsResult {
+  problems: string[];
+  updated: string[];
+  changedFiles: PageFile[];
+}
+
+/** Compute stats and report what regen would rewrite, without writing anything. */
+export function verifyPublishedPages(entries: ServerEntry[], root = process.cwd()): PublishedStatsResult {
+  return applyTo(entries, root, false);
+}
+
+/** Compute stats and rewrite the pages in place. Returns what changed and any refusals. */
+export function applyPublishedStats(entries: ServerEntry[], root = process.cwd()): PublishedStatsResult {
+  return applyTo(entries, root, true);
+}
+
+function applyTo(entries: ServerEntry[], root: string, write: boolean): PublishedStatsResult {
+  const stats = computePublishedStats(entries, root);
+  const problems: string[] = [];
+  const updated: string[] = [];
+  const changedFiles: PageFile[] = [];
+  for (const file of PAGE_FILES) {
+    const path = join(root, file);
+    const before = readFileSync(path, 'utf8');
+    const patch = patchPageText(file, before, stats);
+    problems.push(...patch.problems);
+    updated.push(...patch.updated);
+    if (patch.text !== before) {
+      changedFiles.push(file);
+      if (write) writeFileSync(path, patch.text);
+    }
+  }
+  return { problems, updated, changedFiles };
+}

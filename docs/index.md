@@ -2,10 +2,10 @@
 
 **How much of your agent's context window does an MCP server eat before it does anything?**
 
-We measured 82 popular MCP servers (69 measurable without credentials). The spread is
-1,700×: from the 32-token `postgres` reference server to the official GitHub server's
-**54,422 tokens** — more than a quarter of a 200K context window, before the agent takes a
-single action. Second-heaviest is `xcodebuildmcp` at 26,594.
+We measure 82 popular MCP servers; 69 have a number today, and every failure is listed
+with its reason. The spread is 1,700×: from `postgres` at 32 tokens to `github` at
+**54,422 tokens** — 27% of a 200K context window, before the agent takes a single action.
+Second-heaviest is `xcodebuildmcp` at 26,594.
 
 - **[The dashboard](dashboard.html)** — the ranked chart; open any row for its breakdown
 - **[Server pages](servers/)** — per-server: where the tokens are, tool by tool

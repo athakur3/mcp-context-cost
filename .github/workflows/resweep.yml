@@ -69,10 +69,13 @@ jobs:
       - name: Regenerate leaderboard, server pages and dashboard
         run: npx tsx src/sweep/regen.ts
       - name: Commit refreshed measurements
+        # README.md is included because regen patches the numbers the front page
+        # states (src/sweep/published-stats.ts) — leaving it out would commit a
+        # leaderboard the README then contradicts.
         run: |
           git config user.name "mcp-context-cost bot"
           git config user.email "actions@users.noreply.github.com"
-          git add badges/ results/ docs/
+          git add badges/ results/ docs/ README.md
           git diff --cached --quiet && echo "no change to publish" && exit 0
           git commit -m "chore: rotating re-sweep of this week's server shard"
           # This job can run long enough for main to have moved underneath it.

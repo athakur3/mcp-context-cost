@@ -36,7 +36,7 @@ export interface ServerEntry {
   envValues?: Record<string, string>;
 }
 
-interface Row {
+export interface Row {
   entry: ServerEntry;
   m: Measurement | null;
 }
@@ -54,7 +54,7 @@ function csvCell(s: unknown): string {
   return /[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v;
 }
 
-function loadRows(entries: ServerEntry[], root = process.cwd()): Row[] {
+export function loadRows(entries: ServerEntry[], root = process.cwd()): Row[] {
   return entries.map((entry) => {
     const p = join(root, 'results', entry.name, 'measurement.json');
     return { entry, m: existsSync(p) ? (JSON.parse(readFileSync(p, 'utf8')) as Measurement) : null };
