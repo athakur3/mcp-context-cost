@@ -20,11 +20,11 @@
       "capturedSha256": "0ba9e9185e3d5c167bbaf0dcfeb499f27020c307f1387a3b85374f849f0a38a7"
     },
     "blender": {
-      "o200kFull": 5258,
-      "o200kMapped": 4629,
-      "claudeDelta": 8106,
-      "toolCount": 24,
-      "capturedSha256": "d2eaa893817022900e08e72922d111d17cc1acb50532e337704a89305ee57639"
+      "o200kFull": 5462,
+      "o200kMapped": 4799,
+      "claudeDelta": 8409,
+      "toolCount": 25,
+      "capturedSha256": "14c1a93ca0b59e6b394bae642a6eba89f01c8c953076c19ed8ae16c6a0db6e09"
     },
     "brave-search": {
       "o200kFull": 25456,

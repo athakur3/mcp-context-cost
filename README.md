@@ -184,7 +184,7 @@ Add `--claude` to annotate each server with its Anthropic-request cost from the 
 [Claude divergence](docs/METHODOLOGY.md#claude-divergence) run — an exact number when the
 published capture hash matches what you have installed, `—` (silence, not a stale guess)
 when it doesn't. The run holds 20 rows — the top 20 measured servers by tokens when it ran —
-and [results/leaderboard.md](results/leaderboard.md) prints a claude number for the 19 that
+and [results/leaderboard.md](results/leaderboard.md) prints a claude number for the 20 that
 still match today and silence for the rest. Most installs will show a mix:
 
 ```

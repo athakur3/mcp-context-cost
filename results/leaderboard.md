@@ -2,7 +2,7 @@
 
 Tokens = o200k_base count of the canonical `tools/list` bytes ([methodology v1.0](../docs/METHODOLOGY.md)). Measured 69/82 candidates; every candidate is listed — failures are findings, not omissions. Server names link to their per-tool breakdown.
 
-The **claude** column is the same tools measured through Anthropic's `count_tokens` on `claude-opus-5` (2026-09-03, method `tools-delta/v1`): the tokens the server's tools add to a request, measured for the top 19. It is not a rescaling of the o200k column — two effects pull in opposite directions, and the [per-server pages](../docs/servers/) break both out. See [Claude divergence](../docs/METHODOLOGY.md#claude-divergence).
+The **claude** column is the same tools measured through Anthropic's `count_tokens` on `claude-opus-5` (2026-09-03, method `tools-delta/v1`): the tokens the server's tools add to a request, measured for the top 20. It is not a rescaling of the o200k column — two effects pull in opposite directions, and the [per-server pages](../docs/servers/) break both out. See [Claude divergence](../docs/METHODOLOGY.md#claude-divergence).
 
 The **session start** column is what a client puts in context when it *defers* tool definitions until they are used: the server's tool names plus the `instructions` string it returns from `initialize` (method `deferred-load/v1`). The tokens column is what a client that loads every definition up front pays; this one is what the same server costs a client that does not. See [session-start load](../docs/METHODOLOGY.md#session-start-load).
 
@@ -30,7 +30,7 @@ The **session start** column is what a client puts in context when it *defers* t
 | 16 | [sentry](../docs/servers/sentry.md) | 6,455 | 40 | 10,463 | 9 | update_issue (1,306) | measured | vendor-official |
 | 17 | [pinecone](../docs/servers/pinecone.md) | 5,903 | 294 | 9,184 | 9 | search-records (1,179) | measured | vendor-official |
 | 18 | [shopify-dev](../docs/servers/shopify-dev.md) | 5,624 | ≥24 | 9,805 | 5 | learn_shopify_api (2,518) | measured | vendor-official |
-| 19 | [blender](../docs/servers/blender.md) | 5,462 | 151 | — | 25 | generate_hyper3d_model_via_images (454) | measured | community |
+| 19 | [blender](../docs/servers/blender.md) | 5,462 | 151 | 8,409 | 25 | generate_hyper3d_model_via_images (454) | measured | community |
 | 20 | [kubernetes](../docs/servers/kubernetes.md) | 5,268 | 95 | 9,165 | 23 | kubectl_create (945) | measured | community |
 | 21 | [aws-documentation](../docs/servers/aws-documentation.md) | 5,074 | 425 | — | 5 | search_documentation (1,956) | measured | vendor-official |
 | 22 | [supabase](../docs/servers/supabase.md) | 5,013 | 342 | — | 29 | query_logs (800) | measured | vendor-official |

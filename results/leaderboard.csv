@@ -63,7 +63,7 @@ mcp-atlassian,17311,63,dynamic,community,353572,https://pypistats.org/packages/m
 postgres-mcp,8632,9,measured,community,234706,https://pypistats.org/packages/postgres-mcp (PyPI weekly),2381,claude-opus-5,39,false,39,0
 xcodebuildmcp,26594,24,measured,community,149200,https://api.npmjs.org/downloads/point/last-week/xcodebuildmcp (npm weekly),5335,claude-opus-5,559,false,95,464
 n8n-mcp,2636,7,measured,community,114676,https://api.npmjs.org/downloads/point/last-week/n8n-mcp (npm weekly),,,24,false,24,0
-blender,5462,25,measured,community,71408,https://pypistats.org/packages/blender-mcp (PyPI weekly),,,151,false,151,0
+blender,5462,25,measured,community,71408,https://pypistats.org/packages/blender-mcp (PyPI weekly),8409,claude-opus-5,151,false,151,0
 excel,4266,25,measured,community,57839,https://pypistats.org/packages/excel-mcp-server (PyPI weekly),,,106,false,99,7
 figma-context,946,2,measured,community,57771,https://api.npmjs.org/downloads/point/last-week/figma-developer-mcp (npm weekly),,,11,false,11,0
 duckduckgo,724,2,measured,community,41360,https://pypistats.org/packages/duckduckgo-mcp-server (PyPI weekly),,,6,false,6,0
