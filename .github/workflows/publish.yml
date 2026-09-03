@@ -25,11 +25,9 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      # v4, deliberately, in this one workflow: the 0.9.0 publish through v5
-      # died at the registry PUT with E401 "token is invalid" after every gate
-      # passed — v5 arranges .npmrc auth differently, and a configured token
-      # placeholder overrides the OIDC trusted-publishing path this job relies
-      # on. v4 is the configuration 0.8.0 verifiably shipped through.
+      # v4, deliberately, in this one workflow: while the publish path is held
+      # as close as possible to the configuration 0.8.0 verifiably shipped
+      # through. The other workflows run v5, where no registry auth is involved.
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -38,8 +36,15 @@ jobs:
 
       # Trusted publishing needs npm >= 11.5.1, and node 22 ships an older one. Without
       # this the publish falls back to looking for a token and fails as if unauthorised.
+      #
+      # Pinned to the 11.x major rather than latest: this line quietly became
+      # npm 12 between 0.8.0 and 0.9.0, and both 0.9.0 attempts through 12.0.2
+      # passed every gate, signed provenance, and then died at the registry PUT
+      # with E401 "token is invalid" — the OIDC exchange behind `npm publish`
+      # changed under a workflow no commit had touched. 0.8.0 shipped through
+      # 11.x; the publish path does not float across npm majors on its own.
       - name: npm new enough to publish by OIDC
-        run: npm install -g npm@latest
+        run: npm install -g npm@11
 
       - run: npm ci
 
