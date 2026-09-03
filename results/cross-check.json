@@ -41,6 +41,16 @@
       "toolSetMatches": true,
       "capturedSha256": "4dd4565165c7066d8e8ef666f79cd8b323bad3d7f66b4d34fbe769f07e979453"
     },
+    "appium-mcp": {
+      "ourTokens": 10267,
+      "ourMappedTokens": 9798,
+      "cliTokens": 9843,
+      "ourToolCount": 31,
+      "cliToolCount": 31,
+      "toolSetMatches": true,
+      "dynamic": false,
+      "capturedSha256": "d024ca5b97d52d5442da395ed92d1d107b6728db57cf1295bb87c5d3624c0e53"
+    },
     "arxiv": {
       "ourTokens": 3960,
       "ourMappedTokens": 3699,
@@ -68,6 +78,16 @@
       "cliToolCount": 23,
       "toolSetMatches": true,
       "capturedSha256": "0ba9e9185e3d5c167bbaf0dcfeb499f27020c307f1387a3b85374f849f0a38a7"
+    },
+    "bitbucket-mcp": {
+      "ourTokens": 6156,
+      "ourMappedTokens": 6156,
+      "cliTokens": 6156,
+      "ourToolCount": 47,
+      "cliToolCount": 47,
+      "toolSetMatches": true,
+      "dynamic": false,
+      "capturedSha256": "e131b1d46e30c0d05f07995aa167fa323ec1003719d861dbe27c82c94ad803cf"
     },
     "blender": {
       "ourTokens": 6928,
@@ -125,6 +145,16 @@
       "toolSetMatches": true,
       "capturedSha256": "eb0b416a1586989ce3f646259f9f96d0ae6d7b62342aa30393b10ecb7c03c707"
     },
+    "chrome-devtools": {
+      "ourTokens": 5717,
+      "ourMappedTokens": 5100,
+      "cliTokens": 5080,
+      "ourToolCount": 29,
+      "cliToolCount": 29,
+      "toolSetMatches": true,
+      "dynamic": false,
+      "capturedSha256": "151a59215c20049ea5934809670996c1d73977d468a65fa6b5624c2e24ca3ef4"
+    },
     "circleci": {
       "ourTokens": 11912,
       "ourMappedTokens": 11755,
@@ -143,6 +173,16 @@
       "toolSetMatches": true,
       "capturedSha256": "6f42fcefaf49e720fe8ec5acf8dafc7ae6065bf541957572b6a6abbe61f111d4"
     },
+    "clinicaltrialsgov": {
+      "ourTokens": 5134,
+      "ourMappedTokens": 2879,
+      "cliTokens": 2874,
+      "ourToolCount": 7,
+      "cliToolCount": 7,
+      "toolSetMatches": true,
+      "dynamic": false,
+      "capturedSha256": "acdc9b99e581c7493a98e8c0fac919bbe384ac3205227c15891b94d6ddcf4825"
+    },
     "cloudflare-docs": {
       "ourTokens": 422,
       "ourMappedTokens": 252,
@@ -151,6 +191,26 @@
       "cliToolCount": 2,
       "toolSetMatches": true,
       "capturedSha256": "a65649ac29928ffde9e8bf8796482b5aaeb17e79d02ea2f3b8b96f11ac32b604"
+    },
+    "codebase-memory-mcp": {
+      "ourTokens": 5258,
+      "ourMappedTokens": 4774,
+      "cliTokens": 4776,
+      "ourToolCount": 15,
+      "cliToolCount": 15,
+      "toolSetMatches": true,
+      "dynamic": false,
+      "capturedSha256": "01a1bd0f450ccf86b0bf36b2b63749c70dc4add7b0a4d9621ce69e29c9db7b27"
+    },
+    "comfyui-mcp": {
+      "ourTokens": 50640,
+      "ourMappedTokens": 50249,
+      "cliTokens": 50375,
+      "ourToolCount": 41,
+      "cliToolCount": 41,
+      "toolSetMatches": true,
+      "dynamic": false,
+      "capturedSha256": "af7eaa380b99a67fc49ab075c762cd2686f108acc4ba21d001ce922554f7510a"
     },
     "context7": {
       "ourTokens": 1052,
@@ -438,6 +498,26 @@
       "cliToolCount": 15,
       "toolSetMatches": true,
       "capturedSha256": "6064f85a43ae17b2da72d1b87fd9435879e8b42bc320e1347e382f5c8a61b499"
+    },
+    "obsidian-rest": {
+      "ourTokens": 10173,
+      "ourMappedTokens": 5878,
+      "cliTokens": 5855,
+      "ourToolCount": 12,
+      "cliToolCount": 12,
+      "toolSetMatches": true,
+      "dynamic": false,
+      "capturedSha256": "85d23a7fa63923641625701d0c5fff39249eb8b379c3c1a7a444fef6437d6bc4"
+    },
+    "octocode": {
+      "ourTokens": 13552,
+      "ourMappedTokens": 12967,
+      "cliTokens": 13122,
+      "ourToolCount": 14,
+      "cliToolCount": 14,
+      "toolSetMatches": true,
+      "dynamic": false,
+      "capturedSha256": "17bae5bf5a76df127b4ddba609724a2a52b86400700daa315562e18f1082304f"
     },
     "pandoc": {
       "ourTokens": 1425,

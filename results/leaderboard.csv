@@ -81,3 +81,17 @@ kubernetes,5268,23,measured,community,12374,https://api.npmjs.org/downloads/poin
 basic-memory,9188,23,measured,community,10460,https://pypistats.org/packages/basic-memory (PyPI weekly),12426,claude-opus-5,71,false,71,0,7113,v0.2.5
 airtable,4207,16,measured,community,3022,https://api.npmjs.org/downloads/point/last-week/airtable-mcp-server (npm weekly),,,50,false,50,0,2533,v0.2.5
 airbnb,486,2,measured,community,2599,https://api.npmjs.org/downloads/point/last-week/@openbnb/mcp-server-airbnb (npm weekly),,,10,false,10,0,486,v0.2.5
+chrome-devtools,5717,29,measured,vendor-official,3288165,https://api.npmjs.org/downloads/point/last-week/chrome-devtools-mcp (npm weekly),,,98,false,98,0,5080,v0.2.5
+comfyui-mcp,50640,41,measured,community,141905,https://api.npmjs.org/downloads/point/last-week/comfyui-mcp (npm weekly),,,428,false,140,288,50375,v0.2.5
+agent-device,,,startup-failure,community,138188,https://api.npmjs.org/downloads/point/last-week/agent-device (npm weekly),,,,,,,,
+appium-mcp,10267,31,measured,vendor-official,12466,https://api.npmjs.org/downloads/point/last-week/appium-mcp (npm weekly),,,328,false,164,164,9843,v0.2.5
+codebase-memory-mcp,5258,15,measured,community,9040,https://api.npmjs.org/downloads/point/last-week/codebase-memory-mcp (npm weekly),,,205,false,55,150,4776,v0.2.5
+kubernetes-containers,,,startup-failure,community,8556,https://api.npmjs.org/downloads/point/last-week/kubernetes-mcp-server (npm weekly),,,,,,,,
+obsidian-rest,10173,12,measured,community,5784,https://api.npmjs.org/downloads/point/last-week/obsidian-mcp-server (npm weekly),,,65,false,65,0,5855,v0.2.5
+bitbucket-mcp,6156,47,measured,community,5033,https://api.npmjs.org/downloads/point/last-week/bitbucket-mcp (npm weekly),,,230,false,230,0,6156,v0.2.5
+hana-cli,,,startup-failure,vendor-official,3854,https://api.npmjs.org/downloads/point/last-week/hana-cli (npm weekly),,,,,,,,
+clinicaltrialsgov,5134,7,measured,community,3123,https://api.npmjs.org/downloads/point/last-week/clinicaltrialsgov-mcp-server (npm weekly),,,54,false,54,0,2874,v0.2.5
+accessibility-scanner,,,startup-failure,community,3068,https://api.npmjs.org/downloads/point/last-week/mcp-accessibility-scanner (npm weekly),,,,,,,,
+keboola,,,auth-required,vendor-official,2907,https://pypistats.org/packages/keboola-mcp-server (PyPI weekly),,,,,,,,
+octocode,13552,14,measured,community,1797,https://api.npmjs.org/downloads/point/last-week/octocode-mcp (npm weekly),,,791,false,64,727,13122,v0.2.5
+anki,,,timeout,community,1716,https://api.npmjs.org/downloads/point/last-week/@ankimcp/anki-mcp-server (npm weekly),,,,,,,,

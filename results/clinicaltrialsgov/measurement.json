@@ -1,0 +1,989 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "measured",
+  "totalTokens": 5134,
+  "toolCount": 7,
+  "tools": [
+    {
+      "name": "clinicaltrials_search_studies",
+      "tokens": 1257,
+      "descriptionTokens": 51,
+      "inputSchemaTokens": 884
+    },
+    {
+      "name": "clinicaltrials_get_study_record",
+      "tokens": 279,
+      "descriptionTokens": 38,
+      "inputSchemaTokens": 65
+    },
+    {
+      "name": "clinicaltrials_get_study_count",
+      "tokens": 677,
+      "descriptionTokens": 59,
+      "inputSchemaTokens": 450
+    },
+    {
+      "name": "clinicaltrials_get_field_values",
+      "tokens": 527,
+      "descriptionTokens": 46,
+      "inputSchemaTokens": 118
+    },
+    {
+      "name": "clinicaltrials_get_field_definitions",
+      "tokens": 737,
+      "descriptionTokens": 153,
+      "inputSchemaTokens": 224
+    },
+    {
+      "name": "clinicaltrials_get_study_results",
+      "tokens": 928,
+      "descriptionTokens": 52,
+      "inputSchemaTokens": 318
+    },
+    {
+      "name": "clinicaltrials_find_eligible",
+      "tokens": 727,
+      "descriptionTokens": 35,
+      "inputSchemaTokens": 281
+    }
+  ],
+  "canonicalSha256": "acdc9b99e581c7493a98e8c0fac919bbe384ac3205227c15891b94d6ddcf4825",
+  "rawToolsCapture": [
+    {
+      "name": "clinicaltrials_search_studies",
+      "title": "Clinicaltrials Search Studies",
+      "description": "Search for clinical trial studies from ClinicalTrials.gov. Supports full-text and field-specific queries, status/phase/geographic filters, pagination, sorting, and field selection. Use the fields parameter to reduce payload size — full study records are ~70KB each.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "query": {
+            "description": "General full-text search across all fields.",
+            "type": "string"
+          },
+          "conditionQuery": {
+            "description": "Condition/disease-specific search. E.g., \"Type 2 Diabetes\", \"non-small cell lung cancer\".",
+            "type": "string"
+          },
+          "interventionQuery": {
+            "description": "Intervention/treatment search. E.g., \"pembrolizumab\", \"cognitive behavioral therapy\".",
+            "type": "string"
+          },
+          "locationQuery": {
+            "description": "Location search — city, state, country, or facility name.",
+            "type": "string"
+          },
+          "sponsorQuery": {
+            "description": "Sponsor/collaborator name search.",
+            "type": "string"
+          },
+          "titleQuery": {
+            "description": "Search within study titles and acronyms only.",
+            "type": "string"
+          },
+          "outcomeQuery": {
+            "description": "Search within outcome measure fields.",
+            "type": "string"
+          },
+          "statusFilter": {
+            "description": "Filter by study status. Values: RECRUITING, COMPLETED, ACTIVE_NOT_RECRUITING, NOT_YET_RECRUITING, ENROLLING_BY_INVITATION, SUSPENDED, TERMINATED, WITHDRAWN, UNKNOWN, WITHHELD, NO_LONGER_AVAILABLE, AVAILABLE, APPROVED_FOR_MARKETING, TEMPORARILY_NOT_AVAILABLE.",
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "A single status value."
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Multiple status values (OR)."
+              }
+            ]
+          },
+          "phaseFilter": {
+            "description": "Filter by trial phase. Values: EARLY_PHASE1, PHASE1, PHASE2, PHASE3, PHASE4, NA.",
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "A single phase value."
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Multiple phase values (OR)."
+              }
+            ]
+          },
+          "advancedFilter": {
+            "description": "Advanced filter using AREA[] Essie syntax. E.g., \"AREA[StudyType]INTERVENTIONAL\", \"AREA[EnrollmentCount]RANGE[100, 1000]\". Combine with AND/OR/NOT and parentheses. Use clinicaltrials_get_field_definitions with a query to find AREA[]-compatible field names.",
+            "type": "string"
+          },
+          "geoFilter": {
+            "description": "Geographic proximity filter. Format: distance(lat,lon,radius). E.g., \"distance(47.6062,-122.3321,50mi)\" for studies within 50 miles of Seattle.",
+            "type": "string"
+          },
+          "nctIds": {
+            "description": "Filter to specific NCT IDs for batch lookups.",
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^NCT\\d{8}$",
+                "description": "A single NCT ID."
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^NCT\\d{8}$"
+                },
+                "description": "Multiple NCT IDs (OR)."
+              }
+            ]
+          },
+          "fields": {
+            "description": "PascalCase leaf names to return; strongly recommended since full records are ~70KB. Common leaves: NCTId, BriefTitle, BriefSummary, OverallStatus, Phase, LeadSponsorName, Condition. Call clinicaltrials_get_field_definitions with a concept query (e.g., \"adverse events\", \"eligibility\") to find the exact leaf for any concept.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sort": {
+            "description": "Sort order. Format: FieldName:asc or FieldName:desc. E.g., \"LastUpdatePostDate:desc\", \"EnrollmentCount:desc\". Max 2 fields comma-separated. Use clinicaltrials_get_field_definitions to find sortable field names.",
+            "type": "string"
+          },
+          "pageSize": {
+            "default": 10,
+            "description": "Results per page, 1–200.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200
+          },
+          "pageToken": {
+            "description": "Pagination cursor from a previous response.",
+            "type": "string"
+          },
+          "countTotal": {
+            "default": true,
+            "description": "Include total study count in response. Only computed on the first page.",
+            "type": "boolean"
+          },
+          "includeUnknownEnrollment": {
+            "default": false,
+            "description": "Include studies whose EnrollmentCount is the upstream \"unknown\" sentinel (99999999). Excluded by default — the sentinel pollutes RANGE[N, MAX] queries and EnrollmentCount:desc sorts. Set true for data-quality audits or when targeting unknown-enrollment studies specifically.",
+            "type": "boolean"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "studies": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            },
+            "description": "Matching studies. Each entry is a nested ClinicalTrials.gov study record — top-level keys: protocolSection, derivedSection, hasResults, resultsSection, documentSection. Use clinicaltrials_get_field_definitions to explore the schema."
+          },
+          "totalCount": {
+            "description": "Total matching studies (first page only when countTotal=true).",
+            "type": "number"
+          },
+          "nextPageToken": {
+            "description": "Token for the next page. Absent on last page.",
+            "type": "string"
+          },
+          "searchCriteria": {
+            "description": "Echo of query/filter criteria used. Present when results are empty.",
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "requestedFields": {
+            "description": "Echo of the explicit fields parameter. Present only when the caller passed fields — signals that all requested leaves should render in format() without the default truncation cap.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "noMatchHints": {
+            "description": "Suggestions for broadening the search when no results are found.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "studies"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "clinicaltrials_get_study_record",
+      "title": "Clinicaltrials Get Study Record",
+      "description": "Fetch a single clinical trial study by NCT ID from ClinicalTrials.gov. Returns the full study record including protocol details, eligibility criteria, outcomes, arms, interventions, contacts, and locations.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "nctId": {
+            "type": "string",
+            "pattern": "^NCT\\d{8}$",
+            "description": "NCT identifier (e.g., NCT03722472)."
+          }
+        },
+        "required": [
+          "nctId"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "study": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {},
+            "description": "Full study record. Top-level keys: protocolSection (identification, status, sponsor, conditions, design, arms/interventions, outcomes, eligibility, contacts/locations), derivedSection (MeSH-normalized terms), hasResults, resultsSection, documentSection. Use clinicaltrials_get_field_definitions to explore the schema."
+          }
+        },
+        "required": [
+          "study"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "clinicaltrials_get_study_count",
+      "title": "Clinicaltrials Get Study Count",
+      "description": "Get total clinical trial study count from ClinicalTrials.gov matching a query, without fetching study data. Fast and lightweight. Use for quick statistics or to build breakdowns by calling multiple times with different filters (e.g., count by phase, count by status, count recruiting vs completed for a condition).",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "query": {
+            "description": "General full-text search across all fields.",
+            "type": "string"
+          },
+          "conditionQuery": {
+            "description": "Condition/disease-specific search. E.g., \"Type 2 Diabetes\", \"non-small cell lung cancer\".",
+            "type": "string"
+          },
+          "interventionQuery": {
+            "description": "Intervention/treatment search. E.g., \"pembrolizumab\", \"cognitive behavioral therapy\".",
+            "type": "string"
+          },
+          "sponsorQuery": {
+            "description": "Sponsor/collaborator name search.",
+            "type": "string"
+          },
+          "statusFilter": {
+            "description": "Filter by study status. Values: RECRUITING, COMPLETED, ACTIVE_NOT_RECRUITING, NOT_YET_RECRUITING, ENROLLING_BY_INVITATION, SUSPENDED, TERMINATED, WITHDRAWN, UNKNOWN, WITHHELD, NO_LONGER_AVAILABLE, AVAILABLE, APPROVED_FOR_MARKETING, TEMPORARILY_NOT_AVAILABLE.",
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "A single status value."
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Multiple status values (OR)."
+              }
+            ]
+          },
+          "phaseFilter": {
+            "description": "Filter by trial phase. Values: EARLY_PHASE1, PHASE1, PHASE2, PHASE3, PHASE4, NA.",
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "A single phase value."
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Multiple phase values (OR)."
+              }
+            ]
+          },
+          "advancedFilter": {
+            "description": "Advanced filter using AREA[] Essie syntax. E.g., \"AREA[StudyType]INTERVENTIONAL\", \"AREA[EnrollmentCount]RANGE[100, 1000]\". Combine with AND/OR/NOT and parentheses. Use clinicaltrials_get_field_definitions with a query to find AREA[]-compatible field names.",
+            "type": "string"
+          },
+          "includeUnknownEnrollment": {
+            "default": false,
+            "description": "Include studies whose EnrollmentCount is the upstream \"unknown\" sentinel (99999999). Excluded by default — the sentinel pollutes RANGE[N, MAX] queries. Set true for data-quality audits.",
+            "type": "boolean"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "number",
+            "description": "Total studies matching the query/filters."
+          },
+          "searchCriteria": {
+            "description": "Echo of query/filter criteria used.",
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "noMatchHints": {
+            "description": "Suggestions when no studies match (totalCount is 0).",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "totalCount"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "clinicaltrials_get_field_values",
+      "title": "Clinicaltrials Get Field Values",
+      "description": "Discover valid values for ClinicalTrials.gov fields with study counts per value. Use to explore available filter options before building a search — e.g., valid OverallStatus, Phase, InterventionType, StudyType, or LeadSponsorClass values.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "fields": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "A single PascalCase field name."
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Multiple PascalCase field names."
+              }
+            ],
+            "description": "PascalCase field name(s) to get value statistics for. Examples: OverallStatus, Phase, StudyType, Sex, LeadSponsorClass. Use clinicaltrials_get_field_definitions with a query to find more field names."
+          }
+        },
+        "required": [
+          "fields"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "fieldStats": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string",
+                  "description": "Full dot-notation field path."
+                },
+                "piece": {
+                  "type": "string",
+                  "description": "PascalCase piece name."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Field data type (ENUM, BOOLEAN, STRING, DATE, etc.)."
+                },
+                "missingStudiesCount": {
+                  "description": "Number of studies where this field is absent.",
+                  "type": "number"
+                },
+                "uniqueValuesCount": {
+                  "description": "Number of distinct values.",
+                  "type": "number"
+                },
+                "topValues": {
+                  "description": "Values ranked by frequency (capped at 250 by the API). Present for ENUM/STRING fields.",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "description": "Field value."
+                      },
+                      "studiesCount": {
+                        "type": "number",
+                        "description": "Number of studies with this value."
+                      }
+                    },
+                    "required": [
+                      "value",
+                      "studiesCount"
+                    ],
+                    "additionalProperties": false,
+                    "description": "A value and its study count."
+                  }
+                },
+                "trueCount": {
+                  "description": "Studies where field is true. Present for BOOLEAN fields.",
+                  "type": "number"
+                },
+                "falseCount": {
+                  "description": "Studies where field is false. Present for BOOLEAN fields.",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "field",
+                "piece",
+                "type"
+              ],
+              "additionalProperties": false,
+              "description": "Statistics for a single requested field."
+            },
+            "description": "Statistics per requested field."
+          }
+        },
+        "required": [
+          "fieldStats"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "clinicaltrials_get_field_definitions",
+      "title": "Clinicaltrials Get Field Definitions",
+      "description": "Discover valid field names from the ClinicalTrials.gov data model. Call this FIRST when you need to know which field names to use in `fields`, `advancedFilter`, or `sort` parameters of other tools, or as input to clinicaltrials_get_field_values. Three usage modes: pass `query` for keyword search by concept (e.g., \"enrollment\", \"sponsor\", \"adverse events\") returning a ranked list of matches; pass `path` for drill-down into a section by dot-notation (e.g., \"protocolSection.designModule\") returning its individual fields; omit both for a top-level overview of all sections. Returns canonical PascalCase identifiers like OverallStatus, EnrollmentCount, LeadSponsorName — the exact names the API accepts.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "query": {
+            "description": "Keyword to search field names by — e.g., \"enrollment\", \"sponsor\", \"adverse events\". Returns matching field names ranked by relevance with their full paths and data types. Cannot be combined with `path`.",
+            "type": "string"
+          },
+          "path": {
+            "description": "Dot-notation path to drill into a section. E.g., \"protocolSection.designModule\", \"protocolSection.eligibilityModule\", \"resultsSection\". Returns the section's individual fields. Cannot be combined with `query`. Omit both `path` and `query` for a top-level overview.",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Maximum results to return when using `query`. Default: 20.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "includeIndexedOnly": {
+            "description": "Only return indexed (searchable) fields. Default: false. Has no visible effect at the top level — use with `path` to filter.",
+            "type": "boolean"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Field name (camelCase)."
+                },
+                "piece": {
+                  "description": "PascalCase identifier for use in `fields`/`AREA[]`/`sort` params.",
+                  "type": "string"
+                },
+                "sourceType": {
+                  "description": "Data type in the model.",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Semantic type.",
+                  "type": "string"
+                },
+                "isEnum": {
+                  "description": "Whether the field is an enum type.",
+                  "type": "boolean"
+                },
+                "description": {
+                  "description": "Human-readable description from the upstream data model. Often absent.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "Full dot-notation path.",
+                  "type": "string"
+                },
+                "children": {
+                  "description": "Child fields (top-level overview only).",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  }
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "additionalProperties": false,
+              "description": "A single field definition node."
+            },
+            "description": "Field definitions, ordered by relevance when `query` is used."
+          },
+          "totalFields": {
+            "type": "number",
+            "description": "Total fields returned."
+          },
+          "resolvedPath": {
+            "description": "Resolved path when `path` was used.",
+            "type": "string"
+          },
+          "searchQuery": {
+            "description": "Echo of the keyword when `query` was used.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "fields",
+          "totalFields"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "clinicaltrials_get_study_results",
+      "title": "Clinicaltrials Get Study Results",
+      "description": "Fetch clinical trial results data from ClinicalTrials.gov for completed studies — outcome measures with statistics, adverse events, participant flow, and baseline characteristics. Only available for studies where hasResults is true. Use clinicaltrials_search_studies first to find studies with results.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "nctIds": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^NCT\\d{8}$",
+                "description": "A single NCT ID."
+              },
+              {
+                "minItems": 1,
+                "maxItems": 20,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^NCT\\d{8}$"
+                },
+                "description": "Multiple NCT IDs (max 20)."
+              }
+            ],
+            "description": "One or more NCT IDs (max 20). E.g., \"NCT12345678\" or [\"NCT12345678\", \"NCT87654321\"]. Use summary=true for large batches to avoid large payloads."
+          },
+          "sections": {
+            "description": "Filter which sections to return. Values: outcomes, adverseEvents, participantFlow, baseline. Omit for all sections.",
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "outcomes",
+                  "adverseEvents",
+                  "participantFlow",
+                  "baseline"
+                ],
+                "description": "A single section name."
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "outcomes",
+                    "adverseEvents",
+                    "participantFlow",
+                    "baseline"
+                  ]
+                },
+                "description": "Multiple section names."
+              }
+            ]
+          },
+          "summary": {
+            "default": false,
+            "description": "Return condensed summaries instead of full data. Reduces payload from ~200KB to ~5KB per study. Summaries include outcome titles, types, timeframes, group counts, and top-level stats — omitting individual measurements, analyses, and per-group data.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "nctIds"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "nctId": {
+                  "type": "string",
+                  "description": "NCT identifier."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Study title."
+                },
+                "hasResults": {
+                  "type": "boolean",
+                  "description": "Whether study has posted results."
+                },
+                "outcomes": {
+                  "description": "Outcome measures with per-group statistics. Summary mode (compact): type, title, timeFrame, paramType, unitOfMeasure, group/class counts, plus topStats per group when available. Full mode (default): adds raw groups, classes, categories, measurements, and analyses arrays.",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  }
+                },
+                "adverseEvents": {
+                  "description": "Adverse events. Summary mode: timeFrame, groupCount, seriousEventCount, otherEventCount. Full mode: adds eventGroups, seriousEvents, otherEvents with per-event term and per-group affected/at-risk stats.",
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                "participantFlow": {
+                  "description": "Participant flow milestones and drop-outs. Summary mode: groupCount, periodCount. Full mode: adds groups and periods with per-period milestones, achievements, and dropWithdraws.",
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                "baseline": {
+                  "description": "Baseline characteristics. Summary mode: groupCount, measureCount, and measures (title, paramType, unitOfMeasure). Full mode: adds groups and measures with per-group classes/categories/measurements.",
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              },
+              "required": [
+                "nctId",
+                "title",
+                "hasResults"
+              ],
+              "additionalProperties": false,
+              "description": "Extracted results for one study."
+            },
+            "description": "Results per study."
+          },
+          "studiesWithoutResults": {
+            "description": "NCT IDs that do not have results data.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "fetchErrors": {
+            "description": "Studies that could not be fetched.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "nctId": {
+                  "type": "string",
+                  "description": "NCT ID."
+                },
+                "error": {
+                  "type": "string",
+                  "description": "Error message."
+                }
+              },
+              "required": [
+                "nctId",
+                "error"
+              ],
+              "additionalProperties": false,
+              "description": "A single fetch error."
+            }
+          }
+        },
+        "required": [
+          "results"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "clinicaltrials_find_eligible",
+      "title": "Clinicaltrials Find Eligible",
+      "description": "Match patient demographics and conditions to eligible recruiting clinical trials. Provide age, sex, conditions, and location to find studies with matching eligibility criteria, contact information, and recruiting locations.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "age": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 120,
+            "description": "Patient age in years."
+          },
+          "sex": {
+            "type": "string",
+            "enum": [
+              "FEMALE",
+              "MALE",
+              "ALL"
+            ],
+            "description": "Patient's biological sex. Use 'ALL' to include studies regardless of sex restrictions."
+          },
+          "conditions": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Medical conditions or diagnoses. E.g., [\"Type 2 Diabetes\", \"Hypertension\"]."
+          },
+          "location": {
+            "type": "object",
+            "properties": {
+              "country": {
+                "type": "string",
+                "description": "Country name. E.g., \"United States\"."
+              },
+              "state": {
+                "description": "State or province.",
+                "type": "string"
+              },
+              "city": {
+                "description": "City name.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "country"
+            ],
+            "description": "Patient location."
+          },
+          "healthyVolunteer": {
+            "default": false,
+            "description": "Whether the patient is a healthy volunteer. When true, only studies accepting healthy volunteers are queried.",
+            "type": "boolean"
+          },
+          "recruitingOnly": {
+            "default": true,
+            "description": "Only include actively recruiting studies.",
+            "type": "boolean"
+          },
+          "maxResults": {
+            "default": 10,
+            "description": "Maximum results to return.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          }
+        },
+        "required": [
+          "age",
+          "sex",
+          "conditions",
+          "location"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "studies": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            },
+            "description": "Matching studies with eligibility and location fields."
+          },
+          "totalCount": {
+            "description": "Total matching studies from the API.",
+            "type": "number"
+          },
+          "searchCriteria": {
+            "type": "object",
+            "properties": {
+              "conditions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Conditions searched."
+              },
+              "location": {
+                "type": "string",
+                "description": "Location searched."
+              },
+              "age": {
+                "type": "number",
+                "description": "Patient age."
+              },
+              "sex": {
+                "type": "string",
+                "description": "Patient sex."
+              }
+            },
+            "required": [
+              "conditions",
+              "location",
+              "age",
+              "sex"
+            ],
+            "additionalProperties": false,
+            "description": "Search criteria used."
+          },
+          "funnel": {
+            "type": "object",
+            "properties": {
+              "conditionMatched": {
+                "type": "number",
+                "description": "Studies matching the condition query alone (broadest stage)."
+              },
+              "locationMatched": {
+                "type": "number",
+                "description": "Studies matching condition + location — diagnoses geographic narrowing."
+              },
+              "demographicsMatched": {
+                "type": "number",
+                "description": "Studies matching the full filter set (condition + location + age/sex + status). Equal to totalCount."
+              }
+            },
+            "required": [
+              "conditionMatched",
+              "locationMatched",
+              "demographicsMatched"
+            ],
+            "additionalProperties": false,
+            "description": "Match counts at each filter stage. Diagnoses where the funnel collapsed on sparse results — e.g., conditionMatched=298 but demographicsMatched=2 means age/sex/status are the constraint."
+          },
+          "noMatchHints": {
+            "description": "Hints when no studies match, with suggestions to broaden the search.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "studies",
+          "searchCriteria",
+          "funnel"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ],
+  "measuredAt": "2026-09-03T21:03:44.503Z",
+  "serverName": "@cyanheads/mcp-ts-core",
+  "serverVersion": "0.8.18",
+  "launchCommand": "npx -y clinicaltrialsgov-mcp-server",
+  "envVarNames": [],
+  "serverInstructions": null,
+  "isolation": {
+    "docker": true,
+    "image": "public.ecr.aws/docker/library/node:22-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  },
+  "timeoutMs": 240000
+}

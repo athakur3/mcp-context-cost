@@ -692,3 +692,123 @@ servers:
     metricSource: https://api.npmjs.org/downloads/point/last-week/@openbnb/mcp-server-airbnb (npm weekly)
     category: community
     repo: https://github.com/openbnb-org/mcp-server-airbnb
+  # ============ REGISTRY LONG-TAIL EXPANSION (2026-09-04) ============
+  # Curated from the official registry (registry.modelcontextprotocol.io):
+  # 14,283 distinct active servers scanned, npm/PyPI stdio packages ranked by
+  # live weekly downloads, provenance-checked by org and repo. Appended rather
+  # than interleaved: shard membership is dealt by position (src/sweep/shard.ts),
+  # so appending leaves every existing row's rotation slot unchanged.
+  - name: chrome-devtools
+    command: npx -y chrome-devtools-mcp
+    package: chrome-devtools-mcp
+    env: []
+    metric: 3288165
+    metricSource: https://api.npmjs.org/downloads/point/last-week/chrome-devtools-mcp (npm weekly)
+    category: vendor-official
+    repo: https://github.com/ChromeDevTools/chrome-devtools-mcp
+    timeoutSeconds: 240
+  - name: comfyui-mcp
+    command: npx -y comfyui-mcp
+    package: comfyui-mcp
+    env: []
+    metric: 141905
+    metricSource: https://api.npmjs.org/downloads/point/last-week/comfyui-mcp (npm weekly)
+    category: community
+    repo: https://github.com/artokun/comfyui-mcp
+  - name: agent-device
+    command: npx -y agent-device
+    package: agent-device
+    env: []
+    metric: 138188
+    metricSource: https://api.npmjs.org/downloads/point/last-week/agent-device (npm weekly)
+    category: community
+    repo: https://github.com/callstack/agent-device
+  - name: appium-mcp
+    command: npx -y appium-mcp
+    package: appium-mcp
+    env: []
+    metric: 12466
+    metricSource: https://api.npmjs.org/downloads/point/last-week/appium-mcp (npm weekly)
+    category: vendor-official
+    repo: https://github.com/appium/appium-mcp
+  - name: codebase-memory-mcp
+    command: npx -y codebase-memory-mcp
+    package: codebase-memory-mcp
+    env: []
+    metric: 9040
+    metricSource: https://api.npmjs.org/downloads/point/last-week/codebase-memory-mcp (npm weekly)
+    category: community
+    repo: https://github.com/DeusData/codebase-memory-mcp
+  - name: kubernetes-containers
+    command: npx -y kubernetes-mcp-server
+    package: kubernetes-mcp-server
+    env: []
+    metric: 8556
+    metricSource: https://api.npmjs.org/downloads/point/last-week/kubernetes-mcp-server (npm weekly)
+    category: community
+    repo: https://github.com/containers/kubernetes-mcp-server
+  - name: obsidian-rest
+    command: npx -y obsidian-mcp-server
+    package: obsidian-mcp-server
+    env: [OBSIDIAN_API_KEY]
+    metric: 5784
+    metricSource: https://api.npmjs.org/downloads/point/last-week/obsidian-mcp-server (npm weekly)
+    category: community
+    repo: https://github.com/cyanheads/obsidian-mcp-server
+  - name: bitbucket-mcp
+    command: npx -y bitbucket-mcp
+    package: bitbucket-mcp
+    env: [BITBUCKET_TOKEN]
+    metric: 5033
+    metricSource: https://api.npmjs.org/downloads/point/last-week/bitbucket-mcp (npm weekly)
+    category: community
+    repo: https://github.com/MatanYemini/bitbucket-mcp
+  - name: hana-cli
+    command: npx -y -p hana-cli hana-cli-mcp
+    package: hana-cli
+    env: []
+    metric: 3854
+    metricSource: https://api.npmjs.org/downloads/point/last-week/hana-cli (npm weekly)
+    category: vendor-official
+    repo: https://github.com/SAP-samples/hana-developer-cli-tool-example
+  - name: clinicaltrialsgov
+    command: npx -y clinicaltrialsgov-mcp-server
+    package: clinicaltrialsgov-mcp-server
+    env: []
+    metric: 3123
+    metricSource: https://api.npmjs.org/downloads/point/last-week/clinicaltrialsgov-mcp-server (npm weekly)
+    category: community
+    repo: https://github.com/cyanheads/clinicaltrialsgov-mcp-server
+  - name: accessibility-scanner
+    command: npx -y mcp-accessibility-scanner
+    package: mcp-accessibility-scanner
+    env: []
+    metric: 3068
+    metricSource: https://api.npmjs.org/downloads/point/last-week/mcp-accessibility-scanner (npm weekly)
+    category: community
+    repo: https://github.com/JustasMonkev/mcp-accessibility-scanner
+  - name: keboola
+    command: uvx keboola-mcp-server
+    package: keboola-mcp-server (PyPI)
+    env: [KBC_STORAGE_TOKEN, KBC_STORAGE_API_URL]
+    envValues: {KBC_STORAGE_API_URL: 'https://connection.keboola.com'}
+    metric: 2907
+    metricSource: https://pypistats.org/packages/keboola-mcp-server (PyPI weekly)
+    category: vendor-official
+    repo: https://github.com/keboola/mcp-server
+  - name: octocode
+    command: npx -y octocode-mcp
+    package: octocode-mcp
+    env: []
+    metric: 1797
+    metricSource: https://api.npmjs.org/downloads/point/last-week/octocode-mcp (npm weekly)
+    category: community
+    repo: https://github.com/bgauryy/octocode
+  - name: anki
+    command: npx -y @ankimcp/anki-mcp-server
+    package: '@ankimcp/anki-mcp-server'
+    env: []
+    metric: 1716
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@ankimcp/anki-mcp-server (npm weekly)
+    category: community
+    repo: https://github.com/ankimcp/anki-mcp-server

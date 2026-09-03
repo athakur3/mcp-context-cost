@@ -1,0 +1,1663 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "measured",
+  "totalTokens": 10267,
+  "toolCount": 31,
+  "tools": [
+    {
+      "name": "select_device",
+      "tokens": 434,
+      "descriptionTokens": 254,
+      "inputSchemaTokens": 146
+    },
+    {
+      "name": "appium_session_management",
+      "tokens": 971,
+      "descriptionTokens": 48,
+      "inputSchemaTokens": 891
+    },
+    {
+      "name": "appium_mobile_device_control",
+      "tokens": 221,
+      "descriptionTokens": 30,
+      "inputSchemaTokens": 164
+    },
+    {
+      "name": "appium_geolocation",
+      "tokens": 384,
+      "descriptionTokens": 113,
+      "inputSchemaTokens": 245
+    },
+    {
+      "name": "appium_mobile_device_info",
+      "tokens": 216,
+      "descriptionTokens": 37,
+      "inputSchemaTokens": 152
+    },
+    {
+      "name": "appium_mobile_file",
+      "tokens": 255,
+      "descriptionTokens": 27,
+      "inputSchemaTokens": 202
+    },
+    {
+      "name": "appium_driver_settings",
+      "tokens": 261,
+      "descriptionTokens": 59,
+      "inputSchemaTokens": 176
+    },
+    {
+      "name": "prepare_ios_simulator",
+      "tokens": 348,
+      "descriptionTokens": 157,
+      "inputSchemaTokens": 164
+    },
+    {
+      "name": "appium_prepare_ios_real_device",
+      "tokens": 356,
+      "descriptionTokens": 179,
+      "inputSchemaTokens": 147
+    },
+    {
+      "name": "appium_gesture",
+      "tokens": 1308,
+      "descriptionTokens": 94,
+      "inputSchemaTokens": 1188
+    },
+    {
+      "name": "appium_drag_and_drop",
+      "tokens": 416,
+      "descriptionTokens": 70,
+      "inputSchemaTokens": 319
+    },
+    {
+      "name": "appium_perform_actions",
+      "tokens": 623,
+      "descriptionTokens": 80,
+      "inputSchemaTokens": 516
+    },
+    {
+      "name": "appium_find_element",
+      "tokens": 533,
+      "descriptionTokens": 154,
+      "inputSchemaTokens": 344
+    },
+    {
+      "name": "appium_mobile_press_key",
+      "tokens": 267,
+      "descriptionTokens": 30,
+      "inputSchemaTokens": 210
+    },
+    {
+      "name": "appium_set_value",
+      "tokens": 179,
+      "descriptionTokens": 5,
+      "inputSchemaTokens": 147
+    },
+    {
+      "name": "appium_mobile_keyboard",
+      "tokens": 222,
+      "descriptionTokens": 43,
+      "inputSchemaTokens": 153
+    },
+    {
+      "name": "appium_get_text",
+      "tokens": 106,
+      "descriptionTokens": 5,
+      "inputSchemaTokens": 74
+    },
+    {
+      "name": "appium_get_element_attribute",
+      "tokens": 222,
+      "descriptionTokens": 45,
+      "inputSchemaTokens": 149
+    },
+    {
+      "name": "appium_mobile_clipboard",
+      "tokens": 172,
+      "descriptionTokens": 33,
+      "inputSchemaTokens": 112
+    },
+    {
+      "name": "appium_get_active_element",
+      "tokens": 115,
+      "descriptionTokens": 37,
+      "inputSchemaTokens": 50
+    },
+    {
+      "name": "appium_get_page_source",
+      "tokens": 109,
+      "descriptionTokens": 11,
+      "inputSchemaTokens": 50
+    },
+    {
+      "name": "appium_orientation",
+      "tokens": 158,
+      "descriptionTokens": 24,
+      "inputSchemaTokens": 108
+    },
+    {
+      "name": "appium_alert",
+      "tokens": 154,
+      "descriptionTokens": 19,
+      "inputSchemaTokens": 110
+    },
+    {
+      "name": "appium_screenshot",
+      "tokens": 277,
+      "descriptionTokens": 19,
+      "inputSchemaTokens": 212
+    },
+    {
+      "name": "appium_get_window_size",
+      "tokens": 103,
+      "descriptionTokens": 26,
+      "inputSchemaTokens": 50
+    },
+    {
+      "name": "appium_screen_recording",
+      "tokens": 513,
+      "descriptionTokens": 21,
+      "inputSchemaTokens": 465
+    },
+    {
+      "name": "appium_app_lifecycle",
+      "tokens": 444,
+      "descriptionTokens": 14,
+      "inputSchemaTokens": 403
+    },
+    {
+      "name": "appium_mobile_permissions",
+      "tokens": 479,
+      "descriptionTokens": 23,
+      "inputSchemaTokens": 430
+    },
+    {
+      "name": "appium_context",
+      "tokens": 166,
+      "descriptionTokens": 26,
+      "inputSchemaTokens": 115
+    },
+    {
+      "name": "generate_locators",
+      "tokens": 132,
+      "descriptionTokens": 37,
+      "inputSchemaTokens": 50
+    },
+    {
+      "name": "appium_generate_tests",
+      "tokens": 151,
+      "descriptionTokens": 71,
+      "inputSchemaTokens": 54
+    }
+  ],
+  "canonicalSha256": "d024ca5b97d52d5442da395ed92d1d107b6728db57cf1295bb87c5d3624c0e53",
+  "rawToolsCapture": [
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Discover and select a device for LOCAL Appium servers ONLY.\n      DO NOT use this tool for REMOTE Appium servers - remoteServerUrl indicates a remote server.\n      WORKFLOW FOR LOCAL SERVERS:\n      1. ASK THE USER which platform they want (Android or iOS) - do not assume\n      2. Call this tool with the chosen platform (and iosDeviceType for iOS)\n      3. If only one device is found, it is auto-selected - proceed to appium_session_management (action=create) (or prepare_ios_simulator for iOS simulators)\n      4. If multiple devices are found, ask the user which one they want, then call this tool again with deviceUdid\n      5. After selection, proceed to appium_session_management (action=create) (or prepare_ios_simulator for iOS simulators, then appium_session_management with action=create)\n      WORKFLOW FOR REMOTE SERVERS:\n      - SKIP this tool entirely\n      - Device selection should be handled via capabilities on appium_session_management (action=create) (e.g., appium:deviceName, appium:udid)\n      - The remote Appium server is already configured for specific device(s)\n      ",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "platform": {
+            "type": "string",
+            "enum": [
+              "ios",
+              "android"
+            ],
+            "description": "The platform to list devices for (must match previously selected platform)"
+          },
+          "iosDeviceType": {
+            "description": "For iOS only: Specify whether to use 'simulator' or 'real' device. REQUIRED when platform is 'ios'.",
+            "type": "string",
+            "enum": [
+              "simulator",
+              "real"
+            ]
+          },
+          "deviceUdid": {
+            "description": "The UDID of the device selected by the user. If not provided, this tool will list available devices for the user to choose from.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "platform"
+        ],
+        "additionalProperties": false
+      },
+      "name": "select_device"
+    },
+    {
+      "annotations": {
+        "destructiveHint": true,
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Manage Appium sessions. Use action=create to start a session, attach to connect to an existing one, detach to forget an attached session, delete to stop one, list to see all active sessions, or select to switch the active session.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "create",
+              "attach",
+              "detach",
+              "delete",
+              "list",
+              "select"
+            ],
+            "description": "Action to perform. create: Create a new Appium session with Android, iOS or any device/driver Appium supports.\n      DEFAULT MODE (no remoteServerUrl) — USE THIS UNLESS THE USER EXPLICITLY PROVIDES A SERVER URL:\n      - Drivers run embedded inside this MCP server; no separate Appium process is needed\n      - Use select_device tool FIRST to discover devices and let the user choose platform and device\n      - Then call action=create with the selected platform (do NOT pass remoteServerUrl)\n      - For iOS simulators, call prepare_ios_simulator before action=create\n      - DO NOT assume or default to any platform\n      - NEVER invent a localhost URL (e.g. http://localhost:4723) — omitting remoteServerUrl IS the local/embedded mode\n      REMOTE SERVER MODE (only when user explicitly provides a URL like http://localhost:4723):\n      - SKIP select_device tool entirely\n      - Infer the platform from the user's request (e.g., 'ios', 'android', or 'general')\n      - If platform is 'general', treat the provided capabilities as a pass-through W3C/Appium capability set (useful for non-Android/iOS drivers like Windows, macOS, or custom drivers)\n      - Infer device type from context when possible (e.g., 'simulator', 'real device')\n      - Call session with action=create directly with platform, remoteServerUrl, and any other capabilities from the user's request\n      - Example: User says 'start session with http://localhost:4723 for ios with iphone 17' → infer platform='ios' and call session(action=create) with remoteServerUrl and platform parametersattach: Attach MCP Appium to an existing remote Appium session without taking ownership of its lifecycle. Requires remoteServerUrl and sessionId. Always pass capabilities with at least platformName (e.g. '{\"platformName\":\"iOS\"}' or '{\"platformName\":\"Android\"}') so the client is configured with the correct protocol commands.detach: Remove an attached Appium session from MCP Appium without deleting the real remote session. Defaults to the active session.delete: Delete a mobile session and clean up resources. If sessionId is omitted, deletes the active session.list: List all active Appium sessions managed by this MCP server, including active flag, ownership, and current context.select: Set an existing Appium session as the active session for subsequent tool calls (requires sessionId)."
+          },
+          "platform": {
+            "description": "Required for create. For local servers, must match the platform selected via select_device. Use \"general\" for non-Android/iOS drivers (Windows, macOS, custom). For remote servers, infer from context.",
+            "type": "string",
+            "enum": [
+              "ios",
+              "android",
+              "general"
+            ]
+          },
+          "capabilities": {
+            "description": "Optional W3C capabilities for create. Provide as a JSON string (e.g. '{\"appium:app\":\"/path/to/app\",\"appium:platformVersion\":\"17.0\"}'). For create: applied on top of defaults for ios/android, or used as-is for general. Common: appium:app, appium:deviceName, appium:platformVersion, appium:bundleId. When passing from a capabilitiesHint result, serialize the full object to JSON — do NOT drop boolean or numeric values. For attach: always include platformName (\"iOS\" or \"Android\") so the WebDriver client loads the correct Appium protocol commands (e.g. '{\"platformName\":\"iOS\"}').",
+            "type": "string"
+          },
+          "remoteServerUrl": {
+            "description": "Remote Appium server URL for create or attach (e.g. http://localhost:4723). Omit to use local server for create.",
+            "type": "string"
+          },
+          "sessionId": {
+            "description": "For attach: existing session to connect to. For delete: session to remove (defaults to active). For detach: attached session to remove from MCP (defaults to active). For select: session to activate. Required for attach and select.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_session_management"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Control device behavior: lock/unlock the screen, shake the device, or open the notifications panel. Use the action parameter to choose what to do.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "lock",
+              "unlock",
+              "shake",
+              "open_notifications"
+            ],
+            "description": "Action to perform. lock: lock the device (optional seconds for timed lock). unlock: unlock the device. shake: perform shake gesture (iOS only). open_notifications: open notifications panel (Android only)."
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          },
+          "seconds": {
+            "description": "Only for action=lock: lock duration in seconds before auto-unlock. Omit to remain locked until unlock.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_mobile_device_control"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Get, set, or reset the device geolocation (GPS coordinates). Works on both iOS (simulators and real devices) and Android (emulators and real devices with mock location enabled). Use action=get to read current coordinates, action=set with latitude/longitude (and optional altitude for Android) to simulate a location, or action=reset to restore the system default. Note: On Android emulators, reset is not supported — use action=set to manually restore coordinates instead. On Android real devices, the mocked location may persist until the GPS cache refreshes.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "get",
+              "set",
+              "reset"
+            ],
+            "description": "Action to perform. get: read the current device geolocation. set: set the device geolocation (requires latitude and longitude; optional altitude for Android). reset: reset the geolocation to the default/system value. Not supported on Android emulators — use action=set instead."
+          },
+          "latitude": {
+            "description": "Latitude value (-90 to 90). Measurement of distance north or south of the Equator. Required for: set.",
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "longitude": {
+            "description": "Longitude value (-180 to 180). Measurement of distance east or west of the prime meridian. Required for: set.",
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          },
+          "altitude": {
+            "description": "Altitude value in meters. Android only, defaults to 0. Ignored on iOS. Used with: set.",
+            "type": "number"
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_geolocation"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "description": "Get device information, battery status, or current device time in a single call. Use the \"action\" parameter to select which data to retrieve. Works on both iOS and Android.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "info",
+              "battery",
+              "time"
+            ],
+            "description": "Action to perform: \"info\" returns device model/OS/locale/etc., \"battery\" returns battery level and charging state, \"time\" returns the current device time."
+          },
+          "format": {
+            "description": "Only used when action is \"time\". moment.js format string for the returned time. Defaults to ISO 8601 (YYYY-MM-DDTHH:mm:ssZ).",
+            "type": "string"
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_mobile_device_info"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Push or pull a file using Appium mobile extensions. action=push uses payloadBase64, action=pull returns contentBase64.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "push",
+              "pull"
+            ],
+            "description": "push uploads a file to device; pull downloads from device."
+          },
+          "remotePath": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Path to the file on the device. Android (UiAutomator2): use an absolute path (e.g. /data/local/tmp/foo.txt or /sdcard/Download/foo.txt). iOS (XCUITest): use the formats described in the Appium XCUITest file transfer guide (e.g. @com.example.app:documents/file.txt or simulator-relative paths)."
+          },
+          "payloadBase64": {
+            "description": "Required when action=push. Ignored when action=pull.",
+            "type": "string"
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "remotePath"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_mobile_file"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Read or update Appium driver session settings (e.g. idle timeouts, selector waits). Use action=get to return JSON settings; action=update merges a map into the session. Works for embedded UiAutomator2/XCUITest sessions and remote WebDriver clients that support Appium settings.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "get",
+              "update"
+            ],
+            "description": "get: read current Appium driver session settings (timeouts, selector waits, flags). update: merge a settings map into the session (requires settings)."
+          },
+          "settings": {
+            "description": "Required when action is update. Driver-specific keys (e.g. Android UiAutomator2: waitForIdleTimeout, waitForSelectorTimeout, ignoreUnimportantViews; iOS XCUITest has its own set). Use action=get first to inspect current values.",
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": false
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_driver_settings"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Prepare an iOS/tvOS simulator for Appium testing in a single call. Automatically boots the simulator, downloads prebuilt WDA (if not cached), and installs/launches WDA on a free per-simulator port (so multiple simulators can run in parallel without colliding on the default 8100). Pass the returned capabilitiesHint (appium:webDriverAgentUrl) to appium_session_management (action=create) so the session reuses this running WDA instead of trying to start its own. Use skipWda=true to only boot without WDA. Set APPIUM_MCP_WDA_APP_PATH to an absolute path to a pre-extracted WebDriverAgentRunner-Runner.app to skip download entirely (useful in environments where external downloads are blocked).",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "udid": {
+            "type": "string",
+            "description": "The UDID of the iOS simulator to prepare. Use select_device to get this."
+          },
+          "platform": {
+            "default": "ios",
+            "description": "The simulator platform to download WDA for. Default is \"ios\". Use \"tvos\" for Apple TV simulators.",
+            "type": "string",
+            "enum": [
+              "ios",
+              "tvos"
+            ]
+          },
+          "skipWda": {
+            "description": "If true, only boot the simulator without downloading or installing WDA. Default: false.",
+            "type": "boolean"
+          },
+          "forceRefreshWda": {
+            "description": "If true, re-download WDA even if already cached. Default: false.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "udid"
+        ],
+        "additionalProperties": false
+      },
+      "name": "prepare_ios_simulator"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Prepare an iOS real device for Appium testing in a single call. Two-mode flow: (1) Call without provisioningProfileUuid to receive the list of available .mobileprovision profiles — present them to the user (highlight any with recommendedForWda=true) and ask them to pick one. (2) Call again with the chosen UUID to download the matching WebDriverAgent release, package it as an IPA, and resign it with the chosen profile (wildcard \"*\" profiles are supported — a concrete WDA bundle ID is substituted at sign time). WDA download and unsigned IPA are cached per WDA version; the signed IPA is rebuilt every call. Pass the returned capabilitiesHint to appium_session_management (action=create) so Appium installs and launches the signed prebuilt WDA instead of rebuilding. Requires macOS, Xcode 16+, and a paired developer-mode device.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "udid": {
+            "type": "string",
+            "description": "UDID of the connected iOS real device. Use select_device to discover it."
+          },
+          "provisioningProfileUuid": {
+            "description": "UUID of the .mobileprovision profile to sign WDA with. If omitted, the tool returns the list of available profiles so you can ask the user to pick one.",
+            "type": "string"
+          },
+          "forceRebuild": {
+            "description": "If true, ignore the cached WDA download and unsigned IPA and start clean. The signed IPA is always rebuilt regardless. Default: false.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "udid"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_prepare_ios_real_device"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Perform a touch gesture. Use 'action' to choose: tap, double_tap, long_press, scroll, swipe, pinch_zoom, scroll_to_element, back. Choose scroll vs swipe by intent: scroll to browse content in a list or feed; swipe to dismiss, switch screens, navigate carousels, or pull-to-refresh (speed=fast). For drag-and-drop use appium_drag_and_drop. For custom multi-touch use appium_perform_actions.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "tap",
+              "double_tap",
+              "long_press",
+              "scroll",
+              "swipe",
+              "pinch_zoom",
+              "scroll_to_element",
+              "back"
+            ],
+            "description": "Gesture to perform. tap: tap an element or a coordinate. double_tap: trigger a double-tap action (e.g. zoom in on an image, favorite a post). long_press: press and hold to open a context menu or initiate drag. scroll: browse a list, feed, or page to reveal content. swipe: dismiss a card, switch screens or tabs, navigate a carousel, or pull-to-refresh (use speed=fast). pinch_zoom: zoom in (scale > 1) or out (scale < 1) on maps, images, or any zoomable view. scroll_to_element: scroll until a specific element is on screen (strategy + selector + direction up|down). Stops when the element is found, page source is unchanged after a scroll (end of scrollable content), or maxScrollAttempts is reached. Optional scrollDistance (0.05–1) or scrollDistancePreset (small|medium|large). back: triggers the system back navigation (e.g., Android back button or iOS navigation controller pop)."
+          },
+          "elementUUID": {
+            "description": "UUID of the element to act on. Used by: tap, double_tap, long_press, pinch_zoom. For scroll/swipe, when provided with direction, the gesture is calculated relative to this element instead of the whole screen.",
+            "type": "string"
+          },
+          "x": {
+            "description": "X coordinate. For tap/double_tap/long_press: tap location (alternative to elementUUID). For scroll/swipe: starting X for custom-coordinate mode (requires y, endX, endY). For pinch_zoom: center X of the pinch. Requires y. Ignored if elementUUID is set.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "y": {
+            "description": "Y coordinate. For tap/double_tap/long_press: tap location. For scroll/swipe: starting Y for custom-coordinate mode. For pinch_zoom: center Y of the pinch. Requires x. Ignored if elementUUID is set.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "endX": {
+            "description": "Ending X coordinate. Used by: scroll, swipe (custom-coordinate mode).",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "endY": {
+            "description": "Ending Y coordinate. Used by: scroll, swipe (custom-coordinate mode).",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "direction": {
+            "description": "Direction for scroll or swipe. Coordinates are auto-calculated from screen or element bounds. Either direction OR custom coordinates (x, y, endX, endY) must be provided for these actions.",
+            "type": "string",
+            "enum": [
+              "up",
+              "down",
+              "left",
+              "right"
+            ]
+          },
+          "speed": {
+            "description": "Swipe speed. slow = deliberate drag; normal = default navigation speed; fast = flick with no hold, use for pull-to-refresh and other velocity-sensitive UIs. Used by: swipe.",
+            "type": "string",
+            "enum": [
+              "slow",
+              "normal",
+              "fast"
+            ]
+          },
+          "duration": {
+            "description": "Duration in milliseconds. long_press default 2000 (range 500-10000). scroll default 800. For swipe, prefer the speed parameter; duration overrides it if both are provided.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000
+          },
+          "scale": {
+            "description": "Pinch scale factor. < 1 = zoom out (pinch close), > 1 = zoom in (pinch open). Example: 0.5 = zoom out 50%, 2.0 = zoom in 2x. Required for: pinch_zoom.",
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 10
+          },
+          "velocity": {
+            "description": "Pinch velocity in scale factor per second. Default 2.2. Used by: pinch_zoom.",
+            "type": "number",
+            "minimum": 0.1,
+            "maximum": 20
+          },
+          "strategy": {
+            "description": "Locator strategy. Required for: scroll_to_element. Priority: accessibility id > id > platform-native (-ios predicate string / -ios class chain on iOS, -android uiautomator on Android) > xpath (LAST RESORT — slow on iOS XCUITest, brittle) > name > class name > css selector (webview only). Same ranking as appium_find_element.",
+            "type": "string",
+            "enum": [
+              "accessibility id",
+              "id",
+              "-ios predicate string",
+              "-ios class chain",
+              "-android uiautomator",
+              "xpath",
+              "name",
+              "class name",
+              "css selector"
+            ]
+          },
+          "selector": {
+            "description": "Locator selector value. Required for: scroll_to_element.",
+            "type": "string"
+          },
+          "maxScrollAttempts": {
+            "default": 10,
+            "description": "scroll_to_element only: maximum scroll attempts after the element is not yet visible (default 10).",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 80
+          },
+          "scrollDistance": {
+            "description": "scroll_to_element only: vertical swipe length as a fraction 0.05–1 (same scale as legacy scroll). Ignored when scrollDistancePreset is set. Default 0.45 if neither preset nor scrollDistance is set.",
+            "type": "number",
+            "minimum": 0.05,
+            "maximum": 1
+          },
+          "scrollDistancePreset": {
+            "description": "scroll_to_element only: convenience preset — small ≈ light nudge (0.25), medium ≈ 0.45, large = full default swipe (1). When set, overrides scrollDistance.",
+            "type": "string",
+            "enum": [
+              "small",
+              "medium",
+              "large"
+            ]
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_gesture"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Perform a drag-and-drop gesture from a source location to a target location. The gesture: long press the source (default 600ms), drag to the target (default 1200ms), then release. Source and target can each be specified as either an element UUID or coordinates. Useful for reordering lists, moving items, drag-to-delete.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "sourceElementUUID": {
+            "description": "UUID of source element to drag from. Either sourceElementUUID or sourceX+sourceY must be provided.",
+            "type": "string"
+          },
+          "sourceX": {
+            "description": "Source X coordinate. Required if sourceElementUUID is not provided.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "sourceY": {
+            "description": "Source Y coordinate. Required if sourceElementUUID is not provided.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "targetElementUUID": {
+            "description": "UUID of target element to drop on. Either targetElementUUID or targetX+targetY must be provided.",
+            "type": "string"
+          },
+          "targetX": {
+            "description": "Target X coordinate. Required if targetElementUUID is not provided.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "targetY": {
+            "description": "Target Y coordinate. Required if targetElementUUID is not provided.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "duration": {
+            "description": "Duration of the drag movement in milliseconds. Default 1200.",
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 5000
+          },
+          "longPressDuration": {
+            "description": "Duration of the long press before dragging in milliseconds. Default 600.",
+            "type": "integer",
+            "minimum": 400,
+            "maximum": 2000
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "name": "appium_drag_and_drop"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Execute raw W3C Actions API sequences for advanced multi-touch gestures not covered by appium_gesture. Use this for custom multi-finger gestures (rotate, three-finger swipe, edge swipes), complex timing sequences, or any gesture requiring precise control over individual touch points. Prefer appium_gesture for standard gestures (tap, scroll, swipe, pinch) — it handles platform differences automatically.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "actions": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "pointer",
+                    "key",
+                    "none"
+                  ],
+                  "description": "Input source type. pointer = touch/mouse, key = keyboard, none = pause/timing."
+                },
+                "id": {
+                  "type": "string",
+                  "description": "Unique identifier for this input source (e.g. \"finger1\", \"finger2\")."
+                },
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "pointerType": {
+                      "description": "Pointer type. Use \"touch\" for mobile gestures. Only for type=pointer.",
+                      "type": "string",
+                      "enum": [
+                        "touch",
+                        "mouse",
+                        "pen"
+                      ]
+                    }
+                  }
+                },
+                "actions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "pointerMove",
+                          "pointerDown",
+                          "pointerUp",
+                          "pointerCancel",
+                          "keyDown",
+                          "keyUp",
+                          "pause"
+                        ],
+                        "description": "Action step type."
+                      },
+                      "duration": {
+                        "description": "Duration in milliseconds. Required for pause and pointerMove.",
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "x": {
+                        "description": "X coordinate (pointerMove only).",
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "y": {
+                        "description": "Y coordinate (pointerMove only).",
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "button": {
+                        "description": "Button index (pointerDown/pointerUp). 0 = primary.",
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "value": {
+                        "description": "Key value (keyDown/keyUp only).",
+                        "type": "string"
+                      },
+                      "origin": {
+                        "description": "Coordinate origin: \"viewport\" (default) or \"pointer\" (relative to current position).",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type"
+                    ]
+                  },
+                  "description": "Ordered list of action steps for this input source."
+                }
+              },
+              "required": [
+                "type",
+                "id",
+                "actions"
+              ]
+            },
+            "description": "W3C Actions API input source array. Each entry is one input source (pointer/key/none) with its action sequence. Multiple pointer sources enable multi-touch gestures (e.g. two-finger rotate, three-finger swipe). All sources execute in parallel, synchronized tick-by-tick."
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "actions"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_perform_actions"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "description": "Find a specific element by strategy and selector which will return a uuid that can be used for interactions.\n\n[PRIORITY 2: Use this to search for a target element.]\n\n**Strategy priority**: accessibility id > id > platform-native (`-ios predicate string` / `-ios class chain` on iOS, `-android uiautomator` on Android) > xpath (last resort — slow & brittle). See the `strategy` parameter for the full ranking.\n\n**Scrolling until an element appears**: use `appium_gesture` with `action=scroll_to_element` (same strategy + selector), not this tool.\n\n**Vision / natural-language find**: use `appium_ai` with `action=find_element`, not this tool.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "strategy": {
+            "type": "string",
+            "enum": [
+              "accessibility id",
+              "id",
+              "-ios predicate string",
+              "-ios class chain",
+              "-android uiautomator",
+              "xpath",
+              "name",
+              "class name",
+              "css selector"
+            ],
+            "description": "Locator strategy. Try in priority order: (1) accessibility id [cross-platform, fastest, most stable], (2) id [Android resource-id; iOS aliases accessibility id], (3) -ios predicate string [iOS native, fast], (4) -ios class chain [iOS native, hierarchy queries], (5) -android uiautomator [Android native, expressive UiSelector], (6) xpath [LAST RESORT — slow on iOS XCUITest, brittle to layout changes], (7) name [legacy; often aliased on iOS], (8) class name [too generic, usually multi-match], (9) css selector [webview/hybrid contexts only]. Platform tips: iOS prefer (1)→(3)→(4); Android prefer (1)→(2)→(5); xpath last on both. For natural-language / vision-based find, use the appium_ai tool (action=find_element), not this one."
+          },
+          "selector": {
+            "type": "string",
+            "description": "Selector string for the chosen strategy. Do not pass natural-language descriptions of the target here; use appium_ai (action=find_element) for that."
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "strategy",
+          "selector"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_find_element"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Press navigation keys (BACK, HOME, APP_SWITCH) on Android or physical buttons (HOME, volume, etc.) on iOS/tvOS.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          },
+          "key": {
+            "description": "Logical key/button to press. On Android: BACK, HOME, APP_SWITCH. On iOS/tvOS: HOME, VOLUME_UP, VOLUME_DOWN, UP, DOWN, LEFT, RIGHT, MENU, PLAY_PAUSE, SELECT.",
+            "type": "string",
+            "enum": [
+              "BACK",
+              "HOME",
+              "APP_SWITCH",
+              "VOLUME_UP",
+              "VOLUME_DOWN",
+              "UP",
+              "DOWN",
+              "LEFT",
+              "RIGHT",
+              "MENU",
+              "PLAY_PAUSE",
+              "SELECT"
+            ]
+          },
+          "keyCode": {
+            "description": "Android keycode to press. If provided, takes precedence over key for Android.",
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "isLongPress": {
+            "description": "Android only. Whether to perform a long press. Defaults to false.",
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "name": "appium_mobile_press_key"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Enter text into an element",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "elementUUID": {
+            "type": "string",
+            "description": "Element ID from appium_find_element."
+          },
+          "text": {
+            "type": "string",
+            "description": "The text to enter"
+          },
+          "w3cActions": {
+            "description": "When true, type text via the W3C Actions API (performActions) instead of the driver-specific setValue. No elementUUID needed — key events are sent to whatever element currently has focus. Works on both Android and iOS.",
+            "type": "boolean"
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_set_value"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Hide the software keyboard or check if it is visible (Android UiAutomator2 / iOS XCUITest). action=hide uses mobile: hideKeyboard; action=is_shown uses mobile: isKeyboardShown.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "hide",
+              "is_shown"
+            ],
+            "description": "hide: dismiss the software keyboard (mobile: hideKeyboard). is_shown: whether the keyboard is visible (mobile: isKeyboardShown)."
+          },
+          "keys": {
+            "description": "hide only: optional key names to dismiss the keyboard (e.g. \"done\"). Forwarded to mobile: hideKeyboard when non-empty. Ignored for is_shown.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_mobile_keyboard"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "description": "Get text from an element",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "elementUUID": {
+            "type": "string",
+            "description": "Element ID from appium_find_element."
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "elementUUID"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_get_text"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "description": "Get the value of an element attribute. Use this to check element state (enabled, selected, checked, focused, displayed, clickable) or read properties (name, value, label, content-desc, resource-id, class).",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "elementUUID": {
+            "type": "string",
+            "description": "Element ID from appium_find_element."
+          },
+          "attribute": {
+            "type": "string",
+            "description": "The attribute name to retrieve. Common attributes: \"enabled\", \"selected\", \"displayed\", \"checked\", \"focused\", \"clickable\", \"scrollable\", \"focusable\", \"name\", \"value\", \"label\", \"text\", \"content-desc\", \"resource-id\", \"class\", \"package\"."
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "elementUUID",
+          "attribute"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_get_element_attribute"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Read or set the device clipboard as plain text (Android UiAutomator2 / iOS XCUITest). action=get returns current text; action=set requires content.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "get",
+              "set"
+            ],
+            "description": "get: read device clipboard as plain text. set: write plain text to the clipboard."
+          },
+          "content": {
+            "description": "Required when action is set. Plain text to put on the clipboard.",
+            "type": "string"
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_mobile_clipboard"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "description": "Get the currently active/focused element and return its UUID for follow-up interactions. [PRIORITY 1: Use this first when you need to find what element currently has focus]",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "name": "appium_get_active_element"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "description": "Get the page source (XML) from the current screen",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "name": "appium_get_page_source",
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://appium-mcp/page-source-inspector"
+        }
+      }
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Get or set the device/screen orientation. Supports action=get and action=set (LANDSCAPE or PORTRAIT).",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "get",
+              "set"
+            ],
+            "description": "Use get to read current orientation, set to change orientation."
+          },
+          "orientation": {
+            "description": "Required when action is set.",
+            "type": "string",
+            "enum": [
+              "LANDSCAPE",
+              "PORTRAIT"
+            ]
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_orientation"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Handle system alerts with action=accept|dismiss, or read alert text with action=get_text.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "accept",
+              "dismiss",
+              "get_text"
+            ],
+            "description": "Action to perform on alert: accept, dismiss, or get_text"
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          },
+          "buttonLabel": {
+            "description": "Optional label of the button to click for accept/dismiss.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_alert"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Take a screenshot and save as PNG. Optionally provide elementUUID to capture only that element.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "elementUUID": {
+            "description": "Optional element UUID. If provided, captures only this element. If omitted, captures full screen.",
+            "type": "string"
+          },
+          "maxWidth": {
+            "description": "Optional maximum width in pixels to resize the screenshot. The aspect ratio is preserved. Useful for reducing token usage when sending screenshots to LLMs.",
+            "type": "number"
+          },
+          "returnRawBase64": {
+            "default": false,
+            "description": "When true, returns the raw base64-encoded PNG image instead of saving it to disk. This should only be enabled when a human explicitly invokes the tool manually, typically to view the screenshot on a different machine (e.g. when the server runs on a remote machine and the saved file is not accessible). An LLM must always keep this false and rely on the saved file path.",
+            "type": "boolean"
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "name": "appium_screenshot",
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://appium-mcp/screenshot-viewer"
+        }
+      }
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "description": "Get the width and height of the device screen in pixels. Useful for calculating coordinates for swipes, taps, and scrolls.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "name": "appium_get_window_size"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Start or stop screen recording. action=start begins recording; action=stop stops and saves to MP4.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "start",
+              "stop"
+            ],
+            "description": "start begins recording; stop ends, retrieves, and saves it."
+          },
+          "timeLimit": {
+            "description": "Recorder limit in seconds; it does not retrieve/save automatically, so call stop. iOS default 180/max 4200; Android default 180/max 1800.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "forceRestart": {
+            "description": "Restart and discard any active recording; default false.",
+            "type": "boolean"
+          },
+          "videoQuality": {
+            "description": "iOS only. Video quality preset. Default: medium.",
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "photo"
+            ]
+          },
+          "videoFps": {
+            "description": "iOS only. Frames per second. Default: 10.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 60
+          },
+          "videoType": {
+            "description": "iOS only. Video codec to use (e.g. libx264).",
+            "type": "string"
+          },
+          "videoFilters": {
+            "description": "iOS only. FFMPEG video filters. Takes precedence over videoScale.",
+            "type": "string"
+          },
+          "videoScale": {
+            "description": "iOS only. Scaling value (e.g. 1280:720).",
+            "type": "string"
+          },
+          "pixelFormat": {
+            "description": "iOS only. Output pixel format (e.g. yuv420p).",
+            "type": "string"
+          },
+          "hardwareAcceleration": {
+            "description": "iOS only. FFMPEG hardware acceleration backend.",
+            "type": "string",
+            "enum": [
+              "videoToolbox",
+              "cuda",
+              "amf_dx11",
+              "qsv",
+              "vaapi"
+            ]
+          },
+          "videoSize": {
+            "description": "Android only. Frame size in WIDTHxHEIGHT format (e.g. 1280x720).",
+            "type": "string"
+          },
+          "bitRate": {
+            "description": "Android only. Video bit rate in bits per second.",
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "bugReport": {
+            "description": "Android only. Display timestamp overlay. Requires API level 27+.",
+            "type": "boolean"
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_screen_recording"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Manage app lifecycle, installation, state, data, and deep links.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "activate",
+              "terminate",
+              "install",
+              "uninstall",
+              "list",
+              "is_installed",
+              "query_state",
+              "background",
+              "clear",
+              "deep_link"
+            ],
+            "description": "activate: foreground app; terminate: stop app; is_installed: check installation; clear: clear app data without uninstalling (all require id or name). install: requires path. uninstall: requires id/name; Android keepData is optional. list: optional iOS applicationType. query_state: get state 0=not installed,1=not running,2=background suspended,3=background,4=foreground (requires id or name). background: send foreground app to background; optional seconds (default 5). deep_link: requires url; id/name is optional."
+          },
+          "id": {
+            "description": "Android package or iOS bundle ID; takes precedence over name.",
+            "type": "string"
+          },
+          "name": {
+            "description": "Human-readable app name resolved to an ID; alternative to id.",
+            "type": "string"
+          },
+          "path": {
+            "description": "App file path; required for install.",
+            "type": "string"
+          },
+          "keepData": {
+            "description": "Android uninstall: preserve app data and cache.",
+            "type": "boolean"
+          },
+          "applicationType": {
+            "description": "iOS list filter: User (default) or System.",
+            "type": "string",
+            "enum": [
+              "User",
+              "System"
+            ]
+          },
+          "seconds": {
+            "description": "Background duration; default 5. Use -1 to remain in background.",
+            "type": "number",
+            "minimum": -1,
+            "maximum": 86400
+          },
+          "url": {
+            "description": "URL for deep_link (e.g. https://example.com or myapp://path).",
+            "type": "string"
+          },
+          "waitForLaunch": {
+            "description": "Android deep_link: wait for the activity to return; default true.",
+            "type": "boolean"
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_app_lifecycle"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Get/update Android app permissions or iOS Simulator privacy services; reset iOS privacy prompts. See action-specific parameters.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "get",
+              "update",
+              "reset"
+            ],
+            "description": "get: list (Android) or read one privacy state (iOS Simulator). update: grant/revoke (Android) or set privacy map (iOS Simulator). reset: restore a privacy prompt for the app under test (iOS only)."
+          },
+          "id": {
+            "description": "App ID; overrides name. Android defaults to the app under test; required for iOS get/update.",
+            "type": "string"
+          },
+          "name": {
+            "description": "App name resolved to an ID. Android defaults to the app under test; alternative to id for iOS get/update.",
+            "type": "string"
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          },
+          "permissionFilter": {
+            "description": "Android get only: which bucket to return. Defaults to requested per UiAutomator2.",
+            "type": "string",
+            "enum": [
+              "denied",
+              "granted",
+              "requested"
+            ]
+          },
+          "service": {
+            "description": "iOS get: privacy service name (e.g. camera, microphone, photos). iOS reset: service name or numeric XCUIProtectedResource id.",
+            "type": [
+              "string",
+              "number"
+            ]
+          },
+          "permissions": {
+            "description": "Android update only: permission name(s), `all` (with pm target), or appops names. Required for Android update.",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "permissionChangeAction": {
+            "description": "Android update: for pm target grant (default) or revoke; for appops allow, deny, ignore, default.",
+            "type": "string"
+          },
+          "target": {
+            "description": "Android update: pm (default) or appops.",
+            "type": "string",
+            "enum": [
+              "pm",
+              "appops"
+            ]
+          },
+          "access": {
+            "description": "iOS update only: map of access rule → yes|no|unset|limited (Simulator + AppleSimulatorUtils). Required for iOS update.",
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_mobile_permissions"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Manage Appium contexts with one tool. action=list returns all contexts and current context. action=switch changes to a target context.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "list",
+              "switch"
+            ],
+            "description": "Use list to fetch contexts or switch to change context."
+          },
+          "context": {
+            "description": "Required when action is switch. Common values: NATIVE_APP or WEBVIEW_<id>/WEBVIEW_<package>.",
+            "type": "string"
+          },
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_context"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "description": "Generate locators for all interactable elements on the current page. [PRIORITY 3: Use this for debugging/inspection or when you need comprehensive element info with locator suggestions]",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "description": "Session ID to target. If omitted, uses the active session.",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "name": "generate_locators",
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://appium-mcp/locator-generator"
+        }
+      }
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Generate tests for a mobile app: follow the returned instructions to drive the real session with MCP tools (select_device, appium_session_management, appium_find_element, appium_gesture, appium_set_value, etc.), then emit code. Use generate_locators only when you need a full locator snapshot; prefer appium_find_element for normal steps.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The steps of the test"
+          }
+        },
+        "required": [
+          "steps"
+        ],
+        "additionalProperties": false
+      },
+      "name": "appium_generate_tests"
+    }
+  ],
+  "measuredAt": "2026-09-03T21:03:12.302Z",
+  "serverName": "MCP Appium",
+  "serverVersion": "1.92.13",
+  "launchCommand": "npx -y appium-mcp",
+  "envVarNames": [],
+  "serverInstructions": "Appium mobile automation through MCP. Defaults that avoid broken flows:\n- Establish a driver session first: select_device and appium_session_management (action=create) for local/embedded mode, or attach to a remote session when the user supplies a server URL.\n- Call only tools this server actually registers (appium_find_element, appium_gesture, appium_session_management, etc.); do not invent tool names or aliases.\n- Prefer stable locators: accessibility id and id before long xpath; use xpath only when nothing else works.\n- Use appium_gesture for taps and drags; when something is off-screen, use action=scroll_to_element instead of spamming appium_find_element alone.\n- For local Appium install, doctor, or smoke tests, run appium_skills before guessing commands.",
+  "isolation": {
+    "docker": true,
+    "image": "public.ecr.aws/docker/library/node:22-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  },
+  "timeoutMs": 240000
+}

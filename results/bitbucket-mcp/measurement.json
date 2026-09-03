@@ -1,0 +1,2063 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "measured",
+  "totalTokens": 6156,
+  "toolCount": 47,
+  "tools": [
+    {
+      "name": "listRepositories",
+      "tokens": 177,
+      "descriptionTokens": 4,
+      "inputSchemaTokens": 162
+    },
+    {
+      "name": "getRepository",
+      "tokens": 56,
+      "descriptionTokens": 3,
+      "inputSchemaTokens": 42
+    },
+    {
+      "name": "getPullRequests",
+      "tokens": 211,
+      "descriptionTokens": 6,
+      "inputSchemaTokens": 193
+    },
+    {
+      "name": "createPullRequest",
+      "tokens": 190,
+      "descriptionTokens": 5,
+      "inputSchemaTokens": 173
+    },
+    {
+      "name": "getPullRequest",
+      "tokens": 178,
+      "descriptionTokens": 7,
+      "inputSchemaTokens": 159
+    },
+    {
+      "name": "updatePullRequest",
+      "tokens": 105,
+      "descriptionTokens": 4,
+      "inputSchemaTokens": 89
+    },
+    {
+      "name": "getPullRequestActivity",
+      "tokens": 179,
+      "descriptionTokens": 7,
+      "inputSchemaTokens": 159
+    },
+    {
+      "name": "approvePullRequest",
+      "tokens": 175,
+      "descriptionTokens": 4,
+      "inputSchemaTokens": 159
+    },
+    {
+      "name": "unapprovePullRequest",
+      "tokens": 178,
+      "descriptionTokens": 6,
+      "inputSchemaTokens": 159
+    },
+    {
+      "name": "declinePullRequest",
+      "tokens": 92,
+      "descriptionTokens": 5,
+      "inputSchemaTokens": 74
+    },
+    {
+      "name": "mergePullRequest",
+      "tokens": 116,
+      "descriptionTokens": 4,
+      "inputSchemaTokens": 100
+    },
+    {
+      "name": "getPullRequestComments",
+      "tokens": 178,
+      "descriptionTokens": 6,
+      "inputSchemaTokens": 159
+    },
+    {
+      "name": "getPullRequestDiff",
+      "tokens": 80,
+      "descriptionTokens": 6,
+      "inputSchemaTokens": 61
+    },
+    {
+      "name": "getPullRequestCommits",
+      "tokens": 179,
+      "descriptionTokens": 6,
+      "inputSchemaTokens": 159
+    },
+    {
+      "name": "addPullRequestComment",
+      "tokens": 220,
+      "descriptionTokens": 12,
+      "inputSchemaTokens": 195
+    },
+    {
+      "name": "addPendingPullRequestComment",
+      "tokens": 202,
+      "descriptionTokens": 16,
+      "inputSchemaTokens": 172
+    },
+    {
+      "name": "publishPendingComments",
+      "tokens": 81,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 61
+    },
+    {
+      "name": "getRepositoryBranchingModel",
+      "tokens": 63,
+      "descriptionTokens": 7,
+      "inputSchemaTokens": 42
+    },
+    {
+      "name": "getRepositoryBranchingModelSettings",
+      "tokens": 65,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 42
+    },
+    {
+      "name": "updateRepositoryBranchingModelSettings",
+      "tokens": 235,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 212
+    },
+    {
+      "name": "getEffectiveRepositoryBranchingModel",
+      "tokens": 65,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 42
+    },
+    {
+      "name": "getProjectBranchingModel",
+      "tokens": 63,
+      "descriptionTokens": 7,
+      "inputSchemaTokens": 42
+    },
+    {
+      "name": "getProjectBranchingModelSettings",
+      "tokens": 65,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 42
+    },
+    {
+      "name": "updateProjectBranchingModelSettings",
+      "tokens": 235,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 212
+    },
+    {
+      "name": "createDraftPullRequest",
+      "tokens": 173,
+      "descriptionTokens": 6,
+      "inputSchemaTokens": 154
+    },
+    {
+      "name": "publishDraftPullRequest",
+      "tokens": 85,
+      "descriptionTokens": 11,
+      "inputSchemaTokens": 61
+    },
+    {
+      "name": "convertTodraft",
+      "tokens": 81,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 61
+    },
+    {
+      "name": "getPendingReviewPRs",
+      "tokens": 114,
+      "descriptionTokens": 21,
+      "inputSchemaTokens": 80
+    },
+    {
+      "name": "listPipelineRuns",
+      "tokens": 258,
+      "descriptionTokens": 6,
+      "inputSchemaTokens": 240
+    },
+    {
+      "name": "getPipelineRun",
+      "tokens": 175,
+      "descriptionTokens": 7,
+      "inputSchemaTokens": 156
+    },
+    {
+      "name": "runPipeline",
+      "tokens": 256,
+      "descriptionTokens": 5,
+      "inputSchemaTokens": 240
+    },
+    {
+      "name": "stopPipeline",
+      "tokens": 73,
+      "descriptionTokens": 4,
+      "inputSchemaTokens": 58
+    },
+    {
+      "name": "getPipelineSteps",
+      "tokens": 76,
+      "descriptionTokens": 6,
+      "inputSchemaTokens": 58
+    },
+    {
+      "name": "getPipelineStep",
+      "tokens": 93,
+      "descriptionTokens": 7,
+      "inputSchemaTokens": 74
+    },
+    {
+      "name": "getPipelineStepLogs",
+      "tokens": 226,
+      "descriptionTokens": 7,
+      "inputSchemaTokens": 206
+    },
+    {
+      "name": "getPullRequestComment",
+      "tokens": 98,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 77
+    },
+    {
+      "name": "updatePullRequestComment",
+      "tokens": 112,
+      "descriptionTokens": 7,
+      "inputSchemaTokens": 92
+    },
+    {
+      "name": "resolveComment",
+      "tokens": 96,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 77
+    },
+    {
+      "name": "reopenComment",
+      "tokens": 99,
+      "descriptionTokens": 10,
+      "inputSchemaTokens": 77
+    },
+    {
+      "name": "getPullRequestDiffStat",
+      "tokens": 82,
+      "descriptionTokens": 7,
+      "inputSchemaTokens": 61
+    },
+    {
+      "name": "getPullRequestPatch",
+      "tokens": 80,
+      "descriptionTokens": 6,
+      "inputSchemaTokens": 61
+    },
+    {
+      "name": "getPullRequestTasks",
+      "tokens": 80,
+      "descriptionTokens": 6,
+      "inputSchemaTokens": 61
+    },
+    {
+      "name": "createPullRequestTask",
+      "tokens": 134,
+      "descriptionTokens": 7,
+      "inputSchemaTokens": 114
+    },
+    {
+      "name": "getPullRequestTask",
+      "tokens": 98,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 77
+    },
+    {
+      "name": "updatePullRequestTask",
+      "tokens": 132,
+      "descriptionTokens": 7,
+      "inputSchemaTokens": 112
+    },
+    {
+      "name": "getPullRequestStatuses",
+      "tokens": 82,
+      "descriptionTokens": 8,
+      "inputSchemaTokens": 61
+    },
+    {
+      "name": "getEffectiveDefaultReviewers",
+      "tokens": 63,
+      "descriptionTokens": 7,
+      "inputSchemaTokens": 42
+    }
+  ],
+  "canonicalSha256": "e131b1d46e30c0d05f07995aa167fa323ec1003719d861dbe27c82c94ad803cf",
+  "rawToolsCapture": [
+    {
+      "name": "listRepositories",
+      "description": "List Bitbucket repositories",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "name": {
+            "type": "string",
+            "description": "Filter repositories by name (partial match supported)"
+          },
+          "pagelen": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100,
+            "description": "Number of items per page (Bitbucket pagelen). Defaults to 10 and caps at 100."
+          },
+          "page": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Bitbucket page number to fetch (1-based)."
+          },
+          "all": {
+            "type": "boolean",
+            "description": "When true (and no page is provided), automatically follows Bitbucket next links to return all items up to 1000."
+          },
+          "limit": {
+            "type": "number",
+            "description": "Deprecated alias for pagelen. Use pagelen/page/all for pagination control."
+          }
+        }
+      }
+    },
+    {
+      "name": "getRepository",
+      "description": "Get repository details",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug"
+        ]
+      }
+    },
+    {
+      "name": "getPullRequests",
+      "description": "Get pull requests for a repository",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "MERGED",
+              "DECLINED",
+              "SUPERSEDED"
+            ],
+            "description": "Pull request state"
+          },
+          "pagelen": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100,
+            "description": "Number of items per page (Bitbucket pagelen). Defaults to 10 and caps at 100."
+          },
+          "page": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Bitbucket page number to fetch (1-based)."
+          },
+          "all": {
+            "type": "boolean",
+            "description": "When true (and no page is provided), automatically follows Bitbucket next links to return all items up to 1000."
+          },
+          "limit": {
+            "type": "number",
+            "description": "Deprecated alias for pagelen. Use pagelen/page/all for pagination control."
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug"
+        ]
+      }
+    },
+    {
+      "name": "createPullRequest",
+      "description": "Create a new pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "title": {
+            "type": "string",
+            "description": "Pull request title"
+          },
+          "description": {
+            "type": "string",
+            "description": "Pull request description"
+          },
+          "sourceBranch": {
+            "type": "string",
+            "description": "Source branch name"
+          },
+          "targetBranch": {
+            "type": "string",
+            "description": "Target branch name"
+          },
+          "reviewers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of reviewer UUIDs (e.g., '{04776764-62c7-453b-b97e-302f60395ceb}')"
+          },
+          "draft": {
+            "type": "boolean",
+            "description": "Whether to create the pull request as a draft"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "title",
+          "description",
+          "sourceBranch",
+          "targetBranch"
+        ]
+      }
+    },
+    {
+      "name": "getPullRequest",
+      "description": "Get details for a specific pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          },
+          "pagelen": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100,
+            "description": "Number of items per page (Bitbucket pagelen). Defaults to 10 and caps at 100."
+          },
+          "page": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Bitbucket page number to fetch (1-based)."
+          },
+          "all": {
+            "type": "boolean",
+            "description": "When true (and no page is provided), automatically follows Bitbucket next links to return all items up to 1000."
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id"
+        ]
+      }
+    },
+    {
+      "name": "updatePullRequest",
+      "description": "Update a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          },
+          "title": {
+            "type": "string",
+            "description": "New pull request title"
+          },
+          "description": {
+            "type": "string",
+            "description": "New pull request description"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id"
+        ]
+      }
+    },
+    {
+      "name": "getPullRequestActivity",
+      "description": "Get activity log for a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          },
+          "pagelen": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100,
+            "description": "Number of items per page (Bitbucket pagelen). Defaults to 10 and caps at 100."
+          },
+          "page": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Bitbucket page number to fetch (1-based)."
+          },
+          "all": {
+            "type": "boolean",
+            "description": "When true (and no page is provided), automatically follows Bitbucket next links to return all items up to 1000."
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id"
+        ]
+      }
+    },
+    {
+      "name": "approvePullRequest",
+      "description": "Approve a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          },
+          "pagelen": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100,
+            "description": "Number of items per page (Bitbucket pagelen). Defaults to 10 and caps at 100."
+          },
+          "page": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Bitbucket page number to fetch (1-based)."
+          },
+          "all": {
+            "type": "boolean",
+            "description": "When true (and no page is provided), automatically follows Bitbucket next links to return all items up to 1000."
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id"
+        ]
+      }
+    },
+    {
+      "name": "unapprovePullRequest",
+      "description": "Remove approval from a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          },
+          "pagelen": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100,
+            "description": "Number of items per page (Bitbucket pagelen). Defaults to 10 and caps at 100."
+          },
+          "page": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Bitbucket page number to fetch (1-based)."
+          },
+          "all": {
+            "type": "boolean",
+            "description": "When true (and no page is provided), automatically follows Bitbucket next links to return all items up to 1000."
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id"
+        ]
+      }
+    },
+    {
+      "name": "declinePullRequest",
+      "description": "Decline a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          },
+          "message": {
+            "type": "string",
+            "description": "Reason for declining"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id"
+        ]
+      }
+    },
+    {
+      "name": "mergePullRequest",
+      "description": "Merge a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          },
+          "message": {
+            "type": "string",
+            "description": "Merge commit message"
+          },
+          "strategy": {
+            "type": "string",
+            "enum": [
+              "merge-commit",
+              "squash",
+              "fast-forward"
+            ],
+            "description": "Merge strategy"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id"
+        ]
+      }
+    },
+    {
+      "name": "getPullRequestComments",
+      "description": "List comments on a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          },
+          "pagelen": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100,
+            "description": "Number of items per page (Bitbucket pagelen). Defaults to 10 and caps at 100."
+          },
+          "page": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Bitbucket page number to fetch (1-based)."
+          },
+          "all": {
+            "type": "boolean",
+            "description": "When true (and no page is provided), automatically follows Bitbucket next links to return all items up to 1000."
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id"
+        ]
+      }
+    },
+    {
+      "name": "getPullRequestDiff",
+      "description": "Get diff for a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id"
+        ]
+      }
+    },
+    {
+      "name": "getPullRequestCommits",
+      "description": "Get commits on a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          },
+          "pagelen": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100,
+            "description": "Number of items per page (Bitbucket pagelen). Defaults to 10 and caps at 100."
+          },
+          "page": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Bitbucket page number to fetch (1-based)."
+          },
+          "all": {
+            "type": "boolean",
+            "description": "When true (and no page is provided), automatically follows Bitbucket next links to return all items up to 1000."
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id"
+        ]
+      }
+    },
+    {
+      "name": "addPullRequestComment",
+      "description": "Add a comment to a pull request (general or inline)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          },
+          "content": {
+            "type": "string",
+            "description": "Comment content in markdown format"
+          },
+          "pending": {
+            "type": "boolean",
+            "description": "Whether to create this comment as a pending comment (draft state)"
+          },
+          "inline": {
+            "type": "object",
+            "description": "Inline comment information for commenting on specific lines",
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "Path to the file in the repository"
+              },
+              "from": {
+                "type": "number",
+                "description": "Line number in the old version of the file (for deleted or modified lines)"
+              },
+              "to": {
+                "type": "number",
+                "description": "Line number in the new version of the file (for added or modified lines)"
+              }
+            },
+            "required": [
+              "path"
+            ]
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id",
+          "content"
+        ]
+      }
+    },
+    {
+      "name": "addPendingPullRequestComment",
+      "description": "Add a pending (draft) comment to a pull request that can be published later",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          },
+          "content": {
+            "type": "string",
+            "description": "Comment content in markdown format"
+          },
+          "inline": {
+            "type": "object",
+            "description": "Inline comment information for commenting on specific lines",
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "Path to the file in the repository"
+              },
+              "from": {
+                "type": "number",
+                "description": "Line number in the old version of the file (for deleted or modified lines)"
+              },
+              "to": {
+                "type": "number",
+                "description": "Line number in the new version of the file (for added or modified lines)"
+              }
+            },
+            "required": [
+              "path"
+            ]
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id",
+          "content"
+        ]
+      }
+    },
+    {
+      "name": "publishPendingComments",
+      "description": "Publish all pending comments for a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id"
+        ]
+      }
+    },
+    {
+      "name": "getRepositoryBranchingModel",
+      "description": "Get the branching model for a repository",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug"
+        ]
+      }
+    },
+    {
+      "name": "getRepositoryBranchingModelSettings",
+      "description": "Get the branching model config for a repository",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug"
+        ]
+      }
+    },
+    {
+      "name": "updateRepositoryBranchingModelSettings",
+      "description": "Update the branching model config for a repository",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "development": {
+            "type": "object",
+            "description": "Development branch settings",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Branch name"
+              },
+              "use_mainbranch": {
+                "type": "boolean",
+                "description": "Use main branch"
+              }
+            }
+          },
+          "production": {
+            "type": "object",
+            "description": "Production branch settings",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Branch name"
+              },
+              "use_mainbranch": {
+                "type": "boolean",
+                "description": "Use main branch"
+              },
+              "enabled": {
+                "type": "boolean",
+                "description": "Enable production branch"
+              }
+            }
+          },
+          "branch_types": {
+            "type": "array",
+            "description": "Branch types configuration",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "description": "Branch type kind (e.g., bugfix, feature)"
+                },
+                "prefix": {
+                  "type": "string",
+                  "description": "Branch prefix"
+                },
+                "enabled": {
+                  "type": "boolean",
+                  "description": "Enable this branch type"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            }
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug"
+        ]
+      }
+    },
+    {
+      "name": "getEffectiveRepositoryBranchingModel",
+      "description": "Get the effective branching model for a repository",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug"
+        ]
+      }
+    },
+    {
+      "name": "getProjectBranchingModel",
+      "description": "Get the branching model for a project",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "project_key": {
+            "type": "string",
+            "description": "Project key"
+          }
+        },
+        "required": [
+          "workspace",
+          "project_key"
+        ]
+      }
+    },
+    {
+      "name": "getProjectBranchingModelSettings",
+      "description": "Get the branching model config for a project",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "project_key": {
+            "type": "string",
+            "description": "Project key"
+          }
+        },
+        "required": [
+          "workspace",
+          "project_key"
+        ]
+      }
+    },
+    {
+      "name": "updateProjectBranchingModelSettings",
+      "description": "Update the branching model config for a project",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "project_key": {
+            "type": "string",
+            "description": "Project key"
+          },
+          "development": {
+            "type": "object",
+            "description": "Development branch settings",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Branch name"
+              },
+              "use_mainbranch": {
+                "type": "boolean",
+                "description": "Use main branch"
+              }
+            }
+          },
+          "production": {
+            "type": "object",
+            "description": "Production branch settings",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Branch name"
+              },
+              "use_mainbranch": {
+                "type": "boolean",
+                "description": "Use main branch"
+              },
+              "enabled": {
+                "type": "boolean",
+                "description": "Enable production branch"
+              }
+            }
+          },
+          "branch_types": {
+            "type": "array",
+            "description": "Branch types configuration",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "description": "Branch type kind (e.g., bugfix, feature)"
+                },
+                "prefix": {
+                  "type": "string",
+                  "description": "Branch prefix"
+                },
+                "enabled": {
+                  "type": "boolean",
+                  "description": "Enable this branch type"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            }
+          }
+        },
+        "required": [
+          "workspace",
+          "project_key"
+        ]
+      }
+    },
+    {
+      "name": "createDraftPullRequest",
+      "description": "Create a new draft pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "title": {
+            "type": "string",
+            "description": "Pull request title"
+          },
+          "description": {
+            "type": "string",
+            "description": "Pull request description"
+          },
+          "sourceBranch": {
+            "type": "string",
+            "description": "Source branch name"
+          },
+          "targetBranch": {
+            "type": "string",
+            "description": "Target branch name"
+          },
+          "reviewers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of reviewer UUIDs (e.g., '{04776764-62c7-453b-b97e-302f60395ceb}')"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "title",
+          "description",
+          "sourceBranch",
+          "targetBranch"
+        ]
+      }
+    },
+    {
+      "name": "publishDraftPullRequest",
+      "description": "Publish a draft pull request to make it ready for review",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id"
+        ]
+      }
+    },
+    {
+      "name": "convertTodraft",
+      "description": "Convert a regular pull request to draft status",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id"
+        ]
+      }
+    },
+    {
+      "name": "getPendingReviewPRs",
+      "description": "List all open pull requests in the workspace where the authenticated user is a reviewer and has not yet approved.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name (optional, defaults to BITBUCKET_WORKSPACE)"
+          },
+          "limit": {
+            "type": "number",
+            "description": "Maximum number of PRs to return (optional)"
+          },
+          "repositoryList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of repository slugs to check (optional)"
+          }
+        }
+      }
+    },
+    {
+      "name": "listPipelineRuns",
+      "description": "List pipeline runs for a repository",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pagelen": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100,
+            "description": "Number of items per page (Bitbucket pagelen). Defaults to 10 and caps at 100."
+          },
+          "page": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Bitbucket page number to fetch (1-based)."
+          },
+          "all": {
+            "type": "boolean",
+            "description": "When true (and no page is provided), automatically follows Bitbucket next links to return all items up to 1000."
+          },
+          "limit": {
+            "type": "number",
+            "description": "Deprecated alias for pagelen. Use pagelen/page/all for pagination control."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "IN_PROGRESS",
+              "SUCCESSFUL",
+              "FAILED",
+              "ERROR",
+              "STOPPED"
+            ],
+            "description": "Filter pipelines by status"
+          },
+          "target_branch": {
+            "type": "string",
+            "description": "Filter pipelines by target branch"
+          },
+          "trigger_type": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "push",
+              "pullrequest",
+              "schedule"
+            ],
+            "description": "Filter pipelines by trigger type"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug"
+        ]
+      }
+    },
+    {
+      "name": "getPipelineRun",
+      "description": "Get details for a specific pipeline run",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pipeline_uuid": {
+            "type": "string",
+            "description": "Pipeline UUID"
+          },
+          "pagelen": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100,
+            "description": "Number of items per page (Bitbucket pagelen). Defaults to 10 and caps at 100."
+          },
+          "page": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Bitbucket page number to fetch (1-based)."
+          },
+          "all": {
+            "type": "boolean",
+            "description": "When true (and no page is provided), automatically follows Bitbucket next links to return all items up to 1000."
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pipeline_uuid"
+        ]
+      }
+    },
+    {
+      "name": "runPipeline",
+      "description": "Trigger a new pipeline run",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "target": {
+            "type": "object",
+            "description": "Pipeline target configuration",
+            "properties": {
+              "ref_type": {
+                "type": "string",
+                "enum": [
+                  "branch",
+                  "tag",
+                  "bookmark",
+                  "named_branch"
+                ],
+                "description": "Reference type"
+              },
+              "ref_name": {
+                "type": "string",
+                "description": "Reference name (branch, tag, etc.)"
+              },
+              "commit_hash": {
+                "type": "string",
+                "description": "Specific commit hash to run pipeline on"
+              },
+              "selector_type": {
+                "type": "string",
+                "enum": [
+                  "default",
+                  "custom",
+                  "pull-requests"
+                ],
+                "description": "Pipeline selector type"
+              },
+              "selector_pattern": {
+                "type": "string",
+                "description": "Pipeline selector pattern (for custom pipelines)"
+              }
+            },
+            "required": [
+              "ref_type",
+              "ref_name"
+            ]
+          },
+          "variables": {
+            "type": "array",
+            "description": "Pipeline variables",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "description": "Variable name"
+                },
+                "value": {
+                  "type": "string",
+                  "description": "Variable value"
+                },
+                "secured": {
+                  "type": "boolean",
+                  "description": "Whether the variable is secured"
+                }
+              },
+              "required": [
+                "key",
+                "value"
+              ]
+            }
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "target"
+        ]
+      }
+    },
+    {
+      "name": "stopPipeline",
+      "description": "Stop a running pipeline",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pipeline_uuid": {
+            "type": "string",
+            "description": "Pipeline UUID"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pipeline_uuid"
+        ]
+      }
+    },
+    {
+      "name": "getPipelineSteps",
+      "description": "List steps for a pipeline run",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pipeline_uuid": {
+            "type": "string",
+            "description": "Pipeline UUID"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pipeline_uuid"
+        ]
+      }
+    },
+    {
+      "name": "getPipelineStep",
+      "description": "Get details for a specific pipeline step",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pipeline_uuid": {
+            "type": "string",
+            "description": "Pipeline UUID"
+          },
+          "step_uuid": {
+            "type": "string",
+            "description": "Step UUID"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pipeline_uuid",
+          "step_uuid"
+        ]
+      }
+    },
+    {
+      "name": "getPipelineStepLogs",
+      "description": "Get logs for a specific pipeline step",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pipeline_uuid": {
+            "type": "string",
+            "description": "Pipeline UUID"
+          },
+          "step_uuid": {
+            "type": "string",
+            "description": "Step UUID"
+          },
+          "max_lines": {
+            "type": "number",
+            "description": "Maximum number of log lines to return (default 500)",
+            "minimum": 1,
+            "maximum": 5000
+          },
+          "tail": {
+            "type": "boolean",
+            "description": "When true, returns the most recent lines instead of the first lines"
+          },
+          "errors_only": {
+            "type": "boolean",
+            "description": "When true, only include lines that look like errors (case-insensitive match on error keywords)"
+          },
+          "search_term": {
+            "type": "string",
+            "description": "Optional case-insensitive search term to filter log lines"
+          },
+          "save_to_file": {
+            "type": "boolean",
+            "description": "Save the full log to a temporary file and return the path for offline review"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pipeline_uuid",
+          "step_uuid"
+        ]
+      }
+    },
+    {
+      "name": "getPullRequestComment",
+      "description": "Get a specific comment on a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          },
+          "comment_id": {
+            "type": "string",
+            "description": "Comment ID"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id",
+          "comment_id"
+        ]
+      }
+    },
+    {
+      "name": "updatePullRequestComment",
+      "description": "Update a comment on a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          },
+          "comment_id": {
+            "type": "string",
+            "description": "Comment ID"
+          },
+          "content": {
+            "type": "string",
+            "description": "Updated comment content"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id",
+          "comment_id",
+          "content"
+        ]
+      }
+    },
+    {
+      "name": "resolveComment",
+      "description": "Resolve a comment thread on a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          },
+          "comment_id": {
+            "type": "string",
+            "description": "Comment ID"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id",
+          "comment_id"
+        ]
+      }
+    },
+    {
+      "name": "reopenComment",
+      "description": "Reopen a resolved comment thread on a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          },
+          "comment_id": {
+            "type": "string",
+            "description": "Comment ID"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id",
+          "comment_id"
+        ]
+      }
+    },
+    {
+      "name": "getPullRequestDiffStat",
+      "description": "Get diff statistics for a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id"
+        ]
+      }
+    },
+    {
+      "name": "getPullRequestPatch",
+      "description": "Get patch for a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id"
+        ]
+      }
+    },
+    {
+      "name": "getPullRequestTasks",
+      "description": "List tasks on a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id"
+        ]
+      }
+    },
+    {
+      "name": "createPullRequestTask",
+      "description": "Create a task on a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          },
+          "content": {
+            "type": "string",
+            "description": "Task content"
+          },
+          "comment": {
+            "type": "number",
+            "description": "Optional comment ID to attach the task"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "RESOLVED"
+            ],
+            "description": "Initial task state"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id",
+          "content"
+        ]
+      }
+    },
+    {
+      "name": "getPullRequestTask",
+      "description": "Get a specific task on a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          },
+          "task_id": {
+            "type": "string",
+            "description": "Task ID"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id",
+          "task_id"
+        ]
+      }
+    },
+    {
+      "name": "updatePullRequestTask",
+      "description": "Update a task on a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          },
+          "task_id": {
+            "type": "string",
+            "description": "Task ID"
+          },
+          "content": {
+            "type": "string",
+            "description": "Updated task content"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "RESOLVED"
+            ],
+            "description": "Updated task state"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id",
+          "task_id"
+        ]
+      }
+    },
+    {
+      "name": "getPullRequestStatuses",
+      "description": "List commit statuses associated with a pull request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          },
+          "pull_request_id": {
+            "type": "string",
+            "description": "Pull request ID"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug",
+          "pull_request_id"
+        ]
+      }
+    },
+    {
+      "name": "getEffectiveDefaultReviewers",
+      "description": "Get effective default reviewers for a repository",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "description": "Bitbucket workspace name"
+          },
+          "repo_slug": {
+            "type": "string",
+            "description": "Repository slug"
+          }
+        },
+        "required": [
+          "workspace",
+          "repo_slug"
+        ]
+      }
+    }
+  ],
+  "measuredAt": "2026-09-03T21:17:17.463Z",
+  "serverName": "bitbucket-mcp-server",
+  "serverVersion": "1.0.0",
+  "launchCommand": "npx -y bitbucket-mcp",
+  "envVarNames": [
+    "BITBUCKET_TOKEN"
+  ],
+  "serverInstructions": null,
+  "isolation": {
+    "docker": true,
+    "image": "public.ecr.aws/docker/library/node:22-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  },
+  "timeoutMs": 240000
+}

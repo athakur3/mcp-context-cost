@@ -1,0 +1,22 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "auth-required",
+  "totalTokens": null,
+  "toolCount": null,
+  "tools": [],
+  "canonicalSha256": null,
+  "rawToolsCapture": null,
+  "measuredAt": "2026-09-03T21:17:21.580Z",
+  "serverName": "keboola",
+  "launchCommand": "uvx keboola-mcp-server",
+  "notes": "server error 0: Client error '401 Unauthorized' for url 'https://connection.keboola.com/v2/storage/tokens/verify'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401\nAPI error: Invalid access token\nException ID: kbc-us-east-1-connection-549703459b03fe776927080494c9c16f\nWhen contacting Keboola support please provide the exception ID.",
+  "isolation": {
+    "docker": true,
+    "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  },
+  "timeoutMs": 240000
+}

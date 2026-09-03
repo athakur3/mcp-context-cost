@@ -1,0 +1,2333 @@
+{
+  "methodologyVersion": "1.0",
+  "provider": "tiktoken",
+  "encoding": "o200k_base",
+  "status": "measured",
+  "totalTokens": 10173,
+  "toolCount": 12,
+  "tools": [
+    {
+      "name": "obsidian_get_note",
+      "tokens": 1523,
+      "descriptionTokens": 41,
+      "inputSchemaTokens": 578
+    },
+    {
+      "name": "obsidian_list_notes",
+      "tokens": 774,
+      "descriptionTokens": 75,
+      "inputSchemaTokens": 197
+    },
+    {
+      "name": "obsidian_list_tags",
+      "tokens": 249,
+      "descriptionTokens": 59,
+      "inputSchemaTokens": 24
+    },
+    {
+      "name": "obsidian_search_notes",
+      "tokens": 1369,
+      "descriptionTokens": 83,
+      "inputSchemaTokens": 368
+    },
+    {
+      "name": "obsidian_open_in_ui",
+      "tokens": 298,
+      "descriptionTokens": 35,
+      "inputSchemaTokens": 121
+    },
+    {
+      "name": "obsidian_write_note",
+      "tokens": 933,
+      "descriptionTokens": 129,
+      "inputSchemaTokens": 643
+    },
+    {
+      "name": "obsidian_append_to_note",
+      "tokens": 817,
+      "descriptionTokens": 124,
+      "inputSchemaTokens": 570
+    },
+    {
+      "name": "obsidian_patch_note",
+      "tokens": 1028,
+      "descriptionTokens": 58,
+      "inputSchemaTokens": 729
+    },
+    {
+      "name": "obsidian_replace_in_note",
+      "tokens": 812,
+      "descriptionTokens": 54,
+      "inputSchemaTokens": 555
+    },
+    {
+      "name": "obsidian_manage_frontmatter",
+      "tokens": 878,
+      "descriptionTokens": 41,
+      "inputSchemaTokens": 409
+    },
+    {
+      "name": "obsidian_manage_tags",
+      "tokens": 1052,
+      "descriptionTokens": 96,
+      "inputSchemaTokens": 404
+    },
+    {
+      "name": "obsidian_delete_note",
+      "tokens": 438,
+      "descriptionTokens": 41,
+      "inputSchemaTokens": 289
+    }
+  ],
+  "canonicalSha256": "85d23a7fa63923641625701d0c5fff39249eb8b379c3c1a7a444fef6437d6bc4",
+  "rawToolsCapture": [
+    {
+      "name": "obsidian_get_note",
+      "title": "Obsidian Get Note",
+      "description": "Read a note from the vault — by path, the active file, or a periodic note. Choose a `format` projection: raw body, full object, structural document map, or a single section.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "format": {
+            "type": "string",
+            "enum": [
+              "content",
+              "full",
+              "document-map",
+              "section"
+            ],
+            "description": "Which projection to return. `content` — raw markdown body. `full` — content plus parsed frontmatter, tags, and file metadata. `document-map` — catalog of headings, block IDs, and frontmatter field names (use to discover patch targets). `section` — a single heading, block, or frontmatter section (requires `section`); heading sections include the full subtree under that heading and use `Parent::Child` syntax for nesting."
+          },
+          "target": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "path",
+                    "description": "Address by vault-relative path."
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Vault-relative path including extension, e.g. \"Projects/foo.md\"."
+                  }
+                },
+                "required": [
+                  "type",
+                  "path"
+                ],
+                "description": "Address a note by its vault-relative path."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "active",
+                    "description": "Address the file currently open in Obsidian."
+                  }
+                },
+                "required": [
+                  "type"
+                ],
+                "description": "Address whichever file is currently active in the Obsidian UI."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "periodic",
+                    "description": "Address a daily/weekly/monthly/etc. periodic note."
+                  },
+                  "period": {
+                    "type": "string",
+                    "enum": [
+                      "daily",
+                      "weekly",
+                      "monthly",
+                      "quarterly",
+                      "yearly"
+                    ],
+                    "description": "Periodic note granularity."
+                  },
+                  "date": {
+                    "description": "ISO date YYYY-MM-DD. Omit for the current period.",
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  }
+                },
+                "required": [
+                  "type",
+                  "period"
+                ],
+                "description": "Address a periodic note (current or dated)."
+              }
+            ],
+            "description": "Where the note lives."
+          },
+          "section": {
+            "description": "Required when `format` is `\"section\"`. Identifies the heading/block/frontmatter to extract.",
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "heading",
+                  "block",
+                  "frontmatter"
+                ],
+                "description": "Heading by name, block by reference, or frontmatter field by key."
+              },
+              "target": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Heading name (use \"::\" for nested headings), block reference without leading caret (e.g. \"2d9b4a\", not \"^2d9b4a\"), or frontmatter field name."
+              }
+            },
+            "required": [
+              "type",
+              "target"
+            ]
+          },
+          "includeLinks": {
+            "default": false,
+            "description": "When true with `format: \"full\"`, parses outgoing wiki and markdown link references from the note body. Skipped for other formats.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "format",
+          "target"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "result": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "format": {
+                    "type": "string",
+                    "const": "content",
+                    "description": "Echoed format discriminator."
+                  },
+                  "path": {
+                    "type": "string",
+                    "description": "Resolved vault-relative path of the note."
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "Raw markdown body."
+                  }
+                },
+                "required": [
+                  "format",
+                  "path",
+                  "content"
+                ],
+                "additionalProperties": false,
+                "description": "Content-only projection."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "format": {
+                    "type": "string",
+                    "const": "full",
+                    "description": "Echoed format discriminator."
+                  },
+                  "path": {
+                    "type": "string",
+                    "description": "Resolved vault-relative path of the note."
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "Raw markdown body."
+                  },
+                  "frontmatter": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {},
+                    "description": "Parsed YAML frontmatter. Values are strings, numbers, booleans, arrays, or nested objects."
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Tags from frontmatter and inline #tag syntax."
+                  },
+                  "stat": {
+                    "type": "object",
+                    "properties": {
+                      "ctime": {
+                        "type": "number",
+                        "description": "Created time, ms since epoch."
+                      },
+                      "mtime": {
+                        "type": "number",
+                        "description": "Modified time, ms since epoch."
+                      },
+                      "size": {
+                        "type": "number",
+                        "description": "File size in bytes."
+                      }
+                    },
+                    "required": [
+                      "ctime",
+                      "mtime",
+                      "size"
+                    ],
+                    "additionalProperties": false,
+                    "description": "File metadata."
+                  },
+                  "outgoingLinks": {
+                    "description": "Outgoing link references parsed from the note body. Present when `includeLinks` is true. Vault-internal references only — external URLs (http, mailto, etc.) are filtered out.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "target": {
+                          "type": "string",
+                          "description": "Link target as written — vault path, basename, or alias. No existence check."
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "wikilink",
+                            "markdown"
+                          ],
+                          "description": "Source syntax."
+                        }
+                      },
+                      "required": [
+                        "target",
+                        "type"
+                      ],
+                      "additionalProperties": false,
+                      "description": "A single outgoing link reference."
+                    }
+                  }
+                },
+                "required": [
+                  "format",
+                  "path",
+                  "content",
+                  "frontmatter",
+                  "tags",
+                  "stat"
+                ],
+                "additionalProperties": false,
+                "description": "Full projection — content plus parsed metadata."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "format": {
+                    "type": "string",
+                    "const": "document-map",
+                    "description": "Echoed format discriminator."
+                  },
+                  "path": {
+                    "type": "string",
+                    "description": "Resolved vault-relative path of the note."
+                  },
+                  "headings": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "All headings in document order."
+                  },
+                  "blocks": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "All block reference IDs."
+                  },
+                  "frontmatterFields": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "All frontmatter field keys."
+                  }
+                },
+                "required": [
+                  "format",
+                  "path",
+                  "headings",
+                  "blocks",
+                  "frontmatterFields"
+                ],
+                "additionalProperties": false,
+                "description": "Document-map projection — catalog of patch targets."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "format": {
+                    "type": "string",
+                    "const": "section",
+                    "description": "Echoed format discriminator."
+                  },
+                  "path": {
+                    "type": "string",
+                    "description": "Resolved vault-relative path of the note."
+                  },
+                  "section": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "heading",
+                          "block",
+                          "frontmatter"
+                        ],
+                        "description": "Heading by name, block by reference, or frontmatter field by key."
+                      },
+                      "target": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Heading name (use \"::\" for nested headings), block reference without leading caret (e.g. \"2d9b4a\", not \"^2d9b4a\"), or frontmatter field name."
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "target"
+                    ],
+                    "additionalProperties": false,
+                    "description": "Echoed section locator."
+                  },
+                  "valueText": {
+                    "description": "Section value as raw markdown (heading/block sections).",
+                    "type": "string"
+                  },
+                  "valueJson": {
+                    "description": "Section value as the JSON-typed frontmatter value (frontmatter sections only)."
+                  }
+                },
+                "required": [
+                  "format",
+                  "path",
+                  "section"
+                ],
+                "additionalProperties": false,
+                "description": "Single-section projection."
+              }
+            ],
+            "description": "Mode-discriminated projection of the requested note."
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "obsidian_list_notes",
+      "title": "Obsidian List Notes",
+      "description": "List notes and subdirectories at a vault path. Defaults to the vault root when `path` is omitted. Tune recursion with `depth`, or filter the walk with `extension` / `nameRegex`. Capped at 1000 entries per call — when reached, walking stops and `excluded` is set; narrow `path` or tighten filters to surface the rest.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "path": {
+            "description": "Vault-relative directory path. Omit for the vault root.",
+            "type": "string"
+          },
+          "extension": {
+            "description": "Only include files matching this extension, with or without leading dot. Applies to files only — directories are returned regardless.",
+            "type": "string"
+          },
+          "nameRegex": {
+            "description": "Optional ECMAScript regex (no flags) applied to entry names. Matches both files and directories; directories that fail the regex are skipped without recursing into them.",
+            "type": "string"
+          },
+          "depth": {
+            "default": 2,
+            "description": "How many directory levels to walk. `1` = target directory only (no recursion); `2` = target plus its immediate children — a structural overview; bump higher to drill in. Prefer narrowing `path` to a subdirectory over a high `depth` on the vault root.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "The directory listed (empty string for vault root)."
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "description": "Vault-relative path of this entry."
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "file",
+                    "directory"
+                  ],
+                  "description": "Whether this entry is a regular file or a subdirectory."
+                },
+                "truncated": {
+                  "description": "On directory entries: true when the depth limit prevented walking into this directory. Pass a deeper `depth` to expand.",
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "path",
+                "type"
+              ],
+              "additionalProperties": false,
+              "description": "A single entry in the listing."
+            },
+            "description": "Entries in DFS order — top-level first, then descendants."
+          },
+          "totals": {
+            "type": "object",
+            "properties": {
+              "entries": {
+                "type": "number",
+                "description": "Total entries returned across all walked depths."
+              },
+              "files": {
+                "type": "number",
+                "description": "Number of file entries."
+              },
+              "directories": {
+                "type": "number",
+                "description": "Number of directory entries."
+              }
+            },
+            "required": [
+              "entries",
+              "files",
+              "directories"
+            ],
+            "additionalProperties": false,
+            "description": "Counts across the returned tree."
+          },
+          "appliedFilters": {
+            "type": "object",
+            "properties": {
+              "extension": {
+                "description": "Extension filter applied, normalized with leading dot.",
+                "type": "string"
+              },
+              "nameRegex": {
+                "description": "nameRegex filter applied to this listing.",
+                "type": "string"
+              },
+              "depth": {
+                "type": "number",
+                "description": "Recursion depth used to produce this listing."
+              }
+            },
+            "required": [
+              "depth"
+            ],
+            "additionalProperties": false,
+            "description": "Active filters and the recursion depth that produced this listing."
+          },
+          "excluded": {
+            "description": "Present when the walk was truncated by the global entry cap.",
+            "type": "object",
+            "properties": {
+              "reason": {
+                "type": "string",
+                "const": "entry_cap",
+                "description": "`entry_cap`: walk stopped because the per-call entry limit was reached."
+              },
+              "cap": {
+                "type": "number",
+                "description": "The cap value at which walking stopped."
+              },
+              "hint": {
+                "type": "string",
+                "description": "Suggestion for narrowing the listing."
+              }
+            },
+            "required": [
+              "reason",
+              "cap",
+              "hint"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "path",
+          "entries",
+          "totals",
+          "appliedFilters"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "obsidian_list_tags",
+      "title": "Obsidian List Tags",
+      "description": "List every tag found across the vault, with usage counts. Includes hierarchical parents — `work/tasks` contributes to both `work` and `work/tasks`. To find notes by tag, use `obsidian_search_notes` in dataview mode (e.g. `TABLE FROM #work`).",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Tag name without the leading `#`."
+                },
+                "count": {
+                  "type": "number",
+                  "description": "Usage count across the vault."
+                }
+              },
+              "required": [
+                "name",
+                "count"
+              ],
+              "additionalProperties": false,
+              "description": "A tag with its usage count."
+            },
+            "description": "All tags in the vault, in upstream-provided order."
+          }
+        },
+        "required": [
+          "tags"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "obsidian_search_notes",
+      "title": "Obsidian Search Notes",
+      "description": "Search the vault by text substring, Dataview DQL query, or JSONLogic predicate. Pick the mode that matches the query shape. Results cap at 100 hits with an `excluded` indicator when more were available; text-mode hits also clip per file at `maxMatchesPerHit`. On large vaults, narrow with `pathPrefix` or lower `maxMatchesPerHit` to keep responses compact.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "text",
+              "dataview",
+              "jsonlogic"
+            ],
+            "description": "Which search algorithm to run. `text` matches a substring case-insensitively across filenames and note bodies, returning surrounding context windows. `dataview` runs a DQL query (e.g. `TABLE WHERE file.mtime > date(today)`) for path/date/metadata filters. `jsonlogic` evaluates a JSONLogic tree against each note, with `var` paths into `path`, `content`, `frontmatter.<key>`, `tags`, and `stat.{ctime,mtime,size}`, plus `glob` and `regexp` operators."
+          },
+          "query": {
+            "description": "For `text` mode: substring to match. For `dataview` mode: the DQL query string. Required for those modes.",
+            "type": "string"
+          },
+          "logic": {
+            "description": "JSONLogic tree. Required and only used when `mode` is `\"jsonlogic\"`.",
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "contextLength": {
+            "default": 100,
+            "description": "Characters of context on each side of the match (text mode only).",
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "pathPrefix": {
+            "description": "Filter returned filenames by prefix (text mode only, applied client-side).",
+            "type": "string"
+          },
+          "maxMatchesPerHit": {
+            "default": 10,
+            "description": "Cap on match contexts returned per file in text mode. When clipped, the hit carries `truncated: true` and `totalMatches`.",
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "mode"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "result": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "mode": {
+                    "type": "string",
+                    "const": "text",
+                    "description": "Echoed mode."
+                  },
+                  "hits": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "filename": {
+                          "type": "string",
+                          "description": "Vault-relative path of the matching note."
+                        },
+                        "score": {
+                          "description": "Relevance score from the search index, when available.",
+                          "type": "number"
+                        },
+                        "matches": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "context": {
+                                "type": "string",
+                                "description": "Surrounding text around the match."
+                              },
+                              "match": {
+                                "type": "object",
+                                "properties": {
+                                  "start": {
+                                    "type": "number",
+                                    "description": "Match start offset in the surrounding context."
+                                  },
+                                  "end": {
+                                    "type": "number",
+                                    "description": "Match end offset in the surrounding context."
+                                  }
+                                },
+                                "required": [
+                                  "start",
+                                  "end"
+                                ],
+                                "additionalProperties": false,
+                                "description": "Match offsets within the context window."
+                              }
+                            },
+                            "required": [
+                              "context",
+                              "match"
+                            ],
+                            "additionalProperties": false,
+                            "description": "A single match within a file."
+                          },
+                          "description": "Per-match context windows. Capped per file by `maxMatchesPerHit`."
+                        },
+                        "totalMatches": {
+                          "description": "Total matches in this file. Present only when `matches` was clipped to `maxMatchesPerHit`.",
+                          "type": "number"
+                        },
+                        "truncated": {
+                          "description": "True when `matches` was clipped to `maxMatchesPerHit`. Use `obsidian_get_note` to read the full file when more context is needed.",
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "filename",
+                        "matches"
+                      ],
+                      "additionalProperties": false,
+                      "description": "A file with one or more text-search matches."
+                    },
+                    "description": "Matching files with per-match context."
+                  },
+                  "excluded": {
+                    "description": "Present when results were truncated to the cap.",
+                    "type": "object",
+                    "properties": {
+                      "count": {
+                        "type": "number",
+                        "description": "Number of additional hits the upstream returned beyond the cap."
+                      },
+                      "hint": {
+                        "type": "string",
+                        "description": "Suggestion for narrowing the query."
+                      }
+                    },
+                    "required": [
+                      "count",
+                      "hint"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "mode",
+                  "hits"
+                ],
+                "additionalProperties": false,
+                "description": "Text-search results."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "mode": {
+                    "type": "string",
+                    "const": "dataview",
+                    "description": "Echoed mode."
+                  },
+                  "hits": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "filename": {
+                          "type": "string",
+                          "description": "Vault-relative path of the matching note."
+                        },
+                        "result": {
+                          "description": "The query result for this file — shape determined by the query."
+                        }
+                      },
+                      "required": [
+                        "filename",
+                        "result"
+                      ],
+                      "additionalProperties": false,
+                      "description": "A file with a structured (Dataview/JSONLogic) result value."
+                    },
+                    "description": "Matching files with the query result per file."
+                  },
+                  "excluded": {
+                    "description": "Present when results were truncated to the cap.",
+                    "type": "object",
+                    "properties": {
+                      "count": {
+                        "type": "number",
+                        "description": "Number of additional hits the upstream returned beyond the cap."
+                      },
+                      "hint": {
+                        "type": "string",
+                        "description": "Suggestion for narrowing the query."
+                      }
+                    },
+                    "required": [
+                      "count",
+                      "hint"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "mode",
+                  "hits"
+                ],
+                "additionalProperties": false,
+                "description": "Dataview DQL results."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "mode": {
+                    "type": "string",
+                    "const": "jsonlogic",
+                    "description": "Echoed mode."
+                  },
+                  "hits": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "filename": {
+                          "type": "string",
+                          "description": "Vault-relative path of the matching note."
+                        },
+                        "result": {
+                          "description": "The query result for this file — shape determined by the query."
+                        }
+                      },
+                      "required": [
+                        "filename",
+                        "result"
+                      ],
+                      "additionalProperties": false,
+                      "description": "A file with a structured (Dataview/JSONLogic) result value."
+                    },
+                    "description": "Matching files with the JSONLogic result per file."
+                  },
+                  "excluded": {
+                    "description": "Present when results were truncated to the cap.",
+                    "type": "object",
+                    "properties": {
+                      "count": {
+                        "type": "number",
+                        "description": "Number of additional hits the upstream returned beyond the cap."
+                      },
+                      "hint": {
+                        "type": "string",
+                        "description": "Suggestion for narrowing the query."
+                      }
+                    },
+                    "required": [
+                      "count",
+                      "hint"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "mode",
+                  "hits"
+                ],
+                "additionalProperties": false,
+                "description": "JSONLogic results."
+              }
+            ],
+            "description": "Mode-discriminated search payload."
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "obsidian_open_in_ui",
+      "title": "Obsidian Open In Ui",
+      "description": "Open a file in the Obsidian app UI. By default fails when the path does not exist; the `failIfMissing` flag controls the open-or-create behavior.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Vault-relative path of the file to open."
+          },
+          "failIfMissing": {
+            "default": true,
+            "description": "When true (default), fails if the file does not exist. When false, allows Obsidian to create the file on open.",
+            "type": "boolean"
+          },
+          "newLeaf": {
+            "default": false,
+            "description": "Open in a new leaf (split pane) instead of the active one.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "annotations": {
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Resolved vault-relative path that was opened."
+          },
+          "opened": {
+            "type": "boolean",
+            "description": "True when the open call succeeded."
+          },
+          "createdIfMissing": {
+            "type": "boolean",
+            "description": "True when the file did not exist before the call and was created by Obsidian."
+          }
+        },
+        "required": [
+          "path",
+          "opened",
+          "createdIfMissing"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "obsidian_write_note",
+      "title": "Obsidian Write Note",
+      "description": "Create or overwrite a note. With `section`, replaces just that heading/block/frontmatter section in place; nested headings need `Parent::Child` syntax — use `obsidian_get_note` with `format: \"document-map\"` to discover available targets. Whole-file writes fail with `file_exists` against an existing note unless `overwrite: true` — for in-place edits, prefer `obsidian_patch_note` (sections), `obsidian_append_to_note` (append), or `obsidian_replace_in_note` (find-and-replace). For heading sections, `content` is the new body; the heading line is preserved automatically.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "target": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "path",
+                    "description": "Address by vault-relative path."
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Vault-relative path including extension, e.g. \"Projects/foo.md\"."
+                  }
+                },
+                "required": [
+                  "type",
+                  "path"
+                ],
+                "description": "Address a note by its vault-relative path."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "active",
+                    "description": "Address the file currently open in Obsidian."
+                  }
+                },
+                "required": [
+                  "type"
+                ],
+                "description": "Address whichever file is currently active in the Obsidian UI."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "periodic",
+                    "description": "Address a daily/weekly/monthly/etc. periodic note."
+                  },
+                  "period": {
+                    "type": "string",
+                    "enum": [
+                      "daily",
+                      "weekly",
+                      "monthly",
+                      "quarterly",
+                      "yearly"
+                    ],
+                    "description": "Periodic note granularity."
+                  },
+                  "date": {
+                    "description": "ISO date YYYY-MM-DD. Omit for the current period.",
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  }
+                },
+                "required": [
+                  "type",
+                  "period"
+                ],
+                "description": "Address a periodic note (current or dated)."
+              }
+            ],
+            "description": "Where the note lives."
+          },
+          "content": {
+            "type": "string",
+            "description": "Body to write. For heading sections, the new section body — do not repeat the heading line (it stays in place). Markdown unless `contentType` is `json`."
+          },
+          "section": {
+            "description": "Optional sub-document target. When set, only this section is replaced; rest of the note is untouched.",
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "heading",
+                  "block",
+                  "frontmatter"
+                ],
+                "description": "Heading by name, block by reference, or frontmatter field by key."
+              },
+              "target": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Heading name (use \"::\" for nested headings), block reference without leading caret (e.g. \"2d9b4a\", not \"^2d9b4a\"), or frontmatter field name."
+              }
+            },
+            "required": [
+              "type",
+              "target"
+            ]
+          },
+          "contentType": {
+            "default": "markdown",
+            "description": "Content body format. Use \"json\" for typed frontmatter values or block-targeted table rows. JSON values must be valid JSON literals — strings need quoting (`\"\\\"draft\\\"\"`, not `\"draft\"`), and numbers/booleans/arrays/objects pass through as-is.",
+            "type": "string",
+            "enum": [
+              "markdown",
+              "json"
+            ]
+          },
+          "overwrite": {
+            "default": false,
+            "description": "Whole-file mode only (ignored when `section` is set). When `false` (default), the call fails with `file_exists` if the target note already exists — read it first and use `obsidian_patch_note` / `obsidian_append_to_note` / `obsidian_replace_in_note` for in-place edits, or retry with `overwrite: true` for a deliberate full replacement.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "target",
+          "content"
+        ]
+      },
+      "annotations": {
+        "idempotentHint": true,
+        "destructiveHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Resolved vault-relative path of the note that was written."
+          },
+          "sectionTargeted": {
+            "type": "boolean",
+            "description": "True when only a section was replaced; false for full-file writes."
+          },
+          "created": {
+            "type": "boolean",
+            "description": "True when the write created a new file. False when it replaced an existing one or targeted a section."
+          }
+        },
+        "required": [
+          "path",
+          "sectionTargeted",
+          "created"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "obsidian_append_to_note",
+      "title": "Obsidian Append To Note",
+      "description": "Append content to a note. Without `section`, the body is appended to the end of the file. With `section`, the content is appended to the end of that heading/block/frontmatter; nested headings need `Parent::Child` syntax — use `obsidian_get_note` with `format: \"document-map\"` to discover available targets. For block-reference targets, content is concatenated adjacent to the block line without inserting a separator — include a leading newline in `content` if you want one. Set `createTargetIfMissing` to bring the target section into existence rather than failing when it does not exist.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "target": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "path",
+                    "description": "Address by vault-relative path."
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Vault-relative path including extension, e.g. \"Projects/foo.md\"."
+                  }
+                },
+                "required": [
+                  "type",
+                  "path"
+                ],
+                "description": "Address a note by its vault-relative path."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "active",
+                    "description": "Address the file currently open in Obsidian."
+                  }
+                },
+                "required": [
+                  "type"
+                ],
+                "description": "Address whichever file is currently active in the Obsidian UI."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "periodic",
+                    "description": "Address a daily/weekly/monthly/etc. periodic note."
+                  },
+                  "period": {
+                    "type": "string",
+                    "enum": [
+                      "daily",
+                      "weekly",
+                      "monthly",
+                      "quarterly",
+                      "yearly"
+                    ],
+                    "description": "Periodic note granularity."
+                  },
+                  "date": {
+                    "description": "ISO date YYYY-MM-DD. Omit for the current period.",
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  }
+                },
+                "required": [
+                  "type",
+                  "period"
+                ],
+                "description": "Address a periodic note (current or dated)."
+              }
+            ],
+            "description": "Where the note lives."
+          },
+          "content": {
+            "type": "string",
+            "description": "Body to append. Markdown unless `contentType` is `json`."
+          },
+          "section": {
+            "description": "Optional sub-document target. When set, content is appended to that section instead of the file.",
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "heading",
+                  "block",
+                  "frontmatter"
+                ],
+                "description": "Heading by name, block by reference, or frontmatter field by key."
+              },
+              "target": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Heading name (use \"::\" for nested headings), block reference without leading caret (e.g. \"2d9b4a\", not \"^2d9b4a\"), or frontmatter field name."
+              }
+            },
+            "required": [
+              "type",
+              "target"
+            ]
+          },
+          "contentType": {
+            "default": "markdown",
+            "description": "Content body format. Use \"json\" for typed frontmatter values or block-targeted table rows. JSON values must be valid JSON literals — strings need quoting (`\"\\\"draft\\\"\"`, not `\"draft\"`), and numbers/booleans/arrays/objects pass through as-is.",
+            "type": "string",
+            "enum": [
+              "markdown",
+              "json"
+            ]
+          },
+          "createTargetIfMissing": {
+            "default": false,
+            "description": "When `section` is provided, create the section if it does not already exist (otherwise the call fails when the section is missing).",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "target",
+          "content"
+        ]
+      },
+      "annotations": {
+        "destructiveHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Resolved vault-relative path of the note."
+          },
+          "sectionTargeted": {
+            "type": "boolean",
+            "description": "True when the append went to a section; false for whole-file appends."
+          }
+        },
+        "required": [
+          "path",
+          "sectionTargeted"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "obsidian_patch_note",
+      "title": "Obsidian Patch Note",
+      "description": "Edit a heading, block reference, or frontmatter field in place — append to, prepend to, or replace the target's body. Use `obsidian_get_note` with `format: \"document-map\"` to discover available targets first; nested headings need `Parent::Child` syntax.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "target": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "path",
+                    "description": "Address by vault-relative path."
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Vault-relative path including extension, e.g. \"Projects/foo.md\"."
+                  }
+                },
+                "required": [
+                  "type",
+                  "path"
+                ],
+                "description": "Address a note by its vault-relative path."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "active",
+                    "description": "Address the file currently open in Obsidian."
+                  }
+                },
+                "required": [
+                  "type"
+                ],
+                "description": "Address whichever file is currently active in the Obsidian UI."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "periodic",
+                    "description": "Address a daily/weekly/monthly/etc. periodic note."
+                  },
+                  "period": {
+                    "type": "string",
+                    "enum": [
+                      "daily",
+                      "weekly",
+                      "monthly",
+                      "quarterly",
+                      "yearly"
+                    ],
+                    "description": "Periodic note granularity."
+                  },
+                  "date": {
+                    "description": "ISO date YYYY-MM-DD. Omit for the current period.",
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  }
+                },
+                "required": [
+                  "type",
+                  "period"
+                ],
+                "description": "Address a periodic note (current or dated)."
+              }
+            ],
+            "description": "Where the note lives."
+          },
+          "section": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "heading",
+                  "block",
+                  "frontmatter"
+                ],
+                "description": "Heading by name, block by reference, or frontmatter field by key."
+              },
+              "target": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Heading name (use \"::\" for nested headings), block reference without leading caret (e.g. \"2d9b4a\", not \"^2d9b4a\"), or frontmatter field name."
+              }
+            },
+            "required": [
+              "type",
+              "target"
+            ],
+            "description": "Which heading/block/frontmatter field to edit."
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "append",
+              "prepend",
+              "replace"
+            ],
+            "description": "How to apply `content` relative to the targeted section. `append` — at the end of the target's body (for headings, before the next sibling/parent heading; for frontmatter array fields, as a new array item). `prepend` — at the start. `replace` — swaps the target's body."
+          },
+          "content": {
+            "type": "string",
+            "description": "Body to insert/replace. Markdown unless `contentType` is `json`."
+          },
+          "contentType": {
+            "default": "markdown",
+            "description": "Content body format. Use \"json\" for typed frontmatter values or block-targeted table rows. JSON values must be valid JSON literals — strings need quoting (`\"\\\"draft\\\"\"`, not `\"draft\"`), and numbers/booleans/arrays/objects pass through as-is.",
+            "type": "string",
+            "enum": [
+              "markdown",
+              "json"
+            ]
+          },
+          "patchOptions": {
+            "description": "Optional flags: createTargetIfMissing, applyIfContentPreexists, trimTargetWhitespace.",
+            "type": "object",
+            "properties": {
+              "createTargetIfMissing": {
+                "default": false,
+                "description": "Create the target heading/block/frontmatter field if it does not exist.",
+                "type": "boolean"
+              },
+              "applyIfContentPreexists": {
+                "default": false,
+                "description": "Apply the patch even if matching content already exists in the target. Guards against double-applying.",
+                "type": "boolean"
+              },
+              "trimTargetWhitespace": {
+                "default": false,
+                "description": "Trim whitespace from the target section before applying the operation.",
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "required": [
+          "target",
+          "section",
+          "operation",
+          "content"
+        ]
+      },
+      "annotations": {
+        "destructiveHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Resolved vault-relative path of the note."
+          },
+          "section": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "heading",
+                  "block",
+                  "frontmatter"
+                ],
+                "description": "Heading by name, block by reference, or frontmatter field by key."
+              },
+              "target": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Heading name (use \"::\" for nested headings), block reference without leading caret (e.g. \"2d9b4a\", not \"^2d9b4a\"), or frontmatter field name."
+              }
+            },
+            "required": [
+              "type",
+              "target"
+            ],
+            "additionalProperties": false,
+            "description": "Echoed section locator."
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "append",
+              "prepend",
+              "replace"
+            ],
+            "description": "Echoed operation that was applied."
+          }
+        },
+        "required": [
+          "path",
+          "section",
+          "operation"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "obsidian_replace_in_note",
+      "title": "Obsidian Replace In Note",
+      "description": "Search and replace inside a single note, literally or by regex. Replacements run in array order, each over the previous one's output. Use for edits that don't fit `obsidian_patch_note`'s structural targets — e.g., body-wide find-and-replace.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "target": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "path",
+                    "description": "Address by vault-relative path."
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Vault-relative path including extension, e.g. \"Projects/foo.md\"."
+                  }
+                },
+                "required": [
+                  "type",
+                  "path"
+                ],
+                "description": "Address a note by its vault-relative path."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "active",
+                    "description": "Address the file currently open in Obsidian."
+                  }
+                },
+                "required": [
+                  "type"
+                ],
+                "description": "Address whichever file is currently active in the Obsidian UI."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "periodic",
+                    "description": "Address a daily/weekly/monthly/etc. periodic note."
+                  },
+                  "period": {
+                    "type": "string",
+                    "enum": [
+                      "daily",
+                      "weekly",
+                      "monthly",
+                      "quarterly",
+                      "yearly"
+                    ],
+                    "description": "Periodic note granularity."
+                  },
+                  "date": {
+                    "description": "ISO date YYYY-MM-DD. Omit for the current period.",
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  }
+                },
+                "required": [
+                  "type",
+                  "period"
+                ],
+                "description": "Address a periodic note (current or dated)."
+              }
+            ],
+            "description": "Where the note lives."
+          },
+          "replacements": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "search": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Substring or regex pattern to match."
+                },
+                "replace": {
+                  "type": "string",
+                  "description": "Replacement text. Empty string deletes matches."
+                },
+                "useRegex": {
+                  "default": false,
+                  "description": "Treat `search` as an ECMAScript regex pattern.",
+                  "type": "boolean"
+                },
+                "caseSensitive": {
+                  "default": true,
+                  "description": "When false, match case-insensitively.",
+                  "type": "boolean"
+                },
+                "wholeWord": {
+                  "default": false,
+                  "description": "Match only at word boundaries. Applies in both literal and regex modes — the search pattern is wrapped with `\\b…\\b`.",
+                  "type": "boolean"
+                },
+                "flexibleWhitespace": {
+                  "default": false,
+                  "description": "Treat any run of whitespace in `search` as matching any whitespace in the body. Literal mode only — has no effect when `useRegex: true` (express it directly with `\\s+`).",
+                  "type": "boolean"
+                },
+                "replaceAll": {
+                  "default": true,
+                  "description": "When false, only the first match is replaced.",
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "search",
+                "replace"
+              ],
+              "description": "A single search/replace operation."
+            },
+            "description": "Replacements to apply in array order over the evolving content."
+          }
+        },
+        "required": [
+          "target",
+          "replacements"
+        ]
+      },
+      "annotations": {
+        "destructiveHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Resolved vault-relative path of the note."
+          },
+          "totalReplacements": {
+            "type": "number",
+            "description": "Total number of substitutions applied across all replacement entries."
+          },
+          "perReplacement": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "search": {
+                  "type": "string",
+                  "description": "The search term/pattern that ran."
+                },
+                "count": {
+                  "type": "number",
+                  "description": "Number of matches replaced for this entry."
+                }
+              },
+              "required": [
+                "search",
+                "count"
+              ],
+              "additionalProperties": false,
+              "description": "Counts for one replacement entry."
+            },
+            "description": "Per-entry counts in the order replacements were applied."
+          }
+        },
+        "required": [
+          "path",
+          "totalReplacements",
+          "perReplacement"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "obsidian_manage_frontmatter",
+      "title": "Obsidian Manage Frontmatter",
+      "description": "Get, set, or delete a single frontmatter key on a note, atomically. `set` requires a JSON-typed `value` (string, number, boolean, array, or object).",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "operation": {
+            "type": "string",
+            "enum": [
+              "get",
+              "set",
+              "delete"
+            ],
+            "description": "Operation to perform on `key`. `get` — read the current value. `set` — write `value`, creating the key if absent. `delete` — remove the key from frontmatter."
+          },
+          "target": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "path",
+                    "description": "Address by vault-relative path."
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Vault-relative path including extension, e.g. \"Projects/foo.md\"."
+                  }
+                },
+                "required": [
+                  "type",
+                  "path"
+                ],
+                "description": "Address a note by its vault-relative path."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "active",
+                    "description": "Address the file currently open in Obsidian."
+                  }
+                },
+                "required": [
+                  "type"
+                ],
+                "description": "Address whichever file is currently active in the Obsidian UI."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "periodic",
+                    "description": "Address a daily/weekly/monthly/etc. periodic note."
+                  },
+                  "period": {
+                    "type": "string",
+                    "enum": [
+                      "daily",
+                      "weekly",
+                      "monthly",
+                      "quarterly",
+                      "yearly"
+                    ],
+                    "description": "Periodic note granularity."
+                  },
+                  "date": {
+                    "description": "ISO date YYYY-MM-DD. Omit for the current period.",
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  }
+                },
+                "required": [
+                  "type",
+                  "period"
+                ],
+                "description": "Address a periodic note (current or dated)."
+              }
+            ],
+            "description": "Where the note lives."
+          },
+          "key": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Frontmatter field name."
+          },
+          "value": {
+            "description": "Required when `operation` is `\"set\"`. JSON-typed value to write — strings, numbers, booleans, arrays, and objects all accepted."
+          }
+        },
+        "required": [
+          "operation",
+          "target",
+          "key"
+        ]
+      },
+      "annotations": {
+        "destructiveHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "result": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "const": "get",
+                    "description": "Echoed operation."
+                  },
+                  "path": {
+                    "type": "string",
+                    "description": "Resolved vault-relative path."
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "Echoed frontmatter key."
+                  },
+                  "exists": {
+                    "type": "boolean",
+                    "description": "True when the key was present in the frontmatter."
+                  },
+                  "value": {
+                    "description": "Current value, or `null` when the key is absent."
+                  }
+                },
+                "required": [
+                  "operation",
+                  "path",
+                  "key",
+                  "exists",
+                  "value"
+                ],
+                "additionalProperties": false,
+                "description": "Result for `get`."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "const": "set",
+                    "description": "Echoed operation."
+                  },
+                  "path": {
+                    "type": "string",
+                    "description": "Resolved vault-relative path."
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "Echoed frontmatter key."
+                  },
+                  "frontmatter": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {},
+                    "description": "Full frontmatter after the change."
+                  }
+                },
+                "required": [
+                  "operation",
+                  "path",
+                  "key",
+                  "frontmatter"
+                ],
+                "additionalProperties": false,
+                "description": "Result for `set`."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "const": "delete",
+                    "description": "Echoed operation."
+                  },
+                  "path": {
+                    "type": "string",
+                    "description": "Resolved vault-relative path."
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "Echoed frontmatter key."
+                  },
+                  "frontmatter": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {},
+                    "description": "Full frontmatter after the change."
+                  }
+                },
+                "required": [
+                  "operation",
+                  "path",
+                  "key",
+                  "frontmatter"
+                ],
+                "additionalProperties": false,
+                "description": "Result for `delete`."
+              }
+            ],
+            "description": "Operation-discriminated result payload."
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "obsidian_manage_tags",
+      "title": "Obsidian Manage Tags",
+      "description": "Add, remove, or list a note's tags. The server reconciles both representations — frontmatter `tags:` array and inline `#tag` syntax — so an `add` ensures the tag is present in the requested location(s), and a `remove` strips it. Inline `#tag` occurrences inside fenced code blocks are intentionally left alone. Inline-location additions append the new tag at the end of the file. `list` ignores the input `tags` array.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "target": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "path",
+                    "description": "Address by vault-relative path."
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Vault-relative path including extension, e.g. \"Projects/foo.md\"."
+                  }
+                },
+                "required": [
+                  "type",
+                  "path"
+                ],
+                "description": "Address a note by its vault-relative path."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "active",
+                    "description": "Address the file currently open in Obsidian."
+                  }
+                },
+                "required": [
+                  "type"
+                ],
+                "description": "Address whichever file is currently active in the Obsidian UI."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "periodic",
+                    "description": "Address a daily/weekly/monthly/etc. periodic note."
+                  },
+                  "period": {
+                    "type": "string",
+                    "enum": [
+                      "daily",
+                      "weekly",
+                      "monthly",
+                      "quarterly",
+                      "yearly"
+                    ],
+                    "description": "Periodic note granularity."
+                  },
+                  "date": {
+                    "description": "ISO date YYYY-MM-DD. Omit for the current period.",
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  }
+                },
+                "required": [
+                  "type",
+                  "period"
+                ],
+                "description": "Address a periodic note (current or dated)."
+              }
+            ],
+            "description": "Where the note lives."
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "add",
+              "remove",
+              "list"
+            ],
+            "description": "`add` and `remove` mutate the note; `list` reads the current tag set."
+          },
+          "tags": {
+            "description": "Tags to add or remove. Omit the leading `#`. Required for add/remove.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "location": {
+            "default": "both",
+            "description": "Where to apply the change. Default `both` reconciles both representations.",
+            "type": "string",
+            "enum": [
+              "frontmatter",
+              "inline",
+              "both"
+            ]
+          }
+        },
+        "required": [
+          "target",
+          "operation"
+        ]
+      },
+      "annotations": {
+        "destructiveHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "result": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "const": "list",
+                    "description": "Echoed operation."
+                  },
+                  "path": {
+                    "type": "string",
+                    "description": "Resolved vault-relative path."
+                  },
+                  "tags": {
+                    "type": "object",
+                    "properties": {
+                      "frontmatter": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Tags from frontmatter `tags:` array."
+                      },
+                      "inline": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Tags found in inline `#tag` syntax."
+                      },
+                      "all": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Deduplicated union of frontmatter and inline tags."
+                      }
+                    },
+                    "required": [
+                      "frontmatter",
+                      "inline",
+                      "all"
+                    ],
+                    "additionalProperties": false,
+                    "description": "Tags split by location plus the deduplicated union."
+                  }
+                },
+                "required": [
+                  "operation",
+                  "path",
+                  "tags"
+                ],
+                "additionalProperties": false,
+                "description": "Result for `list`."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "const": "add",
+                    "description": "Echoed operation."
+                  },
+                  "path": {
+                    "type": "string",
+                    "description": "Resolved vault-relative path."
+                  },
+                  "applied": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Tags actually changed by this call."
+                  },
+                  "skipped": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Tags already present at the targeted location(s)."
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "All tags on the note after the change."
+                  }
+                },
+                "required": [
+                  "operation",
+                  "path",
+                  "applied",
+                  "skipped",
+                  "tags"
+                ],
+                "additionalProperties": false,
+                "description": "Result for `add`."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "const": "remove",
+                    "description": "Echoed operation."
+                  },
+                  "path": {
+                    "type": "string",
+                    "description": "Resolved vault-relative path."
+                  },
+                  "applied": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Tags actually changed by this call."
+                  },
+                  "skipped": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Tags absent from the targeted location(s)."
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "All tags on the note after the change."
+                  }
+                },
+                "required": [
+                  "operation",
+                  "path",
+                  "applied",
+                  "skipped",
+                  "tags"
+                ],
+                "additionalProperties": false,
+                "description": "Result for `remove`."
+              }
+            ],
+            "description": "Operation-discriminated result payload."
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "obsidian_delete_note",
+      "title": "Obsidian Delete Note",
+      "description": "Permanently delete a note from the vault. Confirms with the user before deleting when the client supports interactive confirmation. Recovery requires the local trash in Obsidian — there is no API-level undo.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "target": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "path",
+                    "description": "Address by vault-relative path."
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Vault-relative path including extension, e.g. \"Projects/foo.md\"."
+                  }
+                },
+                "required": [
+                  "type",
+                  "path"
+                ],
+                "description": "Address a note by its vault-relative path."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "active",
+                    "description": "Address the file currently open in Obsidian."
+                  }
+                },
+                "required": [
+                  "type"
+                ],
+                "description": "Address whichever file is currently active in the Obsidian UI."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "periodic",
+                    "description": "Address a daily/weekly/monthly/etc. periodic note."
+                  },
+                  "period": {
+                    "type": "string",
+                    "enum": [
+                      "daily",
+                      "weekly",
+                      "monthly",
+                      "quarterly",
+                      "yearly"
+                    ],
+                    "description": "Periodic note granularity."
+                  },
+                  "date": {
+                    "description": "ISO date YYYY-MM-DD. Omit for the current period.",
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  }
+                },
+                "required": [
+                  "type",
+                  "period"
+                ],
+                "description": "Address a periodic note (current or dated)."
+              }
+            ],
+            "description": "Which note to delete."
+          }
+        },
+        "required": [
+          "target"
+        ]
+      },
+      "annotations": {
+        "destructiveHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Resolved vault-relative path of the deleted note."
+          },
+          "deleted": {
+            "type": "boolean",
+            "description": "True when the file was removed."
+          }
+        },
+        "required": [
+          "path",
+          "deleted"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ],
+  "measuredAt": "2026-09-03T21:03:13.548Z",
+  "serverName": "@cyanheads/mcp-ts-core",
+  "serverVersion": "0.8.18",
+  "launchCommand": "npx -y obsidian-mcp-server",
+  "envVarNames": [
+    "OBSIDIAN_API_KEY"
+  ],
+  "serverInstructions": null,
+  "isolation": {
+    "docker": true,
+    "image": "public.ecr.aws/docker/library/node:22-slim",
+    "network": "bridge",
+    "note": "network enabled for package fetch; clean FS, no host credentials"
+  },
+  "timeoutMs": 240000
+}

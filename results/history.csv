@@ -163,9 +163,15 @@ date,server,tokens,toolCount,status,isolation
 2026-09-02,puppeteer,540,7,measured,docker
 2026-09-02,redis,9246,53,measured,docker
 2026-09-02,searxng,1537,4,measured,docker
+2026-09-03,appium-mcp,10267,31,measured,docker
 2026-09-03,arxiv,3960,19,measured,docker
+2026-09-03,bitbucket-mcp,6156,47,measured,docker
 2026-09-03,blender,6928,28,measured,docker
 2026-09-03,bright-data,978,5,measured,docker
+2026-09-03,chrome-devtools,5717,29,measured,docker
+2026-09-03,clinicaltrialsgov,5134,7,measured,docker
+2026-09-03,codebase-memory-mcp,5258,15,measured,docker
+2026-09-03,comfyui-mcp,50640,41,measured,docker
 2026-09-03,deepwiki,359,3,measured,docker
 2026-09-03,figma-context,946,2,measured,docker
 2026-09-03,firecrawl,9561,27,measured,docker
@@ -179,6 +185,8 @@ date,server,tokens,toolCount,status,isolation
 2026-09-03,mongodb,7926,27,measured,docker
 2026-09-03,netlify,2831,9,measured,docker
 2026-09-03,obsidian,2062,15,measured,docker
+2026-09-03,obsidian-rest,10173,12,measured,docker
+2026-09-03,octocode,13552,14,measured,docker
 2026-09-03,postgres,32,1,measured,docker
 2026-09-03,pulumi,2768,12,measured,docker
 2026-09-03,qdrant,188,2,measured,docker
