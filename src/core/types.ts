@@ -4,6 +4,16 @@ export type MeasurementStatus =
   | 'auth-required'
   | 'startup-failure'
   | 'timeout'
+  /**
+   * This harness cannot run the server, for a reason that is a property of the
+   * harness rather than of the software: an OS or architecture the package does
+   * not ship for, or a backing service the isolation deliberately does not
+   * provide. Distinct from `startup-failure`, which asserts the server did not
+   * come up — a claim about someone else's code that these entries do not
+   * support. Only ever set when the entry declares the reason AND the failure's
+   * own text corroborates it (see `notApplicable` in report.ts).
+   */
+  | 'not-applicable'
   | 'dynamic'
   | 'remote-auth-wall';
 

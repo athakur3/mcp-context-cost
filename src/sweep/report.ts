@@ -39,6 +39,19 @@ export interface ServerEntry {
    * before ever reaching tools/list. See docker.ts `dummyEnvValues`.
    */
   envValues?: Record<string, string>;
+  /**
+   * Declares that a failure of this entry is this harness's limitation, not the
+   * server's — an OS or architecture the package does not ship for, or a
+   * backing service the isolation deliberately does not provide.
+   *
+   * `evidence` is what keeps the declaration honest. The status only becomes
+   * `not-applicable` when the failure's own text contains that substring, so an
+   * annotation left behind after upstream changes cannot quietly absorb a real
+   * breakage: the server fails a different way, the evidence stops matching,
+   * and it is published as the failure it actually is. The entry is still
+   * attempted every sweep, so the day it starts working it simply measures.
+   */
+  notApplicable?: { reason: string; evidence: string };
 }
 
 export interface Row {

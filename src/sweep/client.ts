@@ -147,7 +147,16 @@ export class McpStdioClient {
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
         this.pending.delete(id);
-        reject(new Error(`timeout after ${timeoutMs}ms waiting for ${method}`));
+        // A process that is killed mid-hang never reaches the exit handler, so
+        // without this a timed-out record carries no evidence at all — it says
+        // only that we waited. What the server managed to print before it
+        // stopped answering is usually the whole explanation.
+        const tail = evidenceTail(this.stderrTail);
+        reject(
+          new Error(
+            `timeout after ${timeoutMs}ms waiting for ${method}${tail ? `; stderr tail: ${tail}` : ''}`,
+          ),
+        );
       }, timeoutMs);
       this.pending.set(id, {
         resolve: (v) => {

@@ -87,6 +87,7 @@ Every candidate server appears in published results with exactly one status:
 | `auth-required` | won't start or list tools without real credentials |
 | `startup-failure` | crashed or missing dependencies (stderr tail recorded) |
 | `timeout` | no response within the configured timeout (recorded per measurement) |
+| `not-applicable` | this harness cannot run it — an OS or architecture the package does not ship for, or a backing service the isolation deliberately does not provide |
 | `remote-auth-wall` | OAuth-gated remote server; listed, not measured |
 | `not-yet-run` | candidate not yet swept (appears in interim leaderboards only) |
 
@@ -103,6 +104,20 @@ If the retry succeeds, the successful measurement is the published one. If it fa
 way, the note says which retry it survived — so "broken upstream" and "broken here" read
 differently without re-running the sweep. A `timeout` note always names the widest budget
 tried, not the first one that failed.
+
+**`not-applicable` is declared, and then corroborated.** Some entries cannot run here for a
+reason that is a property of this harness rather than of the software: a package that ships
+no build for the isolation's OS or architecture, or a server that connects to a backing
+service the isolation deliberately does not provide. Publishing those as `startup-failure`
+would assert that the server is broken, which the run did not establish.
+
+So the entry declares the reason in `servers.yaml`, together with the text its failure is
+expected to contain — and the status is only `not-applicable` when the failure's own words
+contain it. An annotation left behind after upstream changes therefore cannot absorb a real
+breakage: the server fails some other way, the evidence stops matching, and it is published
+as the failure it actually is. Declared entries are still attempted every sweep, so the day
+one starts working it simply measures. Neither retry above applies — a package that will not
+install for this platform will not install on the second attempt either.
 
 **A whole sweep is checked before any of it is published.** Both retries above re-run
 through the same harness, so neither can see the failure mode that isn't about any

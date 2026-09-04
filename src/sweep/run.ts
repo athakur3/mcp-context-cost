@@ -24,10 +24,30 @@ import type { Measurement } from '../core/types.js';
  * exists because a truncated message was being filed as a broken server.
  */
 export function classifyFailure(msg: string): 'timeout' | 'auth-required' | 'startup-failure' {
-  if (msg.includes('timeout')) return 'timeout';
+  // Matched against this harness's own phrasing, not the bare word: these
+  // messages carry the server's stderr, and a server that prints "connection
+  // timeout" before dying did not time out — it exited, and saying otherwise
+  // blames the clock for a breakage.
+  if (/timeout after \d+ms waiting for/.test(msg)) return 'timeout';
   return /auth|unauthorized|401|forbidden|credential|api.?key|token/i.test(msg)
     ? 'auth-required'
     : 'startup-failure';
+}
+
+/**
+ * The declared reason, when this failure is the one the entry warned about.
+ *
+ * Corroboration is the whole point: an entry may declare that this harness
+ * cannot run it, but only the failure's own words can confirm that *this*
+ * failure is that one. A macOS-only package that starts failing for some new
+ * reason stops matching, and is published as the failure it actually is.
+ */
+export function notApplicableReason(
+  declared: { reason: string; evidence: string } | undefined,
+  msg: string,
+): string | null {
+  if (!declared?.evidence) return null;
+  return msg.toLowerCase().includes(declared.evidence.toLowerCase()) ? declared.reason : null;
 }
 
 function arg(name: string): string | undefined {
@@ -47,6 +67,8 @@ export interface MeasureOptions {
   dummyEnvValues?: Record<string, string>;
   /** Install `git` in the container before launch (docker mode) — see docker.ts. */
   needsGit?: boolean;
+  /** Declared harness limitation for this entry — see `notApplicable` in report.ts. */
+  notApplicable?: { reason: string; evidence: string };
   /**
    * Exact argv, when the caller already has it (client configs store command and
    * args separately). Avoids re-splitting a joined string on spaces, which would
@@ -192,10 +214,13 @@ export async function measureServer(
       if (dockerWrapped && isDockerRunFailure(msg)) {
         throw new DockerHarnessFault(`docker could not run the container for ${name}: ${msg.slice(0, 400)}`);
       }
-      r = failedMeasurement(classifyFailure(msg), {
+      const declared = notApplicableReason(opts.notApplicable, msg);
+      r = failedMeasurement(declared ? 'not-applicable' : classifyFailure(msg), {
         serverName: name,
         launchCommand: command,
-        notes: msg.slice(0, 700),
+        // The declared reason leads, but the raw failure stays behind it: the
+        // record has to remain checkable against the run that produced it.
+        notes: (declared ? `${declared} — ${msg}` : msg).slice(0, 700),
       });
     }
     r.isolation = isolation;

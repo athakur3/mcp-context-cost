@@ -755,6 +755,9 @@ servers:
     repo: https://github.com/DeusData/codebase-memory-mcp
   - name: kubernetes-containers
     command: npx -y kubernetes-mcp-server
+    notApplicable:
+      reason: needs a kubeconfig with a cluster context; the isolation deliberately has neither
+      evidence: no current-context is set
     package: kubernetes-mcp-server
     env: []
     metric: 8556
@@ -871,6 +874,9 @@ servers:
     repo: https://github.com/githits-com/githits-cli
   - name: windows-mcp
     command: uvx windows-mcp
+    notApplicable:
+      reason: Windows only — it depends on pywin32, which publishes no Linux wheels
+      evidence: no wheels with a matching platform tag
     package: windows-mcp (PyPI)
     env: []
     metric: 2818
@@ -903,6 +909,9 @@ servers:
     repo: https://github.com/HarimxChoi/google-surf-mcp
   - name: safari-mcp
     command: npx -y safari-mcp
+    notApplicable:
+      reason: macOS only — the package declares os darwin and npm refuses to install it on Linux
+      evidence: EBADPLATFORM
     package: safari-mcp
     env: []
     metric: 1772

@@ -108,6 +108,7 @@ async function worker() {
         dummyEnv: e.env ?? [],
         dummyEnvValues: e.envValues,
         needsGit: e.needsGit,
+        notApplicable: e.notApplicable,
       });
     } catch (err) {
       if (!(err instanceof DockerHarnessFault)) throw err;
