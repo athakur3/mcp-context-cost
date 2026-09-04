@@ -7,6 +7,46 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+## 0.11.2 — 2026-09-04
+
+A full-codebase review found the same failure in six more places: a number compared against a
+line without establishing that the number was whole. Two were live in published files; four
+were gates that passed.
+
+- **The staleness gate now guards every published Claude figure.** README carried github at
+  **54,622** from the measurement and, three lines below, **54,422** from a divergence row
+  computed against bytes that no longer exist — `leaderboard.md` had already printed `—` for
+  that row while `published-stats.ts` read the same run raw, the rule guarding one number and
+  not its neighbour ten lines apart in one function. The badge column now comes from the
+  measurement, the Claude column carries the em-dash the leaderboard already uses, and the
+  ranges METHODOLOGY quotes are computed over current rows only, naming whichever shows the
+  field-selection effect most rather than a server hardcoded into prose. The dashboard had the
+  same class three times — Claude costs for four servers whose captures had moved, hardcoded
+  prose contradicting its own table, and a count of sweeps labelled as days (`+200 / 3d` for
+  an 18-day span) — and now shares the canonical gate instead of a second copy of the rule.
+- **`--max-increase` no longer passes when a server was added and could not be measured.** Its
+  cost is unknown, not zero, so the total it is subtracted from does not contain it; the
+  comparison is now inexact and the gate refuses. This was the ordinary CI case — a server
+  added in a PR has no credential on the runner — and it cleared even a zero-token allowance.
+- **A baseline that cannot be read is never "no change".** `parseBaselineReport` shape-checked
+  each config's `source` but not its `totalTokens`, so a hand-trimmed or `jq`-filtered report
+  produced `after − undefined === NaN`; `typeof NaN` is `'number'`, so the gate reported an
+  increase of **0** and passed. The baseline is refused at the door, and the gate now tests
+  `Number.isFinite` rather than `typeof`.
+- **`--budget` no longer passes on a total that is missing a server.** A server that fails to
+  start contributes 0, so the stack read lighter than it is and the budget passed — on exactly
+  the pull request the front page says this gate catches. It now fails when any audited server
+  produced no number, naming which and saying which way the total is wrong. The server-level
+  gate already refused this; the two now agree.
+- **Movement attribution joins the capture in force, not the date.** Vectors are deduped by
+  capture and keep the first date one was seen; the previous side of a change is the last row
+  of the previous plateau. Those coincide only when a cost was measured exactly once, so with
+  weekly sweeps the report almost always printed "only one of the two captures is on record"
+  while holding both. It now resolves each side to the newest capture recorded on or before
+  that day, prefers the one whose total is the number history recorded for it (a same-day
+  re-sweep can leave two under one date), and still refuses when neither agrees — rather than
+  attributing a delta to the wrong capture and publishing the mismatch as framing bytes.
+
 ## 0.11.1 — 2026-09-04
 
 A review of 0.11.0 found three places where the new code stated something it had not

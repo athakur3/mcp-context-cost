@@ -232,6 +232,13 @@ export interface AuditReport {
     worstTotal: number;
     worstSource: string;
     over: boolean;
+    /**
+     * Servers in the audited configs with no number, when there are any. Their
+     * cost is missing from `worstTotal`, so the budget could not be checked
+     * against the whole stack and the verdict fails rather than passing on a
+     * total that understates by an unknown amount.
+     */
+    unestablished?: string[];
     /** Present only when over budget: the arithmetic of getting back under it. */
     fit?: BudgetFit;
   };
@@ -556,12 +563,23 @@ export function buildReport(
     // The worst config is the gate: passing because your *lightest* client fits
     // would be a green check on a session you don't run.
     const worst = results[0];
+    // A total is only a ceiling to compare against if it is the whole cost. A
+    // server that failed to start contributes 0, so the stack reads lighter
+    // than it is and the budget passes on a number that is missing a server —
+    // exactly the PR the README says this gate catches. The server-level gate
+    // (core/server-diff.ts) already refuses this; so does this one now.
+    const unestablished = results.flatMap((c) =>
+      c.skipped.filter((s) => s.status !== 'remote-not-measurable').map((s) => `${c.source}: ${s.name} (${s.status})`),
+    );
     const over = (worst?.totalTokens ?? 0) > opts.budget;
     report.budget = {
       limit: opts.budget,
       worstTotal: worst?.totalTokens ?? 0,
       worstSource: worst?.source ?? '(none)',
-      over,
+      over: over || unestablished.length > 0,
+      // Named so the reader knows which way the number is wrong: the total
+      // understates by however much these cost, which nobody knows.
+      unestablished: unestablished.length ? unestablished : undefined,
       fit: over && worst ? planBudgetFit(worst, opts.budget) : undefined,
     };
   }
@@ -1027,6 +1045,15 @@ export function formatReport(report: AuditReport): string {
     if (!b.over) {
       const headroom = b.limit - b.worstTotal;
       lines.push(`budget ok: ${n(b.worstTotal)} ≤ ${n(b.limit)} — ${n(headroom)} to spare`);
+    } else if (b.unestablished && b.worstTotal <= b.limit) {
+      // Under the line on what was measured, but not everything was: say which
+      // way the number is wrong rather than passing on it.
+      lines.push(
+        `BUDGET FAIL: ${n(b.worstTotal)} ≤ ${n(b.limit)}, but the budget could not be checked against the ` +
+          `whole stack — ${b.unestablished.length} server(s) produced no number, so this total understates ` +
+          `by however much they cost:`,
+      );
+      for (const u of b.unestablished) lines.push(`  ${u}`);
     } else {
       lines.push(`BUDGET FAIL: ${n(b.worstTotal)} > ${n(b.limit)} (${b.worstSource})`);
       const fit = b.fit;

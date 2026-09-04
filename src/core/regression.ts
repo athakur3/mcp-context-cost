@@ -281,12 +281,38 @@ export function latestChange(
   if (deltaTokens === 0 && deltaTools === 0) return null;
   const deltaPct = from.tokens > 0 ? (deltaTokens / from.tokens) * 100 : 0;
 
-  // Attribution needs both sides on record, matched by date. A vector file that
-  // only holds the newer capture explains nothing about how the server got there.
+  // Attribution needs both sides on record. Matched by *cost as of that date*,
+  // not by date equality: vectors are deduped by capture and keep the first
+  // date a capture was seen, while `from` is the last row of the previous
+  // plateau — so the two dates coincide only when the previous cost was
+  // measured exactly once. With weekly sweeps and less frequent releases they
+  // almost never do, and a date-equality join therefore reported "only one of
+  // the two captures is on record" while holding both. The vector in force on a
+  // given day is the newest one recorded on or before it.
   let attribution: ToolAttribution | null = null;
-  const fromVec = vectors?.entries.find((e) => e.date === from.date);
-  const toVec = vectors?.entries.find((e) => e.date === to.date);
-  if (fromVec && toVec) attribution = attribute(fromVec, toVec, deltaTokens);
+  const inForceOn = (date: string, tokensThatDay: number): ToolVectorEntry | undefined => {
+    const upto = (vectors?.entries ?? []).filter((e) => e.date <= date);
+    // A same-day re-sweep replaces that day's history row but *appends* a
+    // capture, so one date can carry two. Only one of them is the one the row
+    // describes: prefer the capture whose total is the number history recorded.
+    const agreeing = upto.filter((e) => e.totalTokens === tokensThatDay);
+    const pool = agreeing.length > 0 ? agreeing : upto;
+    return pool.reduce<ToolVectorEntry | undefined>((best, e) => (!best || e.date >= best.date ? e : best), undefined);
+  };
+  const fromVec = inForceOn(from.date, from.tokens);
+  const toVec = inForceOn(to.date, to.tokens);
+  // A vector only explains the row it agrees with. If the totals disagree the
+  // file does not cover this change — say so rather than attributing a delta
+  // to the wrong capture and publishing the mismatch as framing bytes.
+  if (
+    fromVec &&
+    toVec &&
+    fromVec.canonicalSha256 !== toVec.canonicalSha256 &&
+    fromVec.totalTokens === from.tokens &&
+    toVec.totalTokens === to.tokens
+  ) {
+    attribution = attribute(fromVec, toVec, deltaTokens);
+  }
 
   return {
     server,

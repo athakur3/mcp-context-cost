@@ -103,6 +103,17 @@ export function parseBaselineReport(text: string): { report: AuditReport | null;
     if (!c || typeof c !== 'object' || typeof (c as AuditConfigResult).source !== 'string') {
       return { report: null, problem: 'baseline has a config entry without a source path' };
     }
+    // The number the diff subtracts from. Unchecked, a hand-trimmed or
+    // jq-filtered baseline yields `after - undefined === NaN`, and `typeof NaN`
+    // is 'number' — so the gate reported an increase of 0 and passed. A
+    // baseline that cannot be read is never "no change".
+    const total = (c as AuditConfigResult).totalTokens;
+    if (typeof total !== 'number' || !Number.isFinite(total)) {
+      return {
+        report: null,
+        problem: `baseline config ${(c as AuditConfigResult).source} has no usable totalTokens — is it the output of \`audit --json\`?`,
+      };
+    }
   }
   return { report: doc as AuditReport };
 }
@@ -157,11 +168,24 @@ export function diffConfig(before: AuditConfigResult | null, after: AuditConfigR
       continue;
     }
     if (!bs && as) {
-      servers.push(
-        as.tokens === null
-          ? { name, kind: 'added', before: null, after: null, delta: null, note: 'added but not measurable — its cost is unknown, not zero' }
-          : { name, kind: 'added', before: null, after: as.tokens, delta: as.tokens },
-      );
+      if (as.tokens === null) {
+        // Unknown, not zero — so the total this diff subtracts from does not
+        // contain it and the increase understates. Marking the config inexact
+        // is what stops `--max-increase` from passing: a server added in a PR
+        // and unmeasurable in CI (no credential — the ordinary case) otherwise
+        // reads as +0 and clears even a zero-token allowance.
+        exact = false;
+        servers.push({
+          name,
+          kind: 'added',
+          before: null,
+          after: null,
+          delta: null,
+          note: 'added but not measurable — its cost is unknown, not zero',
+        });
+      } else {
+        servers.push({ name, kind: 'added', before: null, after: as.tokens, delta: as.tokens });
+      }
       continue;
     }
     if (!bs || !as) continue;
@@ -419,14 +443,20 @@ export function evaluateIncreaseGate(diff: AuditDiff, limit: number): IncreaseGa
     if (c.matchedBy === 'unmatched') {
       reasons.push(`${c.source}: no baseline to check its ${n(c.afterTotal)} tokens against`);
     } else if (!c.exact) {
-      reasons.push(`${c.source}: a server changed measured-ness, so the change could not be established exactly`);
+      reasons.push(
+        `${c.source}: a server's cost is not established on both sides, so the change could not be established exactly`,
+      );
     }
   }
   for (const d of diff.droppedConfigs) {
     reasons.push(`${d.source}: covered by the baseline and not found in this run`);
   }
 
-  const increase = diff.worstIncrease?.delta ?? (diff.configs.some((c) => typeof c.delta === 'number') ? 0 : null);
+  // `Number.isFinite`, not `typeof === 'number'`: NaN passes the latter and
+  // then compares false against every limit, which is a silent pass.
+  const anyDelta = diff.configs.some((c) => Number.isFinite(c.delta));
+  const worst = diff.worstIncrease?.delta;
+  const increase = Number.isFinite(worst) ? (worst as number) : anyDelta ? 0 : null;
   if (reasons.length === 0 && increase !== null && increase > limit) {
     reasons.push(`${diff.worstIncrease!.source}: +${n(increase)} tokens per request, over the ${n(limit)} allowed`);
   }
