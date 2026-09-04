@@ -220,7 +220,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-02T07:53:52.133Z",
+  "measuredAt": "2026-09-04T05:45:28.030Z",
   "serverName": "ihor-sokoliuk/mcp-searxng",
   "serverVersion": "2.1.0",
   "launchCommand": "npx -y mcp-searxng",
@@ -234,5 +234,5 @@
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 240000
+  "timeoutMs": 480000
 }

@@ -3,39 +3,44 @@
   "provider": "tiktoken",
   "encoding": "o200k_base",
   "status": "measured",
-  "totalTokens": 694,
+  "totalTokens": 632,
   "toolCount": 3,
   "tools": [
     {
       "name": "list_databases",
-      "tokens": 79,
+      "tokens": 78,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 9
+      "inputSchemaTokens": 14
     },
     {
       "name": "list_tables",
-      "tokens": 413,
-      "descriptionTokens": 227,
-      "inputSchemaTokens": 109
+      "tokens": 353,
+      "descriptionTokens": 63,
+      "inputSchemaTokens": 230
     },
     {
       "name": "run_query",
-      "tokens": 203,
+      "tokens": 201,
       "descriptionTokens": 121,
-      "inputSchemaTokens": 19
+      "inputSchemaTokens": 24
     }
   ],
-  "canonicalSha256": "1f68f3e76c71c7c8c4c6cf537ed857231daacdf9cd6ebb95e30ac482cc218b89",
+  "canonicalSha256": "6f42fcefaf49e720fe8ec5acf8dafc7ae6065bf541957572b6a6abbe61f111d4",
   "rawToolsCapture": [
     {
-      "name": "list_databases",
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      },
       "description": "List available ClickHouse databases",
       "inputSchema": {
         "properties": {},
-        "type": "object"
+        "type": "object",
+        "additionalProperties": false
       },
+      "name": "list_databases",
       "outputSchema": {
-        "description": "Generic wrapper for non-object return types.",
         "properties": {
           "result": {
             "type": "string"
@@ -47,19 +52,20 @@
         "type": "object",
         "x-fastmcp-wrap-result": true
       },
-      "_meta": {
-        "_fastmcp": {
-          "tags": []
-        }
-      }
+      "title": "List Databases"
     },
     {
-      "name": "list_tables",
-      "description": "List available ClickHouse tables in a database, including schema, comment,\nrow count, and column count.\n\nIntegers outside [-9007199254740991, 9007199254740991] in table metadata are\nreturned as decimal strings.\n\nArgs:\n    database: The database to list tables from\n    like: Optional LIKE pattern to filter table names\n    not_like: Optional NOT LIKE pattern to exclude table names\n    page_token: Token for pagination, obtained from a previous call\n    page_size: Number of tables to return per page (default: 50, must be greater than 0)\n    include_detailed_columns: Whether to include detailed column metadata (default: True).\n        When False, the columns array will be empty but create_table_query still contains\n        all column information. This reduces payload size for large schemas.\n\nReturns:\n    A JSON-encoded string of an object containing:\n    - tables: List of table information (as dictionaries)\n    - next_page_token: Token for the next page, or None if no more pages\n    - total_tables: Total number of tables matching the filters",
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      },
+      "description": "List available ClickHouse tables in a database, including schema, comment,\nrow count, and column count.\n\nIntegers outside [-9007199254740991, 9007199254740991] in table metadata are\nreturned as decimal strings.\nPagination tokens are single-use and retained for up to one hour.",
       "inputSchema": {
         "properties": {
           "database": {
-            "type": "string"
+            "type": "string",
+            "description": "The database to list tables from"
           },
           "like": {
             "anyOf": [
@@ -70,7 +76,8 @@
                 "type": "null"
               }
             ],
-            "default": null
+            "default": null,
+            "description": "Optional LIKE pattern to filter table names"
           },
           "not_like": {
             "anyOf": [
@@ -81,7 +88,8 @@
                 "type": "null"
               }
             ],
-            "default": null
+            "default": null,
+            "description": "Optional NOT LIKE pattern to exclude table names"
           },
           "page_token": {
             "anyOf": [
@@ -92,25 +100,29 @@
                 "type": "null"
               }
             ],
-            "default": null
+            "default": null,
+            "description": "Single-use token from a previous call, retained for up to one hour"
           },
           "page_size": {
             "default": 50,
             "exclusiveMinimum": 0,
-            "type": "integer"
+            "type": "integer",
+            "description": "Number of tables to return per page (default: 50, must be greater than 0)"
           },
           "include_detailed_columns": {
             "default": true,
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether to include detailed column metadata (default: True).\nWhen False, the columns array will be empty but create_table_query still contains\nall column information. This reduces payload size for large schemas."
           }
         },
         "required": [
           "database"
         ],
-        "type": "object"
+        "type": "object",
+        "additionalProperties": false
       },
+      "name": "list_tables",
       "outputSchema": {
-        "description": "Generic wrapper for non-object return types.",
         "properties": {
           "result": {
             "type": "string"
@@ -122,14 +134,14 @@
         "type": "object",
         "x-fastmcp-wrap-result": true
       },
-      "_meta": {
-        "_fastmcp": {
-          "tags": []
-        }
-      }
+      "title": "List Tables"
     },
     {
-      "name": "run_query",
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      },
       "description": "Execute SQL queries in ClickHouse. Queries run in read-only mode by default. Set CLICKHOUSE_ALLOW_WRITE_ACCESS=true to allow DDL and DML operations. Set CLICKHOUSE_ALLOW_DROP=true to additionally allow destructive operations (DROP, TRUNCATE, DELETE, UPDATE, REPLACE TABLE/PARTITION, CREATE OR REPLACE, CLEAR COLUMN/INDEX/PROJECTION, DETACH PERMANENTLY). That gate is a best-effort accident guard, not a security boundary. Integers outside [-9007199254740991, 9007199254740991] are returned as decimal strings.",
       "inputSchema": {
         "properties": {
@@ -140,10 +152,11 @@
         "required": [
           "query"
         ],
-        "type": "object"
+        "type": "object",
+        "additionalProperties": false
       },
+      "name": "run_query",
       "outputSchema": {
-        "description": "Generic wrapper for non-object return types.",
         "properties": {
           "result": {
             "type": "string"
@@ -155,16 +168,12 @@
         "type": "object",
         "x-fastmcp-wrap-result": true
       },
-      "_meta": {
-        "_fastmcp": {
-          "tags": []
-        }
-      }
+      "title": "Run Query"
     }
   ],
-  "measuredAt": "2026-09-02T07:51:36.632Z",
+  "measuredAt": "2026-09-04T05:19:16.946Z",
   "serverName": "mcp-clickhouse",
-  "serverVersion": "2.14.7",
+  "serverVersion": "0.6.0",
   "launchCommand": "uvx mcp-clickhouse",
   "envVarNames": [
     "CLICKHOUSE_HOST",

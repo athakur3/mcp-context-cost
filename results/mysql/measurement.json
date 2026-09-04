@@ -92,9 +92,9 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T12:04:37.074Z",
+  "measuredAt": "2026-09-04T05:44:13.309Z",
   "serverName": "mysql_mcp_server",
-  "serverVersion": "1.29.0",
+  "serverVersion": "1.29.1",
   "launchCommand": "uvx --from mysql-mcp-server mysql_mcp_server",
   "envVarNames": [
     "MYSQL_HOST",
@@ -102,6 +102,7 @@
     "MYSQL_PASSWORD",
     "MYSQL_DATABASE"
   ],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",

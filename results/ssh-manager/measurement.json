@@ -1705,7 +1705,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-03T21:37:51.140Z",
+  "measuredAt": "2026-09-04T06:05:14.476Z",
   "serverName": "mcp-ssh-manager",
   "serverVersion": "3.8.5",
   "launchCommand": "npx -y mcp-ssh-manager",
@@ -1717,5 +1717,5 @@
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 240000
+  "timeoutMs": 480000
 }

@@ -1,6 +1,6 @@
 # everything — context cost
 
-**1,708 tokens** across 13 tools — *light* (1–5K). Measured 2026-08-19 under [methodology v1.0](../METHODOLOGY.html).
+**1,708 tokens** across 13 tools — *light* (1–5K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -41,6 +41,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 | 2026-08-16 | 1,708 | 13 | not recorded | — |
 | 2026-08-18 | 1,708 | 13 | docker | no change |
 | 2026-08-19 | 1,708 | 13 | docker | no change |
+| 2026-09-04 | 1,708 | 13 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

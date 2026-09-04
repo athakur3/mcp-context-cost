@@ -8,7 +8,7 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-09-02T07:51:44.960Z",
+  "measuredAt": "2026-09-04T05:14:14.208Z",
   "serverName": "redis-legacy",
   "launchCommand": "npx -y @modelcontextprotocol/server-redis redis://localhost:6379",
   "notes": "reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: econnect (/tmp/.npm-cache/_npx/5c1b9cdedadb4486/node_modules/@redis/client/dist/lib/client/socket.js:140:16)\n    at RedisSocket._RedisSocket_connect (/tmp/.npm-cache/_npx/5c1b9cdedadb4486/node_modules/@redis/client/dist/lib/client/socket.js:162:117)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async Commander.connect (/tmp/.npm-cache/_npx/5c1b9cdedadb4486/node_modules/@redis/client/dist/lib/client/index.js:185:9)\n    at async runServer (file:///tmp/.npm-cache/_npx/5c1b9cdedadb4486/node_modules/@modelcontextprotocol/server-redis/dist/index.js:240:9)\n",

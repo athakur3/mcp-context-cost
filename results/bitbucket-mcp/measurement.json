@@ -2045,7 +2045,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-03T21:17:17.463Z",
+  "measuredAt": "2026-09-04T05:52:46.394Z",
   "serverName": "bitbucket-mcp-server",
   "serverVersion": "1.0.0",
   "launchCommand": "npx -y bitbucket-mcp",

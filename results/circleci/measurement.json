@@ -629,18 +629,19 @@
       }
     }
   ],
-  "measuredAt": "2026-08-18T23:59:34.450Z",
+  "measuredAt": "2026-09-04T05:23:23.396Z",
   "serverName": "mcp-server-circleci",
   "serverVersion": "1.0.0",
   "launchCommand": "npx -y @circleci/mcp-server-circleci",
   "envVarNames": [
     "CIRCLECI_TOKEN"
   ],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 480000
 }

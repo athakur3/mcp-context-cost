@@ -124,6 +124,129 @@
           "tokens": 111
         }
       ]
+    },
+    {
+      "date": "2026-09-04",
+      "canonicalSha256": "8ad33a05f12e8c0f535683508468dd970df8715f01fc82235b2b039718aeebf7",
+      "totalTokens": 5007,
+      "tools": [
+        {
+          "name": "search_docs",
+          "tokens": 483
+        },
+        {
+          "name": "list_organizations",
+          "tokens": 83
+        },
+        {
+          "name": "get_organization",
+          "tokens": 99
+        },
+        {
+          "name": "list_projects",
+          "tokens": 98
+        },
+        {
+          "name": "get_project",
+          "tokens": 96
+        },
+        {
+          "name": "get_cost",
+          "tokens": 149
+        },
+        {
+          "name": "confirm_cost",
+          "tokens": 162
+        },
+        {
+          "name": "create_project",
+          "tokens": 279
+        },
+        {
+          "name": "pause_project",
+          "tokens": 90
+        },
+        {
+          "name": "restore_project",
+          "tokens": 90
+        },
+        {
+          "name": "list_tables",
+          "tokens": 189
+        },
+        {
+          "name": "list_extensions",
+          "tokens": 90
+        },
+        {
+          "name": "list_migrations",
+          "tokens": 91
+        },
+        {
+          "name": "apply_migration",
+          "tokens": 149
+        },
+        {
+          "name": "execute_sql",
+          "tokens": 143
+        },
+        {
+          "name": "query_logs",
+          "tokens": 794
+        },
+        {
+          "name": "get_advisors",
+          "tokens": 180
+        },
+        {
+          "name": "get_project_url",
+          "tokens": 93
+        },
+        {
+          "name": "get_publishable_keys",
+          "tokens": 173
+        },
+        {
+          "name": "generate_typescript_types",
+          "tokens": 96
+        },
+        {
+          "name": "list_edge_functions",
+          "tokens": 95
+        },
+        {
+          "name": "get_edge_function",
+          "tokens": 110
+        },
+        {
+          "name": "deploy_edge_function",
+          "tokens": 447
+        },
+        {
+          "name": "create_branch",
+          "tokens": 193
+        },
+        {
+          "name": "list_branches",
+          "tokens": 116
+        },
+        {
+          "name": "delete_branch",
+          "tokens": 88
+        },
+        {
+          "name": "merge_branch",
+          "tokens": 96
+        },
+        {
+          "name": "reset_branch",
+          "tokens": 122
+        },
+        {
+          "name": "rebase_branch",
+          "tokens": 111
+        }
+      ]
     }
   ]
 }

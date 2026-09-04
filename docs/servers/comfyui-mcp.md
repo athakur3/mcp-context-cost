@@ -1,10 +1,10 @@
 # comfyui-mcp — context cost
 
-**50,640 tokens** across 41 tools — *very heavy* (≥ 30K). Measured 2026-09-03 under [methodology v1.0](../METHODOLOGY.html).
+**50,640 tokens** across 41 tools — *very heavy* (≥ 30K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
-| server (self-reported) | comfyui-mcp v0.52.183 |
+| server (self-reported) | comfyui-mcp v0.52.189 |
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y comfyui-mcp` |
@@ -52,6 +52,15 @@
 *11 smaller tools omitted (3,700 tokens combined) — all of them are in the [raw capture](https://github.com/athakur3/mcp-context-cost/blob/main/results/comfyui-mcp/measurement.json).*
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
+
+## Over time
+
+| date | tokens | tools | measured in | change |
+|---|---:|---:|---|---:|
+| 2026-09-03 | 50,640 | 41 | docker | — |
+| 2026-09-04 | 50,640 | 41 | docker | no change |
+
+Full series: [results/history.csv](https://github.com/athakur3/mcp-context-cost/blob/main/results/history.csv).
 
 ## Re-derive it
 

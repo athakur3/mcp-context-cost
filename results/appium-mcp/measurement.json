@@ -1647,7 +1647,7 @@
       "name": "appium_generate_tests"
     }
   ],
-  "measuredAt": "2026-09-03T21:03:12.302Z",
+  "measuredAt": "2026-09-04T05:50:10.266Z",
   "serverName": "MCP Appium",
   "serverVersion": "1.92.13",
   "launchCommand": "npx -y appium-mcp",

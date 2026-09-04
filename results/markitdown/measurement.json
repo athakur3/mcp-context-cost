@@ -33,11 +33,12 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T12:03:55.996Z",
+  "measuredAt": "2026-09-04T05:19:09.886Z",
   "serverName": "markitdown",
   "serverVersion": "1.8.1",
   "launchCommand": "uvx markitdown-mcp",
   "envVarNames": [],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",

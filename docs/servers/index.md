@@ -14,7 +14,7 @@ One page per measured server: the per-tool breakdown behind the badge, the exact
 | 8 | [githits](githits.html) | 12,600 | 16 | moderate |
 | 9 | [circleci](circleci.html) | 11,912 | 13 | moderate |
 | 10 | [desktop-commander](desktop-commander.html) | 11,836 | 26 | moderate |
-| 11 | [apify](apify.html) | 10,426 | 10 | moderate |
+| 11 | [apify](apify.html) | 10,452 | 10 | moderate |
 | 12 | [appium-mcp](appium-mcp.html) | 10,267 | 31 | moderate |
 | 13 | [obsidian-rest](obsidian-rest.html) | 10,173 | 12 | moderate |
 | 14 | [firecrawl](firecrawl.html) | 9,561 | 27 | moderate |
@@ -35,9 +35,9 @@ One page per measured server: the per-tool breakdown behind the badge, the exact
 | 29 | [kubernetes](kubernetes.html) | 5,268 | 23 | moderate |
 | 30 | [codebase-memory-mcp](codebase-memory-mcp.html) | 5,258 | 15 | moderate |
 | 31 | [clinicaltrialsgov](clinicaltrialsgov.html) | 5,134 | 7 | moderate |
-| 32 | [aws-documentation](aws-documentation.html) | 5,074 | 5 | moderate |
-| 33 | [supabase](supabase.html) | 5,013 | 29 | moderate |
-| 34 | [huggingface](huggingface.html) | 4,691 | 4 | light |
+| 32 | [aws-documentation](aws-documentation.html) | 5,045 | 5 | moderate |
+| 33 | [supabase](supabase.html) | 5,007 | 29 | moderate |
+| 34 | [huggingface](huggingface.html) | 4,724 | 4 | light |
 | 35 | [excel](excel.html) | 4,266 | 25 | light |
 | 36 | [airtable](airtable.html) | 4,207 | 16 | light |
 | 37 | [playwright](playwright.html) | 4,024 | 24 | light |
@@ -63,8 +63,8 @@ One page per measured server: the per-tool breakdown behind the badge, the exact
 | 57 | [microsoft-learn](microsoft-learn.html) | 972 | 3 | lean |
 | 58 | [figma-context](figma-context.html) | 946 | 2 | lean |
 | 59 | [duckduckgo](duckduckgo.html) | 724 | 2 | lean |
-| 60 | [clickhouse](clickhouse.html) | 694 | 3 | lean |
-| 61 | [slack-legacy](slack-legacy.html) | 681 | 8 | lean |
+| 60 | [slack-legacy](slack-legacy.html) | 681 | 8 | lean |
+| 61 | [clickhouse](clickhouse.html) | 632 | 3 | lean |
 | 62 | [emailmd](emailmd.html) | 585 | 3 | lean |
 | 63 | [google-maps](google-maps.html) | 549 | 7 | lean |
 | 64 | [puppeteer](puppeteer.html) | 540 | 7 | lean |

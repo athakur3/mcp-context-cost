@@ -973,7 +973,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-03T21:03:44.503Z",
+  "measuredAt": "2026-09-04T05:55:39.343Z",
   "serverName": "@cyanheads/mcp-ts-core",
   "serverVersion": "0.8.18",
   "launchCommand": "npx -y clinicaltrialsgov-mcp-server",

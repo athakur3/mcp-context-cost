@@ -2,15 +2,15 @@
 
 Tokens = o200k_base count of the canonical `tools/list` bytes ([methodology v1.0](../docs/METHODOLOGY.md)). Measured 81/106 candidates; every candidate is listed — failures are findings, not omissions. Server names link to their per-tool breakdown.
 
-The **claude** column is the same tools measured through Anthropic's `count_tokens` on `claude-opus-5` (2026-09-03, method `tools-delta/v1`): the tokens the server's tools add to a request, measured for the top 16. It is not a rescaling of the o200k column — two effects pull in opposite directions, and the [per-server pages](../docs/servers/) break both out. See [Claude divergence](../docs/METHODOLOGY.md#claude-divergence).
+The **claude** column is the same tools measured through Anthropic's `count_tokens` on `claude-opus-5` (2026-09-03, method `tools-delta/v1`): the tokens the server's tools add to a request, measured for the top 15. It is not a rescaling of the o200k column — two effects pull in opposite directions, and the [per-server pages](../docs/servers/) break both out. See [Claude divergence](../docs/METHODOLOGY.md#claude-divergence).
 
-The **mcp-tokens** column is the other CLI's count of the same server — `sd2k/mcp-tokens` `v0.2.5` (2026-09-03, method `cli-cross-check/v1`), invoked with `--model gpt-4o` so both columns count o200k tokens. Its structs model the three request fields (name/description/input\_schema), so its number sits below the tokens column wherever a server ships metadata those fields do not carry — that gap is each server's field-selection share, published on its page, not a disagreement of counters. The parenthesized percentage is the disagreement of counters: the CLI's count against ours of the same three-field projection, −0.8% to +1.4% across the 71 rows where both tools saw the same tool set. A row prints only while the comparison is between like and like: the same tool names on both sides, and our capture unchanged since the run. See [CLI cross-check](../docs/METHODOLOGY.md#cli-cross-check).
+The **mcp-tokens** column is the other CLI's count of the same server — `sd2k/mcp-tokens` `v0.2.5` (2026-09-04, method `cli-cross-check/v1`), invoked with `--model gpt-4o` so both columns count o200k tokens. Its structs model the three request fields (name/description/input\_schema), so its number sits below the tokens column wherever a server ships metadata those fields do not carry — that gap is each server's field-selection share, published on its page, not a disagreement of counters. The parenthesized percentage is the disagreement of counters: the CLI's count against ours of the same three-field projection, −0.8% to +1.4% across the 76 rows where both tools saw the same tool set. A row prints only while the comparison is between like and like: the same tool names on both sides, and our capture unchanged since the run. See [CLI cross-check](../docs/METHODOLOGY.md#cli-cross-check).
 
-**Of the servers whose cost has moved at all, 9 moved upward and 1 moved down** — a net +4,357 tokens across the set. Most entries here launch unpinned, so a movement is a real upstream release landing in real context windows, and only measurements taken under the same isolation are compared. Every movement, which half of the server moved, and where the tokens went: [regressions.md](regressions.md).
+**Of the servers whose cost has moved at all, 10 moved upward and 4 moved down** — a net +4,206 tokens across the set. Most entries here launch unpinned, so a movement is a real upstream release landing in real context windows, and only measurements taken under the same isolation are compared. Every movement, which half of the server moved, and where the tokens went: [regressions.md](regressions.md).
 
 The **session start** column is what a client puts in context when it *defers* tool definitions until they are used: the server's tool names plus the `instructions` string it returns from `initialize` (method `deferred-load/v1`). The tokens column is what a client that loads every definition up front pays; this one is what the same server costs a client that does not. See [session-start load](../docs/METHODOLOGY.md#session-start-load).
 
-**`≥` marks a floor, on 2 of 81 rows.** Tool names are counted exactly from the published capture, but `instructions` is not part of `tools/list` and has not been captured for these servers — so the figure is the names half alone and the true number is that or higher. A row stops being a floor the first time the server is measured with its instructions.
+**`≥` marks a floor, on 1 of 81 rows.** Tool names are counted exactly from the published capture, but `instructions` is not part of `tools/list` and has not been captured for these servers — so the figure is the names half alone and the true number is that or higher. A row stops being a floor the first time the server is measured with its instructions.
 
 **Deferring costs more than it saves on 1 of 81 rows.** `deepwiki` pays 580 at session start against 359 of definitions. The names half is always a fraction of the headline, but `instructions` are bytes the tokens column never counted and their length is independent of the tool set — so a server that re-lists its tools in its instructions makes a deferring client pay for a prose copy of the schemas it just skipped. A client that defers definitions is better off on every other measured row and worse off on this one.
 
@@ -26,7 +26,7 @@ The **session start** column is what a client puts in context when it *defers* t
 | 8 | [githits](../docs/servers/githits.md) | 12,600 | 53 | — | 12,183 (+0.3%) | 16 | search (2,270) | measured | community |
 | 9 | [circleci](../docs/servers/circleci.md) | 11,912 | 61 | 19,164 | 11,750 (−0.0%) | 13 | run_rollback_pipeline (1,391) | measured | vendor-official |
 | 10 | [desktop-commander](../docs/servers/desktop-commander.md) | 11,836 | ≥99 | 19,305 | — | 26 | start_search (1,351) | dynamic | community |
-| 11 | [apify](../docs/servers/apify.md) | 10,426 | ≥51 | 8,313 | — | 10 | search-actors (2,200) | measured | vendor-official |
+| 11 | [apify](../docs/servers/apify.md) | 10,452 | 1,144 | — | 4,803 (+0.2%) | 10 | search-actors (2,226) | measured | vendor-official |
 | 12 | [appium-mcp](../docs/servers/appium-mcp.md) | 10,267 | 328 | — | 9,843 (+0.5%) | 31 | appium_gesture (1,308) | measured | vendor-official |
 | 13 | [obsidian-rest](../docs/servers/obsidian-rest.md) | 10,173 | 65 | — | 5,855 (−0.4%) | 12 | obsidian_get_note (1,523) | measured | community |
 | 14 | [firecrawl](../docs/servers/firecrawl.md) | 9,561 | 342 | 16,428 | 8,993 (+1.4%) | 27 | firecrawl_search (1,391) | measured | vendor-official |
@@ -47,9 +47,9 @@ The **session start** column is what a client puts in context when it *defers* t
 | 29 | [kubernetes](../docs/servers/kubernetes.md) | 5,268 | 95 | 9,165 | 5,089 (+0.0%) | 23 | kubectl_create (945) | measured | community |
 | 30 | [codebase-memory-mcp](../docs/servers/codebase-memory-mcp.md) | 5,258 | 205 | — | 4,776 (+0.0%) | 15 | search_graph (905) | measured | community |
 | 31 | [clinicaltrialsgov](../docs/servers/clinicaltrialsgov.md) | 5,134 | 54 | — | 2,874 (−0.2%) | 7 | clinicaltrials_search_studies (1,257) | measured | community |
-| 32 | [aws-documentation](../docs/servers/aws-documentation.md) | 5,074 | 425 | — | — | 5 | search_documentation (1,956) | measured | vendor-official |
-| 33 | [supabase](../docs/servers/supabase.md) | 5,013 | 342 | — | — | 29 | query_logs (800) | measured | vendor-official |
-| 34 | [huggingface](../docs/servers/huggingface.md) | 4,691 | 200 | — | — | 4 | hf_whoami (1,948) | measured | vendor-official |
+| 32 | [aws-documentation](../docs/servers/aws-documentation.md) | 5,045 | 425 | — | 3,380 (+0.0%) | 5 | search_documentation (1,956) | measured | vendor-official |
+| 33 | [supabase](../docs/servers/supabase.md) | 5,007 | 342 | — | 4,061 (−0.0%) | 29 | query_logs (794) | measured | vendor-official |
+| 34 | [huggingface](../docs/servers/huggingface.md) | 4,724 | 378 | — | 1,611 (+0.4%) | 4 | hf_fs (1,957) | measured | vendor-official |
 | 35 | [excel](../docs/servers/excel.md) | 4,266 | 106 | — | 3,080 (+0.0%) | 25 | format_range (472) | measured | community |
 | 36 | [airtable](../docs/servers/airtable.md) | 4,207 | 50 | — | 2,533 (+0.1%) | 16 | list_records (395) | measured | community |
 | 37 | [playwright](../docs/servers/playwright.md) | 4,024 | 91 | — | 3,409 (+0.2%) | 24 | browser_take_screenshot (329) | measured | vendor-official |
@@ -75,8 +75,8 @@ The **session start** column is what a client puts in context when it *defers* t
 | 57 | [microsoft-learn](../docs/servers/microsoft-learn.md) | 972 | 307 | — | 726 (+0.0%) | 3 | microsoft_code_sample_search (396) | measured | vendor-official |
 | 58 | [figma-context](../docs/servers/figma-context.md) | 946 | 11 | — | 898 (+0.0%) | 2 | download_figma_images (646) | measured | community |
 | 59 | [duckduckgo](../docs/servers/duckduckgo.md) | 724 | 6 | — | 661 (+0.0%) | 2 | fetch_content (387) | measured | community |
-| 60 | [clickhouse](../docs/servers/clickhouse.md) | 694 | 72 | — | — | 3 | list_tables (413) | measured | vendor-official |
-| 61 | [slack-legacy](../docs/servers/slack-legacy.md) | 681 | 47 | — | 681 (+0.0%) | 8 | slack_reply_to_thread (124) | measured | official-reference |
+| 60 | [slack-legacy](../docs/servers/slack-legacy.md) | 681 | 47 | — | 681 (+0.0%) | 8 | slack_reply_to_thread (124) | measured | official-reference |
+| 61 | [clickhouse](../docs/servers/clickhouse.md) | 632 | 72 | — | 494 (−0.2%) | 3 | list_tables (353) | measured | vendor-official |
 | 62 | [emailmd](../docs/servers/emailmd.md) | 585 | 377 | — | 546 (+0.7%) | 3 | render (227) | measured | community |
 | 63 | [google-maps](../docs/servers/google-maps.md) | 549 | 30 | — | 550 (+0.2%) | 7 | maps_distance_matrix (124) | measured | official-reference |
 | 64 | [puppeteer](../docs/servers/puppeteer.md) | 540 | 39 | — | 538 (−0.4%) | 7 | puppeteer_screenshot (142) | measured | official-reference |
@@ -102,12 +102,12 @@ The **session start** column is what a client puts in context when it *defers* t
 
 | server | status | note |
 |---|---|---|
-| gdrive | auth-required | server exited (code 1); stderr tail: npm warn deprecated @modelcontextprotocol/server-gdrive@2025.1.14: Package no longer supported. Contact Support at https:// |
+| gdrive | auth-required | server exited (code 1); stderr tail: Credentials not found. Please run with 'auth' argument first.  |
 | redis-legacy | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: econnect (/tmp/.npm-cache/_npx/5c1b9cdedadb4486/node_modules/@redis/clie |
 | azure | auth-required | server exited (code 0); stderr tail: oveNext()    at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start\[\[Azure.Mcp.Server.Program+\<Main\>d__2, azmc |
 | magic | auth-required | server error -32001: Not authenticated - your API key is missing or was reset. Get a fresh key at https://21st.dev/mcp and update your MCP config (x-api-key / B |
 | stripe | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: index.js:20:30)     at Object.\<anonymous\> (/tmp/.npm-cache/_npx/bce731 |
-| heroku | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: Fatal error in main(): Cannot find module '/tmp/.npm-cache/_npx/909ffbc9 |
+| heroku | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for |
 | grafana | timeout | reproduced on double the timeout budget; timeout after 360000ms waiting for initialize |
 | neon | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: npm warn deprecated @neondatabase/mcp-server-neon@0.6.5: This package is |
 | linear | remote-auth-wall |  |
@@ -121,9 +121,9 @@ The **session start** column is what a client puts in context when it *defers* t
 | accessibility-scanner | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: Resolve (node:internal/modules/esm/resolve:661:9)     at packageResolve  |
 | keboola | auth-required | server error 0: Client error '401 Unauthorized' for url 'https://connection.keboola.com/v2/storage/tokens/verify' For more information check: https://developer. |
 | anki | timeout | reproduced on double the timeout budget; timeout after 480000ms waiting for initialize |
-| hevy | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: Fatal error in main() { category: 'Error' }  |
+| hevy | startup-failure | server exited (code 1); stderr tail: Fatal error in main() { category: 'Error' }  |
 | local-mcp | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail:  LMCP v3.0.404 (linux-arm64) not found in cache. Downloading from https: |
-| windows-mcp | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: hen resolving tool dependencies:   ╰─▶ Because only the following versio |
+| windows-mcp | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: when resolving tool dependencies:   ╰─▶ Because only the following versi |
 | yandex-tracker | auth-required | server exited (code 1); stderr tail: Downloading grpcio-tools (2.5MiB)  Downloaded grpcio-tools Downloading yandexcloud (6.3MiB)  Downloaded yandexcloud Install |
 | google-surf | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: arn deprecated inflight@1.0.6: This module is not supported, and leaks m |
 | safari-mcp | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: npm error code EBADPLATFORM npm error notsup Unsupported platform for sa |

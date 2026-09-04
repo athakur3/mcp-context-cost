@@ -48,6 +48,53 @@
           "tokens": 347
         }
       ]
+    },
+    {
+      "date": "2026-09-04",
+      "canonicalSha256": "4dd4565165c7066d8e8ef666f79cd8b323bad3d7f66b4d34fbe769f07e979453",
+      "totalTokens": 10452,
+      "tools": [
+        {
+          "name": "search-actors",
+          "tokens": 2226
+        },
+        {
+          "name": "fetch-actor-details",
+          "tokens": 1534
+        },
+        {
+          "name": "call-actor",
+          "tokens": 1875
+        },
+        {
+          "name": "get-actor-run",
+          "tokens": 1290
+        },
+        {
+          "name": "get-dataset-items",
+          "tokens": 664
+        },
+        {
+          "name": "get-key-value-store-record",
+          "tokens": 341
+        },
+        {
+          "name": "abort-actor-run",
+          "tokens": 1165
+        },
+        {
+          "name": "search-apify-docs",
+          "tokens": 722
+        },
+        {
+          "name": "fetch-apify-docs",
+          "tokens": 286
+        },
+        {
+          "name": "report-problem",
+          "tokens": 347
+        }
+      ]
     }
   ]
 }

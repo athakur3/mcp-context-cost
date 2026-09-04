@@ -989,11 +989,12 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:08:49.840Z",
+  "measuredAt": "2026-09-04T05:44:09.475Z",
   "serverName": "playwright-mcp",
   "serverVersion": "1.0.11",
   "launchCommand": "npx -y @executeautomation/playwright-mcp-server",
   "envVarNames": [],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",

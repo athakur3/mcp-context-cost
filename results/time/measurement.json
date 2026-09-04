@@ -76,16 +76,17 @@
       }
     }
   ],
-  "measuredAt": "2026-08-18T23:56:55.875Z",
+  "measuredAt": "2026-09-04T05:05:20.198Z",
   "serverName": "mcp-time",
-  "serverVersion": "1.29.0",
+  "serverVersion": "1.29.1",
   "launchCommand": "uvx --with \"mcp<2\" mcp-server-time",
   "envVarNames": [],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

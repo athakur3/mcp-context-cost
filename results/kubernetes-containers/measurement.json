@@ -8,7 +8,7 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-09-03T21:02:42.836Z",
+  "measuredAt": "2026-09-04T05:50:30.410Z",
   "serverName": "kubernetes-containers",
   "launchCommand": "npx -y kubernetes-mcp-server",
   "notes": "reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: l/prompt change notifications). Useful for container deployments and load balancing. Default is false (stateful mode)\n      --tls-cert string           Path to TLS certificate file for HTTPS. Must be used together with --tls-key.\n      --tls-key string            Path to TLS private key file for HTTPS. Must be used together with --tls-cert.\n      --toolsets strings          Comma-separated list of MCP toolsets to use (available toolsets: config, core, helm, kcp, kiali, kubevirt, netobserv, tekton). Defaults to core, config.\n      --version                   Print version information and quit\n\n",

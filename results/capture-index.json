@@ -14,6 +14,12 @@
       "totalTokens": 5074,
       "toolCount": 5
     },
+    "096790f5b6a85d5faf9b4a09edbeddc34de23ed3c26c195bee05c42fb7f8b6a7": {
+      "server": "aws-documentation",
+      "date": "2026-09-04",
+      "totalTokens": 5045,
+      "toolCount": 5
+    },
     "0ba9e9185e3d5c167bbaf0dcfeb499f27020c307f1387a3b85374f849f0a38a7": {
       "server": "basic-memory",
       "date": "2026-09-02",
@@ -146,6 +152,12 @@
       "totalTokens": 1425,
       "toolCount": 1
     },
+    "4dd4565165c7066d8e8ef666f79cd8b323bad3d7f66b4d34fbe769f07e979453": {
+      "server": "apify",
+      "date": "2026-09-04",
+      "totalTokens": 10452,
+      "toolCount": 10
+    },
     "55e4c41338722ccc0672def6b5462f1dee664bf168cfd01172c4e96d344a1c2e": {
       "server": "sequential-thinking",
       "date": "2026-09-03",
@@ -206,6 +218,12 @@
       "totalTokens": 4207,
       "toolCount": 16
     },
+    "6f42fcefaf49e720fe8ec5acf8dafc7ae6065bf541957572b6a6abbe61f111d4": {
+      "server": "clickhouse",
+      "date": "2026-09-04",
+      "totalTokens": 632,
+      "toolCount": 3
+    },
     "7205f4d29a1a97d6fa9d13d2e9b3c2ccc5e8dda8539cf836d5895380c56c4b3b": {
       "server": "terraform",
       "date": "2026-09-03",
@@ -254,6 +272,12 @@
       "totalTokens": 11836,
       "toolCount": 26
     },
+    "8ad33a05f12e8c0f535683508468dd970df8715f01fc82235b2b039718aeebf7": {
+      "server": "supabase",
+      "date": "2026-09-04",
+      "totalTokens": 5007,
+      "toolCount": 29
+    },
     "8c3c954e5a791807875357bc783cc67385bd7bb53ee31b659e83015b36ed99a9": {
       "server": "exa",
       "date": "2026-09-02",
@@ -295,6 +319,12 @@
       "date": "2026-09-03",
       "totalTokens": 2768,
       "toolCount": 12
+    },
+    "a2e48e88545d92665679b878c9e66f4f902af2a11bccafc29cc6e627def941ae": {
+      "server": "huggingface",
+      "date": "2026-09-04",
+      "totalTokens": 4724,
+      "toolCount": 4
     },
     "a65649ac29928ffde9e8bf8796482b5aaeb17e79d02ea2f3b8b96f11ac32b604": {
       "server": "cloudflare-docs",
@@ -493,10 +523,10 @@
     "agentphone": "eec89a7ec71ac3e9e65fb8477bf594b4ce9af01b572bcc5d7e9fbbcc85f4e813",
     "airbnb": "79c3109b4fa4e4735ba1071cacbd98948c6aba20b70c9a4295a78e84850a81e0",
     "airtable": "6ae170e7625e0fa953f2981d005a89ee2b7c80d94830c81a9e5e03d3e5de59e6",
-    "apify": "45e69bb7d3ab57903ca84555f5bb3851cbc806ae35ce9398eb88eea7f587ec91",
+    "apify": "4dd4565165c7066d8e8ef666f79cd8b323bad3d7f66b4d34fbe769f07e979453",
     "appium-mcp": "d024ca5b97d52d5442da395ed92d1d107b6728db57cf1295bb87c5d3624c0e53",
     "arxiv": "2ee361441efca1de3e296a572bbe2d20fa88d5565c9d4f54a8a1523ee7f54251",
-    "aws-documentation": "03d94c1d9bbcaf8fcaf375d1d6f14b975f108724d76ebe3d70ea7ce72eed13ac",
+    "aws-documentation": "096790f5b6a85d5faf9b4a09edbeddc34de23ed3c26c195bee05c42fb7f8b6a7",
     "basic-memory": "0ba9e9185e3d5c167bbaf0dcfeb499f27020c307f1387a3b85374f849f0a38a7",
     "bitbucket-mcp": "e131b1d46e30c0d05f07995aa167fa323ec1003719d861dbe27c82c94ad803cf",
     "blender": "5d8045af01c1eaf81a5931cfc5aa814fe0928f66cf1e176962bd3a97aff0a62f",
@@ -507,7 +537,7 @@
     "chroma": "eb0b416a1586989ce3f646259f9f96d0ae6d7b62342aa30393b10ecb7c03c707",
     "chrome-devtools": "151a59215c20049ea5934809670996c1d73977d468a65fa6b5624c2e24ca3ef4",
     "circleci": "f4d995111363bc9a5c220871fb9e4c2d81372ef647572f5f4f19cb5d4bd08bbe",
-    "clickhouse": "1f68f3e76c71c7c8c4c6cf537ed857231daacdf9cd6ebb95e30ac482cc218b89",
+    "clickhouse": "6f42fcefaf49e720fe8ec5acf8dafc7ae6065bf541957572b6a6abbe61f111d4",
     "clinicaltrialsgov": "acdc9b99e581c7493a98e8c0fac919bbe384ac3205227c15891b94d6ddcf4825",
     "cloudflare-docs": "a65649ac29928ffde9e8bf8796482b5aaeb17e79d02ea2f3b8b96f11ac32b604",
     "codebase-memory-mcp": "01a1bd0f450ccf86b0bf36b2b63749c70dc4add7b0a4d9621ce69e29c9db7b27",
@@ -532,7 +562,7 @@
     "gitlab": "d51fb022687ee403f9710c9fae31ac91dbc796f5c52a3fcdbe0a91c387aa9365",
     "google-maps": "a88e204db09aa56954e3e041d6a9814aee9ac888fdfc7d5cb47aec1877441986",
     "hubspot": "3389dd469cfc2f46f06e4be24ba13ff95595ee30fd8dd62df81809a95daf3791",
-    "huggingface": "b269a72bb6340ebfd5cf8170399b2606a9d7ea88b2277cfd6ca3511cec51a980",
+    "huggingface": "a2e48e88545d92665679b878c9e66f4f902af2a11bccafc29cc6e627def941ae",
     "kubernetes": "20126671be70fdb77743a595f195002612b03c889b348447ed9ff4d7057f8c1c",
     "markitdown": "d708fc0ae4f3fb818d01cc3d4da0b74c2e5591a7982735d6200b3d56ab74d66b",
     "mcp-atlassian": "fa9df2701a0250cd546422d5d629d4af411b5c359e92bd710fc7aa4ada7ccc4e",
@@ -566,7 +596,7 @@
     "slack-legacy": "5939f969618ff709e86ff0599b80cc8f418db8904b4304a6eeb82a25f30ccd81",
     "sqlite": "d432983abc546eac2725c9db1a07f5f8dad0e6cbfb12f925c1d4fb61743d1c6b",
     "ssh-manager": "22ce75f27b9a8bf50f1cb77824b5769d6041d1f3c25032916b5201b1be31f5d7",
-    "supabase": "ebbc7cd5f3f0c9a1c7eff808c38c4630b4cdc88126e34538b46b860efb89bd35",
+    "supabase": "8ad33a05f12e8c0f535683508468dd970df8715f01fc82235b2b039718aeebf7",
     "tavily": "b2bcd45339fe42caa0f55e5ca1196091b2dcda4b868fedd209177b54f2ef51ef",
     "terraform": "7205f4d29a1a97d6fa9d13d2e9b3c2ccc5e8dda8539cf836d5895380c56c4b3b",
     "time": "7c6ff08840620894a66a103e02a8eb315013dd0a7d7c6cfb59b0fbe51f8a5d87",

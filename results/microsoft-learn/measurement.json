@@ -171,11 +171,12 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:04:06.848Z",
+  "measuredAt": "2026-09-04T05:38:44.039Z",
   "serverName": "Microsoft Learn MCP Server",
   "serverVersion": "1.0.0",
   "launchCommand": "npx -y mcp-remote https://learn.microsoft.com/api/mcp",
   "envVarNames": [],
+  "serverInstructions": "# Microsoft Learn MCP Server\r\n\r\nThis server gives structured access to official Microsoft and Azure documentation via three tools:\r\n\r\n## Tools\r\n\r\n### microsoft_docs_search\r\nSearch official documentation and return up to 10 concise, high-quality content chunks (max 500 tokens each), including title, URL, and excerpt.\r\n\r\n- Use first to get a quick, reliable overview\r\n- Ideal for grounding answers in Microsoft knowledge\r\n\r\n### microsoft_code_sample_search\r\nSearch for code snippets and examples in official Microsoft Learn documentation and return up to 20 relevant, high-quality code samples.\r\n\r\n- Use when you need to provide sample Microsoft/Azure related code in your answers.  \r\n- Ideal for generating code snippets or practical implementation examples.  \r\n- Optional parameter `language` can filter results. \r\n\r\n### microsoft_docs_fetch\r\nFetch and convert full Microsoft documentation pages to markdown.\r\n\r\n- Use after search when you need full content from a specific URL\r\n- Required for detailed tutorials, troubleshooting, prerequisites, code samples, or when search results are incomplete or outdated\r\n\r\n## Workflow\r\n\r\n1. Use `microsoft_docs_search` to find relevant documents.\r\n2. If you need code examples or practical snippets, use `microsoft_code_sample_search`.\r\n3. If deeper or complete information is needed, use `microsoft_docs_fetch`.\r\n\r\n**Search gives breadth. Code Sample Search gives practical examples. Fetch gives depth.**\r\n\r\nAll content comes from Microsoft Learn or official sources, returned in clean markdown format.",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",

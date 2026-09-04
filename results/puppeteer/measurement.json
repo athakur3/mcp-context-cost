@@ -198,7 +198,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-02T07:51:23.520Z",
+  "measuredAt": "2026-09-04T05:10:52.245Z",
   "serverName": "example-servers/puppeteer",
   "serverVersion": "0.1.0",
   "launchCommand": "npx -y @modelcontextprotocol/server-puppeteer",

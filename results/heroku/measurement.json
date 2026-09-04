@@ -8,15 +8,15 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-08-19T00:24:14.913Z",
+  "measuredAt": "2026-09-04T05:31:32.627Z",
   "serverName": "heroku",
   "launchCommand": "npx -y @heroku/mcp-server",
-  "notes": "reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: Fatal error in main(): Cannot find module '/tmp/.npm-cache/_npx/909ffbc9d45b7a62/node_modules/@modelcontextprotocol/sdk/dist/esm/server/mcp' imported from /tmp/.npm-cache/_npx/909ffbc9d45b7a62/node_modules/@heroku/mcp-server/dist/index.js",
+  "notes": "reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation\nnpm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead\nFatal error in main(): Cannot find module '/tmp/.npm-cache/_npx/909ffbc9d45b7a62/node_modules/@modelcontextprotocol/sdk/dist/esm/server/mcp' imported from /tmp/.npm-cache/_npx/909ffbc9d45b7a62/node_modules/@heroku/mcp-server/dist/index.js",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

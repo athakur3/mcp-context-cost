@@ -80,16 +80,17 @@
       }
     }
   ],
-  "measuredAt": "2026-08-18T23:58:15.070Z",
+  "measuredAt": "2026-09-04T05:17:35.856Z",
   "serverName": "Context7",
-  "serverVersion": "4.0.2",
+  "serverVersion": "4.0.4",
   "launchCommand": "npx -y @upstash/context7-mcp",
   "envVarNames": [],
+  "serverInstructions": "Use this server to fetch current documentation whenever the user asks about a library, framework, SDK, API, CLI tool, or cloud service — even well-known ones like React, Next.js, Prisma, Express, Tailwind, Django, or Spring Boot. This includes API syntax, configuration, version migration, library-specific debugging, setup instructions, and CLI tool usage. Use even when you think you know the answer — your training data may not reflect recent changes. Prefer this over web search for library docs.\n\nDo not use for: refactoring, writing scripts from scratch, debugging business logic, code review, or general programming concepts.",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 480000
 }

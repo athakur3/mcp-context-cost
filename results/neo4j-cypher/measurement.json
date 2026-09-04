@@ -125,7 +125,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T12:04:07.415Z",
+  "measuredAt": "2026-09-04T05:32:23.331Z",
   "serverName": "mcp-neo4j-cypher",
   "serverVersion": "2.13.3",
   "launchCommand": "uvx mcp-neo4j-cypher",
@@ -134,6 +134,7 @@
     "NEO4J_USERNAME",
     "NEO4J_PASSWORD"
   ],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",

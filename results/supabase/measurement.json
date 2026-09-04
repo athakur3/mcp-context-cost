@@ -3,7 +3,7 @@
   "provider": "tiktoken",
   "encoding": "o200k_base",
   "status": "measured",
-  "totalTokens": 5013,
+  "totalTokens": 5007,
   "toolCount": 29,
   "tools": [
     {
@@ -98,9 +98,9 @@
     },
     {
       "name": "query_logs",
-      "tokens": 800,
+      "tokens": 794,
       "descriptionTokens": 102,
-      "inputSchemaTokens": 655
+      "inputSchemaTokens": 649
     },
     {
       "name": "get_advisors",
@@ -181,7 +181,7 @@
       "inputSchemaTokens": 41
     }
   ],
-  "canonicalSha256": "ebbc7cd5f3f0c9a1c7eff808c38c4630b4cdc88126e34538b46b860efb89bd35",
+  "canonicalSha256": "8ad33a05f12e8c0f535683508468dd970df8715f01fc82235b2b039718aeebf7",
   "rawToolsCapture": [
     {
       "name": "search_docs",
@@ -648,13 +648,13 @@
             "description": "The start of the log window as an ISO 8601 timestamp, including a UTC \"Z\" suffix or explicit offset. Defaults to 24 hours before the end of the window. The API caps the requested range at 24 hours.",
             "type": "string",
             "format": "date-time",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
           },
           "iso_timestamp_end": {
             "description": "The end of the log window as an ISO 8601 timestamp, including a UTC \"Z\" suffix or explicit offset. Defaults to the current time. The API caps the requested range at 24 hours.",
             "type": "string",
             "format": "date-time",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
           }
         },
         "required": [
@@ -1047,18 +1047,19 @@
       }
     }
   ],
-  "measuredAt": "2026-08-18T23:58:46.632Z",
+  "measuredAt": "2026-09-04T05:21:40.372Z",
   "serverName": "supabase",
-  "serverVersion": "0.10.0",
+  "serverVersion": "0.11.0",
   "launchCommand": "npx -y @supabase/mcp-server-supabase@latest",
   "envVarNames": [
     "SUPABASE_ACCESS_TOKEN"
   ],
+  "serverInstructions": "Here are guidelines for using Supabase tools effectively:\n\n- Before making schema changes, use `list_tables` to understand the existing structure\n- When debugging issues, start with `get_logs` and `get_advisors` before making changes\n- Use `get_project_url` and `get_publishable_api_key` when helping users configure client-side integrations\n\nIf you have access to a local development environment with a filesystem and shell:\n- Install the Supabase agent skill for critical development and security guidance: `npx skills add supabase/agent-skills` (https://supabase.com/docs/guides/getting-started/ai-skills.md)\n- Use the Supabase CLI (`supabase`) for local development workflows such as starting a local stack, managing migrations, and running edge functions locally (https://supabase.com/docs/guides/local-development.md)\n- Prefer local development and testing before applying changes to a remote project\n\nIf you are running in a web-only or remote environment without filesystem or shell access:\n- Rely on the MCP tools directly for all Supabase interactions\n- Use `apply_migration` carefully, as changes go directly to the remote project",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 480000
 }

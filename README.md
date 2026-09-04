@@ -184,7 +184,7 @@ Add `--claude` to annotate each server with its Anthropic-request cost from the 
 [Claude divergence](docs/METHODOLOGY.md#claude-divergence) run — an exact number when the
 published capture hash matches what you have installed, `—` (silence, not a stale guess)
 when it doesn't. The run holds 20 rows — the top 20 measured servers by tokens when it ran —
-and [results/leaderboard.md](results/leaderboard.md) prints a claude number for the 16 that
+and [results/leaderboard.md](results/leaderboard.md) prints a claude number for the 15 that
 still match today and silence for the rest. Most installs will show a mix:
 
 ```
@@ -260,7 +260,7 @@ answers a question no client asks: **what did this server cost last month?**
 [results/regressions.md](results/regressions.md) reports each server's most recent movement —
 dated to when it happened, separated into *shipped more tools* versus *same tools, rewritten*,
 and compared only within one isolation. The ecosystem ratchets upward: of the servers whose
-cost has moved at all, 9 moved up against 1 that moved down. Method:
+cost has moved at all, 10 moved up against 4 that moved down. Method:
 [cost movement](docs/METHODOLOGY.md#cost-movement).
 
 If you publish a server, the same measurement is available as a badge, so your users can see

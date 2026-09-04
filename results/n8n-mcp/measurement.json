@@ -642,16 +642,17 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:05:34.736Z",
+  "measuredAt": "2026-09-04T05:40:54.351Z",
   "serverName": "n8n-documentation-mcp",
-  "serverVersion": "2.72.0",
+  "serverVersion": "2.82.1",
   "launchCommand": "npx -y n8n-mcp",
   "envVarNames": [],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

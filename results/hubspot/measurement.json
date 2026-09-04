@@ -1401,13 +1401,14 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T12:04:00.099Z",
+  "measuredAt": "2026-09-04T05:31:07.641Z",
   "serverName": "hubspot-mcp-server",
   "serverVersion": "0.4.0",
   "launchCommand": "npx -y @hubspot/mcp-server",
   "envVarNames": [
     "PRIVATE_APP_ACCESS_TOKEN"
   ],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",

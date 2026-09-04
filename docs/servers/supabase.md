@@ -1,16 +1,16 @@
 # supabase — context cost
 
-**5,013 tokens** across 29 tools — *moderate* (5–15K). Measured 2026-08-18 under [methodology v1.0](../METHODOLOGY.html).
+**5,007 tokens** across 29 tools — *moderate* (5–15K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
-| server (self-reported) | supabase v0.10.0 |
+| server (self-reported) | supabase v0.11.0 |
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @supabase/mcp-server-supabase@latest` |
 | isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | SUPABASE_ACCESS_TOKEN |
-| canonical SHA-256 | `ebbc7cd5f3f0c9a1c7eff808c38c4630b4cdc88126e34538b46b860efb89bd35` |
+| canonical SHA-256 | `8ad33a05f12e8c0f535683508468dd970df8715f01fc82235b2b039718aeebf7` |
 | category | vendor-official |
 | source | https://github.com/supabase-community/supabase-mcp |
 
@@ -18,11 +18,11 @@
 
 | tool | tokens | share | description | schema |
 |---|---:|---:|---:|---:|
-| query_logs | 800 | 16.0% | 102 | 655 |
+| query_logs | 794 | 15.9% | 102 | 649 |
 | search_docs | 483 | 9.6% | 387 | 48 |
 | deploy_edge_function | 447 | 8.9% | 104 | 277 |
 | create_project | 279 | 5.6% | 39 | 198 |
-| create_branch | 193 | 3.8% | 60 | 91 |
+| create_branch | 193 | 3.9% | 60 | 91 |
 | list_tables | 189 | 3.8% | 33 | 114 |
 | get_advisors | 180 | 3.6% | 69 | 66 |
 | get_publishable_keys | 173 | 3.5% | 86 | 41 |
@@ -56,6 +56,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 |---|---:|---:|---|---:|
 | 2026-08-16 | 5,013 | 29 | not recorded | — |
 | 2026-08-18 | 5,013 | 29 | docker | no change |
+| 2026-09-04 | 5,007 | 29 | docker | -6 |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

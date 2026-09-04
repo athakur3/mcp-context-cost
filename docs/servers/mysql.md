@@ -1,10 +1,10 @@
 # mysql — context cost
 
-**393 tokens** across 3 tools — *lean* (< 1K). Measured 2026-08-19 under [methodology v1.0](../METHODOLOGY.html).
+**393 tokens** across 3 tools — *lean* (< 1K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
-| server (self-reported) | mysql_mcp_server v1.29.0 |
+| server (self-reported) | mysql_mcp_server v1.29.1 |
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `uvx --from mysql-mcp-server mysql_mcp_server` |
@@ -30,6 +30,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 |---|---:|---:|---|---:|
 | 2026-08-16 | 393 | 3 | not recorded | — |
 | 2026-08-19 | 393 | 3 | docker | no change |
+| 2026-09-04 | 393 | 3 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

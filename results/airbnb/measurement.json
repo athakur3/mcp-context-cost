@@ -136,16 +136,17 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:09:21.339Z",
+  "measuredAt": "2026-09-04T05:48:34.622Z",
   "serverName": "airbnb",
   "serverVersion": "0.3.0",
   "launchCommand": "npx -y @openbnb/mcp-server-airbnb",
   "envVarNames": [],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 480000
 }

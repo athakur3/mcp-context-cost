@@ -3059,7 +3059,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-02T07:53:42.768Z",
+  "measuredAt": "2026-09-04T05:39:53.208Z",
   "serverName": "postgres-mcp",
   "serverVersion": "1.29.1",
   "launchCommand": "uvx --with \"mcp<2\" postgres-mcp --access-mode=restricted",

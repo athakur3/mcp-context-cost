@@ -11,7 +11,7 @@
     "--format",
     "json"
   ],
-  "measuredAt": "2026-09-03",
+  "measuredAt": "2026-09-04",
   "isolation": "docker (same images, limits and package caches as a sweep)",
   "servers": {
     "agentphone": {
@@ -31,6 +31,7 @@
       "ourToolCount": 2,
       "cliToolCount": 2,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "79c3109b4fa4e4735ba1071cacbd98948c6aba20b70c9a4295a78e84850a81e0"
     },
     "airtable": {
@@ -49,6 +50,7 @@
       "ourToolCount": 10,
       "cliToolCount": 10,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "4dd4565165c7066d8e8ef666f79cd8b323bad3d7f66b4d34fbe769f07e979453"
     },
     "appium-mcp": {
@@ -78,6 +80,7 @@
       "ourToolCount": 5,
       "cliToolCount": 5,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "096790f5b6a85d5faf9b4a09edbeddc34de23ed3c26c195bee05c42fb7f8b6a7"
     },
     "basic-memory": {
@@ -87,6 +90,7 @@
       "ourToolCount": 23,
       "cliToolCount": 23,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "0ba9e9185e3d5c167bbaf0dcfeb499f27020c307f1387a3b85374f849f0a38a7"
     },
     "bitbucket-mcp": {
@@ -172,6 +176,7 @@
       "ourToolCount": 13,
       "cliToolCount": 13,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "f4d995111363bc9a5c220871fb9e4c2d81372ef647572f5f4f19cb5d4bd08bbe"
     },
     "clickhouse": {
@@ -181,6 +186,7 @@
       "ourToolCount": 3,
       "cliToolCount": 3,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "6f42fcefaf49e720fe8ec5acf8dafc7ae6065bf541957572b6a6abbe61f111d4"
     },
     "clinicaltrialsgov": {
@@ -200,6 +206,7 @@
       "ourToolCount": 2,
       "cliToolCount": 2,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "a65649ac29928ffde9e8bf8796482b5aaeb17e79d02ea2f3b8b96f11ac32b604"
     },
     "codebase-memory-mcp": {
@@ -229,6 +236,7 @@
       "ourToolCount": 2,
       "cliToolCount": 2,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "699d8b33d6d2d90ce7deb777994bb408e1e07bb08fa997042b7cce19e6c1ecec"
     },
     "deepwiki": {
@@ -258,6 +266,7 @@
       "ourToolCount": 2,
       "cliToolCount": 2,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "61f82494284ccb413e9cb213ed93d7b79f43769229713b2748056a7f1018db14"
     },
     "elasticsearch": {
@@ -267,6 +276,7 @@
       "ourToolCount": 4,
       "cliToolCount": 0,
       "toolSetMatches": false,
+      "dynamic": false,
       "capturedSha256": "76a005f840c738f5788e7b5801fdc12194713fce1ed435ad500f891a2b2dd13c",
       "error": "cli: exited 1: Error: connection closed: initialize response\n"
     },
@@ -287,6 +297,7 @@
       "ourToolCount": 13,
       "cliToolCount": 13,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "e61b2e1761ff2f931d030faf1dc192ca70247e52ff31d8633431b69ba6e00b7e"
     },
     "exa": {
@@ -296,6 +307,7 @@
       "ourToolCount": 2,
       "cliToolCount": 2,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "8c3c954e5a791807875357bc783cc67385bd7bb53ee31b659e83015b36ed99a9"
     },
     "excel": {
@@ -305,6 +317,7 @@
       "ourToolCount": 25,
       "cliToolCount": 25,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "cf374a8866847f36b743f5b59176d3908466f40c2d5d9b3cb0462ea47af40999"
     },
     "fetch": {
@@ -314,6 +327,7 @@
       "ourToolCount": 1,
       "cliToolCount": 1,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "5d0a1b56f6c08786d7d764b6f4376fba201015e5a5995b6b39c14350bd4aeeb3"
     },
     "figma-context": {
@@ -332,6 +346,7 @@
       "ourToolCount": 14,
       "cliToolCount": 14,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "245b04832111268c3fcc72543af89fb2f8c109d8306c1b5b8c49dc45977e41e1"
     },
     "firecrawl": {
@@ -408,6 +423,7 @@
       "ourToolCount": 21,
       "cliToolCount": 21,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "3389dd469cfc2f46f06e4be24ba13ff95595ee30fd8dd62df81809a95daf3791"
     },
     "huggingface": {
@@ -417,6 +433,7 @@
       "ourToolCount": 4,
       "cliToolCount": 4,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "a2e48e88545d92665679b878c9e66f4f902af2a11bccafc29cc6e627def941ae"
     },
     "kubernetes": {
@@ -435,6 +452,7 @@
       "ourToolCount": 1,
       "cliToolCount": 1,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "d708fc0ae4f3fb818d01cc3d4da0b74c2e5591a7982735d6200b3d56ab74d66b"
     },
     "mcp-atlassian": {
@@ -464,6 +482,7 @@
       "ourToolCount": 3,
       "cliToolCount": 3,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "9e3f4a65f0dc136a6ffa5ed00f95785ec561e9a78413888da160e44ceb139346"
     },
     "mongodb": {
@@ -482,6 +501,7 @@
       "ourToolCount": 3,
       "cliToolCount": 3,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "48f53cd914e3137feabfb3087abdb3bb54df46907d605a4cf97fac272bba2afb"
     },
     "n8n-mcp": {
@@ -491,6 +511,7 @@
       "ourToolCount": 7,
       "cliToolCount": 7,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "efc31b255c09a3f364367c1450285b1e107d999faf01d4c9c37711aa12410948"
     },
     "neo4j-cypher": {
@@ -500,6 +521,7 @@
       "ourToolCount": 3,
       "cliToolCount": 3,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "2e66ec7b2ea28f25f5b986a65cc950c06febad089b2c3033be49e15548f9c432"
     },
     "netlify": {
@@ -518,6 +540,7 @@
       "ourToolCount": 24,
       "cliToolCount": 24,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "f9544e7c84986529d5bc4a1c9357bbbb9c2f458133904075319f8fec7d716da9"
     },
     "obsidian": {
@@ -556,6 +579,7 @@
       "ourToolCount": 1,
       "cliToolCount": 1,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "4d8f9de25d7aa74f0fb5e0c828a904d74b3934e62cb1032bc6cf0fada1f0d952"
     },
     "perplexity": {
@@ -592,6 +616,7 @@
       "ourToolCount": 33,
       "cliToolCount": 33,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "4af7a9d131b4506471d83cc2d014ffc39b784a16ff181cce05ae2d9f26dbe9ff"
     },
     "postgres": {
@@ -629,6 +654,7 @@
       "ourToolCount": 7,
       "cliToolCount": 7,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "d9e46f0316917c1d140ffeebceefd4d31c16188780ac278baf347ff536015dd0"
     },
     "qdrant": {
@@ -647,6 +673,7 @@
       "ourToolCount": 53,
       "cliToolCount": 53,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "92a01e079c4436e651586a0fa4117e21204dc481de169763e621253280225570"
     },
     "searxng": {
@@ -656,6 +683,7 @@
       "ourToolCount": 4,
       "cliToolCount": 4,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "277906d8ed722cfce33b345e34effdc0a2c37c8effc4fc85c9f5d13888d6ea7f"
     },
     "sentry": {
@@ -684,6 +712,7 @@
       "ourToolCount": 29,
       "cliToolCount": 29,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "7d876a84707e0689df306366dc7c3225ae49762ca045d7604c7c9a2b20dfbc3c"
     },
     "shopify-dev": {
@@ -703,6 +732,7 @@
       "ourToolCount": 8,
       "cliToolCount": 8,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "5939f969618ff709e86ff0599b80cc8f418db8904b4304a6eeb82a25f30ccd81"
     },
     "sqlite": {
@@ -712,6 +742,7 @@
       "ourToolCount": 6,
       "cliToolCount": 6,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "d432983abc546eac2725c9db1a07f5f8dad0e6cbfb12f925c1d4fb61743d1c6b"
     },
     "ssh-manager": {
@@ -731,6 +762,7 @@
       "ourToolCount": 29,
       "cliToolCount": 29,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "8ad33a05f12e8c0f535683508468dd970df8715f01fc82235b2b039718aeebf7"
     },
     "tavily": {
@@ -759,6 +791,7 @@
       "ourToolCount": 2,
       "cliToolCount": 2,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "7c6ff08840620894a66a103e02a8eb315013dd0a7d7c6cfb59b0fbe51f8a5d87"
     },
     "xcodebuildmcp": {

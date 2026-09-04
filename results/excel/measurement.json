@@ -1560,11 +1560,12 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T12:04:30.915Z",
+  "measuredAt": "2026-09-04T05:40:59.045Z",
   "serverName": "excel-mcp",
-  "serverVersion": "1.29.0",
+  "serverVersion": "1.29.1",
   "launchCommand": "uvx excel-mcp-server stdio",
   "envVarNames": [],
+  "serverInstructions": "Excel MCP Server for manipulating Excel files",
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",

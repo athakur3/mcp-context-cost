@@ -24,6 +24,29 @@
           "tokens": 1924
         }
       ]
+    },
+    {
+      "date": "2026-09-04",
+      "canonicalSha256": "a2e48e88545d92665679b878c9e66f4f902af2a11bccafc29cc6e627def941ae",
+      "totalTokens": 4724,
+      "tools": [
+        {
+          "name": "hf_whoami",
+          "tokens": 1948
+        },
+        {
+          "name": "hub_repo_search",
+          "tokens": 364
+        },
+        {
+          "name": "hub_repo_details",
+          "tokens": 453
+        },
+        {
+          "name": "hf_fs",
+          "tokens": 1957
+        }
+      ]
     }
   ]
 }

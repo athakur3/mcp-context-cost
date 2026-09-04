@@ -1,6 +1,6 @@
 # fetch — context cost
 
-**238 tokens** across 1 tools — *lean* (< 1K). Measured 2026-09-02 under [methodology v1.0](../METHODOLOGY.html).
+**238 tokens** across 1 tools — *lean* (< 1K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -28,6 +28,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 |---|---:|---:|---|---:|
 | 2026-08-18 | 238 | 1 | docker | — |
 | 2026-09-02 | 238 | 1 | docker | no change |
+| 2026-09-04 | 238 | 1 | docker | no change |
 
 Full series: [results/history.csv](https://github.com/athakur3/mcp-context-cost/blob/main/results/history.csv).
 

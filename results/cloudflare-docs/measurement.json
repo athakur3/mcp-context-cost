@@ -101,11 +101,12 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:02:28.965Z",
+  "measuredAt": "2026-09-04T05:35:29.763Z",
   "serverName": "docs-ai-search",
   "serverVersion": "0.4.13",
   "launchCommand": "npx -y mcp-remote https://docs.mcp.cloudflare.com/sse",
   "envVarNames": [],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",

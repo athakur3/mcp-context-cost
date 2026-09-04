@@ -225,7 +225,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T12:03:35.995Z",
+  "measuredAt": "2026-09-04T05:09:23.976Z",
   "serverName": "Slack MCP Server",
   "serverVersion": "1.0.0",
   "launchCommand": "npx -y @modelcontextprotocol/server-slack",
@@ -233,11 +233,12 @@
     "SLACK_BOT_TOKEN",
     "SLACK_TEAM_ID"
   ],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials, shared package cache bypassed"
+    "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 240000
+  "timeoutMs": 480000
 }
