@@ -59,6 +59,30 @@ describe('published pages agree with the data on disk', () => {
     });
   }
 
+  it('states a Claude figure only where the leaderboard would print one', () => {
+    // The README once carried github at 54,422 (from a divergence row computed
+    // against bytes that no longer existed) three lines from 54,622 (from the
+    // measurement) — the staleness gate guarded one number and not its
+    // neighbour. The badge column now comes from the measurement, and the
+    // Claude column is null exactly when the leaderboard prints `—`.
+    const board = readFileSync(join(repoRoot, 'results', 'leaderboard.md'), 'utf8');
+    for (const name of ['github', 'notion'] as const) {
+      const row = board.split('\n').find((l) => l.includes(`| [${name}](`))!;
+      const boardShowsClaude = row.split('|')[5]?.trim() !== '—';
+      expect(stats.claude[name].claudeTokens === null, `${name}: README vs leaderboard`).toBe(!boardShowsClaude);
+      // And the badge column is the measured number, never the run's copy of it.
+      expect(stats.claude[name].badgeTokens).toBe(stats.sample[name]?.tokens ?? stats.claude[name].badgeTokens);
+    }
+  });
+
+  it('derives its ranges only from rows that still describe the capture on disk', () => {
+    expect(stats.claude.shareMin).toBeGreaterThanOrEqual(0);
+    expect(stats.claude.shareMax).toBeLessThanOrEqual(1);
+    expect(stats.claude.shareMin).toBeLessThanOrEqual(stats.claude.shareMax);
+    // The exemplar METHODOLOGY names is derived, so it cannot name a stale row.
+    expect(stats.claude.widest.mapped).toBeLessThanOrEqual(stats.claude.widest.full);
+  });
+
   it('derives the numbers the pages state from the same rules the leaderboard uses', () => {
     expect(Object.keys(stats.sample).sort()).toEqual([...SAMPLE_SERVERS].sort());
     expect(stats.spanTimes).toBe(floorToTwoSignificant(stats.max.tokens / stats.min.tokens));
@@ -130,7 +154,7 @@ describe('the patch engine', () => {
 
   it('every claim template has as many slots as its values function returns', () => {
     for (const c of PAGE_CLAIMS) {
-      const slots = [...c.template.matchAll(/\{[ndwf]\}/g)].length;
+      const slots = [...c.template.matchAll(/\{[ndwfq]\}/g)].length;
       expect(c.values(stats), `claim '${c.id}'`).toHaveLength(slots);
     }
   });

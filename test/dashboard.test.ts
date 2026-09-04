@@ -92,7 +92,7 @@ describe('generateDashboard sparklines', () => {
     expect(html).toContain('1,200 → 1,210'); // only the docker run is plotted
     expect(html).not.toContain('900 → 1,210'); // the false 34% jump is never published
     expect(html).toContain('2 earlier sweeps measured under different isolation, not plotted');
-    expect(html).toContain('+10 / 2d'); // and the table column agrees with the line
+    expect(html).toContain('+10 over 2 sweeps'); // and the table column agrees with the line
   });
 
   it('says why there is no line when only the pre-change sweeps would remain', () => {

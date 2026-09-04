@@ -89,7 +89,7 @@
 </style>
 <div class="wrap">
   <header>
-    <p class="eyebrow">methodology v1.0 · o200k_base · generated 2026-09-03 21:40 UTC</p>
+    <p class="eyebrow">methodology v1.0 · o200k_base · generated 2026-09-04 00:54 UTC</p>
     <h1>mcp-context-cost</h1>
     <p class="sub">What popular MCP servers cost in context tokens before the agent does any work — measured from raw <code>tools/list</code> captures, every number re-derivable from its published measurement file.</p>
   </header>
@@ -102,9 +102,9 @@
   </div>
 
   <h2>Leaderboard</h2>
-  <p class="h2sub">Tokens = o200k_base count of the canonical <code>tools/list</code> bytes — the wire payload. What a <em>Claude request</em> actually carries can differ sharply (github: 54,422 on the wire, 18,406 in a request — 80% of its schema bytes are fields no Anthropic request sends). The trend line plots tokens across every sweep date on record (oldest→newest, dot = current); servers with one sweep so far show no line yet, and a sweep taken under different isolation than the current one is left out rather than drawn as a change in the server. Hover a row for exact numbers; <a href="METHODOLOGY.html#claude-divergence">method</a>.</p>
+  <p class="h2sub">Tokens = o200k_base count of the canonical <code>tools/list</code> bytes — the wire payload. What a <em>Claude request</em> actually carries can differ sharply (a server can spend most of its schema bytes on fields no Anthropic request sends, and the denser tokenizer can push the rest back up). The trend line plots tokens across every sweep date on record (oldest→newest, dot = current); servers with one sweep so far show no line yet, and a sweep taken under different isolation than the current one is left out rather than drawn as a change in the server. Hover a row for exact numbers; <a href="METHODOLOGY.html#claude-divergence">method</a>.</p>
   <div class="board">
-<a class="row" href="servers/github.html" data-tip="44 tools · largest: issue_write (2,050 tok) · in a Claude request: 18,406 tok · 3-sweep trend: 54,422 → 54,622 · vendor-official · measured · v1.11.0">
+<a class="row" href="servers/github.html" data-tip="44 tools · largest: issue_write (2,050 tok) · 3-sweep trend: 54,422 → 54,622 · vendor-official · measured · v1.11.0">
   <span class="rank">1</span>
   <span class="name">github</span>
   <span class="track"><span class="bar" style="width:100.0%"></span></span>
@@ -296,7 +296,7 @@
   </svg></span>
   <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>7,926<span class="bandname">moderate</span></span>
 </a>
-<a class="row" href="servers/blender.html" data-tip="28 tools · largest: download_polypizza_model (490 tok) · in a Claude request: 8,409 tok · 3-sweep trend: 5,258 → 6,928 · community · measured · v1.29.1">
+<a class="row" href="servers/blender.html" data-tip="28 tools · largest: download_polypizza_model (490 tok) · 3-sweep trend: 5,258 → 6,928 · community · measured · v1.29.1">
   <span class="rank">22</span>
   <span class="name">blender</span>
   <span class="track"><span class="bar" style="width:12.7%"></span></span>
@@ -306,7 +306,7 @@
   </svg></span>
   <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>6,928<span class="bandname">moderate</span></span>
 </a>
-<a class="row" href="servers/shopify-dev.html" data-tip="6 tools · largest: learn_shopify_api (2,847 tok) · in a Claude request: 9,805 tok · 3-sweep trend: 5,624 → 6,841 · vendor-official · measured · v1.15.0">
+<a class="row" href="servers/shopify-dev.html" data-tip="6 tools · largest: learn_shopify_api (2,847 tok) · 3-sweep trend: 5,624 → 6,841 · vendor-official · measured · v1.15.0">
   <span class="rank">23</span>
   <span class="name">shopify-dev</span>
   <span class="track"><span class="bar" style="width:12.5%"></span></span>
@@ -330,7 +330,7 @@
   <span class="spark-cell"></span>
   <span class="val"><span class="dot dot-yellow" aria-hidden="true"></span>6,134<span class="bandname">moderate</span></span>
 </a>
-<a class="row" href="servers/sentry.html" data-tip="9 tools · largest: update_issue (1,248 tok) · in a Claude request: 10,463 tok · 3-sweep trend: 6,455 → 6,086 · vendor-official · measured · v0.39.0">
+<a class="row" href="servers/sentry.html" data-tip="9 tools · largest: update_issue (1,248 tok) · 3-sweep trend: 6,455 → 6,086 · vendor-official · measured · v0.39.0">
   <span class="rank">26</span>
   <span class="name">sentry</span>
   <span class="track"><span class="bar" style="width:11.1%"></span></span>
@@ -934,87 +934,87 @@ npm error notsup Unsupported platform for sa</td></tr></tbody>
   <details><summary>Full data table</summary>
   <div class="tablewrap" style="margin-top:10px"><table>
     <thead><tr><th>#</th><th>server</th><th>tokens (o200k)</th><th>claude req</th><th>tools</th><th>band</th><th>category</th><th>trend</th></tr></thead>
-    <tbody><tr><td>1</td><td>github</td><td class="num">54,622</td><td class="num">18,406</td><td class="num">44</td><td>very heavy</td><td>vendor-official</td><td class="num">+200 / 3d</td></tr>
+    <tbody><tr><td>1</td><td>github</td><td class="num">54,622</td><td class="num">—</td><td class="num">44</td><td>very heavy</td><td>vendor-official</td><td class="num">+200 over 3 sweeps</td></tr>
 <tr><td>2</td><td>comfyui-mcp</td><td class="num">50,640</td><td class="num">—</td><td class="num">41</td><td>very heavy</td><td>community</td><td class="num">—</td></tr>
-<tr><td>3</td><td>xcodebuildmcp</td><td class="num">26,594</td><td class="num">5,335</td><td class="num">24</td><td>heavy</td><td>community</td><td class="num">+0 / 2d</td></tr>
-<tr><td>4</td><td>brave-search</td><td class="num">25,456</td><td class="num">13,746</td><td class="num">8</td><td>heavy</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
-<tr><td>5</td><td>notion</td><td class="num">17,500</td><td class="num">33,560</td><td class="num">24</td><td>heavy</td><td>vendor-official</td><td class="num">+0 / 3d</td></tr>
-<tr><td>6</td><td>mcp-atlassian</td><td class="num">17,311</td><td class="num">22,234</td><td class="num">63</td><td>heavy</td><td>community</td><td class="num">+0 / 4d</td></tr>
+<tr><td>3</td><td>xcodebuildmcp</td><td class="num">26,594</td><td class="num">5,335</td><td class="num">24</td><td>heavy</td><td>community</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>4</td><td>brave-search</td><td class="num">25,456</td><td class="num">13,746</td><td class="num">8</td><td>heavy</td><td>vendor-official</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>5</td><td>notion</td><td class="num">17,500</td><td class="num">33,560</td><td class="num">24</td><td>heavy</td><td>vendor-official</td><td class="num">+0 over 3 sweeps</td></tr>
+<tr><td>6</td><td>mcp-atlassian</td><td class="num">17,311</td><td class="num">22,234</td><td class="num">63</td><td>heavy</td><td>community</td><td class="num">+0 over 4 sweeps</td></tr>
 <tr><td>7</td><td>octocode</td><td class="num">13,552</td><td class="num">—</td><td class="num">14</td><td>moderate</td><td>community</td><td class="num">—</td></tr>
 <tr><td>8</td><td>githits</td><td class="num">12,600</td><td class="num">—</td><td class="num">16</td><td>moderate</td><td>community</td><td class="num">—</td></tr>
-<tr><td>9</td><td>circleci</td><td class="num">11,912</td><td class="num">19,164</td><td class="num">13</td><td>moderate</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
-<tr><td>10</td><td>desktop-commander</td><td class="num">11,836</td><td class="num">19,305</td><td class="num">26</td><td>moderate</td><td>community</td><td class="num">+1 / 2d</td></tr>
-<tr><td>11</td><td>apify</td><td class="num">10,426</td><td class="num">8,313</td><td class="num">10</td><td>moderate</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
+<tr><td>9</td><td>circleci</td><td class="num">11,912</td><td class="num">19,164</td><td class="num">13</td><td>moderate</td><td>vendor-official</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>10</td><td>desktop-commander</td><td class="num">11,836</td><td class="num">19,305</td><td class="num">26</td><td>moderate</td><td>community</td><td class="num">+1 over 2 sweeps</td></tr>
+<tr><td>11</td><td>apify</td><td class="num">10,426</td><td class="num">8,313</td><td class="num">10</td><td>moderate</td><td>vendor-official</td><td class="num">+0 over 2 sweeps</td></tr>
 <tr><td>12</td><td>appium-mcp</td><td class="num">10,267</td><td class="num">—</td><td class="num">31</td><td>moderate</td><td>vendor-official</td><td class="num">—</td></tr>
 <tr><td>13</td><td>obsidian-rest</td><td class="num">10,173</td><td class="num">—</td><td class="num">12</td><td>moderate</td><td>community</td><td class="num">—</td></tr>
-<tr><td>14</td><td>firecrawl</td><td class="num">9,561</td><td class="num">16,428</td><td class="num">27</td><td>moderate</td><td>vendor-official</td><td class="num">+0 / 4d</td></tr>
-<tr><td>15</td><td>redis</td><td class="num">9,246</td><td class="num">13,221</td><td class="num">53</td><td>moderate</td><td>vendor-official</td><td class="num">+0 / 3d</td></tr>
-<tr><td>16</td><td>basic-memory</td><td class="num">9,188</td><td class="num">12,426</td><td class="num">23</td><td>moderate</td><td>community</td><td class="num">+0 / 3d</td></tr>
-<tr><td>17</td><td>hubspot</td><td class="num">9,158</td><td class="num">14,398</td><td class="num">21</td><td>moderate</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
-<tr><td>18</td><td>postgres-mcp</td><td class="num">8,632</td><td class="num">2,381</td><td class="num">9</td><td>moderate</td><td>community</td><td class="num">+0 / 3d</td></tr>
+<tr><td>14</td><td>firecrawl</td><td class="num">9,561</td><td class="num">16,428</td><td class="num">27</td><td>moderate</td><td>vendor-official</td><td class="num">+0 over 4 sweeps</td></tr>
+<tr><td>15</td><td>redis</td><td class="num">9,246</td><td class="num">13,221</td><td class="num">53</td><td>moderate</td><td>vendor-official</td><td class="num">+0 over 3 sweeps</td></tr>
+<tr><td>16</td><td>basic-memory</td><td class="num">9,188</td><td class="num">12,426</td><td class="num">23</td><td>moderate</td><td>community</td><td class="num">+0 over 3 sweeps</td></tr>
+<tr><td>17</td><td>hubspot</td><td class="num">9,158</td><td class="num">14,398</td><td class="num">21</td><td>moderate</td><td>vendor-official</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>18</td><td>postgres-mcp</td><td class="num">8,632</td><td class="num">2,381</td><td class="num">9</td><td>moderate</td><td>community</td><td class="num">+0 over 3 sweeps</td></tr>
 <tr><td>19</td><td>ssh-manager</td><td class="num">8,446</td><td class="num">—</td><td class="num">37</td><td>moderate</td><td>community</td><td class="num">—</td></tr>
-<tr><td>20</td><td>serena</td><td class="num">8,204</td><td class="num">11,494</td><td class="num">29</td><td>moderate</td><td>community</td><td class="num">+0 / 2d</td></tr>
-<tr><td>21</td><td>mongodb</td><td class="num">7,926</td><td class="num">8,765</td><td class="num">27</td><td>moderate</td><td>vendor-official</td><td class="num">+0 / 4d</td></tr>
-<tr><td>22</td><td>blender</td><td class="num">6,928</td><td class="num">8,409</td><td class="num">28</td><td>moderate</td><td>community</td><td class="num">+1,670 / 3d</td></tr>
-<tr><td>23</td><td>shopify-dev</td><td class="num">6,841</td><td class="num">9,805</td><td class="num">6</td><td>moderate</td><td>vendor-official</td><td class="num">+1,217 / 3d</td></tr>
+<tr><td>20</td><td>serena</td><td class="num">8,204</td><td class="num">11,494</td><td class="num">29</td><td>moderate</td><td>community</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>21</td><td>mongodb</td><td class="num">7,926</td><td class="num">8,765</td><td class="num">27</td><td>moderate</td><td>vendor-official</td><td class="num">+0 over 4 sweeps</td></tr>
+<tr><td>22</td><td>blender</td><td class="num">6,928</td><td class="num">—</td><td class="num">28</td><td>moderate</td><td>community</td><td class="num">+1,670 over 3 sweeps</td></tr>
+<tr><td>23</td><td>shopify-dev</td><td class="num">6,841</td><td class="num">—</td><td class="num">6</td><td>moderate</td><td>vendor-official</td><td class="num">+1,217 over 3 sweeps</td></tr>
 <tr><td>24</td><td>bitbucket-mcp</td><td class="num">6,156</td><td class="num">—</td><td class="num">47</td><td>moderate</td><td>community</td><td class="num">—</td></tr>
 <tr><td>25</td><td>agentphone</td><td class="num">6,134</td><td class="num">—</td><td class="num">28</td><td>moderate</td><td>community</td><td class="num">—</td></tr>
-<tr><td>26</td><td>sentry</td><td class="num">6,086</td><td class="num">10,463</td><td class="num">9</td><td>moderate</td><td>vendor-official</td><td class="num">-369 / 3d</td></tr>
-<tr><td>27</td><td>pinecone</td><td class="num">5,903</td><td class="num">9,184</td><td class="num">9</td><td>moderate</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
+<tr><td>26</td><td>sentry</td><td class="num">6,086</td><td class="num">—</td><td class="num">9</td><td>moderate</td><td>vendor-official</td><td class="num">-369 over 3 sweeps</td></tr>
+<tr><td>27</td><td>pinecone</td><td class="num">5,903</td><td class="num">9,184</td><td class="num">9</td><td>moderate</td><td>vendor-official</td><td class="num">+0 over 2 sweeps</td></tr>
 <tr><td>28</td><td>chrome-devtools</td><td class="num">5,717</td><td class="num">—</td><td class="num">29</td><td>moderate</td><td>vendor-official</td><td class="num">—</td></tr>
-<tr><td>29</td><td>kubernetes</td><td class="num">5,268</td><td class="num">9,165</td><td class="num">23</td><td>moderate</td><td>community</td><td class="num">+0 / 4d</td></tr>
+<tr><td>29</td><td>kubernetes</td><td class="num">5,268</td><td class="num">9,165</td><td class="num">23</td><td>moderate</td><td>community</td><td class="num">+0 over 4 sweeps</td></tr>
 <tr><td>30</td><td>codebase-memory-mcp</td><td class="num">5,258</td><td class="num">—</td><td class="num">15</td><td>moderate</td><td>community</td><td class="num">—</td></tr>
 <tr><td>31</td><td>clinicaltrialsgov</td><td class="num">5,134</td><td class="num">—</td><td class="num">7</td><td>moderate</td><td>community</td><td class="num">—</td></tr>
-<tr><td>32</td><td>aws-documentation</td><td class="num">5,074</td><td class="num">—</td><td class="num">5</td><td>moderate</td><td>vendor-official</td><td class="num">+0 / 3d</td></tr>
-<tr><td>33</td><td>supabase</td><td class="num">5,013</td><td class="num">—</td><td class="num">29</td><td>moderate</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
-<tr><td>34</td><td>huggingface</td><td class="num">4,691</td><td class="num">—</td><td class="num">4</td><td>light</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
-<tr><td>35</td><td>excel</td><td class="num">4,266</td><td class="num">—</td><td class="num">25</td><td>light</td><td>community</td><td class="num">+0 / 2d</td></tr>
-<tr><td>36</td><td>airtable</td><td class="num">4,207</td><td class="num">—</td><td class="num">16</td><td>light</td><td>community</td><td class="num">+0 / 2d</td></tr>
-<tr><td>37</td><td>playwright</td><td class="num">4,024</td><td class="num">—</td><td class="num">24</td><td>light</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
-<tr><td>38</td><td>arxiv</td><td class="num">3,960</td><td class="num">—</td><td class="num">19</td><td>light</td><td>community</td><td class="num">+732 / 3d</td></tr>
-<tr><td>39</td><td>github-legacy</td><td class="num">3,548</td><td class="num">—</td><td class="num">26</td><td>light</td><td>official-reference</td><td class="num">+0 / 3d</td></tr>
-<tr><td>40</td><td>playwright-community</td><td class="num">2,920</td><td class="num">—</td><td class="num">33</td><td>light</td><td>community</td><td class="num">+0 / 2d</td></tr>
-<tr><td>41</td><td>chroma</td><td class="num">2,837</td><td class="num">—</td><td class="num">13</td><td>light</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
-<tr><td>42</td><td>netlify</td><td class="num">2,831</td><td class="num">—</td><td class="num">9</td><td>light</td><td>vendor-official</td><td class="num">+0 / 4d</td></tr>
-<tr><td>43</td><td>filesystem</td><td class="num">2,823</td><td class="num">—</td><td class="num">14</td><td>light</td><td>official-reference</td><td class="num">+0 / 2d</td></tr>
-<tr><td>44</td><td>pulumi</td><td class="num">2,768</td><td class="num">—</td><td class="num">12</td><td>light</td><td>vendor-official</td><td class="num">+0 / 4d</td></tr>
-<tr><td>45</td><td>n8n-mcp</td><td class="num">2,636</td><td class="num">—</td><td class="num">7</td><td>light</td><td>community</td><td class="num">+0 / 2d</td></tr>
-<tr><td>46</td><td>memory</td><td class="num">2,378</td><td class="num">—</td><td class="num">9</td><td>light</td><td>official-reference</td><td class="num">+0 / 7d</td></tr>
-<tr><td>47</td><td>obsidian</td><td class="num">2,062</td><td class="num">—</td><td class="num">15</td><td>light</td><td>community</td><td class="num">+930 / 4d</td></tr>
-<tr><td>48</td><td>terraform</td><td class="num">2,061</td><td class="num">—</td><td class="num">9</td><td>light</td><td>vendor-official</td><td class="num">+0 / 4d</td></tr>
-<tr><td>49</td><td>everything</td><td class="num">1,708</td><td class="num">—</td><td class="num">13</td><td>light</td><td>official-reference</td><td class="num">+0 / 3d</td></tr>
-<tr><td>50</td><td>tavily</td><td class="num">1,653</td><td class="num">—</td><td class="num">5</td><td>light</td><td>vendor-official</td><td class="num">+0 / 3d</td></tr>
-<tr><td>51</td><td>searxng</td><td class="num">1,537</td><td class="num">—</td><td class="num">4</td><td>light</td><td>community</td><td class="num">+56 / 3d</td></tr>
+<tr><td>32</td><td>aws-documentation</td><td class="num">5,074</td><td class="num">—</td><td class="num">5</td><td>moderate</td><td>vendor-official</td><td class="num">+0 over 3 sweeps</td></tr>
+<tr><td>33</td><td>supabase</td><td class="num">5,013</td><td class="num">—</td><td class="num">29</td><td>moderate</td><td>vendor-official</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>34</td><td>huggingface</td><td class="num">4,691</td><td class="num">—</td><td class="num">4</td><td>light</td><td>vendor-official</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>35</td><td>excel</td><td class="num">4,266</td><td class="num">—</td><td class="num">25</td><td>light</td><td>community</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>36</td><td>airtable</td><td class="num">4,207</td><td class="num">—</td><td class="num">16</td><td>light</td><td>community</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>37</td><td>playwright</td><td class="num">4,024</td><td class="num">—</td><td class="num">24</td><td>light</td><td>vendor-official</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>38</td><td>arxiv</td><td class="num">3,960</td><td class="num">—</td><td class="num">19</td><td>light</td><td>community</td><td class="num">+732 over 3 sweeps</td></tr>
+<tr><td>39</td><td>github-legacy</td><td class="num">3,548</td><td class="num">—</td><td class="num">26</td><td>light</td><td>official-reference</td><td class="num">+0 over 3 sweeps</td></tr>
+<tr><td>40</td><td>playwright-community</td><td class="num">2,920</td><td class="num">—</td><td class="num">33</td><td>light</td><td>community</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>41</td><td>chroma</td><td class="num">2,837</td><td class="num">—</td><td class="num">13</td><td>light</td><td>vendor-official</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>42</td><td>netlify</td><td class="num">2,831</td><td class="num">—</td><td class="num">9</td><td>light</td><td>vendor-official</td><td class="num">+0 over 4 sweeps</td></tr>
+<tr><td>43</td><td>filesystem</td><td class="num">2,823</td><td class="num">—</td><td class="num">14</td><td>light</td><td>official-reference</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>44</td><td>pulumi</td><td class="num">2,768</td><td class="num">—</td><td class="num">12</td><td>light</td><td>vendor-official</td><td class="num">+0 over 4 sweeps</td></tr>
+<tr><td>45</td><td>n8n-mcp</td><td class="num">2,636</td><td class="num">—</td><td class="num">7</td><td>light</td><td>community</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>46</td><td>memory</td><td class="num">2,378</td><td class="num">—</td><td class="num">9</td><td>light</td><td>official-reference</td><td class="num">+0 over 7 sweeps</td></tr>
+<tr><td>47</td><td>obsidian</td><td class="num">2,062</td><td class="num">—</td><td class="num">15</td><td>light</td><td>community</td><td class="num">+930 over 4 sweeps</td></tr>
+<tr><td>48</td><td>terraform</td><td class="num">2,061</td><td class="num">—</td><td class="num">9</td><td>light</td><td>vendor-official</td><td class="num">+0 over 4 sweeps</td></tr>
+<tr><td>49</td><td>everything</td><td class="num">1,708</td><td class="num">—</td><td class="num">13</td><td>light</td><td>official-reference</td><td class="num">+0 over 3 sweeps</td></tr>
+<tr><td>50</td><td>tavily</td><td class="num">1,653</td><td class="num">—</td><td class="num">5</td><td>light</td><td>vendor-official</td><td class="num">+0 over 3 sweeps</td></tr>
+<tr><td>51</td><td>searxng</td><td class="num">1,537</td><td class="num">—</td><td class="num">4</td><td>light</td><td>community</td><td class="num">+56 over 3 sweeps</td></tr>
 <tr><td>52</td><td>git</td><td class="num">1,455</td><td class="num">—</td><td class="num">12</td><td>light</td><td>official-reference</td><td class="num">—</td></tr>
-<tr><td>53</td><td>pandoc</td><td class="num">1,425</td><td class="num">—</td><td class="num">1</td><td>light</td><td>community</td><td class="num">+0 / 2d</td></tr>
-<tr><td>54</td><td>context7</td><td class="num">1,052</td><td class="num">—</td><td class="num">2</td><td>light</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
-<tr><td>55</td><td>sequential-thinking</td><td class="num">1,003</td><td class="num">—</td><td class="num">1</td><td>light</td><td>official-reference</td><td class="num">+11 / 3d</td></tr>
-<tr><td>56</td><td>bright-data</td><td class="num">978</td><td class="num">—</td><td class="num">5</td><td>lean</td><td>vendor-official</td><td class="num">+0 / 3d</td></tr>
-<tr><td>57</td><td>microsoft-learn</td><td class="num">972</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
-<tr><td>58</td><td>figma-context</td><td class="num">946</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>community</td><td class="num">+0 / 4d</td></tr>
-<tr><td>59</td><td>duckduckgo</td><td class="num">724</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>community</td><td class="num">+0 / 3d</td></tr>
-<tr><td>60</td><td>clickhouse</td><td class="num">694</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>vendor-official</td><td class="num">+113 / 3d</td></tr>
-<tr><td>61</td><td>slack-legacy</td><td class="num">681</td><td class="num">—</td><td class="num">8</td><td>lean</td><td>official-reference</td><td class="num">+0 / 3d</td></tr>
+<tr><td>53</td><td>pandoc</td><td class="num">1,425</td><td class="num">—</td><td class="num">1</td><td>light</td><td>community</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>54</td><td>context7</td><td class="num">1,052</td><td class="num">—</td><td class="num">2</td><td>light</td><td>vendor-official</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>55</td><td>sequential-thinking</td><td class="num">1,003</td><td class="num">—</td><td class="num">1</td><td>light</td><td>official-reference</td><td class="num">+11 over 3 sweeps</td></tr>
+<tr><td>56</td><td>bright-data</td><td class="num">978</td><td class="num">—</td><td class="num">5</td><td>lean</td><td>vendor-official</td><td class="num">+0 over 3 sweeps</td></tr>
+<tr><td>57</td><td>microsoft-learn</td><td class="num">972</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>vendor-official</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>58</td><td>figma-context</td><td class="num">946</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>community</td><td class="num">+0 over 4 sweeps</td></tr>
+<tr><td>59</td><td>duckduckgo</td><td class="num">724</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>community</td><td class="num">+0 over 3 sweeps</td></tr>
+<tr><td>60</td><td>clickhouse</td><td class="num">694</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>vendor-official</td><td class="num">+113 over 3 sweeps</td></tr>
+<tr><td>61</td><td>slack-legacy</td><td class="num">681</td><td class="num">—</td><td class="num">8</td><td>lean</td><td>official-reference</td><td class="num">+0 over 3 sweeps</td></tr>
 <tr><td>62</td><td>emailmd</td><td class="num">585</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>community</td><td class="num">—</td></tr>
-<tr><td>63</td><td>google-maps</td><td class="num">549</td><td class="num">—</td><td class="num">7</td><td>lean</td><td>official-reference</td><td class="num">+0 / 3d</td></tr>
-<tr><td>64</td><td>puppeteer</td><td class="num">540</td><td class="num">—</td><td class="num">7</td><td>lean</td><td>official-reference</td><td class="num">+0 / 3d</td></tr>
-<tr><td>65</td><td>neo4j-cypher</td><td class="num">523</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
-<tr><td>66</td><td>exa</td><td class="num">486</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>vendor-official</td><td class="num">+0 / 3d</td></tr>
-<tr><td>67</td><td>airbnb</td><td class="num">486</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>community</td><td class="num">+0 / 2d</td></tr>
-<tr><td>68</td><td>cloudflare-docs</td><td class="num">422</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
-<tr><td>69</td><td>mysql</td><td class="num">393</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>community</td><td class="num">+0 / 2d</td></tr>
-<tr><td>70</td><td>elasticsearch</td><td class="num">374</td><td class="num">—</td><td class="num">4</td><td>lean</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
-<tr><td>71</td><td>browserbase</td><td class="num">364</td><td class="num">—</td><td class="num">6</td><td>lean</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
-<tr><td>72</td><td>deepwiki</td><td class="num">359</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>vendor-official</td><td class="num">+0 / 3d</td></tr>
-<tr><td>73</td><td>gitlab</td><td class="num">336</td><td class="num">—</td><td class="num">9</td><td>lean</td><td>official-reference</td><td class="num">+0 / 4d</td></tr>
-<tr><td>74</td><td>brave-search-legacy</td><td class="num">319</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>official-reference</td><td class="num">+0 / 2d</td></tr>
+<tr><td>63</td><td>google-maps</td><td class="num">549</td><td class="num">—</td><td class="num">7</td><td>lean</td><td>official-reference</td><td class="num">+0 over 3 sweeps</td></tr>
+<tr><td>64</td><td>puppeteer</td><td class="num">540</td><td class="num">—</td><td class="num">7</td><td>lean</td><td>official-reference</td><td class="num">+0 over 3 sweeps</td></tr>
+<tr><td>65</td><td>neo4j-cypher</td><td class="num">523</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>vendor-official</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>66</td><td>exa</td><td class="num">486</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>vendor-official</td><td class="num">+0 over 3 sweeps</td></tr>
+<tr><td>67</td><td>airbnb</td><td class="num">486</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>community</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>68</td><td>cloudflare-docs</td><td class="num">422</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>vendor-official</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>69</td><td>mysql</td><td class="num">393</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>community</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>70</td><td>elasticsearch</td><td class="num">374</td><td class="num">—</td><td class="num">4</td><td>lean</td><td>vendor-official</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>71</td><td>browserbase</td><td class="num">364</td><td class="num">—</td><td class="num">6</td><td>lean</td><td>vendor-official</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>72</td><td>deepwiki</td><td class="num">359</td><td class="num">—</td><td class="num">3</td><td>lean</td><td>vendor-official</td><td class="num">+0 over 3 sweeps</td></tr>
+<tr><td>73</td><td>gitlab</td><td class="num">336</td><td class="num">—</td><td class="num">9</td><td>lean</td><td>official-reference</td><td class="num">+0 over 4 sweeps</td></tr>
+<tr><td>74</td><td>brave-search-legacy</td><td class="num">319</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>official-reference</td><td class="num">+0 over 2 sweeps</td></tr>
 <tr><td>75</td><td>time</td><td class="num">293</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>official-reference</td><td class="num">—</td></tr>
 <tr><td>76</td><td>sqlite</td><td class="num">268</td><td class="num">—</td><td class="num">6</td><td>lean</td><td>official-reference</td><td class="num">—</td></tr>
-<tr><td>77</td><td>fetch</td><td class="num">238</td><td class="num">—</td><td class="num">1</td><td>lean</td><td>official-reference</td><td class="num">+0 / 2d</td></tr>
-<tr><td>78</td><td>qdrant</td><td class="num">188</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>vendor-official</td><td class="num">+0 / 4d</td></tr>
-<tr><td>79</td><td>perplexity</td><td class="num">133</td><td class="num">—</td><td class="num">1</td><td>lean</td><td>vendor-official</td><td class="num">+0 / 2d</td></tr>
-<tr><td>80</td><td>markitdown</td><td class="num">64</td><td class="num">—</td><td class="num">1</td><td>lean</td><td>vendor-official</td><td class="num">+0 / 3d</td></tr>
-<tr><td>81</td><td>postgres</td><td class="num">32</td><td class="num">—</td><td class="num">1</td><td>lean</td><td>official-reference</td><td class="num">+0 / 4d</td></tr></tbody>
+<tr><td>77</td><td>fetch</td><td class="num">238</td><td class="num">—</td><td class="num">1</td><td>lean</td><td>official-reference</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>78</td><td>qdrant</td><td class="num">188</td><td class="num">—</td><td class="num">2</td><td>lean</td><td>vendor-official</td><td class="num">+0 over 4 sweeps</td></tr>
+<tr><td>79</td><td>perplexity</td><td class="num">133</td><td class="num">—</td><td class="num">1</td><td>lean</td><td>vendor-official</td><td class="num">+0 over 2 sweeps</td></tr>
+<tr><td>80</td><td>markitdown</td><td class="num">64</td><td class="num">—</td><td class="num">1</td><td>lean</td><td>vendor-official</td><td class="num">+0 over 3 sweeps</td></tr>
+<tr><td>81</td><td>postgres</td><td class="num">32</td><td class="num">—</td><td class="num">1</td><td>lean</td><td>official-reference</td><td class="num">+0 over 4 sweeps</td></tr></tbody>
   </table></div>
   </details>
 

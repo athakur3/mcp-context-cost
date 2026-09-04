@@ -6,6 +6,7 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { parse } from 'yaml';
+import { isCurrent } from '../core/divergence.js';
 import type { Measurement } from '../core/types.js';
 import type { ServerEntry } from './report.js';
 import { bandColor, BAND_META } from '../core/bands.js';
@@ -55,6 +56,9 @@ interface DivergenceEntry {
   o200kFull: number;
   o200kMapped: number;
   claudeDelta: number;
+  /** The capture the row was computed from — what makes it current, or not. */
+  capturedSha256?: string;
+  error?: string;
 }
 
 export function generateDashboard(root = process.cwd()): string {
@@ -95,7 +99,12 @@ export function generateDashboard(root = process.cwd()): string {
       const meta = BAND_META[band];
       const largest = [...m.tools].sort((a, b) => b.tokens - a.tokens)[0];
       const pct = Math.max(1.2, (t / max) * 100);
-      const div = dSrv[r.entry.name];
+      // Gated on the capture it was computed from, exactly as the leaderboard
+      // gates it: four rows here were publishing a Claude cost derived from
+      // bytes that no longer exist, while leaderboard.md printed `—` for the
+      // same four.
+      const dRaw = dSrv[r.entry.name];
+      const div = isCurrent(dRaw as never, m.canonicalSha256 ?? null) ? dRaw : undefined;
       const claudeTip = div ? ` · in a Claude request: ${fmt(div.claudeDelta)} tok` : '';
       const series = seriesFor(r.entry.name);
       const tokens = series.rows.map((h) => h.tokens);
@@ -131,11 +140,16 @@ export function generateDashboard(root = process.cwd()): string {
   const tableRows = measured
     .map((r, i) => {
       const m = r.m!;
-      const div = dSrv[r.entry.name];
+      // Gated on the capture it was computed from, exactly as the leaderboard
+      // gates it: four rows here were publishing a Claude cost derived from
+      // bytes that no longer exist, while leaderboard.md printed `—` for the
+      // same four.
+      const dRaw = dSrv[r.entry.name];
+      const div = isCurrent(dRaw as never, m.canonicalSha256 ?? null) ? dRaw : undefined;
       const tokens = seriesFor(r.entry.name).rows.map((h) => h.tokens);
       const trend =
         tokens.length > 1
-          ? `${tokens[tokens.length - 1]! - tokens[0]! >= 0 ? '+' : ''}${fmt(tokens[tokens.length - 1]! - tokens[0]!)} / ${tokens.length}d`
+          ? `${tokens[tokens.length - 1]! - tokens[0]! >= 0 ? '+' : ''}${fmt(tokens[tokens.length - 1]! - tokens[0]!)} over ${tokens.length} sweeps`
           : '—';
       return `<tr><td>${i + 1}</td><td>${esc(r.entry.name)}</td><td class="num">${fmt(m.totalTokens as number)}</td><td class="num">${div ? fmt(div.claudeDelta) : '—'}</td><td class="num">${esc(m.toolCount)}</td><td>${esc(BAND_META[bandColor(m.totalTokens as number)].label)}</td><td>${esc(r.entry.category)}</td><td class="num">${trend}</td></tr>`;
     })
@@ -254,7 +268,7 @@ export function generateDashboard(root = process.cwd()): string {
   </div>
 
   <h2>Leaderboard</h2>
-  <p class="h2sub">Tokens = o200k_base count of the canonical <code>tools/list</code> bytes — the wire payload. What a <em>Claude request</em> actually carries can differ sharply (github: 54,422 on the wire, ${dSrv['github'] ? fmt(dSrv['github'].claudeDelta) : '…'} in a request — 80% of its schema bytes are fields no Anthropic request sends). The trend line plots tokens across every sweep date on record (oldest→newest, dot = current); servers with one sweep so far show no line yet, and a sweep taken under different isolation than the current one is left out rather than drawn as a change in the server. Hover a row for exact numbers; <a href="METHODOLOGY.html#claude-divergence">method</a>.</p>
+  <p class="h2sub">Tokens = o200k_base count of the canonical <code>tools/list</code> bytes — the wire payload. What a <em>Claude request</em> actually carries can differ sharply (a server can spend most of its schema bytes on fields no Anthropic request sends, and the denser tokenizer can push the rest back up). The trend line plots tokens across every sweep date on record (oldest→newest, dot = current); servers with one sweep so far show no line yet, and a sweep taken under different isolation than the current one is left out rather than drawn as a change in the server. Hover a row for exact numbers; <a href="METHODOLOGY.html#claude-divergence">method</a>.</p>
   <div class="board">
 ${barRows || '<p class="h2sub">Sweep in progress — first results land shortly.</p>'}
   </div>

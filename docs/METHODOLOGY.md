@@ -188,8 +188,8 @@ opposite directions, and a single ratio hides the larger one:
 
 1. **Field selection.** `title`, `annotations`, `outputSchema`, `execution`, and `icons` are
    real bytes the server ships and the canonical form counts them — but an Anthropic `tools`
-   array has nowhere to put them. Across the measured set this removes between 0.7% and
-   **89.9%** of the payload (github: 54,422 → 10,535 tokens).
+   array has nowhere to put them. Across the measured set this removes between 1.3% and
+   **89.9%** of the payload (xcodebuildmcp: 26,594 → 2,676 tokens).
 2. **Tokenizer and framing.** Anthropic's tokenizer is denser on schema text than o200k_base,
    and the API adds its own framing around the tools channel. A single minimal tool costs
    328 tokens more than no tools at all, which is an upper bound on the fixed part.

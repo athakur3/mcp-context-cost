@@ -51,9 +51,12 @@ export interface PublishedStats {
     /** Rows the leaderboard prints a claude number for: measured AND capture-current. */
     currentCount: number;
     heaviestClaudeName: string | null;
-    github: { badgeTokens: number; mappedTokens: number; claudeTokens: number; droppedPct: number };
-    notion: { badgeTokens: number; claudeTokens: number };
-    /** Field-selection share across the run's rows, as fractions of the payload. */
+    /** `claudeTokens` is null when the published row no longer matches the capture on disk. */
+    github: { badgeTokens: number; claudeTokens: number | null };
+    notion: { badgeTokens: number; claudeTokens: number | null };
+    /** The current row showing the largest field-selection effect, and its two counts. */
+    widest: { server: string; full: number; mapped: number };
+    /** Field-selection share across the run's *current* rows, as fractions of the payload. */
     shareMin: number;
     shareMax: number;
     /** claudeDelta / o200kFull across the run's rows that carry a number. */
@@ -110,23 +113,50 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
   }
 
   if (!div) throw new Error('results/divergence.json is missing — README states its numbers');
-  const divRow = (name: string) => {
+
+  /**
+   * A divergence row only where it still describes the capture on disk.
+   *
+   * The staleness gate is the whole discipline of this column, and skipping it
+   * here is how README came to print two different costs for github on one
+   * page: 54,422 from a row computed against bytes that no longer existed,
+   * beside 54,622 from the measurement. `withClaude` below already applied
+   * `isCurrent` to the very same run — the rule guarded one number and not its
+   * neighbour.
+   */
+  const currentDivRow = (name: string) => {
     const d = div.servers[name];
     if (!d) throw new Error(`README's Claude table names ${name}, which is not in the divergence run`);
-    return d;
+    const onDisk = rows.find((r) => r.entry.name === name)?.m?.canonicalSha256 ?? null;
+    return isCurrent(d, onDisk) ? d : null;
   };
-  const github = divRow('github');
-  const notion = divRow('notion');
-  const githubShare = fieldSelectionShare(github);
-  if (githubShare === null) throw new Error('divergence run carries no o200k counts for github');
-  const runRows = Object.values(div.servers);
-  const shares = runRows.map((r) => fieldSelectionShare(r)).filter((s): s is number => s !== null);
-  const ratios = runRows
-    .filter((r) => typeof r.claudeDelta === 'number' && r.claudeDelta > 0 && r.o200kFull > 0)
-    .map((r) => r.claudeDelta / r.o200kFull);
+  /** The badge number comes from the measurement, never from a divergence row's copy of it. */
+  const badgeTokensOf = (name: string) => {
+    const r = measured.find((x) => x.entry.name === name);
+    if (!r) throw new Error(`README's Claude table names ${name}, which has no current measurement`);
+    return r.m.totalTokens!;
+  };
+
+  // Ranges are stated over the rows that are still current, for the same
+  // reason: a range whose endpoint comes from a superseded capture describes a
+  // set that no longer exists.
+  const currentRows = Object.entries(div.servers).filter(([name, r]) =>
+    isCurrent(r, rows.find((x) => x.entry.name === name)?.m?.canonicalSha256 ?? null),
+  );
+  const shares = currentRows
+    .map(([, r]) => fieldSelectionShare(r))
+    .filter((s): s is number => s !== null && s >= 0);
+  const ratios = currentRows
+    .filter(([, r]) => typeof r.claudeDelta === 'number' && r.claudeDelta > 0 && r.o200kFull > 0)
+    .map(([, r]) => r.claudeDelta / r.o200kFull);
   if (shares.length === 0 || ratios.length === 0) {
-    throw new Error('divergence run carries no usable rows — METHODOLOGY states its ranges');
+    throw new Error('no current divergence row — METHODOLOGY states ranges over them; run `npm run divergence`');
   }
+  // The exemplar METHODOLOGY names for the field-selection effect is whichever
+  // current row shows it most, rather than a server hardcoded into the prose.
+  const widest = currentRows
+    .filter(([, r]) => (fieldSelectionShare(r) ?? -1) >= 0)
+    .sort((a, b) => (fieldSelectionShare(b[1]) ?? 0) - (fieldSelectionShare(a[1]) ?? 0))[0]!;
   const withClaude = measured.filter((r) => isCurrent(div.servers[r.entry.name], r.m.canonicalSha256));
   const heaviest = [...withClaude].sort(
     (a, b) => div.servers[b.entry.name].claudeDelta - div.servers[a.entry.name].claudeDelta,
@@ -157,13 +187,9 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
       runSize: Object.keys(div.servers).length,
       currentCount: withClaude.length,
       heaviestClaudeName: heaviest?.entry.name ?? null,
-      github: {
-        badgeTokens: github.o200kFull,
-        mappedTokens: github.o200kMapped,
-        claudeTokens: github.claudeDelta,
-        droppedPct: Math.round(githubShare * 100),
-      },
-      notion: { badgeTokens: notion.o200kFull, claudeTokens: notion.claudeDelta },
+      github: { badgeTokens: badgeTokensOf('github'), claudeTokens: currentDivRow('github')?.claudeDelta ?? null },
+      notion: { badgeTokens: badgeTokensOf('notion'), claudeTokens: currentDivRow('notion')?.claudeDelta ?? null },
+      widest: { server: widest[0], full: widest[1].o200kFull, mapped: widest[1].o200kMapped },
       shareMin: Math.min(...shares),
       shareMax: Math.max(...shares),
       ratioMin: Math.min(...ratios),
@@ -195,6 +221,8 @@ export interface Claim {
 }
 
 const fmt = (n: number) => n.toLocaleString('en-US');
+/** A number, or the em-dash that means "no current measurement" everywhere else here. */
+const q = (n: number | null) => (n === null ? '—' : fmt(n));
 
 export const PAGE_CLAIMS: Claim[] = [
   {
@@ -266,14 +294,14 @@ export const PAGE_CLAIMS: Claim[] = [
   {
     file: 'README.md',
     id: 'claude-table:github',
-    template: '| github | {n} | **{n}** | {d}% of the capture is `annotations`/`outputSchema` metadata Claude never sees |',
-    values: (s) => [fmt(s.claude.github.badgeTokens), fmt(s.claude.github.claudeTokens), String(s.claude.github.droppedPct)],
+    template: '| github | {n} | **{q}** | most of the capture is `annotations`/`outputSchema` metadata Claude never sees |',
+    values: (s) => [fmt(s.claude.github.badgeTokens), q(s.claude.github.claudeTokens)],
   },
   {
     file: 'README.md',
     id: 'claude-table:notion',
-    template: '| notion | {n} | **{n}** | almost no metadata to drop, so the tokenizer difference dominates |',
-    values: (s) => [fmt(s.claude.notion.badgeTokens), fmt(s.claude.notion.claudeTokens)],
+    template: '| notion | {n} | **{q}** | almost no metadata to drop, so the tokenizer difference dominates |',
+    values: (s) => [fmt(s.claude.notion.badgeTokens), q(s.claude.notion.claudeTokens)],
   },
   {
     file: 'README.md',
@@ -309,12 +337,15 @@ export const PAGE_CLAIMS: Claim[] = [
   {
     file: 'docs/METHODOLOGY.md',
     id: 'divergence:share-range',
-    template: 'this removes between {f}% and **{f}%** of the payload (github: {n} → {n} tokens).',
+    template: 'this removes between {f}% and **{f}%** of the payload ({w}: {n} → {n} tokens).',
+    // The exemplar is whichever current row shows the effect most, not a server
+    // named in the prose — a hardcoded name goes stale the week it is re-swept.
     values: (s) => [
       (s.claude.shareMin * 100).toFixed(1),
       (s.claude.shareMax * 100).toFixed(1),
-      fmt(s.claude.github.badgeTokens),
-      fmt(s.claude.github.mappedTokens),
+      s.claude.widest.server,
+      fmt(s.claude.widest.full),
+      fmt(s.claude.widest.mapped),
     ],
   },
   {
@@ -379,7 +410,7 @@ const escapeLiteral = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').re
 export function compileTemplate(template: string): RegExp {
   let source = '';
   let last = 0;
-  for (const slot of template.matchAll(/\{[ndwf]\}/g)) {
+  for (const slot of template.matchAll(/\{[ndwfq]\}/g)) {
     source += escapeLiteral(template.slice(last, slot.index));
     source +=
       slot[0] === '{n}'
@@ -388,7 +419,11 @@ export function compileTemplate(template: string): RegExp {
           ? '(\\d+)'
           : slot[0] === '{f}'
             ? '(\\d+\\.\\d+)'
-            : '([A-Za-z0-9._-]+)';
+            : // `{q}` is a number that may not exist: the em-dash the leaderboard
+              // already prints for a row whose capture has moved on.
+              slot[0] === '{q}'
+              ? '([\\d,]+|—)'
+              : '([A-Za-z0-9._-]+)';
     last = slot.index + slot[0].length;
   }
   source += escapeLiteral(template.slice(last));
