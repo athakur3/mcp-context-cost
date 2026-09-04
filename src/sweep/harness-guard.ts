@@ -103,12 +103,24 @@ export interface Verdict {
  * `current` maps server name to the status it just measured at. Servers absent
  * from it were not swept and are ignored.
  */
-export function verdict(prior: Snapshot[], current: Map<string, MeasurementStatus>): Verdict {
+export function verdict(
+  prior: Snapshot[],
+  current: Map<string, MeasurementStatus>,
+  /**
+   * Servers this sweep could not measure because docker itself failed. They
+   * never reached a status, so they are absent from `current` and invisible to
+   * the comparison below — but they are the same fact it is looking for: a
+   * server that could have produced a number and did not. Counted here so the
+   * two symptoms share one threshold instead of being each other's blind spot.
+   */
+  dockerFaults = 0,
+): Verdict {
   const comparableNames = prior
     .filter((s) => s.status !== null && isGood(s.status) && current.has(s.name))
     .map((s) => s.name);
   const regressed = comparableNames.filter((n) => !isGood(current.get(n)!));
-  const comparable = comparableNames.length;
+  const failed = regressed.length + dockerFaults;
+  const comparable = comparableNames.length + dockerFaults;
 
   if (comparable === 0) {
     return {
@@ -120,16 +132,17 @@ export function verdict(prior: Snapshot[], current: Map<string, MeasurementStatu
       reason: 'no prior measurement to compare against — harness check not performed',
     };
   }
-  const ratio = regressed.length / comparable;
+  const ratio = failed / comparable;
   const pct = (ratio * 100).toFixed(0);
-  if (regressed.length >= MIN_REGRESSIONS && ratio >= FAULT_RATIO) {
+  const how = dockerFaults > 0 ? ` (${regressed.length} regressed, ${dockerFaults} unmeasurable)` : '';
+  if (failed >= MIN_REGRESSIONS && ratio >= FAULT_RATIO) {
     return {
       fault: true,
       regressed,
       comparable,
       reason:
-        `${regressed.length} of ${comparable} previously-measured servers (${pct}%) failed in ` +
-        `this sweep — at or above the ${MIN_REGRESSIONS}-server, ` +
+        `${failed} of ${comparable} previously-measured servers (${pct}%) produced no number in ` +
+        `this sweep${how} — at or above the ${MIN_REGRESSIONS}-server, ` +
         `${(FAULT_RATIO * 100).toFixed(0)}% threshold that reads as a broken harness ` +
         `rather than broken servers`,
     };
@@ -139,8 +152,8 @@ export function verdict(prior: Snapshot[], current: Map<string, MeasurementStatu
     regressed,
     comparable,
     reason:
-      `${regressed.length} of ${comparable} previously-measured servers (${pct}%) failed in ` +
-      `this sweep — below the harness-fault threshold, publishing normally`,
+      `${failed} of ${comparable} previously-measured servers (${pct}%) produced no number in ` +
+      `this sweep${how} — below the harness-fault threshold, publishing normally`,
   };
 }
 

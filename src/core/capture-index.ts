@@ -106,13 +106,17 @@ export function identify(canonicalSha256: string | null | undefined, index: Capt
   const mine = index.captures[canonicalSha256];
   if (!mine) return { kind: 'unknown' };
   const currentSha = index.current[mine.server];
-  if (!currentSha || currentSha === canonicalSha256) {
+  if (currentSha === canonicalSha256) {
     return { kind: 'current', server: mine.server, date: mine.date, tokens: mine.totalTokens };
   }
-  const current = index.captures[currentSha];
-  // A `current` pointer with no capture behind it describes nothing; treat the
-  // version as identified but with nothing to compare it against.
-  if (!current) return { kind: 'current', server: mine.server, date: mine.date, tokens: mine.totalTokens };
+  // The bytes are identified, but what is current for this server is not: the
+  // pointer is missing, or points at a capture the index dropped as ambiguous.
+  // `current` would be an affirmative claim that nothing has moved, which the
+  // audit prints as "no server here is running a published capture that has
+  // since moved" — told to someone who may be far behind. Unknown currency
+  // reads as unknown, which is the discipline the rest of this module keeps.
+  const current = currentSha ? index.captures[currentSha] : undefined;
+  if (!current) return { kind: 'unknown' };
   return {
     kind: 'behind',
     server: mine.server,

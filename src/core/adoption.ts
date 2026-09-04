@@ -187,6 +187,14 @@ export function decodeLoose(text: string): string {
 export interface EndpointBadge {
   url: string;
   linkTarget: string | null;
+  /**
+   * The badge's own label — markdown alt text or an `<img alt>`. What the badge
+   * calls itself is the only thing in a README that distinguishes *this*
+   * project's badge from any other shields endpoint badge, since the JSON can
+   * be hosted anywhere (the staged action publishes to a gist, with no path
+   * shape to recognise).
+   */
+  alt: string | null;
 }
 
 /** How far either side of an image to look for the link wrapping it. */
@@ -216,7 +224,11 @@ export function endpointBadges(text: string): EndpointBadge[] {
       const last = anchors[anchors.length - 1];
       if (last && !before.slice(last.index ?? 0).includes('</a>')) linkTarget = last[1];
     }
-    out.push({ url: m[1], linkTarget });
+    // Markdown puts the alt before the image; HTML puts it in the same tag.
+    const beforeAlt = decoded.slice(Math.max(0, start - LINK_WINDOW), start);
+    const mdAlt = beforeAlt.match(/!\[([^\]]*)\]\(\s*[^\s)]*$/);
+    const tagAlt = after.match(/^[^<>]*?\balt\s*=\s*["']([^"']*)["']/i);
+    out.push({ url: m[1], linkTarget, alt: mdAlt ? mdAlt[1] : tagAlt ? tagAlt[1] : null });
   }
   return out;
 }
@@ -253,9 +265,30 @@ export function linksBackToProject(target: string, src: BadgeSource = BADGE_SOUR
  * measurement here. See the header for why both count and why the link is
  * paired with the image rather than looked for anywhere in the file.
  */
+/**
+ * Whether a badge calls itself this project's badge.
+ *
+ * The self-hosted branch below used to accept the link alone and look at
+ * nothing else, so *any* shields endpoint badge — a coverage badge, say —
+ * wrapped in a link to this repository counted as displaying ours. That
+ * inflates the one number this project keeps about itself, which is the last
+ * place it can afford a generous reading.
+ *
+ * The URL cannot decide it: self-hosted JSON lives wherever its author put it,
+ * and the staged action publishes to a gist. What every published snippet does
+ * carry is the label — `context cost` — so that is what is read, tolerantly
+ * enough to accept `Context-Cost` and strictly enough to reject `coverage`.
+ */
+export function namesThisBadge(alt: string | null): boolean {
+  if (!alt) return false;
+  return alt.toLowerCase().replace(/[^a-z]/g, '').includes('contextcost');
+}
+
 export function displaysBadge(text: string, src: BadgeSource = BADGE_SOURCE): boolean {
   return endpointBadges(text).some(
-    (b) => hostedHere(b.url, src) || (b.linkTarget !== null && linksBackToProject(b.linkTarget, src)),
+    (b) =>
+      hostedHere(b.url, src) ||
+      (namesThisBadge(b.alt) && b.linkTarget !== null && linksBackToProject(b.linkTarget, src)),
   );
 }
 

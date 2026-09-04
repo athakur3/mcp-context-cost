@@ -25,6 +25,7 @@ import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'yaml';
 import { measureServer } from './run.js';
+import { DockerHarnessFault } from './docker.js';
 import type { ServerEntry } from './report.js';
 import {
   SESSION_START_METHOD,
@@ -79,15 +80,34 @@ if (isMain) {
   const queue = [...entries];
   async function worker() {
     for (let e = queue.shift(); e; e = queue.shift()) {
-      const m = await measureServer(e.name, e.command, {
-        timeoutMs: (e.timeoutSeconds ?? defaultTimeout) * 1000,
-        docker,
-        dockerImage: e.dockerImage,
-        dummyEnv: e.env ?? [],
-        dummyEnvValues: e.envValues,
-        needsGit: e.needsGit,
-        persist: false, // the measurements on disk are not this run's to rewrite
-      });
+      let m;
+      try {
+        m = await measureServer(e.name, e.command, {
+          timeoutMs: (e.timeoutSeconds ?? defaultTimeout) * 1000,
+          docker,
+          dockerImage: e.dockerImage,
+          dummyEnv: e.env ?? [],
+          dummyEnvValues: e.envValues,
+          needsGit: e.needsGit,
+          persist: false, // the measurements on disk are not this run's to rewrite
+        });
+      } catch (err) {
+        // One thrown error used to reject Promise.all and end the process
+        // before anything was written, discarding every capture the run had
+        // already completed — and skipping the `finally` that force-removes
+        // containers, orphaning the in-flight ones. A machine fault on one
+        // server is recorded against that server; the rest of the run stands.
+        if (!(err instanceof DockerHarnessFault)) throw err;
+        servers[e.name] = {
+          instructions: '',
+          instructionsTokens: 0,
+          instructionsSha256: '',
+          capturedSha256: null,
+          error: `docker harness fault: ${err.message.slice(0, 200)}`,
+        };
+        console.log(`  ${e.name}: docker harness fault — recorded, run continues`);
+        continue;
+      }
       if (m.status !== 'measured' && m.status !== 'dynamic') {
         servers[e.name] = {
           instructions: '',

@@ -62,7 +62,18 @@ function csvCell(s: unknown): string {
 export function loadRows(entries: ServerEntry[], root = process.cwd()): Row[] {
   return entries.map((entry) => {
     const p = join(root, 'results', entry.name, 'measurement.json');
-    return { entry, m: existsSync(p) ? (JSON.parse(readFileSync(p, 'utf8')) as Measurement) : null };
+    if (!existsSync(p)) return { entry, m: null };
+    try {
+      return { entry, m: JSON.parse(readFileSync(p, 'utf8')) as Measurement };
+    } catch {
+      // The same tolerance `appendHistory` states for the same file: a sweep
+      // killed mid-write leaves a truncated measurement, and every generator
+      // reads through here. Throwing meant one such file broke the leaderboard,
+      // the server pages, the dashboard, the tool-shape baseline and the
+      // published-stats check at once — weekly, with a SyntaxError that named
+      // no file. A server with no readable record reads as one with no record.
+      return { entry, m: null };
+    }
   });
 }
 

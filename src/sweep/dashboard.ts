@@ -8,7 +8,7 @@ import { dirname, join } from 'node:path';
 import { parse } from 'yaml';
 import { isCurrent } from '../core/divergence.js';
 import type { Measurement } from '../core/types.js';
-import type { ServerEntry } from './report.js';
+import { loadRows, type ServerEntry } from './report.js';
 import { bandColor, BAND_META } from '../core/bands.js';
 import { parseHistory, plottableSeries, type PlottableSeries } from './history.js';
 
@@ -74,10 +74,9 @@ export function generateDashboard(root = process.cwd()): string {
   // across an isolation change is the harness moving, not the server.
   const seriesFor = (name: string): PlottableSeries =>
     plottableSeries(history.filter((h) => h.server === name));
-  const rows: Row[] = doc.servers.map((entry) => {
-    const p = join(root, 'results', entry.name, 'measurement.json');
-    return { entry, m: existsSync(p) ? (JSON.parse(readFileSync(p, 'utf8')) as Measurement) : null };
-  });
+  // Shared with the leaderboard rather than re-read here: one definition of how
+  // a measurement is loaded, including its tolerance for a half-written file.
+  const rows: Row[] = loadRows(doc.servers, root);
 
   const measured = rows
     .filter((r) => r.m && (r.m.status === 'measured' || r.m.status === 'dynamic') && r.m.totalTokens !== null)

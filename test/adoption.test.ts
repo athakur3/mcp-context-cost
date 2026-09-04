@@ -139,6 +139,19 @@ describe('the badge forms this project actually publishes', () => {
     );
   });
 
+  it('does not count an unrelated endpoint badge that merely links here', () => {
+    // The self-hosted branch once accepted the link and looked at nothing else,
+    // so any shields endpoint badge wrapped in a link to this project counted —
+    // inflating the one number this project keeps about itself.
+    const coverage = `[![coverage](https://img.shields.io/endpoint?url=https%3A%2F%2Fcodecov.example.com%2Fapi%2Fshield.json)](${METHODOLOGY})`;
+    expect(classifyFile(coverage)).toBe('mention');
+  });
+
+  it('reads the badge\'s own label tolerantly, since the URL cannot decide it', () => {
+    const gist = 'https://gist.githubusercontent.com/someone/abc123/raw/badge.json';
+    expect(classifyFile(`[![Context-Cost](https://img.shields.io/endpoint?url=${gist})](${METHODOLOGY})`)).toBe('badge');
+  });
+
   it('counts the staged action\'s gist badge, which has no badges/ segment at all', () => {
     const gist = 'https://gist.githubusercontent.com/someone/abc123/raw/badge.json';
     expect(classifyFile(`[![context cost](https://img.shields.io/endpoint?url=${gist})](${METHODOLOGY})`)).toBe(
@@ -180,14 +193,14 @@ describe('endpointBadges', () => {
   it('pairs each image with its own link and no other', () => {
     const md = `[![a](https://img.shields.io/endpoint?url=one)](https://x.example) [![b](https://img.shields.io/endpoint?url=two)](https://y.example)`;
     expect(endpointBadges(md)).toEqual([
-      { url: 'one', linkTarget: 'https://x.example' },
-      { url: 'two', linkTarget: 'https://y.example' },
+      { url: 'one', linkTarget: 'https://x.example', alt: 'a' },
+      { url: 'two', linkTarget: 'https://y.example', alt: 'b' },
     ]);
   });
 
   it('reports no link rather than borrowing a later one', () => {
     const md = `![a](https://img.shields.io/endpoint?url=one)\n\nsee [the page](${PAGE})`;
-    expect(endpointBadges(md)).toEqual([{ url: 'one', linkTarget: null }]);
+    expect(endpointBadges(md)).toEqual([{ url: 'one', linkTarget: null, alt: 'a' }]);
   });
 });
 

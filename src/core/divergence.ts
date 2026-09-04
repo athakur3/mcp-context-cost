@@ -108,6 +108,13 @@ export function mappedTokens(raw: unknown[]): number {
  */
 export function fieldSelectionShare(row: DivergenceRow): number | null {
   if (row.o200kFull <= 0) return null;
+  // The projection can add bytes rather than remove them — `inputSchema`
+  // becomes the longer `input_schema`, and a tool with no description gains
+  // `description: ""` — so a server with almost no metadata to drop can map
+  // *larger* than it measured. There is no share of the payload removed in that
+  // case, and publishing a negative one reads as "−11.1% of the capture is
+  // MCP-only metadata", which is not a thing.
+  if (row.o200kMapped > row.o200kFull) return null;
   return (row.o200kFull - row.o200kMapped) / row.o200kFull;
 }
 

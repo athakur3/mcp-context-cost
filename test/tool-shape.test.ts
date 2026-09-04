@@ -51,13 +51,29 @@ describe('quantileTable and percentileOf', () => {
     expect(baseline.quantiles.descriptionTokens[90]).toBe(90);
   });
 
-  it('places a value at the highest percentile whose quantile it reaches', () => {
+  it('places a value where its tie begins, not where it ends', () => {
     const q = baseline.quantiles.descriptionTokens;
     expect(percentileOf(q, 0)).toBe(0); // below the whole population
-    expect(percentileOf(q, 1)).toBe(1);
     expect(percentileOf(q, 50)).toBe(50);
     expect(percentileOf(q, 100)).toBe(100);
     expect(percentileOf(q, 5000)).toBe(100); // above the whole population
+    // The minimum is heavier than nothing, so it is p0 — the quantile table
+    // repeats it across the bottom, and taking the top of that run would call
+    // the lightest tool in the set p1.
+    expect(percentileOf(q, 1)).toBe(0);
+  });
+
+  it('does not call a value tied with half the set the heaviest in it', () => {
+    // Ten tools, five at 5 and five at 12. Taking the top of the tie reported
+    // 12 as p100 — "heavier than 100% of measured tools" about something
+    // exactly average for its tie — and `--suggest` printed that percentile.
+    const tied = buildToolShapeBaseline(
+      Array.from({ length: 10 }, (_, i) => tm(`t${i}`, 30, i < 5 ? 5 : 12, 10)),
+      { serverCount: 1, generatedAt: '2026-09-04', methodologyVersion: '1.0' },
+    );
+    const p = percentileOf(tied.quantiles.descriptionTokens, 12);
+    expect(p).toBeGreaterThan(SUGGEST_DESCRIPTION_PERCENTILE - 45);
+    expect(p).toBeLessThan(100);
   });
 });
 

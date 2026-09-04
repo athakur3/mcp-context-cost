@@ -75,10 +75,17 @@ export function quantileTable(values: number[]): number[] {
  * checkable by anyone holding the same JSON.
  */
 export function percentileOf(quantiles: number[], value: number): number {
+  // The LOWEST percentile whose quantile the value reaches, not the highest.
+  // Taking the highest reports a value tied with half the measured set as p100
+  // — "heavier than 100% of measured tools" about something exactly average for
+  // its tie — because every percentile across the tie carries the same
+  // quantile. The lowest names where the tie begins, which is what "heavier
+  // than P% of tools" means.
   let p = 0;
   for (let i = 0; i <= 100; i++) {
-    if (quantiles[i] <= value) p = i;
-    else break;
+    if (quantiles[i] <= value) {
+      if (quantiles[i] < value || i === 0 || quantiles[i - 1] < quantiles[i]) p = i;
+    } else break;
   }
   return p;
 }

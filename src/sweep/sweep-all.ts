@@ -114,27 +114,27 @@ async function worker() {
 
 await Promise.all(Array.from({ length: Math.max(1, concurrency) }, () => worker()));
 
-// A docker fault on most of the slice is the harness-fault story with an
-// earlier symptom — the guard below can't see it (nothing regressed on disk;
-// the throws happened before anything was written), so it is judged here by
-// the guard's own thresholds. Below them, the sweep publishes what it did
-// measure and the faulted servers wait for the next cycle.
-if (dockerFaults.size >= MIN_REGRESSIONS && dockerFaults.size / entries.length >= FAULT_RATIO) {
-  console.error(
-    `\nHARNESS FAULT — docker could not run for ${dockerFaults.size} of ${entries.length} servers; ` +
-      `refusing to publish this sweep.\n` +
-      [...dockerFaults].map(([n, msg]) => `  ${n}: ${msg}`).join('\n') +
-      `\n  Nothing was overwritten — every previous record stands. ` +
-      `Check the Docker daemon and registry path, then re-run.`,
-  );
-  process.exit(1);
-}
-
 // Before publishing anything: is this sweep a statement about the servers, or
 // about the machine that measured them?
-const v = verdict(prior, statuses);
+//
+// The two symptoms are counted together, against one denominator. Judged apart
+// they were each other's blind spot: a flaky daemon that throws for 6 of 14
+// servers (6 ≥ 5, but 43% of the slice) and times out 4 more (4 < 5) trips
+// neither threshold, and the sweep publishes with 10 of 14 servers producing no
+// number and four good records overwritten with failures. A server that could
+// have produced a number and didn't is one fact, however it failed.
+const v = verdict(prior, statuses, dockerFaults.size);
 console.log(`harness check: ${v.reason}`);
+if (dockerFaults.size > 0 && !v.fault) {
+  console.warn(`  (${dockerFaults.size} docker fault(s) counted toward that check; those servers were not measured)`);
+}
 if (v.fault) {
+  if (dockerFaults.size) {
+    console.error(
+      `\ndocker could not run for ${dockerFaults.size} server(s):\n` +
+        [...dockerFaults].map(([n, msg]) => `  ${n}: ${msg}`).join('\n'),
+    );
+  }
   const restored = restore(prior, v.regressed);
   console.error(
     `\nHARNESS FAULT — refusing to publish this sweep.\n` +

@@ -65,9 +65,15 @@ describe('identify — by bytes, never by name', () => {
     expect(identify(undefined, index).kind).toBe('unknown');
   });
 
-  it('does not claim a comparison when the current pointer has no capture behind it', () => {
-    const broken: CaptureIndex = { ...index, current: { obsidian: SHA_OTHER } };
-    expect(identify(SHA_OLD, broken).kind).toBe('current');
+  it('answers unknown when what is current for the server cannot be established', () => {
+    // A pointer at a capture the index dropped as ambiguous, or no pointer at
+    // all: the bytes are identified but their currency is not. Reporting
+    // `current` here is an affirmative "nothing has moved" — which the audit
+    // prints in those words — to someone who may be far behind.
+    const dangling: CaptureIndex = { ...index, current: { obsidian: SHA_OTHER } };
+    expect(identify(SHA_OLD, dangling).kind).toBe('unknown');
+    const pointerless: CaptureIndex = { ...index, current: {} };
+    expect(identify(SHA_OLD, pointerless).kind).toBe('unknown');
   });
 });
 

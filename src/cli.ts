@@ -53,6 +53,18 @@ export function slugFromUrl(url: string): string {
 }
 
 
+/**
+ * Report a `verify` failure and exit 1, in whichever shape the caller asked
+ * for. `--json` is documented as putting `{ ok, rederivedTokens, rederivedSha,
+ * problems }` on stdout; a script reading that gets nothing from a thrown
+ * exception, so every failure path goes through here.
+ */
+function failVerify(json: boolean, problem: string): never {
+  if (json) console.log(JSON.stringify({ ok: false, rederivedTokens: null, rederivedSha: null, problems: [problem] }));
+  else console.error(problem);
+  process.exit(1);
+}
+
 /** Installed version, for error messages that need to say which one you are running. */
 export function cliVersion(): string {
   try {
@@ -336,6 +348,14 @@ if (cmd === 'audit') {
           `${empty.length === 1 ? 'It was' : 'They were'} read and parsed; there is simply nothing declared to measure.\n` +
           `Declare a server in one of them, or point at a different config: mcp-context-cost audit --config <path/to/mcp.json>`,
       );
+    else if (all('config').length)
+      // A path the user named is not a discovery miss. Saying "looked in the
+      // standard locations" describes something the command did not do, and
+      // then advises doing the thing they just did.
+      console.error(
+        `no MCP config found at the path(s) given: ${all('config').join(', ')}. ` +
+          `Nothing else was searched, because --config was set.`,
+      );
     else
       console.error(
         `no MCP config found. Looked in the standard Claude Desktop / Claude Code / Cursor / VS Code / Windsurf locations.${where}\n` +
@@ -369,15 +389,26 @@ if (cmd === 'audit') {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       raw = await res.text();
     } catch (e) {
-      const problem = `failed to fetch ${remoteUrl}: ${(e as Error).message}`;
-      if (json) console.log(JSON.stringify({ ok: false, rederivedTokens: null, rederivedSha: null, problems: [problem] }));
-      else console.error(problem);
-      process.exit(1);
+      failVerify(json, `failed to fetch ${remoteUrl}: ${(e as Error).message}`);
     }
   } else {
-    raw = readFileSync(path!, 'utf8');
+    try {
+      raw = readFileSync(path!, 'utf8');
+    } catch (e) {
+      // The remote branch above reports a failed fetch in the documented shape;
+      // this one used to throw, so `--json` produced a stack trace on stderr and
+      // nothing at all on stdout — the contract a script parses.
+      failVerify(json, `cannot read ${path}: ${(e as Error).message}`);
+    }
   }
-  const m = JSON.parse(raw) as Measurement;
+  let m: Measurement;
+  try {
+    m = JSON.parse(raw!) as Measurement;
+  } catch (e) {
+    // Reachable remotely: a proxy, a captive portal or an HTML error page
+    // served with status 200 passes the `res.ok` check above and arrives here.
+    failVerify(json, `${remoteUrl ?? path} is not valid JSON: ${(e as Error).message}`);
+  }
   const r = verifyMeasurement(m);
   if (json) {
     console.log(JSON.stringify({ serverName: m.serverName, ...r, badge: r.ok ? toBadge(m) : undefined }));
