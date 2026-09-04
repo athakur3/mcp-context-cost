@@ -106,7 +106,7 @@ No page: there is no number to show. The reason is recorded per candidate.
 | zapier | remote-auth-wall |
 | vercel | remote-auth-wall |
 | gmail | auth-required |
-| slack | startup-failure |
+| slack | auth-required |
 | kubernetes-containers | not-applicable |
 | hana-cli | startup-failure |
 | accessibility-scanner | startup-failure |

@@ -73,7 +73,7 @@ gmail,,,auth-required,community,26678,https://api.npmjs.org/downloads/point/last
 pandoc,1425,1,measured,community,23590,https://pypistats.org/packages/mcp-pandoc (PyPI weekly),,,5,false,5,0,1426,v0.2.5
 obsidian,2062,15,measured,community,23503,https://pypistats.org/packages/mcp-obsidian (PyPI weekly),,,92,false,92,0,2064,v0.2.5
 searxng,1537,4,measured,community,22508,https://api.npmjs.org/downloads/point/last-week/mcp-searxng (npm weekly),,,27,false,27,0,1490,v0.2.5
-slack,,,startup-failure,community,16956,https://api.npmjs.org/downloads/point/last-week/slack-mcp-server (npm weekly),,,,,,,,
+slack,,,auth-required,community,16956,https://api.npmjs.org/downloads/point/last-week/slack-mcp-server (npm weekly),,,,,,,,
 playwright-community,2920,33,measured,community,16066,https://api.npmjs.org/downloads/point/last-week/@executeautomation/playwright-mcp-server (npm weekly),,,158,false,158,0,2925,v0.2.5
 arxiv,3960,19,measured,community,13984,https://pypistats.org/packages/arxiv-mcp-server (PyPI weekly),,,84,false,84,0,3696,v0.2.5
 mysql,393,3,measured,community,13634,https://pypistats.org/packages/mysql-mcp-server (PyPI weekly),,,12,false,12,0,332,v0.2.5

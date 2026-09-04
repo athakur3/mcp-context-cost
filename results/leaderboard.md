@@ -114,7 +114,7 @@ The **session start** column is what a client puts in context when it *defers* t
 | zapier | remote-auth-wall |  |
 | vercel | remote-auth-wall |  |
 | gmail | auth-required | server exited (code 1); stderr tail: Error: OAuth keys file not found. Please place gcp-oauth.keys.json in current directory or /tmp/.gmail-mcp |
-| slack | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail:   \[…\]  node:child_process:955     throw err;     ^  Error: Command fai |
+| slack | auth-required | server exited (code 1); stderr tail: {"level":"error","timestamp":"2026-09-04T13:14:01Z","message":"Request failed","app":"slack-mcp-server","error":"tls: faile |
 | kubernetes-containers | not-applicable | needs a kubeconfig with a cluster context; the isolation deliberately has neither — server exited (code 1); stderr tail: Error: unable to create kubernetes targ |
 | hana-cli | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: purchased (at exorbitant rates) by contacting i@izs.me node:internal/mod |
 | accessibility-scanner | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: node:internal/modules/esm/resolve:314   return new ERR_PACKAGE_PATH_NOT_ |
