@@ -161,13 +161,25 @@ jobs:
           if git diff --cached --quiet; then echo "no change to publish"; exit 0; fi
           git reset -q
 
-          # The per-server records, which rebase cleanly.
+          # What was measured rather than derived: the per-server records and
+          # the cross-check rows. Disjoint sets touch disjoint files, so this
+          # commit rebases cleanly. cross-check.json may be absent — that step
+          # is allowed to fail without blocking the sweep's own commit.
           records=0
           git add results/*/ badges/
+          if [ -f results/cross-check.json ]; then git add results/cross-check.json; fi
           if ! git diff --cached --quiet; then
             records=1
             git commit -q -m "chore: ${WHAT}"
           fi
+
+          # Drop the aggregates this run regenerated locally. They are rebuilt
+          # from the merged tree below, and leaving them modified is what makes
+          # the rebase refuse to start at all ("cannot pull with rebase: you
+          # have unstaged changes"). The clean covers pages for servers this run
+          # has never seen, which are untracked here and tracked upstream.
+          git checkout -q -- .
+          git clean -qfd results docs
 
           # This job runs for an hour, so main has usually moved underneath it.
           git pull --rebase origin main
