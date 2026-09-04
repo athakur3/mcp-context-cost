@@ -3,7 +3,7 @@
   "provider": "tiktoken",
   "encoding": "o200k_base",
   "status": "measured",
-  "totalTokens": 4207,
+  "totalTokens": 4186,
   "toolCount": 16,
   "tools": [
     {
@@ -86,13 +86,13 @@
     },
     {
       "name": "create_comment",
-      "tokens": 317,
+      "tokens": 310,
       "descriptionTokens": 6,
       "inputSchemaTokens": 118
     },
     {
       "name": "list_comments",
-      "tokens": 339,
+      "tokens": 325,
       "descriptionTokens": 5,
       "inputSchemaTokens": 122
     },
@@ -103,7 +103,7 @@
       "inputSchemaTokens": 198
     }
   ],
-  "canonicalSha256": "6ae170e7625e0fa953f2981d005a89ee2b7c80d94830c81a9e5e03d3e5de59e6",
+  "canonicalSha256": "5f90d662e26a77e01125999b97db0bf9204bb92bd0fc7297a28495986d80ec30",
   "rawToolsCapture": [
     {
       "name": "list_records",
@@ -1013,13 +1013,9 @@
                 "type": "string"
               },
               "lastUpdatedTime": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
+                "type": [
+                  "string",
+                  "null"
                 ]
               },
               "text": {
@@ -1121,13 +1117,9 @@
                   "type": "string"
                 },
                 "lastUpdatedTime": {
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "null"
-                    }
+                  "type": [
+                    "string",
+                    "null"
                   ]
                 },
                 "text": {
@@ -1167,13 +1159,9 @@
             }
           },
           "offset": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
+            "type": [
+              "string",
+              "null"
             ]
           }
         },
@@ -1256,18 +1244,20 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:09:11.965Z",
+  "measuredAt": "2026-09-04T13:05:52.666Z",
   "serverName": "airtable-mcp-server",
   "serverVersion": "1.14.0",
   "launchCommand": "npx -y airtable-mcp-server",
   "envVarNames": [
     "AIRTABLE_API_KEY"
   ],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

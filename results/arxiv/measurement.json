@@ -711,7 +711,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-03T19:24:17.914Z",
+  "measuredAt": "2026-09-04T13:05:46.800Z",
   "serverName": "arxiv-mcp-server",
   "serverVersion": "0.7.2",
   "launchCommand": "uvx arxiv-mcp-server",
@@ -721,7 +721,8 @@
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

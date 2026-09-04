@@ -28,7 +28,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-03T13:47:21.529Z",
+  "measuredAt": "2026-09-04T13:02:24.360Z",
   "serverName": "example-servers/postgres",
   "serverVersion": "0.1.0",
   "launchCommand": "npx -y @modelcontextprotocol/server-postgres postgresql://localhost/postgres",
@@ -38,7 +38,8 @@
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

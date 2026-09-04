@@ -14,6 +14,16 @@
   "measuredAt": "2026-09-04",
   "isolation": "docker (same images, limits and package caches as a sweep)",
   "servers": {
+    "agent-device": {
+      "ourTokens": 53669,
+      "ourMappedTokens": 40105,
+      "cliTokens": 40124,
+      "ourToolCount": 57,
+      "cliToolCount": 57,
+      "toolSetMatches": true,
+      "dynamic": false,
+      "capturedSha256": "61a100d3f94ba6e81eedcbd151cfff7ce5e6acd36906571c7035e0b09a681dca"
+    },
     "agentphone": {
       "ourTokens": 6134,
       "ourMappedTokens": 5582,
@@ -35,13 +45,14 @@
       "capturedSha256": "79c3109b4fa4e4735ba1071cacbd98948c6aba20b70c9a4295a78e84850a81e0"
     },
     "airtable": {
-      "ourTokens": 4207,
+      "ourTokens": 4186,
       "ourMappedTokens": 2531,
       "cliTokens": 2533,
       "ourToolCount": 16,
       "cliToolCount": 16,
       "toolSetMatches": true,
-      "capturedSha256": "6ae170e7625e0fa953f2981d005a89ee2b7c80d94830c81a9e5e03d3e5de59e6"
+      "dynamic": false,
+      "capturedSha256": "5f90d662e26a77e01125999b97db0bf9204bb92bd0fc7297a28495986d80ec30"
     },
     "apify": {
       "ourTokens": 10452,
@@ -120,6 +131,7 @@
       "ourToolCount": 8,
       "cliToolCount": 8,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "ec3c4f85b22d1e4866faeb04af7038fc28568dc4a262416cea7ce77c63b2b015"
     },
     "brave-search-legacy": {
@@ -129,6 +141,7 @@
       "ourToolCount": 2,
       "cliToolCount": 2,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "727577fbcd5fe4e811453a32d9c9852ea877c90b8acf56e0cdf5eda15e97d803"
     },
     "bright-data": {
@@ -148,6 +161,7 @@
       "ourToolCount": 6,
       "cliToolCount": 6,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "1dc53461369d7cb64ea8151f33283db371951cf44289471f6156e35cd1ae28bb"
     },
     "chroma": {
@@ -157,6 +171,7 @@
       "ourToolCount": 13,
       "cliToolCount": 13,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "eb0b416a1586989ce3f646259f9f96d0ae6d7b62342aa30393b10ecb7c03c707"
     },
     "chrome-devtools": {
@@ -250,14 +265,14 @@
       "capturedSha256": "3735162916165ab23696fc91fbf626bd99a36ddcd1e15746e91e16c7e336b379"
     },
     "desktop-commander": {
-      "ourTokens": 11835,
-      "ourMappedTokens": 11055,
-      "cliTokens": 11571,
+      "ourTokens": 11836,
+      "ourMappedTokens": 11056,
+      "cliTokens": 11070,
       "ourToolCount": 26,
       "cliToolCount": 26,
       "toolSetMatches": true,
       "dynamic": true,
-      "capturedSha256": "f863e5625fb204efc3fbe0a14e0dfe59a1f7ba599cff7bc144dbed82229222fd"
+      "capturedSha256": "0bb6f7fd2deedc6dc19a2a3a8c7cb176c6c4590948d623d666a4874170cc51bc"
     },
     "duckduckgo": {
       "ourTokens": 724,
@@ -337,6 +352,7 @@
       "ourToolCount": 2,
       "cliToolCount": 2,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "c1409e496bb0262b3dd4d78de8da42d1b79d5704fcf693e1455c5b3dff0f2604"
     },
     "filesystem": {
@@ -356,6 +372,7 @@
       "ourToolCount": 27,
       "cliToolCount": 27,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "3b7694bcedabac9706eba0c497c1fb4591121db0fd25e4e87e4802a001e34cd6"
     },
     "git": {
@@ -365,17 +382,18 @@
       "ourToolCount": 12,
       "cliToolCount": 12,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "9710fb8f79f50348c138ee513e344f7fc9ac0e912a728d8aeda847cd04ed64f1"
     },
     "githits": {
-      "ourTokens": 12600,
-      "ourMappedTokens": 12151,
-      "cliTokens": 12183,
+      "ourTokens": 12833,
+      "ourMappedTokens": 12384,
+      "cliTokens": 12416,
       "ourToolCount": 16,
       "cliToolCount": 16,
       "toolSetMatches": true,
       "dynamic": false,
-      "capturedSha256": "1de63e2beef41e0f618a1b41e1ead6a82fbce11d6e0c9652466884a2c74e10f0"
+      "capturedSha256": "1de4342682e058fb6395fc1a42dbcb9fa87838dc26852ba6810e57cc388ab81e"
     },
     "github": {
       "ourTokens": 54622,
@@ -404,6 +422,7 @@
       "ourToolCount": 9,
       "cliToolCount": 9,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "d51fb022687ee403f9710c9fae31ac91dbc796f5c52a3fcdbe0a91c387aa9365"
     },
     "google-maps": {
@@ -415,6 +434,16 @@
       "toolSetMatches": true,
       "dynamic": false,
       "capturedSha256": "a88e204db09aa56954e3e041d6a9814aee9ac888fdfc7d5cb47aec1877441986"
+    },
+    "google-surf": {
+      "ourTokens": 10948,
+      "ourMappedTokens": 6412,
+      "cliTokens": 6472,
+      "ourToolCount": 7,
+      "cliToolCount": 7,
+      "toolSetMatches": true,
+      "dynamic": false,
+      "capturedSha256": "64ca81a34311e1318d731b8fbf14e5f1759567e4a7bdaabf43f3553ee732ee41"
     },
     "hubspot": {
       "ourTokens": 9158,
@@ -443,6 +472,7 @@
       "ourToolCount": 23,
       "cliToolCount": 23,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "20126671be70fdb77743a595f195002612b03c889b348447ed9ff4d7057f8c1c"
     },
     "markitdown": {
@@ -463,7 +493,7 @@
       "cliToolCount": 63,
       "toolSetMatches": true,
       "dynamic": true,
-      "capturedSha256": "e6138ef9cee6f3218ea78d07da6a7b22b5ba1edbc61852fdf37bc6308d7e5f68"
+      "capturedSha256": "69f61b1213f2153a03e480902005a228f79b39b8dc201bf720f0ca0a1b63fe5b"
     },
     "memory": {
       "ourTokens": 2378,
@@ -492,6 +522,7 @@
       "ourToolCount": 27,
       "cliToolCount": 27,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "c771e7295dc27668861b2a251566196a3e30b5b3ac282f7736aab96891bff300"
     },
     "mysql": {
@@ -531,6 +562,7 @@
       "ourToolCount": 9,
       "cliToolCount": 9,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "be8578ef35da6e632f7cee04f664676c4895a1320868eceec1150a55f6c21440"
     },
     "notion": {
@@ -550,6 +582,7 @@
       "ourToolCount": 15,
       "cliToolCount": 15,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "6064f85a43ae17b2da72d1b87fd9435879e8b42bc320e1347e382f5c8a61b499"
     },
     "obsidian-rest": {
@@ -589,6 +622,7 @@
       "ourToolCount": 1,
       "cliToolCount": 1,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "bf3f548ecca0308f30e544a03d3a36778dbbfba3a5ed12dab6d981dcbcc7a73c"
     },
     "pinecone": {
@@ -598,6 +632,7 @@
       "ourToolCount": 9,
       "cliToolCount": 9,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "cc8ffaadb37615f11747b0a1eafd8541cfb2f31064adcd4973860f8f03bab377"
     },
     "playwright": {
@@ -607,6 +642,7 @@
       "ourToolCount": 24,
       "cliToolCount": 24,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "5d5d92a7c727ef75bd9a70f076039dbdbfd331c56f022915c2e89b76f7fc88f0"
     },
     "playwright-community": {
@@ -626,6 +662,7 @@
       "ourToolCount": 1,
       "cliToolCount": 1,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "bbdb8dd9b6d3cd9b855597127ad5268e3fa4e3355e616b3dc102f4ed12cca454"
     },
     "postgres-mcp": {
@@ -645,6 +682,7 @@
       "ourToolCount": 12,
       "cliToolCount": 12,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "9eb845dee6bb274d3b93ba0ea67276b2829cb98cbe7ed01079eba7fb8263fa26"
     },
     "puppeteer": {
@@ -664,6 +702,7 @@
       "ourToolCount": 2,
       "cliToolCount": 2,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "2bd5a36e7293bab6b8e62c28b7d210c5261f4b80331b176c1df6dc100a7e6fc4"
     },
     "redis": {
@@ -697,13 +736,14 @@
       "capturedSha256": "11ef5fbfa5440a29377fedcd23abb764cf640ba03762911c8bfcd5b11a53aebd"
     },
     "sequential-thinking": {
-      "ourTokens": 1024,
-      "ourMappedTokens": 886,
-      "cliTokens": 887,
+      "ourTokens": 1003,
+      "ourMappedTokens": 865,
+      "cliTokens": 866,
       "ourToolCount": 1,
       "cliToolCount": 1,
       "toolSetMatches": true,
-      "capturedSha256": "cf018e87c69c9a43bce0b310801c68104ce85102351fdf8bae7bb32e7ae54f19"
+      "dynamic": false,
+      "capturedSha256": "55e4c41338722ccc0672def6b5462f1dee664bf168cfd01172c4e96d344a1c2e"
     },
     "serena": {
       "ourTokens": 8204,
@@ -782,6 +822,7 @@
       "ourToolCount": 9,
       "cliToolCount": 9,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "7205f4d29a1a97d6fa9d13d2e9b3c2ccc5e8dda8539cf836d5895380c56c4b3b"
     },
     "time": {
@@ -801,6 +842,7 @@
       "ourToolCount": 24,
       "cliToolCount": 24,
       "toolSetMatches": true,
+      "dynamic": false,
       "capturedSha256": "f467743f38a30d15da18709c500aa4e22186a755f0e3d2c97966ccd343978a5d"
     }
   }

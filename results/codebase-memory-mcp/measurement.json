@@ -821,7 +821,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-03T21:03:05.812Z",
+  "measuredAt": "2026-09-04T13:06:23.312Z",
   "serverName": "codebase-memory-mcp",
   "serverVersion": "0.10.8",
   "launchCommand": "npx -y codebase-memory-mcp",
@@ -831,7 +831,8 @@
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

@@ -482,16 +482,18 @@
       }
     }
   ],
-  "measuredAt": "2026-08-18T23:57:13.146Z",
+  "measuredAt": "2026-09-04T13:02:35.063Z",
   "serverName": "mcp-git",
-  "serverVersion": "1.29.0",
+  "serverVersion": "1.29.1",
   "launchCommand": "uvx --with \"mcp<2\" mcp-server-git",
   "envVarNames": [],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials, git installed"
+    "note": "network enabled for package fetch; clean FS, no host credentials, git installed",
+    "arch": "linux/amd64"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

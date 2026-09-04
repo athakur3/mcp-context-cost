@@ -8,15 +8,16 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-09-03T19:24:09.132Z",
+  "measuredAt": "2026-09-04T13:05:36.609Z",
   "serverName": "gmail",
   "launchCommand": "npx -y @gongrzhe/server-gmail-autoauth-mcp",
-  "notes": "server exited (code 1); stderr tail: npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead\nnpm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).\nError: OAuth keys file not found. Please place gcp-oauth.keys.json in current directory or /tmp/.gmail-mcp\n",
+  "notes": "server exited (code 1); stderr tail: Error: OAuth keys file not found. Please place gcp-oauth.keys.json in current directory or /tmp/.gmail-mcp",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

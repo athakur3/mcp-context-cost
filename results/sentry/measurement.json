@@ -762,7 +762,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-03T19:23:02.477Z",
+  "measuredAt": "2026-09-04T13:02:58.350Z",
   "serverName": "Sentry MCP",
   "serverVersion": "0.39.0",
   "launchCommand": "npx -y @sentry/mcp-server@latest",
@@ -774,7 +774,8 @@
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

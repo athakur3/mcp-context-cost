@@ -599,18 +599,20 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:01:19.139Z",
+  "measuredAt": "2026-09-04T13:03:56.324Z",
   "serverName": "pinecone-mcp",
   "serverVersion": "0.3.0",
   "launchCommand": "npx -y @pinecone-database/mcp",
   "envVarNames": [
     "PINECONE_API_KEY"
   ],
+  "serverInstructions": "Pinecone is a vector database that provides AI\ntools and applications with fast, scalable, and flexible vector search.\n\nInstructions for usage:\n- Always search the documentation before attempting to explain or write code for\nPinecone. When writing code, always refer to examples from the documentation. Do\nnot make assumptions about usage. Always use the latest SDK version.\n\n- If the code uses an index or namespace, make sure you use the correct names I\nhave configured or help me create new ones.\n\n- Always use a consistent schema for records in an index. Do not use different\nfield names in the same index. Always put the text content in the field named in\nthe index's \"fieldMap\". Do not use objects as field values. Do not include a\n\"metadata\" field.\n\n- When searching for records, make sure to use a query that accurately reflects\nmy needs. Only use a filter if you are sure it will help me find the records I\nneed. Craft filters knowing the schema of the data in the index.\n\n- If you receive an error, read the error response to understand what went\nwrong. \"MCP error -32602\" means your input was wrong. Correct your input by\nfollowing the instructions carefully.",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

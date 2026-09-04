@@ -1,6 +1,6 @@
 # github — context cost
 
-**54,622 tokens** across 44 tools — *very heavy* (≥ 30K). Measured 2026-09-03 under [methodology v1.0](../METHODOLOGY.html).
+**54,622 tokens** across 44 tools — *very heavy* (≥ 30K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -60,6 +60,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 | 2026-08-16 | 54,422 | 44 | not recorded | — |
 | 2026-08-18 | 54,422 | 44 | docker | no change |
 | 2026-09-03 | 54,622 | 44 | docker | +200 |
+| 2026-09-04 | 54,622 | 44 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

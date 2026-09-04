@@ -2315,7 +2315,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-03T21:03:13.548Z",
+  "measuredAt": "2026-09-04T13:06:11.432Z",
   "serverName": "@cyanheads/mcp-ts-core",
   "serverVersion": "0.8.18",
   "launchCommand": "npx -y obsidian-mcp-server",
@@ -2327,7 +2327,8 @@
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

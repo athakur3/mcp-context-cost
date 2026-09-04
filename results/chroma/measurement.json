@@ -603,16 +603,18 @@
       }
     }
   ],
-  "measuredAt": "2026-08-18T23:59:14.545Z",
+  "measuredAt": "2026-09-04T13:03:13.364Z",
   "serverName": "chroma",
   "serverVersion": "1.6.0",
   "launchCommand": "uvx chroma-mcp",
   "envVarNames": [],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

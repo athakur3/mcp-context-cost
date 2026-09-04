@@ -1306,7 +1306,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-03T21:25:55.053Z",
+  "measuredAt": "2026-09-04T13:07:44.140Z",
   "serverName": "agentphone",
   "serverVersion": "0.7.0",
   "launchCommand": "npx -y agentphone-mcp",
@@ -1318,7 +1318,8 @@
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

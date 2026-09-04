@@ -2,21 +2,2463 @@
   "methodologyVersion": "1.0",
   "provider": "tiktoken",
   "encoding": "o200k_base",
-  "status": "startup-failure",
-  "totalTokens": null,
-  "toolCount": null,
-  "tools": [],
-  "canonicalSha256": null,
-  "rawToolsCapture": null,
-  "measuredAt": "2026-09-03T21:38:20.846Z",
-  "serverName": "google-surf",
+  "status": "measured",
+  "totalTokens": 10948,
+  "toolCount": 7,
+  "tools": [
+    {
+      "name": "search",
+      "tokens": 1737,
+      "descriptionTokens": 478,
+      "inputSchemaTokens": 612
+    },
+    {
+      "name": "scholar_search",
+      "tokens": 981,
+      "descriptionTokens": 134,
+      "inputSchemaTokens": 302
+    },
+    {
+      "name": "search_parallel",
+      "tokens": 1860,
+      "descriptionTokens": 482,
+      "inputSchemaTokens": 631
+    },
+    {
+      "name": "extract",
+      "tokens": 1249,
+      "descriptionTokens": 330,
+      "inputSchemaTokens": 511
+    },
+    {
+      "name": "project_memory_search",
+      "tokens": 1436,
+      "descriptionTokens": 208,
+      "inputSchemaTokens": 261
+    },
+    {
+      "name": "project_memory",
+      "tokens": 3279,
+      "descriptionTokens": 285,
+      "inputSchemaTokens": 2030
+    },
+    {
+      "name": "health",
+      "tokens": 404,
+      "descriptionTokens": 50,
+      "inputSchemaTokens": 24
+    }
+  ],
+  "canonicalSha256": "64ca81a34311e1318d731b8fbf14e5f1759567e4a7bdaabf43f3553ee732ee41",
+  "rawToolsCapture": [
+    {
+      "name": "search",
+      "title": "Web Search and Extract",
+      "description": "PRIMARY SINGLE-QUERY LIVE DISCOVERY AND CONTENT INGESTION TOOL. ALWAYS PERFORMS LIVE WEB SEARCH. With research enabled, one local broker lets multiple MCP sessions query the same knowledge base concurrently and orders writes safely. Use this tool only when new external information from Google, public websites, papers, or repositories is required. When the task requires both finding and reading public web pages, PDFs, papers, or GitHub repositories, set extract_mode=abstract or full in this call. Do not download public PDFs, clone repositories, or invoke local parsers first. Select extract_mode=full, not abstract, when the user asks to read originals, full text, document bodies, or code, or to compare source contents. Use extract separately only when the exact public URL is already known and no new discovery is required. Use general repository tools only for editing, building, testing, or full Git history. Providing project_id also fuses stored project evidence with live results, but never makes this a local-only search. For stored project knowledge without live web discovery, use project_memory_search. limit accepts integers from 1 to 20. extract_limit accepts integers from 1 to 10, defaults to 5, and limits unique extracted URLs. Final results use one bounded response budget after ranking; full captured bodies remain local. Use extract on one selected URL when longer response text is explicitly required. The response includes applied, skipped, truncated, total_chars, and a bounded remaining_urls list. GitHub none mode reads the README; abstract and full can sparse-index eligible repositories with Tree-sitter. With research enabled and project_id set, live web, exact, BM25, vector, code, and graph lanes are fused by RRF and one reranker. With research disabled, provider order and query BM25 rank are fused by a lightweight in-memory RRF reranker without opening local storage or loading the vector model. research_context returns up to three prior searches for deeper or adjacent follow-up work. Captured search, source, session, and project provenance form data lineage; extracted bodies become evidence while unread hits remain metadata. include_project_ids adds read-only cross-project retrieval through versioned ontology and verified schema/entity links without merging records. Browser search is the no-key default and SearchApi is the configured primary or fallback provider. Results are cached for 24h unless the TTL is disabled.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 400,
+            "description": "Google search query. Use site: filters and quotes for exact match."
+          },
+          "limit": {
+            "default": 10,
+            "description": "Maximum results. Integer 1-20, default 10.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          },
+          "extract_mode": {
+            "default": "none",
+            "description": "Content depth in this search call. Use none only when titles and snippets are enough, abstract for relevance evidence, and full when the user asks to read originals, full text, document bodies, or code, or to compare source contents. Use abstract or full here instead of following search with separate extraction, PDF download, or repository clone. For GitHub results, none reads the README; abstract and full use the same repository eligibility gate but index different source amounts.",
+            "type": "string",
+            "enum": [
+              "none",
+              "abstract",
+              "full"
+            ]
+          },
+          "extract_limit": {
+            "default": 5,
+            "description": "Maximum unique result URLs to extract. Integer 1-10, default 5.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "response_content": {
+            "default": "summary",
+            "description": "Controls only the returned body. summary is the default and returns a 1500-character evidence excerpt; full returns up to max_chars. Research storage keeps the full captured text in deterministic chunks.",
+            "type": "string",
+            "enum": [
+              "summary",
+              "full"
+            ]
+          },
+          "max_chars": {
+            "description": "Maximum returned characters per extracted result in response_content=full. Defaults to 1500 for abstract and 50000 for full.",
+            "type": "integer",
+            "minimum": 200,
+            "maximum": 50000
+          },
+          "project_id": {
+            "description": "Project memory id.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "include_project_ids": {
+            "description": "Additional read-only projects joined through ontology-aligned schema and identity links. New records stay in project_id.",
+            "maxItems": 8,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            }
+          },
+          "memory_handle": {
+            "description": "Reuse the handle returned by a prior project-aware call.",
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "session_id": {
+            "description": "Stable host task id. Reuses the same project session after restart.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "session_intent": {
+            "description": "Current durable task intent. A changed value creates an immutable revision.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                },
+                "excerpt": {
+                  "type": "string"
+                },
+                "length": {
+                  "type": "number"
+                },
+                "source_length": {
+                  "type": "number"
+                },
+                "truncated": {
+                  "type": "boolean"
+                },
+                "is_pdf": {
+                  "type": "boolean"
+                },
+                "page_count": {
+                  "type": "number"
+                },
+                "extraction_quality": {
+                  "type": "string",
+                  "enum": [
+                    "full_text",
+                    "abstract",
+                    "meta_abstract",
+                    "metadata_only"
+                  ]
+                },
+                "authors": {
+                  "type": "string"
+                },
+                "publication": {
+                  "type": "string"
+                },
+                "published_at": {
+                  "type": "string"
+                },
+                "year": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "doi": {
+                  "type": "string"
+                },
+                "keywords": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "canonical_url": {
+                  "type": "string"
+                },
+                "language": {
+                  "type": "string"
+                },
+                "subject": {
+                  "type": "string"
+                },
+                "creator": {
+                  "type": "string"
+                },
+                "producer": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string"
+                },
+                "modified_at": {
+                  "type": "string"
+                },
+                "extract_error": {
+                  "type": "string"
+                },
+                "document_id": {
+                  "type": "string"
+                },
+                "project_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "source_family": {
+                  "type": "string",
+                  "enum": [
+                    "live",
+                    "document",
+                    "code",
+                    "graph"
+                  ]
+                },
+                "retrieval_families": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "exact",
+                      "bm25",
+                      "vector",
+                      "graph"
+                    ]
+                  }
+                },
+                "score": {
+                  "type": "number"
+                },
+                "fresh_web": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "title",
+                "url",
+                "description"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "elapsed_ms": {
+            "type": "number"
+          },
+          "memory": {
+            "type": "string"
+          },
+          "memory_handle": {
+            "type": "string"
+          },
+          "research_context": {
+            "type": "object",
+            "properties": {
+              "prior_searches": {
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string"
+                    },
+                    "relation": {
+                      "type": "string",
+                      "enum": [
+                        "same",
+                        "related",
+                        "recent"
+                      ]
+                    },
+                    "searched_at": {
+                      "type": "string"
+                    },
+                    "results": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "surface": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "query",
+                    "relation",
+                    "searched_at",
+                    "results"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "prior_searches"
+            ],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "retryable": {
+                "type": "boolean"
+              },
+              "retry_after_ms": {
+                "type": "number"
+              },
+              "user_action": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "retryable"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "scholar_search",
+      "title": "Google Scholar Search",
+      "description": "Use only for paper metadata such as authors, venue, year, versions, and citation counts. With research enabled, one local broker lets multiple MCP sessions query the same knowledge base concurrently and orders writes safely. Do not use it to discover or read paper content; use search with extract_mode instead. Returns title, authors, publication, year, snippet, citation count, related/version links, and an available full-text link. With research enabled, metadata and citation observations retain provider provenance and research_context exposes related prior searches. Google Scholar uses browser search, SearchApi primary, or configured fallback. Results are cached with the same TTL as search. Max 10 papers per call.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 400,
+            "description": "Google Scholar query. Supports quotes and author: operators."
+          },
+          "limit": {
+            "default": 10,
+            "description": "Maximum papers. Integer 1-10, default 10.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "project_id": {
+            "description": "Project memory id.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "memory_handle": {
+            "description": "Reuse the handle returned by a prior project-aware call.",
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "session_id": {
+            "description": "Stable host task id. Reuses the same project session after restart.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "session_intent": {
+            "description": "Current durable task intent. A changed value creates an immutable revision.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "rank": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "authors": {
+                  "type": "string"
+                },
+                "publication": {
+                  "type": "string"
+                },
+                "year": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "source": {
+                  "type": "string"
+                },
+                "snippet": {
+                  "type": "string"
+                },
+                "cited_by_count": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "cited_by_url": {
+                  "type": "string"
+                },
+                "related_articles_url": {
+                  "type": "string"
+                },
+                "versions_count": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "versions_url": {
+                  "type": "string"
+                },
+                "full_text_url": {
+                  "type": "string"
+                },
+                "scholar_id": {
+                  "type": "string"
+                },
+                "metadata": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "rank",
+                "title",
+                "snippet",
+                "cited_by_count",
+                "metadata"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "elapsed_ms": {
+            "type": "number"
+          },
+          "memory": {
+            "type": "string"
+          },
+          "memory_handle": {
+            "type": "string"
+          },
+          "research_context": {
+            "type": "object",
+            "properties": {
+              "prior_searches": {
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string"
+                    },
+                    "relation": {
+                      "type": "string",
+                      "enum": [
+                        "same",
+                        "related",
+                        "recent"
+                      ]
+                    },
+                    "searched_at": {
+                      "type": "string"
+                    },
+                    "results": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "surface": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "query",
+                    "relation",
+                    "searched_at",
+                    "results"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "prior_searches"
+            ],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "retryable": {
+                "type": "boolean"
+              },
+              "retry_after_ms": {
+                "type": "number"
+              },
+              "user_action": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "retryable"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "search_parallel",
+      "title": "Parallel Web Search and Extract",
+      "description": "PRIMARY MULTI-QUERY LIVE DISCOVERY AND CONTENT INGESTION TOOL. ALWAYS PERFORMS MULTIPLE LIVE WEB SEARCHES. With research enabled, one local broker lets multiple MCP sessions query the same knowledge base concurrently and orders writes safely. Use this tool only when 2-12 new external queries are required. Providing project_id adds stored evidence but never makes the searches local-only. When the task requires broad discovery plus reading public web pages, PDFs, papers, or GitHub repositories, set extract_mode=abstract or full in this call. Do not download public PDFs, clone repositories, or invoke local parsers first. Select extract_mode=full, not abstract, when the user asks to read originals, full text, document bodies, or code, or to compare source contents. Use extract separately only when the exact public URL is already known and no new discovery is required. Use general repository tools only for editing, building, testing, or full Git history. For stored project knowledge without live web discovery, use project_memory_search. Each query limit accepts integers from 1 to 20. Call-wide extract_limit accepts 1-20 with default 12 for abstract, and 1-10 with default 10 for full. Final results use one call-wide bounded response budget after ranking; at most 36 ranked rows are returned across query groups and full captured bodies remain local. Use extract on one selected URL when longer response text is explicitly required. The response includes applied, skipped, truncated, total_chars, and a bounded remaining_urls list. GitHub none mode reads the README; abstract and full can sparse-index eligible repositories with Tree-sitter. With research enabled and project_id set, each query fuses live, exact, BM25, vector, code, and graph lanes through RRF and one reranker. With research disabled, each query independently fuses provider order and query BM25 rank through a lightweight in-memory RRF reranker without opening local storage or loading the vector model. research_context returns prior project searches; capture retains data lineage and include_project_ids uses versioned ontology and verified cross-project schema/entity links. Extracted bodies become evidence while unread hits remain metadata. Native Chrome uses one authenticated local broker across MCP sessions and keeps one hidden process with up to four reusable tabs. Query starts are staggered and each tab continuously consumes the remaining queue. SearchApi fallback replaces failed queries individually.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "queries": {
+            "minItems": 2,
+            "maxItems": 12,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "description": "2-12 independent live queries."
+          },
+          "limit": {
+            "default": 10,
+            "description": "Maximum results per query. Integer 1-20, default 10.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          },
+          "extract_mode": {
+            "default": "none",
+            "description": "Content depth in this search call. Use none only when titles and snippets are enough, abstract for relevance evidence, and full when the user asks to read originals, full text, document bodies, or code, or to compare source contents. Use abstract or full here instead of following search with separate extraction, PDF download, or repository clone. For GitHub results, none reads the README; abstract and full use the same repository eligibility gate but index different source amounts.",
+            "type": "string",
+            "enum": [
+              "none",
+              "abstract",
+              "full"
+            ]
+          },
+          "extract_limit": {
+            "description": "Call-wide maximum unique result URLs to extract. Integer 1-20, default 12 for abstract; full defaults to and allows at most 10.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          },
+          "response_content": {
+            "default": "summary",
+            "description": "Controls only returned bodies. summary is the default and returns 1500-character evidence excerpts; full returns up to max_chars. Research storage keeps the full captured text in deterministic chunks.",
+            "type": "string",
+            "enum": [
+              "summary",
+              "full"
+            ]
+          },
+          "max_chars": {
+            "description": "Maximum returned characters per extracted result in response_content=full. Defaults to 1500 for abstract and 50000 for full.",
+            "type": "integer",
+            "minimum": 200,
+            "maximum": 50000
+          },
+          "project_id": {
+            "description": "Project memory id.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "include_project_ids": {
+            "description": "Additional read-only projects joined through ontology-aligned schema and identity links. New records stay in project_id.",
+            "maxItems": 8,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            }
+          },
+          "memory_handle": {
+            "description": "Reuse the handle returned by a prior project-aware call.",
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "session_id": {
+            "description": "Stable host task id. Reuses the same project session after restart.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "session_intent": {
+            "description": "Current durable task intent. A changed value creates an immutable revision.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "queries"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "query": {
+                  "type": "string"
+                },
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "content": {
+                        "type": "string"
+                      },
+                      "excerpt": {
+                        "type": "string"
+                      },
+                      "length": {
+                        "type": "number"
+                      },
+                      "source_length": {
+                        "type": "number"
+                      },
+                      "truncated": {
+                        "type": "boolean"
+                      },
+                      "is_pdf": {
+                        "type": "boolean"
+                      },
+                      "page_count": {
+                        "type": "number"
+                      },
+                      "extraction_quality": {
+                        "type": "string",
+                        "enum": [
+                          "full_text",
+                          "abstract",
+                          "meta_abstract",
+                          "metadata_only"
+                        ]
+                      },
+                      "authors": {
+                        "type": "string"
+                      },
+                      "publication": {
+                        "type": "string"
+                      },
+                      "published_at": {
+                        "type": "string"
+                      },
+                      "year": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "doi": {
+                        "type": "string"
+                      },
+                      "keywords": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "canonical_url": {
+                        "type": "string"
+                      },
+                      "language": {
+                        "type": "string"
+                      },
+                      "subject": {
+                        "type": "string"
+                      },
+                      "creator": {
+                        "type": "string"
+                      },
+                      "producer": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "string"
+                      },
+                      "modified_at": {
+                        "type": "string"
+                      },
+                      "extract_error": {
+                        "type": "string"
+                      },
+                      "document_id": {
+                        "type": "string"
+                      },
+                      "project_ids": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "source_family": {
+                        "type": "string",
+                        "enum": [
+                          "live",
+                          "document",
+                          "code",
+                          "graph"
+                        ]
+                      },
+                      "retrieval_families": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "exact",
+                            "bm25",
+                            "vector",
+                            "graph"
+                          ]
+                        }
+                      },
+                      "score": {
+                        "type": "number"
+                      },
+                      "fresh_web": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "title",
+                      "url",
+                      "description"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "dropped": {
+                  "type": "number"
+                },
+                "dropped_reasons": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "degraded_reasons": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "provider": {
+                  "type": "string",
+                  "enum": [
+                    "browser",
+                    "searchapi",
+                    "local"
+                  ]
+                },
+                "fallback_reason": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query",
+                "results"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "elapsed_ms": {
+            "type": "number"
+          },
+          "memory": {
+            "type": "string"
+          },
+          "memory_handle": {
+            "type": "string"
+          },
+          "research_context": {
+            "type": "object",
+            "properties": {
+              "prior_searches": {
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string"
+                    },
+                    "relation": {
+                      "type": "string",
+                      "enum": [
+                        "same",
+                        "related",
+                        "recent"
+                      ]
+                    },
+                    "searched_at": {
+                      "type": "string"
+                    },
+                    "results": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "surface": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "query",
+                    "relation",
+                    "searched_at",
+                    "results"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "prior_searches"
+            ],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "retryable": {
+                "type": "boolean"
+              },
+              "retry_after_ms": {
+                "type": "number"
+              },
+              "user_action": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "retryable"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "extract",
+      "title": "Known URL Extract",
+      "description": "SECONDARY KNOWN-URL CONTENT EXTRACTION TOOL. Use only when the exact public URL is already known and no new web discovery is required. If sources still need to be found, use search or search_parallel with extract_mode instead. For semantic reading of a public PDF or GitHub repository, use this tool before local download or parsing. Local PDF tools are for local files, forms, OCR recovery, or visual layout inspection; general repository tools are for editing, building, testing, or full Git history. Fetch one public URL and return clean content. With research enabled, one local broker lets multiple MCP sessions query the same knowledge base concurrently and orders writes safely. For GitHub repository URLs, metadata reads the README; abstract and full use the same bounded download gate and differ only in indexed source depth. HTML via Mozilla Readability; academic PDFs (arxiv/biorxiv/Nature/OpenReview/NeurIPS/JMLR/PMLR/Springer/PubMed-via-PMC) auto-detected via Content-Type, %PDF magic, citation_pdf_url meta, and per-domain URL rules. Tiered depth: `mode=\"metadata\"` returns document metadata without body text, `mode=\"abstract\"` returns about 1500 chars for relevance checks, and `mode=\"full\"` reads the full bounded source. response_content controls whether the response contains a 1500-character summary or up to 50000 characters. PDF and landing-page metadata are merged when available. With research enabled, abstract and full PDF reads are stored as searchable evidence with bibliographic metadata and provenance. Best-effort: failures return an errorInfo instead of throwing.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Public http(s) URL. Loopback/private IPs blocked unless SURF_ALLOW_PRIVATE=true."
+          },
+          "project_id": {
+            "description": "Project memory id.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "memory_handle": {
+            "description": "Reuse the handle returned by a prior project-aware call.",
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "session_id": {
+            "description": "Stable host task id. Reuses the same project session after restart.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "session_intent": {
+            "description": "Current durable task intent. A changed value creates an immutable revision.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "max_chars": {
+            "description": "Maximum returned characters when response_content=full. Defaults to 1500 for abstract and 50000 for full.",
+            "type": "integer",
+            "minimum": 200,
+            "maximum": 50000
+          },
+          "response_content": {
+            "default": "full",
+            "description": "Controls only the returned body. full returns up to max_chars; summary returns a 1500-character evidence excerpt. Research storage keeps the full captured text in deterministic chunks.",
+            "type": "string",
+            "enum": [
+              "summary",
+              "full"
+            ]
+          },
+          "mode": {
+            "default": "full",
+            "description": "Extraction depth. `full` = whole article body (default; uses Playwright if needed). `abstract` = cheap survey: PDF page 1 OR HTML meta description (~1500 chars); use to triage relevance before paying for full text. `metadata` = document metadata without body text: title, authors, publication details, dates, DOI, keywords, canonical URL, and PDF properties when available. Academic PDFs (arxiv/biorxiv/Nature/OpenReview/NeurIPS/JMLR/PMLR/Springer/PubMed-via-PMC) are auto-detected; abstract mode skips Playwright for them.",
+            "type": "string",
+            "enum": [
+              "full",
+              "abstract",
+              "metadata"
+            ]
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "excerpt": {
+            "type": "string"
+          },
+          "length": {
+            "type": "number"
+          },
+          "source_length": {
+            "type": "number"
+          },
+          "truncated": {
+            "type": "boolean"
+          },
+          "is_pdf": {
+            "type": "boolean"
+          },
+          "page_count": {
+            "type": "number"
+          },
+          "extraction_quality": {
+            "type": "string",
+            "enum": [
+              "full_text",
+              "abstract",
+              "meta_abstract",
+              "metadata_only"
+            ]
+          },
+          "authors": {
+            "type": "string"
+          },
+          "publication": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "string"
+          },
+          "year": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "doi": {
+            "type": "string"
+          },
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "canonical_url": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "creator": {
+            "type": "string"
+          },
+          "producer": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "modified_at": {
+            "type": "string"
+          },
+          "elapsed_ms": {
+            "type": "number"
+          },
+          "memory": {
+            "type": "string"
+          },
+          "memory_handle": {
+            "type": "string"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "type": "boolean"
+                  },
+                  "retry_after_ms": {
+                    "type": "number"
+                  },
+                  "user_action": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "meta": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "project_memory_search",
+      "title": "Local Project Memory Search",
+      "description": "LOCAL PROJECT KNOWLEDGE SEARCH ONLY. With research enabled, one local broker lets multiple MCP sessions query the same knowledge base concurrently and orders writes safely. Always use this tool when the user asks to find, recall, inspect, or search information already stored in project memory, indexed local roots, papers, codebases, plans, experiments, or decisions. Use query_variants for multiple retrieval angles in one call instead of opening terminals or calling this tool repeatedly. Query embeddings are batched, candidates are fused with RRF, graph expansion starts from retrieved evidence, and the primary query is reranked once. Only bounded query-focused summaries from that final ranking are returned; stored bodies never bypass this response gate. If one retrieval lane times out, the other lanes still return and meta.degraded_lanes identifies the partial lane; do not repeat the same query automatically. Uses exact, BM25, vector, and graph retrieval. It never opens Google, a browser, or SearchApi. Use search or search_parallel only when new external information is required.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 400,
+            "description": "Natural-language query over indexed local project knowledge."
+          },
+          "query_variants": {
+            "description": "Optional retrieval variants executed inside this one broker request. Exact identifiers and quoted phrases are added deterministically, candidates are fused with RRF, and the primary query is reranked once. Do not make repeated terminal or tool calls for query variants.",
+            "maxItems": 19,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            }
+          },
+          "project_id": {
+            "description": "Primary project to search. Required unless all_projects=true.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "include_project_ids": {
+            "description": "Additional read-only projects searched with the primary project.",
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            }
+          },
+          "all_projects": {
+            "description": "Search every active named project. Excludes Inbox and cannot be combined with project ids.",
+            "type": "boolean"
+          },
+          "limit": {
+            "default": 10,
+            "description": "Maximum local RAG results.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                },
+                "excerpt": {
+                  "type": "string"
+                },
+                "length": {
+                  "type": "number"
+                },
+                "source_length": {
+                  "type": "number"
+                },
+                "truncated": {
+                  "type": "boolean"
+                },
+                "is_pdf": {
+                  "type": "boolean"
+                },
+                "page_count": {
+                  "type": "number"
+                },
+                "extraction_quality": {
+                  "type": "string",
+                  "enum": [
+                    "full_text",
+                    "abstract",
+                    "meta_abstract",
+                    "metadata_only"
+                  ]
+                },
+                "authors": {
+                  "type": "string"
+                },
+                "publication": {
+                  "type": "string"
+                },
+                "published_at": {
+                  "type": "string"
+                },
+                "year": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "doi": {
+                  "type": "string"
+                },
+                "keywords": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "canonical_url": {
+                  "type": "string"
+                },
+                "language": {
+                  "type": "string"
+                },
+                "subject": {
+                  "type": "string"
+                },
+                "creator": {
+                  "type": "string"
+                },
+                "producer": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string"
+                },
+                "modified_at": {
+                  "type": "string"
+                },
+                "extract_error": {
+                  "type": "string"
+                },
+                "document_id": {
+                  "type": "string"
+                },
+                "project_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "source_family": {
+                  "type": "string",
+                  "enum": [
+                    "live",
+                    "document",
+                    "code",
+                    "graph"
+                  ]
+                },
+                "retrieval_families": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "exact",
+                      "bm25",
+                      "vector",
+                      "graph"
+                    ]
+                  }
+                },
+                "score": {
+                  "type": "number"
+                },
+                "fresh_web": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "title",
+                "url",
+                "description"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "elapsed_ms": {
+            "type": "number"
+          },
+          "meta": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "project": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "projects": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "index": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "visualization": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "forget": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "session": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "record": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "assertion": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "entity": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "entities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "memory": {
+            "type": "string"
+          },
+          "memory_handle": {
+            "type": "string"
+          },
+          "plans": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "experiments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "decisions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "assertion_count": {
+            "type": "number"
+          },
+          "correction_count": {
+            "type": "number"
+          },
+          "entity_count": {
+            "type": "number"
+          },
+          "entity_operation_count": {
+            "type": "number"
+          },
+          "job_counts": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "session_count": {
+            "type": "number"
+          },
+          "search_event_count": {
+            "type": "number"
+          },
+          "document_count": {
+            "type": "number"
+          },
+          "citation_observation_count": {
+            "type": "number"
+          },
+          "source_entry_count": {
+            "type": "number"
+          },
+          "plan_count": {
+            "type": "number"
+          },
+          "experiment_count": {
+            "type": "number"
+          },
+          "decision_count": {
+            "type": "number"
+          },
+          "active_source_snapshot": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "retryable": {
+                "type": "boolean"
+              },
+              "retry_after_ms": {
+                "type": "number"
+              },
+              "user_action": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "retryable"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "project_memory",
+      "title": "Project Memory",
+      "description": "PROJECT MEMORY MANAGEMENT. With research enabled, one local broker lets multiple MCP sessions query the same knowledge base concurrently and orders writes safely. Use create to create a project; show to inspect known projects or durable records; record to store session intent, immutable plan revisions, experiments, decisions, versioned ontology terms, or corrections; rebuild to index approved local roots; export to write graph or lineage views; and forget for reversible deletion. show always returns a bounded summary; detail_level=full is accepted for compatibility but never dumps every durable record body. Use project_memory_search for relevant bodies or target_id for one assertion or entity. record returns only a compact receipt and never echoes submitted bodies. action=search remains a compatibility alias, but project_memory_search should be used for local knowledge retrieval. Ontology revisions use supersedes_term_id. Corrections preserve bitemporal data lineage and support assertion replacement plus entity merge or split. rebuild indexes approved local roots and code structure into a reproducible snapshot; export writes an interactive HTML viewer, Graphviz DOT, D3 JSON, or a Neo4j import bundle. HTML always includes PKM, Lineage, and Ontology tabs, an embedded-project selector, empty-canvas focus reset, and visible PNG or JSON download. forget previews impact before reversible project or assertion deletion. Search, search_parallel, scholar_search, and extract automatically capture sources and provenance; project_memory manages their durable structure.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "create",
+              "show",
+              "search",
+              "record",
+              "rebuild",
+              "export",
+              "forget"
+            ],
+            "description": "create: project_id and name required. show: inspect a known project, assertion, entity, or durable record. search: compatibility alias for project_memory_search. record: project_id and record_type required. rebuild: project_id required; roots optional. export: project_id, include_project_ids, or all_projects=true required. forget: project_id and forget_mode required; apply also requires confirm_token."
+          },
+          "project_id": {
+            "description": "Stable project id. For search, this is the write-isolated primary scope. Omit to list projects or use all_projects.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "detail_level": {
+            "default": "summary",
+            "description": "For show with project_id and no target_id, both values return a bounded summary. full is retained only for compatibility and never returns every durable record body.",
+            "type": "string",
+            "enum": [
+              "summary",
+              "full"
+            ]
+          },
+          "include_project_ids": {
+            "description": "Additional read-only projects for one local search or integrated visualization export.",
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            }
+          },
+          "all_projects": {
+            "description": "Search or export every active named project. Excludes Inbox and cannot be combined with project ids.",
+            "type": "boolean"
+          },
+          "query": {
+            "description": "Required for action=search. Searches stored local knowledge only and does not start live web discovery.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 400
+          },
+          "query_variants": {
+            "description": "Optional local retrieval variants for action=search. They run inside one broker request and are fused before one rerank.",
+            "maxItems": 19,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            }
+          },
+          "limit": {
+            "default": 10,
+            "description": "Maximum local RAG results for action=search.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          },
+          "export_format": {
+            "default": "d3",
+            "description": "Visualization file format. html writes one offline explorer with PKM, Lineage, Ontology, project selection, and current-view PNG or anonymized JSON download; d3 writes node-link JSON; dot writes Graphviz DOT; neo4j writes an import-ready CSV and Cypher bundle.",
+            "type": "string",
+            "enum": [
+              "dot",
+              "d3",
+              "html",
+              "neo4j"
+            ]
+          },
+          "export_view": {
+            "default": "graph",
+            "description": "Initial HTML tab or non-HTML export scope. graph is PKM; ontology shows types, shared schema, verified identity links, and typed instances; lineage shows aligned data and research lineage.",
+            "type": "string",
+            "enum": [
+              "graph",
+              "ontology",
+              "lineage"
+            ]
+          },
+          "name": {
+            "description": "Project name for create, or entity name lookup for show.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "record_type": {
+            "description": "Required for record. session stores intent; plan creates an immutable revision; experiment starts or finishes a run; decision links a conclusion; ontology creates a versioned type or relation; correction replaces an assertion or merges/splits entities.",
+            "type": "string",
+            "enum": [
+              "session",
+              "plan",
+              "experiment",
+              "decision",
+              "ontology",
+              "correction"
+            ]
+          },
+          "memory_handle": {
+            "description": "Existing project session handle for a session intent revision.",
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "intent": {
+            "description": "Durable intent for record_type=session.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "title": {
+            "description": "Plan title, experiment name, or decision title.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "body": {
+            "description": "Plan body for record_type=plan.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50000
+          },
+          "change_reason": {
+            "description": "Reason for a new plan revision.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "based_on_experiment_id": {
+            "description": "Experiment that motivated a plan revision.",
+            "type": "string"
+          },
+          "experiment_id": {
+            "description": "Experiment to finish or associate with a decision.",
+            "type": "string"
+          },
+          "hypothesis": {
+            "description": "Hypothesis when starting an experiment.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 5000
+          },
+          "plan_revision_id": {
+            "description": "Plan revision associated with an experiment or decision.",
+            "type": "string"
+          },
+          "status": {
+            "description": "Use success, failed, or inconclusive to finish an experiment. Omit or use running when starting it.",
+            "type": "string",
+            "enum": [
+              "running",
+              "success",
+              "failed",
+              "inconclusive"
+            ]
+          },
+          "summary": {
+            "description": "Experiment result or decision summary.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000
+          },
+          "metrics": {
+            "description": "Terminal experiment metrics.",
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": [
+                "string",
+                "number",
+                "boolean",
+                "null"
+              ]
+            }
+          },
+          "artifacts": {
+            "description": "Experiment artifact paths or identifiers.",
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 2000
+            }
+          },
+          "roots": {
+            "description": "Approved local roots to index. Omit to rebuild derived state from stored sources.",
+            "minItems": 1,
+            "maxItems": 8,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 32
+                },
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "label",
+                "path"
+              ]
+            }
+          },
+          "git_root": {
+            "description": "Optional Git root recorded with a rebuild snapshot.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "forget_mode": {
+            "description": "Preview first. Apply requires its confirm_token. Restore reverses deletion.",
+            "type": "string",
+            "enum": [
+              "preview",
+              "apply",
+              "restore"
+            ]
+          },
+          "confirm_token": {
+            "description": "Token returned by the matching forget preview.",
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 16
+          },
+          "target_id": {
+            "description": "Assertion or entity id for show or correction.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "replacement": {
+            "description": "New assertion value, or new entity name for entity_split.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "correction_kind": {
+            "description": "Correction operation. Defaults to assertion.",
+            "type": "string",
+            "enum": [
+              "assertion",
+              "entity_merge",
+              "entity_split"
+            ]
+          },
+          "source_ids": {
+            "description": "Entity ids merged into target_id by entity_merge.",
+            "minItems": 1,
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          "aliases": {
+            "description": "Ontology term aliases, or aliases moved during entity_split.",
+            "minItems": 1,
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            }
+          },
+          "ontology_kind": {
+            "description": "Ontology term kind for record_type=ontology.",
+            "type": "string",
+            "enum": [
+              "entity_type",
+              "relation"
+            ]
+          },
+          "version": {
+            "description": "Ontology revision number. Defaults to 1 or the superseded term version plus one.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "supersedes_term_id": {
+            "description": "Prior ontology term replaced by this revision.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "reason": {
+            "description": "Required reason for any correction.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "evidence_ids": {
+            "description": "Evidence retained on a corrected assertion.",
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          "valid_from": {
+            "description": "Corrected assertion valid-time start.",
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "valid_to": {
+            "description": "Corrected assertion valid-time end.",
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                },
+                "excerpt": {
+                  "type": "string"
+                },
+                "length": {
+                  "type": "number"
+                },
+                "source_length": {
+                  "type": "number"
+                },
+                "truncated": {
+                  "type": "boolean"
+                },
+                "is_pdf": {
+                  "type": "boolean"
+                },
+                "page_count": {
+                  "type": "number"
+                },
+                "extraction_quality": {
+                  "type": "string",
+                  "enum": [
+                    "full_text",
+                    "abstract",
+                    "meta_abstract",
+                    "metadata_only"
+                  ]
+                },
+                "authors": {
+                  "type": "string"
+                },
+                "publication": {
+                  "type": "string"
+                },
+                "published_at": {
+                  "type": "string"
+                },
+                "year": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "doi": {
+                  "type": "string"
+                },
+                "keywords": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "canonical_url": {
+                  "type": "string"
+                },
+                "language": {
+                  "type": "string"
+                },
+                "subject": {
+                  "type": "string"
+                },
+                "creator": {
+                  "type": "string"
+                },
+                "producer": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string"
+                },
+                "modified_at": {
+                  "type": "string"
+                },
+                "extract_error": {
+                  "type": "string"
+                },
+                "document_id": {
+                  "type": "string"
+                },
+                "project_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "source_family": {
+                  "type": "string",
+                  "enum": [
+                    "live",
+                    "document",
+                    "code",
+                    "graph"
+                  ]
+                },
+                "retrieval_families": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "exact",
+                      "bm25",
+                      "vector",
+                      "graph"
+                    ]
+                  }
+                },
+                "score": {
+                  "type": "number"
+                },
+                "fresh_web": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "title",
+                "url",
+                "description"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "elapsed_ms": {
+            "type": "number"
+          },
+          "meta": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "project": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "projects": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "index": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "visualization": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "forget": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "session": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "record": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "assertion": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "entity": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "entities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "memory": {
+            "type": "string"
+          },
+          "memory_handle": {
+            "type": "string"
+          },
+          "plans": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "experiments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "decisions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "assertion_count": {
+            "type": "number"
+          },
+          "correction_count": {
+            "type": "number"
+          },
+          "entity_count": {
+            "type": "number"
+          },
+          "entity_operation_count": {
+            "type": "number"
+          },
+          "job_counts": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "session_count": {
+            "type": "number"
+          },
+          "search_event_count": {
+            "type": "number"
+          },
+          "document_count": {
+            "type": "number"
+          },
+          "citation_observation_count": {
+            "type": "number"
+          },
+          "source_entry_count": {
+            "type": "number"
+          },
+          "plan_count": {
+            "type": "number"
+          },
+          "experiment_count": {
+            "type": "number"
+          },
+          "decision_count": {
+            "type": "number"
+          },
+          "active_source_snapshot": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "retryable": {
+                "type": "boolean"
+              },
+              "retry_after_ms": {
+                "type": "number"
+              },
+              "user_action": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "retryable"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "health",
+      "title": "MCP Health Check",
+      "description": "MCP server status: cascade mode + transitions, rate-limiter usage, cache size, config. Call this if searches start failing or returning empty -- check cascade.totalCaptchas and rateLimiter.queueSize, and reduce search volume if they are high.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "cascade": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "rateLimiter": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "cache": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "pool": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "telemetry": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "selfHealing": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "nativeBrowser": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "research": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "config": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "retryable": {
+                "type": "boolean"
+              },
+              "retry_after_ms": {
+                "type": "number"
+              },
+              "user_action": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "retryable"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  ],
+  "measuredAt": "2026-09-04T13:08:13.128Z",
+  "serverName": "google-surf-mcp",
+  "serverVersion": "1.0.9",
   "launchCommand": "npx -y google-surf-mcp",
-  "notes": "reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: arn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.\nnpm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me\nnpm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported\n",
+  "envVarNames": [],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

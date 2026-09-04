@@ -2574,7 +2574,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-03T21:04:46.517Z",
+  "measuredAt": "2026-09-04T13:07:07.944Z",
   "serverName": "octocode-mcp_18.2.2",
   "serverVersion": "18.2.2",
   "launchCommand": "npx -y octocode-mcp",
@@ -2584,7 +2584,8 @@
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

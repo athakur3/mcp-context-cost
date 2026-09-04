@@ -8,15 +8,16 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-09-03T21:24:43.268Z",
+  "measuredAt": "2026-09-04T13:07:39.379Z",
   "serverName": "local-mcp",
   "launchCommand": "npx -y local-mcp",
-  "notes": "reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: \nLMCP v3.0.404 (linux-arm64) not found in cache.\nDownloading from https://download.local-mcp.com/lmcp-server-3.0.404-linux-arm64.tar.gz\n\nError al preparar el runtime de LMCP:\nLMCP 3.0.404 is not yet available for linux-arm64.\nThe Windows/Linux Go server is in preview — check https://local-mcp.com for updates.\nIntentá reinstalar: npx local-mcp update\n\n",
+  "notes": "reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: LMCP v3.0.404 (linux-amd64) not found in cache.\nDownloading from https://download.local-mcp.com/lmcp-server-3.0.404-linux-amd64.tar.gz\n\nError al preparar el runtime de LMCP:\nLMCP 3.0.404 is not yet available for linux-amd64.\nThe Windows/Linux Go server is in preview — check https://local-mcp.com for updates.\nIntentá reinstalar: npx local-mcp update",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

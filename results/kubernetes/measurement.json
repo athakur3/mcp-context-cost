@@ -1290,7 +1290,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-03T13:48:41.108Z",
+  "measuredAt": "2026-09-04T13:06:03.636Z",
   "serverName": "kubernetes",
   "serverVersion": "4.1.6",
   "launchCommand": "npx -y mcp-server-kubernetes",
@@ -1300,7 +1300,8 @@
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

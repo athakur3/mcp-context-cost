@@ -184,7 +184,7 @@ Add `--claude` to annotate each server with its Anthropic-request cost from the 
 [Claude divergence](docs/METHODOLOGY.md#claude-divergence) run — an exact number when the
 published capture hash matches what you have installed, `—` (silence, not a stale guess)
 when it doesn't. The run holds 20 rows — the top 20 measured servers by tokens when it ran —
-and [results/leaderboard.md](results/leaderboard.md) prints a claude number for the 15 that
+and [results/leaderboard.md](results/leaderboard.md) prints a claude number for the 12 that
 still match today and silence for the rest. Most installs will show a mix:
 
 ```
@@ -235,7 +235,7 @@ Flags: `--json` (full report on stdout, progress on stderr), `--budget N`,
 
 The number `audit` gives you is the same measurement, run across a curated set of public
 servers — which is how you can tell it is a measurement and not this tool's opinion. It also
-shows what you are choosing between: across the 81 servers measured, cost spans **1,700×**,
+shows what you are choosing between: across the 83 servers measured, cost spans **1,700×**,
 from `postgres` at 32 tokens to `github` at 54,622. The table below is a
 sample of that range; the full range is in
 [results/leaderboard.md](results/leaderboard.md).
@@ -244,13 +244,13 @@ sample of that range; the full range is in
 |---|---:|---:|
 | github (official) | **54,622 tokens** | 44 |
 | xcodebuildmcp | 26,594 | 24 |
-| brave-search | 25,456 | 8 |
+| brave-search | 25,487 | 8 |
 | notion | 17,500 | 24 |
 | playwright *(4.8M installs/week)* | 4,024 | 24 |
 | filesystem (reference) | 2,823 | 14 |
 | markitdown | 64 | 1 |
 
-*(81 of 106 popular servers measured, each row dated by its own most recent sweep — full table in
+*(83 of 106 popular servers measured, each row dated by its own most recent sweep — full table in
 [results/leaderboard.md](results/leaderboard.md); every failure is listed with its reason.
 Each measured server also has a [detail page](https://athakur3.github.io/mcp-context-cost/servers/)
 showing which tools its tokens are in.)*
@@ -260,7 +260,7 @@ answers a question no client asks: **what did this server cost last month?**
 [results/regressions.md](results/regressions.md) reports each server's most recent movement —
 dated to when it happened, separated into *shipped more tools* versus *same tools, rewritten*,
 and compared only within one isolation. The ecosystem ratchets upward: of the servers whose
-cost has moved at all, 10 moved up against 4 that moved down. Method:
+cost has moved at all, 11 moved up against 6 that moved down. Method:
 [cost movement](docs/METHODOLOGY.md#cost-movement).
 
 If you publish a server, the same measurement is available as a badge, so your users can see

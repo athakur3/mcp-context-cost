@@ -442,7 +442,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-03T19:23:39.601Z",
+  "measuredAt": "2026-09-04T13:04:02.446Z",
   "serverName": "shopify-dev-mcp",
   "serverVersion": "1.15.0",
   "launchCommand": "npx -y @shopify/dev-mcp@latest",
@@ -452,7 +452,8 @@
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

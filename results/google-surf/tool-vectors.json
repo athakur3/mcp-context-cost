@@ -1,0 +1,41 @@
+{
+  "method": "cost-regression/v1",
+  "server": "google-surf",
+  "entries": [
+    {
+      "date": "2026-09-04",
+      "canonicalSha256": "64ca81a34311e1318d731b8fbf14e5f1759567e4a7bdaabf43f3553ee732ee41",
+      "totalTokens": 10948,
+      "tools": [
+        {
+          "name": "search",
+          "tokens": 1737
+        },
+        {
+          "name": "scholar_search",
+          "tokens": 981
+        },
+        {
+          "name": "search_parallel",
+          "tokens": 1860
+        },
+        {
+          "name": "extract",
+          "tokens": 1249
+        },
+        {
+          "name": "project_memory_search",
+          "tokens": 1436
+        },
+        {
+          "name": "project_memory",
+          "tokens": 3279
+        },
+        {
+          "name": "health",
+          "tokens": 404
+        }
+      ]
+    }
+  ]
+}

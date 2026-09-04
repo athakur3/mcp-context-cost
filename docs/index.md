@@ -2,10 +2,10 @@
 
 **How much of your agent's context window does an MCP server eat before it does anything?**
 
-We measure 106 popular MCP servers; 81 have a number today, and every failure is listed
+We measure 106 popular MCP servers; 83 have a number today, and every failure is listed
 with its reason. The spread is 1,700×: from `postgres` at 32 tokens to `github` at
 **54,622 tokens** — 27% of a 200K context window, before the agent takes a single action.
-Second-heaviest is `comfyui-mcp` at 50,640.
+Second-heaviest is `agent-device` at 53,669.
 
 - **[The State of MCP Context Cost](state-of-mcp-context-cost)** — six findings from the
   data, September 2026: the spread, the tokenizer reversal, the deferral exception, and why

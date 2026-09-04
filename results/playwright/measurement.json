@@ -972,16 +972,18 @@
       }
     }
   ],
-  "measuredAt": "2026-08-18T23:58:03.954Z",
+  "measuredAt": "2026-09-04T13:02:38.277Z",
   "serverName": "Playwright",
-  "serverVersion": "1.63.0-alpha-2026-08-05",
+  "serverVersion": "1.63.0-alpha-2026-08-31",
   "launchCommand": "npx -y @playwright/mcp@latest",
   "envVarNames": [],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 180000
 }

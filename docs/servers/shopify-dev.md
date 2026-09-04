@@ -1,6 +1,6 @@
 # shopify-dev — context cost
 
-**6,841 tokens** across 6 tools — *moderate* (5–15K). Measured 2026-09-03 under [methodology v1.0](../METHODOLOGY.html).
+**6,841 tokens** across 6 tools — *moderate* (5–15K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -34,6 +34,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 | 2026-08-16 | 5,624 | 5 | not recorded | — |
 | 2026-08-19 | 5,624 | 5 | docker | no change |
 | 2026-09-03 | 6,841 | 6 | docker | +1,217 |
+| 2026-09-04 | 6,841 | 6 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

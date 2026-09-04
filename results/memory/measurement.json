@@ -766,7 +766,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-03T19:22:51.550Z",
+  "measuredAt": "2026-09-04T13:02:16.496Z",
   "serverName": "memory-server",
   "serverVersion": "0.6.3",
   "launchCommand": "npx -y @modelcontextprotocol/server-memory",
@@ -776,7 +776,8 @@
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

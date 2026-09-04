@@ -1,10 +1,10 @@
 # playwright — context cost
 
-**4,024 tokens** across 24 tools — *light* (1–5K). Measured 2026-08-18 under [methodology v1.0](../METHODOLOGY.html).
+**4,024 tokens** across 24 tools — *light* (1–5K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
-| server (self-reported) | Playwright v1.63.0-alpha-2026-08-05 |
+| server (self-reported) | Playwright v1.63.0-alpha-2026-08-31 |
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @playwright/mcp@latest` |
@@ -51,6 +51,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 |---|---:|---:|---|---:|
 | 2026-08-16 | 4,024 | 24 | not recorded | — |
 | 2026-08-18 | 4,024 | 24 | docker | no change |
+| 2026-09-04 | 4,024 | 24 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

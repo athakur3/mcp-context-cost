@@ -2473,7 +2473,7 @@
       "name": "firecrawl_developer_search"
     }
   ],
-  "measuredAt": "2026-09-03T13:47:33.396Z",
+  "measuredAt": "2026-09-04T13:02:48.793Z",
   "serverName": "firecrawl-fastmcp",
   "serverVersion": "3.24.0",
   "launchCommand": "npx -y firecrawl-mcp",
@@ -2485,7 +2485,8 @@
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

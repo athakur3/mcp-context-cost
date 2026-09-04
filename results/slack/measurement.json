@@ -8,15 +8,16 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-08-19T00:25:20.556Z",
+  "measuredAt": "2026-09-04T13:05:43.387Z",
   "serverName": "slack",
   "launchCommand": "npx -y slack-mcp-server@latest --transport stdio",
-  "notes": "reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: .execFileSync (node:child_process:952:15)\n    at Object.<anonymous> (/tmp/.npm-cache/_npx/2f12aed4e6049c73/node_modules/slack-mcp-server/bin/index.js:64:14)\n    at Module._compile (node:internal/modules/cjs/loader:1781:14)\n    at Object..js (node:internal/modules/cjs/loader:1913:10)\n    at Module.load (node:internal/modules/cjs/loader:1505:32)\n    at Function._load (node:internal/modules/cjs/loader:1309:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:254:19) {\n  status: 1,\n  signal: null,\n  output: [ null, null, null ],\n  pid: 30,\n  stdout: null,\n  stderr: null\n}\n\nNode.js v22.23.2\n",
+  "notes": "reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: \n […] \nnode:child_process:955\n    throw err;\n    ^\n\nError: Command failed: /tmp/.npm-cache/_npx/2f12aed4e6049c73/node_modules/slack-mcp-server-linux-amd64/bin/slack-mcp-server-linux-amd64 --transport stdio\n  status: 1,\n  signal: null,\n  output: [ null, null, null ],\n  pid: 29,\n  stdout: null,\n  stderr: null\n}\n\nNode.js v22.23.2",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

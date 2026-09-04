@@ -150,7 +150,7 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:02:27.948Z",
+  "measuredAt": "2026-09-04T13:04:25.855Z",
   "serverName": "Browserbase MCP Server",
   "serverVersion": "3.0.0",
   "launchCommand": "npx -y @browserbasehq/mcp",
@@ -158,11 +158,13 @@
     "BROWSERBASE_API_KEY",
     "BROWSERBASE_PROJECT_ID"
   ],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

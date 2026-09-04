@@ -3,66 +3,66 @@
   "provider": "tiktoken",
   "encoding": "o200k_base",
   "status": "measured",
-  "totalTokens": 25456,
+  "totalTokens": 25487,
   "toolCount": 8,
   "tools": [
     {
       "name": "brave_web_search",
-      "tokens": 1396,
+      "tokens": 1398,
       "descriptionTokens": 133,
-      "inputSchemaTokens": 1211
+      "inputSchemaTokens": 1213
     },
     {
       "name": "brave_local_search",
-      "tokens": 1415,
+      "tokens": 1417,
       "descriptionTokens": 157,
-      "inputSchemaTokens": 1211
+      "inputSchemaTokens": 1213
     },
     {
       "name": "brave_video_search",
-      "tokens": 688,
+      "tokens": 690,
       "descriptionTokens": 86,
-      "inputSchemaTokens": 554
+      "inputSchemaTokens": 556
     },
     {
       "name": "brave_image_search",
-      "tokens": 814,
+      "tokens": 818,
       "descriptionTokens": 67,
-      "inputSchemaTokens": 268
+      "inputSchemaTokens": 270
     },
     {
       "name": "brave_news_search",
-      "tokens": 1002,
+      "tokens": 1004,
       "descriptionTokens": 249,
-      "inputSchemaTokens": 694
+      "inputSchemaTokens": 696
     },
     {
       "name": "brave_summarizer",
-      "tokens": 307,
+      "tokens": 309,
       "descriptionTokens": 154,
-      "inputSchemaTokens": 101
+      "inputSchemaTokens": 103
     },
     {
       "name": "brave_llm_context",
-      "tokens": 2550,
+      "tokens": 2554,
       "descriptionTokens": 177,
-      "inputSchemaTokens": 1535
+      "inputSchemaTokens": 1537
     },
     {
       "name": "brave_place_search",
-      "tokens": 17282,
+      "tokens": 17295,
       "descriptionTokens": 351,
-      "inputSchemaTokens": 1143
+      "inputSchemaTokens": 1145
     }
   ],
-  "canonicalSha256": "e5a8f43437056e6e89bb8f5167f5b8d471ba42de915ede953ce5968a84471582",
+  "canonicalSha256": "ec3c4f85b22d1e4866faeb04af7038fc28568dc4a262416cea7ce77c63b2b015",
   "rawToolsCapture": [
     {
       "name": "brave_web_search",
       "title": "brave_web_search",
       "description": "Performs web searches using the Brave Search API and returns comprehensive search results with rich metadata.\n\n    When to use:\n        - General web searches for information, facts, or current topics\n        - Location-based queries (restaurants, businesses, points of interest)\n        - News searches for recent events or breaking stories\n        - Finding videos, discussions, or FAQ content\n        - Research requiring diverse result types (web pages, images, reviews, etc.)\n\n    Returns a JSON list of web results with title, description, and URL.\n    \n    When the \"results_filter\" parameter is empty, JSON results may also contain FAQ, Discussions, News, and Video results.",
       "inputSchema": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
         "properties": {
           "query": {
@@ -344,7 +344,7 @@
       "title": "brave_local_search",
       "description": "Brave Local Search API provides enrichments for location search results. Access to this API is available only through the Brave Search API Pro plans; confirm the user's plan before using this tool (if the user does not have a Pro plan, use the brave_web_search tool). Searches for local businesses and places using Brave's Local Search API. Best for queries related to physical locations, businesses, restaurants, services, etc.\n    \n    Returns detailed information including:\n        - Business names and addresses\n        - Ratings and review counts\n        - Phone numbers and opening hours\n\n    Use this when the query implies 'near me', 'in my area', or mentions specific locations (e.g., 'in San Francisco'). This tool automatically falls back to brave_web_search if no local results are found.",
       "inputSchema": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
         "properties": {
           "query": {
@@ -626,7 +626,7 @@
       "title": "brave_video_search",
       "description": "Searches for videos using Brave's Video Search API and returns structured video results with metadata.\n\n    When to use:\n        - When you need to find videos related to a specific topic, keyword, or query.\n        - Useful for discovering video content, getting video metadata, or finding videos from specific creators/publishers.\n\n    Returns a JSON list of video-related results with title, url, description, duration, and thumbnail_url.",
       "inputSchema": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
         "properties": {
           "query": {
@@ -723,7 +723,7 @@
       "title": "brave_image_search",
       "description": "\n    Performs an image search using the Brave Search API. Helpful for when you need pictures of people, places, things, graphic design ideas, art inspiration, and more. When relaying results in a markdown environment, it may be helpful to include images in the results (e.g., ![image.title](image.properties.url)).\n",
       "inputSchema": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
         "properties": {
           "query": {
@@ -781,7 +781,7 @@
         "taskSupport": "forbidden"
       },
       "outputSchema": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
         "properties": {
           "type": {
@@ -874,7 +874,7 @@
       "title": "brave_news_search",
       "description": "This tool searches for news articles using Brave's News Search API based on the user's query. Use it when you need current news information, breaking news updates, or articles about specific topics, events, or entities.\n    \n    When to use:\n        - Finding recent news articles on specific topics\n        - Getting breaking news updates\n        - Researching current events or trending stories\n        - Gathering news sources and headlines for analysis\n\n    Returns a JSON list of news-related results with title, url, and description. Some results may contain snippets of text from the article.\n    \n    When relaying results in markdown-supporting environments, always cite sources with hyperlinks.\n    \n    Examples:\n        - \"According to [Reuters](https://www.reuters.com/technology/china-bans/), China bans uncertified and recalled power banks on planes\".\n        - \"The [New York Times](https://www.nytimes.com/2025/06/27/us/technology/ev-sales.html) reports that Tesla's EV sales have increased by 20%\".\n        - \"According to [BBC News](https://www.bbc.com/news/world-europe-65910000), the UK government has announced a new policy to support renewable energy\".",
       "inputSchema": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
         "properties": {
           "query": {
@@ -989,7 +989,7 @@
       "title": "brave_summarizer",
       "description": "Retrieves AI-generated summaries of web search results using Brave's Summarizer API. This tool processes search results to create concise, coherent summaries of information gathered from multiple sources.\n\n    When to use:\n\n    - When you need a concise overview of complex topics from multiple sources\n    - For quick fact-checking or getting key points without reading full articles\n    - When providing users with summarized information that synthesizes various perspectives\n    - For research tasks requiring distilled information from web searches\n\n    Returns a text summary that consolidates information from the search results. Optional features include inline references to source URLs and additional entity information.\n\n    Requirements: Must first perform a web search using brave_web_search with summary=true parameter. Requires a Pro AI subscription to access the summarizer functionality.",
       "inputSchema": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
         "properties": {
           "key": {
@@ -1024,7 +1024,7 @@
       "title": "brave_llm_context",
       "description": "Retrieves pre-extracted, relevance-ranked web content using Brave's LLM Context API, optimized for AI agents, LLM grounding, and RAG pipelines. Unlike a traditional web search that returns links and short descriptions, this tool returns the actual substance of matching pages — text chunks, tables, code blocks, and structured data — so the model can reason over it directly.\n\n    When to use:\n        - Grounding answers in fresh, relevant web content (RAG)\n        - Giving an AI agent ready-to-use page content from a single search call\n        - Question answering and fact-checking against current sources\n        - Gathering source material for research without manually fetching pages\n        - When you need the contents of pages, not just titles, descriptions, and URLs\n\n    When relaying results in markdown-supporting environments, cite the source URLs from the \"sources\" map.",
       "inputSchema": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
         "properties": {
           "query": {
@@ -1294,7 +1294,7 @@
         "taskSupport": "forbidden"
       },
       "outputSchema": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
         "properties": {
           "grounding": {
@@ -1479,7 +1479,7 @@
       "title": "brave_place_search",
       "description": "Searches Brave's Place Search API. A single call may populate any combination of 'results' (POIs), 'cities', 'addresses', 'streets', and 'location' (the resolved search area), depending on the query's shape.\n\n    When to use:\n        - POIs near coordinates or a named area (e.g. \"coffee shops in Paris\") -> 'results', each with structured business data (postal address, hours, contact, ratings, photos, categories, timezone).\n        - Browsing general POIs (omit 'query'; supply 'latitude'+'longitude' or 'location').\n        - Disambiguating a bare city name (e.g. \"springfield\") -> 'cities'.\n        - Resolving a specific address (e.g. \"350 5th avenue\" with NYC coords) -> 'addresses' (often plus 'streets').\n        - Looking up a street by name (e.g. \"michigan avenue\" with Chicago coords) -> 'streets'.\n\n    Inputs:\n        - Anchor the search via 'latitude'+'longitude' or 'location' (or both). With neither, 'query' is required.\n        - 'addresses' / 'streets' only surface when the query is address-/street-shaped AND geographically anchored.\n        - 'location' format: US -- '<city> <state> <country>' (e.g. 'san francisco ca united states'); non-US -- '<city> <country>' (e.g. 'tokyo japan'). Capitalization and commas don't matter.\n        - 'count' caps results (max 50, default 20). 'radius' (meters) biases toward closer results; it does NOT hard-limit the search area.",
       "inputSchema": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
         "properties": {
           "query": {
@@ -1716,7 +1716,7 @@
         "taskSupport": "forbidden"
       },
       "outputSchema": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
         "properties": {
           "type": {
@@ -1843,7 +1843,7 @@
                 },
                 "coordinates": {
                   "type": "array",
-                  "items": [
+                  "prefixItems": [
                     {
                       "type": "number"
                     },
@@ -2504,7 +2504,7 @@
                 },
                 "coordinates": {
                   "type": "array",
-                  "items": [
+                  "prefixItems": [
                     {
                       "type": "number"
                     },
@@ -2592,7 +2592,7 @@
                 },
                 "coordinates": {
                   "type": "array",
-                  "items": [
+                  "prefixItems": [
                     {
                       "type": "number"
                     },
@@ -2698,7 +2698,7 @@
                       },
                       "coordinates": {
                         "type": "array",
-                        "items": [
+                        "prefixItems": [
                           {
                             "type": "number"
                           },
@@ -3436,7 +3436,7 @@
                       },
                       "coordinates": {
                         "type": "array",
-                        "items": [
+                        "prefixItems": [
                           {
                             "type": "number"
                           },
@@ -4172,7 +4172,7 @@
                 },
                 "coordinates": {
                   "type": "array",
-                  "items": [
+                  "prefixItems": [
                     {
                       "type": "number"
                     },
@@ -4278,7 +4278,7 @@
                       },
                       "coordinates": {
                         "type": "array",
-                        "items": [
+                        "prefixItems": [
                           {
                             "type": "number"
                           },
@@ -5016,7 +5016,7 @@
                       },
                       "coordinates": {
                         "type": "array",
-                        "items": [
+                        "prefixItems": [
                           {
                             "type": "number"
                           },
@@ -5738,7 +5738,7 @@
             "properties": {
               "coordinates": {
                 "type": "array",
-                "items": [
+                "prefixItems": [
                   {
                     "type": "number"
                   },
@@ -5771,18 +5771,20 @@
       }
     }
   ],
-  "measuredAt": "2026-08-19T00:00:06.662Z",
+  "measuredAt": "2026-09-04T13:03:23.329Z",
   "serverName": "brave-search-mcp-server",
-  "serverVersion": "2.1.0",
+  "serverVersion": "2.1.3",
   "launchCommand": "npx -y @brave/brave-search-mcp-server",
   "envVarNames": [
     "BRAVE_API_KEY"
   ],
+  "serverInstructions": "Use this server to search the Web for various types of data via the Brave Search API.",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

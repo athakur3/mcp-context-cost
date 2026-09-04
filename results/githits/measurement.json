@@ -3,7 +3,7 @@
   "provider": "tiktoken",
   "encoding": "o200k_base",
   "status": "measured",
-  "totalTokens": 12600,
+  "totalTokens": 12833,
   "toolCount": 16,
   "tools": [
     {
@@ -74,9 +74,9 @@
     },
     {
       "name": "pkg_info",
-      "tokens": 404,
-      "descriptionTokens": 170,
-      "inputSchemaTokens": 191
+      "tokens": 509,
+      "descriptionTokens": 232,
+      "inputSchemaTokens": 233
     },
     {
       "name": "pkg_vulns",
@@ -86,9 +86,9 @@
     },
     {
       "name": "pkg_deps",
-      "tokens": 677,
-      "descriptionTokens": 191,
-      "inputSchemaTokens": 445
+      "tokens": 805,
+      "descriptionTokens": 247,
+      "inputSchemaTokens": 516
     },
     {
       "name": "pkg_changelog",
@@ -103,7 +103,7 @@
       "inputSchemaTokens": 486
     }
   ],
-  "canonicalSha256": "1de63e2beef41e0f618a1b41e1ead6a82fbce11d6e0c9652466884a2c74e10f0",
+  "canonicalSha256": "1de4342682e058fb6395fc1a42dbcb9fa87838dc26852ba6810e57cc388ab81e",
   "rawToolsCapture": [
     {
       "name": "quick_start",
@@ -1072,7 +1072,7 @@
     },
     {
       "name": "pkg_info",
-      "description": "Assess latest package health and adoption: license, downloads, and activity. Provide `registry` and `package_name` (for example `npm` + `express`). Default text returns license, description, repository popularity (stars/forks/issues and [ARCHIVED] when applicable), downloads, publish age, and vulnerability status. Set `verbose: true` for GitHub language/topics/last-pushed, recent advisories, and recent changes. Pass `format: \"json\"` for structured fields. Use `pkg_vulns` for version-specific vulnerability details, `pkg_deps` for the dependency graph, `pkg_changelog` for release evidence, or `pkg_upgrade_review` for current-vs-target comparison.\n\n\n\nBefore using this tool, call `quick_start` once per session unless the `githits-mcp` skill is loaded.",
+      "description": "Assess latest package health and adoption: license, downloads, and activity. Provide `registry` and `package_name` (for example `npm` + `express`). Default text returns license, description, repository popularity (stars/forks/issues and [ARCHIVED] when applicable), downloads, publish age, latest affected count, and separate package-wide advisory history count. These counts are shown separately. Set `verbose: true` for GitHub language/topics/last-pushed, published-version count, download refresh date, package-wide advisory history (all versions), and recent changes. Pass `format: \"json\"` for structured fields including `versionCount`, `downloads.refreshedAt`, and `advisoryHistory.total`. Use `pkg_vulns` for version-specific vulnerability details, or pass `advisory_scope: \"all\"` for package-wide history; use `pkg_deps` for the dependency graph, `pkg_changelog` for release evidence, or `pkg_upgrade_review` for current-vs-target comparison.\n\n\n\nBefore using this tool, call `quick_start` once per session unless the `githits-mcp` skill is loaded.",
       "inputSchema": {
         "$schema": "http://json-schema.org/draft-07/schema#",
         "type": "object",
@@ -1086,12 +1086,12 @@
             "description": "Package name (scoped names ok: @types/node)."
           },
           "verbose": {
-            "description": "Text only. Adds GitHub language/topics/last-pushed, recent advisories, and recent changes. Ignored for format=json.",
+            "description": "Text only. Adds GitHub language/topics/last-pushed, published-version count, download refresh date, package-wide advisory history (all versions), and recent changes. Latest affected and package-wide history counts are shown separately. Ignored for format=json.",
             "type": "boolean"
           },
           "format": {
             "default": "text-v1",
-            "description": "Response format. Default `text-v1` — compact package overview. Pass `format: \"json\"` for the structured envelope.",
+            "description": "Response format. Default `text-v1` — compact package overview. Pass `format: \"json\"` for structured fields including `versionCount`, `downloads.refreshedAt`, and `advisoryHistory.total`.",
             "type": "string",
             "enum": [
               "text-v1",
@@ -1176,7 +1176,7 @@
     },
     {
       "name": "pkg_deps",
-      "description": "Inspect what a package depends on, directly or transitively. Lists direct runtime dependencies with resolved versions; non-runtime groups are omitted by default. Use `lifecycle` with a concrete value for matching dependency groups, or `all` for every available group. Runtime group rows include resolved versions when available. Pass `max_depth` to add a `transitive` block with the capped install footprint, conflict detection, and circular-dependency flags; layer `include_importers: true` on top when you also need per-package provenance. Supports npm, PyPI, Hex, Crates, Zig, vcpkg, RubyGems, Go, and Swift. Use `pkg_info` for latest package health, `pkg_vulns` for advisories, or `pkg_upgrade_review` for current-vs-target evidence.\n\nBefore using this tool, call `quick_start` once per session unless the `githits-mcp` skill is loaded.",
+      "description": "Inspect what a package depends on, directly or transitively. Lists direct runtime dependencies with resolved versions; non-runtime groups are omitted by default. Use `lifecycle` with a concrete value for matching dependency groups, or `all` for every available group. Runtime group rows include resolved versions when available. Pass `max_depth` to add a `transitive` block with the capped install footprint, conflict detection, and circular-dependency flags; layer `include_importers: true` on top when you also need per-package provenance. Supports npm, PyPI, Hex, Crates, Zig, vcpkg, RubyGems, Go, and Swift. Use `include_issues: true` for deprecated, outdated, duplicate, and conflict analysis across the resolved dependency graph; use `format: \"json\"` for complete issue rows. Without `max_depth`, issues scan the full graph; `max_depth` bounds cost and scope. Use `pkg_info` for latest package health, `pkg_vulns` for advisories, or `pkg_upgrade_review` for current-vs-target evidence.\n\nBefore using this tool, call `quick_start` once per session unless the `githits-mcp` skill is loaded.",
       "inputSchema": {
         "$schema": "http://json-schema.org/draft-07/schema#",
         "type": "object",
@@ -1209,6 +1209,10 @@
           },
           "include_importers": {
             "description": "When true, each entry in `transitive.packages[]` also carries an `importers` array — every upstream package that pulls it in, with that importer's own resolved version and the constraint it declared. Off by default because adding provenance roughly quadruples the envelope size on heavy graphs. If `max_depth` is omitted, this also requests the full transitive block.",
+            "type": "boolean"
+          },
+          "include_issues": {
+            "description": "When true, computes deprecated, outdated, duplicate, and conflict analysis across the resolved dependency graph. Without `max_depth`, this traverses the full graph; set `max_depth` to bound analysis cost and scope. Off by default; use `format: \"json\"` for complete issue rows.",
             "type": "boolean"
           },
           "max_depth": {
@@ -1402,9 +1406,9 @@
       }
     }
   ],
-  "measuredAt": "2026-09-03T21:39:45.687Z",
+  "measuredAt": "2026-09-04T13:07:47.597Z",
   "serverName": "githits",
-  "serverVersion": "0.12.0",
+  "serverVersion": "0.12.1",
   "launchCommand": "npx -y githits mcp start",
   "envVarNames": [],
   "serverInstructions": null,
@@ -1412,7 +1416,8 @@
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

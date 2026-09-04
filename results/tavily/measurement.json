@@ -365,7 +365,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-03T19:23:03.043Z",
+  "measuredAt": "2026-09-04T13:03:18.317Z",
   "serverName": "tavily-mcp",
   "serverVersion": "0.2.22",
   "launchCommand": "npx -y tavily-mcp",
@@ -377,7 +377,8 @@
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

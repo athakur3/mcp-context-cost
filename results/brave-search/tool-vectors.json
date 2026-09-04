@@ -40,6 +40,45 @@
           "tokens": 17282
         }
       ]
+    },
+    {
+      "date": "2026-09-04",
+      "canonicalSha256": "ec3c4f85b22d1e4866faeb04af7038fc28568dc4a262416cea7ce77c63b2b015",
+      "totalTokens": 25487,
+      "tools": [
+        {
+          "name": "brave_web_search",
+          "tokens": 1398
+        },
+        {
+          "name": "brave_local_search",
+          "tokens": 1417
+        },
+        {
+          "name": "brave_video_search",
+          "tokens": 690
+        },
+        {
+          "name": "brave_image_search",
+          "tokens": 818
+        },
+        {
+          "name": "brave_news_search",
+          "tokens": 1004
+        },
+        {
+          "name": "brave_summarizer",
+          "tokens": 309
+        },
+        {
+          "name": "brave_llm_context",
+          "tokens": 2554
+        },
+        {
+          "name": "brave_place_search",
+          "tokens": 17295
+        }
+      ]
     }
   ]
 }

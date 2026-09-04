@@ -70,7 +70,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-03T13:48:00.999Z",
+  "measuredAt": "2026-09-04T13:03:30.611Z",
   "serverName": "mcp-server-qdrant",
   "serverVersion": "1.29.1",
   "launchCommand": "uvx mcp-server-qdrant",
@@ -83,7 +83,8 @@
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

@@ -4,24 +4,27 @@ Every server here is measured again on a rotating schedule, and most launch unpi
 
 Comparable means the two runs used the same isolation — two numbers taken under different isolation are not comparable, and the trend line already refuses to span that boundary (see [history](history.csv) and the sparklines on each [server page](../docs/servers/)). A failed measurement contributes no row at all, so a server that stopped starting reads as a gap in its series, never as a drop to zero.
 
-**10 servers moved upward and 4 moved down**, a net +4,206 tokens across the measured set. 6 movements clear both thresholds for being called out (at least 5% *and* at least 25 tokens — relative alone would headline a fifth of a cheap server, absolute alone would headline drift on an expensive one). Everything comparable is listed either way.
+**11 servers moved upward and 6 moved down**, a net +4,446 tokens across the measured set. 6 movements clear both thresholds for being called out (at least 5% *and* at least 25 tokens — relative alone would headline a fifth of a cheap server, absolute alone would headline drift on an expensive one). Everything comparable is listed either way.
 
 | server | window | tokens | change | tools | what moved |
 |---|---|---:|---:|---:|---|
-| [obsidian](../docs/servers/obsidian.md) **·** | 2026-08-19 → 2026-08-26, held to 2026-09-03 | 1,132 → 2,062 | +930 (+82.2%) | +3 | shipped more tools |
-| [blender](../docs/servers/blender.md) **·** | 2026-08-19 → 2026-09-03 | 5,462 → 6,928 | +1,466 (+26.8%) | +3 | shipped more tools |
-| [arxiv](../docs/servers/arxiv.md) **·** | 2026-08-19 → 2026-09-03 | 3,228 → 3,960 | +732 (+22.7%) | +5 | shipped more tools |
-| [shopify-dev](../docs/servers/shopify-dev.md) **·** | 2026-08-19 → 2026-09-03 | 5,624 → 6,841 | +1,217 (+21.6%) | +1 | shipped more tools |
+| [obsidian](../docs/servers/obsidian.md) **·** | 2026-08-19 → 2026-08-26, held to 2026-09-04 | 1,132 → 2,062 | +930 (+82.2%) | +3 | shipped more tools |
+| [blender](../docs/servers/blender.md) **·** | 2026-08-19 → 2026-09-03, held to 2026-09-04 | 5,462 → 6,928 | +1,466 (+26.8%) | +3 | shipped more tools |
+| [arxiv](../docs/servers/arxiv.md) **·** | 2026-08-19 → 2026-09-03, held to 2026-09-04 | 3,228 → 3,960 | +732 (+22.7%) | +5 | shipped more tools |
+| [shopify-dev](../docs/servers/shopify-dev.md) **·** | 2026-08-19 → 2026-09-03, held to 2026-09-04 | 5,624 → 6,841 | +1,217 (+21.6%) | +1 | shipped more tools |
 | [clickhouse](../docs/servers/clickhouse.md) **·** | 2026-09-02 → 2026-09-04 | 694 → 632 | −62 (−8.9%) | — | same tools, rewritten |
-| [sentry](../docs/servers/sentry.md) **·** | 2026-08-18 → 2026-09-03 | 6,455 → 6,086 | −369 (−5.7%) | — | same tools, rewritten |
+| [sentry](../docs/servers/sentry.md) **·** | 2026-08-18 → 2026-09-03, held to 2026-09-04 | 6,455 → 6,086 | −369 (−5.7%) | — | same tools, rewritten |
 | [searxng](../docs/servers/searxng.md) | 2026-08-19 → 2026-09-02, held to 2026-09-04 | 1,481 → 1,537 | +56 (+3.8%) | — | same tools, rewritten |
-| [sequential-thinking](../docs/servers/sequential-thinking.md) | 2026-08-18 → 2026-09-03 | 992 → 1,003 | +11 (+1.1%) | — | same tools, rewritten |
+| [githits](../docs/servers/githits.md) | 2026-09-03 → 2026-09-04 | 12,600 → 12,833 | +233 (+1.8%) | — | same tools, rewritten |
+| [sequential-thinking](../docs/servers/sequential-thinking.md) | 2026-08-18 → 2026-09-03, held to 2026-09-04 | 992 → 1,003 | +11 (+1.1%) | — | same tools, rewritten |
 | [huggingface](../docs/servers/huggingface.md) | 2026-08-19 → 2026-09-04 | 4,691 → 4,724 | +33 (+0.7%) | — | same tools, rewritten |
 | [aws-documentation](../docs/servers/aws-documentation.md) | 2026-08-19 → 2026-09-04 | 5,074 → 5,045 | −29 (−0.6%) | — | same tools, rewritten |
-| [github](../docs/servers/github.md) | 2026-08-18 → 2026-09-03 | 54,422 → 54,622 | +200 (+0.4%) | — | same tools, rewritten |
+| [airtable](../docs/servers/airtable.md) | 2026-08-19 → 2026-09-04 | 4,207 → 4,186 | −21 (−0.5%) | — | same tools, rewritten |
+| [github](../docs/servers/github.md) | 2026-08-18 → 2026-09-03, held to 2026-09-04 | 54,422 → 54,622 | +200 (+0.4%) | — | same tools, rewritten |
 | [apify](../docs/servers/apify.md) | 2026-08-19 → 2026-09-04 | 10,426 → 10,452 | +26 (+0.2%) | — | same tools, rewritten |
+| [brave-search](../docs/servers/brave-search.md) | 2026-08-19 → 2026-09-04 | 25,456 → 25,487 | +31 (+0.1%) | — | same tools, rewritten |
 | [supabase](../docs/servers/supabase.md) | 2026-08-18 → 2026-09-04 | 5,013 → 5,007 | −6 (−0.1%) | — | same tools, rewritten |
-| [desktop-commander](../docs/servers/desktop-commander.md) | 2026-08-18 → 2026-08-19 | 11,835 → 11,836 | +1 (+0.0%) | — | same tools, rewritten |
+| [desktop-commander](../docs/servers/desktop-commander.md) | 2026-08-19 → 2026-09-04 | 11,836 → 11,834 | −2 (−0.0%) | — | same tools, rewritten |
 
 Rows marked **·** clear both thresholds.
 
@@ -48,5 +51,5 @@ Rows marked **·** clear both thresholds.
 
 ## Not compared (and why)
 
-67 server(s) carry a measurement but no second comparable one — first measurement, or every earlier run taken under different isolation. They appear on the [leaderboard](leaderboard.md) with today's number and no delta, which is the honest reading: a cost with nothing yet to compare it to.
+66 server(s) carry a measurement but no second comparable one — first measurement, or every earlier run taken under different isolation. They appear on the [leaderboard](leaderboard.md) with today's number and no delta, which is the honest reading: a cost with nothing yet to compare it to.
 

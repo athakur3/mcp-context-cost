@@ -50,6 +50,12 @@
       "totalTokens": 364,
       "toolCount": 6
     },
+    "1de4342682e058fb6395fc1a42dbcb9fa87838dc26852ba6810e57cc388ab81e": {
+      "server": "githits",
+      "date": "2026-09-04",
+      "totalTokens": 12833,
+      "toolCount": 16
+    },
     "1de63e2beef41e0f618a1b41e1ead6a82fbce11d6e0c9652466884a2c74e10f0": {
       "server": "githits",
       "date": "2026-09-03",
@@ -91,6 +97,12 @@
       "date": "2026-09-03",
       "totalTokens": 188,
       "toolCount": 2
+    },
+    "2c373ba271649e86628d49fbfa80b9e5f152bdc3cb7c65ec8f40c309eb9c8822": {
+      "server": "desktop-commander",
+      "date": "2026-09-04",
+      "totalTokens": 11834,
+      "toolCount": 26
     },
     "2e66ec7b2ea28f25f5b986a65cc950c06febad089b2c3033be49e15548f9c432": {
       "server": "neo4j-cypher",
@@ -188,17 +200,35 @@
       "totalTokens": 6928,
       "toolCount": 28
     },
+    "5f90d662e26a77e01125999b97db0bf9204bb92bd0fc7297a28495986d80ec30": {
+      "server": "airtable",
+      "date": "2026-09-04",
+      "totalTokens": 4186,
+      "toolCount": 16
+    },
     "6064f85a43ae17b2da72d1b87fd9435879e8b42bc320e1347e382f5c8a61b499": {
       "server": "obsidian",
       "date": "2026-09-03",
       "totalTokens": 2062,
       "toolCount": 15
     },
+    "61a100d3f94ba6e81eedcbd151cfff7ce5e6acd36906571c7035e0b09a681dca": {
+      "server": "agent-device",
+      "date": "2026-09-04",
+      "totalTokens": 53669,
+      "toolCount": 57
+    },
     "61f82494284ccb413e9cb213ed93d7b79f43769229713b2748056a7f1018db14": {
       "server": "duckduckgo",
       "date": "2026-09-02",
       "totalTokens": 724,
       "toolCount": 2
+    },
+    "64ca81a34311e1318d731b8fbf14e5f1759567e4a7bdaabf43f3553ee732ee41": {
+      "server": "google-surf",
+      "date": "2026-09-04",
+      "totalTokens": 10948,
+      "toolCount": 7
     },
     "6817cd262c23cdfbac2ac9e04b037d307d7d21907f9028707ae6dbac3f0a284d": {
       "server": "shopify-dev",
@@ -259,6 +289,12 @@
       "date": "2026-08-19",
       "totalTokens": 8204,
       "toolCount": 29
+    },
+    "7e46d900cd08847d2710e0e0a1ec66d6f3d415c01ca2e8e6c5a9e357a9d5b4c1": {
+      "server": "mcp-atlassian",
+      "date": "2026-09-04",
+      "totalTokens": 17311,
+      "toolCount": 63
     },
     "85d23a7fa63923641625701d0c5fff39249eb8b379c3c1a7a444fef6437d6bc4": {
       "server": "obsidian-rest",
@@ -482,6 +518,12 @@
       "totalTokens": 5013,
       "toolCount": 29
     },
+    "ec3c4f85b22d1e4866faeb04af7038fc28568dc4a262416cea7ce77c63b2b015": {
+      "server": "brave-search",
+      "date": "2026-09-04",
+      "totalTokens": 25487,
+      "toolCount": 8
+    },
     "eec89a7ec71ac3e9e65fb8477bf594b4ce9af01b572bcc5d7e9fbbcc85f4e813": {
       "server": "agentphone",
       "date": "2026-09-03",
@@ -520,9 +562,10 @@
     }
   },
   "current": {
+    "agent-device": "61a100d3f94ba6e81eedcbd151cfff7ce5e6acd36906571c7035e0b09a681dca",
     "agentphone": "eec89a7ec71ac3e9e65fb8477bf594b4ce9af01b572bcc5d7e9fbbcc85f4e813",
     "airbnb": "79c3109b4fa4e4735ba1071cacbd98948c6aba20b70c9a4295a78e84850a81e0",
-    "airtable": "6ae170e7625e0fa953f2981d005a89ee2b7c80d94830c81a9e5e03d3e5de59e6",
+    "airtable": "5f90d662e26a77e01125999b97db0bf9204bb92bd0fc7297a28495986d80ec30",
     "apify": "4dd4565165c7066d8e8ef666f79cd8b323bad3d7f66b4d34fbe769f07e979453",
     "appium-mcp": "d024ca5b97d52d5442da395ed92d1d107b6728db57cf1295bb87c5d3624c0e53",
     "arxiv": "2ee361441efca1de3e296a572bbe2d20fa88d5565c9d4f54a8a1523ee7f54251",
@@ -530,7 +573,7 @@
     "basic-memory": "0ba9e9185e3d5c167bbaf0dcfeb499f27020c307f1387a3b85374f849f0a38a7",
     "bitbucket-mcp": "e131b1d46e30c0d05f07995aa167fa323ec1003719d861dbe27c82c94ad803cf",
     "blender": "5d8045af01c1eaf81a5931cfc5aa814fe0928f66cf1e176962bd3a97aff0a62f",
-    "brave-search": "e5a8f43437056e6e89bb8f5167f5b8d471ba42de915ede953ce5968a84471582",
+    "brave-search": "ec3c4f85b22d1e4866faeb04af7038fc28568dc4a262416cea7ce77c63b2b015",
     "brave-search-legacy": "727577fbcd5fe4e811453a32d9c9852ea877c90b8acf56e0cdf5eda15e97d803",
     "bright-data": "bd26660364200a7866906bbfecc185e41ea6a42e43ed5d6380b1c3b77a699eae",
     "browserbase": "1dc53461369d7cb64ea8151f33283db371951cf44289471f6156e35cd1ae28bb",
@@ -544,7 +587,7 @@
     "comfyui-mcp": "af7eaa380b99a67fc49ab075c762cd2686f108acc4ba21d001ce922554f7510a",
     "context7": "699d8b33d6d2d90ce7deb777994bb408e1e07bb08fa997042b7cce19e6c1ecec",
     "deepwiki": "3735162916165ab23696fc91fbf626bd99a36ddcd1e15746e91e16c7e336b379",
-    "desktop-commander": "8623f9de377963b97d6e8294e16ac107c445e29b3ad97fbe78f18c1971dde6f5",
+    "desktop-commander": "2c373ba271649e86628d49fbfa80b9e5f152bdc3cb7c65ec8f40c309eb9c8822",
     "duckduckgo": "61f82494284ccb413e9cb213ed93d7b79f43769229713b2748056a7f1018db14",
     "elasticsearch": "76a005f840c738f5788e7b5801fdc12194713fce1ed435ad500f891a2b2dd13c",
     "emailmd": "991fa59036ab1d4a4c1270ba14025668cd37bad41d9a804544a5e6aa23564365",
@@ -556,16 +599,17 @@
     "filesystem": "245b04832111268c3fcc72543af89fb2f8c109d8306c1b5b8c49dc45977e41e1",
     "firecrawl": "3b7694bcedabac9706eba0c497c1fb4591121db0fd25e4e87e4802a001e34cd6",
     "git": "9710fb8f79f50348c138ee513e344f7fc9ac0e912a728d8aeda847cd04ed64f1",
-    "githits": "1de63e2beef41e0f618a1b41e1ead6a82fbce11d6e0c9652466884a2c74e10f0",
+    "githits": "1de4342682e058fb6395fc1a42dbcb9fa87838dc26852ba6810e57cc388ab81e",
     "github": "40d73048f0112cd8282ee61d586632738f6746678ece24f8f61f4dcc4b8b2135",
     "github-legacy": "e0194003d2ddaf668a23e0570cdbcf8c142c3314d3dd811a50ae99e5afd79ae3",
     "gitlab": "d51fb022687ee403f9710c9fae31ac91dbc796f5c52a3fcdbe0a91c387aa9365",
     "google-maps": "a88e204db09aa56954e3e041d6a9814aee9ac888fdfc7d5cb47aec1877441986",
+    "google-surf": "64ca81a34311e1318d731b8fbf14e5f1759567e4a7bdaabf43f3553ee732ee41",
     "hubspot": "3389dd469cfc2f46f06e4be24ba13ff95595ee30fd8dd62df81809a95daf3791",
     "huggingface": "a2e48e88545d92665679b878c9e66f4f902af2a11bccafc29cc6e627def941ae",
     "kubernetes": "20126671be70fdb77743a595f195002612b03c889b348447ed9ff4d7057f8c1c",
     "markitdown": "d708fc0ae4f3fb818d01cc3d4da0b74c2e5591a7982735d6200b3d56ab74d66b",
-    "mcp-atlassian": "fa9df2701a0250cd546422d5d629d4af411b5c359e92bd710fc7aa4ada7ccc4e",
+    "mcp-atlassian": "7e46d900cd08847d2710e0e0a1ec66d6f3d415c01ca2e8e6c5a9e357a9d5b4c1",
     "memory": "d028274f76dc9aa2e622ae02a17ce313aa65d7b5935254ca53889d4094238abb",
     "microsoft-learn": "9e3f4a65f0dc136a6ffa5ed00f95785ec561e9a78413888da160e44ceb139346",
     "mongodb": "c771e7295dc27668861b2a251566196a3e30b5b3ac282f7736aab96891bff300",

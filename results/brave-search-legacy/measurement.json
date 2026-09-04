@@ -69,18 +69,20 @@
       }
     }
   ],
-  "measuredAt": "2026-08-18T23:57:15.730Z",
+  "measuredAt": "2026-09-04T13:02:27.216Z",
   "serverName": "example-servers/brave-search",
   "serverVersion": "0.1.0",
   "launchCommand": "npx -y @modelcontextprotocol/server-brave-search",
   "envVarNames": [
     "BRAVE_API_KEY"
   ],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
-  "timeoutMs": 60000
+  "timeoutMs": 240000
 }

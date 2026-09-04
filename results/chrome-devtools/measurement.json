@@ -1371,7 +1371,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-03T21:01:53.833Z",
+  "measuredAt": "2026-09-04T13:05:58.084Z",
   "serverName": "chrome_devtools",
   "serverVersion": "1.8.0",
   "launchCommand": "npx -y chrome-devtools-mcp",
@@ -1381,7 +1381,8 @@
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

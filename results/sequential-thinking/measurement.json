@@ -127,7 +127,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-03T13:47:23.017Z",
+  "measuredAt": "2026-09-04T13:02:16.440Z",
   "serverName": "sequential-thinking-server",
   "serverVersion": "2026.8.31",
   "launchCommand": "npx -y @modelcontextprotocol/server-sequential-thinking",
@@ -137,7 +137,8 @@
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }
