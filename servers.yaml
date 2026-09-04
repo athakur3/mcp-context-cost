@@ -725,9 +725,14 @@ servers:
     category: community
     repo: https://github.com/artokun/comfyui-mcp
   - name: agent-device
-    command: npx -y agent-device
+    # Bare `agent-device` prints its help and exits 0 — it is a CLI whose MCP
+    # server is one of 68 subcommands, listed only under `help commands`.
+    command: npx -y agent-device mcp
     package: agent-device
     env: []
+    # Cold install measured at 142s uncontended; the 240s default leaves too
+    # little headroom on a slower runner sweeping two servers at a time.
+    timeoutSeconds: 420
     metric: 138188
     metricSource: https://api.npmjs.org/downloads/point/last-week/agent-device (npm weekly)
     category: community
