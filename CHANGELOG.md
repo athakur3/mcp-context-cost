@@ -7,6 +7,39 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+## 0.11.1 — 2026-09-04
+
+A review of 0.11.0 found three places where the new code stated something it had not
+established — the failure this project exists to refuse, committed by the code written to
+enforce it. All three are fixed, and each is now a named test.
+
+- **A gate flag given without its value silently skipped the gate.** `measure --baseline b.json
+  --max-increase` — the flag last, which is what a CI template renders from an empty variable —
+  read as "no gate was asked for" and exited **0** on a change that should have failed the
+  build. `--max-increase=100` failed the same way by a second door: the unknown-flag check
+  splits on `=` and accepted it, while the reader only matched the bare token, so the flag was
+  accepted and then invisible. This is precisely the green-check-on-a-gate-that-never-ran that
+  `unknownFlags` was added in 0.4.0 to prevent, reached through doors it did not cover. Flag
+  values are now read in one place that understands both spellings, and a value-taking flag
+  present without a usable value is a **usage error (exit 2)**, refused beside unknown flags
+  and for the same stated reason. `audit`, `measure` and `verify` all read through it, so
+  `--flag=value` now works everywhere it is accepted.
+- **A baseline describing a different server was diffed as though it described this one.**
+  Nothing checked that `--baseline` belonged to the server being measured, so a crossed path in
+  a monorepo produced a confident delta between two unrelated servers — and because an
+  unrelated heavier baseline makes the delta *negative*, it read as an improvement and
+  **passed** the gate. Both sides record the name the server gave itself at `initialize`; where
+  both carry one and they disagree, the comparison is refused and the gate fails as
+  unestablished. A measurement that predates the field, or a server that reports no name, stays
+  unknown rather than mismatched — unknown is not evidence, the same rule the isolation column
+  follows.
+- **A capture hash shared by two servers named whichever was written last.** The capture index
+  is keyed by hash across all servers, so one package listed under two slugs (the set already
+  holds near-duplicate pairs) would let the later write silently rename the earlier server's
+  capture, and `audit --changed` would print the wrong server with full confidence — the exact
+  by-bytes attribution the feature exists to get right. An ambiguous hash is now dropped from
+  the index, so `identify` answers `unknown`: an absence of a record, which is true.
+
 ## 0.11.0 — 2026-09-04
 
 - **`measure --baseline --max-increase --budget`, and a composite action: server authors can

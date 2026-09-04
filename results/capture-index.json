@@ -1,6 +1,6 @@
 {
   "method": "capture-index/v1",
-  "generatedAt": "2026-09-03",
+  "generatedAt": "2026-09-04",
   "captures": {
     "01a1bd0f450ccf86b0bf36b2b63749c70dc4add7b0a4d9621ce69e29c9db7b27": {
       "server": "codebase-memory-mcp",

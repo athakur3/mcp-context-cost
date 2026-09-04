@@ -93,10 +93,23 @@ export function loadToolVectors(server: string, root = process.cwd()): ToolVecto
 export function writeCaptureIndex(entries: ServerEntry[], root = process.cwd()): CaptureIndex {
   const captures: Record<string, IndexedCapture> = {};
   const current: Record<string, string> = {};
+  // A hash two servers share identifies neither of them. The set already holds
+  // near-duplicate pairs (`redis`/`redis-legacy`, `github`/`github-legacy`), and
+  // one package listed under two slugs would produce byte-identical captures —
+  // whereupon the later write would silently rename the earlier server's capture
+  // and `audit --changed` would print the wrong name with full confidence.
+  // Ambiguous hashes are dropped instead, so `identify` answers `unknown`: an
+  // absence of a record, which is true, rather than a confident misattribution.
+  const ambiguous = new Set<string>();
   for (const entry of entries) {
     const vectors = loadToolVectors(entry.name, root);
     if (!vectors || vectors.entries.length === 0) continue;
     for (const e of vectors.entries) {
+      const held = captures[e.canonicalSha256];
+      if (held && held.server !== entry.name) {
+        ambiguous.add(e.canonicalSha256);
+        continue;
+      }
       captures[e.canonicalSha256] = {
         server: entry.name,
         date: e.date,
@@ -106,6 +119,7 @@ export function writeCaptureIndex(entries: ServerEntry[], root = process.cwd()):
     }
     current[entry.name] = vectors.entries[vectors.entries.length - 1]!.canonicalSha256;
   }
+  for (const sha of ambiguous) delete captures[sha];
   const index: CaptureIndex = {
     method: CAPTURE_INDEX_METHOD,
     generatedAt: new Date().toISOString().slice(0, 10),

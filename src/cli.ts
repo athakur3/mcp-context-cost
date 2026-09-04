@@ -92,15 +92,83 @@ export function unknownFlags(argv: string[], spec: { value: string[]; boolean: s
   return unknown;
 }
 
+/**
+ * Every value a value-taking flag was given, in either accepted spelling:
+ * `--flag value` and `--flag=value`.
+ *
+ * Both forms are read here because reading only one of them is the same bug as
+ * ignoring an unknown flag. `--max-increase=100` was accepted by
+ * `unknownFlags` (which splits on `=`) and then invisible to a reader that only
+ * matched the bare token, so the gate it asked for silently did not run and the
+ * command exited 0 — a green check on a check that never happened.
+ */
+export function flagValues(argv: string[], name: string): string[] {
+  const out: string[] = [];
+  for (let i = 0; i < argv.length; i++) {
+    const tok = argv[i];
+    if (tok === `--${name}`) {
+      const next = argv[i + 1];
+      // A following flag is not this flag's value; that case is a usage error,
+      // caught by `valuelessFlags`, and must not be read as a value here.
+      if (next !== undefined && !next.startsWith('--')) out.push(next);
+      continue;
+    }
+    if (tok.startsWith(`--${name}=`)) out.push(tok.slice(name.length + 3));
+  }
+  return out;
+}
+
+/** The last value given for a flag, or undefined when the flag is absent. */
+export function flagValue(argv: string[], name: string): string | undefined {
+  const values = flagValues(argv, name);
+  return values.length ? values[values.length - 1] : undefined;
+}
+
+/**
+ * Value-taking flags that appear with no usable value.
+ *
+ * A flag present without its value is a *usage error*, never an absent flag.
+ * `--max-increase` as the last argument — what a CI template renders when its
+ * variable is empty — otherwise reads as "no gate was asked for", and the run
+ * exits 0 on a change that should have failed it. That is the same green-check
+ * failure `unknownFlags` exists to prevent, reached through a different door,
+ * so it is refused in the same place and with the same severity.
+ */
+export function valuelessFlags(argv: string[], spec: { value: string[]; boolean: string[] }): string[] {
+  const bad: string[] = [];
+  for (let i = 0; i < argv.length; i++) {
+    const tok = argv[i];
+    if (!tok.startsWith('--')) continue;
+    const name = tok.slice(2).split('=')[0];
+    if (!spec.value.includes(name)) continue;
+    if (tok.includes('=')) {
+      if (tok.slice(name.length + 3) === '') bad.push(`--${name}`);
+      continue;
+    }
+    const next = argv[i + 1];
+    if (next === undefined || next.startsWith('--')) bad.push(`--${name}`);
+    else i++; // consume the value, so `--command "--weird"` is not re-read as a flag
+  }
+  return bad;
+}
+
 function rejectUnknownFlags(cmd: string, argv: string[], spec: { value: string[]; boolean: string[] }): void {
   const bad = unknownFlags(argv, spec);
-  if (!bad.length) return;
-  const all = [...spec.value, ...spec.boolean].sort().map((f) => `--${f}`).join(' ');
-  console.error(`unknown flag for \`${cmd}\`: ${bad.join(', ')}`);
-  console.error(`this is mcp-context-cost ${cliVersion()} — if you copied the command from the README,`);
-  console.error(`your install may be older than the docs. Try: npx -y mcp-context-cost@latest ${cmd} ...`);
-  console.error(`known flags for ${cmd}: ${all}`);
-  process.exit(2);
+  if (bad.length) {
+    const all = [...spec.value, ...spec.boolean].sort().map((f) => `--${f}`).join(' ');
+    console.error(`unknown flag for \`${cmd}\`: ${bad.join(', ')}`);
+    console.error(`this is mcp-context-cost ${cliVersion()} — if you copied the command from the README,`);
+    console.error(`your install may be older than the docs. Try: npx -y mcp-context-cost@latest ${cmd} ...`);
+    console.error(`known flags for ${cmd}: ${all}`);
+    process.exit(2);
+  }
+  const empty = valuelessFlags(argv, spec);
+  if (empty.length) {
+    console.error(`flag with no value for \`${cmd}\`: ${empty.join(', ')}`);
+    console.error(`a flag given without its value is refused rather than ignored: ignoring it would run`);
+    console.error(`a command that quietly does less than it was asked to — a gate that never gates.`);
+    process.exit(2);
+  }
 }
 
 const [, , cmd, ...rest] = process.argv;
@@ -121,12 +189,8 @@ if (cmd === 'audit') {
     ],
     boolean: ['json', 'docker', 'claude', 'suggest', 'changed'],
   });
-  const argOf = (name: string) => {
-    const i = rest.indexOf(`--${name}`);
-    return i >= 0 ? rest[i + 1] : undefined;
-  };
-  const all = (name: string) =>
-    rest.flatMap((a, i) => (a === `--${name}` && rest[i + 1] ? [rest[i + 1]] : []));
+  const argOf = (name: string) => flagValue(rest, name);
+  const all = (name: string) => flagValues(rest, name);
   const json = rest.includes('--json');
   const numeric = (name: string): number | undefined => {
     const raw = argOf(name);
@@ -266,8 +330,7 @@ if (cmd === 'audit') {
 } else if (cmd === 'verify') {
   rejectUnknownFlags('verify', rest, { value: ['remote'], boolean: ['json'] });
   const json = rest.includes('--json');
-  const remoteIdx = rest.indexOf('--remote');
-  const remoteUrl = remoteIdx >= 0 ? rest[remoteIdx + 1] : undefined;
+  const remoteUrl = flagValue(rest, 'remote');
   const path = rest.find((a) => !a.startsWith('--') && a !== remoteUrl);
   if (!remoteUrl && !path) {
     console.error('usage: mcp-context-cost verify <measurement.json> [--json]');
@@ -310,10 +373,7 @@ if (cmd === 'audit') {
     value: ['name', 'command', 'remote', 'timeout', 'docker-image', 'baseline', 'max-increase', 'budget'],
     boolean: ['docker'],
   });
-  const argOf = (name: string) => {
-    const i = rest.indexOf(`--${name}`);
-    return i >= 0 ? rest[i + 1] : undefined;
-  };
+  const argOf = (name: string) => flagValue(rest, name);
   const command = argOf('command');
   const remoteUrl = argOf('remote');
   if (remoteUrl && !/^https?:\/\//i.test(remoteUrl)) {

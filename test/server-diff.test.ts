@@ -4,6 +4,7 @@ import {
   evaluateServerGate,
   formatServerDiff,
   parseBaselineMeasurement,
+  sameServer,
 } from '../src/core/server-diff.js';
 import { failedMeasurement, measureTools } from '../src/core/canonical.js';
 import type { Measurement } from '../src/core/types.js';
@@ -75,6 +76,39 @@ describe('diffServer', () => {
     const d = diffServer('demo', null, grown);
     expect(d.exact).toBe(false);
     expect(d.problem).toBe('no baseline to compare against');
+  });
+});
+
+describe('a baseline that describes a different server', () => {
+  const other = { ...server([{ name: 'x', description: 'Other.' }]), serverName: 'a-different-server' };
+
+  it('is refused rather than diffed, because the difference is not a change', () => {
+    const d = diffServer('demo', other, grown);
+    expect(d.exact).toBe(false);
+    expect(d.delta).toBeNull();
+    expect(d.problem).toContain('a-different-server');
+    expect(d.problem).toContain('not a change to either');
+  });
+
+  it('fails the gate instead of passing on a fabricated improvement', () => {
+    // The dangerous direction: an unrelated heavy baseline makes the delta
+    // negative, which reads as the server getting cheaper.
+    const heavy = { ...other, totalTokens: 9000 };
+    const g = evaluateServerGate(diffServer('demo', heavy, grown), { maxIncrease: 100 });
+    expect(g.pass).toBe(false);
+    expect(g.failure).toContain('different server');
+  });
+
+  it('treats an unrecorded name as unknown, not as a mismatch', () => {
+    // A measurement predating the field, or a server that reports no name, is
+    // not evidence of anything — the same rule the isolation column follows.
+    const nameless = { ...base, serverName: undefined as unknown as string };
+    expect(sameServer(nameless, grown)).toBe(true);
+    expect(diffServer('demo', nameless, grown).exact).toBe(true);
+  });
+
+  it('still compares two measurements of the same server', () => {
+    expect(sameServer(base, grown)).toBe(true);
   });
 });
 

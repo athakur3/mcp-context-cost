@@ -61,6 +61,28 @@ const sideOf = (m: Measurement | null): MeasuredSide | null => {
   };
 };
 
+/**
+ * Whether two measurements describe the same server, as far as what they
+ * recorded can say.
+ *
+ * A baseline is a path the caller passes, and nothing about the path proves it
+ * belongs to the server being measured — a monorepo with `baseline-a.json` and
+ * `baseline-b.json` is one copy-paste away from diffing two unrelated servers
+ * and reporting the difference as though it meant something. Both sides record
+ * `serverName` (what the server called itself at `initialize`), so where both
+ * carry one and they disagree, the comparison is refused.
+ *
+ * Only a disagreement counts. A measurement predating the field, or one whose
+ * server reports no name, is unknown rather than mismatched, and unknown is not
+ * evidence of anything — the same rule the isolation column follows.
+ */
+export function sameServer(baseline: Measurement, current: Measurement): boolean {
+  const a = typeof baseline.serverName === 'string' ? baseline.serverName : '';
+  const b = typeof current.serverName === 'string' ? current.serverName : '';
+  if (!a || !b) return true;
+  return a === b;
+}
+
 export function diffServer(name: string, baseline: Measurement | null, current: Measurement): ServerDiff {
   const before = sideOf(baseline);
   const after = sideOf(current);
@@ -90,6 +112,18 @@ export function diffServer(name: string, baseline: Measurement | null, current: 
         ? `the baseline carries no measured number (${baseline.status}), so the increase overstates: ` +
           `it compares against a cost that was never established`
         : 'no baseline to compare against',
+    };
+  }
+
+  // Checked only once both sides measured, so a mismatch is reported as what it
+  // is rather than hidden behind an unmeasured side.
+  if (!sameServer(baseline!, current)) {
+    return {
+      ...base,
+      problem:
+        `the baseline measured '${baseline!.serverName}' and this run measured ` +
+        `'${current.serverName}' — a difference between two servers is not a change to either, ` +
+        `so nothing is compared`,
     };
   }
 
@@ -146,11 +180,14 @@ export function evaluateServerGate(diff: ServerDiff, limits: GateLimits): Server
       // A short reason rather than the diff's full sentence: the diff has
       // already printed that above, and a gate line that repeats it in full
       // buries the verdict it exists to state.
+      // Both sides measured and still not exact means exactly one thing today:
+      // the baseline describes a different server. Kept as its own branch so a
+      // future non-exact case cannot inherit this sentence by accident.
       const reason = !diff.after
         ? 'this run produced no number'
         : !diff.before
           ? 'the baseline carries no measured number'
-          : 'no comparable baseline';
+          : 'the baseline describes a different server';
       return {
         pass: false,
         failure: `INCREASE FAIL: ${reason}, so the change could not be established and the gate has not passed.`,

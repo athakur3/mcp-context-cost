@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { parse } from 'yaml';
 import {
@@ -10,7 +11,7 @@ import {
 } from '../src/core/capture-index.js';
 import { measureTools } from '../src/core/canonical.js';
 import { buildReport, formatReport, serverKey } from '../src/audit/audit.js';
-import { loadToolVectors } from '../src/sweep/regressions.js';
+import { loadToolVectors, writeCaptureIndex } from '../src/sweep/regressions.js';
 import type { ServerEntry } from '../src/sweep/report.js';
 
 /**
@@ -137,6 +138,46 @@ describe('the audit report', () => {
     expect(r.configs[0].captureVerdicts).toBeUndefined();
     expect(r.captureIndex).toBeUndefined();
     expect(formatReport(r)).not.toContain('changed');
+  });
+});
+
+describe('a hash two servers share identifies neither', () => {
+  it('is dropped from the index, so identify answers unknown rather than a wrong name', () => {
+    const root = mkdtempSync(join(tmpdir(), 'xidx-'));
+    try {
+      const shared = 'd'.repeat(64);
+      const own = 'e'.repeat(64);
+      // Two servers whose captures collide — one package under two slugs.
+      for (const [name, entries] of [
+        ['alpha', [{ date: '2026-09-01', canonicalSha256: shared, totalTokens: 100, tools: [{ name: 't', tokens: 100 }] }]],
+        [
+          'beta',
+          [
+            { date: '2026-09-02', canonicalSha256: shared, totalTokens: 100, tools: [{ name: 't', tokens: 100 }] },
+            { date: '2026-09-03', canonicalSha256: own, totalTokens: 150, tools: [{ name: 't', tokens: 150 }] },
+          ],
+        ],
+      ] as const) {
+        mkdirSync(join(root, 'results', name), { recursive: true });
+        writeFileSync(
+          join(root, 'results', name, 'tool-vectors.json'),
+          JSON.stringify({ method: 'cost-regression/v1', server: name, entries }),
+        );
+      }
+      const index = writeCaptureIndex(
+        [
+          { name: 'alpha', command: 'npx -y alpha' },
+          { name: 'beta', command: 'npx -y beta' },
+        ],
+        root,
+      );
+      expect(index.captures[shared]).toBeUndefined();
+      expect(identify(shared, index).kind).toBe('unknown');
+      // The unambiguous capture is unaffected.
+      expect(index.captures[own]?.server).toBe('beta');
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });
 
