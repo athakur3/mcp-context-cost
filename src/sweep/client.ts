@@ -26,6 +26,43 @@ interface Pending {
 
 const PROTOCOL_VERSION = '2025-06-18';
 
+/**
+ * The part of a dead server's stderr worth keeping as evidence.
+ *
+ * A failure record is only useful if it contains the failure, and a plain tail
+ * reliably keeps the least useful part. `npx` prints a deprecation warning per
+ * transitive dependency and a version notice at the end, and a crashing process
+ * prints its message *before* the stack — so the last N characters of stderr
+ * are npm warnings and stack frames on exactly the servers whose failure needs
+ * explaining. Several published records ended up saying nothing about why the
+ * server did not start.
+ *
+ * This is not cosmetic. `run.ts` classifies a failure by reading these words:
+ * a record whose message was cut off is filed as `startup-failure` — the server
+ * is broken — when the surviving text would have said `auth-required`. Spending
+ * the budget on the message rather than the frames is what keeps the published
+ * taxonomy describing the server.
+ *
+ * Noise is only dropped while something else survives. A package that fails
+ * *inside* npm (EBADPLATFORM, a failed postinstall) has npm's own lines as its
+ * only evidence, and a server whose whole output is a stack keeps the stack.
+ */
+export function evidenceTail(stderr: string, limit = 600): string {
+  const withoutNoise = drop(stderr, (l) => /^npm (warn|notice)\b/.test(l));
+  const withoutFrames = drop(withoutNoise, (l) => /^at\s/.test(l));
+  return withoutFrames.slice(-limit);
+}
+
+/** Drop matching lines, keeping the input whole if that would leave nothing. */
+function drop(text: string, isNoise: (trimmedLine: string) => boolean): string {
+  const kept = text
+    .split('\n')
+    .filter((l) => !isNoise(l.trim()))
+    .join('\n')
+    .trim();
+  return kept || text.trim();
+}
+
 export class McpStdioClient {
   private child;
   private buffer = '';
@@ -56,7 +93,7 @@ export class McpStdioClient {
         resolve();
       });
       this.child.on('exit', (code) => {
-        const tail = this.stderrTail.slice(-600);
+        const tail = evidenceTail(this.stderrTail);
         this.deadReason = `server exited (code ${code})${tail ? `; stderr tail: ${tail}` : ''}`;
         for (const p of this.pending.values()) p.reject(new Error(this.deadReason));
         this.pending.clear();

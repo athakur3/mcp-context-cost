@@ -13,6 +13,23 @@ import { measureTools, failedMeasurement, canonicalString } from '../core/canoni
 import { toBadge } from '../core/badge.js';
 import type { Measurement } from '../core/types.js';
 
+/**
+ * Which kind of failure a dead server's own words describe.
+ *
+ * The distinction is the published one: `auth-required` says the server works
+ * and this harness has no credentials for it, `startup-failure` says the server
+ * did not come up. Only the text decides, so it matters that the text reaching
+ * here is the part that explains the failure rather than whatever happened to
+ * fall in the last few hundred bytes — see `evidenceTail` in client.ts, which
+ * exists because a truncated message was being filed as a broken server.
+ */
+export function classifyFailure(msg: string): 'timeout' | 'auth-required' | 'startup-failure' {
+  if (msg.includes('timeout')) return 'timeout';
+  return /auth|unauthorized|401|forbidden|credential|api.?key|token/i.test(msg)
+    ? 'auth-required'
+    : 'startup-failure';
+}
+
 function arg(name: string): string | undefined {
   const i = process.argv.indexOf(`--${name}`);
   return i >= 0 ? process.argv[i + 1] : undefined;
@@ -175,12 +192,11 @@ export async function measureServer(
       if (dockerWrapped && isDockerRunFailure(msg)) {
         throw new DockerHarnessFault(`docker could not run the container for ${name}: ${msg.slice(0, 400)}`);
       }
-      const status = msg.includes('timeout')
-        ? 'timeout'
-        : /auth|unauthorized|401|forbidden|credential|api.?key|token/i.test(msg)
-          ? 'auth-required'
-          : 'startup-failure';
-      r = failedMeasurement(status, { serverName: name, launchCommand: command, notes: msg.slice(0, 700) });
+      r = failedMeasurement(classifyFailure(msg), {
+        serverName: name,
+        launchCommand: command,
+        notes: msg.slice(0, 700),
+      });
     }
     r.isolation = isolation;
     r.timeoutMs = attemptOpts.timeoutMs ?? 60_000;
