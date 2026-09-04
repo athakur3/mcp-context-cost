@@ -197,7 +197,16 @@ describe('every scheduled job that publishes data also publishes the front page'
     it(`${name} commits README.md beside the data regen just patched it from`, () => {
       const adds = addLines(yaml);
       expect(adds.length).toBeGreaterThan(0);
-      for (const line of adds) expect(line).toContain('README.md');
+      expect(adds.some((l) => l.includes('README.md'))).toBe(true);
+
+      // Ordering is the real property, and a staged commit can satisfy the
+      // letter of "adds README.md" while breaking it: the README that gets
+      // committed has to be the one regen patched from the data in the same
+      // commit, so the last `git add` must come after regen has run.
+      const regenAt = yaml.indexOf('regen.ts');
+      expect(regenAt, 'the job regenerates before committing').toBeGreaterThan(-1);
+      expect(yaml.lastIndexOf('git add')).toBeGreaterThan(regenAt);
+      expect(addLines(yaml).at(-1)).toContain('README.md');
     });
   }
 });

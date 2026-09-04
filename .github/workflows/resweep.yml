@@ -122,12 +122,27 @@ jobs:
         # commit — a row that misses a week reads silence, not a stale number.
         continue-on-error: true
         run: npx tsx src/sweep/cross-check.ts --docker ${SELECT} --concurrency 2 --default-timeout 240
-      - name: Regenerate leaderboard, server pages and dashboard
-        run: npx tsx src/sweep/regen.ts
       - name: Commit refreshed measurements
-        # README.md is included because regen patches the numbers the front page
-        # states (src/sweep/published-stats.ts) — leaving it out would commit a
-        # leaderboard the README then contradicts.
+        # Regen runs inside this step, *after* the rebase, and that ordering is
+        # the point rather than a detail.
+        #
+        # Everything under results/ except the per-server directories is derived
+        # from them: the leaderboard, history.csv, the pages, the numbers regen
+        # patches into README.md. Committing those before rebasing asks git to
+        # merge two independently regenerated leaderboards, which it cannot do —
+        # a second sweep on the same day conflicts in files no human edited and
+        # loses its measurements to a merge it could never resolve. That is not
+        # hypothetical: it cost one 61-minute run its entire result.
+        #
+        # So the per-server records go in first — two runs measuring disjoint
+        # sets touch disjoint files, and that commit rebases cleanly — and the
+        # derived files are rebuilt from the merged tree afterwards.
+        # `appendHistory` folds every measurement.json and is idempotent, so the
+        # rebuild is correct whatever the rebase brought in.
+        #
+        # README.md is committed because regen patches the front page's numbers
+        # from this data — leaving it out publishes a leaderboard the README
+        # then contradicts.
         env:
           # A targeted run says so: reading "this week's server shard" over a
           # commit that touched three named servers would misdescribe the
@@ -136,11 +151,35 @@ jobs:
             ${{ inputs.servers && format('targeted re-measure ({0})', inputs.servers)
             || 'rotating re-sweep of this week''s server shard' }}
         run: |
+          set -euo pipefail
           git config user.name "mcp-context-cost bot"
           git config user.email "actions@users.noreply.github.com"
-          git add badges/ results/ docs/ README.md
-          git diff --cached --quiet && echo "no change to publish" && exit 0
-          git commit -m "chore: ${WHAT}"
-          # This job can run long enough for main to have moved underneath it.
+
+          # Is there anything at all to publish? Asked over the whole tree, so a
+          # run that only produced a cross-check row still publishes it.
+          git add -A results/ badges/ docs/ README.md
+          if git diff --cached --quiet; then echo "no change to publish"; exit 0; fi
+          git reset -q
+
+          # The per-server records, which rebase cleanly.
+          records=0
+          git add results/*/ badges/
+          if ! git diff --cached --quiet; then
+            records=1
+            git commit -q -m "chore: ${WHAT}"
+          fi
+
+          # This job runs for an hour, so main has usually moved underneath it.
           git pull --rebase origin main
+
+          # Re-derive the aggregates from the merged tree.
+          npx tsx src/sweep/regen.ts
+          git add -A results/ badges/ docs/ README.md
+          if ! git diff --cached --quiet; then
+            if [ "$records" = 1 ]; then
+              git commit -q --amend --no-edit
+            else
+              git commit -q -m "chore: ${WHAT}"
+            fi
+          fi
           git push
