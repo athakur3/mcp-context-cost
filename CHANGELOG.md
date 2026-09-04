@@ -7,6 +7,54 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+## 0.11.3 — 2026-09-04
+
+The rest of the full-codebase review. Fourteen findings, none live in published output,
+each fixed with its reproduction kept as a test. They sort into three habits.
+
+**Answering more than was known.** `identify()` called a server *current* when what is
+current for it could not be established — a missing pointer, or one aimed at a capture the
+index had dropped as ambiguous — which the audit renders as "no server here is running a
+published capture that has since moved", told to someone who may be far behind; unknown
+currency now reads as unknown. Adoption counted *any* shields endpoint badge wrapped in a
+link to this project as displaying ours, a coverage badge included: the URL cannot decide it
+(self-hosted JSON lives wherever its author put it, and the staged action publishes to a
+gist), so the badge's own label is now read, and captured for the first time — this is the
+one number the project keeps about itself and the last place to be generous.
+`fieldSelectionShare` could go negative, since the projection can *add* bytes, and rendered
+as "−11.1% of the capture is MCP-only metadata". `percentileOf` took the top of a tie, so a
+description tied with half the measured set was published as p100. `audit --config /typo`
+reported having looked in the standard locations, which it had not done, and advised doing
+the thing just done.
+
+**Failing harder than the fact warranted.** One thrown error in `session-start` rejected
+`Promise.all` and ended the process before anything was written, discarding every capture
+already completed and skipping the cleanup that removes containers. `loadRows` threw on a
+half-written `measurement.json` that `appendHistory` deliberately tolerates, so one truncated
+file broke the leaderboard, server pages, dashboard, tool-shape baseline and published-stats
+at once, with a `SyntaxError` naming no file; the dashboard now shares that loader rather
+than keeping a second copy. `verify` crashed on a missing file or a non-JSON body — reachable
+remotely, since a proxy or error page served with status 200 passes the fetch check —
+producing a stack trace and empty stdout where `--json` is documented to put `{ok,…}`.
+
+**Reading a label where the bytes were available.** `--claude` looked the published Claude
+cost up by the config's own key, so a server called `github-work` that is byte-identical to
+the published `github` printed `—`, which the report defines as "the install doesn't match
+what was published"; it now joins by canonical hash first, as `--changed` in the same report
+already did. `attribute()` matched tools by name, so a duplicated name lost one tool silently
+and its tokens resurfaced as `unexplainedTokens` — explained to the reader as canonical-array
+framing bytes — which is reachable both from a server shipping duplicate names and from
+`measureTools` recording every nameless tool as the single invented key `(unnamed)`; where
+names cannot identify tools there is no attribution to give. The `sole-config` baseline
+fallback paired one config on each side without checking they were configs for the same
+client. `loadConfigs` loaded one path twice when it was nominated twice. `cross-check`
+published a comparison from a CLI report carrying `total: 0`, which renders as −100%.
+
+Also: the two harness-fault checks were counted separately over different denominators, so a
+flaky daemon that threw for 6 of 14 servers and timed out 4 more tripped neither. A server
+that could have produced a number and did not is one fact however it failed; they now share
+a threshold.
+
 ## 0.11.2 — 2026-09-04
 
 A full-codebase review found the same failure in six more places: a number compared against a
