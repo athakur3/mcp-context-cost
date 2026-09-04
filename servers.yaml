@@ -334,9 +334,18 @@ servers:
     category: vendor-official
     repo: https://github.com/netlify/netlify-mcp
   - name: stripe
-    command: npx -y @stripe/mcp --tools=all
+    # `--tools=all` was removed upstream — the server now prints "The --tools
+    # flag has been removed. Tool permissions are now controlled by your
+    # Restricted API Key (RAK)" and takes its surface from the key instead.
+    command: npx -y @stripe/mcp
     package: '@stripe/mcp'
     env: [STRIPE_SECRET_KEY]
+    # Rejects the literal `dummy` at startup — "Invalid API key format. Expected
+    # sk_* (secret key) or rk_* (restricted key)" — before reaching tools/list.
+    # A shaped placeholder gets past the format check; nothing is sent to Stripe
+    # to list tools, and this key authenticates nothing.
+    envValues:
+      STRIPE_SECRET_KEY: sk_test_dummy
     metric: 10572
     metricSource: https://api.npmjs.org/downloads/point/last-week/@stripe/mcp (npm weekly)
     category: vendor-official
