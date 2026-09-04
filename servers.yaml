@@ -340,12 +340,12 @@ servers:
     command: npx -y @stripe/mcp
     package: '@stripe/mcp'
     env: [STRIPE_SECRET_KEY]
-    # Rejects the literal `dummy` at startup — "Invalid API key format. Expected
-    # sk_* (secret key) or rk_* (restricted key)" — before reaching tools/list.
-    # A shaped placeholder gets past the format check; nothing is sent to Stripe
-    # to list tools, and this key authenticates nothing.
-    envValues:
-      STRIPE_SECRET_KEY: sk_test_dummy
+    # No `envValues` here on purpose. A shaped placeholder (sk_test_…) gets past
+    # the "Invalid API key format" check and the server prints that it is running
+    # on stdio — but it never answers initialize, so the measurement times out at
+    # the full budget and its retry, ~12 minutes per sweep, and the record it
+    # leaves says `timeout` rather than the truth. The literal `dummy` fails in
+    # seconds with a message that names the cause. Keep the fast, honest failure.
     metric: 10572
     metricSource: https://api.npmjs.org/downloads/point/last-week/@stripe/mcp (npm weekly)
     category: vendor-official
