@@ -7,6 +7,8 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+## 0.11.0 — 2026-09-04
+
 - **`measure --baseline --max-increase --budget`, and a composite action: server authors can
   now defend the number they publish.** The front page has always offered two halves — audit
   your own config, *or badge the server you publish* — and only the first half had a gate. A
