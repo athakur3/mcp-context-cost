@@ -9,10 +9,10 @@
 #
 # The whole set does not fit here: a fresh runner shares no package-cache
 # volume, so each server pays a cold install, and the heaviest entry on record
-# took 216s that way. `SHARDS` slices the set so one part of it runs each week
-# and the same servers come round again `SHARDS` weeks later. The slice is
-# derived from the date (see src/sweep/shard.ts), so a week this job fails to
-# fire needs no repair — there is no cursor to reset.
+# took 216s that way. So the set is sliced: one part runs each week and the same
+# servers come round again `shards` weeks later. The slice is derived from the
+# date (see src/sweep/shard.ts), so a week this job fails to fire needs no
+# repair — there is no cursor to reset.
 #
 # The count is an input because widening the slice is a decision that wants
 # evidence: a dispatch can pin a larger one to find out what it really costs on
@@ -20,6 +20,13 @@
 # parameter either — it sets how wide a movement's date window can be in
 # results/regressions.md, and a window that wide describes the observation
 # schedule rather than the server.
+#
+# `servers` measures a named set instead, in minutes rather than the ~70 a full
+# slice takes. It exists so that re-measuring a handful of entries never needs a
+# laptop: a developer machine is a different architecture under different load,
+# and a measurement taken there describes it rather than the server. `local-mcp`
+# spent weeks published as a startup failure whose real finding was that the
+# machine was arm64. Measurements come from here.
 name: Rotating re-sweep
 on:
   schedule:
@@ -37,6 +44,10 @@ on:
         description: 'How many slices to cut the set into (default 6). Fewer = bigger slice, shorter cycle.'
         required: false
         type: string
+      servers:
+        description: 'Measure these named servers instead of a slice (comma-separated). Minutes, not hours.'
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -52,10 +63,22 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     env:
-      # Read by both the sweep and the cross-check below, so the two cannot
-      # drift onto different slices — the cross-check's staleness rule assumes
-      # each row was made in the same sitting as the capture it sits beside.
-      SHARDS: ${{ inputs.shards || '6' }}
+      # How this run picks its servers. Read by both the sweep and the
+      # cross-check below, so the two cannot drift onto different sets — the
+      # cross-check's staleness rule assumes each row was made in the same
+      # sitting as the capture it sits beside.
+      #
+      # A named set REPLACES the slice rather than narrowing it: sweep-all
+      # refuses `--only` and `--shards` together, because the sharded set is
+      # meant to be a complete partition and an intersection of the two belongs
+      # to no cycle while still looking like a normal week in the log.
+      #
+      # Interpolated into an env var and expanded unquoted, never inlined into
+      # the script: an env expansion is word-split but not re-parsed, so a value
+      # cannot smuggle a command into this step.
+      SELECT: >-
+        ${{ inputs.servers && format('--only {0}', inputs.servers)
+        || format('--shards {0}{1}', inputs.shards || '6', inputs.shard_index && format(' --shard-index {0}', inputs.shard_index) || '') }}
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
@@ -63,6 +86,16 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Reject a server list that is not a list of server names
+        # Not the injection boundary — the expansion below is word-split, not
+        # re-parsed. This is so a typo fails loudly here rather than selecting
+        # nothing and publishing that as a quiet "no change to publish".
+        if: inputs.servers != ''
+        env:
+          SERVERS: ${{ inputs.servers }}
+        run: |
+          printf '%s' "$SERVERS" | grep -Eq '^[a-z0-9][a-z0-9._-]*(,[a-z0-9][a-z0-9._-]*)*$' \
+            || { echo "expected comma-separated server names, got: $SERVERS"; exit 2; }
       - name: Measure this week's shard
         # `--docker` because every published row is measured that way, and a
         # sparkline refuses to span a change of isolation — a host measurement
@@ -81,26 +114,33 @@ jobs:
         # and restores what it overwrote (src/sweep/harness-guard.ts), so a
         # broken Docker daemon on the runner stops the job here rather than
         # pushing a leaderboard full of failures.
-        run: npm run sweep:all -- --docker --shards "${SHARDS}" --concurrency 2 --default-timeout 240 ${{ inputs.shard_index && format('--shard-index {0}', inputs.shard_index) || '' }}
+        run: npm run sweep:all -- --docker ${SELECT} --concurrency 2 --default-timeout 240
       - name: Cross-check this week's shard against mcp-tokens
         # Same slice, same isolation, minutes after the measurements above, so
         # each cross-check row is filed under the capture it sat beside.
         # Best-effort: a CLI release outage must not block the sweep's own
         # commit — a row that misses a week reads silence, not a stale number.
         continue-on-error: true
-        run: npx tsx src/sweep/cross-check.ts --docker --shards "${SHARDS}" --concurrency 2 --default-timeout 240 ${{ inputs.shard_index && format('--shard-index {0}', inputs.shard_index) || '' }}
+        run: npx tsx src/sweep/cross-check.ts --docker ${SELECT} --concurrency 2 --default-timeout 240
       - name: Regenerate leaderboard, server pages and dashboard
         run: npx tsx src/sweep/regen.ts
       - name: Commit refreshed measurements
         # README.md is included because regen patches the numbers the front page
         # states (src/sweep/published-stats.ts) — leaving it out would commit a
         # leaderboard the README then contradicts.
+        env:
+          # A targeted run says so: reading "this week's server shard" over a
+          # commit that touched three named servers would misdescribe the
+          # history for anyone bisecting it later.
+          WHAT: >-
+            ${{ inputs.servers && format('targeted re-measure ({0})', inputs.servers)
+            || 'rotating re-sweep of this week''s server shard' }}
         run: |
           git config user.name "mcp-context-cost bot"
           git config user.email "actions@users.noreply.github.com"
           git add badges/ results/ docs/ README.md
           git diff --cached --quiet && echo "no change to publish" && exit 0
-          git commit -m "chore: rotating re-sweep of this week's server shard"
+          git commit -m "chore: ${WHAT}"
           # This job can run long enough for main to have moved underneath it.
           git pull --rebase origin main
           git push

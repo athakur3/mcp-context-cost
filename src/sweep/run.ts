@@ -35,6 +35,23 @@ export function classifyFailure(msg: string): 'timeout' | 'auth-required' | 'sta
 }
 
 /**
+ * The architecture a measurement ran on, in Docker's vocabulary (`linux/amd64`).
+ *
+ * Worth recording because a package can ship builds for some architectures and
+ * not others, and then the *machine* decides the result. `local-mcp` sat
+ * published as a startup failure on the strength of a run whose actual finding
+ * was that the laptop was arm64 and the package ships no arm64 runtime — and
+ * the record gave a reader no way to notice.
+ *
+ * Containers are linux whatever the host is; with no explicit `--platform` they
+ * take the host's architecture, so that is the half worth reporting.
+ */
+export function measuringArch(docker: boolean): string {
+  const arch = process.arch === 'x64' ? 'amd64' : process.arch;
+  return `${docker ? 'linux' : process.platform}/${arch}`;
+}
+
+/**
  * The declared reason, when this failure is the one the entry warned about.
  *
  * Corroboration is the whole point: an entry may declare that this harness
@@ -223,7 +240,8 @@ export async function measureServer(
         notes: (declared ? `${declared} — ${msg}` : msg).slice(0, 700),
       });
     }
-    r.isolation = isolation;
+    const iso = isolation ?? { docker: false };
+    r.isolation = { ...iso, arch: measuringArch(iso.docker) };
     r.timeoutMs = attemptOpts.timeoutMs ?? 60_000;
     return r;
   }

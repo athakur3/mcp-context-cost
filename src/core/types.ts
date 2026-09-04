@@ -56,7 +56,24 @@ export interface Measurement {
   launchCommand?: string;
   envVarNames?: string[];
   /** How the server was isolated during measurement (docker image, network). */
-  isolation?: { docker: boolean; image?: string; network?: string; note?: string };
+  isolation?: {
+    docker: boolean;
+    image?: string;
+    network?: string;
+    note?: string;
+    /**
+     * The architecture the measurement ran on, as `<platform>/<arch>` (e.g.
+     * `linux/amd64`). Part of the isolation because some packages ship builds
+     * for only some of them: `local-mcp` was published as a startup failure
+     * for weeks on the strength of a run whose real finding was "this laptop
+     * is arm64 and the package has no arm64 runtime" — a fact about the
+     * machine that the record gave no way to see.
+     *
+     * Absent on records written before this was captured, which is why it is
+     * optional; absence means unknown, never "the same as yours".
+     */
+    arch?: string;
+  };
   /** Request timeout in force during this measurement. */
   timeoutMs?: number;
   notes?: string;

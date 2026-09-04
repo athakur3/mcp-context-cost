@@ -65,20 +65,38 @@ describe('rotating re-sweep workflow', () => {
     .map((l) => l.trim())
     .filter((l) => l.startsWith('run:') && l.includes('npm run sweep:all'));
 
+  /** The `SELECT` expression both steps expand to choose their servers. */
+  const select = /SELECT: >-\n([\s\S]*?)\n {4}steps:/.exec(resweep)![1];
+
   /**
-   * The count the *schedule* runs with. A dispatch may pin a different one to
-   * find out what a wider slice really costs on a runner before the schedule
-   * commits to it, so the shared env default — not the dispatch input — is what
-   * these unattended properties have to hold for.
+   * The count the *schedule* runs with — the fallback in `SELECT`, reached when
+   * no dispatch input is set. A dispatch may pin a different count, or name
+   * servers outright, but the unattended properties below have to hold for what
+   * runs on a Wednesday with nobody watching.
    */
-  const scheduledShards = Number(
-    /SHARDS: \$\{\{ inputs\.shards \|\| '(\d+)' \}\}/.exec(resweep)![1],
-  );
+  const scheduledShards = Number(/--shards \{0\}[\s\S]*?inputs\.shards \|\| '(\d+)'/.exec(select)![1]);
 
   it('measures a rotating slice rather than the whole set', () => {
     expect(invocation.length).toBe(1);
-    expect(invocation[0]).toContain('--shards "${SHARDS}"');
+    expect(invocation[0]).toContain('${SELECT}');
+    expect(select).toContain('--shards');
     expect(scheduledShards).toBeGreaterThan(1);
+  });
+
+  it('cannot be given a named set and a slice at once', () => {
+    // sweep-all refuses `--only` with `--shards`, because the sharded set is a
+    // complete partition and an intersection of the two belongs to no cycle
+    // while still reading as a normal week in the log. The expression has to
+    // pick one, not concatenate them.
+    expect(select).toMatch(/inputs\.servers\s*&&\s*format\('--only \{0\}'/);
+    expect(select).toContain('||');
+  });
+
+  it('expands the selection from the environment rather than inlining it', () => {
+    // An env expansion is word-split but not re-parsed, so a dispatch value
+    // cannot smuggle a command into the step. Inlining `${{ inputs.servers }}`
+    // straight into `run:` would paste it into the script text instead.
+    expect(invocation[0]).not.toContain('${{');
   });
 
   it('measures in the same isolation as every other published row', () => {
@@ -145,11 +163,12 @@ describe('the re-sweep cross-checks the slice it just measured', () => {
     const cross = runLine('cross-check.ts');
     expect(cross).toBeDefined();
     expect(cross).toContain('--docker');
-    // Both read the same env var rather than repeating a literal, so a dispatch
-    // that pins a wider slice cannot move one step onto it and leave the other
-    // cross-checking a slice it never measured.
-    expect(/--shards (\S+)/.exec(cross!)![1]).toBe(/--shards (\S+)/.exec(sweep!)![1]);
-    expect(/--shards (\S+)/.exec(sweep!)![1]).toBe('"${SHARDS}"');
+    // Both read the same env var rather than repeating the selection, so a
+    // dispatch that pins a wider slice — or names servers outright — cannot
+    // move one step onto it and leave the other cross-checking a set it never
+    // measured.
+    expect(sweep).toContain('${SELECT}');
+    expect(cross).toContain('${SELECT}');
   });
 
   it('is best-effort — a CLI release outage must not block the sweep commit', () => {
