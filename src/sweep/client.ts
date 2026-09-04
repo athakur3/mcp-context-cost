@@ -50,7 +50,52 @@ const PROTOCOL_VERSION = '2025-06-18';
 export function evidenceTail(stderr: string, limit = 600): string {
   const withoutNoise = drop(stderr, (l) => /^npm (warn|notice)\b/.test(l));
   const withoutFrames = drop(withoutNoise, (l) => /^at\s/.test(l));
-  return withoutFrames.slice(-limit);
+  return bothEnds(withoutFrames, limit);
+}
+
+/**
+ * Keep the start and the end, eliding the middle.
+ *
+ * Dropping npm noise and stack frames is not enough on its own: a CLI that
+ * rejects its environment often prints one line saying why and then its entire
+ * usage screen, which is neither. kubernetes-mcp-server does exactly that, and
+ * a tail-only budget kept forty lines of flag documentation while discarding
+ * "no current-context is set and no contexts are defined in kubeconfig" — the
+ * only sentence in the output that explained anything.
+ *
+ * Failures put their explanation at one end or the other — a crash message
+ * above its aftermath, or an error at the end of a log — so both ends are kept
+ * and the middle is what goes. The split leans towards the head because a
+ * message that precedes its own noise is the more common shape here.
+ */
+function bothEnds(text: string, limit: number): string {
+  if (text.length <= limit) return text;
+  const elision = '\n […] \n';
+  const budget = Math.max(0, limit - elision.length);
+  const lines = text.split('\n');
+
+  // Whole lines only: a boundary cut mid-word ("ool/prompt change") reads as
+  // corruption and loses the token an evidence string would match on.
+  const take = (from: number, to: number, cap: number, fromEnd: boolean) => {
+    const out: string[] = [];
+    let used = 0;
+    for (let i = fromEnd ? to : from; fromEnd ? i >= from : i <= to; i += fromEnd ? -1 : 1) {
+      const cost = lines[i].length + 1;
+      if (used + cost > cap) break;
+      fromEnd ? out.unshift(lines[i]) : out.push(lines[i]);
+      used += cost;
+    }
+    return { out, used };
+  };
+
+  const head = take(0, lines.length - 1, Math.ceil(budget * 0.6), false);
+  const tail = take(head.out.length, lines.length - 1, budget - head.used, true);
+  // A single line longer than the whole budget leaves nothing to keep; fall
+  // back to characters so the evidence is degraded rather than absent.
+  if (head.out.length === 0 && tail.out.length === 0) {
+    return text.slice(0, budget) + elision;
+  }
+  return `${head.out.join('\n')}${elision}${tail.out.join('\n')}`;
 }
 
 /** Drop matching lines, keeping the input whole if that would leave nothing. */

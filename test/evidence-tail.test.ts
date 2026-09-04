@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { evidenceTail } from '../src/sweep/client.js';
-import { classifyFailure } from '../src/sweep/run.js';
+import { classifyFailure, notApplicableReason } from '../src/sweep/run.js';
 
 /**
  * Every fixture here is real stderr from a server in servers.yaml, reproduced
@@ -86,10 +86,46 @@ describe('evidenceTail', () => {
     expect(evidenceTail('   \n  \n')).toBe('');
   });
 
-  it('honours the budget, keeping the end of what survives', () => {
+  it('honours the budget, keeping both ends of what survives', () => {
     const long = Array.from({ length: 200 }, (_, i) => `line ${i}`).join('\n');
     const kept = evidenceTail(long, 100);
     expect(kept.length).toBeLessThanOrEqual(100);
     expect(kept).toContain('line 199');
+    expect(kept).toContain('line 0');
+  });
+
+  it('keeps the one line that explains a usage dump', () => {
+    // kubernetes-mcp-server, reproduced: one sentence saying why, then its whole
+    // usage screen. The screen is neither npm noise nor stack frames, so a
+    // tail-only budget kept flag documentation and dropped the reason — and the
+    // entry's declared evidence then had nothing to match against.
+    const usage = [
+      'Error: unable to create kubernetes target provider: no current-context is set and no contexts are defined in kubeconfig',
+      "Configure a context with 'kubectl config set-context <name>'",
+      'Usage:',
+      '  kubernetes-mcp-server [command] [options] [flags]',
+      ...Array.from({ length: 40 }, (_, i) => `      --flag-${i} string          some documentation for flag ${i}`),
+    ].join('\n');
+
+    const kept = evidenceTail(usage);
+    expect(kept.length).toBeLessThanOrEqual(600);
+    expect(kept).toContain('no current-context is set');
+    expect(notApplicableReason({ reason: 'needs a kubeconfig', evidence: 'no current-context is set' }, kept)).toBe(
+      'needs a kubeconfig',
+    );
+  });
+
+  it('cuts on line boundaries, so an evidence string is never split in half', () => {
+    const text = [
+      'FATAL: the-token-that-matters was rejected',
+      ...Array.from({ length: 60 }, (_, i) => `noise line number ${i} padding padding padding`),
+    ].join('\n');
+    const kept = evidenceTail(text, 200);
+    expect(kept).toContain('the-token-that-matters');
+    // No half-line at either seam.
+    for (const line of kept.split('\n')) {
+      if (line === '' || line.trim() === '[…]') continue;
+      expect(text.split('\n')).toContain(line);
+    }
   });
 });
