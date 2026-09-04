@@ -93,6 +93,24 @@ export function unknownFlags(argv: string[], spec: { value: string[]; boolean: s
 }
 
 /**
+ * Whether a token is another flag of *this* command, rather than a value that
+ * merely looks like one.
+ *
+ * The distinction is load-bearing: `--command "--weird"` is a legitimate launch
+ * command this CLI has always accepted, while `--max-increase --json` is a
+ * value slot swallowed by the next flag. Deciding on the `--` prefix alone
+ * cannot tell them apart; deciding against the command's own flag list can, and
+ * the list is already declared at every call site.
+ */
+function isKnownFlagToken(tok: string, known: Set<string>): boolean {
+  return tok.startsWith('--') && known.has(tok.slice(2).split('=')[0]);
+}
+
+/** Every flag name a command accepts — what tells a value apart from the next flag. */
+export const knownFlagNames = (spec: { value: string[]; boolean: string[] }) =>
+  new Set([...spec.value, ...spec.boolean]);
+
+/**
  * Every value a value-taking flag was given, in either accepted spelling:
  * `--flag value` and `--flag=value`.
  *
@@ -102,15 +120,15 @@ export function unknownFlags(argv: string[], spec: { value: string[]; boolean: s
  * matched the bare token, so the gate it asked for silently did not run and the
  * command exited 0 — a green check on a check that never happened.
  */
-export function flagValues(argv: string[], name: string): string[] {
+export function flagValues(argv: string[], name: string, known: Set<string> = new Set()): string[] {
   const out: string[] = [];
   for (let i = 0; i < argv.length; i++) {
     const tok = argv[i];
     if (tok === `--${name}`) {
       const next = argv[i + 1];
-      // A following flag is not this flag's value; that case is a usage error,
-      // caught by `valuelessFlags`, and must not be read as a value here.
-      if (next !== undefined && !next.startsWith('--')) out.push(next);
+      // Another flag of this command is not this flag's value; that case is a
+      // usage error, caught by `valuelessFlags`, and never read as a value.
+      if (next !== undefined && !isKnownFlagToken(next, known)) out.push(next);
       continue;
     }
     if (tok.startsWith(`--${name}=`)) out.push(tok.slice(name.length + 3));
@@ -119,8 +137,8 @@ export function flagValues(argv: string[], name: string): string[] {
 }
 
 /** The last value given for a flag, or undefined when the flag is absent. */
-export function flagValue(argv: string[], name: string): string | undefined {
-  const values = flagValues(argv, name);
+export function flagValue(argv: string[], name: string, known: Set<string> = new Set()): string | undefined {
+  const values = flagValues(argv, name, known);
   return values.length ? values[values.length - 1] : undefined;
 }
 
@@ -135,6 +153,7 @@ export function flagValue(argv: string[], name: string): string | undefined {
  * so it is refused in the same place and with the same severity.
  */
 export function valuelessFlags(argv: string[], spec: { value: string[]; boolean: string[] }): string[] {
+  const known = knownFlagNames(spec);
   const bad: string[] = [];
   for (let i = 0; i < argv.length; i++) {
     const tok = argv[i];
@@ -146,7 +165,7 @@ export function valuelessFlags(argv: string[], spec: { value: string[]; boolean:
       continue;
     }
     const next = argv[i + 1];
-    if (next === undefined || next.startsWith('--')) bad.push(`--${name}`);
+    if (next === undefined || isKnownFlagToken(next, known)) bad.push(`--${name}`);
     else i++; // consume the value, so `--command "--weird"` is not re-read as a flag
   }
   return bad;
@@ -174,7 +193,7 @@ function rejectUnknownFlags(cmd: string, argv: string[], spec: { value: string[]
 const [, , cmd, ...rest] = process.argv;
 
 if (cmd === 'audit') {
-  rejectUnknownFlags('audit', rest, {
+  const spec = {
     value: [
       'config',
       'budget',
@@ -188,9 +207,14 @@ if (cmd === 'audit') {
       'capture-index-url',
     ],
     boolean: ['json', 'docker', 'claude', 'suggest', 'changed'],
-  });
-  const argOf = (name: string) => flagValue(rest, name);
-  const all = (name: string) => flagValues(rest, name);
+  };
+  rejectUnknownFlags('audit', rest, spec);
+  // The same flag list the rejection used, so a value that merely looks like a
+  // flag (`--command "--weird"`) is told apart from a value slot swallowed by
+  // the next flag.
+  const known = knownFlagNames(spec);
+  const argOf = (name: string) => flagValue(rest, name, known);
+  const all = (name: string) => flagValues(rest, name, known);
   const json = rest.includes('--json');
   const numeric = (name: string): number | undefined => {
     const raw = argOf(name);
@@ -328,9 +352,10 @@ if (cmd === 'audit') {
   console.log(json ? JSON.stringify(report) : formatReport(report));
   process.exit(report.budget?.over || report.increaseGate?.pass === false ? 1 : 0);
 } else if (cmd === 'verify') {
-  rejectUnknownFlags('verify', rest, { value: ['remote'], boolean: ['json'] });
+  const spec = { value: ['remote'], boolean: ['json'] };
+  rejectUnknownFlags('verify', rest, spec);
   const json = rest.includes('--json');
-  const remoteUrl = flagValue(rest, 'remote');
+  const remoteUrl = flagValue(rest, 'remote', knownFlagNames(spec));
   const path = rest.find((a) => !a.startsWith('--') && a !== remoteUrl);
   if (!remoteUrl && !path) {
     console.error('usage: mcp-context-cost verify <measurement.json> [--json]');
@@ -369,11 +394,13 @@ if (cmd === 'audit') {
   for (const p of r.problems) console.error(`  - ${p}`);
   process.exit(1);
 } else if (cmd === 'measure') {
-  rejectUnknownFlags('measure', rest, {
+  const spec = {
     value: ['name', 'command', 'remote', 'timeout', 'docker-image', 'baseline', 'max-increase', 'budget'],
     boolean: ['docker'],
-  });
-  const argOf = (name: string) => flagValue(rest, name);
+  };
+  rejectUnknownFlags('measure', rest, spec);
+  const known = knownFlagNames(spec);
+  const argOf = (name: string) => flagValue(rest, name, known);
   const command = argOf('command');
   const remoteUrl = argOf('remote');
   if (remoteUrl && !/^https?:\/\//i.test(remoteUrl)) {

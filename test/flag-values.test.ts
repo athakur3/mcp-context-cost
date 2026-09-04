@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { flagValue, flagValues, unknownFlags, valuelessFlags } from '../src/cli.js';
+import { flagValue, flagValues, knownFlagNames, unknownFlags, valuelessFlags } from '../src/cli.js';
 
 /**
  * A flag the CLI cannot read is a flag the CLI silently ignores, and an ignored
@@ -16,6 +16,7 @@ import { flagValue, flagValues, unknownFlags, valuelessFlags } from '../src/cli.
  */
 
 const SPEC = { value: ['baseline', 'max-increase', 'command'], boolean: ['json', 'docker'] };
+const KNOWN = knownFlagNames(SPEC);
 
 describe('flagValues — both accepted spellings', () => {
   it('reads the space form', () => {
@@ -27,7 +28,7 @@ describe('flagValues — both accepted spellings', () => {
   });
 
   it('does not read a following flag as this flag’s value', () => {
-    expect(flagValue(['--max-increase', '--json'], 'max-increase')).toBeUndefined();
+    expect(flagValue(['--max-increase', '--json'], 'max-increase', KNOWN)).toBeUndefined();
   });
 
   it('is undefined for an absent flag, and never confuses a prefix', () => {
@@ -66,7 +67,16 @@ describe('valuelessFlags — a flag without its value is a usage error', () => {
 
   it('does not read a value that looks like a flag as a flag', () => {
     // `--command "--weird"` is a legitimate launch command, not a usage error.
+    // The `--` prefix alone cannot tell it from a swallowed value slot; the
+    // command's own flag list can, and only a KNOWN flag ends a value.
     expect(valuelessFlags(['--command', 'npx -y x', '--json'], SPEC)).toEqual([]);
+    expect(valuelessFlags(['--command', '--weird-launcher'], SPEC)).toEqual([]);
+    expect(flagValue(['--command', '--weird-launcher'], 'command', KNOWN)).toBe('--weird-launcher');
+  });
+
+  it('still catches a value slot swallowed by a known flag', () => {
+    expect(valuelessFlags(['--max-increase', '--json'], SPEC)).toEqual(['--max-increase']);
+    expect(flagValue(['--max-increase', '--json'], 'max-increase', KNOWN)).toBeUndefined();
   });
 });
 
