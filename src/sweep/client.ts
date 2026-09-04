@@ -88,14 +88,22 @@ function bothEnds(text: string, limit: number): string {
     return { out, used };
   };
 
-  const head = take(0, lines.length - 1, Math.ceil(budget * 0.6), false);
-  const tail = take(head.out.length, lines.length - 1, budget - head.used, true);
-  // A single line longer than the whole budget leaves nothing to keep; fall
-  // back to characters so the evidence is degraded rather than absent.
-  if (head.out.length === 0 && tail.out.length === 0) {
-    return text.slice(0, budget) + elision;
-  }
-  return `${head.out.join('\n')}${elision}${tail.out.join('\n')}`;
+  const headCap = Math.ceil(budget * 0.6);
+  const head = take(0, lines.length - 1, headCap, false);
+
+  // Whole lines, except when the first line alone overruns the budget. A server
+  // that logs structured JSON puts its entire message on one line, so that line
+  // is both the most informative thing in the output and the only one that can
+  // never fit — slack-mcp-server's `{"level":"fatal","message":"Authentication
+  // required: ..."}` was dropped in full, and the record it left behind said a
+  // child process exited. Truncated evidence beats none.
+  const headText = head.out.length > 0 ? head.out.join('\n') : lines[0].slice(0, headCap);
+  const headUsed = head.out.length > 0 ? head.used : headText.length;
+  const tailFrom = head.out.length > 0 ? head.out.length : 1;
+
+  const tail = take(tailFrom, lines.length - 1, budget - headUsed, true);
+  if (headText === '' && tail.out.length === 0) return text.slice(0, budget) + elision;
+  return `${headText}${elision}${tail.out.join('\n')}`;
 }
 
 /** Drop matching lines, keeping the input whole if that would leave nothing. */

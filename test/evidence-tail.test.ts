@@ -115,6 +115,25 @@ describe('evidenceTail', () => {
     );
   });
 
+  it('truncates a structured log line rather than dropping it whole', () => {
+    // slack-mcp-server, reproduced. The entire message is one JSON line, longer
+    // than the head budget — so a whole-lines rule keeps none of it and the
+    // record says only that a child process exited. That is how slack came back
+    // `startup-failure` when its own first line says it wants a token.
+    const slack = [
+      `{"level":"fatal","timestamp":"2026-09-04T05:27:07Z","message":"Authentication required: Either SLACK_MCP_XOXP_TOKEN, SLACK_MCP_XOXB_TOKEN, or both SLACK_MCP_XOXC_TOKEN and SLACK_MCP_XOXD_TOKEN must be provided","app":"slack-mcp-server","stacktrace":"${'github.com/korotovsky/slack-mcp-server/pkg/provider.New\\n\\t'.repeat(8)}"}`,
+      'node:child_process:955',
+      '    throw err;',
+      'Error: Command failed: /tmp/.npm-cache/_npx/x/bin/slack-mcp-server-linux-amd64 --transport stdio',
+      '  status: 1,',
+      'Node.js v22.23.2',
+    ].join('\n');
+
+    const kept = evidenceTail(slack);
+    expect(kept).toContain('Authentication required');
+    expect(classifyFailure(`server exited (code 1); stderr tail: ${kept}`)).toBe('auth-required');
+  });
+
   it('cuts on line boundaries, so an evidence string is never split in half', () => {
     const text = [
       'FATAL: the-token-that-matters was rejected',
