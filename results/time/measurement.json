@@ -76,7 +76,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:05:20.198Z",
+  "measuredAt": "2026-09-04T06:35:12.871Z",
   "serverName": "mcp-time",
   "serverVersion": "1.29.1",
   "launchCommand": "uvx --with \"mcp<2\" mcp-server-time",

@@ -114,7 +114,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:41:02.874Z",
+  "measuredAt": "2026-09-04T07:03:08.844Z",
   "serverName": "ddg-search",
   "serverVersion": "1.29.1",
   "launchCommand": "uvx duckduckgo-mcp-server",

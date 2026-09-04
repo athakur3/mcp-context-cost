@@ -756,7 +756,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:05:09.434Z",
+  "measuredAt": "2026-09-04T06:35:21.059Z",
   "serverName": "secure-filesystem-server",
   "serverVersion": "0.2.0",
   "launchCommand": "npx -y @modelcontextprotocol/server-filesystem /tmp",
@@ -768,5 +768,5 @@
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 240000
+  "timeoutMs": 480000
 }

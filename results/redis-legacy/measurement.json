@@ -8,15 +8,15 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-09-04T05:14:14.208Z",
+  "measuredAt": "2026-09-04T06:43:59.094Z",
   "serverName": "redis-legacy",
   "launchCommand": "npx -y @modelcontextprotocol/server-redis redis://localhost:6379",
-  "notes": "reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: econnect (/tmp/.npm-cache/_npx/5c1b9cdedadb4486/node_modules/@redis/client/dist/lib/client/socket.js:140:16)\n    at RedisSocket._RedisSocket_connect (/tmp/.npm-cache/_npx/5c1b9cdedadb4486/node_modules/@redis/client/dist/lib/client/socket.js:162:117)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async Commander.connect (/tmp/.npm-cache/_npx/5c1b9cdedadb4486/node_modules/@redis/client/dist/lib/client/index.js:185:9)\n    at async runServer (file:///tmp/.npm-cache/_npx/5c1b9cdedadb4486/node_modules/@modelcontextprotocol/server-redis/dist/index.js:240:9)\n",
+  "notes": "server exited (code 1); stderr tail: lhost:6379\n[Redis Error] Stack: Error: connect ECONNREFUSED 127.0.0.1:6379\n[Redis Reconnecting] Connection lost, attempting to reconnect...\n[Redis Error] Maximum retries (5) reached. Giving up.\n[Redis Error] Connection: redis://localhost:6379\n[Redis Error] Error: connect ECONNREFUSED 127.0.0.1:6379\n[Redis Error] Connection: redis://localhost:6379\n[Redis Error] Stack: Error: connect ECONNREFUSED 127.0.0.1:6379\n[Redis Fatal] Server initialization failed\n[Redis Fatal] Error: Error: Max retries reached\n[Redis Fatal] Connection: redis://localhost:6379\n[Redis Fatal] Stack: Error: Max retries reached",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 240000
+  "timeoutMs": 480000
 }

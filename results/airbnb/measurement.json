@@ -136,7 +136,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:48:34.622Z",
+  "measuredAt": "2026-09-04T07:08:23.900Z",
   "serverName": "airbnb",
   "serverVersion": "0.3.0",
   "launchCommand": "npx -y @openbnb/mcp-server-airbnb",

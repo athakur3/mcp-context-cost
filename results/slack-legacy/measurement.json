@@ -225,7 +225,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:09:23.976Z",
+  "measuredAt": "2026-09-04T06:39:16.250Z",
   "serverName": "Slack MCP Server",
   "serverVersion": "1.0.0",
   "launchCommand": "npx -y @modelcontextprotocol/server-slack",

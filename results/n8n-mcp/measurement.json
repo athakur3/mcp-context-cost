@@ -642,7 +642,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:40:54.351Z",
+  "measuredAt": "2026-09-04T07:03:01.111Z",
   "serverName": "n8n-documentation-mcp",
   "serverVersion": "2.82.1",
   "launchCommand": "npx -y n8n-mcp",

@@ -171,7 +171,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:38:44.039Z",
+  "measuredAt": "2026-09-04T07:02:02.728Z",
   "serverName": "Microsoft Learn MCP Server",
   "serverVersion": "1.0.0",
   "launchCommand": "npx -y mcp-remote https://learn.microsoft.com/api/mcp",

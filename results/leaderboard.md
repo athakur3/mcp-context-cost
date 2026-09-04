@@ -102,13 +102,13 @@ The **session start** column is what a client puts in context when it *defers* t
 
 | server | status | note |
 |---|---|---|
-| gdrive | auth-required | server exited (code 1); stderr tail: Credentials not found. Please run with 'auth' argument first.  |
-| redis-legacy | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: econnect (/tmp/.npm-cache/_npx/5c1b9cdedadb4486/node_modules/@redis/clie |
+| gdrive | auth-required | server exited (code 1); stderr tail: Credentials not found. Please run with 'auth' argument first. |
+| redis-legacy | startup-failure | server exited (code 1); stderr tail: lhost:6379 \[Redis Error\] Stack: Error: connect ECONNREFUSED 127.0.0.1:6379 \[Redis Reconnecting\] Connection lost, attemp |
 | azure | auth-required | server exited (code 0); stderr tail: oveNext()    at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start\[\[Azure.Mcp.Server.Program+\<Main\>d__2, azmc |
 | magic | auth-required | server error -32001: Not authenticated - your API key is missing or was reset. Get a fresh key at https://21st.dev/mcp and update your MCP config (x-api-key / B |
-| stripe | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: index.js:20:30)     at Object.\<anonymous\> (/tmp/.npm-cache/_npx/bce731 |
-| heroku | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for |
-| grafana | timeout | reproduced on double the timeout budget; timeout after 360000ms waiting for initialize |
+| stripe | auth-required | server exited (code 1); stderr tail: 🚨  Error initializing Stripe MCP server:     Invalid API key format. Expected sk_* (secret key) or rk_* (restricted key).  |
+| heroku | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: Fatal error in main(): Cannot find module '/tmp/.npm-cache/_npx/909ffbc9 |
+| grafana | timeout | reproduced on double the timeout budget; timeout after 360000ms waiting for initialize; stderr tail: time=2026-09-04T06:56:22.622Z level=INFO msg="Starting Graf |
 | neon | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: npm warn deprecated @neondatabase/mcp-server-neon@0.6.5: This package is |
 | linear | remote-auth-wall |  |
 | zapier | remote-auth-wall |  |
@@ -116,15 +116,15 @@ The **session start** column is what a client puts in context when it *defers* t
 | gmail | auth-required | server exited (code 1); stderr tail: npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead npm warn deprecated uuid@9.0.1 |
 | slack | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: .execFileSync (node:child_process:952:15)     at Object.\<anonymous\> (/ |
 | agent-device | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1) |
-| kubernetes-containers | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: l/prompt change notifications). Useful for container deployments and loa |
+| kubernetes-containers | startup-failure | server exited (code 1); stderr tail: ool/prompt change notifications). Useful for container deployments and load balancing. Default is false (stateful mode)     |
 | hana-cli | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: eJSONURL (node:internal/modules/package_json_reader:314:9)     at packag |
 | accessibility-scanner | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: Resolve (node:internal/modules/esm/resolve:661:9)     at packageResolve  |
 | keboola | auth-required | server error 0: Client error '401 Unauthorized' for url 'https://connection.keboola.com/v2/storage/tokens/verify' For more information check: https://developer. |
 | anki | timeout | reproduced on double the timeout budget; timeout after 480000ms waiting for initialize |
-| hevy | startup-failure | server exited (code 1); stderr tail: Fatal error in main() { category: 'Error' }  |
+| hevy | startup-failure | server exited (code 1); stderr tail: Fatal error in main() { category: 'Error' } |
 | local-mcp | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail:  LMCP v3.0.404 (linux-arm64) not found in cache. Downloading from https: |
-| windows-mcp | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: when resolving tool dependencies:   ╰─▶ Because only the following versi |
+| windows-mcp | not-applicable | Windows only — it depends on pywin32, which publishes no Linux wheels — server exited (code 1); stderr tail:  when resolving tool dependencies:   ╰─▶ Because on |
 | yandex-tracker | auth-required | server exited (code 1); stderr tail: Downloading grpcio-tools (2.5MiB)  Downloaded grpcio-tools Downloading yandexcloud (6.3MiB)  Downloaded yandexcloud Install |
 | google-surf | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: arn deprecated inflight@1.0.6: This module is not supported, and leaks m |
-| safari-mcp | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: npm error code EBADPLATFORM npm error notsup Unsupported platform for sa |
+| safari-mcp | not-applicable | macOS only — the package declares os darwin and npm refuses to install it on Linux — server exited (code 1); stderr tail: npm error code EBADPLATFORM npm error  |
 

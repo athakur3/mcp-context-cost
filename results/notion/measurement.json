@@ -6564,7 +6564,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:19:00.008Z",
+  "measuredAt": "2026-09-04T06:46:30.993Z",
   "serverName": "Notion API",
   "serverVersion": "1.0.0",
   "launchCommand": "npx -y @notionhq/notion-mcp-server",

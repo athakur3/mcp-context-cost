@@ -478,7 +478,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:08:05.992Z",
+  "measuredAt": "2026-09-04T06:35:02.808Z",
   "serverName": "mcp-servers/everything",
   "serverVersion": "2.0.0",
   "launchCommand": "npx -y @modelcontextprotocol/server-everything",
@@ -490,5 +490,5 @@
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 480000
+  "timeoutMs": 240000
 }

@@ -8,10 +8,10 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-09-04T05:41:23.568Z",
+  "measuredAt": "2026-09-04T07:02:22.616Z",
   "serverName": "grafana",
   "launchCommand": "docker run --rm -i -e GRAFANA_URL=http://localhost:3000 -e GRAFANA_SERVICE_ACCOUNT_TOKEN=dummy mcp/grafana",
-  "notes": "reproduced on double the timeout budget; timeout after 360000ms waiting for initialize",
+  "notes": "reproduced on double the timeout budget; timeout after 360000ms waiting for initialize; stderr tail: time=2026-09-04T06:56:22.622Z level=INFO msg=\"Starting Grafana MCP server using SSE transport\" version=(devel) address=0.0.0.0:8000 basePath=/ metrics=false",
   "isolation": {
     "docker": true,
     "note": "command is itself a docker run (host-spawned container)"

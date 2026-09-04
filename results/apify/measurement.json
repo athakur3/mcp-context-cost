@@ -1926,7 +1926,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:29:49.965Z",
+  "measuredAt": "2026-09-04T06:50:39.319Z",
   "serverName": "apify-mcp-server",
   "serverVersion": "0.15.4",
   "launchCommand": "npx -y @apify/actors-mcp-server",
@@ -1940,5 +1940,5 @@
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 480000
+  "timeoutMs": 240000
 }

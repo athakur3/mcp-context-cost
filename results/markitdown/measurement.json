@@ -33,7 +33,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:19:09.886Z",
+  "measuredAt": "2026-09-04T06:46:55.704Z",
   "serverName": "markitdown",
   "serverVersion": "1.8.1",
   "launchCommand": "uvx markitdown-mcp",

@@ -989,7 +989,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:44:09.475Z",
+  "measuredAt": "2026-09-04T07:04:04.943Z",
   "serverName": "playwright-mcp",
   "serverVersion": "1.0.11",
   "launchCommand": "npx -y @executeautomation/playwright-mcp-server",

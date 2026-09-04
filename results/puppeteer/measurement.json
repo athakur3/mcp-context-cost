@@ -198,7 +198,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:10:52.245Z",
+  "measuredAt": "2026-09-04T06:39:25.229Z",
   "serverName": "example-servers/puppeteer",
   "serverVersion": "0.1.0",
   "launchCommand": "npx -y @modelcontextprotocol/server-puppeteer",
@@ -210,5 +210,5 @@
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 240000
+  "timeoutMs": 480000
 }

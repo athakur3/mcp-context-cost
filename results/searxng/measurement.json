@@ -220,7 +220,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:45:28.030Z",
+  "measuredAt": "2026-09-04T07:07:18.156Z",
   "serverName": "ihor-sokoliuk/mcp-searxng",
   "serverVersion": "2.1.0",
   "launchCommand": "npx -y mcp-searxng",

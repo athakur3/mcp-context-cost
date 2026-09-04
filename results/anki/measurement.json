@@ -8,7 +8,7 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-09-04T06:05:06.835Z",
+  "measuredAt": "2026-09-04T07:28:41.765Z",
   "serverName": "anki",
   "launchCommand": "npx -y @ankimcp/anki-mcp-server",
   "notes": "reproduced on double the timeout budget; timeout after 480000ms waiting for initialize",

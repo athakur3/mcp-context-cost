@@ -92,7 +92,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:44:13.309Z",
+  "measuredAt": "2026-09-04T07:04:07.818Z",
   "serverName": "mysql_mcp_server",
   "serverVersion": "1.29.1",
   "launchCommand": "uvx --from mysql-mcp-server mysql_mcp_server",

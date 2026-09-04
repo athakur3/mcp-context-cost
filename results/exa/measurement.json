@@ -89,7 +89,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:27:27.464Z",
+  "measuredAt": "2026-09-04T06:53:01.959Z",
   "serverName": "exa-search-server",
   "serverVersion": "3.4.1",
   "launchCommand": "npx -y exa-mcp-server",
@@ -103,5 +103,5 @@
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 480000
+  "timeoutMs": 240000
 }

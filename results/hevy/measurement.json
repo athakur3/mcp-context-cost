@@ -8,10 +8,10 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-09-04T05:59:43.480Z",
+  "measuredAt": "2026-09-04T07:23:33.068Z",
   "serverName": "hevy",
   "launchCommand": "npx -y hevy-mcp",
-  "notes": "server exited (code 1); stderr tail: Fatal error in main() { category: 'Error' }\n",
+  "notes": "server exited (code 1); stderr tail: Fatal error in main() { category: 'Error' }",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",

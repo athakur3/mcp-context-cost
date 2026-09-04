@@ -1746,7 +1746,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:41:21.162Z",
+  "measuredAt": "2026-09-04T07:03:24.951Z",
   "serverName": "Serena",
   "serverVersion": "1.7.1.dev0",
   "launchCommand": "uvx --from git+https://github.com/oraios/serena serena start-mcp-server",

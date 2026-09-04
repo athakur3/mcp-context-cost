@@ -80,7 +80,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:17:35.856Z",
+  "measuredAt": "2026-09-04T06:46:48.266Z",
   "serverName": "Context7",
   "serverVersion": "4.0.4",
   "launchCommand": "npx -y @upstash/context7-mcp",

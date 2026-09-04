@@ -134,7 +134,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:09:27.827Z",
+  "measuredAt": "2026-09-04T06:39:18.800Z",
   "serverName": "sqlite",
   "serverVersion": "0.1.0",
   "launchCommand": "uvx --with \"mcp<2\" mcp-server-sqlite --db-path /tmp/test.db",

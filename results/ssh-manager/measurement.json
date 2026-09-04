@@ -1705,7 +1705,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T06:05:14.476Z",
+  "measuredAt": "2026-09-04T07:36:38.585Z",
   "serverName": "mcp-ssh-manager",
   "serverVersion": "3.8.5",
   "launchCommand": "npx -y mcp-ssh-manager",

@@ -1047,7 +1047,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:21:40.372Z",
+  "measuredAt": "2026-09-04T06:48:38.136Z",
   "serverName": "supabase",
   "serverVersion": "0.11.0",
   "launchCommand": "npx -y @supabase/mcp-server-supabase@latest",
@@ -1061,5 +1061,5 @@
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 480000
+  "timeoutMs": 240000
 }

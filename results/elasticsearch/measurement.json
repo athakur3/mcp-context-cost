@@ -122,7 +122,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:38:26.336Z",
+  "measuredAt": "2026-09-04T07:01:47.025Z",
   "serverName": "elasticsearch-mcp",
   "serverVersion": "0.3.1",
   "launchCommand": "npx -y @elastic/mcp-server-elasticsearch",
@@ -137,5 +137,5 @@
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 240000
+  "timeoutMs": 480000
 }

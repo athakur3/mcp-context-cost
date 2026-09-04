@@ -1647,7 +1647,7 @@
       "name": "appium_generate_tests"
     }
   ],
-  "measuredAt": "2026-09-04T05:50:10.266Z",
+  "measuredAt": "2026-09-04T07:12:29.952Z",
   "serverName": "MCP Appium",
   "serverVersion": "1.92.13",
   "launchCommand": "npx -y appium-mcp",
@@ -1659,5 +1659,5 @@
     "network": "bridge",
     "note": "network enabled for package fetch; clean FS, no host credentials"
   },
-  "timeoutMs": 240000
+  "timeoutMs": 480000
 }

@@ -2443,7 +2443,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T05:38:40.696Z",
+  "measuredAt": "2026-09-04T07:01:58.801Z",
   "serverName": "Redis MCP Server",
   "serverVersion": "1.29.1",
   "launchCommand": "uvx --from git+https://github.com/redis/mcp-redis.git redis-mcp-server --url redis://localhost:6379/0",

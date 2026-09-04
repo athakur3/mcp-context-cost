@@ -96,7 +96,7 @@ No page: there is no number to show. The reason is recorded per candidate.
 | redis-legacy | startup-failure |
 | azure | auth-required |
 | magic | auth-required |
-| stripe | startup-failure |
+| stripe | auth-required |
 | heroku | startup-failure |
 | grafana | timeout |
 | neon | startup-failure |
@@ -113,9 +113,9 @@ No page: there is no number to show. The reason is recorded per candidate.
 | anki | timeout |
 | hevy | startup-failure |
 | local-mcp | startup-failure |
-| windows-mcp | startup-failure |
+| windows-mcp | not-applicable |
 | yandex-tracker | auth-required |
 | google-surf | startup-failure |
-| safari-mcp | startup-failure |
+| safari-mcp | not-applicable |
 
 [Leaderboard](https://github.com/athakur3/mcp-context-cost/blob/main/results/leaderboard.md) · [Methodology](../METHODOLOGY.html) · [Dashboard](../dashboard.html)

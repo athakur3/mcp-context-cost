@@ -39,7 +39,7 @@ apify,10452,10,measured,vendor-official,14351,https://api.npmjs.org/downloads/po
 shopify-dev,6841,6,measured,vendor-official,13956,https://api.npmjs.org/downloads/point/last-week/@shopify/dev-mcp (npm weekly),,,26,false,26,0,6804,v0.2.5
 hubspot,9158,21,measured,vendor-official,12712,https://api.npmjs.org/downloads/point/last-week/@hubspot/mcp-server (npm weekly),14398,claude-opus-5,133,false,133,0,8446,v0.2.5
 netlify,2831,9,measured,vendor-official,11850,https://api.npmjs.org/downloads/point/last-week/@netlify/mcp (npm weekly),,,61,false,61,0,2707,v0.2.5
-stripe,,,startup-failure,vendor-official,10572,https://api.npmjs.org/downloads/point/last-week/@stripe/mcp (npm weekly),,,,,,,,
+stripe,,,auth-required,vendor-official,10572,https://api.npmjs.org/downloads/point/last-week/@stripe/mcp (npm weekly),,,,,,,,
 pinecone,5903,9,measured,vendor-official,8982,https://api.npmjs.org/downloads/point/last-week/@pinecone-database/mcp (npm weekly),9184,claude-opus-5,294,false,41,253,5680,v0.2.5
 heroku,,,startup-failure,vendor-official,7890,https://api.npmjs.org/downloads/point/last-week/@heroku/mcp-server (npm weekly),,,,,,,,
 bright-data,978,5,measured,vendor-official,6103,https://api.npmjs.org/downloads/point/last-week/@brightdata/mcp (npm weekly),,,20,false,20,0,880,v0.2.5
@@ -100,8 +100,8 @@ hevy,,,startup-failure,community,6107,https://api.npmjs.org/downloads/point/last
 local-mcp,,,startup-failure,community,5122,https://api.npmjs.org/downloads/point/last-week/local-mcp (npm weekly; macOS host integration),,,,,,,,
 emailmd,585,3,measured,community,4582,https://api.npmjs.org/downloads/point/last-week/emailmd (npm weekly),,,377,false,8,369,546,v0.2.5
 githits,12600,16,measured,community,3790,https://api.npmjs.org/downloads/point/last-week/githits (npm weekly),,,53,false,53,0,12183,v0.2.5
-windows-mcp,,,startup-failure,community,2818,https://pypistats.org/packages/windows-mcp (PyPI weekly; Windows host integration),,,,,,,,
+windows-mcp,,,not-applicable,community,2818,https://pypistats.org/packages/windows-mcp (PyPI weekly; Windows host integration),,,,,,,,
 yandex-tracker,,,auth-required,community,2275,https://pypistats.org/packages/yandex-tracker-mcp (PyPI weekly),,,,,,,,
 ssh-manager,8446,37,measured,community,2117,https://api.npmjs.org/downloads/point/last-week/mcp-ssh-manager (npm weekly),,,143,false,143,0,8162,v0.2.5
 google-surf,,,startup-failure,community,2016,https://api.npmjs.org/downloads/point/last-week/google-surf-mcp (npm weekly),,,,,,,,
-safari-mcp,,,startup-failure,community,1772,https://api.npmjs.org/downloads/point/last-week/safari-mcp (npm weekly; macOS host integration),,,,,,,,
+safari-mcp,,,not-applicable,community,1772,https://api.npmjs.org/downloads/point/last-week/safari-mcp (npm weekly; macOS host integration),,,,,,,,

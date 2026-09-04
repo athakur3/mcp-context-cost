@@ -8,10 +8,10 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-09-04T05:53:02.748Z",
+  "measuredAt": "2026-09-04T07:16:37.709Z",
   "serverName": "keboola",
   "launchCommand": "uvx keboola-mcp-server",
-  "notes": "server error 0: Client error '401 Unauthorized' for url 'https://connection.keboola.com/v2/storage/tokens/verify'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401\nAPI error: Invalid access token\nException ID: kbc-us-east-1-connection-a55a224f1da756a6f683b8ff52fd3f56\nWhen contacting Keboola support please provide the exception ID.",
+  "notes": "server error 0: Client error '401 Unauthorized' for url 'https://connection.keboola.com/v2/storage/tokens/verify'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401\nAPI error: Invalid access token\nException ID: kbc-us-east-1-connection-9ecb3f8fdff76c2bdfaac53a0d03e611\nWhen contacting Keboola support please provide the exception ID.",
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
