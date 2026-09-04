@@ -254,8 +254,16 @@ export interface LoadedConfig {
 /** Read + parse the candidates that exist. Unreadable files are reported, not thrown. */
 export function loadConfigs(candidates: ConfigCandidate[], cwd: string): LoadedConfig[] {
   const out: LoadedConfig[] = [];
+  // Running from your home directory nominates `~/.cursor/mcp.json` twice —
+  // once as the home candidate, once as the cwd one. Loaded twice it is
+  // reported twice, doubles that client's deferral scope, and under
+  // `--baseline` the second copy pairs with nothing and fails the gate. One
+  // path is one config however many ways it was nominated.
+  const seen = new Set<string>();
   for (const c of candidates) {
     if (!existsSync(c.path)) continue;
+    if (seen.has(c.path)) continue;
+    seen.add(c.path);
     try {
       const doc = parseJsonc(readFileSync(c.path, 'utf8'));
       const { servers, disabled } = extractDeclaration(doc, { client: c.client, source: c.path, cwd });

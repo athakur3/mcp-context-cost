@@ -209,6 +209,9 @@ export function isComparable(
     canonicalSha256 !== null &&
     row.capturedSha256 === canonicalSha256 &&
     row.ourTokens > 0 &&
+    // A report that parsed but carries `total: 0` is not a measurement of
+    // anything; published, it renders as a −100% divergence.
+    row.cliTokens > 0 &&
     row.ourMappedTokens > 0
   );
 }

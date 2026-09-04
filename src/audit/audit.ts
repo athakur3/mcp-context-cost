@@ -13,7 +13,7 @@
  * commands shared by two configs are still only measured once.
  */
 import { METHODOLOGY_VERSION } from '../core/canonical.js';
-import { isCurrent, type DivergenceRun } from '../core/divergence.js';
+import { isCurrent, type DivergenceRow, type DivergenceRun } from '../core/divergence.js';
 import {
   SUGGEST_DESCRIPTION_PERCENTILE,
   suggestFor,
@@ -414,6 +414,13 @@ export function buildReport(
   const contextWindow = opts.contextWindow ?? DEFAULT_CONTEXT_WINDOW;
   const problems: string[] = [];
   const emptyConfigs: { client: string; source: string; allDisabled?: string[] }[] = [];
+  // canonicalSha256 → the divergence row computed from it, so a server can be
+  // identified by its bytes whatever the local config calls it.
+  const divByHash = new Map<string, DivergenceRow>();
+  for (const row of Object.values(opts.divergence?.servers ?? {})) {
+    if (row?.capturedSha256) divByHash.set(row.capturedSha256, row);
+  }
+
   const built: Omit<AuditConfigResult, 'deferral'>[] = [];
   // Across every config at once: a twin in one client's file is measured for
   // the other client's entry just the same.

@@ -272,7 +272,17 @@ export function pairConfigs(
     }
   }
 
-  if (before.length === 1 && after.length === 1 && pairs[0].before === null) {
+  // One on each side reads as the same config seen from two machines, where the
+  // path legitimately differs (a laptop's baseline against a CI checkout). It
+  // does not survive the clients differing: a Claude Desktop baseline against a
+  // Claude Code run compares two unrelated stacks, and the gate then rests on
+  // that difference. The paths may differ; what they are configs *for* may not.
+  if (
+    before.length === 1 &&
+    after.length === 1 &&
+    pairs[0].before === null &&
+    before[0].client === after[0].client
+  ) {
     pairs[0] = { before: before[0], after: after[0], matchedBy: 'sole-config' };
     unusedBefore.delete(before[0].source);
   }

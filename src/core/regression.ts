@@ -178,7 +178,22 @@ export interface ToolAttribution {
   unexplainedTokens: number;
 }
 
-export function attribute(from: ToolVectorEntry, to: ToolVectorEntry, deltaTokens: number): ToolAttribution {
+/**
+ * Per-tool attribution, or null when the names cannot carry it.
+ *
+ * The breakdown matches tools by name, so a name that appears twice on either
+ * side makes the maps below lose one of them silently — and the lost tokens
+ * resurface as `unexplainedTokens`, which the report explains to the reader as
+ * canonical-array framing bytes. That is a confident false explanation. Two
+ * ways it happens: a server that ships duplicate or namespaced-collapsed tool
+ * names, and `measureTools` recording every nameless tool as the single key
+ * `(unnamed)` — an invented name, where `toolNames` and `toAnthropicTools`
+ * deliberately drop nameless tools rather than invent one. Where the names
+ * cannot identify the tools, there is no attribution to give.
+ */
+export function attribute(from: ToolVectorEntry, to: ToolVectorEntry, deltaTokens: number): ToolAttribution | null {
+  const unique = (ts: ToolVector[]) => new Set(ts.map((t) => t.name)).size === ts.length;
+  if (!unique(from.tools) || !unique(to.tools)) return null;
   const before = new Map(from.tools.map((t) => [t.name, t.tokens]));
   const after = new Map(to.tools.map((t) => [t.name, t.tokens]));
   const added: ToolVector[] = [];
