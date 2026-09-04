@@ -9,10 +9,17 @@
 #
 # The whole set does not fit here: a fresh runner shares no package-cache
 # volume, so each server pays a cold install, and the heaviest entry on record
-# took 216s that way. `--shards 6` measures a sixth of the set each week and
-# comes back round to the same servers six weeks later. The slice is derived
-# from the date (see src/sweep/shard.ts), so a week this job fails to fire
-# needs no repair — there is no cursor to reset.
+# took 216s that way. `SHARDS` slices the set so one part of it runs each week
+# and the same servers come round again `SHARDS` weeks later. The slice is
+# derived from the date (see src/sweep/shard.ts), so a week this job fails to
+# fire needs no repair — there is no cursor to reset.
+#
+# The count is an input because widening the slice is a decision that wants
+# evidence: a dispatch can pin a larger one to find out what it really costs on
+# a runner before the schedule commits to it. Cycle length is not a free
+# parameter either — it sets how wide a movement's date window can be in
+# results/regressions.md, and a window that wide describes the observation
+# schedule rather than the server.
 name: Rotating re-sweep
 on:
   schedule:
@@ -23,7 +30,11 @@ on:
   workflow_dispatch:
     inputs:
       shard_index:
-        description: 'Pin the slice instead of deriving it from today (0-5)'
+        description: 'Pin the slice instead of deriving it from today (0 to shards-1)'
+        required: false
+        type: string
+      shards:
+        description: 'How many slices to cut the set into (default 6). Fewer = bigger slice, shorter cycle.'
         required: false
         type: string
 
@@ -40,6 +51,11 @@ jobs:
   resweep:
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    env:
+      # Read by both the sweep and the cross-check below, so the two cannot
+      # drift onto different slices — the cross-check's staleness rule assumes
+      # each row was made in the same sitting as the capture it sits beside.
+      SHARDS: ${{ inputs.shards || '6' }}
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
@@ -65,14 +81,14 @@ jobs:
         # and restores what it overwrote (src/sweep/harness-guard.ts), so a
         # broken Docker daemon on the runner stops the job here rather than
         # pushing a leaderboard full of failures.
-        run: npm run sweep:all -- --docker --shards 6 --concurrency 2 --default-timeout 240 ${{ inputs.shard_index && format('--shard-index {0}', inputs.shard_index) || '' }}
+        run: npm run sweep:all -- --docker --shards "${SHARDS}" --concurrency 2 --default-timeout 240 ${{ inputs.shard_index && format('--shard-index {0}', inputs.shard_index) || '' }}
       - name: Cross-check this week's shard against mcp-tokens
         # Same slice, same isolation, minutes after the measurements above, so
         # each cross-check row is filed under the capture it sat beside.
         # Best-effort: a CLI release outage must not block the sweep's own
         # commit — a row that misses a week reads silence, not a stale number.
         continue-on-error: true
-        run: npx tsx src/sweep/cross-check.ts --docker --shards 6 --concurrency 2 --default-timeout 240 ${{ inputs.shard_index && format('--shard-index {0}', inputs.shard_index) || '' }}
+        run: npx tsx src/sweep/cross-check.ts --docker --shards "${SHARDS}" --concurrency 2 --default-timeout 240 ${{ inputs.shard_index && format('--shard-index {0}', inputs.shard_index) || '' }}
       - name: Regenerate leaderboard, server pages and dashboard
         run: npx tsx src/sweep/regen.ts
       - name: Commit refreshed measurements

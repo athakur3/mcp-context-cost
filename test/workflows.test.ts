@@ -65,9 +65,20 @@ describe('rotating re-sweep workflow', () => {
     .map((l) => l.trim())
     .filter((l) => l.startsWith('run:') && l.includes('npm run sweep:all'));
 
+  /**
+   * The count the *schedule* runs with. A dispatch may pin a different one to
+   * find out what a wider slice really costs on a runner before the schedule
+   * commits to it, so the shared env default — not the dispatch input — is what
+   * these unattended properties have to hold for.
+   */
+  const scheduledShards = Number(
+    /SHARDS: \$\{\{ inputs\.shards \|\| '(\d+)' \}\}/.exec(resweep)![1],
+  );
+
   it('measures a rotating slice rather than the whole set', () => {
     expect(invocation.length).toBe(1);
-    expect(invocation[0]).toMatch(/--shards \d+/);
+    expect(invocation[0]).toContain('--shards "${SHARDS}"');
+    expect(scheduledShards).toBeGreaterThan(1);
   });
 
   it('measures in the same isolation as every other published row', () => {
@@ -81,7 +92,7 @@ describe('rotating re-sweep workflow', () => {
     // before it will call a broken harness. Shard the set too finely and a
     // week's slice drops below that floor — the job would then publish a whole
     // slice of failures from a wedged runner without tripping anything.
-    const shards = Number(/--shards (\d+)/.exec(invocation[0])![1]);
+    const shards = scheduledShards;
     const doc = parse(readFileSync(join(import.meta.dirname, '..', 'servers.yaml'), 'utf8')) as {
       servers: { name: string; remote?: boolean }[];
     };
@@ -134,7 +145,11 @@ describe('the re-sweep cross-checks the slice it just measured', () => {
     const cross = runLine('cross-check.ts');
     expect(cross).toBeDefined();
     expect(cross).toContain('--docker');
-    expect(/--shards (\d+)/.exec(cross!)![1]).toBe(/--shards (\d+)/.exec(sweep!)![1]);
+    // Both read the same env var rather than repeating a literal, so a dispatch
+    // that pins a wider slice cannot move one step onto it and leave the other
+    // cross-checking a slice it never measured.
+    expect(/--shards (\S+)/.exec(cross!)![1]).toBe(/--shards (\S+)/.exec(sweep!)![1]);
+    expect(/--shards (\S+)/.exec(sweep!)![1]).toBe('"${SHARDS}"');
   });
 
   it('is best-effort — a CLI release outage must not block the sweep commit', () => {

@@ -4,6 +4,7 @@ import { mkdtempSync, mkdirSync, rmSync, writeFileSync, readFileSync, existsSync
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { weekIndex, shardIndexForDate, selectShard } from '../src/sweep/shard.js';
+import { MIN_REGRESSIONS } from '../src/sweep/harness-guard.js';
 import type { Measurement } from '../src/core/types.js';
 import { TSX_CLI } from './tsx.js';
 
@@ -120,6 +121,13 @@ describe('sweep-all sharding (subprocess)', () => {
   const sweepAll = join(repoRoot, 'src', 'sweep', 'sweep-all.ts');
   let root: string;
 
+  // A sweep refuses a slice too small for the harness guard to fire, so these
+  // scaffolds are sized off that floor rather than a round number: the smallest
+  // set that still cuts three shards a real sweep would agree to measure.
+  const SHARDS = 3;
+  const PER_SHARD = MIN_REGRESSIONS;
+  const TOTAL = SHARDS * PER_SHARD;
+
   beforeEach(() => {
     root = mkdtempSync(join(tmpdir(), 'sweep-shard-'));
   });
@@ -181,30 +189,32 @@ describe('sweep-all sharding (subprocess)', () => {
   }
 
   it('measures only its own slice, and the slices tile the whole set', () => {
-    const names = scaffold(9);
+    const names = scaffold(TOTAL);
     const seen: string[] = [];
-    for (let i = 0; i < 3; i++) {
-      const { code, out } = runSweep(['--shards', '3', '--shard-index', String(i)]);
+    for (let i = 0; i < SHARDS; i++) {
+      const { code, out } = runSweep(['--shards', String(SHARDS), '--shard-index', String(i)]);
       expect(code).toBe(0);
       const week = swept(out);
-      expect(week.length).toBe(3);
+      expect(week.length).toBe(PER_SHARD);
       seen.push(...week);
     }
     expect(seen.sort()).toEqual([...names].sort());
   }, 180_000);
 
   it('names the slice in its log before measuring it', () => {
-    scaffold(9);
-    const { out } = runSweep(['--shards', '3', '--shard-index', '1']);
-    expect(out).toContain('shard 2/3 of 9 sweepable: stub1, stub4, stub7');
+    const names = scaffold(TOTAL);
+    const { out } = runSweep(['--shards', String(SHARDS), '--shard-index', '1']);
+    const slice = selectShard(names, SHARDS, 1).join(', ');
+    expect(out).toContain(`shard 2/${SHARDS} of ${TOTAL} sweepable: ${slice}`);
   }, 120_000);
 
   it('leaves servers outside this week`s slice exactly as they were published', () => {
     // The point of the rotation is that untouched servers keep their number.
     // A shard sweep that blanked them would empty the leaderboard six weeks
     // running, one slice at a time.
-    scaffold(9);
-    const outside = ['stub2', 'stub5'];
+    const names = scaffold(TOTAL);
+    const slice = selectShard(names, SHARDS, 0);
+    const outside = names.filter((n) => !slice.includes(n)).slice(0, 2);
     const before: Record<string, string> = {};
     for (const [i, name] of outside.entries()) {
       mkdirSync(join(root, 'results', name), { recursive: true });
@@ -213,9 +223,9 @@ describe('sweep-all sharding (subprocess)', () => {
       before[name] = json;
     }
 
-    const { code, out } = runSweep(['--shards', '3', '--shard-index', '0']);
+    const { code, out } = runSweep(['--shards', String(SHARDS), '--shard-index', '0']);
     expect(code).toBe(0);
-    expect(swept(out)).toEqual(['stub0', 'stub3', 'stub6']);
+    expect(swept(out)).toEqual([...slice].sort());
     for (const name of outside) {
       expect(readFileSync(join(root, 'results', name, 'measurement.json'), 'utf8')).toBe(before[name]);
     }
@@ -223,16 +233,16 @@ describe('sweep-all sharding (subprocess)', () => {
     const leaderboard = readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8');
     for (const name of outside) expect(leaderboard).toContain(name);
     const history = readFileSync(join(root, 'results', 'history.csv'), 'utf8');
-    expect(history).toContain('2026-08-19,stub2,4000,9,measured');
+    expect(history).toContain(`2026-08-19,${outside[0]},4000,9,measured`);
   }, 120_000);
 
   it('derives the slice from today when no index is pinned', () => {
-    scaffold(9);
-    const { code, out } = runSweep(['--shards', '3']);
+    const names = scaffold(TOTAL);
+    const { code, out } = runSweep(['--shards', String(SHARDS)]);
     expect(code).toBe(0);
-    const expected = shardIndexForDate(new Date(), 3);
-    expect(out).toContain(`shard ${expected + 1}/3 of 9 sweepable:`);
-    expect(swept(out)).toEqual(selectShard(['stub0', 'stub1', 'stub2', 'stub3', 'stub4', 'stub5', 'stub6', 'stub7', 'stub8'], 3, expected));
+    const expected = shardIndexForDate(new Date(), SHARDS);
+    expect(out).toContain(`shard ${expected + 1}/${SHARDS} of ${TOTAL} sweepable:`);
+    expect(swept(out)).toEqual([...selectShard(names, SHARDS, expected)].sort());
   }, 120_000);
 
   it('refuses --shards together with --only rather than intersecting them', () => {
@@ -248,5 +258,21 @@ describe('sweep-all sharding (subprocess)', () => {
     const { code, out } = runSweep(['--shard-index', '0']);
     expect(code).toBe(2);
     expect(out).toContain('--shard-index needs --shards');
+  }, 60_000);
+
+  it('refuses a slice too small for the harness guard to fire', () => {
+    // `--shards` is dispatchable on the scheduled job, so a number typed too
+    // large cuts a slice the guard can never reach: a wedged Docker daemon
+    // would then publish that whole slice as startup failures with nothing to
+    // trip. The floor is the guard's own, so the two cannot drift apart.
+    const names = scaffold(TOTAL);
+    const tooFine = TOTAL; // one server per slice
+    const { code, out } = runSweep(['--shards', String(tooFine), '--shard-index', '0']);
+    expect(code).toBe(2);
+    expect(out).toContain(`below the ${MIN_REGRESSIONS}-server floor`);
+    // Refused before measuring anything, so nothing was published.
+    expect(existsSync(join(root, 'results', 'leaderboard.md'))).toBe(false);
+    expect(swept(out)).toEqual([]);
+    expect(names.length).toBe(TOTAL);
   }, 60_000);
 });

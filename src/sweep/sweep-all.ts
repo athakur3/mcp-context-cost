@@ -60,6 +60,20 @@ if (shards !== undefined) {
   const index = shardIndexArg ?? shardIndexForDate(new Date(), shards);
   entries = selectShard(sweepable, shards, index);
   shardLabel = `, shard ${index + 1}/${shards}`;
+  // The harness guard needs MIN_REGRESSIONS previously-good servers to fail
+  // together before it will call a broken runner rather than broken servers.
+  // A slice smaller than that floor can never reach it, so a wedged Docker
+  // daemon would publish the whole slice as startup failures with nothing to
+  // trip. `--shards` is the one knob that can shrink a slice under the floor
+  // unattended, so it refuses here instead of measuring through it.
+  if (entries.length < MIN_REGRESSIONS) {
+    console.error(
+      `--shards ${shards} cuts a ${entries.length}-server slice, below the ` +
+        `${MIN_REGRESSIONS}-server floor the harness guard needs to tell a broken runner ` +
+        `from broken servers. Use a smaller --shards, or --only to measure a handful by name.`,
+    );
+    process.exit(2);
+  }
   console.log(
     `shard ${index + 1}/${shards} of ${sweepable.length} sweepable: ${entries.map((e) => e.name).join(', ')}`,
   );
