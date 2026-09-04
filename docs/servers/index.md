@@ -106,7 +106,7 @@ No page: there is no number to show. The reason is recorded per candidate.
 | gmail | auth-required |
 | slack | startup-failure |
 | agent-device | startup-failure |
-| kubernetes-containers | startup-failure |
+| kubernetes-containers | not-applicable |
 | hana-cli | startup-failure |
 | accessibility-scanner | startup-failure |
 | keboola | auth-required |

@@ -2,21 +2,22 @@
   "methodologyVersion": "1.0",
   "provider": "tiktoken",
   "encoding": "o200k_base",
-  "status": "startup-failure",
+  "status": "not-applicable",
   "totalTokens": null,
   "toolCount": null,
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-09-04T07:15:25.295Z",
+  "measuredAt": "2026-09-04T09:02:31.387Z",
   "serverName": "kubernetes-containers",
   "launchCommand": "npx -y kubernetes-mcp-server",
-  "notes": "server exited (code 1); stderr tail: ool/prompt change notifications). Useful for container deployments and load balancing. Default is false (stateful mode)\n      --tls-cert string           Path to TLS certificate file for HTTPS. Must be used together with --tls-key.\n      --tls-key string            Path to TLS private key file for HTTPS. Must be used together with --tls-cert.\n      --toolsets strings          Comma-separated list of MCP toolsets to use (available toolsets: config, core, helm, kcp, kiali, kubevirt, netobserv, tekton). Defaults to core, config.\n      --version                   Print version information and quit",
+  "notes": "needs a kubeconfig with a cluster context; the isolation deliberately has neither — server exited (code 1); stderr tail: Error: unable to create kubernetes target provider: no current-context is set and no contexts are defined in kubeconfig.\nConfigure a context with 'kubectl config set-context <name>' and 'kubectl config use-context <name>'\nUsage:\n  kubernetes-mcp-server [command] [options] [flags]\n\nExamples:\n  # show this help\n  kubernetes-mcp-server -h\n  \n […] \n      --version                   Print version information and quit",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
-  "timeoutMs": 480000
+  "timeoutMs": 240000
 }

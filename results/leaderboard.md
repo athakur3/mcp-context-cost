@@ -116,7 +116,7 @@ The **session start** column is what a client puts in context when it *defers* t
 | gmail | auth-required | server exited (code 1); stderr tail: npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead npm warn deprecated uuid@9.0.1 |
 | slack | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: .execFileSync (node:child_process:952:15)     at Object.\<anonymous\> (/ |
 | agent-device | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1) |
-| kubernetes-containers | startup-failure | server exited (code 1); stderr tail: ool/prompt change notifications). Useful for container deployments and load balancing. Default is false (stateful mode)     |
+| kubernetes-containers | not-applicable | needs a kubeconfig with a cluster context; the isolation deliberately has neither — server exited (code 1); stderr tail: Error: unable to create kubernetes targ |
 | hana-cli | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: eJSONURL (node:internal/modules/package_json_reader:314:9)     at packag |
 | accessibility-scanner | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: Resolve (node:internal/modules/esm/resolve:661:9)     at packageResolve  |
 | keboola | auth-required | server error 0: Client error '401 Unauthorized' for url 'https://connection.keboola.com/v2/storage/tokens/verify' For more information check: https://developer. |

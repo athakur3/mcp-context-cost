@@ -86,7 +86,7 @@ comfyui-mcp,50640,41,measured,community,141905,https://api.npmjs.org/downloads/p
 agent-device,,,startup-failure,community,138188,https://api.npmjs.org/downloads/point/last-week/agent-device (npm weekly),,,,,,,,
 appium-mcp,10267,31,measured,vendor-official,12466,https://api.npmjs.org/downloads/point/last-week/appium-mcp (npm weekly),,,328,false,164,164,9843,v0.2.5
 codebase-memory-mcp,5258,15,measured,community,9040,https://api.npmjs.org/downloads/point/last-week/codebase-memory-mcp (npm weekly),,,205,false,55,150,4776,v0.2.5
-kubernetes-containers,,,startup-failure,community,8556,https://api.npmjs.org/downloads/point/last-week/kubernetes-mcp-server (npm weekly),,,,,,,,
+kubernetes-containers,,,not-applicable,community,8556,https://api.npmjs.org/downloads/point/last-week/kubernetes-mcp-server (npm weekly),,,,,,,,
 obsidian-rest,10173,12,measured,community,5784,https://api.npmjs.org/downloads/point/last-week/obsidian-mcp-server (npm weekly),,,65,false,65,0,5855,v0.2.5
 bitbucket-mcp,6156,47,measured,community,5033,https://api.npmjs.org/downloads/point/last-week/bitbucket-mcp (npm weekly),,,230,false,230,0,6156,v0.2.5
 hana-cli,,,startup-failure,vendor-official,3854,https://api.npmjs.org/downloads/point/last-week/hana-cli (npm weekly),,,,,,,,
