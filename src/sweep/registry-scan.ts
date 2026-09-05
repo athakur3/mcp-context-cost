@@ -445,12 +445,26 @@ export function draftCommand(c: ScanCandidate): { command: string; guessed: bool
  * renames on collision — the scan does not read the file's names, only its
  * packages.
  */
+/**
+ * Segments that name what a package *is* rather than *whose* it is. A scoped
+ * package whose last segment is one of these takes its scope into the name:
+ * on the first real page of drafts, `@trusty-squire/mcp`, `@motiblog/mcp`,
+ * `@starreel/mcp`, `@tuteliq/mcp` and `@stratta/mcp` all drafted as `mcp`,
+ * and `validateServers` rightly refused the lot as duplicates before anything
+ * launched. The scope is the identity; the segment is the category.
+ */
+const GENERIC_SEGMENTS = new Set(['mcp', 'mcp-server', 'server', 'cli', 'mcp-cli']);
+
 export function draftName(pkg: string): string {
-  const base = pkg.startsWith('@') ? pkg.slice(pkg.indexOf('/') + 1) : pkg;
-  return base
-    .toLowerCase()
-    .replace(/[^a-z0-9._-]+/g, '-')
-    .replace(/^[^a-z0-9]+/, '');
+  const slug = (s: string) =>
+    s
+      .toLowerCase()
+      .replace(/[^a-z0-9._-]+/g, '-')
+      .replace(/^[^a-z0-9]+/, '');
+  if (!pkg.startsWith('@')) return slug(pkg);
+  const scope = slug(pkg.slice(1, pkg.indexOf('/')));
+  const segment = slug(pkg.slice(pkg.indexOf('/') + 1));
+  return GENERIC_SEGMENTS.has(segment) ? `${scope}-${segment}` : segment;
 }
 
 /**

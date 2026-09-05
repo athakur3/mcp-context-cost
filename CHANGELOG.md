@@ -95,6 +95,12 @@ what the repository does with a stranger's pull request.
   lookups are marked unmetered with that reason rather than asked a few hundred more times. The
   JSON carries the count and the reason, and the summary line an expansion commit quotes says
   how many went unmetered and why, so the number is honest about what it covers.
+- **A scoped package whose last segment is a generic word drafts with its scope in the name.**
+  `draftName` dropped the scope, so on the first real page of drafts `@trusty-squire/mcp`,
+  `@motiblog/mcp`, `@starreel/mcp`, `@tuteliq/mcp` and `@stratta/mcp` all became `mcp` and
+  `validateServers` refused the set as duplicates before anything launched. `mcp`, `mcp-server`,
+  `server`, `cli` and `mcp-cli` now carry the scope — `trusty-squire-mcp` — while a distinctive
+  segment still stands alone, as the file names things.
 - **`servers.yaml` no longer says of `agent-device` what the record refutes.** Its comment had
   the bare launch printing help and exiting 0, one of 68 subcommands; the only captured record
   is exit 1 with nothing on stderr, and the count was never sourced. The comment says that and

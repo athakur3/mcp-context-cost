@@ -306,6 +306,29 @@ describe('metricSourceFor', () => {
   });
 });
 
+describe('draftName', () => {
+  it('keeps a distinctive segment and drops the scope, as the file names things', () => {
+    expect(draftName('@codescene/codehealth-mcp')).toBe('codehealth-mcp');
+    expect(draftName('execbro')).toBe('execbro');
+    expect(draftName('@Ankimcp/Anki-MCP-Server')).toBe('anki-mcp-server');
+  });
+
+  it('carries the scope when the segment is a word every package uses', () => {
+    // Five packages on one page of drafts were all named `mcp`; the validator
+    // refused them as duplicates before anything launched.
+    for (const [pkg, name] of [
+      ['@trusty-squire/mcp', 'trusty-squire-mcp'],
+      ['@adeu/mcp-server', 'adeu-mcp-server'],
+      ['@clauderecallhq/cli', 'clauderecallhq-cli'],
+      ['@stratta/mcp', 'stratta-mcp'],
+    ] as const) {
+      expect(draftName(pkg), pkg).toBe(name);
+    }
+    const scoped = ['@trusty-squire/mcp', '@motiblog/mcp', '@starreel/mcp', '@tuteliq/mcp', '@stratta/mcp'];
+    expect(new Set(scoped.map(draftName)).size).toBe(scoped.length);
+  });
+});
+
 describe('draftEntry', () => {
   const none = new Set<string>();
   const candidate = (key: string): ScanCandidate => candidatesFrom([records[key]!], none)[0]!;
