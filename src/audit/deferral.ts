@@ -438,9 +438,15 @@ export interface WireToClientRatio {
 }
 
 /**
- * The band as published in this repository's own `results/divergence.json`
- * (claude-opus-5, 2026-08-19, 20 servers). Used when no divergence run was
- * supplied; `--claude` recomputes it from the run it fetched.
+ * The band as published in this repository's own `results/divergence.json`.
+ * Used when no divergence run was supplied; `--claude` recomputes it from the
+ * run it fetched.
+ *
+ * The model, the date and the count deliberately are not restated here. This
+ * docblock said `(claude-opus-5, 2026-08-19, 20 servers)` while the field below
+ * read 23 and the run on disk held 24 — prose beside a number, drifting from
+ * it, which is the same failure this constant's own guard exists to catch one
+ * level down. The fields are the record; `source` dates them.
  */
 export const PUBLISHED_WIRE_TO_CLIENT_RATIO: WireToClientRatio = {
   low: 0.2,
