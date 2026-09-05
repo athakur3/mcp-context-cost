@@ -9,6 +9,14 @@ evidence it rests on, so a reader can check whether it is still true before pick
 Forward-looking only: what already shipped lives in the code and the git history. Items
 marked *(maintainer)* need a decision or an account only the maintainer has.
 
+**Check an item's premise before starting it.** Four of phase 1's eight items were wrong
+about *why* — not about the symptom, which was real every time, but about the mechanism
+behind it. The pattern was exact: every item that quoted the record held up, and every item
+that inferred a cause from a category did not. So the first hour of a phase re-reads the
+records its items name and either confirms the sentence or rewrites it. That hour would have
+saved most of phase 1's rework, and it is the same discipline this project applies to its own
+published numbers — a claim is worth what its evidence is worth, including a claim in here.
+
 ## Where it stands
 
 106 candidates, 83 measured, six published columns (tokens, session start, Claude,
@@ -18,8 +26,9 @@ audience: the adoption reading of
 2026-09-03 found zero projects displaying the badge, and the repository has one star. So the
 phases below do two different kinds of work — keeping the published data honest, which is the
 discipline the project exists for, and getting it in front of the people it is for. Every
-technical item here is worth less than one adopter, and the distribution track says when the
-site is ready for them.
+technical item here is worth less than one adopter — which is why, as of 2026-09-05, the
+distribution track is ordered ahead of the technical ones rather than beside them. Its gate
+was the end of phase 1, and the site no longer contradicts itself.
 
 ## The phases at a glance
 
@@ -27,11 +36,11 @@ site is ready for them.
 |---|---|---|---|
 | **0** | Ship what trunk already holds | **done 2026-09-05** | 0.12.0 on npm, with a dated changelog section |
 | **1** | Every published sentence is established | **done 2026-09-05** | eight items, each held by a test; `slack` and `redis-legacy` re-measured in CI |
+| **∥** | **Distribution** *(maintainer)* | **next — unblocked 2026-09-05** | one of: Marketplace listing, a badge PR merged, a post published |
 | **2** | Sweeps that are cheaper and say more | 2026-09-10 → 2026-09-25 | movements name releases; `anki` declared; Claude column refreshed by the re-sweep; four issues filed |
 | **3** | Others can add servers safely | 2026-09-21 → 2026-10-09 | a stranger's entry is measured read-only before any write-token job runs it |
 | **4** | `audit` reaches the stacks people run | 2026-10-05 → 2026-10-23 | remote entries measured; three more clients, each with a who-pays row |
 | **5** | The data tells its second story | from 2026-10-16 | state-of report #2 with per-tool attribution; rotation length decided on evidence |
-| **∥** | Distribution *(maintainer)* | **unblocked 2026-09-05** | one of: Marketplace listing, a badge PR merged, a post published |
 
 ---
 
@@ -70,12 +79,34 @@ forward:
 
 ---
 
+## Distribution *(maintainer)* — the next thing, unblocked 2026-09-05
+
+Zero adopters after three weeks is the number that matters most in this file, and this
+section sat under phase 5 until 2026-09-05 while saying so. Its gate was the end of phase 1,
+and phase 1 is done, so it is ordered where its own argument puts it: **before phase 2**, not
+beside it. Phases 2 to 5 keep the data honest for an audience that does not exist yet. The action is
+already at `athakur3/mcp-context-cost@v1` and could be listed on the GitHub Marketplace; the
+badge is good news for most servers it would land on (`chrome-devtools` at 5,717 tokens on
+3.3M installs a week, `postgres` at 32); the state-of report is written and dated. Marketplace
+listing, awesome-mcp entries, badge pull requests to measured servers, and one post are each
+the maintainer's move, and any one of them outweighs the rest of this file. Phase 1 closed on
+2026-09-05, which was the gate: the site no longer contradicts itself, so the moment is now.
+
+---
+
 ## Phase 2 — Sweeps that are cheaper and say more
 
 **Goal.** A movement names the release that caused it, and a harness limitation never costs
 a retry.
 
 **Scope.**
+- [ ] **A schema test over `servers.yaml` in CI** — moved here from phase 3 on 2026-09-05.
+      Every field present, names unique, `remote` xor `command`, `notApplicable` carrying both
+      `reason` and `evidence`, `deprecated` carrying `version`, `source` and `readOn`. The
+      file now holds three optional structured fields that nothing validates at load, phase 1
+      added one of them, and the next item adds a fourth — a schema test written *after*
+      `requires` lands is a schema test written too late. A day's work, and it guards the rest
+      of this phase.
 - [ ] **Name the release a movement came from.** Every `measurement.json` records
       `serverVersion` from `initialize`; `history.csv` and `tool-vectors.json` do not, so
       `regressions.md` says "a real upstream release" and cannot say which. Carry the version
@@ -90,7 +121,9 @@ a retry.
       `grafana` is **not** a second case for this, as of 2026-09-05: its record says the
       container served SSE on `0.0.0.0:8000` while this harness waited on stdio, so its six
       minutes a cycle are a transport mismatch in our own launch command and want a command
-      fix, not a probe. `anki` alone is about eight minutes a cycle. A probe
+      fix, not a probe. `anki` alone is **twelve** minutes a cycle (240s budget then 480s on
+      the doubled retry; `grafana`'s 180/360 was the other nine), so the exit below is
+      unchanged. A probe
       also closes the hole the 0.12.0 changelog documents: corroboration is a substring test
       against the truncated evidence, so a declared entry whose output grows until its evidence
       line falls in the elided middle reverts to `startup-failure` on its own.
@@ -142,9 +175,8 @@ they need no code.
 holding `contents: write` ever runs its launch command.
 
 **Scope.**
-- [ ] **A schema test over `servers.yaml` in CI**: every field present, names unique, `remote`
-      xor `command`, `notApplicable` carrying both `reason` and `evidence`, `requires` a
-      well-formed address.
+- [ ] *(The schema test moved to phase 2 on 2026-09-05: phase 2 adds a fourth structured
+      entry field, and the check has to exist before the field does.)*
 - [ ] **A `pull_request` job with read-only permissions** that diffs `servers.yaml` against
       the base branch, measures only the entries the PR added, and prints the number in the
       check log. It pushes nothing; the rotation publishes it later under its own rules.
@@ -219,7 +251,10 @@ the runner allows.
 - [ ] **State-of report #2.** Tool vectors accrue from 2026-09-04 and the rotation is six
       weeks, so from about **2026-10-16** both sides of nearly every movement are on record.
       The September edition could say which servers moved; this one can say which tools, and
-      by phase 2 which releases.
+      by phase 2 which releases. It can also say what held: as of 2026-09-05 the movement
+      report separates 64 confirmed-unchanged costs from the 2 with nothing to compare, and
+      "most servers do not move, and the ones that do move up" is a finding the first edition
+      could not state.
 - [ ] **A shorter rotation, decided on evidence.** A movement's window can be six weeks wide,
       and a window that wide describes the schedule rather than the server (`resweep.yml` says
       as much at its top). Dispatch `shards=3` once, time it against the 120-minute cap, and
@@ -236,16 +271,6 @@ with the timing that chose it.
 whatever anyone does.
 
 ---
-
-## Distribution track *(maintainer)* — parallel, any time after phase 1
-
-Zero adopters after three weeks is the number that matters most in this file. The action is
-already at `athakur3/mcp-context-cost@v1` and could be listed on the GitHub Marketplace; the
-badge is good news for most servers it would land on (`chrome-devtools` at 5,717 tokens on
-3.3M installs a week, `postgres` at 32); the state-of report is written and dated. Marketplace
-listing, awesome-mcp entries, badge pull requests to measured servers, and one post are each
-the maintainer's move, and any one of them outweighs the rest of this file. Phase 1 closed on
-2026-09-05, which was the gate: the site no longer contradicts itself, so the moment is now.
 
 ## Decisions that are the maintainer's, not bugs
 
