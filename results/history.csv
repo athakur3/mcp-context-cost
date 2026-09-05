@@ -286,3 +286,4 @@ date,server,tokens,toolCount,status,isolation,version
 2026-09-05,anki,20037,50,measured,docker,0.25.0
 2026-09-05,azure,15239,68,measured,docker,3.0.0-beta.41
 2026-09-05,grafana,16774,65,measured,docker,(devel)
+2026-09-05,memory,2378,9,measured,docker,0.6.3

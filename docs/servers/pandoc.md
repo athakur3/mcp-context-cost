@@ -22,6 +22,18 @@
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
 
+## What this costs on Claude
+
+Measured 2026-09-05 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
+
+| | tokens | |
+|---|---:|---|
+| o200k, full capture | 1,425 | the badge number — every byte `tools/list` returned |
+| o200k, Anthropic fields only | 1,425 | 0.0% of the capture is MCP-only metadata |
+| **Claude, same fields** | **2,628** | 1.84× the badge number |
+
+An Anthropic tool definition carries `name`, `description`, and `input_schema` and nothing else, so `title`, `annotations`, `outputSchema`, `execution`, and `icons` are dropped before the request — that is the second row. The third row is the same tools counted by Anthropic, which is larger than the second because Anthropic's tokenizer is denser on this content than o200k_base *and* the API adds its own framing (at most 328 tokens of it fixed, measured against a single minimal tool). The two effects run in opposite directions, which is why the Claude number is not a fixed multiple of the badge.
+
 ## Over time
 
 | date | tokens | tools | release | measured in | change |

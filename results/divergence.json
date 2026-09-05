@@ -12,6 +12,34 @@
       "toolCount": 33,
       "capturedSha256": "09ec3a887ad0244e50e5f3ae1ae117d1dc3979ba5e96be187961d55b5022c8fa"
     },
+    "agent-device": {
+      "o200kFull": 53669,
+      "o200kMapped": 40105,
+      "claudeDelta": 75686,
+      "toolCount": 57,
+      "capturedSha256": "61a100d3f94ba6e81eedcbd151cfff7ce5e6acd36906571c7035e0b09a681dca"
+    },
+    "agentphone": {
+      "o200kFull": 6134,
+      "o200kMapped": 5582,
+      "claudeDelta": 9982,
+      "toolCount": 28,
+      "capturedSha256": "eec89a7ec71ac3e9e65fb8477bf594b4ce9af01b572bcc5d7e9fbbcc85f4e813"
+    },
+    "airbnb": {
+      "o200kFull": 486,
+      "o200kMapped": 486,
+      "claudeDelta": 1169,
+      "toolCount": 2,
+      "capturedSha256": "79c3109b4fa4e4735ba1071cacbd98948c6aba20b70c9a4295a78e84850a81e0"
+    },
+    "airtable": {
+      "o200kFull": 4186,
+      "o200kMapped": 2531,
+      "claudeDelta": 4555,
+      "toolCount": 16,
+      "capturedSha256": "5f90d662e26a77e01125999b97db0bf9204bb92bd0fc7297a28495986d80ec30"
+    },
     "anki": {
       "o200kFull": 20037,
       "o200kMapped": 9357,
@@ -20,11 +48,32 @@
       "capturedSha256": "ff5c37e3ceea7d5f2514dc0b15b4443a9c6b10ce53fd9328f28be21759c69276"
     },
     "apify": {
-      "o200kFull": 10426,
-      "o200kMapped": 4797,
-      "claudeDelta": 8313,
+      "o200kFull": 10452,
+      "o200kMapped": 4793,
+      "claudeDelta": 8297,
       "toolCount": 10,
-      "capturedSha256": "45e69bb7d3ab57903ca84555f5bb3851cbc806ae35ce9398eb88eea7f587ec91"
+      "capturedSha256": "4dd4565165c7066d8e8ef666f79cd8b323bad3d7f66b4d34fbe769f07e979453"
+    },
+    "appium-mcp": {
+      "o200kFull": 10267,
+      "o200kMapped": 9798,
+      "claudeDelta": 17001,
+      "toolCount": 31,
+      "capturedSha256": "d024ca5b97d52d5442da395ed92d1d107b6728db57cf1295bb87c5d3624c0e53"
+    },
+    "arxiv": {
+      "o200kFull": 3960,
+      "o200kMapped": 3699,
+      "claudeDelta": 6622,
+      "toolCount": 19,
+      "capturedSha256": "2ee361441efca1de3e296a572bbe2d20fa88d5565c9d4f54a8a1523ee7f54251"
+    },
+    "aws-documentation": {
+      "o200kFull": 5045,
+      "o200kMapped": 3380,
+      "claudeDelta": 5749,
+      "toolCount": 5,
+      "capturedSha256": "096790f5b6a85d5faf9b4a09edbeddc34de23ed3c26c195bee05c42fb7f8b6a7"
     },
     "azure": {
       "o200kFull": 15239,
@@ -40,19 +89,61 @@
       "toolCount": 23,
       "capturedSha256": "0ba9e9185e3d5c167bbaf0dcfeb499f27020c307f1387a3b85374f849f0a38a7"
     },
+    "bitbucket-mcp": {
+      "o200kFull": 6156,
+      "o200kMapped": 6156,
+      "claudeDelta": 12210,
+      "toolCount": 47,
+      "capturedSha256": "e131b1d46e30c0d05f07995aa167fa323ec1003719d861dbe27c82c94ad803cf"
+    },
     "blender": {
-      "o200kFull": 5462,
-      "o200kMapped": 4799,
-      "claudeDelta": 8409,
-      "toolCount": 25,
-      "capturedSha256": "14c1a93ca0b59e6b394bae642a6eba89f01c8c953076c19ed8ae16c6a0db6e09"
+      "o200kFull": 6928,
+      "o200kMapped": 6160,
+      "claudeDelta": 10576,
+      "toolCount": 28,
+      "capturedSha256": "5d8045af01c1eaf81a5931cfc5aa814fe0928f66cf1e176962bd3a97aff0a62f"
     },
     "brave-search": {
-      "o200kFull": 25456,
-      "o200kMapped": 8262,
-      "claudeDelta": 13746,
+      "o200kFull": 25487,
+      "o200kMapped": 8278,
+      "claudeDelta": 13762,
       "toolCount": 8,
-      "capturedSha256": "e5a8f43437056e6e89bb8f5167f5b8d471ba42de915ede953ce5968a84471582"
+      "capturedSha256": "ec3c4f85b22d1e4866faeb04af7038fc28568dc4a262416cea7ce77c63b2b015"
+    },
+    "brave-search-legacy": {
+      "o200kFull": 319,
+      "o200kMapped": 319,
+      "claudeDelta": 800,
+      "toolCount": 2,
+      "capturedSha256": "727577fbcd5fe4e811453a32d9c9852ea877c90b8acf56e0cdf5eda15e97d803"
+    },
+    "bright-data": {
+      "o200kFull": 978,
+      "o200kMapped": 879,
+      "claudeDelta": 1859,
+      "toolCount": 5,
+      "capturedSha256": "bd26660364200a7866906bbfecc185e41ea6a42e43ed5d6380b1c3b77a699eae"
+    },
+    "browserbase": {
+      "o200kFull": 364,
+      "o200kMapped": 310,
+      "claudeDelta": 869,
+      "toolCount": 6,
+      "capturedSha256": "1dc53461369d7cb64ea8151f33283db371951cf44289471f6156e35cd1ae28bb"
+    },
+    "chroma": {
+      "o200kFull": 2837,
+      "o200kMapped": 2837,
+      "claudeDelta": 5222,
+      "toolCount": 13,
+      "capturedSha256": "eb0b416a1586989ce3f646259f9f96d0ae6d7b62342aa30393b10ecb7c03c707"
+    },
+    "chrome-devtools": {
+      "o200kFull": 5717,
+      "o200kMapped": 5100,
+      "claudeDelta": 9215,
+      "toolCount": 29,
+      "capturedSha256": "151a59215c20049ea5934809670996c1d73977d468a65fa6b5624c2e24ca3ef4"
     },
     "circleci": {
       "o200kFull": 11912,
@@ -61,12 +152,124 @@
       "toolCount": 13,
       "capturedSha256": "f4d995111363bc9a5c220871fb9e4c2d81372ef647572f5f4f19cb5d4bd08bbe"
     },
+    "clickhouse": {
+      "o200kFull": 632,
+      "o200kMapped": 495,
+      "claudeDelta": 1182,
+      "toolCount": 3,
+      "capturedSha256": "6f42fcefaf49e720fe8ec5acf8dafc7ae6065bf541957572b6a6abbe61f111d4"
+    },
+    "clinicaltrialsgov": {
+      "o200kFull": 5134,
+      "o200kMapped": 2879,
+      "claudeDelta": 5540,
+      "toolCount": 7,
+      "capturedSha256": "acdc9b99e581c7493a98e8c0fac919bbe384ac3205227c15891b94d6ddcf4825"
+    },
+    "cloudflare-docs": {
+      "o200kFull": 422,
+      "o200kMapped": 252,
+      "claudeDelta": 756,
+      "toolCount": 2,
+      "capturedSha256": "a65649ac29928ffde9e8bf8796482b5aaeb17e79d02ea2f3b8b96f11ac32b604"
+    },
+    "codebase-memory-mcp": {
+      "o200kFull": 5258,
+      "o200kMapped": 4774,
+      "claudeDelta": 8585,
+      "toolCount": 15,
+      "capturedSha256": "01a1bd0f450ccf86b0bf36b2b63749c70dc4add7b0a4d9621ce69e29c9db7b27"
+    },
+    "comfyui-mcp": {
+      "o200kFull": 50640,
+      "o200kMapped": 50249,
+      "claudeDelta": 83957,
+      "toolCount": 41,
+      "capturedSha256": "af7eaa380b99a67fc49ab075c762cd2686f108acc4ba21d001ce922554f7510a"
+    },
+    "context7": {
+      "o200kFull": 1052,
+      "o200kMapped": 985,
+      "claudeDelta": 1883,
+      "toolCount": 2,
+      "capturedSha256": "699d8b33d6d2d90ce7deb777994bb408e1e07bb08fa997042b7cce19e6c1ecec"
+    },
+    "deepwiki": {
+      "o200kFull": 359,
+      "o200kMapped": 233,
+      "claudeDelta": 707,
+      "toolCount": 3,
+      "capturedSha256": "3735162916165ab23696fc91fbf626bd99a36ddcd1e15746e91e16c7e336b379"
+    },
     "desktop-commander": {
-      "o200kFull": 11836,
-      "o200kMapped": 11056,
-      "claudeDelta": 19305,
+      "o200kFull": 11834,
+      "o200kMapped": 11054,
+      "claudeDelta": 19303,
       "toolCount": 26,
-      "capturedSha256": "8623f9de377963b97d6e8294e16ac107c445e29b3ad97fbe78f18c1971dde6f5"
+      "capturedSha256": "2c373ba271649e86628d49fbfa80b9e5f152bdc3cb7c65ec8f40c309eb9c8822"
+    },
+    "duckduckgo": {
+      "o200kFull": 724,
+      "o200kMapped": 661,
+      "claudeDelta": 1322,
+      "toolCount": 2,
+      "capturedSha256": "61f82494284ccb413e9cb213ed93d7b79f43769229713b2748056a7f1018db14"
+    },
+    "elasticsearch": {
+      "o200kFull": 374,
+      "o200kMapped": 374,
+      "claudeDelta": 987,
+      "toolCount": 4,
+      "capturedSha256": "76a005f840c738f5788e7b5801fdc12194713fce1ed435ad500f891a2b2dd13c"
+    },
+    "emailmd": {
+      "o200kFull": 585,
+      "o200kMapped": 542,
+      "claudeDelta": 1255,
+      "toolCount": 3,
+      "capturedSha256": "991fa59036ab1d4a4c1270ba14025668cd37bad41d9a804544a5e6aa23564365"
+    },
+    "everything": {
+      "o200kFull": 1708,
+      "o200kMapped": 1082,
+      "claudeDelta": 2248,
+      "toolCount": 13,
+      "capturedSha256": "e61b2e1761ff2f931d030faf1dc192ca70247e52ff31d8633431b69ba6e00b7e"
+    },
+    "exa": {
+      "o200kFull": 486,
+      "o200kMapped": 414,
+      "claudeDelta": 968,
+      "toolCount": 2,
+      "capturedSha256": "8c3c954e5a791807875357bc783cc67385bd7bb53ee31b659e83015b36ed99a9"
+    },
+    "excel": {
+      "o200kFull": 4266,
+      "o200kMapped": 3080,
+      "claudeDelta": 6338,
+      "toolCount": 25,
+      "capturedSha256": "cf374a8866847f36b743f5b59176d3908466f40c2d5d9b3cb0462ea47af40999"
+    },
+    "fetch": {
+      "o200kFull": 238,
+      "o200kMapped": 238,
+      "claudeDelta": 700,
+      "toolCount": 1,
+      "capturedSha256": "5d0a1b56f6c08786d7d764b6f4376fba201015e5a5995b6b39c14350bd4aeeb3"
+    },
+    "figma-context": {
+      "o200kFull": 946,
+      "o200kMapped": 898,
+      "claudeDelta": 1773,
+      "toolCount": 2,
+      "capturedSha256": "c1409e496bb0262b3dd4d78de8da42d1b79d5704fcf693e1455c5b3dff0f2604"
+    },
+    "filesystem": {
+      "o200kFull": 2823,
+      "o200kMapped": 1665,
+      "claudeDelta": 3115,
+      "toolCount": 14,
+      "capturedSha256": "245b04832111268c3fcc72543af89fb2f8c109d8306c1b5b8c49dc45977e41e1"
     },
     "firecrawl": {
       "o200kFull": 9561,
@@ -75,12 +278,55 @@
       "toolCount": 27,
       "capturedSha256": "3b7694bcedabac9706eba0c497c1fb4591121db0fd25e4e87e4802a001e34cd6"
     },
+    "git": {
+      "o200kFull": 1455,
+      "o200kMapped": 1119,
+      "claudeDelta": 2382,
+      "toolCount": 12,
+      "capturedSha256": "9710fb8f79f50348c138ee513e344f7fc9ac0e912a728d8aeda847cd04ed64f1"
+    },
+    "githits": {
+      "o200kFull": 12833,
+      "o200kMapped": 12384,
+      "claudeDelta": 20689,
+      "toolCount": 16,
+      "capturedSha256": "1de4342682e058fb6395fc1a42dbcb9fa87838dc26852ba6810e57cc388ab81e"
+    },
     "github": {
-      "o200kFull": 54422,
-      "o200kMapped": 10535,
-      "claudeDelta": 18406,
+      "o200kFull": 54622,
+      "o200kMapped": 10735,
+      "claudeDelta": 18728,
       "toolCount": 44,
-      "capturedSha256": "086879383bcdc68ea1b960a141ab1b41cb2a203321c4440553c033b5e9a5344d"
+      "capturedSha256": "40d73048f0112cd8282ee61d586632738f6746678ece24f8f61f4dcc4b8b2135"
+    },
+    "github-legacy": {
+      "o200kFull": 3548,
+      "o200kMapped": 3548,
+      "claudeDelta": 6662,
+      "toolCount": 26,
+      "capturedSha256": "e0194003d2ddaf668a23e0570cdbcf8c142c3314d3dd811a50ae99e5afd79ae3"
+    },
+    "gitlab": {
+      "o200kFull": 336,
+      "o200kMapped": 336,
+      "claudeDelta": 0,
+      "toolCount": 9,
+      "capturedSha256": "d51fb022687ee403f9710c9fae31ac91dbc796f5c52a3fcdbe0a91c387aa9365",
+      "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"tools.0.custom.input_schema.type: Field required\"},\"request_id\":\"req_011CekdKJ8tZoQV4TCHi6etc\"}"
+    },
+    "google-maps": {
+      "o200kFull": 549,
+      "o200kMapped": 549,
+      "claudeDelta": 1332,
+      "toolCount": 7,
+      "capturedSha256": "a88e204db09aa56954e3e041d6a9814aee9ac888fdfc7d5cb47aec1877441986"
+    },
+    "google-surf": {
+      "o200kFull": 10948,
+      "o200kMapped": 6412,
+      "claudeDelta": 11232,
+      "toolCount": 7,
+      "capturedSha256": "64ca81a34311e1318d731b8fbf14e5f1759567e4a7bdaabf43f3553ee732ee41"
     },
     "grafana": {
       "o200kFull": 16774,
@@ -96,6 +342,13 @@
       "toolCount": 21,
       "capturedSha256": "3389dd469cfc2f46f06e4be24ba13ff95595ee30fd8dd62df81809a95daf3791"
     },
+    "huggingface": {
+      "o200kFull": 4724,
+      "o200kMapped": 1604,
+      "claudeDelta": 3043,
+      "toolCount": 4,
+      "capturedSha256": "a2e48e88545d92665679b878c9e66f4f902af2a11bccafc29cc6e627def941ae"
+    },
     "kubernetes": {
       "o200kFull": 5268,
       "o200kMapped": 5089,
@@ -103,12 +356,33 @@
       "toolCount": 23,
       "capturedSha256": "20126671be70fdb77743a595f195002612b03c889b348447ed9ff4d7057f8c1c"
     },
+    "markitdown": {
+      "o200kFull": 64,
+      "o200kMapped": 64,
+      "claudeDelta": 404,
+      "toolCount": 1,
+      "capturedSha256": "d708fc0ae4f3fb818d01cc3d4da0b74c2e5591a7982735d6200b3d56ab74d66b"
+    },
     "mcp-atlassian": {
       "o200kFull": 17311,
       "o200kMapped": 12823,
       "claudeDelta": 22234,
       "toolCount": 63,
-      "capturedSha256": "fa9df2701a0250cd546422d5d629d4af411b5c359e92bd710fc7aa4ada7ccc4e"
+      "capturedSha256": "7e46d900cd08847d2710e0e0a1ec66d6f3d415c01ca2e8e6c5a9e357a9d5b4c1"
+    },
+    "memory": {
+      "o200kFull": 2378,
+      "o200kMapped": 901,
+      "claudeDelta": 1880,
+      "toolCount": 9,
+      "capturedSha256": "d028274f76dc9aa2e622ae02a17ce313aa65d7b5935254ca53889d4094238abb"
+    },
+    "microsoft-learn": {
+      "o200kFull": 972,
+      "o200kMapped": 726,
+      "claudeDelta": 1612,
+      "toolCount": 3,
+      "capturedSha256": "9e3f4a65f0dc136a6ffa5ed00f95785ec561e9a78413888da160e44ceb139346"
     },
     "mongodb": {
       "o200kFull": 7926,
@@ -117,12 +391,75 @@
       "toolCount": 27,
       "capturedSha256": "c771e7295dc27668861b2a251566196a3e30b5b3ac282f7736aab96891bff300"
     },
+    "mysql": {
+      "o200kFull": 393,
+      "o200kMapped": 334,
+      "claudeDelta": 868,
+      "toolCount": 3,
+      "capturedSha256": "48f53cd914e3137feabfb3087abdb3bb54df46907d605a4cf97fac272bba2afb"
+    },
+    "n8n-mcp": {
+      "o200kFull": 2636,
+      "o200kMapped": 2022,
+      "claudeDelta": 3902,
+      "toolCount": 7,
+      "capturedSha256": "efc31b255c09a3f364367c1450285b1e107d999faf01d4c9c37711aa12410948"
+    },
+    "neo4j-cypher": {
+      "o200kFull": 523,
+      "o200kMapped": 354,
+      "claudeDelta": 884,
+      "toolCount": 3,
+      "capturedSha256": "2e66ec7b2ea28f25f5b986a65cc950c06febad089b2c3033be49e15548f9c432"
+    },
+    "netlify": {
+      "o200kFull": 2831,
+      "o200kMapped": 2678,
+      "claudeDelta": 5229,
+      "toolCount": 9,
+      "capturedSha256": "be8578ef35da6e632f7cee04f664676c4895a1320868eceec1150a55f6c21440"
+    },
     "notion": {
       "o200kFull": 17500,
       "o200kMapped": 17163,
       "claudeDelta": 33560,
       "toolCount": 24,
       "capturedSha256": "f9544e7c84986529d5bc4a1c9357bbbb9c2f458133904075319f8fec7d716da9"
+    },
+    "obsidian": {
+      "o200kFull": 2062,
+      "o200kMapped": 2062,
+      "claudeDelta": 3861,
+      "toolCount": 15,
+      "capturedSha256": "6064f85a43ae17b2da72d1b87fd9435879e8b42bc320e1347e382f5c8a61b499"
+    },
+    "obsidian-rest": {
+      "o200kFull": 10173,
+      "o200kMapped": 5878,
+      "claudeDelta": 10172,
+      "toolCount": 12,
+      "capturedSha256": "85d23a7fa63923641625701d0c5fff39249eb8b379c3c1a7a444fef6437d6bc4"
+    },
+    "octocode": {
+      "o200kFull": 13552,
+      "o200kMapped": 12967,
+      "claudeDelta": 23343,
+      "toolCount": 14,
+      "capturedSha256": "17bae5bf5a76df127b4ddba609724a2a52b86400700daa315562e18f1082304f"
+    },
+    "pandoc": {
+      "o200kFull": 1425,
+      "o200kMapped": 1425,
+      "claudeDelta": 2628,
+      "toolCount": 1,
+      "capturedSha256": "4d8f9de25d7aa74f0fb5e0c828a904d74b3934e62cb1032bc6cf0fada1f0d952"
+    },
+    "perplexity": {
+      "o200kFull": 133,
+      "o200kMapped": 133,
+      "claudeDelta": 503,
+      "toolCount": 1,
+      "capturedSha256": "bf3f548ecca0308f30e544a03d3a36778dbbfba3a5ed12dab6d981dcbcc7a73c"
     },
     "pinecone": {
       "o200kFull": 5903,
@@ -131,12 +468,54 @@
       "toolCount": 9,
       "capturedSha256": "cc8ffaadb37615f11747b0a1eafd8541cfb2f31064adcd4973860f8f03bab377"
     },
+    "playwright": {
+      "o200kFull": 4024,
+      "o200kMapped": 3402,
+      "claudeDelta": 6172,
+      "toolCount": 24,
+      "capturedSha256": "5d5d92a7c727ef75bd9a70f076039dbdbfd331c56f022915c2e89b76f7fc88f0"
+    },
+    "playwright-community": {
+      "o200kFull": 2920,
+      "o200kMapped": 2920,
+      "claudeDelta": 5688,
+      "toolCount": 33,
+      "capturedSha256": "4af7a9d131b4506471d83cc2d014ffc39b784a16ff181cce05ae2d9f26dbe9ff"
+    },
+    "postgres": {
+      "o200kFull": 32,
+      "o200kMapped": 32,
+      "claudeDelta": 348,
+      "toolCount": 1,
+      "capturedSha256": "bbdb8dd9b6d3cd9b855597127ad5268e3fa4e3355e616b3dc102f4ed12cca454"
+    },
     "postgres-mcp": {
       "o200kFull": 8632,
       "o200kMapped": 1178,
       "claudeDelta": 2381,
       "toolCount": 9,
       "capturedSha256": "9bb1e5d26dd377de9dbfac88ffe77663a1169cddf66c6b1f52f57d3a740b0e54"
+    },
+    "pulumi": {
+      "o200kFull": 2768,
+      "o200kMapped": 2660,
+      "claudeDelta": 4671,
+      "toolCount": 12,
+      "capturedSha256": "9eb845dee6bb274d3b93ba0ea67276b2829cb98cbe7ed01079eba7fb8263fa26"
+    },
+    "puppeteer": {
+      "o200kFull": 540,
+      "o200kMapped": 540,
+      "claudeDelta": 1267,
+      "toolCount": 7,
+      "capturedSha256": "d9e46f0316917c1d140ffeebceefd4d31c16188780ac278baf347ff536015dd0"
+    },
+    "qdrant": {
+      "o200kFull": 188,
+      "o200kMapped": 188,
+      "claudeDelta": 607,
+      "toolCount": 2,
+      "capturedSha256": "2bd5a36e7293bab6b8e62c28b7d210c5261f4b80331b176c1df6dc100a7e6fc4"
     },
     "redis": {
       "o200kFull": 9246,
@@ -145,12 +524,26 @@
       "toolCount": 53,
       "capturedSha256": "92a01e079c4436e651586a0fa4117e21204dc481de169763e621253280225570"
     },
+    "searxng": {
+      "o200kFull": 1537,
+      "o200kMapped": 1480,
+      "claudeDelta": 2726,
+      "toolCount": 4,
+      "capturedSha256": "277906d8ed722cfce33b345e34effdc0a2c37c8effc4fc85c9f5d13888d6ea7f"
+    },
     "sentry": {
-      "o200kFull": 6455,
-      "o200kMapped": 6051,
-      "claudeDelta": 10463,
+      "o200kFull": 6086,
+      "o200kMapped": 5442,
+      "claudeDelta": 9481,
       "toolCount": 9,
-      "capturedSha256": "b56928d7394324ec80ddda1377e382b535fd3abc7b488cda6b4a52e4a01b410b"
+      "capturedSha256": "11ef5fbfa5440a29377fedcd23abb764cf640ba03762911c8bfcd5b11a53aebd"
+    },
+    "sequential-thinking": {
+      "o200kFull": 1003,
+      "o200kMapped": 865,
+      "claudeDelta": 1804,
+      "toolCount": 1,
+      "capturedSha256": "55e4c41338722ccc0672def6b5462f1dee664bf168cfd01172c4e96d344a1c2e"
     },
     "serena": {
       "o200kFull": 8204,
@@ -160,11 +553,60 @@
       "capturedSha256": "7d876a84707e0689df306366dc7c3225ae49762ca045d7604c7c9a2b20dfbc3c"
     },
     "shopify-dev": {
-      "o200kFull": 5624,
-      "o200kMapped": 5584,
-      "claudeDelta": 9805,
+      "o200kFull": 6841,
+      "o200kMapped": 6793,
+      "claudeDelta": 11831,
+      "toolCount": 6,
+      "capturedSha256": "6817cd262c23cdfbac2ac9e04b037d307d7d21907f9028707ae6dbac3f0a284d"
+    },
+    "slack-legacy": {
+      "o200kFull": 681,
+      "o200kMapped": 681,
+      "claudeDelta": 1483,
+      "toolCount": 8,
+      "capturedSha256": "5939f969618ff709e86ff0599b80cc8f418db8904b4304a6eeb82a25f30ccd81"
+    },
+    "sqlite": {
+      "o200kFull": 268,
+      "o200kMapped": 268,
+      "claudeDelta": 806,
+      "toolCount": 6,
+      "capturedSha256": "d432983abc546eac2725c9db1a07f5f8dad0e6cbfb12f925c1d4fb61743d1c6b"
+    },
+    "ssh-manager": {
+      "o200kFull": 8446,
+      "o200kMapped": 8149,
+      "claudeDelta": 14196,
+      "toolCount": 37,
+      "capturedSha256": "22ce75f27b9a8bf50f1cb77824b5769d6041d1f3c25032916b5201b1be31f5d7"
+    },
+    "supabase": {
+      "o200kFull": 5007,
+      "o200kMapped": 4062,
+      "claudeDelta": 7323,
+      "toolCount": 29,
+      "capturedSha256": "8ad33a05f12e8c0f535683508468dd970df8715f01fc82235b2b039718aeebf7"
+    },
+    "tavily": {
+      "o200kFull": 1653,
+      "o200kMapped": 1653,
+      "claudeDelta": 3096,
       "toolCount": 5,
-      "capturedSha256": "6c863ee06d8d4d8fb2ade2e07673c087b75cc1482b3e521e9c9375151860c659"
+      "capturedSha256": "b2bcd45339fe42caa0f55e5ca1196091b2dcda4b868fedd209177b54f2ef51ef"
+    },
+    "terraform": {
+      "o200kFull": 2061,
+      "o200kMapped": 1718,
+      "claudeDelta": 3248,
+      "toolCount": 9,
+      "capturedSha256": "7205f4d29a1a97d6fa9d13d2e9b3c2ccc5e8dda8539cf836d5895380c56c4b3b"
+    },
+    "time": {
+      "o200kFull": 293,
+      "o200kMapped": 239,
+      "claudeDelta": 703,
+      "toolCount": 2,
+      "capturedSha256": "7c6ff08840620894a66a103e02a8eb315013dd0a7d7c6cfb59b0fbe51f8a5d87"
     },
     "xcodebuildmcp": {
       "o200kFull": 26594,

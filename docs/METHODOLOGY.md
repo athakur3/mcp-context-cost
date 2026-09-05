@@ -203,15 +203,15 @@ opposite directions, and a single ratio hides the larger one:
 
 1. **Field selection.** `title`, `annotations`, `outputSchema`, `execution`, and `icons` are
    real bytes the server ships and the canonical form counts them — but an Anthropic `tools`
-   array has nowhere to put them. Across the measured set this removes between 1.3% and
+   array has nowhere to put them. Across the measured set this removes between 0.0% and
    **89.9%** of the payload (xcodebuildmcp: 26,594 → 2,676 tokens).
 2. **Tokenizer and framing.** Anthropic's tokenizer is denser on schema text than o200k_base,
    and the API adds its own framing around the tools channel. A single minimal tool costs
    328 tokens more than no tools at all, which is an upper bound on the fixed part.
 
 Because the effects can cancel or compound, the Claude number is **not** a fixed multiple of
-the badge — it ranged from 0.20× to 1.92× across the 24 servers in the run, and it reorders the leaderboard:
-github is the heaviest server on o200k and notion is the heaviest on Claude.
+the badge — it ranged from 0.20× to 10.88× across the 87 servers in the run, and it reorders the leaderboard:
+github is the heaviest server on o200k and comfyui-mcp is the heaviest on Claude.
 
 **What it is not.** It is not any client's context bill either. `count_tokens` is Anthropic's
 accounting for tools sent through the API's `tools` parameter; a client that re-renders
@@ -334,8 +334,8 @@ exists for the threshold and nowhere else.
 **The threshold comparison is a range, not a point.** Only `auto`/`auto:N` makes size decide
 anything. There the audit's number and the threshold are counted in different units — wire
 bytes under `o200k_base` here, versus what the client sends to the API — so the stack is
-converted through the published [Claude divergence](#claude-divergence) band (0.20×–1.92×
-across 24 servers), taking the exact published count wherever a server's capture still
+converted through the published [Claude divergence](#claude-divergence) band (0.20×–10.88×
+across 87 servers), taking the exact published count wherever a server's capture still
 matches, and the verdict is `above` only when the low end clears the threshold and `below`
 only when the high end does not.
 

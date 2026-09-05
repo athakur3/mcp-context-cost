@@ -77,7 +77,7 @@ The **release** column is what the two servers reported at `initialize`, on the 
 | [filesystem](../docs/servers/filesystem.md) | 2026-08-16 → 2026-09-04 | 2,823 | 14 | 3 |
 | [pulumi](../docs/servers/pulumi.md) | 2026-08-16 → 2026-09-04 | 2,768 | 12 | 5 |
 | [n8n-mcp](../docs/servers/n8n-mcp.md) | 2026-08-16 → 2026-09-04 | 2,636 | 7 | 3 |
-| [memory](../docs/servers/memory.md) | 2026-08-16 → 2026-09-04 | 2,378 | 9 | 8 |
+| [memory](../docs/servers/memory.md) | 2026-08-16 → 2026-09-05 | 2,378 | 9 | 9 |
 | [terraform](../docs/servers/terraform.md) | 2026-08-16 → 2026-09-04 | 2,061 | 9 | 5 |
 | [everything](../docs/servers/everything.md) | 2026-08-16 → 2026-09-04 | 1,708 | 13 | 4 |
 | [tavily](../docs/servers/tavily.md) | 2026-08-16 → 2026-09-04 | 1,653 | 5 | 4 |

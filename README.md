@@ -126,7 +126,7 @@ costs **more** than loading the definitions would.
 
 Three things the report will not do: it will not convert between units silently (in
 threshold mode the stack is compared as a range, because the audit counts wire bytes and the
-threshold is counted in what the client sends to the API — measured at 0.20×–1.92× across 24
+threshold is counted in what the client sends to the API — measured at 0.20×–10.88× across 87
 servers); it will not claim a posture the machine did not state readably, which is four
 refusals and not one — when two places set the same variable to different values, when a
 settings file exists and cannot be read, when the place that would decide sets the variable
@@ -204,8 +204,8 @@ INCREASE FAIL:
 Add `--claude` to annotate each server with its Anthropic-request cost from the published
 [Claude divergence](docs/METHODOLOGY.md#claude-divergence) run — an exact number when the
 published capture hash matches what you have installed, `—` (silence, not a stale guess)
-when it doesn't. The run holds 24 rows — the measured servers it covered when it last ran —
-and [results/leaderboard.md](results/leaderboard.md) prints a claude number for the 16 that
+when it doesn't. The run holds 87 rows — the measured servers it covered when it last ran —
+and [results/leaderboard.md](results/leaderboard.md) prints a claude number for the 86 that
 still match today and silence for the rest. Most installs will show a mix:
 
 ```
@@ -299,7 +299,7 @@ now measured against a pinned model and published beside the badge, and they do 
 
 | server | badge (o200k) | Claude (`claude-opus-5`) | |
 |---|---:|---:|---|
-| github | 54,622 | **—** | most of the capture is `annotations`/`outputSchema` metadata Claude never sees |
+| github | 54,622 | **18,728** | most of the capture is `annotations`/`outputSchema` metadata Claude never sees |
 | notion | 17,500 | **33,560** | almost no metadata to drop, so the tokenizer difference dominates |
 
 So the heaviest server on the badge is not the heaviest server on Claude. Per-server
