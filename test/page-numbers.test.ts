@@ -99,7 +99,7 @@ const STATIC_COUNTS: { file: PageFile; text: string; why: string }[] = [
   // `published-deferral.test.ts` holds `PUBLISHED_WIRE_TO_CLIENT_RATIO` to the
   // run, and holds both pages to the constant — so it is static to *regen*, not
   // static in fact.
-  { file: 'docs/METHODOLOGY.md', text: '22 servers', why: 'the published wire-to-client band, held to results/divergence.json through PUBLISHED_WIRE_TO_CLIENT_RATIO by published-deferral.test.ts rather than by regen' },
+  { file: 'docs/METHODOLOGY.md', text: '23 servers', why: 'the published wire-to-client band, held to results/divergence.json through PUBLISHED_WIRE_TO_CLIENT_RATIO by published-deferral.test.ts rather than by regen' },
   { file: 'README.md', text: '1,150 measured tools', why: 'the tool-shape baseline size — regen-maintained in `results/tool-shape.json`, whose own drift-guard test asserts the committed file re-derives' },
 ];
 

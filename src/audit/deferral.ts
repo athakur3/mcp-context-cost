@@ -445,13 +445,20 @@ export interface WireToClientRatio {
 export const PUBLISHED_WIRE_TO_CLIENT_RATIO: WireToClientRatio = {
   low: 0.2,
   high: 1.92,
-  // Kept true against `results/divergence.json` by a test, not by memory. It
-  // went stale the day the run widened from the top 20 to every measured
-  // server: the pages derive this band from the run, this constant is what the
-  // installed package states offline, and nothing compared the two. The band
-  // itself did not move — the two servers added sat inside it — which is
-  // exactly how a number like this goes wrong quietly.
-  servers: 22,
+  // A snapshot of the run this package was cut against, which is what `source`
+  // below says it is — the installed package has no `results/` to read, so when
+  // a live run is supplied `wireToClientRatio` uses that instead and this is
+  // never consulted. It may therefore lag the run on trunk, and a test holds it
+  // to the two things that matter: the band must still be accurate to the
+  // precision it is published at, because a wrong band gives a wrong
+  // above/below verdict, and the count must never *exceed* the run, because
+  // that would be a claim about servers nobody measured.
+  //
+  // It read 20 from the day the run covered the top 20 until the run widened to
+  // every measured server on 2026-09-05, with nothing comparing the two. The
+  // band had not moved — the servers added sat inside it — which is exactly how
+  // a number like this goes wrong quietly.
+  servers: 23,
   source: 'the published claude-opus-5 divergence run',
 };
 

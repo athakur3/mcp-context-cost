@@ -436,27 +436,36 @@ describe('the published deferral tables describe the resolver', () => {
   });
 
   /**
-   * The constant is what the *installed package* says offline, and the pages are
-   * regen-maintained from the run on disk — so the two agree only for as long as
-   * somebody remembers to move the constant. Nobody did: it read `20` from the
-   * day the divergence run covered the top 20, and stayed at `20` when the run
-   * widened to every measured server on 2026-09-05. The band did not move, which
-   * is what made it quiet; only the count did.
+   * The constant is what the *installed package* states offline: it ships no
+   * `results/`, so with no live run to read, this is the band. It went stale
+   * once already — `20` from the day the divergence run covered the top 20, and
+   * still `20` when the run widened to every measured server on 2026-09-05,
+   * with nothing comparing the two. The band had not moved, which is what made
+   * it quiet; only the count had.
    *
-   * Checked at the precision the pages print, because the constant is the
-   * published rounding of an exact ratio and not the ratio itself.
+   * Deliberately not an equality check. The run on trunk grows whenever a
+   * re-sweep measures a server for the first time, and those commits are made
+   * by a bot that cannot edit a TypeScript constant — so requiring the two to
+   * match exactly would turn main red on a routine sweep and call that a defect
+   * in the data. A snapshot is allowed to lag. It is not allowed to be wrong:
+   *
+   * - the **band** must still be right to the precision it is published at,
+   *   because it decides an above/below verdict against a client threshold;
+   * - the **count** must never exceed the run, because a snapshot claiming more
+   *   servers than were measured is a fabricated number rather than an old one.
    */
-  it('is the band the committed divergence run actually derives', () => {
+  it('is a snapshot of the committed divergence run that may lag but never overstates', () => {
     const run = parseDivergence(readFileSync(join(repoRoot, 'results', 'divergence.json'), 'utf8'));
-    expect(run, 'results/divergence.json must parse — the constant is derived from it').not.toBeNull();
+    expect(run, 'results/divergence.json must parse — the constant is a snapshot of it').not.toBeNull();
     const derived = wireToClientRatio(run);
-    expect(derived.servers, 'PUBLISHED_WIRE_TO_CLIENT_RATIO.servers is stale').toBe(
+    expect(
       PUBLISHED_WIRE_TO_CLIENT_RATIO.servers,
-    );
-    expect(derived.low.toFixed(2), 'PUBLISHED_WIRE_TO_CLIENT_RATIO.low is stale').toBe(
+      'the published band claims more servers than the run holds',
+    ).toBeLessThanOrEqual(derived.servers);
+    expect(derived.low.toFixed(2), 'PUBLISHED_WIRE_TO_CLIENT_RATIO.low no longer matches the run').toBe(
       PUBLISHED_WIRE_TO_CLIENT_RATIO.low.toFixed(2),
     );
-    expect(derived.high.toFixed(2), 'PUBLISHED_WIRE_TO_CLIENT_RATIO.high is stale').toBe(
+    expect(derived.high.toFixed(2), 'PUBLISHED_WIRE_TO_CLIENT_RATIO.high no longer matches the run').toBe(
       PUBLISHED_WIRE_TO_CLIENT_RATIO.high.toFixed(2),
     );
   });
