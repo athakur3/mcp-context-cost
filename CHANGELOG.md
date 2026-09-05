@@ -97,6 +97,12 @@ changed: `auth-walled` and `unreachable` are new, `remote-not-measurable` is gon
   instructions at 2KB each", which bounds what a deferring session loads at start and is noted
   beside the session-start column, whose number is the wire cost of that list and not any one
   client's. `docs/METHODOLOGY.md`'s read-on date has advanced, with the changes.
+- **`linear`'s listed endpoint is the one that exists.** `servers.yaml` named
+  `https://mcp.linear.app/sse`, which answers HTTP 404 to both an initialize POST and an
+  event-stream GET as of 2026-09-06; `https://mcp.linear.app/mcp` answers 401 with the OAuth
+  header. The entry is `remote: true` — listed, not measured — so no published number moves;
+  the listing now names the endpoint a reader would find.
+
 ## 0.14.0 — 2026-09-05
 
 Phase 3 of the roadmap — others can add servers safely — and the hour of checking that came

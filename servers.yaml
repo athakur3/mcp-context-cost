@@ -530,7 +530,11 @@ servers:
     timeoutSeconds: 120
   # ---- vendor-official remote, OAuth-walled: listed, not measured ----
   - name: linear
-    command: https://mcp.linear.app/sse
+    # Probed 2026-09-06 from this repository: `/sse` answers HTTP 404 to both
+    # an initialize POST and an event-stream GET; `/mcp` answers 401 with
+    # `WWW-Authenticate: Bearer realm="OAuth", resource_metadata=…` — the
+    # endpoint that exists, and the wall the row describes.
+    command: https://mcp.linear.app/mcp
     remote: true
     package: remote (SSE/Streamable HTTP, OAuth)
     env: []
