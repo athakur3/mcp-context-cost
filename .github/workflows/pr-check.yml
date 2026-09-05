@@ -1,0 +1,85 @@
+# The measurement a servers.yaml pull request gets before any job holding a
+# write token ever runs its launch command.
+#
+# It diffs the pull request's servers.yaml against the base branch's by name,
+# measures only the entries the PR adds or whose launch fields it changes, and
+# prints the number in the check log. It pushes nothing: results/, badges/ and
+# history.csv are published by the Wednesday rotation (resweep.yml) under its
+# own rules, and the line printed here is not the published number.
+#
+# What the boundary is, stated exactly. The token is read-only (`permissions:
+# contents: read`, explicit so it does not depend on the repository's default),
+# no secret is referenced, and the checkout does not persist the token into
+# .git/config where a spawned process could read it. The entry's command runs
+# inside `docker run --memory=1g --pids-limit=512 --security-opt
+# no-new-privileges` (src/sweep/docker.ts) with the bridge network ON, because
+# npx and uvx fetch the package at startup — so egress is NOT prevented. The
+# sandbox is credential-free, not an airgap; what bounds a hostile command is
+# the timeout below, the container limits and the entry cap, and what makes it
+# harmless is that there is nothing of the repository's here to reach.
+#
+# This job adds no new trust. ci.yml already runs `npm ci` and `npm test` from
+# the pull request's own code on the same kind of runner with the same read-only
+# token — a PR can put anything it likes in a lifecycle script there. And a
+# first-time contributor's workflows, this one included, wait for a maintainer's
+# "Approve and run" (repository policy: first_time_contributors); the job's
+# properties are what make that click safe.
+#
+# A command that is already its own `docker run` is listed, not launched: the
+# harness would spawn it against this runner's daemon with the PR's argv
+# (src/sweep/run.ts, isSelfContainerised). A maintainer measures such an entry
+# with resweep.yml's `servers` input after review.
+#
+# The trigger is `pull_request`, never its target-checkout sibling: that one
+# hands the PR's code a write token, and test/pr-check.test.ts refuses the
+# string even in a comment.
+name: Measure a pull request's servers.yaml entries
+on:
+  pull_request:
+    paths: ['servers.yaml']
+
+permissions:
+  contents: read
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    # Derived from src/sweep/run.ts's retry arithmetic, not chosen. A timed-out
+    # entry is retried on TIMEOUT_RETRY_FACTOR (2) × its budget, so at
+    # `--default-timeout 240` one entry can hold the runner for
+    # 240 + 2 × 240 = 720s. The script measures one entry at a time and refuses
+    # more than `--max-entries 4` before launching anything, so the measuring
+    # step is bounded by 4 × 720s = 48 minutes; `npm ci` and the base-image pull
+    # are minutes on a fresh runner. test/pr-check.test.ts re-derives this
+    # bound from the run line below and fails if the minutes fall under it.
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # The token is read-only for a fork PR, but there is no reason to
+          # leave it on the disk a stranger's process runs beside.
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: The base branch's servers.yaml
+        # The checkout is the merge ref; the base sha is fetched on its own
+        # rather than with the whole history, and the diff is done by the
+        # script over both parsed documents — never by grep over a patch.
+        # The sha reaches the script through the environment, not `${{ }}`
+        # inside `run:` (the resweep.yml rule).
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          git fetch --no-tags --depth=1 origin "$BASE_SHA"
+          git show "$BASE_SHA:servers.yaml" > "$RUNNER_TEMP/base-servers.yaml"
+      - name: Measure only what this pull request adds or relaunches
+        # `--docker` because every published row is measured that way, and the
+        # question this check answers is whether the entry launches under the
+        # isolation the rotation will use. `--default-timeout 240` is the
+        # rotation's budget for a cold runner (resweep.yml); entries with their
+        # own `timeoutSeconds` keep it. No divergence step, no cross-check: both
+        # write files, and one of them needs a secret.
+        run: npx tsx src/sweep/pr-check.ts --base "$RUNNER_TEMP/base-servers.yaml" --head servers.yaml --docker --default-timeout 240 --max-entries 4

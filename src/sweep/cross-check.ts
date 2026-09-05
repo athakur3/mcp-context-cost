@@ -28,7 +28,7 @@ import { homedir, tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'yaml';
-import { measureServer } from './run.js';
+import { isSelfContainerised, measureServer } from './run.js';
 import { DockerHarnessFault, defaultImageFor, dockerize } from './docker.js';
 import { splitCommand } from './client.js';
 import { selectShard, shardIndexForDate } from './shard.js';
@@ -333,7 +333,7 @@ if (isMain) {
         console.log(`  ${e.name}: our measurement ${m.status} — recorded, nothing to compare`);
         continue;
       }
-      const selfDocker = e.command.trimStart().startsWith('docker ');
+      const selfDocker = isSelfContainerised(e.command);
       const out = await runCli(docker && selfDocker ? await hostBin() : binPath, e, {
         docker: docker && !selfDocker,
         timeoutMs,
