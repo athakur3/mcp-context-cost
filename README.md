@@ -3,6 +3,26 @@
 [![npm](https://img.shields.io/npm/v/mcp-context-cost)](https://www.npmjs.com/package/mcp-context-cost)
 [![CI](https://github.com/athakur3/mcp-context-cost/actions/workflows/ci.yml/badge.svg)](https://github.com/athakur3/mcp-context-cost/actions/workflows/ci.yml)
 
+Two entry points: `audit`, for the config you run (below), and a GitHub Action, for the
+server you publish — five lines in a workflow that fail a pull request adding more context
+cost than you meant to ship:
+
+```yaml
+- uses: athakur3/mcp-context-cost@v1
+  with:
+    name: my-server
+    command: node dist/index.js
+    baseline: .context-cost/baseline.json
+    max-increase: 500
+```
+
+Inputs: `name`, `command` or `remote`, `baseline`, `max-increase`, `budget`, `timeout`,
+`version`. Outputs: `tokens`, `tools`, `status`, `measurement`, `badge` — written whether the
+gate passed or not, so a later step can comment the number on the PR or publish the badge.
+[Full workflow](examples/server-author-ci.yml) ·
+[how the gate decides](#defend-the-number-dont-just-display-it) ·
+[what the number is](docs/METHODOLOGY.md).
+
 **What do the MCP servers in your config cost you before you type anything — and what did
 that last config change add to every session you will ever run?**
 
