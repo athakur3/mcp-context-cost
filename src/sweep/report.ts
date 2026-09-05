@@ -34,6 +34,12 @@ export interface ServerEntry {
   /** Launch needs the `git` binary (e.g. `uvx --from git+...`) — absent from the slim isolation images. */
   needsGit?: boolean;
   /**
+   * Debian packages the runtime needs and the slim image lacks — see
+   * `DockerOptions.aptPackages`. The isolation record names them, so a
+   * published number always says what the container carried.
+   */
+  aptPackages?: string[];
+  /**
    * Per-var overrides for the literal `dummy` placeholder docker mode injects
    * for `env` names — for servers that parse a var's shape (URI scheme, URL)
    * before ever reaching tools/list. See docker.ts `dummyEnvValues`.

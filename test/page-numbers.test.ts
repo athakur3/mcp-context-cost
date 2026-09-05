@@ -92,7 +92,14 @@ const STATIC_COUNTS: { file: PageFile; text: string; why: string }[] = [
   { file: 'docs/METHODOLOGY.md', text: '57 measured servers', why: 'the frozen band derivation: the size of the 2026-08-16 sweep the bands were cut against, which is history and must not move' },
   { file: 'docs/METHODOLOGY.md', text: '2,676 tokens', why: 'part of the same frozen 2026-08-16 distribution' },
   { file: 'docs/METHODOLOGY.md', text: '328 tokens', why: 'part of the same frozen 2026-08-16 distribution' },
-  { file: 'docs/METHODOLOGY.md', text: '20 servers', why: 'the divergence run size as stated in a frozen worked example; the live figure is maintained in README by `divergence-run-size`' },
+  // Not frozen, and calling it frozen is what let it go stale: this is the live
+  // band count, and it sat at 20 from the day the divergence run covered the top
+  // 20 until the run widened to every measured server on 2026-09-05. What keeps
+  // it true is a chain of tests rather than regen — the run derives the band,
+  // `published-deferral.test.ts` holds `PUBLISHED_WIRE_TO_CLIENT_RATIO` to the
+  // run, and holds both pages to the constant — so it is static to *regen*, not
+  // static in fact.
+  { file: 'docs/METHODOLOGY.md', text: '22 servers', why: 'the published wire-to-client band, held to results/divergence.json through PUBLISHED_WIRE_TO_CLIENT_RATIO by published-deferral.test.ts rather than by regen' },
   { file: 'README.md', text: '1,150 measured tools', why: 'the tool-shape baseline size — regen-maintained in `results/tool-shape.json`, whose own drift-guard test asserts the committed file re-derives' },
 ];
 

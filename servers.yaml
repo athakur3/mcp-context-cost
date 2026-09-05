@@ -204,8 +204,20 @@ servers:
     category: vendor-official
     repo: https://github.com/makenotion/notion-mcp-server
   - name: azure
+    # Published as a startup-failure until 2026-09-05 on the strength of a .NET
+    # EventSource stack dump — which was the *bottom* of the output, kept by the
+    # old 600-char tail. The message above it says: "Couldn't find a valid ICU
+    # package installed on the system." The roadmap's hypothesis was right about
+    # ICU and wrong about the fix: DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 gets
+    # past ICU and straight into "No usable version of libssl was found".
+    # With libicu72 and libssl3 present it measures — 15,239 tokens, 68 tools,
+    # v3.0.0-beta.41 — so this was never a fact about the server. Installing
+    # them moves the container towards what a plain `npx -y` user's machine
+    # already has, which is the `needsGit` argument, not the `OTEL_SDK_DISABLED`
+    # one; the isolation record names both packages either way.
     command: npx -y @azure/mcp@latest server start
     package: '@azure/mcp'
+    aptPackages: [libicu72, libssl3]
     env: []
     metric: 105959
     metricSource: https://api.npmjs.org/downloads/point/last-week/@azure/mcp (npm weekly)
@@ -872,15 +884,35 @@ servers:
     category: community
     repo: https://github.com/AgentPhone-AI/agentphone-mcp
   - name: hevy
+    # The startup-failure this published was manufactured by our own dummy key.
+    # `HEVY_API_KEY=dummy` gets past the presence check and dies as "Fatal error
+    # in main() { category: 'Error' }", which names no cause and reads as a
+    # broken server. With the variable empty the server says exactly what is
+    # wrong — "Hevy API key is required" — and classifies as auth-required,
+    # which is the true statement: it works, and it needs a credential we do not
+    # have. Empty rather than absent so the variable stays documented here.
     command: npx -y hevy-mcp
     package: hevy-mcp
     env: [HEVY_API_KEY]
+    envValues:
+      HEVY_API_KEY: ''
     metric: 6107
     metricSource: https://api.npmjs.org/downloads/point/last-week/hevy-mcp (npm weekly)
     category: community
     repo: https://github.com/chrisdoc/hevy-mcp
   - name: local-mcp
     command: npx -y local-mcp
+    # Not a broken server: the vendor has not shipped a Linux runtime. The
+    # package installs, then downloads its own Go binary and reports "LMCP
+    # <version> is not yet available for linux-<arch>. The Windows/Linux Go
+    # server is in preview". Reproduced 2026-09-05 on both amd64 and arm64, so
+    # the earlier arm64 reading was not the whole story — neither architecture
+    # has a runtime. The evidence deliberately omits the version and the arch,
+    # which both move; the sentence that states the fact does not. The day
+    # upstream ships one, the words stop matching and it is measured.
+    notApplicable:
+      reason: the vendor ships no Linux runtime yet — its own Go server is in preview for Windows and Linux
+      evidence: The Windows/Linux Go server is in preview
     package: local-mcp
     env: []
     metric: 5122

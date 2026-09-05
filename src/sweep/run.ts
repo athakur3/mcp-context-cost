@@ -136,6 +136,8 @@ export interface MeasureOptions {
   dummyEnvValues?: Record<string, string>;
   /** Install `git` in the container before launch (docker mode) — see docker.ts. */
   needsGit?: boolean;
+  /** Debian packages to install in the container before launch. */
+  aptPackages?: string[];
   /** Declared harness limitation for this entry — see `notApplicable` in report.ts. */
   notApplicable?: { reason: string; evidence: string };
   /**
@@ -244,6 +246,7 @@ export async function measureServer(
       dummyEnvValues: opts.dummyEnvValues,
       containerName,
       needsGit: opts.needsGit,
+      aptPackages: opts.aptPackages,
       noSharedCache,
     });
     isolation = d.isolation;

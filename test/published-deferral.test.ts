@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { DEFAULT_CONTEXT_WINDOW } from '../src/audit/audit.js';
 import {
   evaluateDeferral,
+  wireToClientRatio,
   PUBLISHED_WIRE_TO_CLIENT_RATIO,
   TOOL_SEARCH_AUTO_SHARE,
   type DeferralVerdict,
@@ -11,6 +12,7 @@ import {
   type ToolSearchSetting,
   type ToolSearchSource,
 } from '../src/audit/deferral.js';
+import { parseDivergence } from '../src/core/divergence.js';
 
 /**
  * The published deferral tables, read against the resolver they describe.
@@ -431,5 +433,31 @@ describe('the published deferral tables describe the resolver', () => {
     for (const page of PAGES) {
       expect(pageText(page), `${PAGE_FILES[page]} no longer prints the published band`).toContain(band);
     }
+  });
+
+  /**
+   * The constant is what the *installed package* says offline, and the pages are
+   * regen-maintained from the run on disk — so the two agree only for as long as
+   * somebody remembers to move the constant. Nobody did: it read `20` from the
+   * day the divergence run covered the top 20, and stayed at `20` when the run
+   * widened to every measured server on 2026-09-05. The band did not move, which
+   * is what made it quiet; only the count did.
+   *
+   * Checked at the precision the pages print, because the constant is the
+   * published rounding of an exact ratio and not the ratio itself.
+   */
+  it('is the band the committed divergence run actually derives', () => {
+    const run = parseDivergence(readFileSync(join(repoRoot, 'results', 'divergence.json'), 'utf8'));
+    expect(run, 'results/divergence.json must parse — the constant is derived from it').not.toBeNull();
+    const derived = wireToClientRatio(run);
+    expect(derived.servers, 'PUBLISHED_WIRE_TO_CLIENT_RATIO.servers is stale').toBe(
+      PUBLISHED_WIRE_TO_CLIENT_RATIO.servers,
+    );
+    expect(derived.low.toFixed(2), 'PUBLISHED_WIRE_TO_CLIENT_RATIO.low is stale').toBe(
+      PUBLISHED_WIRE_TO_CLIENT_RATIO.low.toFixed(2),
+    );
+    expect(derived.high.toFixed(2), 'PUBLISHED_WIRE_TO_CLIENT_RATIO.high is stale').toBe(
+      PUBLISHED_WIRE_TO_CLIENT_RATIO.high.toFixed(2),
+    );
   });
 });

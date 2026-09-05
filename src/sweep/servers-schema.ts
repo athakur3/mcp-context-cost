@@ -56,6 +56,7 @@ const FIELDS = {
   dockerImage: 'optional',
   timeoutSeconds: 'optional',
   needsGit: 'optional',
+  aptPackages: 'optional',
   envValues: 'optional',
   notApplicable: 'optional',
   deprecated: 'optional',
@@ -141,6 +142,21 @@ export function validateEntry(raw: unknown, index: number): SchemaProblem[] {
   }
   if (e.remote !== true && typeof e.command === 'string' && /^https?:\/\//.test(e.command)) {
     bad('is a URL, so the entry must be marked remote: true', 'command');
+  }
+
+  const apt = e.aptPackages;
+  if (apt !== undefined) {
+    // The names are joined into a shell word list inside the container, so this
+    // character class is the boundary: a value that is not a package name never
+    // reaches `sh -lc`.
+    if (!Array.isArray(apt) || apt.length === 0) bad('must be a non-empty list of Debian package names', 'aptPackages');
+    else {
+      for (const n of apt) {
+        if (typeof n !== 'string' || !/^[a-z0-9][a-z0-9+._-]*$/.test(n)) {
+          bad(`holds ${JSON.stringify(n)}, which is not a Debian package name`, 'aptPackages');
+        }
+      }
+    }
   }
 
   if (e.dockerImage !== undefined && (typeof e.dockerImage !== 'string' || e.dockerImage.trim() === '')) {

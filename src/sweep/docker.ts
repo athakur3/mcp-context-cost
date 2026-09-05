@@ -31,6 +31,23 @@ export interface DockerOptions {
    */
   needsGit?: boolean;
   /**
+   * Debian packages to install before launch, for a server whose runtime needs
+   * a native library the slim base image does not carry.
+   *
+   * The same argument as `needsGit`, and the same shape: these are libraries a
+   * user's own machine already has, so installing them moves the container
+   * *towards* the conditions a plain `npx -y` run would find rather than away
+   * from them. `azure` is the case — a .NET server that fails on
+   * `node:22-slim` with "Couldn't find a valid ICU package", and again on
+   * libssl once ICU is satisfied. With both present it measures.
+   *
+   * Distinct from an env var that changes the server's own behaviour (see
+   * `elasticsearch` and `OTEL_SDK_DISABLED`), which is a different decision.
+   * The isolation record names what was installed either way, so a reader can
+   * see that the container was not the plain one.
+   */
+  aptPackages?: string[];
+  /**
    * Extra `-v` bind mounts, verbatim (`host:container:ro`). Used to hand a
    * host-verified binary into the container (the cross-check CLI); mounts here
    * should be read-only so the isolation claim — clean FS, no host credentials
@@ -285,7 +302,14 @@ export function dockerize(
   const gitPrefix = opts.needsGit
     ? 'command -v git >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq --no-install-recommends git >/dev/null 2>&1); '
     : '';
-  argv.push(image, 'sh', '-lc', gitPrefix + commandLine);
+  // Package names are validated by the schema check before they reach here, and
+  // they are joined into a shell word list — so the schema's character class is
+  // what keeps this from being an injection point.
+  const packages = opts.aptPackages ?? [];
+  const aptPrefix = packages.length
+    ? `apt-get update -qq >/dev/null 2>&1 && apt-get install -y -qq --no-install-recommends ${packages.join(' ')} >/dev/null 2>&1; `
+    : '';
+  argv.push(image, 'sh', '-lc', gitPrefix + aptPrefix + commandLine);
   return {
     command: 'docker',
     argv,
@@ -296,6 +320,9 @@ export function dockerize(
       note:
         'network enabled for package fetch; clean FS, no host credentials' +
         (opts.needsGit ? ', git installed' : '') +
+        // Named rather than summarised: a record whose container carried extra
+        // libraries has to say which, or the number is not reproducible from it.
+        (packages.length ? `, installed ${packages.join(' ')}` : '') +
         (opts.noSharedCache ? ', shared package cache bypassed' : ''),
     },
   };

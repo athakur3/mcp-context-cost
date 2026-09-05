@@ -186,6 +186,7 @@ export function runCli(
       dummyEnv: entry.env ?? [],
       dummyEnvValues: entry.envValues,
       needsGit: entry.needsGit,
+      aptPackages: entry.aptPackages,
       containerName,
       binds: [`${binPath}:/opt/mcp-tokens:ro`],
     });
@@ -317,6 +318,7 @@ if (isMain) {
           dummyEnv: e.env ?? [],
           dummyEnvValues: e.envValues,
           needsGit: e.needsGit,
+          aptPackages: e.aptPackages,
           notApplicable: e.notApplicable,
           persist: false, // the measurements on disk are not this run's to rewrite
         });

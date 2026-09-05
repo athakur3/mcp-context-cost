@@ -108,6 +108,7 @@ async function worker() {
         dummyEnv: e.env ?? [],
         dummyEnvValues: e.envValues,
         needsGit: e.needsGit,
+        aptPackages: e.aptPackages,
         notApplicable: e.notApplicable,
       });
     } catch (err) {

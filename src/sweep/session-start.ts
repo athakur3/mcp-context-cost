@@ -89,6 +89,7 @@ if (isMain) {
           dummyEnv: e.env ?? [],
           dummyEnvValues: e.envValues,
           needsGit: e.needsGit,
+          aptPackages: e.aptPackages,
           notApplicable: e.notApplicable,
           persist: false, // the measurements on disk are not this run's to rewrite
         });

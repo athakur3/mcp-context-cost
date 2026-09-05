@@ -335,7 +335,7 @@ exists for the threshold and nowhere else.
 anything. There the audit's number and the threshold are counted in different units — wire
 bytes under `o200k_base` here, versus what the client sends to the API — so the stack is
 converted through the published [Claude divergence](#claude-divergence) band (0.20×–1.92×
-across 20 servers), taking the exact published count wherever a server's capture still
+across 22 servers), taking the exact published count wherever a server's capture still
 matches, and the verdict is `above` only when the low end clears the threshold and `below`
 only when the high end does not.
 
