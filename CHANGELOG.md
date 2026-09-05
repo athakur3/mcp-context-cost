@@ -7,6 +7,40 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+Both entries below close the same rule, found in two places on the same day: **a truncation may
+never remove the evidence a published claim rests on.** Phase 2 had left one item open and, when
+its exits were checked rather than taken on trust, a second thing of the same shape was sitting
+behind one of them.
+
+- **A declared `not-applicable` no longer depends on how much the server printed.** An entry
+  declares that a failure is this harness's limitation and names the phrase that proves it;
+  the status is only published while the failure's own text still contains that phrase. The text
+  searched was the *truncated* tail, so an entry whose output grew until its evidence line fell
+  into the elided middle turned its own declaration off — the row reverting to
+  `startup-failure`, which is this project asserting that someone else's working software is
+  broken. Measured before fixing: of the five entries declaring, all five still matched, two
+  were already having their middle elided, and the narrowest surviving margin was 64 characters.
+  The declared phrase now travels with the launch. `evidenceTail` protects its line from the
+  noise filters — npm prints `safari-mcp`'s `EBADPLATFORM` on a line of its own, which the
+  filter would otherwise delete before any budget applied — and anchors the layout on that line
+  when the ordinary both-ends budget would elide it, reserving the elision cost first so a
+  layout cannot buy the evidence by overrunning the limit. `clampNotes` replaces a blind
+  `.slice(0, 700)` on the record's notes: that cut is after classification and so can never move
+  a status, but it could leave a record asserting `not-applicable` with the sentence justifying
+  it deleted. `windows-mcp` sits at exactly that cap today. Nothing changes wherever the evidence
+  already survived, which is every record on disk, and a declaration whose evidence never
+  appeared still fails — there is a test that it cannot be talked into conjuring one.
+- **A divergence row cannot outlive the capture it was computed from.** A selection preserves
+  every row it does not measure, and a re-sweep moves the capture of every server it does — so
+  between the two, a row could go on being merged forward long after its capture was gone. Eight
+  of twenty-four had reached that state. Nothing false was published: `isCurrent` hides a row
+  whose hash no longer matches and the cell prints an em dash instead. What it cost was
+  countability — the file looked complete while the number of rows had stopped meaning the
+  number of usable rows, and the README's Claude table was drawing its comparison from a
+  `github` cell it was therefore not printing. `dropStaleRows` now decides one layer earlier than
+  `isCurrent`, at the merge, and every run ends by saying how many measured servers carry a
+  current row, so the gap is a number rather than something noticed later on a page.
+
 ## 0.13.1 — 2026-09-05
 
 One server changed status in this release, and the interesting part is the three issues that

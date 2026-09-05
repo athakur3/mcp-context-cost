@@ -32,6 +32,7 @@ import type { Measurement } from '../src/core/types.js';
 import {
   DIVERGENCE_METHOD,
   mappedTokens,
+  dropStaleRows,
   parseDivergence,
   toAnthropicTools,
   type DivergenceRow,
@@ -170,6 +171,30 @@ const previous = existsSync(outPath) ? parseDivergence(readFileSync(outPath, 'ut
 // A touch-up edits the previous run in place; a bare run replaces it whole.
 const servers: Record<string, DivergenceRow> = touchUp ? { ...(previous?.servers ?? {}) } : {};
 
+/**
+ * A merge may not carry forward a row that has stopped describing its capture.
+ *
+ * The rows this run measures are rewritten either way; the hazard is the rest of
+ * them. A selection preserves every other row, and a re-sweep that re-measures a
+ * server moves that server's capture — so a row outside the selection can be
+ * left describing a capture that no longer exists, and nothing says so. Eight of
+ * twenty-four rows had reached that state by 2026-09-05. Nothing false reached a
+ * page, because `isCurrent` hides a row whose `capturedSha256` no longer matches
+ * and the cell prints an em dash instead — but the file was carrying dead
+ * numbers, the count of rows had stopped meaning the count of usable rows, and
+ * the README's Claude table was drawing a comparison from a `github` cell it was
+ * therefore not printing. Dropping them costs nothing that was being shown, and
+ * makes the gap countable: what is owed is a bare run, and the line below says
+ * how much of one.
+ */
+const captureNow = new Map(candidates.map((c) => [c.name, c.m.canonicalSha256 as string | undefined]));
+const { kept, dropped: stale } = dropStaleRows(servers, (name) => captureNow.get(name));
+for (const name of Object.keys(servers)) delete servers[name];
+Object.assign(servers, kept);
+if (stale.length > 0) {
+  console.log(`dropped ${stale.length} row(s) whose capture has moved since they were measured: ${stale.join(', ')}`);
+}
+
 for (const { name, m } of selected) {
   const raw = m.rawToolsCapture as unknown[];
   const row: DivergenceRow = {
@@ -202,4 +227,15 @@ const run: DivergenceRun = {
   servers: Object.fromEntries(Object.entries(servers).sort(([a], [b]) => a.localeCompare(b))),
 };
 writeFileSync(outPath, JSON.stringify(run, null, 2) + '\n');
+
+// What the column covers, every run, so a gap is a number rather than a thing
+// somebody notices later on a page that prints an em dash.
+const withRow = candidates.filter((c) => {
+  const row = run.servers[c.name];
+  return row && !row.error && row.capturedSha256 === ((c.m.canonicalSha256 as string | undefined) ?? '');
+}).length;
+console.log(
+  `${withRow} of ${candidates.length} measured servers now carry a current Claude row` +
+    (withRow < candidates.length ? ' — a bare `npm run divergence` closes the rest' : ''),
+);
 console.log(`wrote results/divergence.json (${Object.keys(run.servers).length} servers)`);

@@ -138,6 +138,35 @@ export function isCurrent(row: DivergenceRow | undefined, canonicalSha256: strin
   return !!canonicalSha256 && row.capturedSha256 === canonicalSha256;
 }
 
+/**
+ * Drop rows that have stopped describing the capture they were computed from.
+ *
+ * The companion to `isCurrent`, one layer earlier. `isCurrent` stops a stale row
+ * reaching a page; this stops it being carried forward in the first place. A
+ * selection preserves every row it does not measure, and a re-sweep moves the
+ * capture of every server it re-measures — so between the two, a row outside the
+ * selection can go on being merged forward long after the capture it describes
+ * is gone. Eight of twenty-four rows had reached that state by 2026-09-05, and
+ * nothing said so: the cells were hidden, so the file looked complete while the
+ * count of rows had stopped meaning the count of usable rows.
+ *
+ * `captureSha` returns the canonical hash of what is on disk today, or undefined
+ * when there is no capture at all — which is also a reason to drop, because a
+ * row about a server that no longer measures is a row nothing can confirm.
+ */
+export function dropStaleRows(
+  servers: Record<string, DivergenceRow>,
+  captureSha: (name: string) => string | undefined,
+): { kept: Record<string, DivergenceRow>; dropped: string[] } {
+  const kept: Record<string, DivergenceRow> = {};
+  const dropped: string[] = [];
+  for (const [name, row] of Object.entries(servers)) {
+    if (row.capturedSha256 && row.capturedSha256 === captureSha(name)) kept[name] = row;
+    else dropped.push(name);
+  }
+  return { kept, dropped };
+}
+
 /** Parse results/divergence.json; anything malformed yields null, never throws. */
 export function parseDivergence(text: string): DivergenceRun | null {
   let run: unknown;

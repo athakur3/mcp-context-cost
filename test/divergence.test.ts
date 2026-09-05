@@ -6,6 +6,7 @@ import {
   DIVERGENCE_METHOD,
   claudeRatio,
   fieldSelectionShare,
+  dropStaleRows,
   isCurrent,
   mappedTokens,
   parseDivergence,
@@ -207,5 +208,55 @@ describe('publishing the column', () => {
     expect(renderServerPage(entry, m, [], null)).not.toContain('What this costs on Claude');
     const stale = run({ servers: { demo: row({ capturedSha256: 'b'.repeat(64) }) } });
     expect(renderServerPage(entry, m, [], stale)).not.toContain('What this costs on Claude');
+  });
+});
+
+/**
+ * The bug this covers is not a wrong number on a page — `isCurrent` already
+ * stops that, and prints an em dash instead. It is that the file went on
+ * carrying rows nothing could confirm, so the count of rows had stopped meaning
+ * the count of usable rows, and the gap was invisible until somebody checked a
+ * published sentence against the cell it depends on.
+ */
+describe('dropStaleRows', () => {
+  const row = (sha: string): DivergenceRow => ({
+    o200kFull: 100,
+    o200kMapped: 60,
+    claudeDelta: 40,
+    toolCount: 3,
+    capturedSha256: sha,
+  });
+
+  it('keeps a row that still describes the capture on disk', () => {
+    const { kept, dropped } = dropStaleRows({ github: row('abc') }, () => 'abc');
+    expect(Object.keys(kept)).toEqual(['github']);
+    expect(dropped).toEqual([]);
+  });
+
+  it('drops a row whose capture has moved — the eight of twenty-four case', () => {
+    const { kept, dropped } = dropStaleRows({ github: row('abc') }, () => 'def');
+    expect(kept).toEqual({});
+    expect(dropped).toEqual(['github']);
+  });
+
+  it('drops a row for a server with no capture at all', () => {
+    // Nothing can confirm it, so carrying it forward is carrying a claim with
+    // its evidence deleted — the same rule the evidence tail follows.
+    const { dropped } = dropStaleRows({ gone: row('abc') }, () => undefined);
+    expect(dropped).toEqual(['gone']);
+  });
+
+  it('drops a row that never recorded which capture it came from', () => {
+    const { dropped } = dropStaleRows({ legacy: row('') }, () => '');
+    expect(dropped).toEqual(['legacy']);
+  });
+
+  it('is exactly what isCurrent would have hidden, decided one layer earlier', () => {
+    const servers = { a: row('same'), b: row('moved') };
+    const sha = (n: string) => (n === 'a' ? 'same' : 'elsewhere');
+    const { kept } = dropStaleRows(servers, sha);
+    for (const [name, r] of Object.entries(servers)) {
+      expect(isCurrent(r, sha(name) ?? null), name).toBe(name in kept);
+    }
   });
 });
