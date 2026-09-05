@@ -7,6 +7,8 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+## 0.14.0 — 2026-09-05
+
 Phase 3 of the roadmap — others can add servers safely — and the hour of checking that came
 first found the phase's own goal sentence was false where it mattered most. Three of its four
 items were wrong about the mechanism and the fourth held; the pattern is exact three phases
