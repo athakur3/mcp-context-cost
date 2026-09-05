@@ -2,21 +2,22 @@
   "methodologyVersion": "1.0",
   "provider": "tiktoken",
   "encoding": "o200k_base",
-  "status": "startup-failure",
+  "status": "auth-required",
   "totalTokens": null,
   "toolCount": null,
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-09-04T07:23:33.068Z",
+  "measuredAt": "2026-09-05T12:34:40.850Z",
   "serverName": "hevy",
   "launchCommand": "npx -y hevy-mcp",
-  "notes": "server exited (code 1); stderr tail: Fatal error in main() { category: 'Error' }",
+  "notes": "server exited (code 1); stderr tail: Hevy API key is required. Provide it via the HEVY_API_KEY environment variable.",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
-  "timeoutMs": 480000
+  "timeoutMs": 240000
 }

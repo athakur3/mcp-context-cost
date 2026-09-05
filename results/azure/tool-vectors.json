@@ -1,0 +1,286 @@
+{
+  "method": "cost-regression/v1",
+  "server": "azure",
+  "entries": [
+    {
+      "date": "2026-09-05",
+      "canonicalSha256": "0539db0747ec02a1bfb4167d12146549e697758d0977f487126116c1fa2a6a26",
+      "totalTokens": 15239,
+      "version": "3.0.0-beta.41",
+      "tools": [
+        {
+          "name": "documentation",
+          "tokens": 258
+        },
+        {
+          "name": "azd",
+          "tokens": 236
+        },
+        {
+          "name": "foundry",
+          "tokens": 223
+        },
+        {
+          "name": "arm",
+          "tokens": 203
+        },
+        {
+          "name": "get_azure_bestpractices",
+          "tokens": 454
+        },
+        {
+          "name": "aks",
+          "tokens": 256
+        },
+        {
+          "name": "appconfig",
+          "tokens": 213
+        },
+        {
+          "name": "applens",
+          "tokens": 231
+        },
+        {
+          "name": "appservice",
+          "tokens": 192
+        },
+        {
+          "name": "role",
+          "tokens": 212
+        },
+        {
+          "name": "azurebackup",
+          "tokens": 242
+        },
+        {
+          "name": "datadog",
+          "tokens": 212
+        },
+        {
+          "name": "managedlustre",
+          "tokens": 224
+        },
+        {
+          "name": "azuremigrate",
+          "tokens": 280
+        },
+        {
+          "name": "azureterraform",
+          "tokens": 220
+        },
+        {
+          "name": "azureterraformbestpractices",
+          "tokens": 214
+        },
+        {
+          "name": "deploy",
+          "tokens": 232
+        },
+        {
+          "name": "deviceregistry",
+          "tokens": 220
+        },
+        {
+          "name": "eventgrid",
+          "tokens": 191
+        },
+        {
+          "name": "acr",
+          "tokens": 197
+        },
+        {
+          "name": "advisor",
+          "tokens": 230
+        },
+        {
+          "name": "bicepschema",
+          "tokens": 221
+        },
+        {
+          "name": "cosmos",
+          "tokens": 200
+        },
+        {
+          "name": "cloudarchitect",
+          "tokens": 188
+        },
+        {
+          "name": "communication",
+          "tokens": 187
+        },
+        {
+          "name": "compute",
+          "tokens": 367
+        },
+        {
+          "name": "confidentialledger",
+          "tokens": 208
+        },
+        {
+          "name": "containerapps",
+          "tokens": 198
+        },
+        {
+          "name": "eventhubs",
+          "tokens": 201
+        },
+        {
+          "name": "fileshares",
+          "tokens": 183
+        },
+        {
+          "name": "foundryextensions",
+          "tokens": 250
+        },
+        {
+          "name": "functionapp",
+          "tokens": 185
+        },
+        {
+          "name": "functions",
+          "tokens": 209
+        },
+        {
+          "name": "grafana",
+          "tokens": 208
+        },
+        {
+          "name": "insights",
+          "tokens": 216
+        },
+        {
+          "name": "iothub",
+          "tokens": 189
+        },
+        {
+          "name": "keyvault",
+          "tokens": 186
+        },
+        {
+          "name": "kusto",
+          "tokens": 216
+        },
+        {
+          "name": "loadtesting",
+          "tokens": 214
+        },
+        {
+          "name": "marketplace",
+          "tokens": 185
+        },
+        {
+          "name": "quota",
+          "tokens": 192
+        },
+        {
+          "name": "monitor",
+          "tokens": 289
+        },
+        {
+          "name": "applicationinsights",
+          "tokens": 207
+        },
+        {
+          "name": "mysql",
+          "tokens": 210
+        },
+        {
+          "name": "policy",
+          "tokens": 196
+        },
+        {
+          "name": "postgres",
+          "tokens": 211
+        },
+        {
+          "name": "pricing",
+          "tokens": 229
+        },
+        {
+          "name": "redis",
+          "tokens": 218
+        },
+        {
+          "name": "resilience",
+          "tokens": 232
+        },
+        {
+          "name": "resourcehealth",
+          "tokens": 198
+        },
+        {
+          "name": "search",
+          "tokens": 240
+        },
+        {
+          "name": "speech",
+          "tokens": 243
+        },
+        {
+          "name": "servicebus",
+          "tokens": 246
+        },
+        {
+          "name": "servicefabric",
+          "tokens": 216
+        },
+        {
+          "name": "signalr",
+          "tokens": 195
+        },
+        {
+          "name": "sreagent",
+          "tokens": 219
+        },
+        {
+          "name": "sql",
+          "tokens": 212
+        },
+        {
+          "name": "storage",
+          "tokens": 285
+        },
+        {
+          "name": "storagesync",
+          "tokens": 219
+        },
+        {
+          "name": "virtualdesktop",
+          "tokens": 201
+        },
+        {
+          "name": "wellarchitectedframework",
+          "tokens": 223
+        },
+        {
+          "name": "workbooks",
+          "tokens": 212
+        },
+        {
+          "name": "extension_azqr",
+          "tokens": 322
+        },
+        {
+          "name": "extension_cli_generate",
+          "tokens": 217
+        },
+        {
+          "name": "extension_cli_install",
+          "tokens": 216
+        },
+        {
+          "name": "group_list",
+          "tokens": 188
+        },
+        {
+          "name": "group_resource_list",
+          "tokens": 231
+        },
+        {
+          "name": "subscription_list",
+          "tokens": 219
+        }
+      ]
+    }
+  ]
+}

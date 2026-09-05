@@ -14,6 +14,12 @@
       "totalTokens": 5074,
       "toolCount": 5
     },
+    "0539db0747ec02a1bfb4167d12146549e697758d0977f487126116c1fa2a6a26": {
+      "server": "azure",
+      "date": "2026-09-05",
+      "totalTokens": 15239,
+      "toolCount": 68
+    },
     "096790f5b6a85d5faf9b4a09edbeddc34de23ed3c26c195bee05c42fb7f8b6a7": {
       "server": "aws-documentation",
       "date": "2026-09-04",
@@ -583,6 +589,7 @@
     "appium-mcp": "d024ca5b97d52d5442da395ed92d1d107b6728db57cf1295bb87c5d3624c0e53",
     "arxiv": "2ee361441efca1de3e296a572bbe2d20fa88d5565c9d4f54a8a1523ee7f54251",
     "aws-documentation": "096790f5b6a85d5faf9b4a09edbeddc34de23ed3c26c195bee05c42fb7f8b6a7",
+    "azure": "0539db0747ec02a1bfb4167d12146549e697758d0977f487126116c1fa2a6a26",
     "basic-memory": "0ba9e9185e3d5c167bbaf0dcfeb499f27020c307f1387a3b85374f849f0a38a7",
     "bitbucket-mcp": "e131b1d46e30c0d05f07995aa167fa323ec1003719d861dbe27c82c94ad803cf",
     "blender": "5d8045af01c1eaf81a5931cfc5aa814fe0928f66cf1e176962bd3a97aff0a62f",

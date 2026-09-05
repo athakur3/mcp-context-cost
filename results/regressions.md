@@ -4,7 +4,7 @@ Every server here is measured again on a rotating schedule, and most launch unpi
 
 Comparable means the two runs used the same isolation — two numbers taken under different isolation are not comparable, and the trend line already refuses to span that boundary (see [history](history.csv) and the sparklines on each [server page](../docs/servers/)). A failed measurement contributes no row at all, so a server that stopped starting reads as a gap in its series, never as a drop to zero.
 
-Every server with a measurement on record is in exactly one of the three sections below: **17 moved**, **64 held the same cost across every comparable measurement**, and **4 have no second comparable measurement yet** — 17 + 64 + 4 = 85.
+Every server with a measurement on record is in exactly one of the three sections below: **17 moved**, **64 held the same cost across every comparable measurement**, and **5 have no second comparable measurement yet** — 17 + 64 + 5 = 86.
 
 **11 servers moved upward and 6 moved down**, a net +4,446 tokens across the measured set. 6 movements clear both thresholds for being called out (at least 5% *and* at least 25 tokens — relative alone would headline a fifth of a cheap server, absolute alone would headline drift on an expensive one). Everything comparable is listed either way.
 
@@ -126,5 +126,5 @@ The **release** column is what the two servers reported at `initialize`, on the 
 
 ## Not compared (and why)
 
-4 server(s) carry a measurement but no second comparable one — a first measurement, or every earlier run taken under different isolation. They appear on the [leaderboard](leaderboard.md) with today's number and no delta, which is the honest reading: a cost with nothing yet to compare it to. A cost that *has* been compared and did not move is above, under [Unchanged](#unchanged) — the two are different facts and this page counted them as one until 2026-09-05.
+5 server(s) carry a measurement but no second comparable one — a first measurement, or every earlier run taken under different isolation. They appear on the [leaderboard](leaderboard.md) with today's number and no delta, which is the honest reading: a cost with nothing yet to compare it to. A cost that *has* been compared and did not move is above, under [Unchanged](#unchanged) — the two are different facts and this page counted them as one until 2026-09-05.
 

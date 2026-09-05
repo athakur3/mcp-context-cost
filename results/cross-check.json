@@ -104,6 +104,16 @@
       "dynamic": false,
       "capturedSha256": "096790f5b6a85d5faf9b4a09edbeddc34de23ed3c26c195bee05c42fb7f8b6a7"
     },
+    "azure": {
+      "ourTokens": 15239,
+      "ourMappedTokens": 14303,
+      "cliTokens": 14297,
+      "ourToolCount": 68,
+      "cliToolCount": 68,
+      "toolSetMatches": true,
+      "dynamic": false,
+      "capturedSha256": "0539db0747ec02a1bfb4167d12146549e697758d0977f487126116c1fa2a6a26"
+    },
     "basic-memory": {
       "ourTokens": 9188,
       "ourMappedTokens": 7120,

@@ -19,6 +19,13 @@
       "toolCount": 10,
       "capturedSha256": "45e69bb7d3ab57903ca84555f5bb3851cbc806ae35ce9398eb88eea7f587ec91"
     },
+    "azure": {
+      "o200kFull": 15239,
+      "o200kMapped": 14303,
+      "claudeDelta": 26202,
+      "toolCount": 68,
+      "capturedSha256": "0539db0747ec02a1bfb4167d12146549e697758d0977f487126116c1fa2a6a26"
+    },
     "basic-memory": {
       "o200kFull": 9188,
       "o200kMapped": 7120,

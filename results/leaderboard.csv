@@ -22,7 +22,7 @@ github,54622,44,measured,vendor-official,32282,"https://api.github.com/repos/git
 aws-documentation,5045,5,measured,vendor-official,248642,https://pypistats.org/packages/awslabs-aws-documentation-mcp-server (PyPI weekly),,,425,false,17,408,3380,v0.2.5
 firecrawl,9561,27,measured,vendor-official,167934,https://api.npmjs.org/downloads/point/last-week/firecrawl-mcp (npm weekly),16428,claude-opus-5,342,false,150,192,8993,v0.2.5
 notion,17500,24,measured,vendor-official,141622,https://api.npmjs.org/downloads/point/last-week/@notionhq/notion-mcp-server (npm weekly),33560,claude-opus-5,135,false,135,0,17408,v0.2.5
-azure,,,startup-failure,vendor-official,105959,https://api.npmjs.org/downloads/point/last-week/@azure/mcp (npm weekly),,,,,,,,
+azure,15239,68,measured,vendor-official,105959,https://api.npmjs.org/downloads/point/last-week/@azure/mcp (npm weekly),26202,claude-opus-5,697,false,214,483,14297,v0.2.5
 supabase,5007,29,measured,vendor-official,89662,https://api.npmjs.org/downloads/point/last-week/@supabase/mcp-server-supabase (npm weekly),,,342,false,104,238,4061,v0.2.5
 sentry,6086,9,measured,vendor-official,85640,https://api.npmjs.org/downloads/point/last-week/@sentry/mcp-server (npm weekly; remote alt https://mcp.sentry.dev/mcp),,,40,false,40,0,5432,v0.2.5
 markitdown,64,1,measured,vendor-official,75650,https://pypistats.org/packages/markitdown-mcp (PyPI weekly),,,6,false,6,0,64,v0.2.5
@@ -96,8 +96,8 @@ keboola,,,auth-required,vendor-official,2907,https://pypistats.org/packages/kebo
 octocode,13552,14,measured,community,1797,https://api.npmjs.org/downloads/point/last-week/octocode-mcp (npm weekly),,,791,false,64,727,13122,v0.2.5
 anki,20037,50,measured,community,1716,https://api.npmjs.org/downloads/point/last-week/@ankimcp/anki-mcp-server (npm weekly),16189,claude-opus-5,179,false,179,0,9371,v0.2.5
 agentphone,6134,28,measured,community,7395,https://api.npmjs.org/downloads/point/last-week/agentphone-mcp (npm weekly),,,100,false,100,0,5613,v0.2.5
-hevy,,,startup-failure,community,6107,https://api.npmjs.org/downloads/point/last-week/hevy-mcp (npm weekly),,,,,,,,
-local-mcp,,,startup-failure,community,5122,https://api.npmjs.org/downloads/point/last-week/local-mcp (npm weekly; macOS host integration),,,,,,,,
+hevy,,,auth-required,community,6107,https://api.npmjs.org/downloads/point/last-week/hevy-mcp (npm weekly),,,,,,,,
+local-mcp,,,not-applicable,community,5122,https://api.npmjs.org/downloads/point/last-week/local-mcp (npm weekly; macOS host integration),,,,,,,,
 emailmd,585,3,measured,community,4582,https://api.npmjs.org/downloads/point/last-week/emailmd (npm weekly),,,377,false,8,369,546,v0.2.5
 githits,12833,16,measured,community,3790,https://api.npmjs.org/downloads/point/last-week/githits (npm weekly),,,53,false,53,0,12416,v0.2.5
 windows-mcp,,,not-applicable,community,2818,https://pypistats.org/packages/windows-mcp (PyPI weekly; Windows host integration),,,,,,,,
