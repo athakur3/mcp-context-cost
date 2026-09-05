@@ -7,6 +7,15 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+One server changed status in this release, and the interesting part is the three issues that
+were *not* filed. Phase 2 ended holding four upstream bugs to report; re-verifying each against
+its current published version left one. Two were this harness's own doing — `hevy`'s dummy
+credential, corrected in 0.13.0, and `accessibility-scanner`'s base image, corrected here — one
+was `heroku`, already open under someone else's name, and one was real. So a single issue went
+out and a comment went onto an existing thread. The measured set goes 86 → 87, the divergence
+run 23 → 24, and the regression page's three sections from 17 + 64 + 5 to 17 + 64 + 6; that
+widening run is also what exposed the drift in the last entry below.
+
 - **`accessibility-scanner` measures, and was never upstream's problem.** It published
   `ERR_PACKAGE_PATH_NOT_EXPORTED` out of `playwright-core` and was on its way to being reported
   as a broken package. The package declares `engines.node` of `^24.15.0 || >=26.0.0` and the
@@ -28,6 +37,18 @@ while reading it.
   by someone else (heroku/heroku-mcp-server#249); what we could add went there as a comment
   rather than as a second issue.
 
+- **One number, one source: both pages derive the divergence band from the run.** README's copy
+  of the band is regen-maintained; METHODOLOGY's was hand-written and held to
+  `PUBLISHED_WIRE_TO_CLIENT_RATIO` by a test. That kept the two equal only while the constant
+  tracked the run exactly — and the constant is a release-time snapshot deliberately allowed to
+  lag — so they came apart the first time a sweep measured a new server, and CI went red: the
+  run went 23 → 24 and README moved alone. METHODOLOGY's parenthetical is a `PAGE_CLAIMS` entry
+  now, and the test derives the band from `results/divergence.json` rather than from the
+  constant, so both pages state the run. The constant keeps a guard of its own, asking the two
+  things that actually matter of a snapshot: the band still correct to the precision it is
+  published at, and a count that never exceeds the run. The rule behind it, which this
+  repository broke twice in one day in opposite directions: a number derived somewhere should be
+  derived everywhere, or stated once and quoted.
 ## 0.13.0 — 2026-09-05
 
 Seven servers changed status in this release and **not one of them changed because the server
