@@ -7,6 +7,8 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+## 0.13.1 — 2026-09-05
+
 One server changed status in this release, and the interesting part is the three issues that
 were *not* filed. Phase 2 ended holding four upstream bugs to report; re-verifying each against
 its current published version left one. Two were this harness's own doing — `hevy`'s dummy
