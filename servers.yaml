@@ -764,8 +764,10 @@ servers:
     category: community
     repo: https://github.com/artokun/comfyui-mcp
   - name: agent-device
-    # Bare `agent-device` prints its help and exits 0 — it is a CLI whose MCP
-    # server is one of 68 subcommands, listed only under `help commands`.
+    # The MCP server is the `mcp` subcommand. Launched bare, `npx -y agent-device`
+    # exits non-zero with nothing on stderr — the only record of that launch, a
+    # process ending and no more (CHANGELOG 0.12.0) — so the entry names the
+    # subcommand rather than the package.
     command: npx -y agent-device mcp
     package: agent-device
     env: []
