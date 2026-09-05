@@ -46,6 +46,12 @@
    "url": "https://pypistats.org/api/packages/basic-memory/recent",
    "status": 429,
    "note": "The same URL, with the same User-Agent header, answered 429 on the request before the one that returned pypi-recent.json; the two differ only in when they were sent."
+  },
+  "pypi-404.html": {
+   "url": "https://pypistats.org/api/packages/no-such-package-mcp-context-cost-zz/recent",
+   "status": 404,
+   "fetchedOn": "2026-09-06",
+   "note": "The body is the three characters '404', text/html. The first request for this fixture, sent with the same User-Agent, was answered 429; the fixture is from the retry 65 seconds later."
   }
  }
 }

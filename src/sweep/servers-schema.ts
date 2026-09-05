@@ -72,6 +72,14 @@ export const knownFields = Object.keys(FIELDS) as (keyof typeof FIELDS)[];
  */
 const NAME = /^[a-z0-9][a-z0-9._-]*$/;
 
+/**
+ * What an `env` entry may be: a name a shell accepts, since docker mode passes
+ * each one as `-e NAME=…`. Exported so the registry scan's test can pick the
+ * live variable that fails it (`2Captcha_API_KEY`) from the fixture instead of
+ * carrying a second copy of the rule.
+ */
+export const ENV_NAME = /^[A-Za-z_][A-Za-z0-9_]*$/;
+
 const CATEGORIES = ['official-reference', 'vendor-official', 'community'];
 
 function isPlainObject(v: unknown): v is Record<string, unknown> {
@@ -121,7 +129,7 @@ export function validateEntry(raw: unknown, index: number): SchemaProblem[] {
     if (!Array.isArray(env)) bad('must be a list of variable NAMES (values are never committed)', 'env');
     else {
       for (const n of env) {
-        if (typeof n !== 'string' || !/^[A-Za-z_][A-Za-z0-9_]*$/.test(n)) {
+        if (typeof n !== 'string' || !ENV_NAME.test(n)) {
           bad(`holds ${JSON.stringify(n)}, which is not an environment variable name`, 'env');
         }
       }

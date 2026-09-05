@@ -32,8 +32,9 @@
  * (test/fixtures/registry/sources.json), so the rate limit is about pacing,
  * and the User-Agent sent here is courtesy, not what avoids it. Lookups are
  * paced with a fixed gap for the same reason. An unknown package reads as
- * "no figure" (npm bulk maps it to null; npm single and pypistats answer 404),
- * which the ranking keeps out of the drafted set rather than ranking as 0.
+ * "no figure" (npm bulk maps it to null; npm single and pypistats answer 404
+ * — test/fixtures/registry/npm-single-missing.json and pypi-404.html), which
+ * the ranking keeps out of the drafted set rather than ranking as 0.
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
@@ -179,7 +180,7 @@ const metrics = new Map<string, number | null>();
 
 const { bulk, single } = splitForNpm(candidates.filter((c) => c.registry === 'npm').map((c) => c.pkg));
 const pypi = candidates.filter((c) => c.registry === 'pypi').map((c) => c.pkg);
-log(`${candidates.length} candidate(s): ${bulk.length} npm bulk chunk(s), ${single.length} scoped npm single(s), ${pypi.length} pypi lookup(s)`);
+log(`${candidates.length} candidate(s): ${bulk.length} npm bulk chunk(s), ${single.length} npm single(s), ${pypi.length} pypi lookup(s)`);
 
 for (const chunk of bulk) {
   const res = await request(`${NPM_API}/${chunk.join(',')}`);

@@ -197,7 +197,7 @@ export function metricKey(registry: PackageRegistry, pkg: string): string {
 }
 
 /** The `package:` spellings that name a package, as opposed to a docker image, a git URL or a remote. */
-const PACKAGE_ID = /^(@[a-z0-9][a-z0-9._-]*\/)?[a-z0-9][a-z0-9._-]*$/i;
+export const PACKAGE_ID = /^(@[a-z0-9][a-z0-9._-]*\/)?[a-z0-9][a-z0-9._-]*$/i;
 const PYPI_SUFFIX = / \(PyPI\)$/;
 
 /**
@@ -281,12 +281,32 @@ export function candidatesFrom(records: RegistryRecord[], tracked: Set<string>):
  * name outright — `{"error":"scoped packages are not currently supported in
  * bulk lookups"}`, recorded live — so scoped names each get a single lookup,
  * and unscoped names are chunked at the bulk ceiling.
+ *
+ * A chunk is never one name long. npm decides the response shape from the
+ * URL, not from the caller's intent: a comma-joined list is answered as a map
+ * keyed by name, and a lone name — the same URL a single lookup uses — is
+ * answered in the flat `{downloads, start, end, package}` shape
+ * (test/fixtures/registry/npm-single-unscoped.json is the response to exactly
+ * such a URL). The first version of this function chunked without that rule,
+ * so any run with 1 (mod NPM_BULK_LIMIT) unscoped candidates sent its last
+ * name alone, `parseNpmBulk` iterated the flat object as if it were a map,
+ * filed `downloads`/`start`/`end`/`package` as package names with no figure,
+ * and the real package got no entry at all. A one-page smoke run on 2026-09-05
+ * showed it: `pretrip-mcp`, 90 downloads that week by the single endpoint,
+ * was refused as "no weekly-download figure". A trailing single name goes to
+ * the single endpoint, which accepts unscoped names, and the bulk parser
+ * refuses the flat shape outright so the mistake cannot come back quietly.
  */
 export function splitForNpm(names: string[]): { bulk: string[][]; single: string[] } {
   const single = names.filter((n) => n.startsWith('@'));
   const unscoped = names.filter((n) => !n.startsWith('@'));
   const bulk: string[][] = [];
   for (let i = 0; i < unscoped.length; i += NPM_BULK_LIMIT) bulk.push(unscoped.slice(i, i + NPM_BULK_LIMIT));
+  const last = bulk[bulk.length - 1];
+  if (last && last.length === 1) {
+    bulk.pop();
+    single.push(last[0]!);
+  }
   return { bulk, single };
 }
 
@@ -300,11 +320,21 @@ function downloads(v: unknown): number | null {
  * `null` (live: `"no-such-package-…":null` beside two real rows). Null is
  * "no figure", never zero — a zero would rank the package, a null keeps it
  * out of the drafted set with a reason.
+ *
+ * The single flat shape is refused, not iterated. Iterating it is what filed
+ * `npm:downloads` and `npm:start` as package names and lost `pretrip-mcp`'s
+ * figure (see `splitForNpm`); a top-level numeric `downloads` beside a string
+ * `package` is that shape and nothing else, since a package name cannot be
+ * the bare word `downloads` beside a number.
  */
 export function parseNpmBulk(body: unknown): Map<string, number | null> {
   const out = new Map<string, number | null>();
   if (typeof body !== 'object' || body === null || Array.isArray(body)) return out;
   if ('error' in body) throw new Error(`npm bulk lookup: ${String((body as { error: unknown }).error)}`);
+  const flat = body as { downloads?: unknown; package?: unknown };
+  if (typeof flat.downloads === 'number' && typeof flat.package === 'string') {
+    throw new Error(`npm bulk lookup: single-lookup shape given to the bulk parser (package ${flat.package})`);
+  }
   for (const [name, v] of Object.entries(body)) out.set(name, downloads(v));
   return out;
 }
@@ -361,14 +391,30 @@ function renderArgument(a: RegistryArgument): RenderedArgument {
   return { text: `<${a.valueHint ?? a.name ?? 'value'}>`, placeholder: true };
 }
 
+/** The runtime the harness launches a package of this registry with; anything else is a line it cannot run as given. */
+function conventionalRuntime(registry: PackageRegistry): string {
+  return registry === 'npm' ? 'npx' : 'uvx';
+}
+
 /**
  * The launch line, and whether it is a guess.
  *
- * With a `runtimeHint` and `runtimeArguments` the record says how it is run
- * (`npx -y keyblind` then `start`, live) and the draft repeats it. With a hint
- * alone the draft is the conventional line for that runtime. With neither —
- * most records — it is `npx -y <pkg>` / `uvx <pkg>`, and `guessed` is true so
- * the operator can see which drafts are the class that needed a subcommand.
+ * With the conventional `runtimeHint` (`npx` for npm, `uvx` for PyPI) and
+ * `runtimeArguments` the record says how it is run (`npx -y keyblind` then
+ * `start`, live) and the draft repeats it, not guessed. With the conventional
+ * hint alone the draft is the conventional line. With no hint — most records —
+ * it is `npx -y <pkg>` / `uvx <pkg>`, and `guessed` is true so the operator
+ * can see which drafts are the class that needed a subcommand.
+ *
+ * An unconventional hint is a guess whether or not arguments come with it.
+ * `ai.callmcp/server` (page2.json) carries `runtimeHint: "node"` for an npm
+ * package; the harness starts npm packages through `npx`, so a `node …` line
+ * is one it has to probe, not one the record vouched for. The first version
+ * of this function let a hint-with-arguments through as not-a-guess whatever
+ * the hint was, which would have marked `node dist/index.js <pkg>` as
+ * recorded fact. The arguments are still carried into the line, because they
+ * are the record's own account of what the runtime is given.
+ *
  * A required argument the registry only describes (`<project_root>`) is left
  * as a placeholder, which also marks the command guessed: it cannot run as
  * written.
@@ -379,12 +425,11 @@ export function draftCommand(c: ScanCandidate): { command: string; guessed: bool
   let guessed = [...runtime, ...pkgArgs].some((a) => a.placeholder);
   let parts: string[];
   const conventional = c.registry === 'npm' ? ['npx', '-y', c.pkg] : ['uvx', c.pkg];
+  if (c.runtimeHint && c.runtimeHint !== conventionalRuntime(c.registry)) guessed = true;
   if (c.runtimeHint && runtime.length) {
     parts = [c.runtimeHint, ...runtime.map((a) => a.text)];
     if (!parts.includes(c.pkg)) parts.push(c.pkg);
-  } else if (c.runtimeHint === 'npx' && c.registry === 'npm') {
-    parts = conventional;
-  } else if (c.runtimeHint === 'uvx' && c.registry === 'pypi') {
+  } else if (c.runtimeHint === conventionalRuntime(c.registry)) {
     parts = conventional;
   } else {
     parts = conventional;

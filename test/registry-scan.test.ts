@@ -4,9 +4,10 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parse } from 'yaml';
 import { TSX_CLI } from './tsx.js';
-import { validateEntry } from '../src/sweep/servers-schema.js';
+import { ENV_NAME, validateEntry } from '../src/sweep/servers-schema.js';
 import {
   NPM_BULK_LIMIT,
+  PACKAGE_ID,
   REGISTRY_URL,
   assembleScan,
   candidatesFrom,
@@ -51,6 +52,7 @@ const npmSingleUnscoped = json<{ downloads: number; package: string }>('npm-sing
 const npmSingleMissing = json<unknown>('npm-single-missing.json');
 const pypiRecent = json<{ data: { last_week: number }; package: string }>('pypi-recent.json');
 const pypi429 = readFileSync(join(fixtures, 'pypi-429.html'), 'utf8');
+const pypi404 = readFileSync(join(fixtures, 'pypi-404.html'), 'utf8');
 
 const serversYaml = parse(readFileSync(join(repoRoot, 'servers.yaml'), 'utf8')) as {
   servers: { name: string; package?: string; metricSource?: string }[];
@@ -155,7 +157,7 @@ describe('candidatesFrom', () => {
   it('builds the tracked set only from package spellings that name a package', () => {
     const tracked = trackedPackages(serversYaml);
     const spelled = serversYaml.servers.map((s) => s.package).filter((p): p is string => typeof p === 'string');
-    const named = spelled.filter((p) => /^(@[a-z0-9][a-z0-9._-]*\/)?[a-z0-9][a-z0-9._-]*( \(PyPI\))?$/i.test(p));
+    const named = spelled.filter((p) => PACKAGE_ID.test(p.replace(/ \(PyPI\)$/, '')));
     const other = spelled.filter((p) => !named.includes(p));
     // The file really does carry the other spellings, or this proves nothing.
     expect(other.some((p) => p.includes('(docker)'))).toBe(true);
@@ -217,6 +219,35 @@ describe('download lookups', () => {
     expect(bulk.flat().some((n) => n.startsWith('@'))).toBe(false);
   });
 
+  it('never sends a lone name to the bulk endpoint, which would answer it in the single shape', () => {
+    // 1 (mod NPM_BULK_LIMIT) unscoped names is the case that lost pretrip-mcp's
+    // figure on 2026-09-05: the trailing chunk of one was fetched from the
+    // bulk URL and came back flat. It goes to the single endpoint instead.
+    const unscoped = Array.from({ length: NPM_BULK_LIMIT + 1 }, (_, i) => `pkg-${i}`);
+    const split = splitForNpm(unscoped);
+    expect(split.bulk.map((c) => c.length)).toEqual([NPM_BULK_LIMIT]);
+    expect(split.single).toEqual([unscoped[NPM_BULK_LIMIT]]);
+
+    const lone = splitForNpm(['only-one']);
+    expect(lone.bulk).toEqual([]);
+    expect(lone.single).toEqual(['only-one']);
+
+    for (const n of [0, 1, 2, NPM_BULK_LIMIT - 1, NPM_BULK_LIMIT, NPM_BULK_LIMIT + 1, 2 * NPM_BULK_LIMIT + 1]) {
+      const names = Array.from({ length: n }, (_, i) => `p-${i}`);
+      const { bulk, single } = splitForNpm(['@scoped/one', ...names]);
+      expect(bulk.some((c) => c.length === 1), `${n} unscoped names`).toBe(false);
+      // Nothing is lost by the move: every name is looked up exactly once.
+      expect([...bulk.flat(), ...single].sort()).toEqual(['@scoped/one', ...names].sort());
+    }
+  });
+
+  it('refuses the single flat shape in the bulk parser rather than filing its fields as package names', () => {
+    // npm-single-unscoped.json is the answer to a one-name URL; iterating it
+    // is what recorded npm:downloads and npm:start as packages with no figure.
+    expect(() => parseNpmBulk(npmSingleUnscoped)).toThrow(/single-lookup shape/);
+    expect(() => parseNpmBulk(npmSingleScoped)).toThrow(/single-lookup shape/);
+  });
+
   it('parses the bulk map and reads an unknown name as no figure, never as zero', () => {
     const m = parseNpmBulk(npmBulk);
     const body = npmBulk as Record<string, { downloads: number } | null>;
@@ -246,6 +277,15 @@ describe('download lookups', () => {
     expect(parsePypi(pypi429)).toBeNull();
     expect(parsePypi({ data: {} })).toBeNull();
   });
+
+  it('reads an unknown PyPI package as no figure from the 404 body', () => {
+    // The body is the three characters "404" — which JSON.parse reads as the
+    // number 404, so the tool's status check is what keeps it from the
+    // parser; and even handed the parsed body, there is no data.last_week.
+    expect(JSON.parse(pypi404)).toBe(404);
+    expect(parsePypi(JSON.parse(pypi404))).toBeNull();
+    expect(parsePypi(pypi404)).toBeNull();
+  });
 });
 
 describe('metricSourceFor', () => {
@@ -257,7 +297,7 @@ describe('metricSourceFor', () => {
       if (typeof s.package !== 'string' || typeof s.metricSource !== 'string') continue;
       const isPypi = / \(PyPI\)$/.test(s.package);
       const id = s.package.replace(/ \(PyPI\)$/, '');
-      if (!/^(@[a-z0-9][a-z0-9._-]*\/)?[a-z0-9][a-z0-9._-]*$/i.test(id)) continue;
+      if (!PACKAGE_ID.test(id)) continue;
       if (!/ \((npm|PyPI) weekly\)$/.test(s.metricSource)) continue;
       expect(s.metricSource, s.name).toBe(metricSourceFor(isPypi ? 'pypi' : 'npm', id));
       compared++;
@@ -313,6 +353,47 @@ describe('draftEntry', () => {
     expect(guessed).toBe(true);
   });
 
+  it('marks an unconventional runtimeHint guessed even when the record carries runtimeArguments', () => {
+    // ai.callmcp/server (page2.json) is the live record with a `node` hint on
+    // an npm package. Its runtimeArguments are null live, so the with-args
+    // case is built by hand from it: the arguments below are the addition.
+    const rec = page2.servers.find((r) => r.server.packages?.some((p) => p.runtimeHint && !['npx', 'uvx'].includes(p.runtimeHint)))!;
+    const pkg = rec.server.packages!.find((p) => p.runtimeHint === 'node')!;
+    expect(pkg.registryType).toBe('npm');
+    const [base] = candidatesFrom([rec], none);
+    expect(base!.runtimeHint).toBe('node');
+    expect(base!.runtimeArguments).toBeUndefined();
+    expect(draftCommand(base!)).toEqual({ command: `npx -y ${pkg.identifier}`, guessed: true });
+
+    const withArgs: ScanCandidate = { ...base!, runtimeArguments: [{ type: 'positional', value: 'dist/index.js' }] };
+    const d = draftCommand(withArgs);
+    expect(d.command).toBe(`node dist/index.js ${pkg.identifier}`);
+    expect(d.guessed).toBe(true);
+
+    // The same arguments under the conventional hint are the record's own account, not a guess.
+    const conventional: ScanCandidate = { ...withArgs, runtimeHint: 'npx' };
+    expect(draftCommand(conventional).guessed).toBe(false);
+  });
+
+  it('splits a PyPI record\'s env into required and optional the same way as an npm one', () => {
+    const req = records['pypi-with-env']!;
+    const reqVars = req.server.packages![0]!.environmentVariables!;
+    expect(reqVars.every((v) => v.isRequired === true)).toBe(true);
+    const d = draftEntry(candidate('pypi-with-env'), 4);
+    if (!('entry' in d)) throw new Error(d.refused);
+    expect(validateEntry(d.entry, 0)).toEqual([]);
+    expect(d.entry.env).toEqual(reqVars.map((v) => v.name));
+    expect(d.optionalEnv).toEqual([]);
+
+    const opt = records['io-github-pypi']!;
+    const optVars = opt.server.packages![0]!.environmentVariables!;
+    expect(optVars.every((v) => v.isRequired !== true)).toBe(true);
+    const o = draftEntry(candidate('io-github-pypi'), 4);
+    if (!('entry' in o)) throw new Error(o.refused);
+    expect(o.entry.env).toEqual([]);
+    expect(o.optionalEnv).toEqual(optVars.map((v) => v.name));
+  });
+
   it('drafts a PyPI package with the (PyPI) spelling and the pypistats page as its source', () => {
     const rec = records['io-github-pypi']!;
     const id = rec.server.packages![0]!.identifier;
@@ -332,7 +413,7 @@ describe('draftEntry', () => {
     expect(noRepo).toMatchObject({ refused: expect.stringMatching(/repository\.url/) });
 
     const rec = records['io-github-bad-env-name']!;
-    const bad = rec.server.packages![0]!.environmentVariables!.find((v) => !/^[A-Za-z_][A-Za-z0-9_]*$/.test(v.name))!;
+    const bad = rec.server.packages![0]!.environmentVariables!.find((v) => !ENV_NAME.test(v.name))!;
     expect(bad.isRequired).toBe(true);
     const badEnv = draftEntry(candidate('io-github-bad-env-name'), 5);
     expect(badEnv).toMatchObject({ refused: expect.stringContaining(bad.name) });
