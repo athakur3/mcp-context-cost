@@ -347,7 +347,7 @@ number is *not*, config policy, failure taxonomy, frozen color bands, known dive
 | `src/audit/` | client-config discovery (5 clients, JSONC-tolerant), the per-stack report, and the baseline diff |
 | `src/cli.ts` | `audit` (measure your own stack), `verify` (re-derive any published number), `measure` |
 | `spec/fixtures/` | golden vectors shared by the TypeScript and bash implementations |
-| `tools/` | the one script that calls a network API (Claude divergence); kept out of the package so the library stays offline |
+| `tools/` | the scripts that call a network API — the Claude divergence run, the adoption reading, the registry scan — kept out of the package so the library stays offline |
 | `upstream/` | `badge.sh` + composite-action patch + bash tests — the self-serve badge recipe, carried here |
 | `servers.yaml` | 106 curated candidates with live install metrics and provenance |
 | `results/` · `badges/` | measurements, leaderboard, history series, shields endpoint JSONs |
@@ -360,13 +360,16 @@ npm ci
 npm run sweep -- --no-persist --name my-server --command "npx -y my-mcp-server"
 ```
 
-That prints the number and writes nothing: every record in this repository
+That prints the number and writes nothing. Published records
 (`results/<name>/measurement.json`, `badges/<name>.json`, the `history.csv`
-row) is measured and published by CI, never from a developer machine — a
-laptop's architecture and load describe the laptop, not the server. To get
-your server into the leaderboard, add an entry to `servers.yaml` and open a
-pull request; the check on that PR measures the entry read-only, and the
-rotation publishes it after merge.
+row) come from CI: a developer machine is a different architecture under
+different load, and a measurement taken there describes it rather than the
+server. `local-mcp` was published as a startup failure from an arm64 laptop
+when the finding was the laptop, and it took recording `isolation.arch` on
+every measurement to tell the two apart. To get your server into the
+leaderboard, add an entry to `servers.yaml` and open a pull request; the check
+on that PR measures the entry read-only, and the rotation publishes it after
+merge.
 
 For a badge on your own README, run the published CLI in your server's own CI
 (the [gate](#defend-the-number-dont-just-display-it) below writes

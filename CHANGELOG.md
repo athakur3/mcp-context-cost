@@ -7,6 +7,71 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+Phase 3 of the roadmap — others can add servers safely — and the hour of checking that came
+first found the phase's own goal sentence was false where it mattered most. Three of its four
+items were wrong about the mechanism and the fourth held; the pattern is exact three phases
+running. None of this ships bytes to an installer except the `--no-persist` flag; the rest is
+what the repository does with a stranger's pull request.
+
+- **A stranger's launch command never runs in a process that can push — after merge, too.**
+  The phase promised it, and on the pull request it was true: `ci.yml` runs under a read-only
+  token. But the write-token rotation checked out with `actions/checkout`'s default
+  `persist-credentials: true`, so `resweep.yml` and `self-badge.yml` launched every entry's
+  command with the token sitting in `.git/config`. Every workflow holding `contents: write` now
+  checks out with `persist-credentials: false` and hands the token to the push and nowhere
+  else; `ci.yml` states `contents: read` explicitly. A test over the whole workflow directory
+  holds it, and its four teeth were mutation-checked before it was committed — a token on the
+  cross-check step, a token in a job env, a checkout keeping credentials, and `ci.yml` without
+  its block each turn the suite red.
+- **A `servers.yaml` pull request is measured read-only before a write token ever launches it.**
+  `src/sweep/pr-check.ts` diffs the file by name against the base — `validateServers` first, so
+  a malformed entry fails with the schema's own words — and measures what a write-token job
+  would otherwise launch first: entries the pull request *added*, and entries whose launch
+  fields (`command`, `dockerImage`, `aptPackages`, `needsGit`, `env`, `envValues`,
+  `timeoutSeconds`, `notApplicable`) it *changed*. It measures with `persist: false` in Docker,
+  writes nothing, prints the number, and refuses above a per-request cap before any launch —
+  the cap derived from the retry arithmetic, since one 240-second entry can cost 720. A
+  self-containerised command (`docker run …`, the form `github`, `grafana` and `terraform`
+  take) is listed rather than run from a pull request; a maintainer measures it by dispatch
+  after review. `.github/workflows/pr-check.yml` runs it on `pull_request` for `servers.yaml`,
+  `permissions: contents: read`, no secrets, and its docblock states the real boundary: a
+  read-only token and no secrets, inside Docker with the bridge network on — credential-free,
+  not an airgap. One predicate, `isSelfContainerised`, replaces four copies of the same test
+  across `run.ts` and `cross-check.ts`.
+- **`npm run sweep -- --no-persist` prints a number and writes nothing.** The README's own
+  instruction for measuring your server wrote `results/<name>/measurement.json`,
+  `badges/<name>.json` and a `history.csv` row into the tree by default, and there was no flag
+  not to — the one in-repo measuring path a contributor would follow violated the rule that a
+  laptop's number is never the published one. The instruction now uses the flag, and a test
+  reads the README to keep it that way.
+- **The adoption reading is taken on a schedule, and only a count gets committed.**
+  `.github/workflows/adoption.yml` runs monthly and on dispatch, under the Actions token
+  (`tools/measure-adoption.ts` already fell back to it), with `timeout-minutes` the tool's own
+  fetches lack, `npm test` before the commit as every bot job now does, and an ordering that
+  cannot reach the commit step when the reading is unresolved — the exit as first written
+  would have accepted a page whose date advanced with no number on it. `--render-only`
+  re-renders `docs/adoption.md` from the committed reading without a token and without
+  advancing `checkedAt`, so a wording change to the renderer no longer needs a network run to
+  keep the page and the reading equal; a test asserts they are. GitHub's documentation says the
+  Actions token is accepted by code search; no run in this repository has shown it yet, and the
+  workflow says so until the first dispatch is green.
+- **The registry scan is written down, as a crawl and a ranking with the human step left
+  where it was.** `tools/scan-registry.ts` walks `registry.modelcontextprotocol.io/v0/servers`
+  with `version=latest` — the registry deduplicates server-side; the client keeps `active` —
+  at the API's cap of 100 a page, ranks npm and PyPI stdio packages by live weekly downloads
+  (bulk for unscoped npm names, single lookups for scoped, pypistats paced with wait-and-retry
+  on 429), drafts entries in the schema's shape or refuses each with its reason, emits the two
+  owner strings the provenance judgment reads, writes one dated file to the path the operator
+  names and nothing anywhere else, and prints a summary line an expansion commit can quote. The
+  pure parts live in `src/sweep/registry-scan.ts` and are tested from live-derived fixtures. It
+  claims nothing about provenance beyond emitting its inputs: the 2026-09-04 selection was a
+  human judgment by org and repo, and the numbers that had been attached to it — a count and a
+  page cap — were in a memory file rather than in this repository.
+- **`servers.yaml` no longer says of `agent-device` what the record refutes.** Its comment had
+  the bare launch printing help and exiting 0, one of 68 subcommands; the only captured record
+  is exit 1 with nothing on stderr, and the count was never sourced. The comment says that and
+  no more.
+
 ## 0.13.2 — 2026-09-05
 
 Both entries below close the same rule, found in two places on the same day: **a truncation may

@@ -456,6 +456,17 @@ describe('pr-check (subprocess)', () => {
       expect(existsSync(join(root, 'results', 'history.csv'))).toBe(false);
     }, 60_000);
 
+    it('is the form the README gives a contributor, and the persisting form is gone from it', () => {
+      // The instruction is the one path a would-be contributor follows, so the
+      // suite reads it rather than trusting a docblock that says it changed.
+      const readme = readFileSync(join(repoRoot, 'README.md'), 'utf8');
+      const section = readme.slice(readme.indexOf('## Measure your own server'));
+      const block = section.slice(0, section.indexOf('\n## ', 1));
+      expect(block).toContain('npm run sweep -- --no-persist');
+      expect(block).not.toContain('cat badges/');
+      expect(block).not.toMatch(/npm run sweep -- --name/);
+    });
+
     it('is the flag that made the difference — without it the CLI still persists', () => {
       const { code } = run(sweepRun, ['--name', 'mine', '--command', `node ${stub}`, '--timeout', '10000']);
       expect(code).toBe(0);
