@@ -2,9 +2,9 @@
 
 Where this project is headed, and what a contributor can pick up. What already shipped is in
 [CHANGELOG.md](CHANGELOG.md) and the git history — **a phase leaves this file when it ships**,
-so the plan stays short and stays forward-looking. Phases 0, 1 and 2 shipped on 2026-09-05 and
-phase 3 followed as `0.14.0`; all four have left it, and what they built, and what they
-corrected, is in the changelog sections from `0.12.0` to `0.14.0`.
+so the plan stays short and stays forward-looking. Phases 0, 1 and 2 shipped on 2026-09-05,
+phase 3 followed as `0.14.0` and phase 4 as `0.15.0`; all five have left it, and what they
+built, and what they corrected, is in the changelog sections from `0.12.0` to `0.15.0`.
 
 Dated **2026-09-06**. Every item names the evidence it rests on, so you can check whether it is
 still true before starting it. Items marked *(maintainer)* need an account or a decision only
@@ -19,13 +19,14 @@ regen keeps them honest.
 **Check an item's premise before starting it.** Four of phase 1's eight items were wrong about
 *why* — not about the symptom, which was real every time, but about the mechanism behind it —
 phase 2 then ran the same way, two of its seven, one of which dissolved on contact with the
-record, and phase 3 the same again: three of its four, and its goal sentence was false in the
-one place no item looked, the job that runs after merge. The pattern has been exact three
-times: every item that quoted the record held up, and every item that inferred a cause from a
-category did not. So the first hour of a phase re-reads the records its items name and either
-confirms the sentence or rewrites it. That hour would have saved most of phase 1's rework, and
-it is the same discipline this project applies to its own published numbers — a claim is worth
-what its evidence is worth, including a claim in here.
+record; phase 3 the same again, three of its four, and its goal sentence was false in the one
+place no item looked, the job that runs after merge; and phase 4 the same, two of its three,
+one of them a mechanism that would have opened a browser on the user's machine. The pattern
+has been exact four times: every item that quoted the record held up, and every item that
+inferred a cause from a category did not. So the first hour of a phase re-reads the records
+its items name and either confirms the sentence or rewrites it. That hour would have saved
+most of phase 1's rework, and it is the same discipline this project applies to its own
+published numbers — a claim is worth what its evidence is worth, including a claim in here.
 
 ## Where it stands
 
@@ -49,69 +50,8 @@ reading, the re-sweep cadence. They are all on the distribution track.
 
 | phase | goal | waiting on | exit, in one line |
 |---|---|---|---|
-| **4** | `audit` reaches the stacks people run | nothing | remote entries measured; three more clients, each with a who-pays row |
 | **5** | The data tells its second story | tool vectors on both sides of most movements | state-of report #2 with per-tool attribution; rotation length decided on evidence |
 | **∥** | Distribution *(maintainer)* | its own calendar, and someone else's answer | a badge merged somewhere that is not this repository |
-
----
-
-## Phase 4 — `audit` reaches the stacks people actually run
-
-**Goal.** `audit` measures what is in the config, not the subset the harness finds
-convenient.
-
-**The premise check, 2026-09-06.** Two of the three items were right about the symptom and
-wrong about the mechanism; the third held. The pattern is exact four phases running. What the
-records established:
-
-- **"Route no-auth remotes through the bridge" would open a browser.** Against an OAuth-walled
-  endpoint `mcp-remote` opens a browser window and waits for the callback — its README says so
-  — and in a headless run it waits until this harness's timeout, so the row would read
-  `timeout`. Probing the endpoints themselves settled the mechanism: an unauthenticated
-  `initialize` gets `401` with a `WWW-Authenticate: Bearer …` header from Linear, Zapier and
-  Vercel, and `200` from DeepWiki, Microsoft Learn, Cloudflare Docs and Hugging Face. The
-  answer is the row, and only an endpoint that answered is handed to the bridge.
-- **Windsurf spells a remote `serverUrl`**, and `toServer` looked for `url` alone: a Windsurf
-  remote was dropped from the audit as if it were not configured. Found by reading the page
-  the item named.
-- **The clients' shapes had to be read, not remembered.** Zed's documented form is flat
-  (`command`, `args`, `env`, or `url` with `headers`), and an `extension`-provided entry
-  carries no launch at all; Gemini spells remotes two ways (`url` is SSE, `httpUrl` is
-  streamable HTTP); Goose's documentation moved domains and its extension types are `stdio`
-  and `streamable_http` with `cmd`/`uri`, SSE unsupported; Cline's extension path exists only
-  in third-party guides and is left out; Kiro is fully documented and is in. Five clients had
-  first-hand pages, not three.
-- **The dated re-read held**, and a summarising fetch of the page did not: it reported the
-  `ENABLE_TOOL_SEARCH` table gone, while the raw page has it unchanged. A summary is not a
-  record. Four things had moved around the table — see the changelog.
-
-**Scope.**
-- [x] **Remote entries.** A pre-flight probe decides `auth-walled` (in the server's words, with
-      the URL and its header) or `unreachable` (with the reason); an open endpoint is measured
-      through the `mcp-remote` bridge and joins the total. `remote-not-measurable` is gone.
-      Header values are sent and never reported; a value a server echoes back is redacted.
-- [x] **More clients**: Codex CLI (TOML — the parser decision is `smol-toml`, a third
-      dependency), Gemini CLI, Zed, Kiro and Goose, each with a fixture test, a discovery path,
-      a no-record who-pays row and a line in the README's client list. Cline is out until its
-      extension path has a first-hand source.
-- [x] **Re-read the deferral model, dated.** Re-read 2026-09-06; the read-on date has advanced
-      and the four changes are recorded in `src/audit/deferral.ts` and METHODOLOGY. One of them
-      became code: `alwaysLoad: true` is read from the entry and counted rather than listed.
-
-**Exit.**
-- A fixture config with an `http` entry produces a number or an auth-walled line; the
-  status `remote-not-measurable` no longer appears in output. *Met 2026-09-06:
-  `test/remote-bridge.test.ts` measures the reference "everything" server over streamable HTTP
-  through the bridge; `test/remote.test.ts` prints the auth-walled line for a local `401` and
-  asserts the old status word appears nowhere.*
-- Each added client has a fixture test, a discovery path, a who-pays row, and a line in the
-  README's client list. *Met for Codex CLI, Gemini CLI, Zed, Kiro and Goose
-  (`test/audit-clients.test.ts`, `test/published-deferral.test.ts`).*
-- METHODOLOGY's "read on" date for the deferral model has advanced, with any change noted.
-  *Met: read 2026-08-20, re-read 2026-09-06, four changes noted.*
-
-**Why here.** Independent of the sweep. Ordered after phase 2 because the people distribution
-brings are audit users, and this is the audit they will run.
 
 ---
 
