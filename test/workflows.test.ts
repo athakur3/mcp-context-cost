@@ -300,6 +300,51 @@ describe('the published composite action', () => {
   });
 });
 
+/**
+ * The release workflow exists so that cutting a version is one action rather
+ * than a sequence held in someone's head. That only helps if the order is the
+ * safe one — checks before commits, and the publish left where npm's trust
+ * actually lives.
+ */
+describe('release workflow', () => {
+  const release = readFileSync(join(import.meta.dirname, '..', '.github', 'workflows', 'release.yml'), 'utf8');
+  const at = (needle: string) => release.indexOf(needle);
+
+  it('runs the readiness gate before it writes anything', () => {
+    // A gate that runs after the cut is a report, not a gate.
+    expect(at('release-readiness.ts')).toBeGreaterThan(-1);
+    expect(at('release-readiness.ts')).toBeLessThan(at('cut-changelog.ts'));
+    expect(at('release-readiness.ts')).toBeLessThan(at('git commit'));
+  });
+
+  it('runs the suite before it writes anything', () => {
+    expect(at('npm test')).toBeLessThan(at('cut-changelog.ts'));
+  });
+
+  it('does not publish — it asks the workflow npm actually trusts', () => {
+    // publish.yml holds the OIDC trust, bound to that workflow in this
+    // repository and pinned to a configuration a release verifiably shipped
+    // through. Reimplementing it here would risk the one path that cannot be
+    // tested without publishing.
+    expect(release).not.toMatch(/npm publish/);
+    expect(release).toContain('gh workflow run publish.yml');
+    expect(release).toContain('gh run watch');
+  });
+
+  it('proves the tarball from npm rather than trusting the upload', () => {
+    expect(release).toMatch(/mcp-context-cost@\$VERSION" verify --remote/);
+  });
+
+  it('has a dry run that stops before the first commit reaches main', () => {
+    expect(at('Stop here on a dry run')).toBeLessThan(at('git push'));
+    expect(release).toContain("if: inputs.dry_run");
+  });
+
+  it('cannot race another release', () => {
+    expect(release).toMatch(/concurrency:[^]*?group: release/);
+  });
+});
+
 describe('publish workflow', () => {
   const publish = readFileSync(join(wfDir, 'publish.yml'), 'utf8');
 

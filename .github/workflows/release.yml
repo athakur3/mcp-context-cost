@@ -1,0 +1,153 @@
+# One dispatch, one release.
+#
+# Cutting a version used to be a sequence held in someone's head: check what is
+# unreleased, regenerate the pages, write the changelog, rename its heading,
+# bump two files, commit them separately, push, dispatch the publish, watch it,
+# then prove the tarball from npm. Every step was recoverable and none of them
+# was hard; the cost was that a missed one is invisible until a reader hits it.
+#
+# What this does NOT do is publish. `publish.yml` holds npm's trust over OIDC,
+# bound to that workflow in this repository, and it is deliberately pinned to
+# the configuration a release verifiably shipped through. Restructuring it for
+# the convenience of a caller would risk the one path that cannot be tested
+# without publishing, so this dispatches it and waits instead — the one event
+# a GITHUB_TOKEN is allowed to raise.
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to cut and publish, e.g. 0.14.0. Must not already exist.'
+        required: true
+      dry_run:
+        description: 'Run every check and stop before the first commit.'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  actions: write        # to dispatch publish.yml and read its result
+
+# Two releases in flight would race on the version and on the push.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      VERSION: ${{ inputs.version }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # The readiness gate reads back to the last version-bump commit.
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: The version is a version, and is not already cut
+        run: |
+          set -euo pipefail
+          printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' \
+            || { echo "not a version: $VERSION"; exit 2; }
+          if git log --format=%s | grep -qF "> $VERSION ("; then
+            echo "a bump commit for $VERSION already exists"; exit 1
+          fi
+
+      - name: Nothing published is stale
+        # The check that makes a release boring. It fails when regen would
+        # rewrite a committed artifact — meaning what is published is not what
+        # the data says — or when commits that ship bytes have no changelog
+        # entry at all. Everything else it finds it prints and does not block.
+        run: npx tsx tools/release-readiness.ts
+
+      - name: The suite that prepublishOnly would run anyway
+        run: npm run build && npm test && npm run typecheck
+
+      - name: Cut the changelog and bump
+        # Two commits, because the second is what tooling and anyone bisecting
+        # reads: the bump touches three version fields and nothing else.
+        run: |
+          set -euo pipefail
+          npx tsx tools/cut-changelog.ts "$VERSION"
+          git config user.name "mcp-context-cost bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add CHANGELOG.md
+          git commit -q -m "The changelog is cut for $VERSION"
+          npm version "$VERSION" --no-git-tag-version
+          git add package.json package-lock.json
+          git commit -q -F - <<EOF
+          Version $(git show HEAD~1:package.json | node -p "JSON.parse(require('fs').readFileSync(0,'utf8')).version") -> $VERSION
+
+          Written at: package.json['version'], package-lock.json['version'], package-lock.json['packages']['']['version']
+
+          Nothing else is in this commit.
+          EOF
+
+      - name: Stop here on a dry run
+        if: inputs.dry_run
+        run: |
+          echo "dry run — the two commits above were made locally and are not pushed."
+          git log --oneline -2
+          exit 0
+
+      - name: Push the cut
+        if: '!inputs.dry_run'
+        run: git push origin HEAD:main
+
+      - name: Publish, and wait for it
+        if: '!inputs.dry_run'
+        # publish.yml owns the npm trust; this only asks it to run. `workflow_dispatch`
+        # is the one event a GITHUB_TOKEN may raise, which is why the split works.
+        run: |
+          set -euo pipefail
+          gh workflow run publish.yml -f version="$VERSION"
+          for _ in $(seq 1 30); do
+            sleep 10
+            id=$(gh run list --workflow=publish.yml --limit 1 --json databaseId,headSha \
+                   --jq ".[] | select(.headSha==\"$(git rev-parse HEAD)\") | .databaseId")
+            [ -n "$id" ] && break
+          done
+          [ -n "${id:-}" ] || { echo "publish run never appeared"; exit 1; }
+          echo "watching publish run $id"
+          gh run watch "$id" --exit-status
+
+      - name: Prove the published tarball re-derives a published number
+        if: '!inputs.dry_run'
+        # The project's whole claim is that a stranger can re-derive any number
+        # it publishes. A release that cannot do that for itself has not been
+        # verified, only uploaded. The server is chosen from the data so this
+        # never asks about a row that stopped measuring.
+        run: |
+          set -euo pipefail
+          server=$(node -e "
+            const {readdirSync,readFileSync,existsSync}=require('fs');
+            const ok=readdirSync('results',{withFileTypes:true}).filter(d=>d.isDirectory()).map(d=>d.name)
+              .filter(n=>{const p='results/'+n+'/measurement.json';
+                return existsSync(p) && JSON.parse(readFileSync(p,'utf8')).status==='measured';}).sort();
+            if(!ok.length){console.error('no measured server to verify against');process.exit(1);}
+            console.log(ok[0]);")
+          echo "verifying against $server"
+          for _ in $(seq 1 10); do
+            npm view "mcp-context-cost@$VERSION" version >/dev/null 2>&1 && break
+            echo "registry has not caught up; waiting"; sleep 15
+          done
+          npx -y "mcp-context-cost@$VERSION" verify --remote \
+            "https://raw.githubusercontent.com/${{ github.repository }}/main/results/$server/measurement.json"
+
+      - name: What is left for a human
+        if: '!inputs.dry_run'
+        run: |
+          echo "Published $VERSION and verified it from npm."
+          echo
+          echo "Still yours:"
+          echo "  - ROADMAP.md: mark what shipped, and where the plan was wrong."
+          echo "  - The v1 Action tag moves only if action.yml changed:"
+          echo "      git diff v1 HEAD -- action.yml"

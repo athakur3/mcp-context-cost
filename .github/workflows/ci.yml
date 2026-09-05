@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          # The readiness gate reads back to the last version-bump commit.
+          fetch-depth: 0
       - uses: actions/setup-node@v5
         with:
           node-version: 22
@@ -16,5 +19,13 @@ jobs:
       - run: npm ci
       - run: npx tsc --noEmit
       - run: npm test
+      - name: Nothing published is stale
+        # Runs on every push, not just at release time, because a release should
+        # never be a cleanup job. It fails when regenerating would rewrite a
+        # committed artifact — what is published then is not what the data says
+        # — or when work that ships bytes has no changelog entry at all.
+        # Heuristic findings print without failing: a check that cries wolf is a
+        # check people learn to skip.
+        run: npx tsx tools/release-readiness.ts
       - name: badge.sh golden tests
         run: ./upstream/tests/badge-test.sh
