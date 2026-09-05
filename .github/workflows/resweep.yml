@@ -89,8 +89,9 @@ jobs:
           # cannot see the workspace (src/sweep/docker.ts mounts only the cache
           # volumes), but a `docker `-prefixed command is spawned on the host
           # with the workspace as its cwd (src/sweep/run.ts, client.ts), and
-          # three committed entries already have that shape. A stranger's
-          # command must never run in a process that can push. The token is
+          # the github, grafana and terraform entries in servers.yaml already
+          # have that shape. A stranger's command must never run in a process
+          # that can push. The token is
           # handed to the one step that pushes, below, and nowhere else — until
           # this line the phase-3 promise ("no job holding contents: write ever
           # runs a launch command with the token in reach") was only true of the

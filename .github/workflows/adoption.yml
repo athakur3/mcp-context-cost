@@ -19,11 +19,18 @@
 # on top of "3 on the 20th" is a status line, not a measurement.)
 #
 # The token: the tool reads MCP_CTX_GITHUB_TOKEN and falls back to GITHUB_TOKEN
-# (tools/measure-adoption.ts), and code search accepts a GitHub App installation
-# token — which is what the Actions token is — with no permissions, at 10
-# requests a minute; the tool spaces its searches wider than that. No repository
-# secret is needed. If the endpoint ever rejects the token, the reading fails
-# to resolve and this job goes red before committing anything, as above.
+# (tools/measure-adoption.ts). Per GitHub's REST docs (Search code: GitHub App
+# installation access tokens are accepted and "the fine-grained token does not
+# require any permissions"; 10 requests a minute, and the tool spaces its
+# searches wider than that) the Actions token — an installation token — should
+# be enough, so no repository secret is wired in. That is GitHub's claim, not
+# yet demonstrated by a run in this repository: no run here has hit
+# /search/code with github.token, and the first workflow_dispatch is the proof.
+# If the endpoint rejects the token, the reading fails to resolve and this job
+# goes red before committing anything, as above. The fallback, should that
+# happen, is a fine-grained PAT in the MCP_CTX_GITHUB_TOKEN secret, which the
+# tool prefers — and which would also mean relaxing the no-`secrets.` assertion
+# in test/workflows.test.ts, deliberately, with the failed run as the reason.
 name: Adoption reading
 on:
   schedule:

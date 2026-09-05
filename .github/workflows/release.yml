@@ -46,12 +46,19 @@ jobs:
         with:
           # The readiness gate reads back to the last version-bump commit.
           fetch-depth: 0
-          # The rule every job holding contents: write follows (resweep.yml
-          # states it): the token is not left in .git/config for the whole job,
-          # it is handed to the step that pushes. Nothing here runs a stranger's
-          # command, but the assertion in test/workflows.test.ts is over every
-          # write-token workflow, and a rule with an exception is a rule the
-          # next workflow copies from the wrong file.
+          # Half of the rule every job holding contents: write follows
+          # (resweep.yml states it): the token is not left in .git/config for
+          # the whole job. The other half — the token reaches only the step
+          # that pushes — this job does NOT meet: `GH_TOKEN` above holds the
+          # same token for every step, because `gh workflow run` and `gh run
+          # watch` need it. That is acceptable here only because this job runs
+          # nothing but this repository's own tools — no servers.yaml entry's
+          # launch command executes in it — and the launch-step assertion in
+          # test/workflows.test.ts is what holds the two measuring jobs to the
+          # stricter form. The persist-credentials line is still kept, because
+          # the assertion over every write-token workflow is a rule, and a
+          # rule with an exception is a rule the next workflow copies from the
+          # wrong file.
           persist-credentials: false
       - uses: actions/setup-node@v5
         with:

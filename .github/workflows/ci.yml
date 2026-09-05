@@ -4,6 +4,15 @@ on:
     branches: [main]
   pull_request:
 
+# Read-only, said out loud. Without a permissions block the token gets the
+# repository default, which can be read-and-write, and this job checks out with
+# credentials kept — so a job that pushes nothing could still have pushed. The
+# write-token rule in test/workflows.test.ts treats a missing block as write
+# for exactly that reason; declaring `contents: read` is what takes this job
+# out of it, and a token that cannot push needs no keeping out of .git/config.
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
