@@ -281,6 +281,24 @@ export const PAGE_CLAIMS: Claim[] = [
   },
   {
     file: 'README.md',
+    id: 'divergence-ratio-range',
+    // README's own copy of the range METHODOLOGY maintains. Found by the
+    // page-number guard: three numbers written by hand beside the two
+    // sentences regen already kept true.
+    template: 'measured at {f}×–{f}× across {n} servers)',
+    values: (s) => [s.claude.ratioMin.toFixed(2), s.claude.ratioMax.toFixed(2), fmt(s.claude.runSize)],
+  },
+  {
+    file: 'README.md',
+    id: 'repo-map:candidates',
+    // The repo map's own count of servers.yaml. It said 82 against 106 on disk:
+    // written by hand when the file held 82, and ninety lines from the
+    // regen-maintained count that had moved four times since.
+    template: '| `servers.yaml` | {n} curated candidates with live install metrics and provenance |',
+    values: (s) => [fmt(s.candidateTotal)],
+  },
+  {
+    file: 'README.md',
     id: 'divergence-run-size',
     template: 'The run holds {n} rows — the top {n} measured servers by tokens when it ran',
     values: (s) => [fmt(s.claude.runSize), fmt(s.claude.runSize)],
@@ -307,6 +325,16 @@ export const PAGE_CLAIMS: Claim[] = [
     file: 'README.md',
     id: 'cost-movement',
     template: 'cost has moved at all, {n} moved up against {n} that moved down.',
+    values: (s) => [fmt(s.movement.grew), fmt(s.movement.shrank)],
+  },
+  {
+    file: 'README.md',
+    id: 'movement-ratchet',
+    // The same two counts as `cost-movement`, ninety lines below it and, until
+    // now, written by hand: the badge section said "nine servers ratcheting
+    // upward against one that got cheaper" while the maintained sentence above
+    // said eleven against six.
+    template: 'has {n} servers ratcheting upward against {n} that got cheaper,',
     values: (s) => [fmt(s.movement.grew), fmt(s.movement.shrank)],
   },
   {
@@ -392,6 +420,19 @@ export const CHECK_CLAIMS: CheckClaim[] = [
         : s.claude.heaviestClaudeName === s.max.name
           ? `the heaviest server on the badge (${s.max.name}) IS the heaviest on Claude now`
           : null,
+  },
+  {
+    file: 'README.md',
+    id: 'movement-usually-upward',
+    // The sentence's shape, not its numbers: the section argues for a gate in
+    // CI, and the argument only stands while upward movement outnumbers
+    // downward. Asserted rather than patched — if it flips, a person rewrites
+    // the paragraph rather than regen inverting its meaning under them.
+    words: 'when a cost does move it usually moves up',
+    holds: (s) =>
+      s.movement.grew > s.movement.shrank
+        ? null
+        : `${s.movement.grew} server(s) moved up against ${s.movement.shrank} down — upward movement is no longer the majority`,
   },
   {
     file: 'README.md',

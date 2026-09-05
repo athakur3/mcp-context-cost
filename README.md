@@ -328,7 +328,7 @@ number is *not*, config policy, failure taxonomy, frozen color bands, known dive
 | `spec/fixtures/` | golden vectors shared by the TypeScript and bash implementations |
 | `tools/` | the one script that calls a network API (Claude divergence); kept out of the package so the library stays offline |
 | `upstream/` | `badge.sh` + composite-action patch + bash tests — the self-serve badge recipe, carried here |
-| `servers.yaml` | 82 curated candidates with live install metrics and provenance |
+| `servers.yaml` | 106 curated candidates with live install metrics and provenance |
 | `results/` · `badges/` | measurements, leaderboard, history series, shields endpoint JSONs |
 | `docs/` | methodology, dashboard, and a generated page per measured server |
 
@@ -350,11 +350,11 @@ Then in your README:
 
 A badge says what your server costs today; it does nothing about the release
 that adds 1,200 tokens to every user's context next month. Across the servers
-measured here, that release is the norm rather than the exception — the
-[movement report](results/regressions.md) has nine servers ratcheting upward
-against one that got cheaper, and none of those maintainers had a check that
-would have said so first. `measure` takes the same gate flags `audit` does, so
-your own CI can be that check:
+measured here most costs hold steady from sweep to sweep, but when a cost does
+move it usually moves up: the [movement report](results/regressions.md) has 11
+servers ratcheting upward against 6 that got cheaper, and none of those
+maintainers had a check that would have said so first. `measure` takes the same
+gate flags `audit` does, so your own CI can be that check:
 
 ```bash
 # on your default branch, once — commit the result
