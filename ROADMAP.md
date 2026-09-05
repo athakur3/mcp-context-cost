@@ -1,9 +1,9 @@
 # Roadmap
 
 Six phases, in order. Each has one goal, a scope, and an exit that can be checked rather
-than declared. Phases 0 and 1 are done and the distribution track shipped on 2026-09-05, so
-**phase 2 is next**; 3 and 4 run in parallel; 5 is gated by the calendar, not by work.
-Contributions welcome on any item.
+than declared. Phases 0 and 1 are done, the distribution track shipped on 2026-09-05, and
+**phase 2 is five of seven items in**; 3 and 4 run in parallel; 5 is gated by the calendar,
+not by work. Contributions welcome on any item.
 
 Dated **2026-09-05**, against 0.12.0 on npm and the data of 2026-09-04. Each item names the
 evidence it rests on, so a reader can check whether it is still true before picking it up.
@@ -12,8 +12,9 @@ marked *(maintainer)* need a decision or an account only the maintainer has.
 
 **Check an item's premise before starting it.** Four of phase 1's eight items were wrong
 about *why* — not about the symptom, which was real every time, but about the mechanism
-behind it. The pattern was exact: every item that quoted the record held up, and every item
-that inferred a cause from a category did not. So the first hour of a phase re-reads the
+behind it — and phase 2 then ran the same way: two of its seven, one of which dissolved on
+contact with the record. The pattern has been exact both times: every item that quoted the
+record held up, and every item that inferred a cause from a category did not. So the first hour of a phase re-reads the
 records its items name and either confirms the sentence or rewrites it. That hour would have
 saved most of phase 1's rework, and it is the same discipline this project applies to its own
 published numbers — a claim is worth what its evidence is worth, including a claim in here.
@@ -21,7 +22,7 @@ published numbers — a claim is worth what its evidence is worth, including a c
 ## Where it stands
 
 106 candidates, 83 measured, six published columns (tokens, session start, Claude,
-mcp-tokens, movement, tool shape), 644 tests, four workflows, three weeks of history, and
+mcp-tokens, movement, tool shape), 681 tests, four workflows, three weeks of history, and
 `0.12.0` on npm as of 2026-09-05. The measurement and its gates are further along than their
 audience: the adoption reading of
 2026-09-03 found zero projects displaying the badge, and the repository has one star. So the
@@ -70,8 +71,9 @@ forward:
 
 - **`grafana` is not a backing-service absence.** Its record says the container came up and
   served SSE on `0.0.0.0:8000` while this harness waited on stdio — a transport mismatch in
-  our own launch command, not something a port probe would corroborate. It is left undeclared
-  with the reason written into the entry, and **phase 2's probe item is now `anki` alone**.
+  our own launch command, not something a port probe would corroborate. It was left undeclared
+  with the reason written into the entry. Phase 2 then found `anki` to be the same bug, which
+  closed the probe item altogether — both entries pass a stdio flag now and both measure.
 - The bots' "no change to publish" guard was never blocked by the dashboard stamp; the exit
   that rested on it was unreachable, and wanted the behaviour phase 1's own first item depends
   on. `elasticsearch` was not a bare failure but a clean number for a deprecated package,
