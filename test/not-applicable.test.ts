@@ -214,7 +214,7 @@ describe('every sweep path that measures a servers.yaml entry forwards its decla
     }
     // A rename that made the pattern stop matching would otherwise pass this
     // test by finding nothing at all.
-    expect(sites.map((s) => s.file)).toEqual(['cross-check.ts', 'session-start.ts', 'sweep-all.ts']);
+    expect(sites.map((s) => s.file)).toEqual(['cross-check.ts', 'pr-check.ts', 'session-start.ts', 'sweep-all.ts']);
     expect(sites.filter((s) => !s.forwards).map((s) => s.file)).toEqual([]);
   });
 });

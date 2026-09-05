@@ -1,7 +1,10 @@
 /**
  * Single-server measurement runner:
  *   npm run sweep -- --name memory --command "npx -y @modelcontextprotocol/server-memory"
- * Writes results/<name>/measurement.json and badges/<name>.json.
+ * Writes results/<name>/measurement.json and badges/<name>.json, and folds the
+ * result into results/history.csv — unless `--no-persist` is given, in which
+ * case it prints the number and writes nothing (see the main block for why a
+ * contributor's laptop should never be the source of a committed record).
  * Runs tools/list capture TWICE; differing tool sets -> status "dynamic".
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
@@ -154,6 +157,26 @@ export interface MeasureOptions {
 }
 
 /**
+ * Whether a launch command is already its own `docker run`.
+ *
+ * Such a command is never wrapped in this harness's container: it is spawned on
+ * the host against the machine's own daemon, owns its exit codes and its image,
+ * and has no shared package cache to bypass. Published entries already take
+ * this form (the phase 3 premise record cites `github`, `grafana` and
+ * `terraform`), so every path that decides "wrap or spawn as given" has to ask
+ * the same question — and until 2026-09-05 each of them asked it with its own
+ * copy of the prefix test, four in all (three here, one in cross-check.ts),
+ * which is one edit away from two paths disagreeing about the same entry. This is the one place the question is answered, and
+ * test/pr-check.test.ts fails if a second copy appears under src/.
+ *
+ * Leading whitespace is ignored because a YAML block scalar can carry it; the
+ * trailing space is required because `dockerize-me` is a package, not docker.
+ */
+export function isSelfContainerised(command: string): boolean {
+  return command.trimStart().startsWith('docker ');
+}
+
+/**
  * Marks a startup-failure that was re-attempted from a cold package cache and
  * failed the same way. Its absence on a startup-failure means the retry never
  * ran (host mode, or a self-containerised command), not that it passed.
@@ -177,7 +200,7 @@ export function retriesWithoutSharedCache(
   docker: boolean,
   command: string,
 ): boolean {
-  return status === 'startup-failure' && docker && !command.trimStart().startsWith('docker ');
+  return status === 'startup-failure' && docker && !isSelfContainerised(command);
 }
 
 /**
@@ -219,7 +242,7 @@ export async function measureServer(
   const root = opts.root ?? process.cwd();
   // True only when THIS code wraps the command in `docker run` — a command that
   // is already its own `docker run` owns its exit codes and its image.
-  const dockerWrapped = opts.docker === true && !command.trimStart().startsWith('docker ');
+  const dockerWrapped = opts.docker === true && !isSelfContainerised(command);
   const hostSpec: string | { command: string; argv: string[] } =
     opts.argv && opts.argv.length ? { command: opts.argv[0], argv: opts.argv.slice(1) } : command;
   let isolation: Measurement['isolation'] = { docker: false };
@@ -232,7 +255,7 @@ export async function measureServer(
   // container mid-removal. Distinct names sidestep the race entirely; the
   // `finally` below force-removes every name this call created either way.
   function buildSpec(noSharedCache = false): string | { command: string; argv: string[] } {
-    if (opts.docker && command.trimStart().startsWith('docker ')) {
+    if (opts.docker && isSelfContainerised(command)) {
       // Command is already a container — wrapping it again would need docker-in-docker.
       isolation = { docker: true, note: 'command is itself a docker run (host-spawned container)' };
       return hostSpec;
@@ -363,15 +386,26 @@ if (isMain) {
   const name = arg('name');
   const command = arg('command');
   if (!name || !command) {
-    console.error('usage: npm run sweep -- --name <slug> --command "<launch command>"');
+    console.error('usage: npm run sweep -- --name <slug> --command "<launch command>" [--docker] [--timeout <ms>] [--no-persist]');
     process.exit(2);
   }
+  // `--no-persist` is the form a contributor is told to run (README, "Measure
+  // your own server"). Until it existed the only instruction for measuring a
+  // server wrote results/<name>/measurement.json, badges/<name>.json and a
+  // history.csv row into the checkout — laptop records that nothing then
+  // rejected, since .gitignore covers none of those paths and no test reads
+  // results/ for provenance. Every published number comes from a CI runner
+  // (`local-mcp` sat published as a startup failure whose real finding was that
+  // the laptop was arm64), so the instruction has to be one that cannot commit
+  // a laptop's reading by accident.
+  const persist = !process.argv.includes('--no-persist');
   let m: Measurement;
   try {
     m = await measureServer(name, command, {
       timeoutMs: Number(arg('timeout') ?? 60_000),
       docker: process.argv.includes('--docker'),
       dockerImage: arg('docker-image'),
+      persist,
     });
   } catch (err) {
     if (err instanceof DockerHarnessFault) {
@@ -382,14 +416,23 @@ if (isMain) {
     }
     throw err;
   }
-  // CLI path only — measureServer itself stays history-free so concurrent
-  // sweep-all workers never race on the same file.
-  const { appendHistory } = await import('./history.js');
-  appendHistory();
+  if (persist) {
+    // CLI path only — measureServer itself stays history-free so concurrent
+    // sweep-all workers never race on the same file.
+    const { appendHistory } = await import('./history.js');
+    appendHistory();
+  }
   console.log(
     m.status === 'measured' || m.status === 'dynamic'
       ? `${name}: ${m.totalTokens} tokens across ${m.toolCount} tools (${m.status})`
       : `${name}: ${m.status} — ${m.notes ?? ''}`,
   );
+  if (!persist) {
+    console.log(
+      `nothing written: results/${name}/measurement.json, badges/${name}.json and the ` +
+        `results/history.csv row are published only by CI (.github/workflows/resweep.yml), ` +
+        `never from a developer machine.`,
+    );
+  }
   process.exit(m.status === 'measured' || m.status === 'dynamic' ? 0 : 1);
 }

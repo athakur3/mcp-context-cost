@@ -357,11 +357,21 @@ number is *not*, config policy, failure taxonomy, frozen color bands, known dive
 
 ```bash
 npm ci
-npm run sweep -- --name my-server --command "npx -y my-mcp-server"
-cat badges/my-server.json   # strict shields.io endpoint JSON
+npm run sweep -- --no-persist --name my-server --command "npx -y my-mcp-server"
 ```
 
-Then in your README:
+That prints the number and writes nothing: every record in this repository
+(`results/<name>/measurement.json`, `badges/<name>.json`, the `history.csv`
+row) is measured and published by CI, never from a developer machine — a
+laptop's architecture and load describe the laptop, not the server. To get
+your server into the leaderboard, add an entry to `servers.yaml` and open a
+pull request; the check on that PR measures the entry read-only, and the
+rotation publishes it after merge.
+
+For a badge on your own README, run the published CLI in your server's own CI
+(the [gate](#defend-the-number-dont-just-display-it) below writes
+`results/my-server/measurement.json` and `badges/my-server.json` into that
+repository), then in your README:
 
 ```markdown
 [![context cost](https://img.shields.io/endpoint?url=<raw URL of badges/my-server.json>)](<link target>)
