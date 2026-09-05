@@ -7,43 +7,126 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+## 0.13.0 — 2026-09-05
+
+Seven servers changed status in this release and **not one of them changed because the server
+changed** — the same sentence the last release opened with, and it is still the point. Five were
+defects here: two launch commands that spoke the wrong transport, a base image missing the
+native libraries a .NET server needs, a placeholder credential that manufactured a crash, and a
+classifier that read a word inside another word as a credential request. The other two are true
+statements this harness could have made all along and did not: a backing service the isolation
+deliberately withholds, and a runtime the vendor has not shipped. The measured set went 83 → 86
+and the two remaining timeouts went to zero.
+
+- **Five rows were calling a server broken that this harness was breaking.** Each was published
+  as a failure this project should never have asserted, and each is now a true statement:
+  - `anki` and `grafana` were **timeouts**, together costing twenty-one minutes of every sweep
+    cycle. Neither was hanging on anything: `anki` serves HTTP on `127.0.0.1:3000` and takes
+    `--stdio`, and the `mcp/grafana` image's ENTRYPOINT hard-codes `--transport sse` over a
+    binary whose own default is stdio. Both now measure — 20,037 tokens across 50 tools and
+    16,774 across 65.
+  - `azure` was a **startup-failure** on a .NET stack dump that was the *bottom* of its output;
+    the message above it reads "Couldn't find a valid ICU package installed on the system."
+    `node:22-slim` carries neither libicu nor libssl3, and a .NET server needs both. With them
+    present it measures 15,239 tokens across 68 tools.
+  - `hevy` was a **startup-failure** this harness manufactured. `HEVY_API_KEY=dummy` clears the
+    server's presence check and then dies as "Fatal error in main() { category: 'Error' }",
+    which names no cause. With the variable empty it says "Hevy API key is required" and reads
+    `auth-required` — it works, and it needs a credential the isolation will never have.
+  - `slack` is the fifth, and the only one whose fix was in the classifier rather than in a
+    launch condition — it was published as `auth-required` on a TLS failure reading "certificate
+    signed by unknown authority". See the credential-word entry below; it is published as the
+    startup-failure it is.
+
+- **Two more rows moved because the honest status finally existed to put them in.** No defect
+  was fixed for either; what changed is that this project stopped calling a limitation of its
+  own a defect of somebody else's. `redis-legacy` reads `not-applicable` with its declared
+  reason — the isolation deliberately provides no Redis — and the raw failure behind it.
+  `local-mcp` is the same shape but upstream's calendar rather than ours: the vendor has not
+  shipped a Linux runtime, so the package downloads its own Go binary and reports that "The
+  Windows/Linux Go server is in preview", on both amd64 and arm64. Its evidence deliberately
+  omits the version and the architecture, because both move and the sentence stating the fact
+  does not.
+- **Entries can name Debian packages the base image lacks** (`aptPackages`). The same argument
+  as `needsGit`: these are libraries a user's own machine already has, so installing them moves
+  the container towards what a plain `npx -y` run would find rather than away from it — unlike
+  an environment variable that changes the server's own behaviour, which stays a separate
+  decision. The isolation record names what was installed, so no number is published without
+  saying what the container carried.
 - **A movement can name the release it came from.** `measurement.json` has always recorded
   `serverVersion` from `initialize`, but it holds one sweep — the moment a re-sweep overwrote
   it, the earlier side of a diff was gone, and the regression report could say a movement was
-  "a real upstream release landing in real context windows" without saying which. `history.csv`
-  gains a seventh column and `ToolVectorEntry` an optional field, and `regressions.md` and the
-  per-server pages gain a **release** column. Nothing is back-filled: a short row parses as
-  unversioned and an existing vector entry does not acquire a version retroactively, because
-  identical bytes are the same definitions and what upstream called them that day is not on
-  disk. Two readings it can now state — `1.28.0 → 1.29.1`, and `still 1.29.1`, where the cost
-  moved while the version did not, which is a dependency the server does not pin rather than a
-  release of its own. `0 of 17` movements can name both sides today; the page says so, and why.
-- **`isolation.arch` is observed rather than inferred.** The field exists to tell a broken
-  server apart from one that ships no build for the architecture it was tried on, and it was
-  derived: the platform half assumed `linux`, the architecture half was the *host's*
-  `process.arch`. Nothing passes `--platform`, but `docker run` honours
+  "a real upstream release landing in real context windows" without ever saying which.
+  `history.csv` gains a seventh column and `ToolVectorEntry` an optional field, and
+  `results/regressions.md` and the per-server pages gain a **release** column. Nothing is
+  back-filled: a short row parses as unversioned and a stored vector does not acquire a version
+  retroactively, because identical bytes are the same definitions and what upstream called them
+  that day is not on disk. Two readings it can now state — `1.28.0 → 1.29.1`, and
+  `still 1.29.1`, where the cost moved while the version did not, which is a dependency the
+  server does not pin rather than a release of its own. Reading `history.csv` with a fixed
+  six-column expectation will now see a seventh; `parseHistory` reads both shapes.
+- **`isolation.arch` is observed rather than inferred, and the obvious fix was wrong too.** The
+  field exists to tell a broken server apart from one that ships no build for the architecture
+  it was tried on, and it was derived: the platform half assumed `linux`, the architecture half
+  was the *host's* `process.arch`. Nothing passes `--platform`, but `docker run` honours
   `DOCKER_DEFAULT_PLATFORM` and an image with no manifest for the host is emulated, so an amd64
-  container on an Apple Silicon machine recorded `linux/arm64`. The cheap fix does not work
-  either — `docker image inspect` reports the variant the local store prefers, and answered
-  `linux/arm64` for a tag whose container came up `x86_64` — so the harness starts a container
-  and reads `uname -sm`, once per image. A command that is itself a `docker run` records no
-  architecture at all: this code did not choose that container.
-- **`servers.yaml` is validated before anything measures from it.** Five call sites parsed and
-  cast it; nothing checked it. A misspelled key was an absent field and an absent optional
-  field was indistinguishable from one nobody wanted, so `timeoutSecond: 240` would have swept
-  at the default budget until somebody reread the line. `validateServers` checks entry shape,
-  unique names, the slug a name becomes on disk, env holding names rather than values — and
-  rejects a key nobody reads instead of ignoring it.
+  container on an Apple Silicon machine recorded `linux/arm64`. `docker image inspect` does not
+  answer it either — it reports the variant the local store prefers, and answered `linux/arm64`
+  for a tag whose container came up `x86_64`. So a container is started and `uname -sm` read,
+  once per image, mapped through an explicit table that returns nothing for a machine name it
+  does not know. A command that is *itself* a `docker run` now records no architecture at all:
+  this code did not choose that container, and the host's would be a claim about someone else's.
+  `measuringArch` loses its `docker` parameter and answers only for the measuring process.
+- **A cost that held is published as a measurement, not as a missing one.** `latestChange`
+  returned `null` both for "this server has moved" being false and for "there is nothing to
+  compare", and the report counted every `null` as an absence — so 64 costs that several sweeps
+  had *confirmed unchanged* read exactly like a server measured once. `readSeries` answers with
+  three readings instead of two, and `regressions.md` gained an **Unchanged** section: the page
+  now says 17 moved + 64 held + 5 without, which sums to the measured set. "Most servers do not
+  move, and the ones that do move up" is a finding it could not state before.
+- **A word inside another word is not a credential request.** `classifyFailure` matched
+  `/auth/i`, so a TLS failure reading "certificate signed by unknown authority" published as
+  `auth-required` — a claim that a server works and wants a key, made about a server this
+  harness could not reach. The credential words are now bounded by letter-only lookarounds
+  rather than `\b`, which counts `_` and would have missed `tracker_token`. Every record on
+  disk was re-classified against the new rule and exactly one moved, which is how the change
+  was safe to make; `slack` is published as the startup-failure it is.
+- **A deprecated package says so beside its number.** `gdrive` and `neon` were bare failure
+  rows, which reads as "this server is broken" when upstream stopped shipping it — and
+  `elasticsearch` was worse, a clean 374-token measurement of a package nobody should adopt
+  with nothing on the row to say so. An entry can now carry a `deprecated` block, and it is a
+  dated reading like every other one here: `version`, because an npm deprecation is per-version,
+  `source`, because a published claim carries its evidence, and `readOn`, because both can
+  change without anything in this repository moving.
+- **`servers.yaml` is validated before anything measures from it.** Five call sites parsed it
+  and cast straight to `ServerEntry[]`; nothing checked it. A misspelled key was an absent
+  field, and an absent optional field was indistinguishable from one nobody wanted — so
+  `timeoutSecond: 240` would have swept at the default budget for as long as it took someone to
+  reread the line. `validateServers` checks entry shape, unique names, the slug a name becomes
+  on disk, `env` holding names rather than values, and — the part nothing else did — rejects a
+  key nobody reads instead of ignoring it.
 - **The Claude divergence column refreshes beside the sweep, over every measured server.** It
-  ran only in the Monday self-badge job while re-sweeps land on Wednesdays, so a re-measured row
-  printed `—` for five days of every cycle, `github` included. The re-sweep now refreshes it
-  with the same selection string it swept with, and a bare run covers every measured server
-  rather than the top 20.
-- **`anki` and `grafana` measure.** Both were published as timeouts costing twenty-one minutes
-  a cycle, and neither was a fact about the server: `anki` serves HTTP on `127.0.0.1:3000` and
-  takes `--stdio`, and the `mcp/grafana` image's ENTRYPOINT hard-codes `--transport sse` over a
-  binary whose own default is stdio. Both entries now pass a stdio flag. The numbers behind this
-  were probed on a developer machine and are not published; the rotation measures them.
+  ran only in the Monday self-badge job while re-sweeps land on Wednesdays, so a re-measured
+  row printed `—` for five days of every cycle; on 2026-09-05 that included `github`, the
+  heaviest server in the set, in the front page's own Claude table. The re-sweep now refreshes
+  it with the same selection string it swept with, so a Claude row and the capture beside it
+  cannot come from different sets, and a bare run covers every measured server rather than the
+  top 20 — the rank a row happens to hold no longer decides whether it has a number at all.
+- **The band the installed package states offline is a snapshot, and now says so.**
+  `PUBLISHED_WIRE_TO_CLIENT_RATIO` is the wire-to-client ratio used when no live divergence run
+  is supplied, and it read `20 servers` from the day the run covered the top 20 — the pages
+  derive the same band from the run, and nothing compared the two. Widening the run exposed it.
+  The guard added is deliberately not an equality check: the run grows whenever a sweep measures
+  a server for the first time, and those commits are made by a bot that cannot edit a TypeScript
+  constant. A snapshot may lag; it may not be wrong. The band must stay accurate to the
+  precision it is published at, because it decides an above/below verdict against a client
+  threshold, and the count must never exceed the run.
+- **Two pages stopped stating a number nothing kept true.** The dashboard was stamped with
+  `new Date()`, so it claimed to be as fresh as the moment it was generated rather than as fresh
+  as the data it was generated from; it is dated by its newest measurement now. And a guard over
+  the front pages requires every count of the measured set to be either regen-maintained or
+  written down as deliberately static with the reason — it found three hand-written figures on
+  first run, and caught a fourth going stale in this release.
 
 ## 0.12.0 — 2026-09-05
 
