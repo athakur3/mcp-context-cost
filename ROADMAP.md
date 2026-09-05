@@ -4,7 +4,7 @@ Six phases, in order. Each has one goal, a scope, and an exit that can be checke
 than declared. Phases 0, 1 and 2 are sequential; 3 and 4 run in parallel once 1 is done; 5 is
 gated by the calendar, not by work. Contributions welcome on any item.
 
-Dated **2026-09-05**, against 0.11.3 on npm and the data of 2026-09-04. Each item names the
+Dated **2026-09-05**, against 0.12.0 on npm and the data of 2026-09-04. Each item names the
 evidence it rests on, so a reader can check whether it is still true before picking it up.
 Forward-looking only: what already shipped lives in the code and the git history. Items
 marked *(maintainer)* need a decision or an account only the maintainer has.
@@ -12,8 +12,9 @@ marked *(maintainer)* need a decision or an account only the maintainer has.
 ## Where it stands
 
 106 candidates, 83 measured, six published columns (tokens, session start, Claude,
-mcp-tokens, movement, tool shape), 625 tests, four workflows, three weeks of history. The
-measurement and its gates are further along than their audience: the adoption reading of
+mcp-tokens, movement, tool shape), 625 tests, four workflows, three weeks of history, and
+`0.12.0` on npm as of 2026-09-05. The measurement and its gates are further along than their
+audience: the adoption reading of
 2026-09-03 found zero projects displaying the badge, and the repository has one star. So the
 phases below do two different kinds of work — keeping the published data honest, which is the
 discipline the project exists for, and getting it in front of the people it is for. Every
@@ -24,8 +25,8 @@ site is ready for them.
 
 | phase | goal | window | exit, in one line |
 |---|---|---|---|
-| **0** | Ship what trunk already holds | by 2026-09-07 | 0.12.0 on npm, with a dated changelog section |
-| **1** | Every published sentence is established | by the 2026-09-09 sweep; hard stop 2026-09-16 | four contradictions gone, each held by a test; one bot run ends "no change to publish" |
+| **0** | Ship what trunk already holds | **done 2026-09-05** | 0.12.0 on npm, with a dated changelog section |
+| **1** | Every published sentence is established | by the 2026-09-09 sweep; hard stop 2026-09-16 | eight items, each held by a test; `slack` re-measured; one bot run ends "no change to publish" |
 | **2** | Sweeps that are cheaper and say more | 2026-09-10 → 2026-09-25 | movements name releases; `anki` declared; Claude column refreshed by the re-sweep; four issues filed |
 | **3** | Others can add servers safely | 2026-09-21 → 2026-10-09 | a stranger's entry is measured read-only before any write-token job runs it |
 | **4** | `audit` reaches the stacks people run | 2026-10-05 → 2026-10-23 | remote entries measured; three more clients, each with a who-pays row |
@@ -34,30 +35,13 @@ site is ready for them.
 
 ---
 
-## Phase 0 — Ship what trunk already holds
+## Phase 0 — Ship what trunk already holds · done 2026-09-05
 
-**Goal.** An install carries what CI already runs.
-
-**Scope.**
-- [ ] Write the *Unreleased* section for the eleven commits since the 0.11.3 bump. It is
-      empty today. They include a new published status (`not-applicable`, declared and then
-      corroborated by the failure's own words), a new isolation field (`arch`), a rewritten
-      failure-evidence selector (noise dropped, head and tail kept, an overlong first line
-      truncated rather than skipped), the re-sweep's `servers` input, the rebase-then-regen
-      commit ordering, the `agent-device` recovery, and the `stripe` revert.
-- [ ] Cut **0.12.0** — minor, because a consumer of `measurement.json` now sees a `status`
-      value it has not seen before. Procedure as in CHANGELOG; `publish.yml` refuses a version
-      with no section.
-- [ ] Nothing to do for the `v1` tag: `action.yml` is unchanged since it was placed.
-
-**Exit.** `npm view mcp-context-cost version` prints 0.12.0; the publish workflow was green on
-its first attempt; CHANGELOG carries `## 0.12.0 — <date>`.
-
-**Why first.** Every later phase adds schema — a version column in history, a `deprecated`
-field, probe evidence — and each release's changelog should be about one thing. And the
-evidence-selector fix is the one `measure` users are waiting on without knowing it.
-
-**Size.** Half a day.
+`0.12.0` is on npm, published first-attempt through the pinned OIDC path, with
+`## 0.12.0 — 2026-09-05` in the changelog and the published tarball re-deriving a published
+number. Nothing was needed for the `v1` tag. Per this file's forward-looking rule the detail
+lives in the git history and the changelog; what it left behind is in phase 1 below, because
+writing that section is what found it.
 
 ---
 
@@ -86,6 +70,24 @@ evidence-selector fix is the one `measure` users are waiting on without knowing 
       `grafana` (a Grafana at `localhost:3000`) qualifies if its timeout note carries a
       matchable line now that stderr survives into timeouts; otherwise it waits for the probe
       in phase 2. Both are backing-service absences, which is what `not-applicable` is for.
+- [ ] **The auth classifier matches inside other words, and one record is wrong today.**
+      `classifyFailure` tests a bare `auth` alternative, which matches inside `authority`, so
+      `slack` is published as `auth-required` on the strength of "tls: failed to verify
+      certificate: x509: certificate signed by unknown authority" — a record that reports this
+      harness's container not trusting a CA, not a server wanting a credential. The same
+      function's bare `token` matched inside `PublicKeyToken=null`, which is how `azure` was
+      previously published as `auth-required`. Both are named in the 0.12.0 changelog and
+      neither is fixed. Word-boundary the pattern, keep the six genuine auth records passing,
+      and re-measure through CI rather than editing the published record.
+- [ ] **`not-applicable` reaches only one of the three sweep paths.** `measureServer` takes the
+      option, and `sweep-all.ts` passes it; `cross-check.ts` and `session-start.ts` iterate the
+      same entries and omit it, so either would publish a declared entry as `startup-failure` —
+      the assertion about someone else's software the bucket exists to prevent. Latent only
+      because the three declared servers are absent from those two outputs. Two lines and a
+      structural test that every `ServerEntry` call site forwards the field.
+- [ ] **A docstring that claims more than the record.** `src/core/types.ts` says `local-mcp`
+      was published as a startup failure "for weeks"; the record was a day old. It ships inside
+      `dist/`, so it is a published sentence like any other.
 - [ ] **A `deprecated` annotation.** `gdrive`, `elasticsearch` and `neon` are deprecated
       upstream (`neon` points at `mcp.neon.tech`) and each is published as a bare failure. An
       entry field naming the replacement lets the row say "superseded by X" — a fact about the
@@ -100,13 +102,17 @@ evidence-selector fix is the one `measure` users are waiting on without knowing 
   publish" and pushes nothing.
 - The leaderboard shows `redis-legacy` as `not-applicable` with its evidence, and the three
   deprecated rows name their replacement.
+- `slack` no longer reads `auth-required` on a TLS failure, re-measured in CI, and a test holds
+  the six genuine auth records passing.
+- A test fails if any `ServerEntry` call site stops forwarding `notApplicable`.
 
 **Why here.** The claim the project makes is that a published number describes the server.
-Two of these four are the project failing its own rule, on its own front page. Fix before
-anyone is invited to look, and before the 2026-09-09 sweep so that run's regen publishes the
-corrected aggregates rather than re-publishing the wrong ones.
+Four of these are the project failing its own rule — two on its own front page, and two found
+by writing the 0.12.0 changelog, which is why they sit here and not in the version that
+shipped them. Fix before anyone is invited to look, and before the 2026-09-09 sweep, so that
+run's regen publishes the corrected aggregates rather than re-publishing the wrong ones.
 
-**Size.** Two days.
+**Size.** Three days.
 
 ---
 
@@ -127,7 +133,17 @@ a retry.
       the status still cannot be asserted by declaration alone — and a server that hangs
       silently becomes declarable. `anki` is the case: no `timeoutSeconds`, so 240s and then
       480s on the doubled budget, every cycle, to learn that a desktop application is absent.
-      Together with `grafana` that is about twenty minutes of runner time per cycle.
+      Together with `grafana` that is about twenty minutes of runner time per cycle. A probe
+      also closes the hole the 0.12.0 changelog documents: corroboration is a substring test
+      against the truncated evidence, so a declared entry whose output grows until its evidence
+      line falls in the elided middle reverts to `startup-failure` on its own.
+- [ ] **`isolation.arch` can name the wrong machine.** It is the measuring process's own
+      platform rather than an observation of the container: under Docker the platform half is
+      assumed to be `linux` and the architecture is the host's, and nothing passes `--platform`
+      or reads `DOCKER_DEFAULT_PLATFORM`. So an amd64 container emulated on Apple Silicon
+      records `linux/arm64`. The field exists precisely to tell a broken server from a
+      wrong-architecture one, so it has to be read from the container, not inferred from the
+      host.
 - [ ] **The Claude column refreshes in the job that re-measures, and covers every row.**
       `npm run divergence` runs only in `self-badge.yml` (Mondays, top 20). Re-sweeps land on
       Wednesdays, so a re-measured top-20 row prints `—` for five days each cycle — today the
