@@ -9,7 +9,9 @@ import {
   LAUNCH_FIELDS,
   entriesToMeasure,
   failsCheck,
+  launchBudgetSeconds,
   launchSignature,
+  worstCaseSeconds,
 } from '../src/sweep/pr-check.js';
 import { isSelfContainerised, TIMEOUT_RETRY_FACTOR } from '../src/sweep/run.js';
 import type { ServerEntry } from '../src/sweep/report.js';
@@ -105,6 +107,46 @@ describe('entriesToMeasure', () => {
   it('treats an unreadable base as empty, so the entry cap refuses rather than the whole file measuring', () => {
     const d = entriesToMeasure(null, base);
     expect(d.added.map((e) => e.name)).toEqual(['a', 'b']);
+  });
+});
+
+/**
+ * The entry cap sizes the job's timeout-minutes to `DEFAULT_MAX_ENTRIES`
+ * launches at the default budget, but an entry's own `timeoutSeconds` replaces
+ * the default and the schema bounds it only below (servers-schema.ts:166-169).
+ * The first draft of the check counted entries and nothing else, so one added
+ * entry with a four-digit timeoutSeconds would have been killed by the job
+ * limit with no line printed. The threshold here is derived from the same two
+ * constants the script uses; no number of seconds is written down.
+ */
+describe('worstCaseSeconds', () => {
+  const defaultTimeout = 10;
+  const budget = launchBudgetSeconds(DEFAULT_MAX_ENTRIES, defaultTimeout);
+
+  it('sizes the budget to the entry cap, the default budget and its retry', () => {
+    expect(budget).toBe(DEFAULT_MAX_ENTRIES * defaultTimeout * (1 + TIMEOUT_RETRY_FACTOR));
+  });
+
+  it('is within budget for the cap\'s worth of entries at the default, and over it one second later', () => {
+    const atDefault = Array.from({ length: DEFAULT_MAX_ENTRIES }, (_, i) => entry(`s${i}`));
+    expect(worstCaseSeconds(atDefault, defaultTimeout)).toBe(budget);
+    const oneOver = [entry('slow', { timeoutSeconds: DEFAULT_MAX_ENTRIES * defaultTimeout + 1 })];
+    expect(worstCaseSeconds(oneOver, defaultTimeout)).toBeGreaterThan(budget);
+  });
+
+  it('charges an entry its own timeoutSeconds, and its retry, when it has one', () => {
+    expect(worstCaseSeconds([entry('own', { timeoutSeconds: 7 })], defaultTimeout)).toBe(7 * (1 + TIMEOUT_RETRY_FACTOR));
+  });
+
+  it('counts neither a remote endpoint nor a self-containerised command — neither is launched', () => {
+    const listed = [
+      entry('endpoint', { remote: true, command: 'https://mcp.example.invalid/sse', timeoutSeconds: 9999 }),
+      entry('containerised', { command: 'docker run --rm -i ghcr.io/example/x', timeoutSeconds: 9999 }),
+    ];
+    expect(worstCaseSeconds(listed, defaultTimeout)).toBe(0);
+    expect(worstCaseSeconds([...listed, entry('launched')], defaultTimeout)).toBe(
+      worstCaseSeconds([entry('launched')], defaultTimeout),
+    );
   });
 });
 
@@ -297,6 +339,39 @@ describe('pr-check (subprocess)', () => {
     wroteNothing();
   }, 60_000);
 
+  it('refuses, before any launch, one entry whose own timeoutSeconds exceeds what the cap was sized to', () => {
+    // Host mode, so the stub's marker is the proof: had the script launched,
+    // `launched` would exist beside it whatever the docker shim saw.
+    const defaultTimeout = 10;
+    const tooLong = DEFAULT_MAX_ENTRIES * defaultTimeout + 1;
+    const [b, h] = docs([], [stubEntry('slow', { timeoutSeconds: tooLong })]);
+    const { code, out } = run(prCheck, ['--base', b, '--head', h, '--default-timeout', String(defaultTimeout)]);
+    expect(code).toBe(2);
+    expect(out).toContain(`slow (timeoutSeconds ${tooLong})`);
+    expect(out).toContain('Nothing was launched');
+    expect(out).not.toContain(' tokens / ');
+    expect(launched()).toBe(false);
+    wroteNothing();
+  }, 60_000);
+
+  it('refuses a head document that does not parse, with the parser\'s message and no stack trace', () => {
+    // An unquoted `a: b` inside a plain-scalar command is the YAML mistake a
+    // hand-edited entry makes; the first draft let the parser's exception out
+    // as a stack trace with exit 1, the code reserved for a launched entry.
+    const b = join(root, 'base.yaml');
+    const h = join(root, 'head.yaml');
+    writeFileSync(b, stringify(doc([])));
+    writeFileSync(h, `servers:\n  - name: broken\n    command: node ${stub} a: b\n    package: broken\n`);
+    const { code, out } = run(prCheck, ['--base', b, '--head', h]);
+    expect(code).toBe(2);
+    expect(out).toContain(`${h} does not parse as YAML:`);
+    expect(out).toContain('nothing was launched');
+    expect(out).not.toContain('YAMLParseError');
+    expect(out).not.toContain('    at ');
+    expect(launched()).toBe(false);
+    wroteNothing();
+  }, 60_000);
+
   it('honours an explicit --max-entries', () => {
     const [b, h] = docs([], [stubEntry('s0'), stubEntry('s1')]);
     expect(run(prCheck, ['--base', b, '--head', h, '--max-entries', '1']).code).toBe(2);
@@ -456,8 +531,20 @@ describe('the pull-request measurement workflow', () => {
     const budget = Number(/--default-timeout (\d+)/.exec(invocation)![1]);
     const maxEntries = Number(/--max-entries (\d+)/.exec(invocation)![1]);
     expect(maxEntries).toBe(DEFAULT_MAX_ENTRIES);
-    const measuringMinutes = (maxEntries * budget * (1 + TIMEOUT_RETRY_FACTOR)) / 60;
+    const measuringMinutes = launchBudgetSeconds(maxEntries, budget) / 60;
+    expect(measuringMinutes).toBe((maxEntries * budget * (1 + TIMEOUT_RETRY_FACTOR)) / 60);
     expect(job['timeout-minutes']).toBeGreaterThanOrEqual(measuringMinutes);
+  });
+
+  it('says in its own comment what holds the bound, since the count alone does not', () => {
+    // The entry's own timeoutSeconds replaces the default and is unbounded
+    // above; the script's sum refusal is what keeps the job under its limit,
+    // and the comment beside timeout-minutes has to say so or the next reader
+    // sizes the minutes from the count.
+    const comment = text.slice(text.indexOf('# Derived from'), text.indexOf('timeout-minutes:'));
+    expect(comment).toContain('timeoutSeconds');
+    expect(comment).toContain('servers-schema.ts');
+    expect(comment).toContain('refuses');
   });
 
   it('runs no step that writes a file or needs a secret', () => {

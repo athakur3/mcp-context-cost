@@ -45,13 +45,22 @@ jobs:
   measure:
     runs-on: ubuntu-latest
     # Derived from src/sweep/run.ts's retry arithmetic, not chosen. A timed-out
-    # entry is retried on TIMEOUT_RETRY_FACTOR (2) × its budget, so at
-    # `--default-timeout 240` one entry can hold the runner for
+    # entry is retried on TIMEOUT_RETRY_FACTOR (2) × its budget (run.ts:351-352),
+    # so at `--default-timeout 240` one entry can hold the runner for
     # 240 + 2 × 240 = 720s. The script measures one entry at a time and refuses
     # more than `--max-entries 4` before launching anything, so the measuring
     # step is bounded by 4 × 720s = 48 minutes; `npm ci` and the base-image pull
-    # are minutes on a fresh runner. test/pr-check.test.ts re-derives this
-    # bound from the run line below and fails if the minutes fall under it.
+    # are minutes on a fresh runner.
+    #
+    # The count alone would not hold that bound: an entry's own timeoutSeconds
+    # replaces the default, and the schema bounds it only below
+    # (src/sweep/servers-schema.ts:166-169, "greater than zero"), so one entry
+    # with timeoutSeconds: 4000 could cost 12000s and be killed here with no
+    # line printed for it. The bound is held because the script also refuses,
+    # before any launch, a selection whose worst case (each launched entry's own
+    # budget and its retry, summed) exceeds the 48 minutes the count was sized
+    # to. test/pr-check.test.ts re-derives this bound from the run line below
+    # and fails if the minutes fall under it.
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v5

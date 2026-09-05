@@ -161,12 +161,12 @@ export interface MeasureOptions {
  *
  * Such a command is never wrapped in this harness's container: it is spawned on
  * the host against the machine's own daemon, owns its exit codes and its image,
- * and has no shared package cache to bypass. Three published entries take this
- * form (`github`, `grafana`, `terraform`), so every path that decides "wrap or
- * spawn as given" has to ask the same question — and until 2026-09-05 each of
- * them asked it with its own copy of the prefix test, four in all (three here,
- * one in cross-check.ts), which is one edit away from two paths disagreeing
- * about the same entry. This is the one place the question is answered, and
+ * and has no shared package cache to bypass. Published entries already take
+ * this form (the phase 3 premise record cites `github`, `grafana` and
+ * `terraform`), so every path that decides "wrap or spawn as given" has to ask
+ * the same question — and until 2026-09-05 each of them asked it with its own
+ * copy of the prefix test, four in all (three here, one in cross-check.ts),
+ * which is one edit away from two paths disagreeing about the same entry. This is the one place the question is answered, and
  * test/pr-check.test.ts fails if a second copy appears under src/.
  *
  * Leading whitespace is ignored because a YAML block scalar can carry it; the

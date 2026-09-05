@@ -19,19 +19,28 @@
  * own rules. The measured line here is not the published number and must not
  * be quoted as one: a fresh runner resolves `@latest` on its own day.
  *
- * Three refusals, all before a launch. A head document that fails
- * `validateServers` prints the problems and exits 2 (servers-schema.ts was
- * written for exactly this second caller). More than `--max-entries` entries
- * exits 2, because one entry can cost `budget × (1 + TIMEOUT_RETRY_FACTOR)`
- * (run.ts retries a timeout on the doubled budget) and the workflow's
- * `timeout-minutes` is derived from that product. And an entry whose command is
- * already its own `docker run` (`isSelfContainerised`) is listed, not launched:
- * the harness would spawn it against the runner's own daemon with the pull
- * request's argv, so it waits for a maintainer to measure it via resweep.yml's
- * `servers` input after review. Listing is the `remote` treatment sweep-all.ts
- * gives endpoints, and it is exit 0 — three published entries take this form,
- * and a check that went red on a shape the file already uses would be a check
- * against the file.
+ * Four refusals, all before a launch, all exit 2 so a reader can tell "nothing
+ * ran" from "the entry failed". A head document that does not parse as YAML
+ * prints the parser's message and stops — never its stack trace, which the
+ * first draft of this script let through with exit 1, the code the policy
+ * below reserves for an entry that launched and failed. A head that parses but
+ * fails `validateServers` prints the problems (servers-schema.ts was written
+ * for exactly this second caller). More than `--max-entries` entries is refused
+ * because one entry can cost `budget × (1 + TIMEOUT_RETRY_FACTOR)` (run.ts
+ * retries a timeout on the doubled budget) and the workflow's `timeout-minutes`
+ * is derived from that product — and, because the schema bounds an entry's own
+ * `timeoutSeconds` only below (servers-schema.ts:166-169), the sum of what the
+ * selected entries would actually cost (`worstCaseSeconds`) is refused when it
+ * exceeds the same budget, so no entry's `timeoutSeconds: 4000` can push the
+ * runner past the job limit with its line unprinted. And an entry whose command
+ * is already its own `docker run` (`isSelfContainerised`) is listed, not
+ * launched: the harness would spawn it against the runner's own daemon with the
+ * pull request's argv, so it waits for a maintainer to measure it via
+ * resweep.yml's `servers` input after review. Listing is the `remote` treatment
+ * sweep-all.ts gives endpoints, and it is exit 0 — published entries already
+ * take this form (the premise record cites the `github`, `grafana` and
+ * `terraform` entries), and a check that went red on a shape the file already
+ * uses would be a check against the file.
  *
  * Exit policy, by the entry's outcome: `measured`, `auth-required` and a
  * declared `not-applicable` are findings the leaderboard publishes today, so
@@ -71,15 +80,47 @@ export const LAUNCH_FIELDS = [
 ] as const satisfies readonly (keyof ServerEntry)[];
 
 /**
- * How many entries one pull request may launch. The worst case per entry is a
- * timeout retried on `TIMEOUT_RETRY_FACTOR` times its budget, so at the
- * workflow's `--default-timeout 240` one entry can hold the runner for
- * 240 × (1 + 2) = 720s; four of them, measured one at a time, is 48 minutes,
- * which is what pr-check.yml's `timeout-minutes` is sized to. A PR with more
- * is asked to split, before anything is launched, rather than have the runner
- * cut it off with the last entries unmeasured and no line saying so.
+ * How many entries one pull request may launch, at the default budget. The
+ * worst case per entry is a timeout retried on `TIMEOUT_RETRY_FACTOR` times
+ * its budget (run.ts:351-352), so at the workflow's `--default-timeout 240`
+ * one entry can hold the runner for 240 × (1 + 2) = 720s, and this many of
+ * them measured one at a time is what pr-check.yml's `timeout-minutes` is
+ * sized to (`launchBudgetSeconds`).
+ *
+ * The count alone does not hold that bound. An entry's own `timeoutSeconds`
+ * replaces the default (the rotation's rule, kept here), and the schema bounds
+ * it only below — "a whole number of seconds greater than zero"
+ * (servers-schema.ts:166-169) — so one added entry with `timeoutSeconds: 4000`
+ * would cost 12000s under the same count and be killed by the job limit with
+ * no line printed for it. The bound is held because the script also refuses,
+ * before any launch, a selection whose `worstCaseSeconds` exceeds the budget
+ * the count was sized to. A PR that trips either is asked to split or shorten,
+ * rather than have the runner cut it off with the last entries unmeasured and
+ * no line saying so.
  */
 export const DEFAULT_MAX_ENTRIES = 4;
+
+/** The launched entries among a selection: remote endpoints and self-containerised commands are listed, not spawned. */
+export function launchedEntries(entries: ServerEntry[]): ServerEntry[] {
+  return entries.filter((e) => !e.remote && !isSelfContainerised(e.command));
+}
+
+/**
+ * The most seconds a selection can hold the runner: each launched entry's own
+ * budget (`timeoutSeconds`, or the default) once, then `TIMEOUT_RETRY_FACTOR`
+ * times more on the retry. Listed entries cost nothing and are not counted.
+ */
+export function worstCaseSeconds(entries: ServerEntry[], defaultTimeout: number): number {
+  return launchedEntries(entries).reduce(
+    (sum, e) => sum + (e.timeoutSeconds ?? defaultTimeout) * (1 + TIMEOUT_RETRY_FACTOR),
+    0,
+  );
+}
+
+/** What the job's `timeout-minutes` was sized to: `maxEntries` launches, each at the default budget and its retry. */
+export function launchBudgetSeconds(maxEntries: number, defaultTimeout: number): number {
+  return maxEntries * defaultTimeout * (1 + TIMEOUT_RETRY_FACTOR);
+}
 
 export interface ServersDiff {
   /** Head fails the shape check; nothing is diffed from a malformed document. */
@@ -179,8 +220,20 @@ if (isMain) {
   const defaultTimeout = Number(arg('default-timeout') ?? 60);
   const maxEntries = Number(arg('max-entries') ?? DEFAULT_MAX_ENTRIES);
 
-  const base = parse(readFileSync(basePath, 'utf8')) as unknown;
-  const head = parse(readFileSync(headPath, 'utf8')) as unknown;
+  // A parse error is a refusal, not a failed launch: exit 2 with the parser's
+  // message, never its stack trace. Base is the committed branch and always
+  // parses in practice, but the two are treated alike so no path exits 1
+  // without an entry having been launched.
+  const parseDoc = (path: string): unknown => {
+    try {
+      return parse(readFileSync(path, 'utf8')) as unknown;
+    } catch (err) {
+      console.error(`${path} does not parse as YAML: ${(err as Error).message.trim()}\nnothing was launched`);
+      process.exit(2);
+    }
+  };
+  const base = parseDoc(basePath);
+  const head = parseDoc(headPath);
 
   const diff = entriesToMeasure(base, head);
   if (diff.problems.length) {
@@ -200,6 +253,20 @@ if (isMain) {
         `(${selected.map((e) => e.name).join(', ')}); the check launches at most ${maxEntries} — ` +
         `one entry can cost --default-timeout × (1 + ${TIMEOUT_RETRY_FACTOR}) seconds, and the ` +
         `job's timeout-minutes is sized to ${maxEntries} of those. Split the pull request. Nothing was launched.`,
+    );
+    process.exit(2);
+  }
+  const budget = launchBudgetSeconds(maxEntries, defaultTimeout);
+  const worst = worstCaseSeconds(selected, defaultTimeout);
+  if (worst > budget) {
+    const named = launchedEntries(selected)
+      .map((e) => `${e.name} (timeoutSeconds ${e.timeoutSeconds ?? `${defaultTimeout}, the default`})`)
+      .join(', ');
+    console.error(
+      `the entries this pull request launches could hold the runner for ${worst}s — ${named}, each ` +
+        `retried on ${TIMEOUT_RETRY_FACTOR}× its budget after a timeout — and the job's timeout-minutes ` +
+        `is sized to ${budget}s (${maxEntries} entries at --default-timeout ${defaultTimeout}). ` +
+        `Shorten timeoutSeconds or split the pull request. Nothing was launched.`,
     );
     process.exit(2);
   }
@@ -256,8 +323,8 @@ if (isMain) {
   console.log(
     'Nothing was written: results/, badges/ and history.csv are published only by the rotation ' +
       '(.github/workflows/resweep.yml). If CI is red on this pull request, run `npx tsx src/sweep/regen.ts` ' +
-      'and commit what it rewrote, and add a bullet under `## Unreleased` in CHANGELOG.md — ' +
-      'tools/release-readiness.ts fails a servers.yaml commit that has neither.',
+      'and commit what it rewrote, and add a bullet under `## Unreleased` in CHANGELOG.md or start the ' +
+      'commit subject with `chore:` — tools/release-readiness.ts fails a servers.yaml commit that does neither.',
   );
   if (failed) {
     console.error(`${failed} entr${failed === 1 ? 'y does' : 'ies do'} not launch as written; see the lines above`);
