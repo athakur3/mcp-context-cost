@@ -37,7 +37,12 @@ while reading it.
   within three Wednesdays, and `resweep.yml` carries the timings that chose the number.
   README, METHODOLOGY and CONTRIBUTING say three where they said six; the September article
   keeps the sentence it was written under, because it states the date it was read on and a
-  dated reading is not edited afterwards.
+  dated reading is not edited afterwards. The first movements that can name a release on both
+  sides arrived with the same run: `results/regressions.md` read `0 of 17` when the column
+  shipped on 2026-09-05 and reads **2 of 18** a day later — `comfyui-mcp` `0.52.189` →
+  `0.52.199` for +136 tokens, and `desktop-commander` **still** `0.2.48` across +3, which is
+  the case the column was given that word for. Nothing was back-filled; the rotation is what
+  fills it in, and a three-week rotation fills it in twice as fast.
 
 - **Two numbers nobody was watching: the band an installed copy states, and the machine a
   record was made on.** Both were proposed when the work that created them shipped, and
