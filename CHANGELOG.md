@@ -7,6 +7,19 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **`accessibility-scanner` measures, and was never upstream's problem.** It published
+  `ERR_PACKAGE_PATH_NOT_EXPORTED` out of `playwright-core` and was on its way to being reported
+  as a broken package. It declares `engines.node` of `^24.15.0 || >=26.0.0`; the isolation image
+  is `node:22-slim`, and npm's `EBADENGINE` warning was the whole story. The entry names
+  `node:24-slim` now and it measures 8,959 tokens across 33 tools. Sixth row this project was
+  publishing as a defect in someone else's software.
+- **The one real upstream bug is filed.** `hana-cli` publishes `bin.hana-cli-mcp`, whose
+  entrypoint imports three subpaths of `@modelcontextprotocol/sdk` — a package absent from all
+  50 of its declared dependencies, so it resolves in a checkout and never from the registry
+  (SAP-samples/hana-developer-cli-tool-example#231). `heroku` is real too and was already filed
+  by someone else (heroku/heroku-mcp-server#249); what we could add went there as a comment
+  rather than as a second issue.
+
 ## 0.13.0 — 2026-09-05
 
 Seven servers changed status in this release and **not one of them changed because the server

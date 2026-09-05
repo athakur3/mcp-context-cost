@@ -2,7 +2,7 @@
 
 Six phases, in order. Each has one goal, a scope, and an exit that can be checked rather
 than declared. Phases 0 and 1 are done, the distribution track shipped on 2026-09-05, and
-**phase 2 is six of seven items in**; 3 and 4 run in parallel; 5 is gated by the calendar,
+**phase 2 is done**; 3 and 4 run in parallel; 5 is gated by the calendar,
 not by work. Contributions welcome on any item.
 
 Dated **2026-09-05**, against 0.13.0 on npm and the data of that day. Each item names the
@@ -41,7 +41,7 @@ now a dated reading with six asks behind it rather than an absence of asking.
 | **0** | Ship what trunk already holds | **done 2026-09-05** | 0.12.0 on npm, with a dated changelog section |
 | **1** | Every published sentence is established | **done 2026-09-05** | eight items, each held by a test; `slack` and `redis-legacy` re-measured in CI |
 | **∥** | **Distribution** *(maintainer)* | **shipped 2026-09-05** | listing live and three posts published; five badge PRs open |
-| **2** | Sweeps that are cheaper and say more — **6 of 7, released as 0.13.0** | 2026-09-05 → 2026-09-25 | movements name releases; four rows healed; Claude column refreshed by the re-sweep; three issues filed |
+| **2** | Sweeps that are cheaper and say more — **done 2026-09-05**, released as 0.13.0 | 2026-09-05 | movements name releases; six rows healed; Claude column refreshed by the re-sweep; the one real upstream bug filed |
 | **3** | Others can add servers safely | 2026-09-21 → 2026-10-09 | a stranger's entry is measured read-only before any write-token job runs it |
 | **4** | `audit` reaches the stacks people run | 2026-10-05 → 2026-10-23 | remote entries measured; three more clients, each with a who-pays row |
 | **5** | The data tells its second story | from 2026-10-16 | state-of report #2 with per-tool attribution; rotation length decided on evidence |
@@ -120,8 +120,8 @@ the response log are at https://claude.ai/code/artifact/42d26d8e-b533-4bde-a424-
 **Goal.** A movement names the release that caused it, and a harness limitation never costs
 a retry.
 
-**Six of seven items are done (2026-09-05).** The premise check this file mandates paid for
-itself twice over: two items were wrong about the mechanism, one dissolved entirely, and the
+**All seven items are done (2026-09-05).** The premise check this file mandates paid for
+itself three times over: two items were wrong about the mechanism, one dissolved entirely, and the
 probe item then found that **half the "broken servers" in this set were broken by us** —
 `anki`, `grafana`, `azure` and `hevy` all publish real statuses now, and only `local-mcp`
 turned out to be a fact about someone else's release schedule.
@@ -182,13 +182,17 @@ turned out to be a fact about someone else's release schedule.
       words ("The Windows/Linux Go server is in preview"), on **both** architectures, so the
       arm64 reading was half the story. Entries gain `aptPackages` for the first of those — the
       `needsGit` argument, not the `OTEL_SDK_DISABLED` one.
-- [ ] **Heal failure rows upstream, one reproduction each.** *(maintainer — filing is their
-      account.)* Narrowed to three by the probes above, each reproducible in one line and each
-      genuinely upstream. `heroku` imports `@modelcontextprotocol/sdk/dist/esm/server/mcp`, a
-      deep subpath absent from the SDK 1.30.0 exports map its own `^1.26.0` range resolves to.
-      `accessibility-scanner` imports a `playwright-core` internal its pinned alpha no longer
-      exports. `hana-cli` imports `@modelcontextprotocol/sdk` without declaring it as a
-      dependency at all. Record the issue link in the entry so the row can say "filed <date>".
+- [x] **Heal failure rows upstream, one reproduction each** — done 2026-09-05, and re-verifying
+      each against the *current* published version before writing anything narrowed it in both
+      directions again. Of the three: `heroku` is real and **someone had already filed it**
+      (heroku/heroku-mcp-server#249, open, against 1.2.6) — a second issue would have been the
+      move that costs more than it wins, so what we had that the report did not went in as a
+      comment: it still reproduces on 1.2.7 on a different OS and Node major, and the subpath is
+      absent from the SDK's exports map entirely. `accessibility-scanner` was **not upstream**:
+      it declares `engines.node` of `^24.15.0 || >=26.0.0` against an isolation image of
+      node:22-slim, and on node:24-slim it measures. Only `hana-cli` needed filing, as
+      SAP-samples/hana-developer-cli-tool-example#231 — its published `bin.hana-cli-mcp` imports
+      a package absent from all 50 of its declared dependencies.
 
 **Exit.**
 - ~~Every movement in `regressions.md` whose two records both carry a version names both.~~
@@ -201,8 +205,10 @@ turned out to be a fact about someone else's release schedule.
   number.
 - ~~`azure` and `local-mcp` each have a probe result recorded, whichever way it went.~~ Both
   do, and both moved: `azure` measures and `local-mcp` is declared.
-- Three upstream issues filed, links in `servers.yaml` — down from four, because `hevy` was
-  ours. Nothing is filed yet.
+- ~~Three upstream issues filed~~ — **one**, and that is the result rather than a shortfall.
+  Four candidates became three when `hevy` turned out to be ours, three became two when
+  `heroku` turned out to be already filed, and two became one when `accessibility-scanner`
+  turned out to be our base image. Links are in `servers.yaml`.
 
 **Released.** `0.13.0` is on npm, published first-attempt through the pinned OIDC path, with
 its own dated changelog section and the published tarball re-deriving `azure` — the server this
