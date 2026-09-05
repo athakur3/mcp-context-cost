@@ -105,3 +105,4 @@ yandex-tracker,,,auth-required,community,2275,https://pypistats.org/packages/yan
 ssh-manager,8446,37,measured,community,2117,https://api.npmjs.org/downloads/point/last-week/mcp-ssh-manager (npm weekly),14196,claude-opus-5,143,false,143,0,8162,v0.2.5
 google-surf,10948,7,measured,community,2016,https://api.npmjs.org/downloads/point/last-week/google-surf-mcp (npm weekly),11232,claude-opus-5,21,false,21,0,6472,v0.2.5
 safari-mcp,,,not-applicable,community,1772,https://api.npmjs.org/downloads/point/last-week/safari-mcp (npm weekly; macOS host integration),,,,,,,,
+codehealth-mcp,,,not-yet-run,vendor-official,1729,https://api.npmjs.org/downloads/point/last-week/@codescene/codehealth-mcp (npm weekly),,,,,,,,

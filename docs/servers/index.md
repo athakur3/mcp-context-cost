@@ -1,6 +1,6 @@
 # Server pages
 
-One page per measured server: the per-tool breakdown behind the badge, the exact launch command, and the command that re-derives the number. 87 of 106 candidates measured.
+One page per measured server: the per-tool breakdown behind the badge, the exact launch command, and the command that re-derives the number. 87 of 107 candidates measured.
 
 | # | server | tokens | tools | band |
 |---:|---|---:|---:|---|
@@ -117,5 +117,6 @@ No page: there is no number to show. The reason is recorded per candidate.
 | windows-mcp | not-applicable |
 | yandex-tracker | auth-required |
 | safari-mcp | not-applicable |
+| codehealth-mcp | not-yet-run |
 
 [Leaderboard](https://github.com/athakur3/mcp-context-cost/blob/main/results/leaderboard.md) · [Methodology](../METHODOLOGY.html) · [Dashboard](../dashboard.html)

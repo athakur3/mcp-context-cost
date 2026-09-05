@@ -1001,3 +1001,31 @@ servers:
     metricSource: https://api.npmjs.org/downloads/point/last-week/safari-mcp (npm weekly; macOS host integration)
     category: community
     repo: https://github.com/achiya-automation/safari-mcp
+
+  # ============ FROM THE REGISTRY SCAN (2026-09-06) ============
+  # Drafted by tools/scan-registry.ts, on its first real use. Its summary line:
+  # registry scan 2026-09-05: 40 page(s) (TRUNCATED, resume at
+  # com.leagueloom/league-loom:1.14.1), 4000 distinct latest name(s), 3972
+  # active, 548 npm/pypi stdio package(s) not yet tracked, 378 drafted, 170
+  # refused (90 of them unmetered: pypistats.org rate-limited this run (gave up
+  # after 6 attempts (HTTP 429))), 1324s
+  # The twelve highest-ranked npm drafts with no required env were run through
+  # src/sweep/pr-check.ts locally (persist off): nine measured, one wanted a
+  # key, two do not start as published. This one is appended because it has a
+  # vendor behind it and a repository under that vendor's own organisation; the
+  # rest are drafts, not entries, until someone makes that judgment for each.
+  - name: codehealth-mcp
+    # The package downloads its own binary as a zip, and the isolation image has
+    # no unzip — without it the launch dies at "spawnSync unzip ENOENT". Scope
+    # @codescene, repository under codescene-oss (CodeScene's open-source
+    # organisation): the two owners agree in substance. The local check came
+    # up in 18s including the download, inside the default budget, so no
+    # timeoutSeconds.
+    command: npx -y @codescene/codehealth-mcp
+    aptPackages: [unzip]
+    package: '@codescene/codehealth-mcp'
+    env: []
+    metric: 1729
+    metricSource: https://api.npmjs.org/downloads/point/last-week/@codescene/codehealth-mcp (npm weekly)
+    category: vendor-official
+    repo: https://github.com/codescene-oss/codescene-mcp-server
