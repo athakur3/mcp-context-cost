@@ -158,6 +158,12 @@
       "totalTokens": 10426,
       "toolCount": 10
     },
+    "47b201e9455f2aba4184e2f88c52939ea543f536e305490e17efd9d4730cde9d": {
+      "server": "comfyui-mcp",
+      "date": "2026-09-05",
+      "totalTokens": 50776,
+      "toolCount": 41
+    },
     "48f53cd914e3137feabfb3087abdb3bb54df46907d605a4cf97fac272bba2afb": {
       "server": "mysql",
       "date": "2026-08-19",
@@ -536,6 +542,12 @@
       "totalTokens": 25487,
       "toolCount": 8
     },
+    "ed461d75b5dc273d9389408e032abece8af3bdca493ecf120be6924ef902004a": {
+      "server": "desktop-commander",
+      "date": "2026-09-05",
+      "totalTokens": 11837,
+      "toolCount": 26
+    },
     "eec89a7ec71ac3e9e65fb8477bf594b4ce9af01b572bcc5d7e9fbbcc85f4e813": {
       "server": "agentphone",
       "date": "2026-09-03",
@@ -611,10 +623,10 @@
     "clinicaltrialsgov": "acdc9b99e581c7493a98e8c0fac919bbe384ac3205227c15891b94d6ddcf4825",
     "cloudflare-docs": "a65649ac29928ffde9e8bf8796482b5aaeb17e79d02ea2f3b8b96f11ac32b604",
     "codebase-memory-mcp": "01a1bd0f450ccf86b0bf36b2b63749c70dc4add7b0a4d9621ce69e29c9db7b27",
-    "comfyui-mcp": "af7eaa380b99a67fc49ab075c762cd2686f108acc4ba21d001ce922554f7510a",
+    "comfyui-mcp": "47b201e9455f2aba4184e2f88c52939ea543f536e305490e17efd9d4730cde9d",
     "context7": "699d8b33d6d2d90ce7deb777994bb408e1e07bb08fa997042b7cce19e6c1ecec",
     "deepwiki": "3735162916165ab23696fc91fbf626bd99a36ddcd1e15746e91e16c7e336b379",
-    "desktop-commander": "2c373ba271649e86628d49fbfa80b9e5f152bdc3cb7c65ec8f40c309eb9c8822",
+    "desktop-commander": "ed461d75b5dc273d9389408e032abece8af3bdca493ecf120be6924ef902004a",
     "duckduckgo": "61f82494284ccb413e9cb213ed93d7b79f43769229713b2748056a7f1018db14",
     "elasticsearch": "76a005f840c738f5788e7b5801fdc12194713fce1ed435ad500f891a2b2dd13c",
     "emailmd": "991fa59036ab1d4a4c1270ba14025668cd37bad41d9a804544a5e6aa23564365",

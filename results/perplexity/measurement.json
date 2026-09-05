@@ -49,7 +49,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T13:04:33.715Z",
+  "measuredAt": "2026-09-05T23:39:56.893Z",
   "serverName": "example-servers/perplexity-ask",
   "serverVersion": "0.1.0",
   "launchCommand": "npx -y server-perplexity-ask",

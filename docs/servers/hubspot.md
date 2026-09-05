@@ -1,6 +1,6 @@
 # hubspot — context cost
 
-**9,158 tokens** across 21 tools — *moderate* (5–15K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
+**9,158 tokens** across 21 tools — *moderate* (5–15K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -61,6 +61,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-08-16 | 9,158 | 21 | not recorded | not recorded | — |
 | 2026-08-19 | 9,158 | 21 | not recorded | docker | no change |
 | 2026-09-04 | 9,158 | 21 | 0.4.0 | docker | no change |
+| 2026-09-05 | 9,158 | 21 | 0.4.0 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

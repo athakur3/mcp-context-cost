@@ -599,7 +599,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T13:03:56.324Z",
+  "measuredAt": "2026-09-05T23:39:38.670Z",
   "serverName": "pinecone-mcp",
   "serverVersion": "0.3.0",
   "launchCommand": "npx -y @pinecone-database/mcp",

@@ -67,7 +67,7 @@ blender,6928,28,measured,community,71408,https://pypistats.org/packages/blender-
 excel,4266,25,measured,community,57839,https://pypistats.org/packages/excel-mcp-server (PyPI weekly),6338,claude-opus-5,106,false,99,7,3080,v0.2.5
 figma-context,946,2,measured,community,57771,https://api.npmjs.org/downloads/point/last-week/figma-developer-mcp (npm weekly),1773,claude-opus-5,11,false,11,0,898,v0.2.5
 duckduckgo,724,2,measured,community,41360,https://pypistats.org/packages/duckduckgo-mcp-server (PyPI weekly),1322,claude-opus-5,6,false,6,0,661,v0.2.5
-desktop-commander,11834,26,dynamic,community,38626,https://api.npmjs.org/downloads/point/last-week/@wonderwhy-er/desktop-commander (npm weekly),19303,claude-opus-5,99,false,99,0,,
+desktop-commander,11837,26,dynamic,community,38626,https://api.npmjs.org/downloads/point/last-week/@wonderwhy-er/desktop-commander (npm weekly),19307,claude-opus-5,99,false,99,0,,
 serena,8204,29,measured,community,28084,https://api.github.com/repos/oraios/serena (GitHub stars; installed from git),11494,claude-opus-5,138,false,109,29,6528,v0.2.5
 gmail,,,auth-required,community,26678,https://api.npmjs.org/downloads/point/last-week/@gongrzhe/server-gmail-autoauth-mcp (npm weekly; needs OAuth keys file),,,,,,,,
 pandoc,1425,1,measured,community,23590,https://pypistats.org/packages/mcp-pandoc (PyPI weekly),2628,claude-opus-5,5,false,5,0,1426,v0.2.5
@@ -82,7 +82,7 @@ basic-memory,9188,23,measured,community,10460,https://pypistats.org/packages/bas
 airtable,4186,16,measured,community,3022,https://api.npmjs.org/downloads/point/last-week/airtable-mcp-server (npm weekly),4555,claude-opus-5,50,false,50,0,2533,v0.2.5
 airbnb,486,2,measured,community,2599,https://api.npmjs.org/downloads/point/last-week/@openbnb/mcp-server-airbnb (npm weekly),1169,claude-opus-5,10,false,10,0,486,v0.2.5
 chrome-devtools,5717,29,measured,vendor-official,3288165,https://api.npmjs.org/downloads/point/last-week/chrome-devtools-mcp (npm weekly),9215,claude-opus-5,98,false,98,0,5080,v0.2.5
-comfyui-mcp,50640,41,measured,community,141905,https://api.npmjs.org/downloads/point/last-week/comfyui-mcp (npm weekly),83957,claude-opus-5,428,false,140,288,50375,v0.2.5
+comfyui-mcp,50776,41,measured,community,141905,https://api.npmjs.org/downloads/point/last-week/comfyui-mcp (npm weekly),84168,claude-opus-5,428,false,140,288,50511,v0.2.5
 agent-device,53669,57,measured,community,138188,https://api.npmjs.org/downloads/point/last-week/agent-device (npm weekly),75686,claude-opus-5,463,false,132,331,40124,v0.2.5
 appium-mcp,10267,31,measured,vendor-official,12466,https://api.npmjs.org/downloads/point/last-week/appium-mcp (npm weekly),17001,claude-opus-5,328,false,164,164,9843,v0.2.5
 codebase-memory-mcp,5258,15,measured,community,9040,https://api.npmjs.org/downloads/point/last-week/codebase-memory-mcp (npm weekly),8585,claude-opus-5,205,false,55,150,4776,v0.2.5

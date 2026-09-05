@@ -223,6 +223,118 @@
           "tokens": 445
         }
       ]
+    },
+    {
+      "date": "2026-09-05",
+      "canonicalSha256": "ed461d75b5dc273d9389408e032abece8af3bdca493ecf120be6924ef902004a",
+      "totalTokens": 11837,
+      "version": "0.2.48",
+      "tools": [
+        {
+          "name": "get_config",
+          "tokens": 298
+        },
+        {
+          "name": "set_config_value",
+          "tokens": 306
+        },
+        {
+          "name": "read_file",
+          "tokens": 1024
+        },
+        {
+          "name": "read_multiple_files",
+          "tokens": 241
+        },
+        {
+          "name": "write_file",
+          "tokens": 726
+        },
+        {
+          "name": "write_pdf",
+          "tokens": 882
+        },
+        {
+          "name": "create_directory",
+          "tokens": 191
+        },
+        {
+          "name": "list_directory",
+          "tokens": 536
+        },
+        {
+          "name": "move_file",
+          "tokens": 213
+        },
+        {
+          "name": "start_search",
+          "tokens": 1351
+        },
+        {
+          "name": "get_more_search_results",
+          "tokens": 353
+        },
+        {
+          "name": "stop_search",
+          "tokens": 176
+        },
+        {
+          "name": "list_searches",
+          "tokens": 129
+        },
+        {
+          "name": "get_file_info",
+          "tokens": 262
+        },
+        {
+          "name": "edit_block",
+          "tokens": 917
+        },
+        {
+          "name": "start_process",
+          "tokens": 1181
+        },
+        {
+          "name": "read_process_output",
+          "tokens": 511
+        },
+        {
+          "name": "interact_with_process",
+          "tokens": 825
+        },
+        {
+          "name": "force_terminate",
+          "tokens": 116
+        },
+        {
+          "name": "list_sessions",
+          "tokens": 186
+        },
+        {
+          "name": "list_processes",
+          "tokens": 112
+        },
+        {
+          "name": "kill_process",
+          "tokens": 128
+        },
+        {
+          "name": "get_usage_stats",
+          "tokens": 114
+        },
+        {
+          "name": "get_recent_tool_calls",
+          "tokens": 223
+        },
+        {
+          "name": "give_feedback_to_desktop_commander",
+          "tokens": 389
+        },
+        {
+          "name": "get_prompts",
+          "tokens": 445
+        }
+      ]
     }
   ]
 }

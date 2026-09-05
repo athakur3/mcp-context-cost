@@ -603,7 +603,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T13:03:13.364Z",
+  "measuredAt": "2026-09-05T23:39:33.329Z",
   "serverName": "chroma",
   "serverVersion": "1.6.0",
   "launchCommand": "uvx chroma-mcp",

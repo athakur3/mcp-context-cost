@@ -1401,7 +1401,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T06:51:43.026Z",
+  "measuredAt": "2026-09-05T23:39:33.932Z",
   "serverName": "hubspot-mcp-server",
   "serverVersion": "0.4.0",
   "launchCommand": "npx -y @hubspot/mcp-server",
@@ -1413,7 +1413,8 @@
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

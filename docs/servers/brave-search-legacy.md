@@ -1,6 +1,6 @@
 # brave-search-legacy — context cost
 
-**319 tokens** across 2 tools — *lean* (< 1K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
+**319 tokens** across 2 tools — *lean* (< 1K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -42,6 +42,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-08-16 | 319 | 2 | not recorded | not recorded | — |
 | 2026-08-18 | 319 | 2 | not recorded | docker | no change |
 | 2026-09-04 | 319 | 2 | 0.1.0 | docker | no change |
+| 2026-09-05 | 319 | 2 | 0.1.0 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

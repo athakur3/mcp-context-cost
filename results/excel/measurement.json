@@ -1560,7 +1560,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T07:03:05.805Z",
+  "measuredAt": "2026-09-05T23:40:14.791Z",
   "serverName": "excel-mcp",
   "serverVersion": "1.29.1",
   "launchCommand": "uvx excel-mcp-server stdio",
@@ -1570,7 +1570,8 @@
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

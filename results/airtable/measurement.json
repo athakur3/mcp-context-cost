@@ -1244,7 +1244,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T13:05:52.666Z",
+  "measuredAt": "2026-09-05T23:40:48.626Z",
   "serverName": "airtable-mcp-server",
   "serverVersion": "1.14.0",
   "launchCommand": "npx -y airtable-mcp-server",

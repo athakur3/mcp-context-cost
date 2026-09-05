@@ -2447,7 +2447,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T13:08:13.128Z",
+  "measuredAt": "2026-09-05T23:42:27.496Z",
   "serverName": "google-surf-mcp",
   "serverVersion": "1.0.9",
   "launchCommand": "npx -y google-surf-mcp",

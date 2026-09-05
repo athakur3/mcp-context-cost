@@ -69,7 +69,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T13:02:27.216Z",
+  "measuredAt": "2026-09-05T23:39:00.933Z",
   "serverName": "example-servers/brave-search",
   "serverVersion": "0.1.0",
   "launchCommand": "npx -y @modelcontextprotocol/server-brave-search",

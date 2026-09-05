@@ -1,6 +1,6 @@
 # xcodebuildmcp — context cost
 
-**26,594 tokens** across 24 tools — *heavy* (15–30K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
+**26,594 tokens** across 24 tools — *heavy* (15–30K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -64,6 +64,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-08-18 | 26,594 | 24 | not recorded | not recorded | — |
 | 2026-08-19 | 26,594 | 24 | not recorded | docker | no change |
 | 2026-09-04 | 26,594 | 24 | 2.7.0 | docker | no change |
+| 2026-09-05 | 26,594 | 24 | 2.7.0 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

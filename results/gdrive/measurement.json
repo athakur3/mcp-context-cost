@@ -8,7 +8,7 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-09-04T06:42:44.637Z",
+  "measuredAt": "2026-09-05T23:39:05.865Z",
   "serverName": "gdrive",
   "launchCommand": "npx -y @modelcontextprotocol/server-gdrive",
   "notes": "server exited (code 1); stderr tail: Credentials not found. Please run with 'auth' argument first.",
@@ -16,7 +16,8 @@
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

@@ -265,14 +265,14 @@
       "capturedSha256": "01a1bd0f450ccf86b0bf36b2b63749c70dc4add7b0a4d9621ce69e29c9db7b27"
     },
     "comfyui-mcp": {
-      "ourTokens": 50640,
-      "ourMappedTokens": 50249,
-      "cliTokens": 50375,
+      "ourTokens": 50776,
+      "ourMappedTokens": 50385,
+      "cliTokens": 50511,
       "ourToolCount": 41,
       "cliToolCount": 41,
       "toolSetMatches": true,
       "dynamic": false,
-      "capturedSha256": "af7eaa380b99a67fc49ab075c762cd2686f108acc4ba21d001ce922554f7510a"
+      "capturedSha256": "47b201e9455f2aba4184e2f88c52939ea543f536e305490e17efd9d4730cde9d"
     },
     "context7": {
       "ourTokens": 1052,
@@ -295,14 +295,14 @@
       "capturedSha256": "3735162916165ab23696fc91fbf626bd99a36ddcd1e15746e91e16c7e336b379"
     },
     "desktop-commander": {
-      "ourTokens": 11836,
-      "ourMappedTokens": 11056,
-      "cliTokens": 11070,
+      "ourTokens": 11838,
+      "ourMappedTokens": 11058,
+      "cliTokens": 11071,
       "ourToolCount": 26,
       "cliToolCount": 26,
       "toolSetMatches": true,
       "dynamic": true,
-      "capturedSha256": "0bb6f7fd2deedc6dc19a2a3a8c7cb176c6c4590948d623d666a4874170cc51bc"
+      "capturedSha256": "82c79aa63ee12db00e87b08811de54cb088348ffa07c72d302fc94c7ef298032"
     },
     "duckduckgo": {
       "ourTokens": 724,

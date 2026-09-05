@@ -1,6 +1,6 @@
 # slack-legacy — context cost
 
-**681 tokens** across 8 tools — *lean* (< 1K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
+**681 tokens** across 8 tools — *lean* (< 1K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -49,6 +49,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-08-18 | 681 | 8 | not recorded | docker | no change |
 | 2026-08-19 | 681 | 8 | not recorded | docker | no change |
 | 2026-09-04 | 681 | 8 | 1.0.0 | docker | no change |
+| 2026-09-05 | 681 | 8 | 1.0.0 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

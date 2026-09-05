@@ -478,7 +478,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T06:35:02.808Z",
+  "measuredAt": "2026-09-05T23:38:54.981Z",
   "serverName": "mcp-servers/everything",
   "serverVersion": "2.0.0",
   "launchCommand": "npx -y @modelcontextprotocol/server-everything",
@@ -488,7 +488,8 @@
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

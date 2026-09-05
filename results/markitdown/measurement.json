@@ -33,7 +33,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T06:46:55.704Z",
+  "measuredAt": "2026-09-05T23:39:22.397Z",
   "serverName": "markitdown",
   "serverVersion": "1.8.1",
   "launchCommand": "uvx markitdown-mcp",
@@ -43,7 +43,8 @@
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

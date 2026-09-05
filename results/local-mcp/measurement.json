@@ -8,7 +8,7 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-09-05T12:34:42.818Z",
+  "measuredAt": "2026-09-05T23:41:55.564Z",
   "serverName": "local-mcp",
   "launchCommand": "npx -y local-mcp",
   "notes": "the vendor ships no Linux runtime yet — its own Go server is in preview for Windows and Linux — server exited (code 1); stderr tail: LMCP v3.0.405 (linux-amd64) not found in cache.\nDownloading from https://download.local-mcp.com/lmcp-server-3.0.405-linux-amd64.tar.gz\n\nError al preparar el runtime de LMCP:\nLMCP 3.0.405 is not yet available for linux-amd64.\nThe Windows/Linux Go server is in preview — check https://local-mcp.com for updates.\nIntentá reinstalar: npx local-mcp update",

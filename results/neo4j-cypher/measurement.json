@@ -125,7 +125,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T06:53:22.426Z",
+  "measuredAt": "2026-09-05T23:39:40.026Z",
   "serverName": "mcp-neo4j-cypher",
   "serverVersion": "2.13.3",
   "launchCommand": "uvx mcp-neo4j-cypher",
@@ -139,7 +139,8 @@
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

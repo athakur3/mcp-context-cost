@@ -1905,7 +1905,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-05T13:02:45.525Z",
+  "measuredAt": "2026-09-05T23:41:44.347Z",
   "serverName": "Playwright",
   "serverVersion": "3.3.2",
   "launchCommand": "npx -y mcp-accessibility-scanner",

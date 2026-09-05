@@ -1,6 +1,6 @@
 # excel — context cost
 
-**4,266 tokens** across 25 tools — *light* (1–5K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
+**4,266 tokens** across 25 tools — *light* (1–5K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -65,6 +65,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-08-16 | 4,266 | 25 | not recorded | not recorded | — |
 | 2026-08-19 | 4,266 | 25 | not recorded | docker | no change |
 | 2026-09-04 | 4,266 | 25 | 1.29.1 | docker | no change |
+| 2026-09-05 | 4,266 | 25 | 1.29.1 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

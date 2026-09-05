@@ -4883,7 +4883,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-05T12:24:40.318Z",
+  "measuredAt": "2026-09-05T23:41:54.033Z",
   "serverName": "anki-mcp-server",
   "serverVersion": "0.25.0",
   "launchCommand": "npx -y @ankimcp/anki-mcp-server --stdio",

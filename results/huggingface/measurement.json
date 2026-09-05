@@ -1211,7 +1211,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T07:02:05.610Z",
+  "measuredAt": "2026-09-05T23:40:01.089Z",
   "serverName": "huggingface.co/mcp",
   "serverVersion": "0.4.15",
   "launchCommand": "npx -y mcp-remote https://huggingface.co/mcp",
@@ -1221,7 +1221,8 @@
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 120000
 }

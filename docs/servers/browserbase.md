@@ -1,6 +1,6 @@
 # browserbase — context cost
 
-**364 tokens** across 6 tools — *lean* (< 1K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
+**364 tokens** across 6 tools — *lean* (< 1K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -46,6 +46,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-08-16 | 364 | 6 | not recorded | not recorded | — |
 | 2026-08-19 | 364 | 6 | not recorded | docker | no change |
 | 2026-09-04 | 364 | 6 | 3.0.0 | docker | no change |
+| 2026-09-05 | 364 | 6 | 3.0.0 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

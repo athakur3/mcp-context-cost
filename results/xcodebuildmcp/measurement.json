@@ -10269,7 +10269,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T13:05:02.721Z",
+  "measuredAt": "2026-09-05T23:40:10.361Z",
   "serverName": "xcodebuildmcp",
   "serverVersion": "2.7.0",
   "launchCommand": "npx -y xcodebuildmcp@latest mcp",

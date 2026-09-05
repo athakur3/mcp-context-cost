@@ -6,7 +6,7 @@ The **claude** column is the same tools measured through Anthropic's `count_toke
 
 The **mcp-tokens** column is the other CLI's count of the same server — `sd2k/mcp-tokens` `v0.2.5` (2026-09-05, method `cli-cross-check/v1`), invoked with `--model gpt-4o` so both columns count o200k tokens. Its structs model the three request fields (name/description/input\_schema), so its number sits below the tokens column wherever a server ships metadata those fields do not carry — that gap is each server's field-selection share, published on its page, not a disagreement of counters. The parenthesized percentage is the disagreement of counters: the CLI's count against ours of the same three-field projection, −0.8% to +1.4% across the 84 rows where both tools saw the same tool set. A row prints only while the comparison is between like and like: the same tool names on both sides, and our capture unchanged since the run. See [CLI cross-check](../docs/METHODOLOGY.md#cli-cross-check).
 
-**Of the servers whose cost has moved at all, 11 moved upward and 6 moved down** — a net +4,446 tokens across the set. Most entries here launch unpinned, so a movement is a real upstream release landing in real context windows, and only measurements taken under the same isolation are compared. Every movement, which half of the server moved, and where the tokens went: [regressions.md](regressions.md).
+**Of the servers whose cost has moved at all, 13 moved upward and 5 moved down** — a net +4,587 tokens across the set. Most entries here launch unpinned, so a movement is a real upstream release landing in real context windows, and only measurements taken under the same isolation are compared. Every movement, which half of the server moved, and where the tokens went: [regressions.md](regressions.md).
 
 The **session start** column is what a client puts in context when it *defers* tool definitions until they are used: the server's tool names plus the `instructions` string it returns from `initialize` (method `deferred-load/v1`). The tokens column is what a client that loads every definition up front pays; this one is what the same server costs a client that does not. See [session-start load](../docs/METHODOLOGY.md#session-start-load).
 
@@ -16,7 +16,7 @@ The **session start** column is what a client puts in context when it *defers* t
 |---:|---|---:|---:|---:|---:|---:|---|---|---|
 | 1 | [github](../docs/servers/github.md) | 54,622 | 556 | 18,728 | 10,803 (+0.6%) | 44 | issue_write (2,050) | measured | vendor-official |
 | 2 | [agent-device](../docs/servers/agent-device.md) | 53,669 | 463 | 75,686 | 40,124 (+0.0%) | 57 | fill (4,461) | measured | community |
-| 3 | [comfyui-mcp](../docs/servers/comfyui-mcp.md) | 50,640 | 428 | 83,957 | 50,375 (+0.3%) | 41 | download_model (3,986) | measured | community |
+| 3 | [comfyui-mcp](../docs/servers/comfyui-mcp.md) | 50,776 | 428 | 84,168 | 50,511 (+0.3%) | 41 | download_model (3,986) | measured | community |
 | 4 | [xcodebuildmcp](../docs/servers/xcodebuildmcp.md) | 26,594 | 559 | 5,335 | 2,704 (+1.0%) | 24 | snapshot_ui (2,139) | measured | community |
 | 5 | [brave-search](../docs/servers/brave-search.md) | 25,487 | 61 | 13,762 | 8,300 (+0.3%) | 8 | brave_place_search (17,295) | measured | vendor-official |
 | 6 | [anki](../docs/servers/anki.md) | 20,037 | 179 | 16,189 | 9,371 (+0.1%) | 50 | collection_stats (1,853) | measured | community |
@@ -27,7 +27,7 @@ The **session start** column is what a client puts in context when it *defers* t
 | 11 | [octocode](../docs/servers/octocode.md) | 13,552 | 791 | 23,343 | 13,122 (+1.2%) | 14 | ghSearchPullRequests (1,799) | measured | community |
 | 12 | [githits](../docs/servers/githits.md) | 12,833 | 53 | 20,689 | 12,416 (+0.3%) | 16 | search (2,270) | measured | community |
 | 13 | [circleci](../docs/servers/circleci.md) | 11,912 | 61 | 19,164 | 11,750 (−0.0%) | 13 | run_rollback_pipeline (1,391) | measured | vendor-official |
-| 14 | [desktop-commander](../docs/servers/desktop-commander.md) | 11,834 | 99 | 19,303 | — | 26 | start_search (1,351) | dynamic | community |
+| 14 | [desktop-commander](../docs/servers/desktop-commander.md) | 11,837 | 99 | 19,307 | — | 26 | start_search (1,351) | dynamic | community |
 | 15 | [google-surf](../docs/servers/google-surf.md) | 10,948 | 21 | 11,232 | 6,472 (+0.9%) | 7 | project_memory (3,279) | measured | community |
 | 16 | [apify](../docs/servers/apify.md) | 10,452 | 1,144 | 8,297 | 4,803 (+0.2%) | 10 | search-actors (2,226) | measured | vendor-official |
 | 17 | [appium-mcp](../docs/servers/appium-mcp.md) | 10,267 | 328 | 17,001 | 9,843 (+0.5%) | 31 | appium_gesture (1,308) | measured | vendor-official |
@@ -126,13 +126,13 @@ The **session start** column is what a client puts in context when it *defers* t
 | zapier | remote-auth-wall |  |
 | vercel | remote-auth-wall |  |
 | gmail | auth-required | server exited (code 1); stderr tail: Error: OAuth keys file not found. Please place gcp-oauth.keys.json in current directory or /tmp/.gmail-mcp |
-| slack | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: {"level":"error","timestamp":"2026-09-05T05:53:48Z","message":"Request f |
+| slack | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: {"level":"error","timestamp":"2026-09-05T23:40:39Z","message":"Request f |
 | kubernetes-containers | not-applicable | needs a kubeconfig with a cluster context; the isolation deliberately has neither — server exited (code 1); stderr tail: Error: unable to create kubernetes targ |
 | hana-cli | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: purchased (at exorbitant rates) by contacting i@izs.me node:internal/mod |
 | keboola | auth-required | server error 0: Client error '401 Unauthorized' for url 'https://connection.keboola.com/v2/storage/tokens/verify' For more information check: https://developer. |
 | hevy | auth-required | server exited (code 1); stderr tail: Hevy API key is required. Provide it via the HEVY_API_KEY environment variable. |
 | local-mcp | not-applicable | the vendor ships no Linux runtime yet — its own Go server is in preview for Windows and Linux — server exited (code 1); stderr tail: LMCP v3.0.405 (linux-amd64) |
-| windows-mcp | not-applicable | Windows only — it depends on pywin32, which publishes no Linux wheels — server exited (code 1); stderr tail:  when resolving tool dependencies:   ╰─▶ Because on |
+| windows-mcp | not-applicable | Windows only — it depends on pywin32, which publishes no Linux wheels — server exited (code 1); stderr tail: Downloading cpython-3.13.12-linux-x86_64-gnu (downl |
 | yandex-tracker | auth-required | server exited (code 1); stderr tail: Downloading grpcio-tools (2.6MiB) Downloading yandexcloud (6.3MiB)  Downloaded grpcio-tools  Downloaded yandexcloud Install |
 | safari-mcp | not-applicable | macOS only — the package declares os darwin and npm refuses to install it on Linux — server exited (code 1); stderr tail: npm error code EBADPLATFORM npm error  |
 | codehealth-mcp | not-yet-run |  |

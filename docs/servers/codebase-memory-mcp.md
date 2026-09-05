@@ -1,6 +1,6 @@
 # codebase-memory-mcp — context cost
 
-**5,258 tokens** across 15 tools — *moderate* (5–15K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
+**5,258 tokens** across 15 tools — *moderate* (5–15K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -54,6 +54,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 |---|---:|---:|---|---|---:|
 | 2026-09-03 | 5,258 | 15 | not recorded | docker | — |
 | 2026-09-04 | 5,258 | 15 | 0.10.8 | docker | no change |
+| 2026-09-05 | 5,258 | 15 | 0.10.8 | docker | no change |
 
 Full series: [results/history.csv](https://github.com/athakur3/mcp-context-cost/blob/main/results/history.csv).
 

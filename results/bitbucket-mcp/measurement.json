@@ -2045,7 +2045,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-04T07:16:33.422Z",
+  "measuredAt": "2026-09-05T23:41:31.981Z",
   "serverName": "bitbucket-mcp-server",
   "serverVersion": "1.0.0",
   "launchCommand": "npx -y bitbucket-mcp",
@@ -2057,7 +2057,8 @@
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
-  "timeoutMs": 480000
+  "timeoutMs": 240000
 }

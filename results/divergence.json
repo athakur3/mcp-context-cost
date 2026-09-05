@@ -181,11 +181,11 @@
       "capturedSha256": "01a1bd0f450ccf86b0bf36b2b63749c70dc4add7b0a4d9621ce69e29c9db7b27"
     },
     "comfyui-mcp": {
-      "o200kFull": 50640,
-      "o200kMapped": 50249,
-      "claudeDelta": 83957,
+      "o200kFull": 50776,
+      "o200kMapped": 50385,
+      "claudeDelta": 84168,
       "toolCount": 41,
-      "capturedSha256": "af7eaa380b99a67fc49ab075c762cd2686f108acc4ba21d001ce922554f7510a"
+      "capturedSha256": "47b201e9455f2aba4184e2f88c52939ea543f536e305490e17efd9d4730cde9d"
     },
     "context7": {
       "o200kFull": 1052,
@@ -202,11 +202,11 @@
       "capturedSha256": "3735162916165ab23696fc91fbf626bd99a36ddcd1e15746e91e16c7e336b379"
     },
     "desktop-commander": {
-      "o200kFull": 11834,
-      "o200kMapped": 11054,
-      "claudeDelta": 19303,
+      "o200kFull": 11837,
+      "o200kMapped": 11057,
+      "claudeDelta": 19307,
       "toolCount": 26,
-      "capturedSha256": "2c373ba271649e86628d49fbfa80b9e5f152bdc3cb7c65ec8f40c309eb9c8822"
+      "capturedSha256": "ed461d75b5dc273d9389408e032abece8af3bdca493ecf120be6924ef902004a"
     },
     "duckduckgo": {
       "o200kFull": 724,

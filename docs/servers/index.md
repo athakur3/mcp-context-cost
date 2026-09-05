@@ -6,7 +6,7 @@ One page per measured server: the per-tool breakdown behind the badge, the exact
 |---:|---|---:|---:|---|
 | 1 | [github](github.html) | 54,622 | 44 | very heavy |
 | 2 | [agent-device](agent-device.html) | 53,669 | 57 | very heavy |
-| 3 | [comfyui-mcp](comfyui-mcp.html) | 50,640 | 41 | very heavy |
+| 3 | [comfyui-mcp](comfyui-mcp.html) | 50,776 | 41 | very heavy |
 | 4 | [xcodebuildmcp](xcodebuildmcp.html) | 26,594 | 24 | heavy |
 | 5 | [brave-search](brave-search.html) | 25,487 | 8 | heavy |
 | 6 | [anki](anki.html) | 20,037 | 50 | heavy |
@@ -17,7 +17,7 @@ One page per measured server: the per-tool breakdown behind the badge, the exact
 | 11 | [octocode](octocode.html) | 13,552 | 14 | moderate |
 | 12 | [githits](githits.html) | 12,833 | 16 | moderate |
 | 13 | [circleci](circleci.html) | 11,912 | 13 | moderate |
-| 14 | [desktop-commander](desktop-commander.html) | 11,834 | 26 | moderate |
+| 14 | [desktop-commander](desktop-commander.html) | 11,837 | 26 | moderate |
 | 15 | [google-surf](google-surf.html) | 10,948 | 7 | moderate |
 | 16 | [apify](apify.html) | 10,452 | 10 | moderate |
 | 17 | [appium-mcp](appium-mcp.html) | 10,267 | 31 | moderate |

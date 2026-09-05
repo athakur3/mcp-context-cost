@@ -88,7 +88,7 @@
       "name": "convert-contents"
     }
   ],
-  "measuredAt": "2026-09-04T07:03:14.384Z",
+  "measuredAt": "2026-09-05T23:40:38.362Z",
   "serverName": "mcp-pandoc",
   "serverVersion": "0.11.1",
   "launchCommand": "uvx mcp-pandoc",
@@ -98,7 +98,8 @@
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
   "timeoutMs": 240000
 }

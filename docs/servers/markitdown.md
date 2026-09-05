@@ -1,6 +1,6 @@
 # markitdown — context cost
 
-**64 tokens** across 1 tools — *lean* (< 1K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
+**64 tokens** across 1 tools — *lean* (< 1K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -42,6 +42,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-08-18 | 64 | 1 | not recorded | docker | no change |
 | 2026-08-19 | 64 | 1 | not recorded | docker | no change |
 | 2026-09-04 | 64 | 1 | 1.8.1 | docker | no change |
+| 2026-09-05 | 64 | 1 | 1.8.1 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 
