@@ -383,6 +383,18 @@ export const PAGE_CLAIMS: Claim[] = [
   },
   {
     file: 'docs/METHODOLOGY.md',
+    id: 'divergence:band-parenthetical',
+    // The deferral section's own copy of the band. It was hand-written and held
+    // to `PUBLISHED_WIRE_TO_CLIENT_RATIO` by a test, which worked only while the
+    // constant tracked the run exactly — and the constant is a release-time
+    // snapshot that is deliberately allowed to lag. Two pages quoting two
+    // different sources for one number is the drift this file exists to end, so
+    // both pages state the run and the constant is guarded separately.
+    template: 'band ({f}×–{f}×\nacross {n} servers)',
+    values: (s) => [s.claude.ratioMin.toFixed(2), s.claude.ratioMax.toFixed(2), fmt(s.claude.runSize)],
+  },
+  {
+    file: 'docs/METHODOLOGY.md',
     id: 'divergence:ratio-range',
     template: 'it ranged from {f}× to {f}× across the {n} servers in the run,',
     values: (s) => [s.claude.ratioMin.toFixed(2), s.claude.ratioMax.toFixed(2), fmt(s.claude.runSize)],

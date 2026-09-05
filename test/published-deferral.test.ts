@@ -427,11 +427,20 @@ describe('the published deferral tables describe the resolver', () => {
     expect(verdictFor({ env: { ANTHROPIC_BASE_URL: 'https://api.anthropic.com' } }).mode).toBe('defers-all');
   });
 
-  it('quotes the unit-conversion band both pages print from the constant it is published as', () => {
-    const { low, high, servers } = PUBLISHED_WIRE_TO_CLIENT_RATIO;
+  /**
+   * Both pages quote the *run*, not the constant. They used to be held to the
+   * constant instead, which worked only while it tracked the run exactly — and
+   * it is a release-time snapshot that is deliberately allowed to lag, so the
+   * two came apart the first time a sweep measured a new server: README is
+   * regen-maintained and moved, METHODOLOGY was hand-written and did not. One
+   * number quoted from two sources is the drift this suite exists to end.
+   */
+  it('quotes the unit-conversion band both pages print from the run they derive it from', () => {
+    const run = parseDivergence(readFileSync(join(repoRoot, 'results', 'divergence.json'), 'utf8'));
+    const { low, high, servers } = wireToClientRatio(run);
     const band = `${low.toFixed(2)}×–${high.toFixed(2)}× across ${servers} servers`;
     for (const page of PAGES) {
-      expect(pageText(page), `${PAGE_FILES[page]} no longer prints the published band`).toContain(band);
+      expect(pageText(page), `${PAGE_FILES[page]} no longer prints the derived band`).toContain(band);
     }
   });
 
