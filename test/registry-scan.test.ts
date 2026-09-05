@@ -475,6 +475,42 @@ describe('rankCandidates and the summary line', () => {
     const whole = assembleScan({ ...walk, truncated: false, lastCursor: undefined }, ranked, { scannedAt: scan.scannedAt, elapsedSeconds: 3 });
     expect(summaryLine(whole)).not.toContain('TRUNCATED');
   });
+
+  /**
+   * The first real run of the tool crawled for seven minutes and then died on
+   * one package's 429 after six attempts, writing nothing. A lookup that gives
+   * up is a fact about that candidate: it is refused with the reason, the rest
+   * are ranked, and the summary line says how many went unmetered and why —
+   * so the number an expansion commit quotes is honest about what it covers.
+   */
+  it('refuses an unmetered candidate with the reason the lookup gave, and the summary says so', async () => {
+    const key = metricKey(all[2]!.registry, all[2]!.pkg);
+    const metrics = new Map<string, number | null>([[key, null]]);
+    const why = 'pypistats.org rate-limited this run (gave up after 6 attempts (HTTP 429))';
+
+    const bare = rankCandidates(all, metrics).find((r) => r.pkg === all[2]!.pkg)!;
+    expect('refused' in bare.draft && bare.draft.refused).toMatch(/no weekly-download figure — the endpoint returned no number/);
+
+    const told = rankCandidates(all, metrics, new Map([[key, why]])).find((r) => r.pkg === all[2]!.pkg)!;
+    expect('refused' in told.draft && told.draft.refused).toBe(`no weekly-download figure — ${why}`);
+    // A reason changes the words, never the ranking or the count.
+    expect(rankCandidates(all, metrics, new Map([[key, why]])).map((r) => r.pkg)).toEqual(rankCandidates(all, metrics).map((r) => r.pkg));
+
+    const { fetchPage } = playback([page1, lastPage]);
+    const walk = await walkLatest(fetchPage, {});
+    const withCount = assembleScan(walk, rankCandidates(all, metrics, new Map([[key, why]])), {
+      scannedAt: '2026-09-06T00:00:00.000Z',
+      elapsedSeconds: 3,
+      unmetered: { count: 1, why },
+    });
+    expect(withCount.unmetered).toEqual({ count: 1, why });
+    expect(summaryLine(withCount)).toContain('1 of them unmetered');
+    expect(summaryLine(withCount)).toContain('rate-limited');
+
+    const none = assembleScan(walk, rankCandidates(all, metrics), { scannedAt: '2026-09-06T00:00:00.000Z', elapsedSeconds: 3, unmetered: { count: 0, why } });
+    expect(none.unmetered).toBeUndefined();
+    expect(summaryLine(none)).not.toContain('unmetered');
+  });
 });
 
 /**

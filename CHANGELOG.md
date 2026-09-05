@@ -87,6 +87,14 @@ what the repository does with a stranger's pull request.
   `docs/METHODOLOGY.md` moved with it: the `not-yet-run` row said such a row appears "in interim
   leaderboards only"; a merged entry carries the status on the published leaderboard until its
   slot comes round.
+- **A registry-scan lookup that gives up refuses that candidate; it no longer kills the run.**
+  The scan's first real use crawled for seven minutes, then died on one package's `429` from
+  pypistats after six attempts — and wrote nothing, because the file is written last. A failed
+  download lookup is now a fact about that candidate: it is refused with the reason the lookup
+  gave, the rest are ranked, and when pypistats has rate-limited the run the remaining PyPI
+  lookups are marked unmetered with that reason rather than asked a few hundred more times. The
+  JSON carries the count and the reason, and the summary line an expansion commit quotes says
+  how many went unmetered and why, so the number is honest about what it covers.
 - **`servers.yaml` no longer says of `agent-device` what the record refutes.** Its comment had
   the bare launch printing help and exiting 0, one of 68 subcommands; the only captured record
   is exit 1 with nothing on stderr, and the count was never sourced. The comment says that and

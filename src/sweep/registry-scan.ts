@@ -470,8 +470,10 @@ export function draftName(pkg: string): string {
  * for every listed name and a placeholder port or URL is the class of failure
  * `envValues` exists to undo (servers.yaml, the `hevy` and `keboola` comments).
  */
-export function draftEntry(c: ScanCandidate, metric: number | null): Draft {
-  if (metric === null) return { refused: 'no weekly-download figure — the endpoint returned no number for this package' };
+export function draftEntry(c: ScanCandidate, metric: number | null, why?: string): Draft {
+  if (metric === null) {
+    return { refused: `no weekly-download figure — ${why ?? 'the endpoint returned no number for this package'}` };
+  }
   if (!c.repositoryUrl) return { refused: 'no repository.url on the registry record' };
   const { command, guessed } = draftCommand(c);
   const required = c.environmentVariables.filter((e) => e.isRequired === true).map((e) => e.name);
@@ -501,10 +503,22 @@ export interface RankedCandidate extends ScanCandidate {
  * Rank by weekly downloads, unmetered last, and draft each one. `metrics` is
  * keyed by `metricKey`; a candidate the lookup never reached reads as null.
  */
-export function rankCandidates(candidates: ScanCandidate[], metrics: Map<string, number | null>): RankedCandidate[] {
+/**
+ * `reasons` says why a figure is missing where the tool knows — a lookup that
+ * gave up on a 429, a host that rate-limited the rest of the pass. The first
+ * real run of the scan died on one package's 429 after a seven-minute crawl
+ * and wrote nothing; now the package is refused with that reason and the run
+ * goes on, which is the only way an output ever gets written.
+ */
+export function rankCandidates(
+  candidates: ScanCandidate[],
+  metrics: Map<string, number | null>,
+  reasons: Map<string, string> = new Map(),
+): RankedCandidate[] {
   const ranked = candidates.map((c) => {
-    const metric = metrics.get(metricKey(c.registry, c.pkg)) ?? null;
-    return { ...c, metric, metricSource: metricSourceFor(c.registry, c.pkg), draft: draftEntry(c, metric) };
+    const key = metricKey(c.registry, c.pkg);
+    const metric = metrics.get(key) ?? null;
+    return { ...c, metric, metricSource: metricSourceFor(c.registry, c.pkg), draft: draftEntry(c, metric, reasons.get(key)) };
   });
   ranked.sort((a, b) => {
     if (a.metric === null && b.metric === null) return a.pkg.localeCompare(b.pkg);
@@ -529,6 +543,8 @@ export interface ScanOutput {
   candidates: number;
   drafted: number;
   refused: number;
+  /** Candidates refused only because a download figure could not be fetched this run, and why. */
+  unmetered?: { count: number; why: string };
   elapsedSeconds: number;
   provenance: string;
   ranked: RankedCandidate[];
@@ -540,7 +556,7 @@ export const PROVENANCE_NOTE =
 export function assembleScan(
   walk: WalkResult,
   ranked: RankedCandidate[],
-  meta: { scannedAt: string; elapsedSeconds: number },
+  meta: { scannedAt: string; elapsedSeconds: number; unmetered?: { count: number; why: string } },
 ): ScanOutput {
   return {
     method: SCAN_METHOD,
@@ -556,6 +572,7 @@ export function assembleScan(
     candidates: ranked.length,
     drafted: ranked.filter((r) => 'entry' in r.draft).length,
     refused: ranked.filter((r) => 'refused' in r.draft).length,
+    ...(meta.unmetered && meta.unmetered.count > 0 ? { unmetered: meta.unmetered } : {}),
     elapsedSeconds: meta.elapsedSeconds,
     provenance: PROVENANCE_NOTE,
     ranked,
@@ -569,6 +586,8 @@ export function summaryLine(scan: ScanOutput): string {
     `registry scan ${scan.scannedAt.slice(0, 10)}: ${scan.pages} page(s)${cover}, ` +
     `${scan.distinctLatest} distinct latest name(s), ${scan.active} active, ` +
     `${scan.candidates} npm/pypi stdio package(s) not yet tracked, ` +
-    `${scan.drafted} drafted, ${scan.refused} refused, ${scan.elapsedSeconds}s`
+    `${scan.drafted} drafted, ${scan.refused} refused` +
+    (scan.unmetered ? ` (${scan.unmetered.count} of them unmetered: ${scan.unmetered.why})` : '') +
+    `, ${scan.elapsedSeconds}s`
   );
 }
