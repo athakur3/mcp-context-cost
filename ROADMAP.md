@@ -39,7 +39,7 @@ now a dated reading with six asks behind it rather than an absence of asking.
 | **0** | Ship what trunk already holds | **done 2026-09-05** | 0.12.0 on npm, with a dated changelog section |
 | **1** | Every published sentence is established | **done 2026-09-05** | eight items, each held by a test; `slack` and `redis-legacy` re-measured in CI |
 | **∥** | **Distribution** *(maintainer)* | **shipped 2026-09-05** | listing live and three posts published; five badge PRs open |
-| **2** | Sweeps that are cheaper and say more — **next** | 2026-09-10 → 2026-09-25 | movements name releases; `anki` declared; Claude column refreshed by the re-sweep; four issues filed |
+| **2** | Sweeps that are cheaper and say more — **5 of 7 done** | 2026-09-05 → 2026-09-25 | movements name releases; `anki` and `grafana` measure; Claude column refreshed by the re-sweep; four issues filed |
 | **3** | Others can add servers safely | 2026-09-21 → 2026-10-09 | a stranger's entry is measured read-only before any write-token job runs it |
 | **4** | `audit` reaches the stacks people run | 2026-10-05 → 2026-10-23 | remote entries measured; three more clients, each with a who-pays row |
 | **5** | The data tells its second story | from 2026-10-16 | state-of report #2 with per-tool attribution; rotation length decided on evidence |
@@ -112,53 +112,61 @@ the response log are at https://claude.ai/code/artifact/42d26d8e-b533-4bde-a424-
 
 ---
 
-## Phase 2 — Sweeps that are cheaper and say more
+## Phase 2 — Sweeps that are cheaper and say more · **in progress**
 
 **Goal.** A movement names the release that caused it, and a harness limitation never costs
 a retry.
 
+**Five of seven items are done (2026-09-05).** The premise check this file mandates paid for
+itself again: two items were wrong about the mechanism, and one of them dissolved entirely.
+
 **Scope.**
-- [ ] **A schema test over `servers.yaml` in CI** — moved here from phase 3 on 2026-09-05.
-      Every field present, names unique, `remote` xor `command`, `notApplicable` carrying both
-      `reason` and `evidence`, `deprecated` carrying `version`, `source` and `readOn`. The
-      file now holds three optional structured fields that nothing validates at load, phase 1
-      added one of them, and the next item adds a fourth — a schema test written *after*
-      `requires` lands is a schema test written too late. A day's work, and it guards the rest
-      of this phase.
-- [ ] **Name the release a movement came from.** Every `measurement.json` records
-      `serverVersion` from `initialize`; `history.csv` and `tool-vectors.json` do not, so
-      `regressions.md` says "a real upstream release" and cannot say which. Carry the version
-      into both; print `obsidian 1.28.x → 1.29.1`. Rows written before the column read "not
-      recorded", never a guess.
-- [ ] **Corroborate `not-applicable` by probe as well as by words.** An entry that declares a
-      backing service (`requires: tcp://127.0.0.1:6379`) is checked by the harness inside the
-      isolation, and "port closed" is recorded as the evidence. The safety property is kept —
-      the status still cannot be asserted by declaration alone — and a server that hangs
-      silently becomes declarable. `anki` is the case: no `timeoutSeconds`, so 240s and then
-      480s on the doubled budget, every cycle, to learn that a desktop application is absent.
-      `grafana` is **not** a second case for this, as of 2026-09-05: its record says the
-      container served SSE on `0.0.0.0:8000` while this harness waited on stdio, so its six
-      minutes a cycle are a transport mismatch in our own launch command and want a command
-      fix, not a probe. `anki` alone is **twelve** minutes a cycle (240s budget then 480s on
-      the doubled retry; `grafana`'s 180/360 was the other nine), so the exit below is
-      unchanged. A probe
-      also closes the hole the 0.12.0 changelog documents: corroboration is a substring test
-      against the truncated evidence, so a declared entry whose output grows until its evidence
-      line falls in the elided middle reverts to `startup-failure` on its own.
-- [ ] **`isolation.arch` can name the wrong machine.** It is the measuring process's own
-      platform rather than an observation of the container: under Docker the platform half is
-      assumed to be `linux` and the architecture is the host's, and nothing passes `--platform`
-      or reads `DOCKER_DEFAULT_PLATFORM`. So an amd64 container emulated on Apple Silicon
-      records `linux/arm64`. The field exists precisely to tell a broken server from a
-      wrong-architecture one, so it has to be read from the container, not inferred from the
-      host.
-- [ ] **The Claude column refreshes in the job that re-measures, and covers every row.**
-      `npm run divergence` runs only in `self-badge.yml` (Mondays, top 20). Re-sweeps land on
-      Wednesdays, so a re-measured top-20 row prints `—` for five days each cycle — today the
-      front page's own "what it costs on Claude" table shows `—` for `github`, the heaviest
-      server in the set. Run divergence in `resweep.yml` after the sweep, over the servers just
-      measured (`continue-on-error`, the existing secret), and widen from the top 20 to every
-      measured server.
+- [x] **A schema test over `servers.yaml` in CI** — done 2026-09-05. `validateServers` in
+      `src/sweep/servers-schema.ts`, run by the suite CI already runs. The plan had two things
+      wrong. `notApplicable` and `deprecated` were *already* checked, by their own test files;
+      what nothing checked was entry shape — required fields, unique names, types, and a key
+      nobody reads, which is the real hole because YAML makes a misspelled key an absent field.
+      And remote entries are not `remote` xor `command`: they keep the endpoint *in* `command`,
+      and both directions are now checked. The field table is
+      `satisfies Record<keyof ServerEntry, …>`, so a field added to the type without being
+      declared fails typecheck.
+- [x] **Name the release a movement came from** — done 2026-09-05. `history.csv` has a seventh
+      column and `ToolVectorEntry` an optional field; `regressions.md` and the per-server pages
+      carry a **release** column. Short rows read as not recorded and nothing is back-filled, so
+      it says `0 of 17` movements can name both sides today and fills in as the rotation
+      re-measures. It can also now say `still 1.29.1` — the cost moved while the version did
+      not, which is a dependency the server does not pin rather than a release.
+- [x] ~~**Corroborate `not-applicable` by probe as well as by words.**~~ **Not built, and the
+      item is closed: its only case was a bug in this repository.** `anki` was the case — twelve
+      minutes a cycle to establish, supposedly, that a desktop application is absent. Run in the
+      isolation it prints a banner and serves HTTP on `127.0.0.1:3000` while this harness waits
+      on stdio, exactly the mismatch phase 1 found in `grafana`; `ankimcp --help` names
+      `--stdio`. `grafana` is the same story one level down: the binary's own default transport
+      *is* stdio, and the `mcp/grafana` image's ENTRYPOINT hard-codes
+      `--transport sse --address 0.0.0.0:8000`. Both entries now pass a stdio flag, and probed
+      that way both **measure** — anki 20,037 tokens across 50 tools, grafana 16,774 across 65,
+      in under a minute where they had been spending twenty-one. With both timeouts explained
+      the probe has zero cases, and this file does not widen a bucket without one. The
+      truncation hole it would also have closed is still open and is listed below on its own.
+- [x] **`isolation.arch` can name the wrong machine** — done 2026-09-05, and the obvious fix
+      was also wrong. `docker image inspect` reports the variant the local store prefers: on
+      this machine it answered `linux/arm64` for a tag whose container, under
+      `DOCKER_DEFAULT_PLATFORM=linux/amd64`, came up `x86_64` — the same wrong answer as the
+      host inference. `containerPlatform` starts a container and reads `uname -sm`. A command
+      that is itself a `docker run` records no `arch` at all, because this harness did not
+      choose that container.
+- [x] **The Claude column refreshes in the job that re-measures, and covers every row** — done
+      2026-09-05. `resweep.yml` refreshes it after the cross-check, selecting with the same
+      `${SELECT}` string, and a bare run now covers every measured server rather than the top
+      20. `divergence.json` is staged with the measurements rather than the derived files, or
+      the rebase would discard it. Two published sentences that claimed a rank now state the
+      count regen maintains.
+- [ ] **`not-applicable` corroboration survives a growing evidence tail.** Split out of the
+      probe item above, which is closed. Corroboration is a substring test against the
+      *truncated* tail, so a declared entry whose output grows until its evidence line falls in
+      the elided middle reverts to `startup-failure` on its own — silently, and about someone
+      else's working software. Four entries declare today. Wants a rule that does not depend on
+      how much the server printed.
 - [ ] **Heal failure rows upstream, one reproduction each.** `heroku` (cannot find
       `@modelcontextprotocol/sdk/dist/esm/server/mcp`), `accessibility-scanner`
       (`ERR_PACKAGE_PATH_NOT_EXPORTED`), `hana-cli` (`ERR_MODULE_NOT_FOUND`), `hevy` (a fatal
@@ -171,9 +179,12 @@ a retry.
       `LMCP v3.0.404 (linux-amd64)` and fails, so the arm64 finding was only half of it.
 
 **Exit.**
-- Every movement in `regressions.md` whose two records both carry a version names both.
-- `anki` reads `not-applicable` with probe evidence, and the slice containing it finishes at
-  least twelve minutes faster than its last run (workflow durations are public).
+- ~~Every movement in `regressions.md` whose two records both carry a version names both.~~
+  Met by construction; `0 of 17` today, and the page says why.
+- ~~`anki` reads `not-applicable` with probe evidence, and the slice containing it finishes at
+  least twelve minutes faster.~~ Superseded: `anki` and `grafana` both **measure**, and the
+  slice loses twenty-one minutes rather than twelve. Checkable once CI has run them — the
+  numbers above were probed on a laptop and are not published.
 - After a re-sweep dispatch that touches `github`, the front page's Claude cell for it is a
   number.
 - Four upstream issues filed, links in `servers.yaml`; `azure` and `local-mcp` each have a
