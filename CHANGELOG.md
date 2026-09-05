@@ -7,6 +7,117 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+## 0.12.0 — 2026-09-05
+
+Eight servers changed status while this release was made, and none of them is known to have
+changed because the server changed. Four are retractions of claims this project should not
+have published, two are the same kind of claim made wrongly again, and two moved for reasons
+the repository cannot separate. All eight are written up below as what they are.
+
+- **`not-applicable`: a status for "we cannot run this", so the set stops calling it broken.**
+  `startup-failure` was doing duty for two different claims. One is about the server — it came
+  up wrong. The other is about this harness: the package ships no build for the isolation's OS
+  or architecture, or the server wants a backing service the isolation deliberately withholds.
+  Publishing the second as the first asserts a defect in someone else's software that the run
+  never established, which is what `safari-mcp` (`EBADPLATFORM`, darwin-only), `windows-mcp`
+  (pywin32 publishes no wheels with a matching platform tag) and `kubernetes-containers` ("no
+  current-context is set") had each been carrying. The bucket cannot be claimed by declaration
+  alone: an entry states the reason **and** the text its failure is expected to contain, and it
+  applies only when the failure's own words contain it. Nor does a declaration exempt an entry
+  from a sweep — it is read out of a failure that already happened, never consulted before the
+  launch — so the first time its shard comes round after it starts working, it simply measures.
+  Neither retry applies to a declared entry, and retries are the expensive part of a sweep: 11
+  failing servers cost 2,563 of 7,104 server-seconds in the run this was measured against.
+  Published records and badges now carry a `status` no consumer has seen, and the exported
+  `MeasurementStatus` union gains a member — which is why this is a minor and not a patch. One
+  direction is not yet covered: corroboration is a substring test against the truncated evidence
+  described below, so a declared entry whose output grew until its evidence line fell in the
+  elided middle would fail the match and revert to `startup-failure` on its own.
+- **A failure record now contains the failure.** The evidence kept for a dead server was the
+  last 600 characters of its stderr, which is the right 600 only when the explanation comes
+  last. It usually does not: `npx` prints a deprecation warning per transitive dependency, a
+  CLI that rejects its environment says why once and then prints its whole help screen, and a
+  crash prints its message above its stack. The budget now drops npm `warn`/`notice` lines and
+  `at …` frames first — unless they are the entire output, which `neon`'s record of two
+  deprecation warnings still is — then spends what remains on **both ends** of what survives,
+  eliding the middle and cutting on line boundaries. One shape needed a further concession: a
+  server whose whole message is a single JSON line longer than the head budget used to lose that
+  line, because taking whole lines only left the head empty. Structured logging makes the most
+  explanatory line the longest one, which is backwards from what the rule assumed, so an
+  over-long first line is now truncated to the 356 characters the budget allows — `slack`'s
+  published head is exactly that. Timeouts carry stderr too, which they never did: a process
+  killed mid-hang never reaches the exit handler, so a timed-out record used to report only that
+  the harness had waited. This runs on the path `measure` and `audit` take, so it rewrites the
+  `notes` of a measurement taken on any machine, and such a note may now carry `[…]` in its
+  middle.
+- **Two records are still decided by which characters survived, not by what the server said.**
+  `azure`'s old `auth-required` was an artifact: its raw tail was 600 characters of .NET stack
+  frames, two carrying `PublicKeyToken=null`, and `token` was the only one of the auth pattern's
+  seven alternatives to match anything at all. With frames dropped, what remains is a
+  66-character orphan — `r(System.Diagnostics.Tracing.EventSourceSettings, System.String[])` —
+  which reads as `startup-failure`. The label it replaced was false, but the evidence beside it
+  is worse: 66 characters naming nothing, where 600 at least named
+  `Azure.Mcp.Server.Program.Main`. It begins mid-word because the selector runs downstream of a
+  raw 4,000-character slice that has already cut mid-token. `slack` fails the same test from the
+  other side — its surviving head is "tls: failed to verify certificate: x509: certificate
+  signed by unknown authority", and its published `auth-required` comes from `auth` matching
+  inside `authority`, not from anything the server said about a credential. That record does not
+  report a server wanting a token; it reports this harness's container not trusting a CA.
+  Neither is corrected here, because a classifier change moves published statuses and wants a
+  re-measurement behind it. Both are written down because publishing them quietly is the thing
+  this project exists to refuse.
+- **A timeout is the clock's verdict, not a word in the output.** Because those messages now
+  carry stderr, the check that reads them was matching the bare word `timeout` against text the
+  *server* wrote — so a server that printed "connection timeout" and then exited was filed as a
+  timeout, which blames the clock for a breakage. It now requires this harness's own phrasing,
+  `timeout after <N>ms waiting for`; the pattern is not anchored to the start of a message that
+  carries the server's own output, so this is narrower rather than airtight. What follows is a
+  swap and not a saving: a run reclassified out of `timeout` loses the doubled-budget retry and
+  picks up the cold-cache one, floored at 240s in a Docker sweep.
+- **Two entries were asking the wrong question.** `agent-device` was launched as bare `npx -y
+  agent-device`, which exits non-zero writing nothing to stderr — a record whose whole content
+  was that a process had ended. Its MCP server is a subcommand, and asked as `agent-device mcp`
+  it measures **53,669 tokens across 57 tools**, second in the published set between `github`
+  (54,622) and `comfyui-mcp` (50,640), on a package with 138,188 weekly downloads; its budget
+  comes from a measured 142s cold install rather than a guess. The recovery is not cleanly
+  attributable to the argv fix, and the records say so: the failing run was made on an arm64
+  laptop and the measuring one in `linux/amd64` CI, so the command and the machine moved
+  together. `google-surf` is the control — it went from `startup-failure` to 10,948 tokens on
+  that same CI sweep with its entry untouched and nothing about it changed here. `stripe`
+  separately drops `--tools=all`, which upstream removed in favour of permissions carried by the
+  key; it now dies at the key-format check instead, reading "Invalid API key format. Expected
+  sk_* (secret key) or rk_* (restricted key)." A shaped placeholder key was tried and reverted:
+  the server accepts the shape, prints a startup banner and never answers `initialize` — 901s,
+  the full budget plus its doubled retry. Starting is not answering.
+- **A record says which machine made it.** `isolation` named the image and the network but not
+  the architecture, so a reader had no way to tell a server that fails from a server that was
+  never built for the machine that asked. `local-mcp` prompted it: a record whose stderr named
+  an architecture the record itself did not, "LMCP 3.0.404 is not yet available for
+  linux-arm64", from a run on an arm64 laptop. Every measurement now records `isolation.arch`,
+  including a plain local `measure`; 52 of the 103 published records carry it so far, and absent
+  means unknown on the rest, never "the same as yours". It is the measuring process's own
+  platform rather than an observation of the container: under Docker the platform half is
+  assumed to be `linux` and the architecture is the host's, so a run emulating a foreign
+  platform would be recorded as the host's.
+- **The re-sweep can be told what to measure, and publishes what it measured.** Repository
+  plumbing rather than shipped bytes. Re-measuring three named servers used to mean re-running a
+  whole slice for about seventy minutes, which is why they got run on a laptop instead; the job
+  now takes a `servers` input mapped to the `--only` that `sweep-all` already had, and one
+  `SELECT` expression feeds both the sweep and the cross-check so the two cannot end up on
+  different sets. A slice cutting below the harness guard's five-server floor is refused rather
+  than measured, since under it the guard cannot tell a broken runner from a bad week. And a
+  62-minute run that measured all 51 of its servers published none of them, having hit conflicts
+  in `results/leaderboard.md` and its neighbours — derived files that two runs regenerate from
+  different starting points, so git was asked to merge two independently rebuilt leaderboards.
+  The measured records commit and rebase first, the per-server files two runs touch being
+  disjoint, and the aggregates are rebuilt from the merged tree afterwards.
+
+Also: none of these status changes reaches the trend data. A failed measurement contributes no
+row to `results/history.csv`, so a server that starts being measured, or stops, reads as a gap
+in its series and never as a movement in its cost. And the composite action defaults to
+`version: latest`, so a workflow already using it takes all of the above on its next run
+without an upgrade step.
+
 ## 0.11.3 — 2026-09-04
 
 The rest of the full-codebase review. Fourteen findings, none live in published output,
