@@ -81,6 +81,21 @@ jobs:
         || format('--shards {0}{1}', inputs.shards || '6', inputs.shard_index && format(' --shard-index {0}', inputs.shard_index) || '') }}
     steps:
       - uses: actions/checkout@v5
+        with:
+          # The write token stays out of the checkout. By default checkout
+          # stores it in .git/config, where it sits for the whole job — including
+          # the sweep step below, which executes the launch command of every
+          # servers.yaml entry in the slice. Entries the harness dockerizes
+          # cannot see the workspace (src/sweep/docker.ts mounts only the cache
+          # volumes), but a `docker `-prefixed command is spawned on the host
+          # with the workspace as its cwd (src/sweep/run.ts, client.ts), and
+          # three committed entries already have that shape. A stranger's
+          # command must never run in a process that can push. The token is
+          # handed to the one step that pushes, below, and nowhere else — until
+          # this line the phase-3 promise ("no job holding contents: write ever
+          # runs a launch command with the token in reach") was only true of the
+          # read-only PR job, and this job broke it every Wednesday.
+          persist-credentials: false
       - uses: actions/setup-node@v5
         with:
           node-version: 22
@@ -178,6 +193,10 @@ jobs:
           WHAT: >-
             ${{ inputs.servers && format('targeted re-measure ({0})', inputs.servers)
             || 'rotating re-sweep of this week''s server shard' }}
+          # The only step that holds the write token (the checkout above did
+          # not keep it). It reaches git on the push command line, never the
+          # remote's stored URL, so nothing in the tree carries it afterwards.
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           git config user.name "mcp-context-cost bot"
@@ -215,6 +234,8 @@ jobs:
           git clean -qfd results docs
 
           # This job runs for an hour, so main has usually moved underneath it.
+          # An anonymous fetch: the repository is public and the checkout kept
+          # no credential.
           git pull --rebase origin main
 
           # Re-derive the aggregates from the merged tree.
@@ -227,4 +248,4 @@ jobs:
               git commit -q -m "chore: ${WHAT}"
             fi
           fi
-          git push
+          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}" HEAD:main

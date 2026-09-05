@@ -46,6 +46,13 @@ jobs:
         with:
           # The readiness gate reads back to the last version-bump commit.
           fetch-depth: 0
+          # The rule every job holding contents: write follows (resweep.yml
+          # states it): the token is not left in .git/config for the whole job,
+          # it is handed to the step that pushes. Nothing here runs a stranger's
+          # command, but the assertion in test/workflows.test.ts is over every
+          # write-token workflow, and a rule with an exception is a rule the
+          # next workflow copies from the wrong file.
+          persist-credentials: false
       - uses: actions/setup-node@v5
         with:
           node-version: 22
@@ -107,7 +114,9 @@ jobs:
 
       - name: Push the cut
         if: '!inputs.dry_run'
-        run: git push origin HEAD:main
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}" HEAD:main
 
       - name: Publish, and wait for it
         if: '!inputs.dry_run'

@@ -382,3 +382,80 @@ describe('the suite CI runs', () => {
     expect(offenders).toEqual([]);
   });
 });
+
+/**
+ * The write token and the launch command must never be in the same process.
+ *
+ * actions/checkout stores the job's token in .git/config by default, where it
+ * sits for every later step. In resweep.yml that included the sweep step, which
+ * executes the launch command of every servers.yaml entry in the slice. The
+ * dockerized ones cannot see the workspace, but a `docker `-prefixed command is
+ * spawned on the host with the workspace as its cwd (src/sweep/run.ts,
+ * src/sweep/client.ts), three committed entries already have that shape, and a
+ * stranger's entry of the same shape would have read a write token every
+ * Wednesday — after the read-only PR job had said it was fine. The phase-3
+ * sentence "no job holding contents: write ever runs a launch command with the
+ * token in reach" was true of the PR job and false of the schedule.
+ *
+ * So: every workflow that can push checks out with `persist-credentials: false`,
+ * and the token reaches git on the push command line of the one step that
+ * pushes. Asserted over the directory rather than a list, so the next workflow
+ * that holds `contents: write` is held to it the day it is added.
+ */
+describe('every workflow that can push', () => {
+  interface Step {
+    name?: string;
+    uses?: string;
+    run?: string;
+    env?: Record<string, string>;
+    with?: Record<string, unknown>;
+  }
+  interface Workflow {
+    permissions?: Record<string, string>;
+    jobs: Record<string, { permissions?: Record<string, string>; env?: Record<string, string>; steps: Step[] }>;
+  }
+  const canPush = (wf: Workflow) =>
+    wf.permissions?.contents === 'write' || Object.values(wf.jobs).some((j) => j.permissions?.contents === 'write');
+  const writers = readdirSync(wfDir)
+    .filter((f) => f.endsWith('.yml'))
+    .map((f) => [f, parse(readFileSync(join(wfDir, f), 'utf8')) as Workflow] as const)
+    .filter(([, wf]) => canPush(wf));
+
+  const refersToToken = (v: unknown) => typeof v === 'string' && /github\.token|secrets\.GITHUB_TOKEN/.test(v);
+  const holdsToken = (env?: Record<string, string>) => Object.values(env ?? {}).some(refersToToken);
+
+  it('is not an empty set — the bots push, so the rule has something to hold', () => {
+    expect(writers.length).toBeGreaterThan(0);
+  });
+
+  for (const [file, wf] of writers) {
+    it(`${file} checks out without keeping the token`, () => {
+      const checkouts = Object.values(wf.jobs)
+        .flatMap((j) => j.steps)
+        .filter((s) => s.uses?.startsWith('actions/checkout'));
+      expect(checkouts.length).toBeGreaterThan(0);
+      for (const s of checkouts) expect(s.with?.['persist-credentials'], `${file}: ${s.uses}`).toBe(false);
+    });
+
+    it(`${file} hands the token to the push, and never to a launch command`, () => {
+      for (const job of Object.values(wf.jobs)) {
+        for (const s of job.steps) {
+          const run = s.run ?? '';
+          // Inlining `${{ github.token }}` into a script would paste the secret
+          // into the shell text; it goes through env or not at all.
+          expect(run, s.name ?? s.uses).not.toMatch(/github\.token/);
+          if (run.includes('npm run sweep')) {
+            expect(holdsToken(s.env) || holdsToken(job.env), `${file}: launch step "${s.name}" can see the token`).toBe(false);
+          }
+          if (/git push/.test(run)) {
+            // The documented form: token on the command line, never written to
+            // the remote's URL, so the tree carries nothing after the push.
+            expect(run).toMatch(/git push "https:\/\/x-access-token:\$\{GITHUB_TOKEN\}@github\.com\/\$\{GITHUB_REPOSITORY\}"/);
+            expect(s.env?.GITHUB_TOKEN, `${file}: push step "${s.name}" has no token to push with`).toBe('${{ github.token }}');
+          }
+        }
+      }
+    });
+  }
+});
+
