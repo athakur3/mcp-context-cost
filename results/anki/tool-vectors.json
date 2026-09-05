@@ -1,0 +1,214 @@
+{
+  "method": "cost-regression/v1",
+  "server": "anki",
+  "entries": [
+    {
+      "date": "2026-09-05",
+      "canonicalSha256": "ff5c37e3ceea7d5f2514dc0b15b4443a9c6b10ce53fd9328f28be21759c69276",
+      "totalTokens": 20037,
+      "version": "0.25.0",
+      "tools": [
+        {
+          "name": "sync",
+          "tokens": 192
+        },
+        {
+          "name": "get_due_cards",
+          "tokens": 519
+        },
+        {
+          "name": "get_cards",
+          "tokens": 540
+        },
+        {
+          "name": "present_card",
+          "tokens": 404
+        },
+        {
+          "name": "rate_card",
+          "tokens": 368
+        },
+        {
+          "name": "forgetCards",
+          "tokens": 526
+        },
+        {
+          "name": "setDueDate",
+          "tokens": 616
+        },
+        {
+          "name": "modelNames",
+          "tokens": 247
+        },
+        {
+          "name": "modelFieldNames",
+          "tokens": 257
+        },
+        {
+          "name": "modelStyling",
+          "tokens": 307
+        },
+        {
+          "name": "createModel",
+          "tokens": 570
+        },
+        {
+          "name": "updateModelStyling",
+          "tokens": 407
+        },
+        {
+          "name": "modelTemplates",
+          "tokens": 278
+        },
+        {
+          "name": "updateModelTemplates",
+          "tokens": 442
+        },
+        {
+          "name": "addModelField",
+          "tokens": 338
+        },
+        {
+          "name": "removeModelField",
+          "tokens": 303
+        },
+        {
+          "name": "renameModelField",
+          "tokens": 345
+        },
+        {
+          "name": "repositionModelField",
+          "tokens": 341
+        },
+        {
+          "name": "addNote",
+          "tokens": 570
+        },
+        {
+          "name": "addNotes",
+          "tokens": 590
+        },
+        {
+          "name": "findNotes",
+          "tokens": 332
+        },
+        {
+          "name": "notesInfo",
+          "tokens": 432
+        },
+        {
+          "name": "updateNoteFields",
+          "tokens": 560
+        },
+        {
+          "name": "deleteNotes",
+          "tokens": 347
+        },
+        {
+          "name": "getTags",
+          "tokens": 240
+        },
+        {
+          "name": "listDecks",
+          "tokens": 750
+        },
+        {
+          "name": "deckStats",
+          "tokens": 1306
+        },
+        {
+          "name": "createDeck",
+          "tokens": 268
+        },
+        {
+          "name": "changeDeck",
+          "tokens": 211
+        },
+        {
+          "name": "retrieveMediaFile",
+          "tokens": 219
+        },
+        {
+          "name": "getMediaFilesNames",
+          "tokens": 202
+        },
+        {
+          "name": "storeMediaFile",
+          "tokens": 316
+        },
+        {
+          "name": "deleteMediaFile",
+          "tokens": 201
+        },
+        {
+          "name": "addTags",
+          "tokens": 258
+        },
+        {
+          "name": "removeTags",
+          "tokens": 247
+        },
+        {
+          "name": "replaceTags",
+          "tokens": 281
+        },
+        {
+          "name": "clearUnusedTags",
+          "tokens": 169
+        },
+        {
+          "name": "collection_stats",
+          "tokens": 1853
+        },
+        {
+          "name": "review_stats",
+          "tokens": 669
+        },
+        {
+          "name": "guiBrowse",
+          "tokens": 371
+        },
+        {
+          "name": "guiSelectCard",
+          "tokens": 268
+        },
+        {
+          "name": "guiSelectedNotes",
+          "tokens": 229
+        },
+        {
+          "name": "guiAddCards",
+          "tokens": 384
+        },
+        {
+          "name": "guiEditNote",
+          "tokens": 252
+        },
+        {
+          "name": "guiDeckOverview",
+          "tokens": 231
+        },
+        {
+          "name": "guiDeckBrowser",
+          "tokens": 193
+        },
+        {
+          "name": "guiCurrentCard",
+          "tokens": 413
+        },
+        {
+          "name": "guiShowQuestion",
+          "tokens": 230
+        },
+        {
+          "name": "guiShowAnswer",
+          "tokens": 230
+        },
+        {
+          "name": "guiUndo",
+          "tokens": 213
+        }
+      ]
+    }
+  ]
+}

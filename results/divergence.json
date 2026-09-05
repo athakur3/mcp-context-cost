@@ -1,10 +1,17 @@
 {
   "method": "tools-delta/v1",
   "model": "claude-opus-5",
-  "measuredAt": "2026-09-03",
+  "measuredAt": "2026-09-05",
   "baselineTokens": 7,
   "probeDelta": 328,
   "servers": {
+    "anki": {
+      "o200kFull": 20037,
+      "o200kMapped": 9357,
+      "claudeDelta": 16189,
+      "toolCount": 50,
+      "capturedSha256": "ff5c37e3ceea7d5f2514dc0b15b4443a9c6b10ce53fd9328f28be21759c69276"
+    },
     "apify": {
       "o200kFull": 10426,
       "o200kMapped": 4797,
@@ -60,6 +67,13 @@
       "claudeDelta": 18406,
       "toolCount": 44,
       "capturedSha256": "086879383bcdc68ea1b960a141ab1b41cb2a203321c4440553c033b5e9a5344d"
+    },
+    "grafana": {
+      "o200kFull": 16774,
+      "o200kMapped": 15460,
+      "claudeDelta": 26641,
+      "toolCount": 65,
+      "capturedSha256": "f35587d4d6afaf90c68d7b861793a9e980bb6817b389fdb2391d365e7358beab"
     },
     "hubspot": {
       "o200kFull": 9158,

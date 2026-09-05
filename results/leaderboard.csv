@@ -45,7 +45,7 @@ heroku,,,startup-failure,vendor-official,7890,https://api.npmjs.org/downloads/po
 bright-data,978,5,measured,vendor-official,6103,https://api.npmjs.org/downloads/point/last-week/@brightdata/mcp (npm weekly),,,20,false,20,0,880,v0.2.5
 neo4j-cypher,523,3,measured,vendor-official,5914,https://pypistats.org/packages/mcp-neo4j-cypher (PyPI weekly),,,26,false,26,0,354,v0.2.5
 pulumi,2768,12,measured,vendor-official,4343,https://api.npmjs.org/downloads/point/last-week/@pulumi/mcp-server (npm weekly),,,73,false,73,0,2650,v0.2.5
-grafana,,,timeout,vendor-official,3358,https://api.github.com/repos/grafana/mcp-grafana (GitHub stars; Go binary/docker),,,,,,,,
+grafana,16774,65,measured,vendor-official,3358,https://api.github.com/repos/grafana/mcp-grafana (GitHub stars; Go binary/docker),26641,claude-opus-5,731,false,313,418,15465,v0.2.5
 browserbase,364,6,measured,vendor-official,3231,https://api.npmjs.org/downloads/point/last-week/@browserbasehq/mcp (npm weekly),,,13,false,13,0,310,v0.2.5
 cloudflare-docs,422,2,measured,vendor-official,2119,https://api.npmjs.org/downloads/point/last-week/@cloudflare/mcp-server-cloudflare (npm weekly; current offering is remote suite),,,15,false,15,0,252,v0.2.5
 neon,,,startup-failure,vendor-official,2012,https://api.npmjs.org/downloads/point/last-week/@neondatabase/mcp-server-neon (npm weekly),,,,,,,,
@@ -94,7 +94,7 @@ clinicaltrialsgov,5134,7,measured,community,3123,https://api.npmjs.org/downloads
 accessibility-scanner,,,startup-failure,community,3068,https://api.npmjs.org/downloads/point/last-week/mcp-accessibility-scanner (npm weekly),,,,,,,,
 keboola,,,auth-required,vendor-official,2907,https://pypistats.org/packages/keboola-mcp-server (PyPI weekly),,,,,,,,
 octocode,13552,14,measured,community,1797,https://api.npmjs.org/downloads/point/last-week/octocode-mcp (npm weekly),,,791,false,64,727,13122,v0.2.5
-anki,,,timeout,community,1716,https://api.npmjs.org/downloads/point/last-week/@ankimcp/anki-mcp-server (npm weekly),,,,,,,,
+anki,20037,50,measured,community,1716,https://api.npmjs.org/downloads/point/last-week/@ankimcp/anki-mcp-server (npm weekly),16189,claude-opus-5,179,false,179,0,9371,v0.2.5
 agentphone,6134,28,measured,community,7395,https://api.npmjs.org/downloads/point/last-week/agentphone-mcp (npm weekly),,,100,false,100,0,5613,v0.2.5
 hevy,,,startup-failure,community,6107,https://api.npmjs.org/downloads/point/last-week/hevy-mcp (npm weekly),,,,,,,,
 local-mcp,,,startup-failure,community,5122,https://api.npmjs.org/downloads/point/last-week/local-mcp (npm weekly; macOS host integration),,,,,,,,

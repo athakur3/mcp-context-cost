@@ -536,6 +536,12 @@
       "totalTokens": 2636,
       "toolCount": 7
     },
+    "f35587d4d6afaf90c68d7b861793a9e980bb6817b389fdb2391d365e7358beab": {
+      "server": "grafana",
+      "date": "2026-09-05",
+      "totalTokens": 16774,
+      "toolCount": 65
+    },
     "f467743f38a30d15da18709c500aa4e22186a755f0e3d2c97966ccd343978a5d": {
       "server": "xcodebuildmcp",
       "date": "2026-08-19",
@@ -559,6 +565,12 @@
       "date": "2026-09-03",
       "totalTokens": 17311,
       "toolCount": 63
+    },
+    "ff5c37e3ceea7d5f2514dc0b15b4443a9c6b10ce53fd9328f28be21759c69276": {
+      "server": "anki",
+      "date": "2026-09-05",
+      "totalTokens": 20037,
+      "toolCount": 50
     }
   },
   "current": {
@@ -566,6 +578,7 @@
     "agentphone": "eec89a7ec71ac3e9e65fb8477bf594b4ce9af01b572bcc5d7e9fbbcc85f4e813",
     "airbnb": "79c3109b4fa4e4735ba1071cacbd98948c6aba20b70c9a4295a78e84850a81e0",
     "airtable": "5f90d662e26a77e01125999b97db0bf9204bb92bd0fc7297a28495986d80ec30",
+    "anki": "ff5c37e3ceea7d5f2514dc0b15b4443a9c6b10ce53fd9328f28be21759c69276",
     "apify": "4dd4565165c7066d8e8ef666f79cd8b323bad3d7f66b4d34fbe769f07e979453",
     "appium-mcp": "d024ca5b97d52d5442da395ed92d1d107b6728db57cf1295bb87c5d3624c0e53",
     "arxiv": "2ee361441efca1de3e296a572bbe2d20fa88d5565c9d4f54a8a1523ee7f54251",
@@ -605,6 +618,7 @@
     "gitlab": "d51fb022687ee403f9710c9fae31ac91dbc796f5c52a3fcdbe0a91c387aa9365",
     "google-maps": "a88e204db09aa56954e3e041d6a9814aee9ac888fdfc7d5cb47aec1877441986",
     "google-surf": "64ca81a34311e1318d731b8fbf14e5f1759567e4a7bdaabf43f3553ee732ee41",
+    "grafana": "f35587d4d6afaf90c68d7b861793a9e980bb6817b389fdb2391d365e7358beab",
     "hubspot": "3389dd469cfc2f46f06e4be24ba13ff95595ee30fd8dd62df81809a95daf3791",
     "huggingface": "a2e48e88545d92665679b878c9e66f4f902af2a11bccafc29cc6e627def941ae",
     "kubernetes": "20126671be70fdb77743a595f195002612b03c889b348447ed9ff4d7057f8c1c",

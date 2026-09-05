@@ -1,0 +1,274 @@
+{
+  "method": "cost-regression/v1",
+  "server": "grafana",
+  "entries": [
+    {
+      "date": "2026-09-05",
+      "canonicalSha256": "f35587d4d6afaf90c68d7b861793a9e980bb6817b389fdb2391d365e7358beab",
+      "totalTokens": 16774,
+      "version": "(devel)",
+      "tools": [
+        {
+          "name": "add_activity_to_incident",
+          "tokens": 152
+        },
+        {
+          "name": "alerting_manage_routing",
+          "tokens": 415
+        },
+        {
+          "name": "alerting_manage_rules",
+          "tokens": 1368
+        },
+        {
+          "name": "analyze_loki_labels",
+          "tokens": 360
+        },
+        {
+          "name": "check_datasources_health",
+          "tokens": 119
+        },
+        {
+          "name": "create_annotation",
+          "tokens": 259
+        },
+        {
+          "name": "create_datasource",
+          "tokens": 420
+        },
+        {
+          "name": "create_folder",
+          "tokens": 120
+        },
+        {
+          "name": "create_incident",
+          "tokens": 261
+        },
+        {
+          "name": "create_snapshot",
+          "tokens": 184
+        },
+        {
+          "name": "delete_snapshot",
+          "tokens": 66
+        },
+        {
+          "name": "find_error_pattern_logs",
+          "tokens": 170
+        },
+        {
+          "name": "find_slow_requests",
+          "tokens": 159
+        },
+        {
+          "name": "generate_deeplink",
+          "tokens": 563
+        },
+        {
+          "name": "get_alert_group",
+          "tokens": 90
+        },
+        {
+          "name": "get_annotation_tags",
+          "tokens": 91
+        },
+        {
+          "name": "get_annotations",
+          "tokens": 241
+        },
+        {
+          "name": "get_assertions",
+          "tokens": 269
+        },
+        {
+          "name": "get_current_oncall_users",
+          "tokens": 111
+        },
+        {
+          "name": "get_dashboard_by_uid",
+          "tokens": 178
+        },
+        {
+          "name": "get_dashboard_panel_queries",
+          "tokens": 222
+        },
+        {
+          "name": "get_dashboard_property",
+          "tokens": 319
+        },
+        {
+          "name": "get_dashboard_summary",
+          "tokens": 104
+        },
+        {
+          "name": "get_datasource",
+          "tokens": 140
+        },
+        {
+          "name": "get_incident",
+          "tokens": 89
+        },
+        {
+          "name": "get_oncall_shift",
+          "tokens": 106
+        },
+        {
+          "name": "get_panel_image",
+          "tokens": 602
+        },
+        {
+          "name": "get_plugin",
+          "tokens": 135
+        },
+        {
+          "name": "get_sift_analysis",
+          "tokens": 149
+        },
+        {
+          "name": "get_sift_investigation",
+          "tokens": 152
+        },
+        {
+          "name": "get_snapshot",
+          "tokens": 72
+        },
+        {
+          "name": "grafana_api_request",
+          "tokens": 236
+        },
+        {
+          "name": "install_plugin",
+          "tokens": 164
+        },
+        {
+          "name": "list_alert_groups",
+          "tokens": 407
+        },
+        {
+          "name": "list_datasources",
+          "tokens": 152
+        },
+        {
+          "name": "list_incidents",
+          "tokens": 134
+        },
+        {
+          "name": "list_loki_label_names",
+          "tokens": 223
+        },
+        {
+          "name": "list_loki_label_values",
+          "tokens": 271
+        },
+        {
+          "name": "list_oncall_schedules",
+          "tokens": 166
+        },
+        {
+          "name": "list_oncall_teams",
+          "tokens": 83
+        },
+        {
+          "name": "list_oncall_users",
+          "tokens": 171
+        },
+        {
+          "name": "list_prometheus_label_names",
+          "tokens": 366
+        },
+        {
+          "name": "list_prometheus_label_values",
+          "tokens": 393
+        },
+        {
+          "name": "list_prometheus_metric_metadata",
+          "tokens": 182
+        },
+        {
+          "name": "list_prometheus_metric_names",
+          "tokens": 317
+        },
+        {
+          "name": "list_provisioning_repositories",
+          "tokens": 149
+        },
+        {
+          "name": "list_pyroscope_label_names",
+          "tokens": 281
+        },
+        {
+          "name": "list_pyroscope_label_values",
+          "tokens": 307
+        },
+        {
+          "name": "list_pyroscope_profile_types",
+          "tokens": 267
+        },
+        {
+          "name": "list_sift_investigations",
+          "tokens": 93
+        },
+        {
+          "name": "list_snapshots",
+          "tokens": 98
+        },
+        {
+          "name": "query_loki_logs",
+          "tokens": 568
+        },
+        {
+          "name": "query_loki_patterns",
+          "tokens": 334
+        },
+        {
+          "name": "query_loki_stats",
+          "tokens": 408
+        },
+        {
+          "name": "query_prometheus",
+          "tokens": 438
+        },
+        {
+          "name": "query_prometheus_histogram",
+          "tokens": 391
+        },
+        {
+          "name": "query_pyroscope",
+          "tokens": 404
+        },
+        {
+          "name": "search_dashboards",
+          "tokens": 133
+        },
+        {
+          "name": "search_folders",
+          "tokens": 80
+        },
+        {
+          "name": "search_plugin_information",
+          "tokens": 190
+        },
+        {
+          "name": "suggest_loki_alloy_label_config",
+          "tokens": 160
+        },
+        {
+          "name": "update_annotation",
+          "tokens": 159
+        },
+        {
+          "name": "update_dashboard",
+          "tokens": 1006
+        },
+        {
+          "name": "update_datasource",
+          "tokens": 187
+        },
+        {
+          "name": "validate_provisioning_file",
+          "tokens": 232
+        }
+      ]
+    }
+  ]
+}

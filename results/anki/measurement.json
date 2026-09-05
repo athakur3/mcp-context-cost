@@ -2,21 +2,4899 @@
   "methodologyVersion": "1.0",
   "provider": "tiktoken",
   "encoding": "o200k_base",
-  "status": "timeout",
-  "totalTokens": null,
-  "toolCount": null,
-  "tools": [],
-  "canonicalSha256": null,
-  "rawToolsCapture": null,
-  "measuredAt": "2026-09-04T07:28:41.765Z",
-  "serverName": "anki",
-  "launchCommand": "npx -y @ankimcp/anki-mcp-server",
-  "notes": "reproduced on double the timeout budget; timeout after 480000ms waiting for initialize",
+  "status": "measured",
+  "totalTokens": 20037,
+  "toolCount": 50,
+  "tools": [
+    {
+      "name": "sync",
+      "tokens": 192,
+      "descriptionTokens": 45,
+      "inputSchemaTokens": 26
+    },
+    {
+      "name": "get_due_cards",
+      "tokens": 519,
+      "descriptionTokens": 95,
+      "inputSchemaTokens": 193
+    },
+    {
+      "name": "get_cards",
+      "tokens": 540,
+      "descriptionTokens": 98,
+      "inputSchemaTokens": 213
+    },
+    {
+      "name": "present_card",
+      "tokens": 404,
+      "descriptionTokens": 77,
+      "inputSchemaTokens": 73
+    },
+    {
+      "name": "rate_card",
+      "tokens": 368,
+      "descriptionTokens": 72,
+      "inputSchemaTokens": 104
+    },
+    {
+      "name": "forgetCards",
+      "tokens": 526,
+      "descriptionTokens": 134,
+      "inputSchemaTokens": 105
+    },
+    {
+      "name": "setDueDate",
+      "tokens": 616,
+      "descriptionTokens": 109,
+      "inputSchemaTokens": 197
+    },
+    {
+      "name": "modelNames",
+      "tokens": 247,
+      "descriptionTokens": 29,
+      "inputSchemaTokens": 26
+    },
+    {
+      "name": "modelFieldNames",
+      "tokens": 257,
+      "descriptionTokens": 27,
+      "inputSchemaTokens": 58
+    },
+    {
+      "name": "modelStyling",
+      "tokens": 307,
+      "descriptionTokens": 23,
+      "inputSchemaTokens": 58
+    },
+    {
+      "name": "createModel",
+      "tokens": 570,
+      "descriptionTokens": 58,
+      "inputSchemaTokens": 321
+    },
+    {
+      "name": "updateModelStyling",
+      "tokens": 407,
+      "descriptionTokens": 54,
+      "inputSchemaTokens": 109
+    },
+    {
+      "name": "modelTemplates",
+      "tokens": 278,
+      "descriptionTokens": 43,
+      "inputSchemaTokens": 58
+    },
+    {
+      "name": "updateModelTemplates",
+      "tokens": 442,
+      "descriptionTokens": 112,
+      "inputSchemaTokens": 193
+    },
+    {
+      "name": "addModelField",
+      "tokens": 338,
+      "descriptionTokens": 56,
+      "inputSchemaTokens": 142
+    },
+    {
+      "name": "removeModelField",
+      "tokens": 303,
+      "descriptionTokens": 44,
+      "inputSchemaTokens": 130
+    },
+    {
+      "name": "renameModelField",
+      "tokens": 345,
+      "descriptionTokens": 61,
+      "inputSchemaTokens": 133
+    },
+    {
+      "name": "repositionModelField",
+      "tokens": 341,
+      "descriptionTokens": 64,
+      "inputSchemaTokens": 135
+    },
+    {
+      "name": "addNote",
+      "tokens": 570,
+      "descriptionTokens": 87,
+      "inputSchemaTokens": 282
+    },
+    {
+      "name": "addNotes",
+      "tokens": 590,
+      "descriptionTokens": 76,
+      "inputSchemaTokens": 283
+    },
+    {
+      "name": "findNotes",
+      "tokens": 332,
+      "descriptionTokens": 80,
+      "inputSchemaTokens": 106
+    },
+    {
+      "name": "notesInfo",
+      "tokens": 432,
+      "descriptionTokens": 37,
+      "inputSchemaTokens": 81
+    },
+    {
+      "name": "updateNoteFields",
+      "tokens": 560,
+      "descriptionTokens": 65,
+      "inputSchemaTokens": 311
+    },
+    {
+      "name": "deleteNotes",
+      "tokens": 347,
+      "descriptionTokens": 47,
+      "inputSchemaTokens": 119
+    },
+    {
+      "name": "getTags",
+      "tokens": 240,
+      "descriptionTokens": 47,
+      "inputSchemaTokens": 49
+    },
+    {
+      "name": "listDecks",
+      "tokens": 750,
+      "descriptionTokens": 95,
+      "inputSchemaTokens": 42
+    },
+    {
+      "name": "deckStats",
+      "tokens": 1306,
+      "descriptionTokens": 210,
+      "inputSchemaTokens": 150
+    },
+    {
+      "name": "createDeck",
+      "tokens": 268,
+      "descriptionTokens": 39,
+      "inputSchemaTokens": 64
+    },
+    {
+      "name": "changeDeck",
+      "tokens": 211,
+      "descriptionTokens": 17,
+      "inputSchemaTokens": 67
+    },
+    {
+      "name": "retrieveMediaFile",
+      "tokens": 219,
+      "descriptionTokens": 29,
+      "inputSchemaTokens": 56
+    },
+    {
+      "name": "getMediaFilesNames",
+      "tokens": 202,
+      "descriptionTokens": 19,
+      "inputSchemaTokens": 46
+    },
+    {
+      "name": "storeMediaFile",
+      "tokens": 316,
+      "descriptionTokens": 39,
+      "inputSchemaTokens": 138
+    },
+    {
+      "name": "deleteMediaFile",
+      "tokens": 201,
+      "descriptionTokens": 31,
+      "inputSchemaTokens": 56
+    },
+    {
+      "name": "addTags",
+      "tokens": 258,
+      "descriptionTokens": 36,
+      "inputSchemaTokens": 90
+    },
+    {
+      "name": "removeTags",
+      "tokens": 247,
+      "descriptionTokens": 24,
+      "inputSchemaTokens": 90
+    },
+    {
+      "name": "replaceTags",
+      "tokens": 281,
+      "descriptionTokens": 33,
+      "inputSchemaTokens": 107
+    },
+    {
+      "name": "clearUnusedTags",
+      "tokens": 169,
+      "descriptionTokens": 36,
+      "inputSchemaTokens": 26
+    },
+    {
+      "name": "collection_stats",
+      "tokens": 1853,
+      "descriptionTokens": 267,
+      "inputSchemaTokens": 221
+    },
+    {
+      "name": "review_stats",
+      "tokens": 669,
+      "descriptionTokens": 60,
+      "inputSchemaTokens": 181
+    },
+    {
+      "name": "guiBrowse",
+      "tokens": 371,
+      "descriptionTokens": 62,
+      "inputSchemaTokens": 159
+    },
+    {
+      "name": "guiSelectCard",
+      "tokens": 268,
+      "descriptionTokens": 72,
+      "inputSchemaTokens": 58
+    },
+    {
+      "name": "guiSelectedNotes",
+      "tokens": 229,
+      "descriptionTokens": 60,
+      "inputSchemaTokens": 26
+    },
+    {
+      "name": "guiAddCards",
+      "tokens": 384,
+      "descriptionTokens": 64,
+      "inputSchemaTokens": 170
+    },
+    {
+      "name": "guiEditNote",
+      "tokens": 252,
+      "descriptionTokens": 70,
+      "inputSchemaTokens": 57
+    },
+    {
+      "name": "guiDeckOverview",
+      "tokens": 231,
+      "descriptionTokens": 51,
+      "inputSchemaTokens": 55
+    },
+    {
+      "name": "guiDeckBrowser",
+      "tokens": 193,
+      "descriptionTokens": 52,
+      "inputSchemaTokens": 26
+    },
+    {
+      "name": "guiCurrentCard",
+      "tokens": 413,
+      "descriptionTokens": 97,
+      "inputSchemaTokens": 26
+    },
+    {
+      "name": "guiShowQuestion",
+      "tokens": 230,
+      "descriptionTokens": 78,
+      "inputSchemaTokens": 26
+    },
+    {
+      "name": "guiShowAnswer",
+      "tokens": 230,
+      "descriptionTokens": 78,
+      "inputSchemaTokens": 26
+    },
+    {
+      "name": "guiUndo",
+      "tokens": 213,
+      "descriptionTokens": 62,
+      "inputSchemaTokens": 26
+    }
+  ],
+  "canonicalSha256": "ff5c37e3ceea7d5f2514dc0b15b4443a9c6b10ce53fd9328f28be21759c69276",
+  "rawToolsCapture": [
+    {
+      "name": "sync",
+      "description": "Synchronize local Anki collection with AnkiWeb. IMPORTANT: Always sync at the START of a review session (before getting cards) and at the END when user indicates they are done. This ensures data consistency across devices.",
+      "annotations": {
+        "title": "Sync with AnkiWeb",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "timestamp"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "get_due_cards",
+      "description": "Retrieve cards that are due for review from Anki. IMPORTANT: Use sync tool FIRST before getting cards to ensure latest data. By default answers are NOT included (include_answer defaults to false) so they never enter context before the user has a chance to self-test — after getting cards, use present_card to show them one by one and reveal the answer only when the user is ready. Set include_answer=true only for content analysis/editing workflows that are not live review sessions.",
+      "annotations": {
+        "title": "Get Due Cards",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "deck_name": {
+            "description": "Specific deck name to get cards from. If not specified, gets cards from all decks",
+            "type": "string"
+          },
+          "limit": {
+            "default": 10,
+            "description": "Maximum number of cards to return",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 50
+          },
+          "include_learning": {
+            "default": true,
+            "description": "Include cards in learning phase (seen but not yet graduated). Default: true",
+            "type": "boolean"
+          },
+          "include_new": {
+            "default": false,
+            "description": "Include new cards (never seen before). Default: false",
+            "type": "boolean"
+          },
+          "include_answer": {
+            "default": false,
+            "description": "Whether to include each card's answer (back). Keep this false during review sessions so answers never enter context before the user reveals them via present_card. Set true only for content analysis/editing workflows, not live review.",
+            "type": "boolean"
+          }
+        }
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "cards": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "cardId": {
+                  "type": "number"
+                },
+                "front": {
+                  "type": "string"
+                },
+                "back": {
+                  "description": "Present only when include_answer=true",
+                  "type": "string"
+                },
+                "deckName": {
+                  "type": "string"
+                },
+                "modelName": {
+                  "type": "string"
+                },
+                "due": {
+                  "type": "number"
+                },
+                "interval": {
+                  "type": "number"
+                },
+                "factor": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "cardId",
+                "front",
+                "deckName",
+                "modelName",
+                "due",
+                "interval",
+                "factor"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "total": {
+            "type": "number"
+          },
+          "returned": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "cards",
+          "total",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "get_cards",
+      "description": "Retrieve cards from Anki with flexible filtering by deck and card state. IMPORTANT: Use sync tool FIRST before getting cards to ensure latest data. By default answers are NOT included (include_answer defaults to false) so they never enter context before the user has a chance to self-test — after getting cards, use present_card to show them one by one and reveal the answer only when the user is ready. Set include_answer=true only for content analysis/editing workflows that are not live review sessions.",
+      "annotations": {
+        "title": "Get Cards",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "deck_name": {
+            "description": "Specific deck name to get cards from. If not specified, gets cards from all decks",
+            "type": "string"
+          },
+          "card_state": {
+            "default": "due",
+            "description": "Filter by card state: 'due' (cards due for review), 'new' (never seen), 'learning' (in learning queue), 'suspended' (manually suspended), 'buried' (temporarily hidden)",
+            "type": "string",
+            "enum": [
+              "due",
+              "new",
+              "learning",
+              "suspended",
+              "buried"
+            ]
+          },
+          "limit": {
+            "default": 10,
+            "description": "Maximum number of cards to return",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 50
+          },
+          "include_answer": {
+            "default": false,
+            "description": "Whether to include each card's answer (back). Keep this false during review sessions so answers never enter context before the user reveals them via present_card. Set true only for content analysis/editing workflows, not live review.",
+            "type": "boolean"
+          }
+        }
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "cards": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "cardId": {
+                  "type": "number"
+                },
+                "front": {
+                  "type": "string"
+                },
+                "back": {
+                  "description": "Present only when include_answer=true",
+                  "type": "string"
+                },
+                "deckName": {
+                  "type": "string"
+                },
+                "modelName": {
+                  "type": "string"
+                },
+                "due": {
+                  "type": "number"
+                },
+                "interval": {
+                  "type": "number"
+                },
+                "factor": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "cardId",
+                "front",
+                "deckName",
+                "modelName",
+                "due",
+                "interval",
+                "factor"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "total": {
+            "type": "number"
+          },
+          "returned": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "cards",
+          "total",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "present_card",
+      "description": "Retrieve a card's content for review. WORKFLOW: 1) Show question, 2) Wait for user answer, 3) Show answer with show_answer=true, 4) Evaluate and suggest rating (1-4), 5) Wait for user confirmation (\"ok\"/\"next\" = accept, or they provide different rating), 6) Only then use rate_card",
+      "annotations": {
+        "title": "Present Card for Review",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "card_id": {
+            "type": "number",
+            "description": "The ID of the card to retrieve"
+          },
+          "show_answer": {
+            "default": false,
+            "description": "Whether to include the answer/back content in the response",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "card_id"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "card": {
+            "type": "object",
+            "properties": {
+              "cardId": {
+                "type": "number"
+              },
+              "front": {
+                "type": "string"
+              },
+              "back": {
+                "type": "string"
+              },
+              "deckName": {
+                "type": "string"
+              },
+              "modelName": {
+                "type": "string"
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "currentInterval": {
+                "type": "number"
+              },
+              "easeFactor": {
+                "type": "number"
+              },
+              "reviews": {
+                "type": "number"
+              },
+              "lapses": {
+                "type": "number"
+              },
+              "cardType": {
+                "type": "string"
+              },
+              "noteId": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "cardId",
+              "front",
+              "deckName",
+              "modelName",
+              "tags",
+              "currentInterval",
+              "easeFactor",
+              "reviews",
+              "lapses",
+              "cardType",
+              "noteId"
+            ],
+            "additionalProperties": false
+          },
+          "instruction": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "card",
+          "instruction"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "rate_card",
+      "description": "Submit a rating for a card to update Anki's spaced repetition scheduling. Before calling this, the card's answer must already have been revealed to the user via present_card with show_answer: true, and the user must have self-assessed their recall. Use this ONLY after the user confirms or modifies your suggested rating. Do not rate automatically without user input.",
+      "annotations": {
+        "title": "Rate Card",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "card_id": {
+            "type": "number",
+            "description": "The ID of the card to rate"
+          },
+          "rating": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 4,
+            "description": "The rating for the card (use the user's choice, not your suggestion): 1=Again (failed), 2=Hard, 3=Good, 4=Easy"
+          }
+        },
+        "required": [
+          "card_id",
+          "rating"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "cardId": {
+            "type": "number"
+          },
+          "rating": {
+            "type": "number"
+          },
+          "ratingDescription": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "nextReview": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "interval": {
+                    "type": "number"
+                  },
+                  "due": {
+                    "type": "number"
+                  },
+                  "factor": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "interval",
+                  "due",
+                  "factor"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "success",
+          "cardId",
+          "rating",
+          "ratingDescription",
+          "message",
+          "nextReview"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "forgetCards",
+      "description": "Reset cards to the new queue, discarding their current scheduling (interval, due date, and ease factor). Use this when a card should be relearned from scratch — for example when the user keeps failing to recall a word that Anki has scheduled months out. Prefer this over rating a card 'Again': a rating records a real review and counts as a lapse, which distorts both future scheduling and the collection's statistics. The review log is preserved, so past reviews still show in card info and statistics. This changes scheduling only — note content, tags, and deck placement are untouched. Cards that are already new are unaffected, so re-running is safe.",
+      "annotations": {
+        "title": "Reset Cards to New",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "cards": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "description": "Array of card IDs to reset to new (max 100). Card IDs (not note IDs) — use get_cards, get_due_cards, or notesInfo to obtain them."
+          }
+        },
+        "required": [
+          "cards"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "cardsAffected": {
+            "type": "number"
+          },
+          "reset": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "cardId": {
+                  "type": "number"
+                },
+                "previousState": {
+                  "type": "string",
+                  "description": "Card state before the reset: new, learning, review, or relearning"
+                },
+                "previousIntervalDays": {
+                  "type": "number",
+                  "description": "Scheduling interval in days before the reset (0 for new cards)"
+                },
+                "reps": {
+                  "type": "number",
+                  "description": "Total reviews logged for the card (unchanged by the reset)"
+                },
+                "lapses": {
+                  "type": "number",
+                  "description": "Total lapses logged for the card (unchanged by the reset)"
+                }
+              },
+              "required": [
+                "cardId",
+                "previousState",
+                "previousIntervalDays",
+                "reps",
+                "lapses"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Per-card state captured immediately before the reset, so the caller can report what was given up."
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "cardsAffected",
+          "reset"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "setDueDate",
+      "description": "Reschedule cards to become due in a given number of days, without recording a review. Use this to bring a card forward (or push it back) when its current interval doesn't match how well the user actually knows it — rating the card instead would log a fake review and skew its ease factor. Unlike forgetCards this keeps the card's existing interval and ease unless you ask otherwise, so it is the gentler option when the card's history is still worth keeping. Note that applying this to a new card turns it into a review card.",
+      "annotations": {
+        "title": "Set Card Due Date",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "cards": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "description": "Array of card IDs to reschedule (max 100). Card IDs (not note IDs) — use get_cards, get_due_cards, or notesInfo to obtain them."
+          },
+          "days": {
+            "type": "string",
+            "description": "How many days from now the cards become due. \"0\" = today, \"1\" = tomorrow, \"3-7\" = a random day in that inclusive range (spreads a batch out instead of stacking it on one day). Append \"!\" — e.g. \"1!\" — to also overwrite the card's interval with that value, rather than leaving the existing interval in place."
+          }
+        },
+        "required": [
+          "cards",
+          "days"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "cardsAffected": {
+            "type": "number"
+          },
+          "days": {
+            "type": "string",
+            "description": "The due-date spec that was applied"
+          },
+          "intervalOverwritten": {
+            "type": "boolean",
+            "description": "True when the spec ended in \"!\", meaning the interval was reset to the day count"
+          },
+          "scheduled": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "cardId": {
+                  "type": "number"
+                },
+                "intervalDays": {
+                  "type": "number",
+                  "description": "The card's interval after rescheduling"
+                },
+                "due": {
+                  "type": "number",
+                  "description": "Anki's raw due value: days since collection creation for review cards, a queue position for new cards, a unix timestamp for learning cards"
+                }
+              },
+              "required": [
+                "cardId",
+                "intervalDays",
+                "due"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Per-card scheduling state read back after the change. Empty when the read-back failed — the reschedule itself still succeeded, so check `message` rather than treating an empty array as a no-op."
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "cardsAffected",
+          "days",
+          "intervalOverwritten",
+          "scheduled"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "modelNames",
+      "description": "Get a list of all available note type (model) names in Anki. Use this to see what note types are available before creating notes.",
+      "annotations": {
+        "title": "List Note Types",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "modelNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "total": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          },
+          "commonTypes": {
+            "type": "object",
+            "properties": {
+              "basic": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "basicReversed": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cloze": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "basic",
+              "basicReversed",
+              "cloze"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "success",
+          "modelNames",
+          "total",
+          "message",
+          "commonTypes"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "modelFieldNames",
+      "description": "Get the field names for a specific note type (model). Use this to know what fields are required when creating notes of this type.",
+      "annotations": {
+        "title": "Get Note Type Fields",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "modelName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The name of the model/note type to get fields for"
+          }
+        },
+        "required": [
+          "modelName"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "modelName": {
+            "type": "string"
+          },
+          "fieldNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "total": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          },
+          "example": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "modelName",
+          "fieldNames",
+          "total",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "modelStyling",
+      "description": "Get the CSS styling for a specific note type (model). This CSS is used when rendering cards of this type.",
+      "annotations": {
+        "title": "Get Note Type CSS",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "modelName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The name of the model/note type to get styling for"
+          }
+        },
+        "required": [
+          "modelName"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "modelName": {
+            "type": "string"
+          },
+          "css": {
+            "type": "string"
+          },
+          "cssInfo": {
+            "type": "object",
+            "properties": {
+              "length": {
+                "type": "number"
+              },
+              "hasCardStyling": {
+                "type": "boolean"
+              },
+              "hasFrontStyling": {
+                "type": "boolean"
+              },
+              "hasBackStyling": {
+                "type": "boolean"
+              },
+              "hasClozeStyling": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "length",
+              "hasCardStyling",
+              "hasFrontStyling",
+              "hasBackStyling",
+              "hasClozeStyling"
+            ],
+            "additionalProperties": false
+          },
+          "message": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "modelName",
+          "css",
+          "cssInfo",
+          "message",
+          "hint"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "createModel",
+      "description": "Create a new note type (model) in Anki with custom fields, card templates, and styling. Useful for creating specialized models like RTL (Right-to-Left) language models for Hebrew, Arabic, etc. Each model defines the structure of notes and how cards are generated from them.",
+      "annotations": {
+        "title": "Create Note Type",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "modelName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique name for the new model (e.g., \"Basic RTL\", \"Advanced Vocabulary\")"
+          },
+          "inOrderFields": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Field names in order (e.g., [\"Front\", \"Back\"]). At least one field required."
+          },
+          "cardTemplates": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "Name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Template name (e.g., \"Card 1\")"
+                },
+                "Front": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Front template HTML with field placeholders (e.g., \"{{Front}}\")"
+                },
+                "Back": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Back template HTML with field placeholders (e.g., \"{{FrontSide}}<hr id=answer>{{Back}}\")"
+                }
+              },
+              "required": [
+                "Name",
+                "Front",
+                "Back"
+              ]
+            },
+            "description": "Card templates (at least one required). Each template generates one card per note."
+          },
+          "css": {
+            "description": "Optional CSS styling for cards. For RTL languages, include \"direction: rtl;\" in .card class.",
+            "type": "string"
+          },
+          "isCloze": {
+            "default": false,
+            "description": "Create as cloze deletion model (default: false)",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "modelName",
+          "inOrderFields",
+          "cardTemplates"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "modelName": {
+            "type": "string"
+          },
+          "modelId": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "templateCount": {
+            "type": "number"
+          },
+          "hasCss": {
+            "type": "boolean"
+          },
+          "isCloze": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "success",
+          "modelName",
+          "modelId",
+          "fields",
+          "templateCount",
+          "hasCss",
+          "isCloze",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "updateModelStyling",
+      "description": "Update the CSS styling for an existing note type (model). This changes how cards of this type are rendered in Anki. Useful for adding RTL (Right-to-Left) support, changing fonts, colors, or layout. Changes apply to all cards using this model.",
+      "annotations": {
+        "title": "Update Note Type CSS",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "modelName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Name of the model to update (e.g., \"Basic\", \"Basic RTL\")"
+          },
+          "css": {
+            "type": "string",
+            "minLength": 1,
+            "description": "New CSS styling content. For RTL languages, include \"direction: rtl;\" in .card class. This will completely replace the existing CSS."
+          }
+        },
+        "required": [
+          "modelName",
+          "css"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "modelName": {
+            "type": "string"
+          },
+          "cssLength": {
+            "type": "number"
+          },
+          "cssInfo": {
+            "type": "object",
+            "properties": {
+              "hasRtlSupport": {
+                "type": "boolean"
+              },
+              "hasCardStyling": {
+                "type": "boolean"
+              },
+              "hasFrontStyling": {
+                "type": "boolean"
+              },
+              "hasBackStyling": {
+                "type": "boolean"
+              },
+              "hasClozeStyling": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "hasRtlSupport",
+              "hasCardStyling",
+              "hasFrontStyling",
+              "hasBackStyling",
+              "hasClozeStyling"
+            ],
+            "additionalProperties": false
+          },
+          "message": {
+            "type": "string"
+          },
+          "oldCssLength": {
+            "type": "number"
+          },
+          "cssLengthChange": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "success",
+          "modelName",
+          "cssLength",
+          "cssInfo",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "modelTemplates",
+      "description": "Get the card templates (Front and Back HTML) for a specific note type (model). Returns each card template's Front and Back HTML content. Use this before updateModelTemplates to see current templates and plan changes.",
+      "annotations": {
+        "title": "Get Note Type Templates",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "modelName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The name of the model/note type to get templates for"
+          }
+        },
+        "required": [
+          "modelName"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "modelName": {
+            "type": "string"
+          },
+          "templates": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "Front": {
+                  "type": "string"
+                },
+                "Back": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "Front",
+                "Back"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "message": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "modelName",
+          "templates",
+          "message",
+          "hint"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "updateModelTemplates",
+      "description": "Update the card templates (Front and Back HTML) for an existing note type (model). Each card template defines how the card's front and back sides are rendered. Use modelTemplates first to see current templates, then modify and pass back the templates object. Changes apply to all cards using this model. WARNING: Invalid HTML or missing required fields may break card rendering. Card template names are validated against the model's existing templates (case-sensitive) — unknown or mis-cased names are rejected before any update. An empty string cannot be used to blank a side.",
+      "annotations": {
+        "title": "Update Note Type Templates",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "modelName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Name of the model to update (e.g., \"Basic\", \"Cloze\")"
+          },
+          "templates": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "Front": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "HTML template for the front/question side"
+                },
+                "Back": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "HTML template for the back/answer side"
+                }
+              },
+              "required": [
+                "Front",
+                "Back"
+              ]
+            },
+            "description": "Card templates keyed by card name (e.g., { \"Card 1\": { Front: \"...\", Back: \"...\" } }). Use modelTemplates first to get the current structure, then modify the Front/Back HTML as needed."
+          }
+        },
+        "required": [
+          "modelName",
+          "templates"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "modelName": {
+            "type": "string"
+          },
+          "templateCount": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "modelName",
+          "templateCount",
+          "message",
+          "hint"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "addModelField",
+      "description": "Add a new field to an existing Anki note type (model). The field is appended to the end by default, or inserted at a specific position. Existing notes of this type will have the new field set to empty. Use modelFieldNames to see current fields before adding.",
+      "annotations": {
+        "title": "Add Field to Note Type",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "modelName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Name of the note type to modify (e.g., \"Basic\", \"Latin Vocabulary\")"
+          },
+          "fieldName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Name of the new field to add (e.g., \"Grammar\", \"IPA\", \"Example\")"
+          },
+          "index": {
+            "description": "Position to insert the field (0-based). Omit to append at the end.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "modelName",
+          "fieldName"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "modelName": {
+            "type": "string"
+          },
+          "fieldName": {
+            "type": "string"
+          },
+          "index": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "modelName",
+          "fieldName",
+          "index",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "removeModelField",
+      "description": "Remove a field from an existing Anki note type (model). WARNING: All data stored in this field across every note of this type will be permanently deleted. Use modelFieldNames to confirm the field name before removing.",
+      "annotations": {
+        "title": "Remove Field from Note Type",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "modelName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Name of the note type to modify (e.g., \"Basic\", \"Latin Vocabulary\")"
+          },
+          "fieldName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Name of the field to remove (e.g., \"Grammar\", \"IPA\")"
+          },
+          "confirmDeletion": {
+            "type": "boolean",
+            "description": "Must be set to true to confirm you understand all field data will be permanently deleted."
+          }
+        },
+        "required": [
+          "modelName",
+          "fieldName",
+          "confirmDeletion"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "modelName": {
+            "type": "string"
+          },
+          "fieldName": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "modelName",
+          "fieldName",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "renameModelField",
+      "description": "Rename a field in an existing Anki note type (model). Card templates that reference the old field name (e.g., {{OldName}}) will need to be updated separately using updateModelTemplates — they are not updated automatically. Use modelFieldNames to confirm the current field name before renaming.",
+      "annotations": {
+        "title": "Rename Field in Note Type",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "modelName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Name of the note type to modify (e.g., \"Basic\", \"Latin Vocabulary\")"
+          },
+          "oldFieldName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Current name of the field to rename (e.g., \"Notes\")"
+          },
+          "newFieldName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "New name for the field (e.g., \"Grammar Notes\")"
+          }
+        },
+        "required": [
+          "modelName",
+          "oldFieldName",
+          "newFieldName"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "modelName": {
+            "type": "string"
+          },
+          "oldFieldName": {
+            "type": "string"
+          },
+          "newFieldName": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "warning": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "modelName",
+          "oldFieldName",
+          "newFieldName",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "repositionModelField",
+      "description": "Change the position of a field within an Anki note type (model). Fields are ordered 0-based: index 0 is the first field. (Which field is the sort field is a separate model setting and is not changed by repositioning.) Use modelFieldNames to see the current field order before repositioning.",
+      "annotations": {
+        "title": "Reposition Field in Note Type",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "modelName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Name of the note type to modify (e.g., \"Basic\", \"Latin Vocabulary\")"
+          },
+          "fieldName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Name of the field to reposition (e.g., \"Grammar\")"
+          },
+          "index": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991,
+            "description": "New 0-based position for the field (0 = first field)."
+          }
+        },
+        "required": [
+          "modelName",
+          "fieldName",
+          "index"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "modelName": {
+            "type": "string"
+          },
+          "fieldName": {
+            "type": "string"
+          },
+          "newIndex": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "modelName",
+          "fieldName",
+          "newIndex",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "addNote",
+      "description": "Add a SINGLE note to Anki. To create multiple notes, use the addNotes batch tool instead of calling addNote repeatedly — AnkiConnect processes requests one at a time, so repeated (especially parallel) addNote calls are slower and unnecessary. Use modelNames to see available note types and modelFieldNames to see required fields. Returns the note ID on success. IMPORTANT: Only create notes that were explicitly requested by the user.",
+      "annotations": {
+        "title": "Add Note",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "deckName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The deck to add the note to"
+          },
+          "modelName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The note type/model to use (e.g., \"Basic\", \"Cloze\")"
+          },
+          "fields": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Field values as key-value pairs (e.g., {\"Front\": \"question\", \"Back\": \"answer\"})"
+          },
+          "tags": {
+            "description": "Optional tags to add to the note",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "allowDuplicate": {
+            "default": false,
+            "description": "Whether to allow adding duplicate notes",
+            "type": "boolean"
+          },
+          "duplicateScope": {
+            "description": "Scope for duplicate checking",
+            "type": "string",
+            "enum": [
+              "deck",
+              "collection"
+            ]
+          },
+          "duplicateScopeOptions": {
+            "description": "Advanced duplicate checking options",
+            "type": "object",
+            "properties": {
+              "deckName": {
+                "description": "Specific deck to check for duplicates",
+                "type": "string"
+              },
+              "checkChildren": {
+                "default": false,
+                "description": "Check child decks for duplicates",
+                "type": "boolean"
+              },
+              "checkAllModels": {
+                "default": false,
+                "description": "Check across all note types",
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "required": [
+          "deckName",
+          "modelName",
+          "fields"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "noteId": {
+            "type": "number"
+          },
+          "deckName": {
+            "type": "string"
+          },
+          "modelName": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "details": {
+            "type": "object",
+            "properties": {
+              "fieldsAdded": {
+                "type": "number"
+              },
+              "tagsAdded": {
+                "type": "number"
+              },
+              "duplicateCheckScope": {
+                "type": "string",
+                "enum": [
+                  "deck",
+                  "collection",
+                  "default",
+                  "none"
+                ]
+              }
+            },
+            "required": [
+              "fieldsAdded",
+              "tagsAdded",
+              "duplicateCheckScope"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "success",
+          "noteId",
+          "deckName",
+          "modelName",
+          "message",
+          "details"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "addNotes",
+      "description": "Add multiple notes to Anki in a single batch — the preferred way to create more than one note (use this instead of repeated addNote calls). Up to 100 notes sharing the same deck and model. Duplicates are skipped individually; validation errors (empty required fields, bad tags) reject the batch. IMPORTANT: Only create notes that were explicitly requested by the user.",
+      "annotations": {
+        "title": "Batch Add Notes",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "deckName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The deck to add all notes to"
+          },
+          "modelName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The note type/model for all notes (e.g., \"Basic\", \"Cloze\")"
+          },
+          "tags": {
+            "description": "Tags applied to all notes (merged with per-note tags)",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "allowDuplicate": {
+            "default": false,
+            "description": "Whether to allow adding duplicate notes",
+            "type": "boolean"
+          },
+          "duplicateScope": {
+            "description": "Scope for duplicate checking",
+            "type": "string",
+            "enum": [
+              "deck",
+              "collection"
+            ]
+          },
+          "notes": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "fields": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Field values as key-value pairs (e.g., {\"Front\": \"question\", \"Back\": \"answer\"})"
+                },
+                "tags": {
+                  "description": "Additional tags for this specific note (merged with shared tags)",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "fields"
+              ]
+            },
+            "description": "Array of notes to create (1-100)"
+          }
+        },
+        "required": [
+          "deckName",
+          "modelName",
+          "notes"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "deckName": {
+            "type": "string"
+          },
+          "modelName": {
+            "type": "string"
+          },
+          "totalRequested": {
+            "type": "number"
+          },
+          "created": {
+            "type": "number"
+          },
+          "skipped": {
+            "type": "number"
+          },
+          "failed": {
+            "type": "number"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "index": {
+                  "type": "number"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "created",
+                    "skipped",
+                    "failed"
+                  ]
+                },
+                "noteId": {
+                  "type": "number"
+                },
+                "reason": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "index",
+                "status"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "success",
+          "deckName",
+          "modelName",
+          "totalRequested",
+          "created",
+          "skipped",
+          "failed",
+          "results"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "findNotes",
+      "description": "Search for notes using Anki query syntax. Returns an array of note IDs matching the query. Examples: \"deck:Spanish\", \"tag:verb\", \"is:due\", \"front:hello\", \"added:1\" (cards added today), \"prop:due<=2\" (cards due within 2 days), \"flag:1\" (red flag), \"is:suspended\"",
+      "annotations": {
+        "title": "Find Notes",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Anki search query. Use Anki query syntax like \"deck:DeckName\", \"tag:tagname\", \"is:due\", \"is:new\", \"is:review\", \"front:text\", \"back:text\", or combine with spaces for AND, OR for alternatives. Empty string returns all notes."
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "noteIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "count": {
+            "type": "number"
+          },
+          "query": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "noteIds",
+          "count",
+          "query",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "notesInfo",
+      "description": "Get detailed information about specific notes including all fields, tags, model info, and CSS styling. Use this after findNotes to get complete note data. Includes CSS for proper rendering awareness.",
+      "annotations": {
+        "title": "Get Notes Info",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "notes": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "description": "Array of note IDs to get information for (max 100 at once for performance). Get these IDs from findNotes tool."
+          }
+        },
+        "required": [
+          "notes"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "notes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "noteId": {
+                  "type": "number"
+                },
+                "modelName": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "fields": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "order": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "value",
+                      "order"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "cards": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "mod": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "noteId",
+                "modelName",
+                "tags",
+                "fields",
+                "cards",
+                "mod"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "count": {
+            "type": "number"
+          },
+          "notFound": {
+            "type": "number"
+          },
+          "requestedIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "message": {
+            "type": "string"
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cssNote": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "notes",
+          "count",
+          "notFound",
+          "requestedIds",
+          "message",
+          "models",
+          "cssNote",
+          "hint"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "updateNoteFields",
+      "description": "Update the fields of an existing note. Supports HTML content in fields and preserves CSS styling. WARNING: Do not view the note in Anki browser while updating, or the fields will not update properly. Close the browser or switch to a different note before updating. IMPORTANT: Only update notes that the user explicitly asked to modify.",
+      "annotations": {
+        "title": "Update Note Fields",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "note": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "description": "The ID of the note to update. Get this from findNotes or notesInfo."
+              },
+              "fields": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "Fields to update with new content. Only include fields you want to change. HTML content is supported. Example: {\"Front\": \"<b>New question</b>\", \"Back\": \"New answer\"}"
+              },
+              "audio": {
+                "description": "Optional audio files to add to the note",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "description": "URL of the audio file"
+                    },
+                    "filename": {
+                      "type": "string",
+                      "description": "Filename to save as"
+                    },
+                    "fields": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Fields to add audio to"
+                    }
+                  },
+                  "required": [
+                    "url",
+                    "filename",
+                    "fields"
+                  ]
+                }
+              },
+              "picture": {
+                "description": "Optional images to add to the note",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "description": "URL of the image"
+                    },
+                    "filename": {
+                      "type": "string",
+                      "description": "Filename to save as"
+                    },
+                    "fields": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Fields to add image to"
+                    }
+                  },
+                  "required": [
+                    "url",
+                    "filename",
+                    "fields"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id",
+              "fields"
+            ]
+          }
+        },
+        "required": [
+          "note"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "noteId": {
+            "type": "number"
+          },
+          "updatedFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "fieldCount": {
+            "type": "number"
+          },
+          "modelName": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "cssNote": {
+            "type": "string"
+          },
+          "warning": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "noteId",
+          "updatedFields",
+          "fieldCount",
+          "modelName",
+          "message",
+          "cssNote",
+          "warning",
+          "hint"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "deleteNotes",
+      "description": "Delete notes by their IDs. This will permanently remove the notes and ALL associated cards. This action cannot be undone unless you have a backup. CRITICAL: This is destructive and permanent - only delete notes the user explicitly confirmed for deletion.",
+      "annotations": {
+        "title": "Delete Notes",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "notes": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "description": "Array of note IDs to delete (max 100 at once for safety). Get these IDs from findNotes tool. ALL cards associated with these notes will be deleted."
+          },
+          "confirmDeletion": {
+            "type": "boolean",
+            "description": "Must be set to true to confirm you want to permanently delete these notes and their cards"
+          }
+        },
+        "required": [
+          "notes",
+          "confirmDeletion"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "deletedCount": {
+            "type": "number"
+          },
+          "deletedNoteIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "cardsDeleted": {
+            "type": "number"
+          },
+          "notFoundCount": {
+            "type": "number"
+          },
+          "requestedIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "message": {
+            "type": "string"
+          },
+          "warning": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "deletedCount",
+          "notFoundCount",
+          "requestedIds",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "getTags",
+      "description": "Get all tags in the Anki collection. Use this to discover existing tags before creating notes to maintain consistency and prevent tag duplication (e.g., avoiding 'roman-empire' vs 'roman_empire' vs 'RomanEmpire').",
+      "annotations": {
+        "title": "List Tags",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "pattern": {
+            "description": "Optional filter pattern - returns only tags containing this string (case-insensitive)",
+            "type": "string"
+          }
+        }
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "total": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          },
+          "filtered": {
+            "type": "boolean"
+          },
+          "totalUnfiltered": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "success",
+          "tags",
+          "total",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "listDecks",
+      "description": "List all Anki decks, optionally with per-deck study-queue statistics. IMPORTANT: those statistics are Anki's deck-browser numbers — cards DUE TODAY, capped by each deck's daily new/review limits, excluding suspended and buried cards — NOT totals per card state. Use the `deckStats` tool (its `states` block) or `collection_stats` for true card-state counts. Remember to sync first at the start of a session for latest data.",
+      "annotations": {
+        "title": "List Decks",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "includeStats": {
+            "description": "Include card count statistics for each deck",
+            "type": "boolean"
+          }
+        }
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "decks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "stats": {
+                  "description": "Study-queue counts from Anki's deck browser (due today, capped by daily limits) — not per-state card totals.",
+                  "type": "object",
+                  "properties": {
+                    "deck_id": {
+                      "type": "number"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "new_count": {
+                      "type": "number",
+                      "description": "New cards due today, capped by the daily new-card limit. Subdecks included. Not the total number of new cards."
+                    },
+                    "learn_count": {
+                      "type": "number",
+                      "description": "Learning/relearning cards due now or today. Subdecks included."
+                    },
+                    "review_count": {
+                      "type": "number",
+                      "description": "Review cards DUE TODAY, capped by the daily review limit. Subdecks included. Not 'mature' cards and not all review cards."
+                    },
+                    "total_new": {
+                      "type": "number",
+                      "description": "Misleading legacy name: same value as new_count (new cards due today), NOT the total number of new cards."
+                    },
+                    "total_cards": {
+                      "type": "number",
+                      "description": "Cards stored directly in this deck, subdecks NOT included, suspended and buried included."
+                    }
+                  },
+                  "required": [
+                    "deck_id",
+                    "name",
+                    "new_count",
+                    "learn_count",
+                    "review_count",
+                    "total_new",
+                    "total_cards"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "total": {
+            "type": "number"
+          },
+          "summary": {
+            "description": "Collection-wide totals with study-queue semantics, not card-state totals. Use collection_stats for true per-state counts.",
+            "type": "object",
+            "properties": {
+              "total_cards": {
+                "type": "number",
+                "description": "Total cards in the collection: sum of every deck's own card count (subdecks are separate rows, so nothing is missed or double-counted)."
+              },
+              "new_cards": {
+                "type": "number",
+                "description": "New cards due across the collection today, capped by daily limits. Summed over ROOT decks only, because the per-deck counts are already rolled up over subdecks. Not the total number of new cards."
+              },
+              "learning_cards": {
+                "type": "number",
+                "description": "Learning/relearning cards due now or today across the collection. Summed over ROOT decks only, like new_cards."
+              },
+              "review_cards": {
+                "type": "number",
+                "description": "Review cards DUE TODAY across the collection, capped by daily limits. Summed over ROOT decks only, like new_cards. Not all review cards."
+              }
+            },
+            "required": [
+              "total_cards",
+              "new_cards",
+              "learning_cards",
+              "review_cards"
+            ],
+            "additionalProperties": false
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "decks",
+          "total"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "deckStats",
+      "description": "Get comprehensive statistics for a single deck including card counts, ease and interval distributions. Pass a deck name (e.g., \"Japanese::JLPT N5\") and optional bucket boundaries. Returns TWO different views, do not mix them up: `counts` is today's study queue as shown in Anki's deck browser (cards DUE TODAY, capped by the deck's daily new/review limits, suspended/buried excluded); `states` is the true number of cards in each state (new / learning / review / suspended / buried), ignoring due dates and daily limits. To answer \"how many cards do I have\" use `states`; to answer \"what will I study today\" use `counts`. Both are rolled up over descendant decks (parent decks include their children). `states` costs 5 additional Anki searches per call. For counts: Normally total === new + learning + review + other; `other` is clamped at 0, so in rare filtered-deck / inherited-limit cases the sum can exceed total.",
+      "annotations": {
+        "title": "Deck Statistics",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "deck": {
+            "type": "string",
+            "description": "Deck name (e.g., \"Japanese::JLPT N5\")"
+          },
+          "easeBuckets": {
+            "description": "Bucket boundaries for ease factor distribution. Default: [2.0, 2.5, 3.0]",
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          },
+          "intervalBuckets": {
+            "description": "Bucket boundaries for interval distribution in days. Default: [7, 21, 90]",
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          }
+        },
+        "required": [
+          "deck"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "deck": {
+            "type": "string"
+          },
+          "counts": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "number",
+                "description": "Total cards in this deck AND all of its descendants, including suspended and buried. Example: stats for \"German\" include cards in \"German::Verbs\" and \"German::Verbs::Irregular\"."
+              },
+              "new": {
+                "type": "number",
+                "description": "New cards queued for study TODAY, capped by each deck's daily new-card limit. This is not the total number of new cards — see states.new."
+              },
+              "learning": {
+                "type": "number",
+                "description": "Learning/relearning cards due now or today, the interday part capped by the daily review limit."
+              },
+              "review": {
+                "type": "number",
+                "description": "Review cards DUE TODAY, capped by each deck's daily review limit. Not 'mature' cards and not all review cards — cards scheduled for a future day are excluded. See states.review."
+              },
+              "other": {
+                "type": "number",
+                "description": "Arithmetic remainder: total - new - learning - review. NOT a card state. Dominated by review cards not due today plus new cards beyond the daily new limit; suspended and buried cards also land here. It can also reflect the mismatch between total (counted by storage deck) and the scheduler buckets when a filtered deck has borrowed cards from this deck. Use `states` for real per-state counts."
+              }
+            },
+            "required": [
+              "total",
+              "new",
+              "learning",
+              "review",
+              "other"
+            ],
+            "additionalProperties": false,
+            "description": "Today's study queue for this deck and all of its descendants, exactly as shown in Anki's deck browser: due-today counts capped by the daily new/review limits (parent limits included), always excluding suspended and buried cards. These are NOT card totals — use `states`. All four bucket counts are rolled up over descendant decks. Normally total === new + learning + review + other; `other` is clamped at 0, so in rare filtered-deck / inherited-limit cases the sum can exceed total."
+          },
+          "states": {
+            "type": "object",
+            "properties": {
+              "new": {
+                "type": "number",
+                "description": "Cards never studied, excluding suspended and buried. True count: not filtered by due date and not capped by the daily new-card limit."
+              },
+              "learning": {
+                "type": "number",
+                "description": "Cards in learning or relearning (lapsed cards are counted here), excluding suspended and buried."
+              },
+              "review": {
+                "type": "number",
+                "description": "Cards in the review state that are not relearning, excluding suspended and buried. Young and mature, due or not due."
+              },
+              "suspended": {
+                "type": "number",
+                "description": "Suspended cards, whatever their underlying state."
+              },
+              "buried": {
+                "type": "number",
+                "description": "Buried cards (manually or automatically), whatever their underlying state."
+              }
+            },
+            "required": [
+              "new",
+              "learning",
+              "review",
+              "suspended",
+              "buried"
+            ],
+            "additionalProperties": false,
+            "description": "True card-state counts for this deck and all of its subdecks, computed from Anki searches (is:new / is:learn / is:review / is:suspended / is:buried). Unaffected by due dates and daily limits — use these to answer \"how many cards are in state X\", and `counts` to answer \"what will I study today\". The five values are mutually exclusive and together cover every card in scope."
+          },
+          "ease": {
+            "type": "object",
+            "properties": {
+              "mean": {
+                "type": "number"
+              },
+              "median": {
+                "type": "number"
+              },
+              "min": {
+                "type": "number"
+              },
+              "max": {
+                "type": "number"
+              },
+              "count": {
+                "type": "number"
+              },
+              "buckets": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "number"
+                }
+              }
+            },
+            "required": [
+              "mean",
+              "median",
+              "min",
+              "max",
+              "count",
+              "buckets"
+            ],
+            "additionalProperties": false
+          },
+          "intervals": {
+            "type": "object",
+            "properties": {
+              "mean": {
+                "type": "number"
+              },
+              "median": {
+                "type": "number"
+              },
+              "min": {
+                "type": "number"
+              },
+              "max": {
+                "type": "number"
+              },
+              "count": {
+                "type": "number"
+              },
+              "buckets": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "number"
+                }
+              }
+            },
+            "required": [
+              "mean",
+              "median",
+              "min",
+              "max",
+              "count",
+              "buckets"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "success",
+          "deck",
+          "counts",
+          "states",
+          "ease",
+          "intervals"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "createDeck",
+      "description": "Create a new empty Anki deck. Use \"::\" for parent::child structure (max 2 levels, e.g., \"Japanese::JLPT N5\"). Will not overwrite existing decks.",
+      "annotations": {
+        "title": "Create Deck",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "deckName": {
+            "type": "string",
+            "description": "The name of the deck to create. Use \"::\" for parent::child structure (max 2 levels)"
+          }
+        },
+        "required": [
+          "deckName"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "deckId": {
+            "type": "number"
+          },
+          "deckName": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "created": {
+            "type": "boolean"
+          },
+          "exists": {
+            "type": "boolean"
+          },
+          "parentDeck": {
+            "type": "string"
+          },
+          "childDeck": {
+            "type": "string"
+          },
+          "parentExisted": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success",
+          "deckName",
+          "message",
+          "created"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "changeDeck",
+      "description": "Move cards to a different deck. Target deck will be created if it doesn't exist.",
+      "annotations": {
+        "title": "Move Cards to Deck",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "cards": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "description": "Array of card IDs to move"
+          },
+          "deck": {
+            "type": "string",
+            "description": "Target deck name"
+          }
+        },
+        "required": [
+          "cards",
+          "deck"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "cardsAffected": {
+            "type": "number"
+          },
+          "targetDeck": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "cardsAffected",
+          "targetDeck"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "retrieveMediaFile",
+      "description": "Download a media file from Anki's collection.media folder. Returns base64-encoded file content, or null if the file is not found.",
+      "annotations": {
+        "title": "Retrieve Media File",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string",
+            "description": "Filename of the media file to retrieve (e.g., \"pronunciation.mp3\")"
+          }
+        },
+        "required": [
+          "filename"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "data": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "found": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success",
+          "filename",
+          "data",
+          "message",
+          "found"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "getMediaFilesNames",
+      "description": "List media files in Anki's collection.media folder, optionally filtered by a glob-style pattern.",
+      "annotations": {
+        "title": "List Media Files",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "pattern": {
+            "description": "Optional filter pattern (e.g., \"*.mp3\")",
+            "type": "string"
+          }
+        }
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "count": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          },
+          "pattern": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "files",
+          "count",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "storeMediaFile",
+      "description": "Upload a media file to Anki's collection.media folder. Supports base64 data, absolute file paths, or URLs. Perfect for workflows like ElevenLabs TTS -> Anki audio flashcards.",
+      "annotations": {
+        "title": "Store Media File",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string",
+            "description": "Filename to store in Anki (e.g., \"pronunciation.mp3\", \"image.jpg\")"
+          },
+          "data": {
+            "description": "Base64-encoded file content",
+            "type": "string"
+          },
+          "path": {
+            "description": "Absolute path to a local media file (images, audio, video only)",
+            "type": "string"
+          },
+          "url": {
+            "description": "URL to download file from",
+            "type": "string"
+          },
+          "deleteExisting": {
+            "default": true,
+            "description": "Overwrite existing file (default: true)",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "filename"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "prefixedWithUnderscore": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success",
+          "filename",
+          "message",
+          "prefixedWithUnderscore"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "deleteMediaFile",
+      "description": "Remove a media file from Anki's collection.media folder. CRITICAL: This is destructive and permanent - only delete media the user explicitly confirmed for deletion.",
+      "annotations": {
+        "title": "Delete Media File",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string",
+            "description": "Filename of the media file to delete (e.g., \"old_audio.mp3\")"
+          }
+        },
+        "required": [
+          "filename"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "filename",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "addTags",
+      "description": "Add tags to specified notes. Tags is a space-separated string (e.g., \"tag1 tag2 tag3\"). Use getTags first to discover existing tags and prevent duplication.",
+      "annotations": {
+        "title": "Add Tags",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "notes": {
+            "minItems": 1,
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "description": "Array of note IDs to modify"
+          },
+          "tags": {
+            "type": "string",
+            "description": "Space-separated tags to add (e.g., \"tag1 tag2\")"
+          }
+        },
+        "required": [
+          "notes",
+          "tags"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "notesAffected": {
+            "type": "number"
+          },
+          "tagsAdded": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "notesAffected",
+          "tagsAdded"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "removeTags",
+      "description": "Remove tags from specified notes. Tags is a space-separated string (e.g., \"tag1 tag2 tag3\").",
+      "annotations": {
+        "title": "Remove Tags",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "notes": {
+            "minItems": 1,
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "description": "Array of note IDs to modify"
+          },
+          "tags": {
+            "type": "string",
+            "description": "Space-separated tags to remove (e.g., \"tag1 tag2\")"
+          }
+        },
+        "required": [
+          "notes",
+          "tags"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "notesAffected": {
+            "type": "number"
+          },
+          "tagsRemoved": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "notesAffected",
+          "tagsRemoved"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "replaceTags",
+      "description": "Rename a tag across specified notes (e.g., \"RomanEmpire\" -> \"roman-empire\"). Single tag only; spaces are not allowed in either value.",
+      "annotations": {
+        "title": "Replace Tag",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "notes": {
+            "minItems": 1,
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "description": "Array of note IDs to modify"
+          },
+          "tagToReplace": {
+            "type": "string",
+            "description": "The tag to search for and replace"
+          },
+          "replaceWithTag": {
+            "type": "string",
+            "description": "The tag to replace with"
+          }
+        },
+        "required": [
+          "notes",
+          "tagToReplace",
+          "replaceWithTag"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "notesAffected": {
+            "type": "number"
+          },
+          "tagToReplace": {
+            "type": "string"
+          },
+          "replaceWithTag": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "notesAffected",
+          "tagToReplace",
+          "replaceWithTag"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "clearUnusedTags",
+      "description": "Remove orphaned tags that are not used by any notes in the collection. CRITICAL: This is destructive and permanent - only run when the user explicitly asks to clean up tags.",
+      "annotations": {
+        "title": "Clear Unused Tags",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "collection_stats",
+      "description": "Get aggregated statistics across all decks in the collection including card counts, ease factor distribution, and interval distribution. Returns TWO different views, do not mix them up: `counts` and `per_deck` are today's study queue as shown in Anki's deck browser (cards DUE TODAY, capped by each deck's daily new/review limits, suspended/buried excluded); `states` is the true number of cards in each state (new / learning / review / suspended / buried) across the whole collection, ignoring due dates and daily limits. To answer \"how many cards do I have\" use `states`; to answer \"what will I study today\" use `counts`. Per-deck counts are rolled up over descendants (a parent deck includes its children); collection-level `counts` sum the ROOT decks only to avoid double-counting children. `states` is collection-wide only (it costs 5 additional Anki searches per call) — call the `deckStats` tool for a single deck's true state counts. For every deck and for the collection: Normally total === new + learning + review + other; `other` is clamped at 0, so in rare filtered-deck / inherited-limit cases the sum can exceed total. Ease buckets and interval buckets can be customized to focus on specific ranges.",
+      "annotations": {
+        "title": "Collection Statistics",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "ease_buckets": {
+            "default": [
+              2,
+              2.5,
+              3
+            ],
+            "description": "Bucket boundaries for ease factor distribution. Default: [2.0, 2.5, 3.0]. Example: [2.0, 2.5, 3.0] creates buckets: <2.0, 2.0-2.5, 2.5-3.0, >3.0",
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          },
+          "interval_buckets": {
+            "default": [
+              7,
+              21,
+              90
+            ],
+            "description": "Bucket boundaries for interval distribution in days. Default: [7, 21, 90]. Example: [7, 21, 90] creates buckets: <7d, 7-21d, 21-90d, >90d",
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          }
+        }
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "total_decks": {
+            "type": "number"
+          },
+          "counts": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "number",
+                "description": "Total cards in the collection, including suspended and buried. Computed as the sum of ROOT-deck rolled-up totals (decks without `::` in the name), which prevents double-counting children."
+              },
+              "new": {
+                "type": "number",
+                "description": "New cards queued for study TODAY, capped by each deck's daily new-card limit. This is not the total number of new cards — see states.new."
+              },
+              "learning": {
+                "type": "number",
+                "description": "Learning/relearning cards due now or today, the interday part capped by the daily review limit."
+              },
+              "review": {
+                "type": "number",
+                "description": "Review cards DUE TODAY, capped by each deck's daily review limit. Not 'mature' cards and not all review cards — cards scheduled for a future day are excluded. See states.review."
+              },
+              "other": {
+                "type": "number",
+                "description": "Arithmetic remainder: total - new - learning - review. NOT a card state. Dominated by review cards not due today plus new cards beyond the daily new limit; suspended and buried cards also land here. It can also reflect the mismatch between total (counted by storage deck) and the scheduler buckets when a filtered deck has borrowed cards from this deck. Use `states` for real per-state counts."
+              }
+            },
+            "required": [
+              "total",
+              "new",
+              "learning",
+              "review",
+              "other"
+            ],
+            "additionalProperties": false,
+            "description": "Today's study queue for the whole collection, exactly as shown in Anki's deck browser: due-today counts capped by the daily new/review limits (parent limits included), always excluding suspended and buried cards. These are NOT card totals — use `states`. Summed over ROOT decks only (names without `::`) so that a parent's rollup is not added on top of its children. Normally total === new + learning + review + other; `other` is clamped at 0, so in rare filtered-deck / inherited-limit cases the sum can exceed total."
+          },
+          "states": {
+            "type": "object",
+            "properties": {
+              "new": {
+                "type": "number",
+                "description": "Cards never studied, excluding suspended and buried. True count: not filtered by due date and not capped by the daily new-card limit."
+              },
+              "learning": {
+                "type": "number",
+                "description": "Cards in learning or relearning (lapsed cards are counted here), excluding suspended and buried."
+              },
+              "review": {
+                "type": "number",
+                "description": "Cards in the review state that are not relearning, excluding suspended and buried. Young and mature, due or not due."
+              },
+              "suspended": {
+                "type": "number",
+                "description": "Suspended cards, whatever their underlying state."
+              },
+              "buried": {
+                "type": "number",
+                "description": "Buried cards (manually or automatically), whatever their underlying state."
+              }
+            },
+            "required": [
+              "new",
+              "learning",
+              "review",
+              "suspended",
+              "buried"
+            ],
+            "additionalProperties": false,
+            "description": "True card-state counts for the whole collection, computed from Anki searches (is:new / is:learn / is:review / is:suspended / is:buried). Unaffected by due dates and daily limits — use these to answer \"how many cards are in state X\", and `counts` to answer \"what will I study today\". The five values are mutually exclusive and together cover every card in scope."
+          },
+          "ease": {
+            "type": "object",
+            "properties": {
+              "mean": {
+                "type": "number"
+              },
+              "median": {
+                "type": "number"
+              },
+              "min": {
+                "type": "number"
+              },
+              "max": {
+                "type": "number"
+              },
+              "count": {
+                "type": "number"
+              },
+              "buckets": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "number"
+                }
+              }
+            },
+            "required": [
+              "mean",
+              "median",
+              "min",
+              "max",
+              "count",
+              "buckets"
+            ],
+            "additionalProperties": false
+          },
+          "intervals": {
+            "type": "object",
+            "properties": {
+              "mean": {
+                "type": "number"
+              },
+              "median": {
+                "type": "number"
+              },
+              "min": {
+                "type": "number"
+              },
+              "max": {
+                "type": "number"
+              },
+              "count": {
+                "type": "number"
+              },
+              "buckets": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "number"
+                }
+              }
+            },
+            "required": [
+              "mean",
+              "median",
+              "min",
+              "max",
+              "count",
+              "buckets"
+            ],
+            "additionalProperties": false
+          },
+          "per_deck": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "deck": {
+                  "type": "string",
+                  "description": "Full deck name, e.g. \"German::Verbs\"."
+                },
+                "total": {
+                  "type": "number",
+                  "description": "Total cards in this deck AND all of its descendants, including suspended and buried."
+                },
+                "new": {
+                  "type": "number",
+                  "description": "New cards queued for study TODAY, capped by each deck's daily new-card limit. This is not the total number of new cards — see states.new."
+                },
+                "learning": {
+                  "type": "number",
+                  "description": "Learning/relearning cards due now or today, the interday part capped by the daily review limit."
+                },
+                "review": {
+                  "type": "number",
+                  "description": "Review cards DUE TODAY, capped by each deck's daily review limit. Not 'mature' cards and not all review cards — cards scheduled for a future day are excluded. See states.review."
+                },
+                "other": {
+                  "type": "number",
+                  "description": "Arithmetic remainder: total - new - learning - review. NOT a card state. Dominated by review cards not due today plus new cards beyond the daily new limit; suspended and buried cards also land here. It can also reflect the mismatch between total (counted by storage deck) and the scheduler buckets when a filtered deck has borrowed cards from this deck. Use `states` for real per-state counts."
+                }
+              },
+              "required": [
+                "deck",
+                "total",
+                "new",
+                "learning",
+                "review",
+                "other"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Per-deck breakdown of today's study queue — same due-today, daily-limit-capped semantics as `counts`, NOT card totals. One entry per deck; each entry's counts are rolled up over that deck's descendants (entry for \"German\" includes cards from \"German::Verbs\"). Normally total === new + learning + review + other per row, but `other` is clamped at 0 so the sum can exceed total in rare filtered-deck cases. Per-deck true state counts are not included here — call the `deckStats` tool for a specific deck."
+          }
+        },
+        "required": [
+          "total_decks",
+          "counts",
+          "states",
+          "ease",
+          "intervals",
+          "per_deck"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "review_stats",
+      "description": "Get review history analysis including temporal patterns, retention metrics, and study streak information. Use this to analyze learning progress over time, identify review patterns, and track consistency. Requires a start date; the deck is optional - omit it to analyze the entire collection (all decks). End date defaults to today.",
+      "annotations": {
+        "title": "Review Statistics",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "deck": {
+            "description": "Deck name to filter reviews. Matches the EXACT deck only - subdecks are NOT included, so a parent deck still returns reviews for cards assigned directly to it (but not its subdecks' cards). Omit (or pass an empty string) to analyze the entire collection (all decks).",
+            "type": "string"
+          },
+          "start_date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "description": "Start date for analysis (ISO format: YYYY-MM-DD) - REQUIRED"
+          },
+          "end_date": {
+            "description": "End date (defaults to today)",
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          }
+        },
+        "required": [
+          "start_date"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "object",
+            "properties": {
+              "start": {
+                "type": "string"
+              },
+              "end": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end"
+            ],
+            "additionalProperties": false
+          },
+          "deck": {
+            "type": "string"
+          },
+          "reviews_by_day": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "date",
+                "count"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "summary": {
+            "type": "object",
+            "properties": {
+              "total_reviews": {
+                "type": "number"
+              },
+              "average_per_day": {
+                "type": "number"
+              },
+              "days_studied": {
+                "type": "number"
+              },
+              "max_day": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "date": {
+                        "type": "string"
+                      },
+                      "count": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "date",
+                      "count"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "min_day": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "date": {
+                        "type": "string"
+                      },
+                      "count": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "date",
+                      "count"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "streak": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "total_reviews",
+              "average_per_day",
+              "days_studied",
+              "max_day",
+              "min_day",
+              "streak"
+            ],
+            "additionalProperties": false
+          },
+          "retention": {
+            "type": "object",
+            "properties": {
+              "overall": {
+                "type": "number"
+              },
+              "by_rating": {
+                "type": "object",
+                "properties": {
+                  "again": {
+                    "type": "number"
+                  },
+                  "hard": {
+                    "type": "number"
+                  },
+                  "good": {
+                    "type": "number"
+                  },
+                  "easy": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "again",
+                  "hard",
+                  "good",
+                  "easy"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "overall",
+              "by_rating"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "period",
+          "deck",
+          "reviews_by_day",
+          "summary",
+          "retention"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "guiBrowse",
+      "description": "Open Anki Card Browser and search for cards using Anki query syntax. Returns array of card IDs found. IMPORTANT: Only use when user explicitly requests opening the browser. This tool is for note editing/creation workflows, NOT for review sessions. Use this to find and select cards/notes that need editing.",
+      "annotations": {
+        "title": "Open Card Browser",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Anki search query using standard syntax (e.g., \"deck:Spanish tag:verb\", \"is:due\", \"added:7\")"
+          },
+          "reorderCards": {
+            "description": "Optional reordering of cards in the browser",
+            "type": "object",
+            "properties": {
+              "order": {
+                "type": "string",
+                "enum": [
+                  "ascending",
+                  "descending"
+                ],
+                "description": "Sort order for the cards in browser"
+              },
+              "columnId": {
+                "type": "string",
+                "description": "Column to sort by (e.g., \"noteFld\", \"noteCrt\", \"cardDue\")"
+              }
+            },
+            "required": [
+              "order",
+              "columnId"
+            ]
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "cardIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "cardCount": {
+            "type": "number"
+          },
+          "query": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "cardIds",
+          "cardCount",
+          "query",
+          "message",
+          "hint"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "guiSelectCard",
+      "description": "Select a specific card in an open Card Browser window. Returns true if browser is open and card was selected, false if browser is not open. IMPORTANT: Only use when user explicitly requests selecting a card in the browser. This tool is for note editing/creation workflows, NOT for review sessions. The Card Browser must already be open (use guiBrowse first).",
+      "annotations": {
+        "title": "Select Card in Browser",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "card": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "description": "Card ID to select in the browser (get from guiBrowse results)"
+          }
+        },
+        "required": [
+          "card"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "cardId": {
+            "type": "number"
+          },
+          "browserOpen": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "cardId",
+          "browserOpen",
+          "message",
+          "hint"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "guiSelectedNotes",
+      "description": "Get the IDs of notes currently selected in the Card Browser. Returns array of note IDs (empty if no selection). IMPORTANT: Only use when user explicitly requests getting selected notes. This tool is for note editing/creation workflows, NOT for review sessions. The Card Browser must be open with cards selected.",
+      "annotations": {
+        "title": "Get Selected Notes",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "noteIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "noteCount": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "noteIds",
+          "noteCount",
+          "message",
+          "hint"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "guiAddCards",
+      "description": "Open Anki Add Cards dialog with preset note details (deck, model, fields, tags). Returns potential note ID. IMPORTANT: Only use when user explicitly requests opening the Add Cards dialog. This tool is for note editing/creation workflows. Use this when user wants to manually review and finalize note creation in the GUI.",
+      "annotations": {
+        "title": "Open Add Cards Dialog",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "note": {
+            "type": "object",
+            "properties": {
+              "deckName": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Deck to add the note to"
+              },
+              "modelName": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Note type/model (e.g., \"Basic\", \"Cloze\")"
+              },
+              "fields": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "Field values to pre-fill (e.g., {\"Front\": \"question\", \"Back\": \"answer\"})"
+              },
+              "tags": {
+                "description": "Optional tags to add",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "deckName",
+              "modelName",
+              "fields"
+            ]
+          }
+        },
+        "required": [
+          "note"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "noteId": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "deckName": {
+            "type": "string"
+          },
+          "modelName": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "noteId",
+          "deckName",
+          "modelName",
+          "message",
+          "hint"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "guiEditNote",
+      "description": "Open Anki note editor dialog for a specific note ID. Allows manual editing of note fields, tags, and cards in the GUI. IMPORTANT: Only use when user explicitly requests editing a note via GUI. This tool is for note editing workflows when user wants to manually edit in Anki interface. For programmatic editing, use updateNoteFields instead.",
+      "annotations": {
+        "title": "Open Note Editor",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "note": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "description": "Note ID to edit (get from findNotes or notesInfo)"
+          }
+        },
+        "required": [
+          "note"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "noteId": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "noteId",
+          "message",
+          "hint"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "guiDeckOverview",
+      "description": "Open Anki Deck Overview dialog for a specific deck. Shows deck statistics and study options. Returns true if succeeded. IMPORTANT: Only use when user explicitly requests opening deck overview. This tool is for deck management and note organization workflows, NOT for review sessions.",
+      "annotations": {
+        "title": "Open Deck Overview",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Deck name to open (get from listDecks)"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "deckName": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "deckName",
+          "message",
+          "hint"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "guiDeckBrowser",
+      "description": "Open Anki Deck Browser dialog showing all decks. IMPORTANT: Only use when user explicitly requests opening the deck browser. This tool is for deck management and organization workflows, NOT for review sessions. Use this when user wants to see all decks or manage deck structure.",
+      "annotations": {
+        "title": "Open Deck Browser",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "hint"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "guiCurrentCard",
+      "description": "Get information about the current card displayed in review mode. Returns card details (question, answer, deck, model, etc.) or null if not in review. CRITICAL: This tool is ONLY for note editing/creation workflows when user needs to check what card is currently displayed in the GUI. NEVER use this for conducting review sessions. Use the dedicated review tools (get_due_cards, present_card, rate_card) instead. IMPORTANT: Only use when user explicitly requests current card information.",
+      "annotations": {
+        "title": "Get Current Review Card",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "cardInfo": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "answer": {
+                    "type": "string"
+                  },
+                  "question": {
+                    "type": "string"
+                  },
+                  "deckName": {
+                    "type": "string"
+                  },
+                  "modelName": {
+                    "type": "string"
+                  },
+                  "cardId": {
+                    "type": "number"
+                  },
+                  "buttons": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  },
+                  "nextReviews": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "fields": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string"
+                        },
+                        "order": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "value",
+                        "order"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "answer",
+                  "question",
+                  "deckName",
+                  "modelName",
+                  "cardId",
+                  "buttons",
+                  "nextReviews"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "inReview": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "cardInfo",
+          "inReview",
+          "message",
+          "hint"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "guiShowQuestion",
+      "description": "Show the question side of the current card in review mode. Returns true if in review mode, false otherwise. CRITICAL: This tool is ONLY for note editing/creation workflows when user needs to view the question side to verify content. NEVER use this for conducting review sessions. Use the dedicated review tools (present_card) instead. IMPORTANT: Only use when user explicitly requests showing the question.",
+      "annotations": {
+        "title": "Show Card Question",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "inReview": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "inReview",
+          "message",
+          "hint"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "guiShowAnswer",
+      "description": "Show the answer side of the current card in review mode. Returns true if in review mode, false otherwise. CRITICAL: This tool is ONLY for note editing/creation workflows when user needs to view the answer side to verify content. NEVER use this for conducting review sessions. Use the dedicated review tools (present_card) instead. IMPORTANT: Only use when user explicitly requests showing the answer.",
+      "annotations": {
+        "title": "Show Card Answer",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "inReview": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "inReview",
+          "message",
+          "hint"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "guiUndo",
+      "description": "Undo the last action or card in Anki. Returns true if undo succeeded, false otherwise. IMPORTANT: Only use when user explicitly requests undoing an action. This tool is for note editing/creation workflows, NOT for review sessions. Use this to undo mistakes in note creation, editing, or card management.",
+      "annotations": {
+        "title": "Undo Last Action",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "undone": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "undone",
+          "message",
+          "hint"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ],
+  "measuredAt": "2026-09-05T12:24:40.318Z",
+  "serverName": "anki-mcp-server",
+  "serverVersion": "0.25.0",
+  "launchCommand": "npx -y @ankimcp/anki-mcp-server --stdio",
+  "envVarNames": [],
+  "serverInstructions": null,
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
-  "timeoutMs": 480000
+  "timeoutMs": 240000
 }
