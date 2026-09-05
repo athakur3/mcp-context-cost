@@ -3,10 +3,10 @@
 Where this project is headed, and what a contributor can pick up. What already shipped is in
 [CHANGELOG.md](CHANGELOG.md) and the git history — **a phase leaves this file when it ships**,
 so the plan stays short and stays forward-looking. Phases 0, 1 and 2 shipped on 2026-09-05 and
-have left it; what they built, and what they corrected, is in the changelog sections for
-`0.12.0`, `0.13.0` and `0.13.1` and in the Unreleased section above them.
+phase 3 followed as `0.14.0`; all four have left it, and what they built, and what they
+corrected, is in the changelog sections from `0.12.0` to `0.14.0`.
 
-Dated **2026-09-05**. Every item names the evidence it rests on, so you can check whether it is
+Dated **2026-09-06**. Every item names the evidence it rests on, so you can check whether it is
 still true before starting it. Items marked *(maintainer)* need an account or a decision only
 the maintainer has. Contributions welcome on any item, especially new `servers.yaml` entries.
 
@@ -18,12 +18,14 @@ regen keeps them honest.
 
 **Check an item's premise before starting it.** Four of phase 1's eight items were wrong about
 *why* — not about the symptom, which was real every time, but about the mechanism behind it —
-and phase 2 then ran the same way: two of its seven, one of which dissolved on contact with the
-record. The pattern has been exact both times: every item that quoted the record held up, and
-every item that inferred a cause from a category did not. So the first hour of a phase re-reads
-the records its items name and either confirms the sentence or rewrites it. That hour would
-have saved most of phase 1's rework, and it is the same discipline this project applies to its
-own published numbers — a claim is worth what its evidence is worth, including a claim in here.
+phase 2 then ran the same way, two of its seven, one of which dissolved on contact with the
+record, and phase 3 the same again: three of its four, and its goal sentence was false in the
+one place no item looked, the job that runs after merge. The pattern has been exact three
+times: every item that quoted the record held up, and every item that inferred a cause from a
+category did not. So the first hour of a phase re-reads the records its items name and either
+confirms the sentence or rewrites it. That hour would have saved most of phase 1's rework, and
+it is the same discipline this project applies to its own published numbers — a claim is worth
+what its evidence is worth, including a claim in here.
 
 ## Where it stands
 
@@ -47,132 +49,9 @@ reading, the re-sweep cadence. They are all on the distribution track.
 
 | phase | goal | waiting on | exit, in one line |
 |---|---|---|---|
-| **3** | Others can add servers safely | nothing | a stranger's entry is measured read-only before any write-token job runs it |
-| **4** | `audit` reaches the stacks people run | nothing; shares no files with 3 | remote entries measured; three more clients, each with a who-pays row |
+| **4** | `audit` reaches the stacks people run | nothing | remote entries measured; three more clients, each with a who-pays row |
 | **5** | The data tells its second story | tool vectors on both sides of most movements | state-of report #2 with per-tool attribution; rotation length decided on evidence |
 | **∥** | Distribution *(maintainer)* | its own calendar, and someone else's answer | a badge merged somewhere that is not this repository |
-
----
-
-## Phase 3 — Others can add servers safely
-
-**Goal.** A `servers.yaml` pull request from a stranger gets a measured number before any job
-holding `contents: write` ever runs its launch command — and *after* merge, too.
-
-**The premise check, 2026-09-05.** Three of the four items were wrong about the mechanism, the
-fourth held, and the walk along a stranger's actual path found the goal sentence itself was only
-true on the pull request. The pattern is now exact three phases running: every item that quoted
-a record held, every item that inferred did not. What the records established:
-
-- **The goal was false after merge.** `resweep.yml` holds `contents: write` and checks out with
-  `actions/checkout@v5`, whose default `persist-credentials: true` leaves the token in
-  `.git/config` while an entry's launch command runs. Nothing in the phase listed it. One line
-  fixes it — `persist-credentials: false`, the token supplied only to the push — and it is the
-  boundary the whole phase claims.
-- **Half the first exit was already met.** `ci.yml` runs on every pull request, fork or not,
-  under a read-only token, and its `npm test` runs `validateServers` over the checked-out
-  `servers.yaml` — a malformed entry already fails. The other half could not pass at all: a
-  pull request that appends a real entry is red today in `npm test` (the published-stats drift
-  test asserts regen would rewrite nothing) and again in the readiness gate (a commit touching
-  `servers.yaml` with no changelog bullet). The order that goes green is append → regen →
-  changelog bullet → `npm test` → gate, and nothing told a contributor so.
-- **"Measures only the entries the PR added" does not reach the goal.** A pull request that
-  changes an existing entry's `command`, `dockerImage`, `aptPackages`, `needsGit`, `env` or
-  `envValues` changes what the write-token rotation launches next, and "added" never sees it.
-  The set to measure is added *and relaunched*.
-- **The read-only token is not the whole boundary, and the item implied it was.** The launch
-  runs in Docker with the bridge network on by design — credential-free, not an airgap; egress
-  is not prevented. And a first-time contributor's workflows do not run unattended: repository
-  policy already holds them for a maintainer's *Approve and run*. The read-only job is what makes
-  that click safe, which is the right shape.
-- **`sweep-all` cannot be the measuring command** — it always persists, then rewrites
-  `results/` and `docs/`. The job needs its own script with `persist: false`, which
-  `measureServer` already takes. Nor can the README's own "Measure your own server" instruction
-  be followed by a contributor: `npm run sweep` writes `results/<name>/measurement.json`,
-  `badges/<name>.json` and a `history.csv` row into the tree by default, and there was no flag
-  not to. The only in-repo measuring path violated the laptop rule.
-- **The registry scan had the least evidence behind it.** The tier-2 pass it proposed to run
-  landed on 2026-09-04. The "14,283 servers" and the 500-page cap exist in a memory file, not
-  in this repository — live, uncapped, it is 27,244 latest names in 405 seconds. The registry
-  deduplicates server-side (`version=latest`), `limit` is capped at 100, and the step that
-  actually chose the entries — provenance by org and repo — was never a script. What was "at
-  risk of being lost" was a human judgment. The scan is still worth having, reproducibly, with
-  that stated.
-- **`servers.yaml` carried a refuted claim.** The `agent-device` comment said the bare launch
-  prints help and exits 0, one of 68 subcommands; the 0.12.0 refutation found the only captured
-  record is exit 1 with nothing on stderr and the count unsourced. `hana-cli` is not a subcommand
-  case either — it declares a separate bin, and its failure is an upstream packaging bug. And of
-  seventeen `timeoutSeconds` values, one carries a measured basis.
-- **The adoption workflow held**, with amendments: the 2026-09-19 reading is a dispatch of it
-  rather than a cron that first fires in October; a job holding a write token needs
-  `timeout-minutes`; an *unresolved* reading advances the page's date with no number, which the
-  exit as written would have accepted.
-
-**Scope**, in build order — the dependency decides it.
-- [x] **`persist-credentials: false`** on every write-token checkout, the token reaching only
-      the push, held by a test in `test/workflows.test.ts`.
-- [x] **The adoption workflow** — monthly cron plus `workflow_dispatch`, `timeout-minutes`,
-      `npm test` before the commit as the other scheduled jobs do, and it never commits an
-      unresolved reading. `--render-only` on the tool, so a renderer change can be re-rendered
-      offline without advancing `checkedAt`.
-- [x] **`--no-persist` on `npm run sweep`**, and the README's measuring instruction rewritten
-      to use it: a contributor checks a number; CI publishes one.
-- [x] **The `pull_request` measurement job.** `src/sweep/pr-check.ts` diffs `servers.yaml` by
-      name against the base, runs `validateServers` first, measures added and relaunched entries
-      with `persist: false` in Docker, caps the count per pull request and refuses above it
-      before any launch, lists a self-containerised (`docker run …`) command rather than running
-      it from a pull request, prints the number, writes nothing. `permissions: contents: read`,
-      no secrets, `timeout-minutes` derived from the retry arithmetic.
-- [x] **CONTRIBUTING.md**, after the job it describes. The add-an-entry order that goes green;
-      env var names only and what `envValues` is for; a `timeoutSeconds` from a measured cold
-      install; the subcommand lesson as the records state it (`agent-device mcp`, `githits
-      mcp`, `emailmd`); a laptop number is never the published one; what a reviewer checks before
-      *Approve and run*; and what happens after merge — the entry sits `not-yet-run` until its
-      rotation slot comes round, which is a fact `docs/METHODOLOGY.md` currently states as
-      shorter than it is.
-- [x] **`tools/scan-registry.ts`**, honest scope: crawl `version=latest`, keep `active`, rank by
-      live weekly downloads, draft entries in the schema's shape or refuse with a reason, emit
-      the two owner strings the provenance judgment uses, write only to the path the operator
-      names, and print a one-line summary an expansion commit can quote.
-- [x] **Correct `servers.yaml`'s `agent-device` comment** to what the record establishes.
-
-**Exit.**
-- Every workflow holding `contents: write` checks out without persisting credentials, and a
-  test says so.
-- A pull request appending a real entry, with regen and a changelog bullet committed, is green
-  in `ci.yml` and shows the entry's measured tokens in `pr-check.yml` without writing anything;
-  one changing an existing entry's launch fields measures that entry too. *Met by pull request
-  #1 on 2026-09-06: `codehealth-mcp (added): 10099 tokens / 28 tools (measured, 17s)` in run
-  33991875728 under a read-only token, "Nothing was written", the same number the laptop's
-  local check gave on the other architecture; merged as `d685a90` with nothing under
-  `results/` for it. The relaunched path is held by the suite; no pull request has changed a
-  launch field yet.*
-- The adoption workflow has run once by dispatch and once on schedule, and `docs/adoption.md`
-  carries a count from each. *Dispatch: run 33985123134 on 2026-09-05, committed as `0a9e5f5`,
-  zero adopters — the Actions token was accepted by code search, which until that run was
-  GitHub's claim rather than this repository's record. The scheduled half is the 1st of the
-  month.*
-- `npm run sweep -- --no-persist` writes nothing under `results/`, `badges/` or `history.csv`.
-- `npm run scan-registry -- --out <path>` writes one dated file there and nothing elsewhere.
-  *And the first expansion commit after it, `fc4e8fc`, quotes its summary line — the exit the
-  original item stated. The scan's first real use also found two of its own defects on the way:
-  a lookup that gave up killed the run, and five scoped drafts collided on the name `mcp`.*
-
-**Why here.** Contributions follow distribution, and the safety check must exist before the
-first outside pull request arrives — not after. Runs beside phase 4; the two share no files.
-
-**Decided 2026-09-06: the branch is protected as far as the bots allow, and the merge gate
-stays on the click.** A ruleset on `main` refuses deletion and force-push with no bypass actors
-(ruleset 22351158). It cannot require pull requests or green checks: four workflows push to
-`main` with `GITHUB_TOKEN`, and on a personal repository the GitHub Actions app is not an
-allowed bypass actor — the API says so in words — so either rule would break every scheduled
-job on its next run. The route to an enforced gate is a write-access deploy key as the bypass
-actor, with the private half in a secret and all four workflows pushing over SSH. Declined: it
-trades a per-run, auto-scoped token for a long-lived credential in a job that runs strangers'
-commands, the posture this phase just tightened. What guards the merge is `.github/CODEOWNERS`
-(a pull request requests review as it opens), the pull-request template (the checklist that goes
-green, held by a test to CONTRIBUTING.md), and the checks being on the button — with a
-maintainer who reads them.
 
 ---
 
@@ -204,8 +83,8 @@ convenient.
   README's client list.
 - METHODOLOGY's "read on" date for the deferral model has advanced, with any change noted.
 
-**Why here.** Independent of the sweep, so it runs beside phase 3. Ordered after phase 2
-because the people distribution brings are audit users, and this is the audit they will run.
+**Why here.** Independent of the sweep. Ordered after phase 2 because the people distribution
+brings are audit users, and this is the audit they will run.
 
 ---
 
@@ -277,6 +156,13 @@ pull request to a maintainer who declined is the one move here that costs more t
   isolation is credential-free by definition, and a number taken with a key would describe
   that key's account.
 - Publishing any measurement taken on a developer machine. CI measures; the laptop probes.
+- Requiring pull requests or green checks on `main` while the bots push with `GITHUB_TOKEN`.
+  On a personal repository the Actions app cannot be a bypass actor — GitHub says so in words —
+  so either rule breaks every scheduled job on its next run; and the route around it, a
+  write-access deploy key for the bots, is a long-lived credential in the job that runs
+  strangers' commands. `main` refuses deletion and force-push (ruleset 22351158, decided
+  2026-09-06); `.github/CODEOWNERS` and the pull-request template carry the merge side, and the
+  click is a maintainer who reads the checks.
 - Widening the failure taxonomy again without a corroboration rule for the new bucket.
 - Bumping methodology v1.0 for anything above: none of it touches canonical bytes,
   `totalTokens`, or a hash.
