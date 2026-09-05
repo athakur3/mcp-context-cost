@@ -29,7 +29,8 @@ while reading it.
   produced it, and a six-week window describes the observation schedule rather than the
   server. The roadmap's lever was to dispatch one slice at `shards=3` and time it against the
   job's 120-minute cap. Run 33997431756 (2026-09-06): 34 servers measured in 3m46s,
-  cross-checked in 2m44s, Claude column refreshed in 6s. The slowest weeks on record are the
+  cross-checked in 2m44s, Claude column refreshed in 6s; run 33999205923 measured the same
+  slice again forty minutes later in 5m17s. The slowest weeks on record are the
   two half-set slices of 2026-09-04 — 52 servers, 61m17s and 62m07s measuring — and even that
   pair, which still carried the `anki` and `grafana` timeouts since fixed, leaves a third of
   the list far inside the cap. So the schedule cuts the list into three, every row comes round
