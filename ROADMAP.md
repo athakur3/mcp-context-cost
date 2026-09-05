@@ -2,7 +2,7 @@
 
 Six phases, in order. Each has one goal, a scope, and an exit that can be checked rather
 than declared. Phases 0 and 1 are done, the distribution track shipped on 2026-09-05, and
-**phase 2 is five of seven items in**; 3 and 4 run in parallel; 5 is gated by the calendar,
+**phase 2 is six of seven items in**; 3 and 4 run in parallel; 5 is gated by the calendar,
 not by work. Contributions welcome on any item.
 
 Dated **2026-09-05**, against 0.12.0 on npm and the data of 2026-09-04. Each item names the
@@ -21,8 +21,8 @@ published numbers — a claim is worth what its evidence is worth, including a c
 
 ## Where it stands
 
-106 candidates, 83 measured, six published columns (tokens, session start, Claude,
-mcp-tokens, movement, tool shape), 681 tests, four workflows, three weeks of history, and
+106 candidates, 85 measured and rising, six published columns (tokens, session start, Claude,
+mcp-tokens, movement, tool shape), 682 tests, four workflows, three weeks of history, and
 `0.12.0` on npm as of 2026-09-05. The measurement and its gates are further along than their
 audience: the adoption reading of
 2026-09-03 found zero projects displaying the badge, and the repository has one star. So the
@@ -40,7 +40,7 @@ now a dated reading with six asks behind it rather than an absence of asking.
 | **0** | Ship what trunk already holds | **done 2026-09-05** | 0.12.0 on npm, with a dated changelog section |
 | **1** | Every published sentence is established | **done 2026-09-05** | eight items, each held by a test; `slack` and `redis-legacy` re-measured in CI |
 | **∥** | **Distribution** *(maintainer)* | **shipped 2026-09-05** | listing live and three posts published; five badge PRs open |
-| **2** | Sweeps that are cheaper and say more — **5 of 7 done** | 2026-09-05 → 2026-09-25 | movements name releases; `anki` and `grafana` measure; Claude column refreshed by the re-sweep; four issues filed |
+| **2** | Sweeps that are cheaper and say more — **6 of 7 done** | 2026-09-05 → 2026-09-25 | movements name releases; four rows healed; Claude column refreshed by the re-sweep; three issues filed |
 | **3** | Others can add servers safely | 2026-09-21 → 2026-10-09 | a stranger's entry is measured read-only before any write-token job runs it |
 | **4** | `audit` reaches the stacks people run | 2026-10-05 → 2026-10-23 | remote entries measured; three more clients, each with a who-pays row |
 | **5** | The data tells its second story | from 2026-10-16 | state-of report #2 with per-tool attribution; rotation length decided on evidence |
@@ -119,8 +119,11 @@ the response log are at https://claude.ai/code/artifact/42d26d8e-b533-4bde-a424-
 **Goal.** A movement names the release that caused it, and a harness limitation never costs
 a retry.
 
-**Five of seven items are done (2026-09-05).** The premise check this file mandates paid for
-itself again: two items were wrong about the mechanism, and one of them dissolved entirely.
+**Six of seven items are done (2026-09-05).** The premise check this file mandates paid for
+itself twice over: two items were wrong about the mechanism, one dissolved entirely, and the
+probe item then found that **half the "broken servers" in this set were broken by us** —
+`anki`, `grafana`, `azure` and `hevy` all publish real statuses now, and only `local-mcp`
+turned out to be a fact about someone else's release schedule.
 
 **Scope.**
 - [x] **A schema test over `servers.yaml` in CI** — done 2026-09-05. `validateServers` in
@@ -169,16 +172,22 @@ itself again: two items were wrong about the mechanism, and one of them dissolve
       the elided middle reverts to `startup-failure` on its own — silently, and about someone
       else's working software. Four entries declare today. Wants a rule that does not depend on
       how much the server printed.
-- [ ] **Heal failure rows upstream, one reproduction each.** `heroku` (cannot find
-      `@modelcontextprotocol/sdk/dist/esm/server/mcp`), `accessibility-scanner`
-      (`ERR_PACKAGE_PATH_NOT_EXPORTED`), `hana-cli` (`ERR_MODULE_NOT_FOUND`), `hevy` (a fatal
-      that names no cause) each reduce to one `docker run --rm node:22-slim …` line. Record the
-      issue link in the entry so the row can say "filed <date>".
-- [ ] **Probe before telling anyone anything.** `azure` exits **0** with a .NET tracing dump,
-      which looks like the slim image lacking ICU rather than a broken server (if
-      `DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1` fixes it, adding it is a launch-condition
-      decision like `elasticsearch`'s below). `local-mcp` on amd64 starts downloading
-      `LMCP v3.0.404 (linux-amd64)` and fails, so the arm64 finding was only half of it.
+- [x] **Probe before telling anyone anything** — done 2026-09-05, and it is the item that paid
+      for the one below. Six failure rows probed; **three were ours**. `azure` measures (15,239
+      tokens, 68 tools) once `libicu72` and `libssl3` are in the container — the ICU hypothesis
+      was right and its proposed fix was not, since the env var only clears ICU and lands on
+      libssl. `hevy`'s failure was our own dummy key: with `HEVY_API_KEY` empty it says a key is
+      required and reads `auth-required`. `local-mcp` is a platform absence the vendor states in
+      words ("The Windows/Linux Go server is in preview"), on **both** architectures, so the
+      arm64 reading was half the story. Entries gain `aptPackages` for the first of those — the
+      `needsGit` argument, not the `OTEL_SDK_DISABLED` one.
+- [ ] **Heal failure rows upstream, one reproduction each.** *(maintainer — filing is their
+      account.)* Narrowed to three by the probes above, each reproducible in one line and each
+      genuinely upstream. `heroku` imports `@modelcontextprotocol/sdk/dist/esm/server/mcp`, a
+      deep subpath absent from the SDK 1.30.0 exports map its own `^1.26.0` range resolves to.
+      `accessibility-scanner` imports a `playwright-core` internal its pinned alpha no longer
+      exports. `hana-cli` imports `@modelcontextprotocol/sdk` without declaring it as a
+      dependency at all. Record the issue link in the entry so the row can say "filed <date>".
 
 **Exit.**
 - ~~Every movement in `regressions.md` whose two records both carry a version names both.~~
@@ -189,8 +198,10 @@ itself again: two items were wrong about the mechanism, and one of them dissolve
   numbers above were probed on a laptop and are not published.
 - After a re-sweep dispatch that touches `github`, the front page's Claude cell for it is a
   number.
-- Four upstream issues filed, links in `servers.yaml`; `azure` and `local-mcp` each have a
-  probe result recorded, whichever way it went.
+- ~~`azure` and `local-mcp` each have a probe result recorded, whichever way it went.~~ Both
+  do, and both moved: `azure` measures and `local-mcp` is declared.
+- Three upstream issues filed, links in `servers.yaml` — down from four, because `hevy` was
+  ours. Nothing is filed yet.
 
 **Why here.** The version column and probe evidence are schema; they ship together as 0.13.0
 after phase 0 has cleared the previous batch. The declarations in phase 1 come first because
