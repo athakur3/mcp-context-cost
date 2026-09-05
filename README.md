@@ -477,7 +477,7 @@ says as a whole is written up, dated, in
 [The State of MCP Context Cost](https://athakur3.github.io/mcp-context-cost/state-of-mcp-context-cost)
 (September 2026). Two
 weekly jobs re-measure the set — the `memory` reference server on Mondays, and a rotating
-sixth of the list on Wednesdays, so every row comes round within six weeks. Read each row's
+third of the list on Wednesdays, so every row comes round within three weeks. Read each row's
 date as the date it means, and don't take the cadence on trust — the build history is
 public, one click each:
 [re-sweep runs](https://github.com/athakur3/mcp-context-cost/actions/workflows/resweep.yml)

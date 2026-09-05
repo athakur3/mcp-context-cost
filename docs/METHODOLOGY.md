@@ -159,7 +159,7 @@ with a guess, and because unknown is not evidence of a difference either, those 
 plot — with the page saying their conditions aren't on record.
 
 **How often a row gets a new point.** A scheduled job re-measures one deterministic slice of
-the server list each week, so the whole set is refreshed on a rolling six-week cycle rather
+the server list each week, so the whole set is refreshed on a rolling three-week cycle rather
 than all at once — a fresh CI runner shares no package cache, and every server on it pays a
 cold install. The slice is derived from the date alone, so a week the job doesn't run leaves
 those servers to come round again next cycle; nothing is skipped permanently. Servers the

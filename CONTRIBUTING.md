@@ -324,7 +324,7 @@ Your entry is listed as `not-yet-run` — on the leaderboard (`src/sweep/report.
 the server index (`docs/servers/index.md`) — and its own page under `docs/servers/` does not
 exist until it has been measured. That lasts until its rotation slot comes round:
 `resweep.yml` measures one slice of the list each Wednesday, the slices are dealt by position
-(`src/sweep/shard.ts`), and the default cuts the list into six, so the wait is up to six
+(`src/sweep/shard.ts`), and the default cuts the list into three, so the wait is up to three
 Wednesdays. The bot's commit that week carries the measurement, the badge, the history row
 and the page, and regen rewrites the derived files around them.
 

@@ -4,7 +4,7 @@
  * `history.csv` only grows for servers that get measured again, and the only
  * scheduled measurement this project runs is the weekly self-badge job — one
  * server, `memory`. Every other row's trend line therefore stops at whatever
- * date a maintenance run last swept by hand. Re-measuring all 82 on a schedule
+ * date a maintenance run last swept by hand. Re-measuring every one of them on a schedule
  * is not the fix: a cold runner pays a full image pull and package install per
  * server with no cache volume to carry over, so the whole set does not fit in
  * one job's budget comfortably or cheaply.

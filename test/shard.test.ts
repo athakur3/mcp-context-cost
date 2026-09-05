@@ -210,7 +210,7 @@ describe('sweep-all sharding (subprocess)', () => {
 
   it('leaves servers outside this week`s slice exactly as they were published', () => {
     // The point of the rotation is that untouched servers keep their number.
-    // A shard sweep that blanked them would empty the leaderboard six weeks
+    // A shard sweep that blanked them would empty the leaderboard a cycle
     // running, one slice at a time.
     const names = scaffold(TOTAL);
     const slice = selectShard(names, SHARDS, 0);

@@ -24,6 +24,20 @@ while reading it.
   still the reason two sweeps on one day do not lose a run to a merge nobody can resolve.
   `test/workflows.test.ts` holds the order for both jobs that publish data.
 
+- **The rotation is three weeks wide, decided by dispatching it rather than by arguing about
+  it.** A movement in `results/regressions.md` carries a date window as wide as the cycle that
+  produced it, and a six-week window describes the observation schedule rather than the
+  server. The roadmap's lever was to dispatch one slice at `shards=3` and time it against the
+  job's 120-minute cap. Run 33997431756 (2026-09-06): 34 servers measured in 3m46s,
+  cross-checked in 2m44s, Claude column refreshed in 6s. The slowest weeks on record are the
+  two half-set slices of 2026-09-04 — 52 servers, 61m17s and 62m07s measuring — and even that
+  pair, which still carried the `anki` and `grafana` timeouts since fixed, leaves a third of
+  the list far inside the cap. So the schedule cuts the list into three, every row comes round
+  within three Wednesdays, and `resweep.yml` carries the timings that chose the number.
+  README, METHODOLOGY and CONTRIBUTING say three where they said six; the September article
+  keeps the sentence it was written under, because it states the date it was read on and a
+  dated reading is not edited afterwards.
+
 ## 0.15.0 — 2026-09-05
 
 Phase 4 of the roadmap — `audit` reaches the stacks people actually run — and the hour of

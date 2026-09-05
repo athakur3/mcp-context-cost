@@ -21,6 +21,19 @@
 # results/regressions.md, and a window that wide describes the observation
 # schedule rather than the server.
 #
+# That dispatch happened, which is why the default below is 3 and not the 6 it
+# ran with until 2026-09-06. Two readings, both inside the 120-minute cap:
+#   * shards=3, run 33997431756 (2026-09-06). A 34-server slice measured in
+#     3m46s, cross-checked in 2m44s, Claude column refreshed in 6s — 6m36s.
+#   * shards=2, runs 33838824251 and 33844680654 (2026-09-04), the slowest
+#     weeks on record here. 52-server slices, 61m17s and 62m07s measuring.
+#     Two of the four long poles that day were harness bugs since fixed (anki
+#     724s and grafana 540s were timeouts; both measure in seconds now), so
+#     that pair is an upper bound rather than a forecast — and a third of the
+#     list is smaller than a half of it either way.
+# Three weeks it is, so a movement's window in results/regressions.md is three
+# weeks wide rather than six.
+#
 # `servers` measures a named set instead, in minutes rather than the ~70 a full
 # slice takes. It exists so that re-measuring a handful of entries never needs a
 # laptop: a developer machine is a different architecture under different load,
@@ -43,7 +56,7 @@ on:
         required: false
         type: string
       shards:
-        description: 'How many slices to cut the set into (default 6). Fewer = bigger slice, shorter cycle.'
+        description: 'How many slices to cut the set into (default 3). Fewer = bigger slice, shorter cycle.'
         required: false
         type: string
       servers:
@@ -80,7 +93,7 @@ jobs:
       # cannot smuggle a command into this step.
       SELECT: >-
         ${{ inputs.servers && format('--only {0}', inputs.servers)
-        || format('--shards {0}{1}', inputs.shards || '6', inputs.shard_index && format(' --shard-index {0}', inputs.shard_index) || '') }}
+        || format('--shards {0}{1}', inputs.shards || '3', inputs.shard_index && format(' --shard-index {0}', inputs.shard_index) || '') }}
       # What the commit message calls this run. A targeted run says so: reading
       # "this week's server shard" over a commit that touched three named
       # servers would misdescribe the history for anyone bisecting it later.
