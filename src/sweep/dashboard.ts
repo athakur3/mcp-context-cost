@@ -88,7 +88,22 @@ export function generateDashboard(root = process.cwd()): string {
   const median = totals.length ? totals.slice().sort((a, b) => a - b)[Math.floor(totals.length / 2)] : 0;
   const max = totals.length ? Math.max(...totals) : 1;
   const fmt = (n: number) => n.toLocaleString('en-US');
-  const now = new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
+  /**
+   * The stamp is the newest measurement on the page, not the moment the page
+   * was written.
+   *
+   * A wall-clock stamp made `docs/dashboard.html` differ on every regeneration,
+   * so the scheduled jobs' "no change to publish" guard could never fire: one
+   * file that always diffs is enough to publish a commit that says nothing
+   * happened. Dated to the data instead, the page changes when the data does —
+   * and the line now answers the question a reader actually has, which is how
+   * fresh these numbers are, not when the HTML was rendered.
+   */
+  const dates = rows
+    .map((r) => String(r.m?.measuredAt ?? '').slice(0, 10))
+    .filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d))
+    .sort();
+  const newestMeasurement = dates[dates.length - 1] ?? null;
 
   const barRows = measured
     .map((r, i) => {
@@ -254,7 +269,7 @@ export function generateDashboard(root = process.cwd()): string {
 </style>
 <div class="wrap">
   <header>
-    <p class="eyebrow">methodology v1.0 · o200k_base · generated ${now}</p>
+    <p class="eyebrow">methodology v1.0 · o200k_base · newest measurement ${newestMeasurement ?? 'not yet taken'}</p>
     <h1>mcp-context-cost</h1>
     <p class="sub">What popular MCP servers cost in context tokens before the agent does any work — measured from raw <code>tools/list</code> captures, every number re-derivable from its published measurement file.</p>
   </header>

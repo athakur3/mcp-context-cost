@@ -144,6 +144,27 @@ describe('writeDashboard', () => {
     expect(html).toContain('class="spark"');
   });
 
+  /**
+   * The bots commit whatever regen changed and skip the push when nothing did.
+   * This file stamped `new Date()`, so it changed every run and the guard had
+   * never once fired — every scheduled run published a commit whether or not
+   * any number in it moved.
+   */
+  it('renders byte-identical output when the data has not changed', () => {
+    expect(generateDashboard(root)).toBe(generateDashboard(root));
+  });
+
+  it('stamps the newest measurement, not the moment it ran', () => {
+    const html = generateDashboard(root);
+    expect(html).toContain('newest measurement 2026-08-18');
+    // The date advances with the data — and only with the data.
+    writeFileSync(
+      join(root, 'results', 'demo', 'measurement.json'),
+      JSON.stringify(measurement({ measuredAt: '2026-09-04T06:00:00.000Z' })),
+    );
+    expect(generateDashboard(root)).toContain('newest measurement 2026-09-04');
+  });
+
   it('picks up a new history point on rewrite — a stale dashboard is the defect this exists to stop', () => {
     const out = join(root, 'docs', 'dashboard.html');
     writeDashboard(root, out);
