@@ -141,9 +141,12 @@ a record held, every item that inferred did not. What the records established:
   test says so.
 - A pull request appending a real entry, with regen and a changelog bullet committed, is green
   in `ci.yml` and shows the entry's measured tokens in `pr-check.yml` without writing anything;
-  one changing an existing entry's launch fields measures that entry too. *Held by the suite in
-  host mode and structurally for the workflow; the end-to-end run on GitHub's runner is a real
-  pull request, which is the maintainer's to open on a public repository.*
+  one changing an existing entry's launch fields measures that entry too. *Met by pull request
+  #1 on 2026-09-06: `codehealth-mcp (added): 10099 tokens / 28 tools (measured, 17s)` in run
+  33991875728 under a read-only token, "Nothing was written", the same number the laptop's
+  local check gave on the other architecture; merged as `d685a90` with nothing under
+  `results/` for it. The relaunched path is held by the suite; no pull request has changed a
+  launch field yet.*
 - The adoption workflow has run once by dispatch and once on schedule, and `docs/adoption.md`
   carries a count from each. *Dispatch: run 33985123134 on 2026-09-05, committed as `0a9e5f5`,
   zero adopters — the Actions token was accepted by code search, which until that run was
@@ -151,6 +154,9 @@ a record held, every item that inferred did not. What the records established:
   month.*
 - `npm run sweep -- --no-persist` writes nothing under `results/`, `badges/` or `history.csv`.
 - `npm run scan-registry -- --out <path>` writes one dated file there and nothing elsewhere.
+  *And the first expansion commit after it, `fc4e8fc`, quotes its summary line — the exit the
+  original item stated. The scan's first real use also found two of its own defects on the way:
+  a lookup that gave up killed the run, and five scoped drafts collided on the name `mcp`.*
 
 **Why here.** Contributions follow distribution, and the safety check must exist before the
 first outside pull request arrives — not after. Runs beside phase 4; the two share no files.
