@@ -50,7 +50,7 @@ reading, the re-sweep cadence. They are all on the distribution track.
 
 | phase | goal | waiting on | exit, in one line |
 |---|---|---|---|
-| **5** | The data tells its second story | tool vectors on both sides of most movements | state-of report #2 with per-tool attribution; rotation length decided on evidence |
+| **5** | The data tells its second story | tool vectors on both sides of most movements | state-of report #2 with per-tool attribution (rotation length decided on evidence, 2026-09-06) |
 | **∥** | Distribution *(maintainer)* | its own calendar, and someone else's answer | a badge merged somewhere that is not this repository |
 
 ---
@@ -60,29 +60,33 @@ reading, the re-sweep cadence. They are all on the distribution track.
 **Goal.** The second state-of report says which *tools* grew, and the rotation is as short as
 the runner allows.
 
+**The rotation half is settled**, on 2026-09-06, by dispatching it rather than arguing about
+it: a `shards=3` slice measured 34 servers in 3m46s against the job's 120-minute cap, and the
+slowest weeks on record — the two half-set slices of 2026-09-04, 52 servers in 61 and 62
+minutes — leave a third of the list far inside it either way. The schedule cuts the list into
+three, every row comes round within three Wednesdays, and `resweep.yml` carries the timings
+beside the number they chose. What remains here is the report, and it waits on data.
+
 **Scope.**
 - [ ] **State-of report #2.** Waiting on data rather than on a date: tool vectors began
       accruing 2026-09-04 and a movement needs one on both sides, so the report can be written
-      once the rotation has come round — sooner if the rotation is shortened, which is the item
-      below. The September edition could say which servers moved; this one can say which tools,
+      once the rotation has come round, which is now three weeks rather than six. The
+      September edition could say which servers moved; this one can say which tools,
       and which releases. It can also say what held — the movement report separates confirmed
       unchanged costs from the ones with nothing to compare, and "most servers do not move, and
       the ones that do move up" is a finding the first edition could not state.
-- [ ] **A shorter rotation, decided on evidence.** A movement's window can be six weeks wide,
-      and a window that wide describes the schedule rather than the server (`resweep.yml` says
-      as much at its top). Dispatch `shards=3` once, time it against the 120-minute cap, and
-      halve the cycle if it fits — Actions minutes are free on a public repository.
 - [ ] **Stretch: replace the documented deferral model with a measured one.** Nothing here has
       measured a client deferring or not. An instrumented session that counts what actually
       reached the API would be the first measurement of its kind published anywhere.
 - [ ] **Routine:** vitest 5 (major), `@anthropic-ai/sdk` 0.124; neither blocks anything.
 
-**Exit.** Report #2 published and dated; the shard count in `resweep.yml` carries a comment
-with the timing that chose it.
+**Exit.** Report #2 published and dated. The other half — the shard count in `resweep.yml`
+carrying the timing that chose it — was met on 2026-09-06.
 
 **Why here.** The only phase with a real wait in it, and it is a wait for data rather than for
 a date: the attribution does not exist until the rotation has measured both sides of a movement,
-whatever anyone does. Shortening the rotation is the one lever on it.
+whatever anyone does. Shortening the rotation was the one lever on it, and it has been pulled —
+three weeks now, so the wait is half what it was.
 
 ---
 
