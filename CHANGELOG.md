@@ -7,6 +7,44 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **A movement can name the release it came from.** `measurement.json` has always recorded
+  `serverVersion` from `initialize`, but it holds one sweep — the moment a re-sweep overwrote
+  it, the earlier side of a diff was gone, and the regression report could say a movement was
+  "a real upstream release landing in real context windows" without saying which. `history.csv`
+  gains a seventh column and `ToolVectorEntry` an optional field, and `regressions.md` and the
+  per-server pages gain a **release** column. Nothing is back-filled: a short row parses as
+  unversioned and an existing vector entry does not acquire a version retroactively, because
+  identical bytes are the same definitions and what upstream called them that day is not on
+  disk. Two readings it can now state — `1.28.0 → 1.29.1`, and `still 1.29.1`, where the cost
+  moved while the version did not, which is a dependency the server does not pin rather than a
+  release of its own. `0 of 17` movements can name both sides today; the page says so, and why.
+- **`isolation.arch` is observed rather than inferred.** The field exists to tell a broken
+  server apart from one that ships no build for the architecture it was tried on, and it was
+  derived: the platform half assumed `linux`, the architecture half was the *host's*
+  `process.arch`. Nothing passes `--platform`, but `docker run` honours
+  `DOCKER_DEFAULT_PLATFORM` and an image with no manifest for the host is emulated, so an amd64
+  container on an Apple Silicon machine recorded `linux/arm64`. The cheap fix does not work
+  either — `docker image inspect` reports the variant the local store prefers, and answered
+  `linux/arm64` for a tag whose container came up `x86_64` — so the harness starts a container
+  and reads `uname -sm`, once per image. A command that is itself a `docker run` records no
+  architecture at all: this code did not choose that container.
+- **`servers.yaml` is validated before anything measures from it.** Five call sites parsed and
+  cast it; nothing checked it. A misspelled key was an absent field and an absent optional
+  field was indistinguishable from one nobody wanted, so `timeoutSecond: 240` would have swept
+  at the default budget until somebody reread the line. `validateServers` checks entry shape,
+  unique names, the slug a name becomes on disk, env holding names rather than values — and
+  rejects a key nobody reads instead of ignoring it.
+- **The Claude divergence column refreshes beside the sweep, over every measured server.** It
+  ran only in the Monday self-badge job while re-sweeps land on Wednesdays, so a re-measured row
+  printed `—` for five days of every cycle, `github` included. The re-sweep now refreshes it
+  with the same selection string it swept with, and a bare run covers every measured server
+  rather than the top 20.
+- **`anki` and `grafana` measure.** Both were published as timeouts costing twenty-one minutes
+  a cycle, and neither was a fact about the server: `anki` serves HTTP on `127.0.0.1:3000` and
+  takes `--stdio`, and the `mcp/grafana` image's ENTRYPOINT hard-codes `--transport sse` over a
+  binary whose own default is stdio. Both entries now pass a stdio flag. The numbers behind this
+  were probed on a developer machine and are not published; the rotation measures them.
+
 ## 0.12.0 — 2026-09-05
 
 Eight servers changed status while this release was made, and none of them is known to have
