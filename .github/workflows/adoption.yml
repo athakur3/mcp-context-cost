@@ -23,14 +23,15 @@
 # installation access tokens are accepted and "the fine-grained token does not
 # require any permissions"; 10 requests a minute, and the tool spaces its
 # searches wider than that) the Actions token — an installation token — should
-# be enough, so no repository secret is wired in. That is GitHub's claim, not
-# yet demonstrated by a run in this repository: no run here has hit
-# /search/code with github.token, and the first workflow_dispatch is the proof.
-# If the endpoint rejects the token, the reading fails to resolve and this job
-# goes red before committing anything, as above. The fallback, should that
-# happen, is a fine-grained PAT in the MCP_CTX_GITHUB_TOKEN secret, which the
-# tool prefers — and which would also mean relaxing the no-`secrets.` assertion
-# in test/workflows.test.ts, deliberately, with the failed run as the reason.
+# be enough, so no repository secret is wired in. Demonstrated, not just
+# documented: the first workflow_dispatch (run 33985123134, 2026-09-05) ran
+# four searches under github.token, resolved the reading, and committed it as
+# 0a9e5f5. If the endpoint ever starts rejecting the token, the reading fails
+# to resolve and this job goes red before committing anything, as above. The
+# fallback in that case is a fine-grained PAT in the MCP_CTX_GITHUB_TOKEN
+# secret, which the tool prefers — and which would also mean relaxing the
+# no-`secrets.` assertion in test/workflows.test.ts, deliberately, with the
+# failed run as the reason.
 name: Adoption reading
 on:
   schedule:
