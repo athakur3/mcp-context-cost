@@ -155,9 +155,18 @@ a record held, every item that inferred did not. What the records established:
 **Why here.** Contributions follow distribution, and the safety check must exist before the
 first outside pull request arrives — not after. Runs beside phase 4; the two share no files.
 
-**Left to the maintainer.** `main` is unprotected, with no CODEOWNERS and no pull-request
-template; the merge is guarded only by the click. Whether to protect the branch is a repository
-setting, not a build item.
+**Decided 2026-09-06: the branch is protected as far as the bots allow, and the merge gate
+stays on the click.** A ruleset on `main` refuses deletion and force-push with no bypass actors
+(ruleset 22351158). It cannot require pull requests or green checks: four workflows push to
+`main` with `GITHUB_TOKEN`, and on a personal repository the GitHub Actions app is not an
+allowed bypass actor — the API says so in words — so either rule would break every scheduled
+job on its next run. The route to an enforced gate is a write-access deploy key as the bypass
+actor, with the private half in a secret and all four workflows pushing over SSH. Declined: it
+trades a per-run, auto-scoped token for a long-lived credential in a job that runs strangers'
+commands, the posture this phase just tightened. What guards the merge is `.github/CODEOWNERS`
+(a pull request requests review as it opens), the pull-request template (the checklist that goes
+green, held by a test to CONTRIBUTING.md), and the checks being on the button — with a
+maintainer who reads them.
 
 ---
 
