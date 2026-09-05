@@ -4,7 +4,7 @@ Tokens = o200k_base count of the canonical `tools/list` bytes ([methodology v1.0
 
 The **claude** column is the same tools measured through Anthropic's `count_tokens` on `claude-opus-5` (2026-09-03, method `tools-delta/v1`): the tokens the server's tools add to a request, measured for the top 12. It is not a rescaling of the o200k column — two effects pull in opposite directions, and the [per-server pages](../docs/servers/) break both out. See [Claude divergence](../docs/METHODOLOGY.md#claude-divergence).
 
-The **mcp-tokens** column is the other CLI's count of the same server — `sd2k/mcp-tokens` `v0.2.5` (2026-09-04, method `cli-cross-check/v1`), invoked with `--model gpt-4o` so both columns count o200k tokens. Its structs model the three request fields (name/description/input\_schema), so its number sits below the tokens column wherever a server ships metadata those fields do not carry — that gap is each server's field-selection share, published on its page, not a disagreement of counters. The parenthesized percentage is the disagreement of counters: the CLI's count against ours of the same three-field projection, −0.8% to +1.4% across the 80 rows where both tools saw the same tool set. A row prints only while the comparison is between like and like: the same tool names on both sides, and our capture unchanged since the run. See [CLI cross-check](../docs/METHODOLOGY.md#cli-cross-check).
+The **mcp-tokens** column is the other CLI's count of the same server — `sd2k/mcp-tokens` `v0.2.5` (2026-09-05, method `cli-cross-check/v1`), invoked with `--model gpt-4o` so both columns count o200k tokens. Its structs model the three request fields (name/description/input\_schema), so its number sits below the tokens column wherever a server ships metadata those fields do not carry — that gap is each server's field-selection share, published on its page, not a disagreement of counters. The parenthesized percentage is the disagreement of counters: the CLI's count against ours of the same three-field projection, −0.8% to +1.4% across the 80 rows where both tools saw the same tool set. A row prints only while the comparison is between like and like: the same tool names on both sides, and our capture unchanged since the run. See [CLI cross-check](../docs/METHODOLOGY.md#cli-cross-check).
 
 **Of the servers whose cost has moved at all, 11 moved upward and 6 moved down** — a net +4,446 tokens across the set. Most entries here launch unpinned, so a movement is a real upstream release landing in real context windows, and only measurements taken under the same isolation are compared. Every movement, which half of the server moved, and where the tokens went: [regressions.md](regressions.md).
 
@@ -103,7 +103,7 @@ The **session start** column is what a client puts in context when it *defers* t
 | server | status | note |
 |---|---|---|
 | gdrive | auth-required | server exited (code 1); stderr tail: Credentials not found. Please run with 'auth' argument first. |
-| redis-legacy | startup-failure | server exited (code 1); stderr tail: lhost:6379 \[Redis Error\] Stack: Error: connect ECONNREFUSED 127.0.0.1:6379 \[Redis Reconnecting\] Connection lost, attemp |
+| redis-legacy | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: \[Redis Retry\] Attempt 1/5 failed \[Redis Retry\] Next attempt in 1000m |
 | azure | startup-failure | reproduced with the shared package cache bypassed; server exited (code 0); stderr tail: r(System.Diagnostics.Tracing.EventSourceSettings, System.String\[\]) |
 | magic | auth-required | server error -32001: Not authenticated - your API key is missing or was reset. Get a fresh key at https://21st.dev/mcp and update your MCP config (x-api-key / B |
 | stripe | auth-required | server exited (code 1); stderr tail: 🚨  Error initializing Stripe MCP server:     Invalid API key format. Expected sk_* (secret key) or rk_* (restricted key).  |
@@ -114,7 +114,7 @@ The **session start** column is what a client puts in context when it *defers* t
 | zapier | remote-auth-wall |  |
 | vercel | remote-auth-wall |  |
 | gmail | auth-required | server exited (code 1); stderr tail: Error: OAuth keys file not found. Please place gcp-oauth.keys.json in current directory or /tmp/.gmail-mcp |
-| slack | auth-required | server exited (code 1); stderr tail: {"level":"error","timestamp":"2026-09-04T13:14:01Z","message":"Request failed","app":"slack-mcp-server","error":"tls: faile |
+| slack | auth-required | server exited (code 1); stderr tail: {"level":"error","timestamp":"2026-09-05T05:41:58Z","message":"Request failed","app":"slack-mcp-server","error":"tls: faile |
 | kubernetes-containers | not-applicable | needs a kubeconfig with a cluster context; the isolation deliberately has neither — server exited (code 1); stderr tail: Error: unable to create kubernetes targ |
 | hana-cli | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: purchased (at exorbitant rates) by contacting i@izs.me node:internal/mod |
 | accessibility-scanner | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: node:internal/modules/esm/resolve:314   return new ERR_PACKAGE_PATH_NOT_ |

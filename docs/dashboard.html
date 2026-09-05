@@ -89,7 +89,7 @@
 </style>
 <div class="wrap">
   <header>
-    <p class="eyebrow">methodology v1.0 · o200k_base · generated 2026-09-04 13:14 UTC</p>
+    <p class="eyebrow">methodology v1.0 · o200k_base · generated 2026-09-05 05:43 UTC</p>
     <h1>mcp-context-cost</h1>
     <p class="sub">What popular MCP servers cost in context tokens before the agent does any work — measured from raw <code>tools/list</code> captures, every number re-derivable from its published measurement file.</p>
   </header>
@@ -942,9 +942,9 @@
   <div class="tablewrap"><table>
     <thead><tr><th>server</th><th>status</th><th>note</th></tr></thead>
     <tbody><tr><td>gdrive</td><td><span class="chip">auth-required</span></td><td class="note">server exited (code 1); stderr tail: Credentials not found. Please run with 'auth' argument first.</td></tr>
-<tr><td>redis-legacy</td><td><span class="chip">startup-failure</span></td><td class="note">server exited (code 1); stderr tail: lhost:6379
-[Redis Error] Stack: Error: connect ECONNREFUSED 127.0.0.1:6379
-[Redis Reconnecting] Connection lost, attempting</td></tr>
+<tr><td>redis-legacy</td><td><span class="chip">startup-failure</span></td><td class="note">reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: [Redis Retry] Attempt 1/5 failed
+[Redis Retry] Next attempt in 1000ms
+[R</td></tr>
 <tr><td>azure</td><td><span class="chip">startup-failure</span></td><td class="note">reproduced with the shared package cache bypassed; server exited (code 0); stderr tail: r(System.Diagnostics.Tracing.EventSourceSettings, System.String[])</td></tr>
 <tr><td>magic</td><td><span class="chip">auth-required</span></td><td class="note">server error -32001: Not authenticated - your API key is missing or was reset. Get a fresh key at https://21st.dev/mcp and update your MCP config (x-api-key / B</td></tr>
 <tr><td>stripe</td><td><span class="chip">auth-required</span></td><td class="note">server exited (code 1); stderr tail: 🚨  Error initializing Stripe MCP server:
@@ -958,7 +958,7 @@
 <tr><td>zapier</td><td><span class="chip">remote-auth-wall</span></td><td class="note">OAuth-gated remote server; listed, not measured</td></tr>
 <tr><td>vercel</td><td><span class="chip">remote-auth-wall</span></td><td class="note">OAuth-gated remote server; listed, not measured</td></tr>
 <tr><td>gmail</td><td><span class="chip">auth-required</span></td><td class="note">server exited (code 1); stderr tail: Error: OAuth keys file not found. Please place gcp-oauth.keys.json in current directory or /tmp/.gmail-mcp</td></tr>
-<tr><td>slack</td><td><span class="chip">auth-required</span></td><td class="note">server exited (code 1); stderr tail: {&quot;level&quot;:&quot;error&quot;,&quot;timestamp&quot;:&quot;2026-09-04T13:14:01Z&quot;,&quot;message&quot;:&quot;Reque</td></tr>
+<tr><td>slack</td><td><span class="chip">auth-required</span></td><td class="note">server exited (code 1); stderr tail: {&quot;level&quot;:&quot;error&quot;,&quot;timestamp&quot;:&quot;2026-09-05T05:41:58Z&quot;,&quot;message&quot;:&quot;Reque</td></tr>
 <tr><td>kubernetes-containers</td><td><span class="chip">not-applicable</span></td><td class="note">needs a kubeconfig with a cluster context; the isolation deliberately has neither — server exited (code 1); stderr tail: Error: unable to create kubernetes targ</td></tr>
 <tr><td>hana-cli</td><td><span class="chip">startup-failure</span></td><td class="note">reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: purchased (at exorbitant rates) by contacting i@izs.me
 node:internal/mod</td></tr>

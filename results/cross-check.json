@@ -11,7 +11,7 @@
     "--format",
     "json"
   ],
-  "measuredAt": "2026-09-04",
+  "measuredAt": "2026-09-05",
   "isolation": "docker (same images, limits and package caches as a sweep)",
   "servers": {
     "agent-device": {

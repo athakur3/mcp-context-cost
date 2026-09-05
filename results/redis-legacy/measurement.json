@@ -8,15 +8,16 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-09-04T06:43:59.094Z",
+  "measuredAt": "2026-09-05T05:42:34.413Z",
   "serverName": "redis-legacy",
   "launchCommand": "npx -y @modelcontextprotocol/server-redis redis://localhost:6379",
-  "notes": "server exited (code 1); stderr tail: lhost:6379\n[Redis Error] Stack: Error: connect ECONNREFUSED 127.0.0.1:6379\n[Redis Reconnecting] Connection lost, attempting to reconnect...\n[Redis Error] Maximum retries (5) reached. Giving up.\n[Redis Error] Connection: redis://localhost:6379\n[Redis Error] Error: connect ECONNREFUSED 127.0.0.1:6379\n[Redis Error] Connection: redis://localhost:6379\n[Redis Error] Stack: Error: connect ECONNREFUSED 127.0.0.1:6379\n[Redis Fatal] Server initialization failed\n[Redis Fatal] Error: Error: Max retries reached\n[Redis Fatal] Connection: redis://localhost:6379\n[Redis Fatal] Stack: Error: Max retries reached",
+  "notes": "reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: [Redis Retry] Attempt 1/5 failed\n[Redis Retry] Next attempt in 1000ms\n[Redis Retry] Connection: redis://localhost:6379\n[Redis Error] Error: connect ECONNREFUSED 127.0.0.1:6379\n[Redis Error] Connection: redis://localhost:6379\n[Redis Error] Stack: Error: connect ECONNREFUSED 127.0.0.1:6379\n[Redis Reconnecting] Connection lost, attempting to reconnect...\n […] \n[Redis Fatal] Server initialization failed\n[Redis Fatal] Error: Error: Max retries reached\n[Redis Fatal] Connection: redis://localhost:6379\n[Redis Fatal] Stack: Error: Max retries reached",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
     "network": "bridge",
-    "note": "network enabled for package fetch; clean FS, no host credentials"
+    "note": "network enabled for package fetch; clean FS, no host credentials",
+    "arch": "linux/amd64"
   },
-  "timeoutMs": 480000
+  "timeoutMs": 240000
 }
