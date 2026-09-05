@@ -442,15 +442,22 @@ describe('draftEntry', () => {
     expect(badEnv).toMatchObject({ refused: expect.stringContaining(bad.name) });
   });
 
-  it('derives the slug from the package basename, so a scoped name still validates', () => {
+  it('drafts a scoped package under a name the schema accepts, carrying the scope when the segment is generic', () => {
     const rec = records['npm-scoped']!;
     const id = rec.server.packages![0]!.identifier;
     expect(id.startsWith('@')).toBe(true);
-    expect(draftName(id)).toBe(id.slice(id.indexOf('/') + 1));
+    const scope = id.slice(1, id.indexOf('/'));
+    const segment = id.slice(id.indexOf('/') + 1);
+    // This fixture's segment is one every package uses, so the scope is the
+    // identity; the old rule drafted it as the bare segment, and five packages
+    // on one live page collided on `mcp` that way.
+    expect(segment).toBe('mcp-server');
+    expect(draftName(id)).toBe(`${scope}-${segment}`);
     const d = draftEntry(candidate('npm-scoped'), 1);
     if (!('entry' in d)) throw new Error(d.refused);
     expect(validateEntry(d.entry, 0)).toEqual([]);
     expect(d.entry.name).not.toContain('/');
+    expect(d.entry.name).toBe(draftName(id));
   });
 });
 
