@@ -123,6 +123,10 @@ servers:
   - name: gdrive
     command: npx -y @modelcontextprotocol/server-gdrive
     package: '@modelcontextprotocol/server-gdrive'
+    deprecated:
+      version: 2025.1.14
+      source: https://www.npmjs.com/package/@modelcontextprotocol/server-gdrive
+      readOn: '2026-09-05'
     env: [GDRIVE_CREDENTIALS_PATH]
     metric: 4907
     metricSource: https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-gdrive (npm weekly)
@@ -420,6 +424,11 @@ servers:
   - name: neon
     command: npx -y @neondatabase/mcp-server-neon start
     package: '@neondatabase/mcp-server-neon'
+    deprecated:
+      replacement: the remote MCP server at mcp.neon.tech
+      version: 0.6.5
+      source: https://www.npmjs.com/package/@neondatabase/mcp-server-neon
+      readOn: '2026-09-05'
     env: [NEON_API_KEY]
     metric: 2012
     metricSource: https://api.npmjs.org/downloads/point/last-week/@neondatabase/mcp-server-neon (npm weekly)
@@ -428,6 +437,11 @@ servers:
   - name: elasticsearch
     command: npx -y @elastic/mcp-server-elasticsearch
     package: '@elastic/mcp-server-elasticsearch'
+    deprecated:
+      replacement: v0.4.0 or later, shipped differently — see the upstream README
+      version: 0.3.1
+      source: https://www.npmjs.com/package/@elastic/mcp-server-elasticsearch
+      readOn: '2026-09-05'
     env: [ES_URL, ES_API_KEY]
     envValues: {ES_URL: 'http://localhost:9200'}
     metric: 1599

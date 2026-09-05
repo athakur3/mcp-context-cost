@@ -52,6 +52,38 @@ export interface ServerEntry {
    * attempted every sweep, so the day it starts working it simply measures.
    */
   notApplicable?: { reason: string; evidence: string };
+  /**
+   * The package is deprecated by its own publisher.
+   *
+   * A fact about the package, published as one. Without it `gdrive` and `neon`
+   * are bare failure rows, which reads as "this server is broken" when the
+   * truth is that upstream stopped shipping it and, in `neon`'s case, said
+   * where to go instead — and `elasticsearch` is worse, a clean 374-token
+   * measurement of a package nobody should be adopting, with nothing on the
+   * row to say so.
+   *
+   * The entry stays in the sweep either way: a package people have already
+   * installed and upstream has stopped updating is precisely the one whose
+   * context cost nobody is watching.
+   */
+  deprecated?: Deprecation;
+}
+
+/**
+ * A deprecation as a dated reading, like every other reading here. `version`
+ * because an npm deprecation is per-version, `source` because a published
+ * claim carries its evidence, and `readOn` because both can change without
+ * anything in this repository moving.
+ */
+export interface Deprecation {
+  /** Where upstream points instead, in upstream's own words. Absent when the notice names nowhere. */
+  replacement?: string;
+  /** The published version whose registry metadata carries the notice. */
+  version: string;
+  /** Where the notice was read. */
+  source: string;
+  /** The day it was read. */
+  readOn: string;
 }
 
 export interface Row {
@@ -65,6 +97,22 @@ export function mdCell(s: unknown): string {
     .replace(/[|`[\]<>]/g, (c) => `\\${c}`)
     .replace(/\r?\n/g, ' ')
     .slice(0, 160);
+}
+
+/** A URL safe to sit inside a markdown link's parentheses. */
+const mdLink = (url: unknown) => encodeURI(String(url ?? '')).replace(/\)/g, '%29');
+
+/**
+ * The deprecation, in the words of the notice rather than of this repository —
+ * "superseded by the remote MCP server at mcp.neon.tech", not "broken".
+ * Returns '' for an entry with no deprecation, so a caller can splice it in
+ * without branching.
+ */
+export function deprecationText(entry: ServerEntry): string {
+  const d = entry.deprecated;
+  if (!d) return '';
+  const words = d.replacement ? `superseded by ${d.replacement}` : 'deprecated by its publisher';
+  return `[${mdCell(words)}](${mdLink(d.source)}) — ${mdCell(d.version)}, read ${mdCell(d.readOn)}`;
 }
 
 function csvCell(s: unknown): string {
@@ -283,6 +331,32 @@ export function writeLeaderboard(
     );
   });
   md.push('');
+  // Derived, and the section disappears when the set empties — the same rule
+  // the movement and deferral notes follow. Listed apart from the failure
+  // table because a deprecation is orthogonal to whether the server measured:
+  // `elasticsearch` measures cleanly and is deprecated; `gdrive` and `neon`
+  // fail and are deprecated. Neither reading is left to the reader.
+  const deprecated = rows.filter((r) => r.entry.deprecated);
+  if (deprecated.length > 0) {
+    md.push('## Deprecated upstream');
+    md.push('');
+    md.push(
+      `${deprecated.length} entr${deprecated.length === 1 ? 'y is' : 'ies are'} no longer maintained by ` +
+        `the publisher that ships ${deprecated.length === 1 ? 'it' : 'them'}. They are measured on the same ` +
+        `rotation as everything else — a package people have already installed and upstream has stopped ` +
+        `updating is precisely the one whose context cost nobody is watching — so a row here can carry a ` +
+        `real number, a real failure, or both over time. What it should not carry is silence about the ` +
+        `deprecation itself.`,
+    );
+    md.push('');
+    md.push('| server | status | deprecation |');
+    md.push('|---|---|---|');
+    for (const r of deprecated) {
+      const status = r.entry.remote ? 'remote-auth-wall' : (r.m?.status ?? 'not-yet-run');
+      md.push(`| ${mdCell(r.entry.name)} | ${status} | ${deprecationText(r.entry)} |`);
+    }
+    md.push('');
+  }
   if (unmeasured.length > 0) {
     md.push('## Not measured (and why)');
     md.push('');
@@ -290,7 +364,11 @@ export function writeLeaderboard(
     md.push('|---|---|---|');
     for (const r of unmeasured) {
       const status = r.entry.remote ? 'remote-auth-wall' : (r.m?.status ?? 'not-yet-run');
-      md.push(`| ${mdCell(r.entry.name)} | ${status} | ${mdCell(r.m?.notes)} |`);
+      // A deprecated entry's failure note leads with the deprecation: the
+      // stderr below it explains how the run ended, not why the package is a
+      // dead end.
+      const lead = r.entry.deprecated ? `**${deprecationText(r.entry)}.** ` : '';
+      md.push(`| ${mdCell(r.entry.name)} | ${status} | ${lead}${mdCell(r.m?.notes)} |`);
     }
     md.push('');
   }

@@ -12,7 +12,7 @@ import { join } from 'node:path';
 import { parse } from 'yaml';
 import type { Measurement } from '../core/types.js';
 import { bandColor, BAND_META } from '../core/bands.js';
-import { loadDivergence, mdCell, type ServerEntry } from './report.js';
+import { deprecationText, loadDivergence, mdCell, type ServerEntry } from './report.js';
 import { parseHistory, plottableSeries, type HistoryRow } from './history.js';
 import { claudeRatio, fieldSelectionShare, isCurrent, type DivergenceRow, type DivergenceRun } from '../core/divergence.js';
 
@@ -108,6 +108,10 @@ export function renderServerPage(
   md.push('|---|---|');
   md.push(`| server (self-reported) | ${mdCell(m.serverName)}${m.serverVersion ? ` v${mdCell(String(m.serverVersion).replace(/^v/, ''))}` : ''} |`);
   md.push(`| status | ${mdCell(m.status)} |`);
+  // A reader who arrives here from a badge sees this page and not the
+  // leaderboard, so the deprecation has to be on it too — beside the status,
+  // where it is read as a fact about the package rather than about the run.
+  if (entry.deprecated) md.push(`| package | ${deprecationText(entry)} |`);
   md.push(`| tokenizer | ${mdCell(m.provider)} / ${mdCell(m.encoding)} |`);
   md.push(`| launch command | \`${mdCell(m.launchCommand ?? entry.command)}\` |`);
   md.push(`| isolation | ${mdCell(isolationText(m))} |`);

@@ -6,6 +6,7 @@
 |---|---|
 | server (self-reported) | elasticsearch-mcp v0.3.1 |
 | status | measured |
+| package | [superseded by v0.4.0 or later, shipped differently — see the upstream README](https://www.npmjs.com/package/@elastic/mcp-server-elasticsearch) — 0.3.1, read 2026-09-05 |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @elastic/mcp-server-elasticsearch` |
 | isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |

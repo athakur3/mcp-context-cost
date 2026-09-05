@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { parse } from 'yaml';
 import { classifyFailure, notApplicableReason, retriesWithoutSharedCache } from '../src/sweep/run.js';
@@ -99,5 +99,43 @@ describe('the declarations in servers.yaml', () => {
         `${s.name}'s record must contain its declared evidence`,
       ).toContain(s.notApplicable!.evidence.toLowerCase());
     }
+  });
+});
+
+/**
+ * `notApplicable` is a per-entry declaration, and every path that measures a
+ * `servers.yaml` entry has to carry it. It reached one of three: `sweep-all`
+ * passed it while `cross-check` and `session-start` iterate the same entries
+ * and omitted it — so either would have published a declared entry as
+ * `startup-failure`, the assertion about someone else's software the bucket
+ * exists to prevent. Latent only because the declared servers happen to be
+ * absent from those two outputs.
+ *
+ * Structural rather than behavioural, because the defect is a missing line at
+ * a call site: a fourth sweep path added later would reintroduce it silently,
+ * and no test of the three that exist today would notice.
+ */
+describe('every sweep path that measures a servers.yaml entry forwards its declaration', () => {
+  const sweepDir = join(repoRoot, 'src', 'sweep');
+
+  it('passes notApplicable wherever it measures an entry', () => {
+    const sites: { file: string; forwards: boolean }[] = [];
+    for (const file of readdirSync(sweepDir).filter((f) => f.endsWith('.ts')).sort()) {
+      const src = readFileSync(join(sweepDir, file), 'utf8');
+      // The shape that measures a servers.yaml entry: the entry's own name and
+      // command, then an options object. The other three call sites in the
+      // package measure something that is not an entry — an ad-hoc `--command`,
+      // a remote URL, or a server out of the *user's* config — and have no
+      // declaration to forward.
+      for (const call of src.matchAll(/measureServer\(\s*e\.name\s*,\s*e\.command\s*,\s*\{/g)) {
+        const close = src.indexOf('});', call.index);
+        const options = src.slice(call.index, close === -1 ? call.index + 800 : close);
+        sites.push({ file, forwards: /notApplicable:\s*e\.notApplicable/.test(options) });
+      }
+    }
+    // A rename that made the pattern stop matching would otherwise pass this
+    // test by finding nothing at all.
+    expect(sites.map((s) => s.file)).toEqual(['cross-check.ts', 'session-start.ts', 'sweep-all.ts']);
+    expect(sites.filter((s) => !s.forwards).map((s) => s.file)).toEqual([]);
   });
 });

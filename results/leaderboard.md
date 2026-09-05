@@ -98,18 +98,28 @@ The **session start** column is what a client puts in context when it *defers* t
 | 82 | [markitdown](../docs/servers/markitdown.md) | 64 | 6 | — | 64 (+0.0%) | 1 | convert_to_markdown (62) | measured | vendor-official |
 | 83 | [postgres](../docs/servers/postgres.md) | 32 | 3 | — | 32 (+0.0%) | 1 | query (30) | measured | official-reference |
 
+## Deprecated upstream
+
+3 entries are no longer maintained by the publisher that ships them. They are measured on the same rotation as everything else — a package people have already installed and upstream has stopped updating is precisely the one whose context cost nobody is watching — so a row here can carry a real number, a real failure, or both over time. What it should not carry is silence about the deprecation itself.
+
+| server | status | deprecation |
+|---|---|---|
+| gdrive | auth-required | [deprecated by its publisher](https://www.npmjs.com/package/@modelcontextprotocol/server-gdrive) — 2025.1.14, read 2026-09-05 |
+| neon | startup-failure | [superseded by the remote MCP server at mcp.neon.tech](https://www.npmjs.com/package/@neondatabase/mcp-server-neon) — 0.6.5, read 2026-09-05 |
+| elasticsearch | measured | [superseded by v0.4.0 or later, shipped differently — see the upstream README](https://www.npmjs.com/package/@elastic/mcp-server-elasticsearch) — 0.3.1, read 2026-09-05 |
+
 ## Not measured (and why)
 
 | server | status | note |
 |---|---|---|
-| gdrive | auth-required | server exited (code 1); stderr tail: Credentials not found. Please run with 'auth' argument first. |
-| redis-legacy | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: \[Redis Retry\] Attempt 1/5 failed \[Redis Retry\] Next attempt in 1000m |
+| gdrive | auth-required | **[deprecated by its publisher](https://www.npmjs.com/package/@modelcontextprotocol/server-gdrive) — 2025.1.14, read 2026-09-05.** server exited (code 1); stderr tail: Credentials not found. Please run with 'auth' argument first. |
+| redis-legacy | startup-failure | server exited (code 1); stderr tail: lhost:6379 \[Redis Error\] Stack: Error: connect ECONNREFUSED 127.0.0.1:6379 \[Redis Reconnecting\] Connection lost, attemp |
 | azure | startup-failure | reproduced with the shared package cache bypassed; server exited (code 0); stderr tail: r(System.Diagnostics.Tracing.EventSourceSettings, System.String\[\]) |
 | magic | auth-required | server error -32001: Not authenticated - your API key is missing or was reset. Get a fresh key at https://21st.dev/mcp and update your MCP config (x-api-key / B |
 | stripe | auth-required | server exited (code 1); stderr tail: 🚨  Error initializing Stripe MCP server:     Invalid API key format. Expected sk_* (secret key) or rk_* (restricted key).  |
 | heroku | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: Fatal error in main(): Cannot find module '/tmp/.npm-cache/_npx/909ffbc9 |
 | grafana | timeout | reproduced on double the timeout budget; timeout after 360000ms waiting for initialize; stderr tail: time=2026-09-04T06:56:22.622Z level=INFO msg="Starting Graf |
-| neon | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: npm warn deprecated @neondatabase/mcp-server-neon@0.6.5: This package is |
+| neon | startup-failure | **[superseded by the remote MCP server at mcp.neon.tech](https://www.npmjs.com/package/@neondatabase/mcp-server-neon) — 0.6.5, read 2026-09-05.** reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: npm warn deprecated @neondatabase/mcp-server-neon@0.6.5: This package is |
 | linear | remote-auth-wall |  |
 | zapier | remote-auth-wall |  |
 | vercel | remote-auth-wall |  |
