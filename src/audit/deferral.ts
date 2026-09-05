@@ -422,15 +422,33 @@ export function resolveToolSearchSources(sources: ToolSearchSource[]): ResolvedT
  * threshold is a share of the context window measured in what the client
  * actually sends to the API — the name/description/input_schema projection,
  * counted by Anthropic's tokenizer, plus the tool framework overhead. Those are
- * not the same number and the gap is not small: across the published
- * divergence run it runs from 0.20× to 1.92×, so a single stack total maps to a
- * range roughly ten times as wide as itself. Comparing the wire number directly
- * against the threshold understates the deferrable side for schema-heavy
- * servers and overstates it for metadata-heavy ones, in one direction each.
+ * not the same number and the gap is not small; the fields below carry it, and
+ * the pages state it from the run rather than from here. Comparing the wire
+ * number directly against the threshold understates the deferrable side for
+ * schema-heavy servers and overstates it for metadata-heavy ones, in one
+ * direction each.
+ *
+ * The band is **marginal**: it converts a server's own bytes and excludes the
+ * tool framework overhead, which `fixedOverhead` carries separately because the
+ * API charges it once per request however many servers are attached. Keeping
+ * them together was wrong in a way that stayed invisible while the divergence
+ * run sampled the heavy end — on a 54,000-token server a fixed 328 is noise. On
+ * 2026-09-05 the run widened to every measured server and reached `postgres` at
+ * 32 tokens on the wire, where 328 of its 348 Claude tokens *are* the overhead:
+ * a per-server ratio of 10.88× that says nothing about converting bytes. Folded
+ * into the band it took the published upper bound from 1.92× to 10.88× and made
+ * the audit refuse threshold questions it had been answering correctly. Held
+ * apart, the band across the same 86 rows is 0.19×–1.93× — which is where it
+ * already was, from a sample a quarter the size.
  */
 export interface WireToClientRatio {
   low: number;
   high: number;
+  /**
+   * Tokens the tool framework costs once per request, whatever is attached.
+   * Added to a stack a single time; never multiplied by anything.
+   */
+  fixedOverhead: number;
   /** How many servers the band was measured across, for the printed caveat. */
   servers: number;
   /** The run it came from, so a reader can date it. */
@@ -449,8 +467,9 @@ export interface WireToClientRatio {
  * level down. The fields are the record; `source` dates them.
  */
 export const PUBLISHED_WIRE_TO_CLIENT_RATIO: WireToClientRatio = {
-  low: 0.2,
-  high: 1.92,
+  low: 0.19,
+  high: 1.93,
+  fixedOverhead: 328,
   // A snapshot of the run this package was cut against, which is what `source`
   // below says it is — the installed package has no `results/` to read, so when
   // a live run is supplied `wireToClientRatio` uses that instead and this is
@@ -464,25 +483,39 @@ export const PUBLISHED_WIRE_TO_CLIENT_RATIO: WireToClientRatio = {
   // every measured server on 2026-09-05, with nothing comparing the two. The
   // band had not moved — the servers added sat inside it — which is exactly how
   // a number like this goes wrong quietly.
-  servers: 23,
+  //
+  // The widening then moved it by a hair rather than by the fivefold the first
+  // reading suggested: 0.20×–1.92× over 23 servers, 0.19×–1.93× over 86. That a
+  // quarter of the set predicted the whole of it is the interesting part, and it
+  // is only true of the marginal band — see the interface above for what folding
+  // the fixed overhead in did to the same numbers.
+  servers: 86,
   source: 'the published claude-opus-5 divergence run',
 };
 
 /** Derive the band from a supplied divergence run, falling back to the published one. */
 export function wireToClientRatio(run?: DivergenceRun | null): WireToClientRatio {
   if (!run) return PUBLISHED_WIRE_TO_CLIENT_RATIO;
+  // `probeDelta` is the run's own reading of the fixed overhead: one tiny tool
+  // attached, minus the same request with none. An upper bound, and the only
+  // measurement of it there is. A run that does not carry one converts as it
+  // always did rather than guessing at a correction.
+  const fixedOverhead = typeof run.probeDelta === 'number' && run.probeDelta > 0 ? run.probeDelta : 0;
   let low = Infinity;
   let high = -Infinity;
   let servers = 0;
   for (const row of Object.values(run.servers)) {
     if (!row || row.error || typeof row.claudeDelta !== 'number' || !(row.o200kFull > 0)) continue;
-    const ratio = row.claudeDelta / row.o200kFull;
+    const ratio = (row.claudeDelta - fixedOverhead) / row.o200kFull;
+    // A server whose entire Claude cost is the overhead says nothing about
+    // converting bytes, and a negative ratio is not a conversion at all.
+    if (!(ratio > 0)) continue;
     low = Math.min(low, ratio);
     high = Math.max(high, ratio);
     servers++;
   }
   if (servers === 0) return PUBLISHED_WIRE_TO_CLIENT_RATIO;
-  return { low, high, servers, source: `the ${run.measuredAt} ${run.model} divergence run` };
+  return { low, high, fixedOverhead, servers, source: `the ${run.measuredAt} ${run.model} divergence run` };
 }
 
 /** One measured server, as the deferral arithmetic needs it. */
@@ -624,6 +657,15 @@ function estimate(servers: DeferralServer[], ratio: WireToClientRatio): ClientSi
       high += s.tokens * ratio.high;
       estimated++;
     }
+  }
+  // Once per request, not once per server — the band is marginal precisely so
+  // that this is added here and exactly one time. A published Anthropic count
+  // already carries a copy of it, which is why a stack holding one is left
+  // alone: adding another would be the same double count in the other
+  // direction.
+  if (exact === 0 && estimated > 0) {
+    low += ratio.fixedOverhead;
+    high += ratio.fixedOverhead;
   }
   return { low: Math.round(low), high: Math.round(high), exact, estimated };
 }

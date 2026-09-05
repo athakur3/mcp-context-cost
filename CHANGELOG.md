@@ -40,6 +40,26 @@ behind one of them.
   `github` cell it was therefore not printing. `dropStaleRows` now decides one layer earlier than
   `isCurrent`, at the merge, and every run ends by saying how many measured servers carry a
   current row, so the gap is a number rather than something noticed later on a page.
+- **The unit-conversion band is marginal, and the tool framework overhead is charged once.**
+  Found by the refresh the entry above called for, and caused by phase 2's own widening of that
+  run from the top twenty to every measured server. The band converts wire bytes into what a
+  client sends to the API, and it was derived as `claudeDelta / o200kFull` — a quotient whose
+  numerator includes the overhead the API charges once per request however many servers are
+  attached. On a 54,000-token server a fixed 328 tokens is noise. On `postgres`, 32 tokens on
+  the wire, it is the whole number: 328 of its 348 Claude tokens, read as a ratio of **10.88×**.
+  Folded into the published band that took the upper bound from 1.92× to 10.88× and made `audit`
+  refuse threshold questions it had been answering correctly the day before — a stack's range
+  five times wider than the measurement supports, because the once-per-request overhead was
+  being multiplied in once per server. The band is now taken over `claudeDelta − probeDelta`,
+  the run's own reading of that overhead, and `estimate` adds it back a single time for the
+  stack. Across the same 86 rows the band is **0.19×–1.93×**, which is where it already was when
+  it was measured over 23 — a quarter of the set predicting the whole of it, and the reason the
+  five-fold reading was worth disbelieving. Two derivations of the band also became one:
+  `published-stats` had its own copy, over a different row set and without the correction, so
+  the pages could state a conversion the tool did not perform. They now ask the same function
+  the audit converts with, and the count beside the band is the number of rows that produced it
+  rather than the number in the file — `gitlab` sits in the run with an API error and a zero
+  delta, and "across 87 servers" counted it.
 
 ## 0.13.1 — 2026-09-05
 

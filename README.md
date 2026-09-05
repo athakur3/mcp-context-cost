@@ -126,7 +126,7 @@ costs **more** than loading the definitions would.
 
 Three things the report will not do: it will not convert between units silently (in
 threshold mode the stack is compared as a range, because the audit counts wire bytes and the
-threshold is counted in what the client sends to the API — measured at 0.20×–10.88× across 87
+threshold is counted in what the client sends to the API — measured at 0.19×–1.93× across 86
 servers); it will not claim a posture the machine did not state readably, which is four
 refusals and not one — when two places set the same variable to different values, when a
 settings file exists and cannot be read, when the place that would decide sets the variable

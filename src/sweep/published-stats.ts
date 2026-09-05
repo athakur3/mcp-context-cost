@@ -28,6 +28,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DEFAULT_CONTEXT_WINDOW } from '../audit/audit.js';
+import { wireToClientRatio } from '../audit/deferral.js';
 import { fieldSelectionShare, isCurrent } from '../core/divergence.js';
 import { sessionStartLoad } from '../core/session-start.js';
 import { isGood } from './harness-guard.js';
@@ -62,6 +63,8 @@ export interface PublishedStats {
     /** claudeDelta / o200kFull across the run's rows that carry a number. */
     ratioMin: number;
     ratioMax: number;
+    /** How many rows produced the band — see where it is set. */
+    ratioServers: number;
   };
   /**
    * The published tool-shape baseline, which README quotes twice — once in
@@ -154,10 +157,13 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
   const shares = currentRows
     .map(([, r]) => fieldSelectionShare(r))
     .filter((s): s is number => s !== null && s >= 0);
-  const ratios = currentRows
-    .filter(([, r]) => typeof r.claudeDelta === 'number' && r.claudeDelta > 0 && r.o200kFull > 0)
-    .map(([, r]) => r.claudeDelta / r.o200kFull);
-  if (shares.length === 0 || ratios.length === 0) {
+  // Asked of the same function the audit converts with, rather than recomputed
+  // here. Two derivations of one band is how a page ends up describing a
+  // conversion the tool does not perform — and these two differed twice over:
+  // this one worked from the rows whose capture is still current, and it divided
+  // by a delta that still had the fixed tool overhead in it.
+  const band = wireToClientRatio(div);
+  if (shares.length === 0 || band.servers === 0) {
     throw new Error('no current divergence row — METHODOLOGY states ranges over them; run `npm run divergence`');
   }
   // The exemplar METHODOLOGY names for the field-selection effect is whichever
@@ -208,8 +214,13 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
       widest: { server: widest[0], full: widest[1].o200kFull, mapped: widest[1].o200kMapped },
       shareMin: Math.min(...shares),
       shareMax: Math.max(...shares),
-      ratioMin: Math.min(...ratios),
-      ratioMax: Math.max(...ratios),
+      ratioMin: band.low,
+      ratioMax: band.high,
+      // What produced the band, never `runSize`: a row can sit in the run and
+      // contribute nothing to it — `gitlab` is there with an API error and a
+      // zero delta. "Across {runSize} servers" states the band was measured over
+      // one more server than measured it.
+      ratioServers: band.servers,
     },
     deferralCostlierCount: costlier.length,
     movement: { grew: movement.grew, shrank: movement.shrank },
@@ -302,7 +313,7 @@ export const PAGE_CLAIMS: Claim[] = [
     // page-number guard: three numbers written by hand beside the two
     // sentences regen already kept true.
     template: 'measured at {f}×–{f}× across {n} servers)',
-    values: (s) => [s.claude.ratioMin.toFixed(2), s.claude.ratioMax.toFixed(2), fmt(s.claude.runSize)],
+    values: (s) => [s.claude.ratioMin.toFixed(2), s.claude.ratioMax.toFixed(2), fmt(s.claude.ratioServers)],
   },
   {
     file: 'README.md',
@@ -421,13 +432,13 @@ export const PAGE_CLAIMS: Claim[] = [
     // different sources for one number is the drift this file exists to end, so
     // both pages state the run and the constant is guarded separately.
     template: 'band ({f}×–{f}×\nacross {n} servers)',
-    values: (s) => [s.claude.ratioMin.toFixed(2), s.claude.ratioMax.toFixed(2), fmt(s.claude.runSize)],
+    values: (s) => [s.claude.ratioMin.toFixed(2), s.claude.ratioMax.toFixed(2), fmt(s.claude.ratioServers)],
   },
   {
     file: 'docs/METHODOLOGY.md',
     id: 'divergence:ratio-range',
     template: 'it ranged from {f}× to {f}× across the {n} servers in the run,',
-    values: (s) => [s.claude.ratioMin.toFixed(2), s.claude.ratioMax.toFixed(2), fmt(s.claude.runSize)],
+    values: (s) => [s.claude.ratioMin.toFixed(2), s.claude.ratioMax.toFixed(2), fmt(s.claude.ratioServers)],
   },
   {
     file: 'docs/METHODOLOGY.md',

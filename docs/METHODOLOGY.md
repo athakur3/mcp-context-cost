@@ -210,7 +210,7 @@ opposite directions, and a single ratio hides the larger one:
    328 tokens more than no tools at all, which is an upper bound on the fixed part.
 
 Because the effects can cancel or compound, the Claude number is **not** a fixed multiple of
-the badge — it ranged from 0.20× to 10.88× across the 87 servers in the run, and it reorders the leaderboard:
+the badge — it ranged from 0.19× to 1.93× across the 86 servers in the run, and it reorders the leaderboard:
 github is the heaviest server on o200k and comfyui-mcp is the heaviest on Claude.
 
 **What it is not.** It is not any client's context bill either. `count_tokens` is Anthropic's
@@ -334,8 +334,8 @@ exists for the threshold and nowhere else.
 **The threshold comparison is a range, not a point.** Only `auto`/`auto:N` makes size decide
 anything. There the audit's number and the threshold are counted in different units — wire
 bytes under `o200k_base` here, versus what the client sends to the API — so the stack is
-converted through the published [Claude divergence](#claude-divergence) band (0.20×–10.88×
-across 87 servers), taking the exact published count wherever a server's capture still
+converted through the published [Claude divergence](#claude-divergence) band (0.19×–1.93×
+across 86 servers), taking the exact published count wherever a server's capture still
 matches, and the verdict is `above` only when the low end clears the threshold and `below`
 only when the high end does not.
 

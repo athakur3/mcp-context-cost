@@ -1264,15 +1264,20 @@ describe('deferral — reading the mode that is actually in force', () => {
 
   describe('the threshold is compared in the unit it is counted in', () => {
     const r = PUBLISHED_WIRE_TO_CLIENT_RATIO;
+    /**
+     * Derived from the band rather than written out, because the band moves
+     * whenever the divergence run widens — and a fixture that hard-codes a
+     * number the library derives is the drift this suite keeps finding
+     * elsewhere. The overhead is added once for the stack, never per server.
+     */
+    const conv = (wire: number) => ({
+      low: Math.round(wire * r.low + r.fixedOverhead),
+      high: Math.round(wire * r.high + r.fixedOverhead),
+    });
 
     it('converts the wire total into a range, because the two are different numbers', () => {
       const d = verdict('claude-code', [12_000], { env: auto });
-      expect(d.clientTokens).toMatchObject({
-        low: Math.round(12_000 * r.low),
-        high: Math.round(12_000 * r.high),
-        exact: 0,
-        estimated: 1,
-      });
+      expect(d.clientTokens).toMatchObject({ ...conv(12_000), exact: 0, estimated: 1 });
       expect(d.ratio).toEqual(r);
     });
 
@@ -1285,11 +1290,26 @@ describe('deferral — reading the mode that is actually in force', () => {
     });
 
     it('still answers when the whole range falls on one side', () => {
+      const wide = conv(200_000);
       expect(verdict('claude-code', [200_000], { env: auto })).toMatchObject({
         crosses: true,
-        distanceTokens: { low: Math.round(200_000 * r.low) - threshold, high: Math.round(200_000 * r.high) - threshold },
+        distanceTokens: { low: wide.low - threshold, high: wide.high - threshold },
       });
-      expect(verdict('claude-code', [10_000], { env: auto }).crosses).toBe(false);
+      // Sized from the band: a stack small enough that even the top of its
+      // range sits under the threshold, whatever the band currently is.
+      const under = Math.floor((threshold - r.fixedOverhead) / r.high) - 1;
+      expect(verdict('claude-code', [under], { env: auto }).crosses).toBe(false);
+    });
+
+    it('charges the tool framework overhead once for the stack, not once a server', () => {
+      // The bug this replaces: the band used to carry the overhead inside it, so
+      // a per-server multiply paid it once per server. On the small servers the
+      // 2026-09-05 run reached, that overhead *was* the ratio — `postgres` at 32
+      // wire tokens read 10.88×, and the published upper bound moved with it.
+      const one = verdict('claude-code', [10_000], { env: auto }).clientTokens!;
+      const two = verdict('claude-code', [5_000, 5_000], { env: auto }).clientTokens!;
+      expect(two.high).toBe(one.high);
+      expect(one.high - Math.round(10_000 * r.high)).toBe(r.fixedOverhead);
     });
 
     it('collapses the range onto published Anthropic counts where --claude supplied them', () => {
@@ -1321,7 +1341,17 @@ describe('deferral — reading the mode that is actually in force', () => {
           bad: { o200kFull: 0, o200kMapped: 0, claudeDelta: 0, toolCount: 0, capturedSha256: 'z', error: 'nope' },
         },
       };
-      expect(wireToClientRatio(run)).toMatchObject({ low: 1, high: 1.5, servers: 2 });
+      // 1,000 and 1,500 Claude tokens over 1,000 wire, less the run's own 328 of
+      // fixed overhead: the band converts bytes, and the overhead is not bytes.
+      expect(wireToClientRatio(run)).toMatchObject({
+        low: 0.672,
+        high: 1.172,
+        fixedOverhead: 328,
+        servers: 2,
+      });
+      // A run that never recorded the overhead converts as it always did rather
+      // than guessing at a correction.
+      expect(wireToClientRatio({ ...run, probeDelta: 0 })).toMatchObject({ low: 1, high: 1.5, fixedOverhead: 0 });
       expect(wireToClientRatio(null)).toEqual(PUBLISHED_WIRE_TO_CLIENT_RATIO);
       // A run with nothing usable falls back rather than inventing a band.
       expect(wireToClientRatio({ ...run, servers: {} })).toEqual(PUBLISHED_WIRE_TO_CLIENT_RATIO);
@@ -1604,6 +1634,21 @@ describe('deferral — a stack measured as fewer servers than it has', () => {
 });
 
 describe('formatReport states where the cost is paid', () => {
+  /**
+   * The band and the numbers converted through it are derived here for the same
+   * reason the pages derive them: a fixture that writes out `0.20×–1.92×` is a
+   * second source for a number the library owns, and it goes stale the next time
+   * the divergence run widens. That is precisely how this suite came to assert a
+   * band the audit had stopped using.
+   */
+  const band = PUBLISHED_WIRE_TO_CLIENT_RATIO;
+  const bandText = `${band.low.toFixed(2)}×–${band.high.toFixed(2)}×`;
+  const side = (wire: number) => ({
+    low: Math.round(wire * band.low + band.fixedOverhead),
+    high: Math.round(wire * band.high + band.fixedOverhead),
+  });
+  const n = (v: number) => v.toLocaleString('en-US');
+
   // Prose is asserted against the text with its line breaks flattened, so a
   // re-wrap for terminal width is not a test failure — the sentence is.
   const render = (client: string, tokens: number, opts: { servers?: DiffSrv[]; env?: ToolSearchEnv } = {}) =>
@@ -1647,8 +1692,8 @@ describe('formatReport states where the cost is paid', () => {
     expect(out).toContain('defers tool definitions above a threshold here (tool search)');
     expect(out).toContain('deferral activates once the definitions reach 20,000 tokens — 10.0% of the context window');
     expect(out).toContain('12,000 tokens on the wire');
-    expect(out).toContain('0.20×–1.92×');
-    expect(out).toContain('between 2,400 and 23,040 tokens');
+    expect(out).toContain(bandText);
+    expect(out).toContain(`between ${n(side(12_000).low)} and ${n(side(12_000).high)} tokens`);
     expect(out).toContain('that range straddles the 20,000-token threshold');
     expect(out).toContain('run with --claude');
   });
@@ -1658,7 +1703,7 @@ describe('formatReport states where the cost is paid', () => {
     expect(over).toContain('at or above the threshold');
     expect(over).toContain('NOT loaded up front');
     const under = render('claude-code', 10_000, { env: { ENABLE_TOOL_SEARCH: 'auto' } });
-    expect(under).toContain('below the threshold — under by 800 at the high end');
+    expect(under).toContain(`below the threshold — under by ${n(20_000 - side(10_000).high)} at the high end`);
     expect(under).toContain('deferral does not activate and every request carries these tokens');
   });
 
@@ -1690,7 +1735,7 @@ describe('formatReport states where the cost is paid', () => {
 
   it('quotes one divergence band, in the verdict and in the footer alike', () => {
     const out = render('claude-code', 12_000, { env: { ENABLE_TOOL_SEARCH: 'auto' } });
-    expect(out.match(/0\.20×–1\.92×/g)).toHaveLength(2);
+    expect(out.split(bandText).length - 1, 'the verdict and the footer must quote one band').toBe(2);
   });
 });
 
