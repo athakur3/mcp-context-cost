@@ -26,14 +26,15 @@ import {
   SIGNIFICANT_PCT,
   SIGNIFICANT_TOKENS,
   appendVector,
-  latestChange,
   parseToolVectorFile,
+  readSeries,
   summarize,
   vectorEntryOf,
   type CostChange,
   type Mechanism,
   type RegressionSummary,
   type ToolVectorFile,
+  type UnchangedSeries,
 } from '../core/regression.js';
 import {
   CAPTURE_INDEX_METHOD,
@@ -156,6 +157,7 @@ export function collectChanges(
   }
 
   const changes: CostChange[] = [];
+  const unchanged: UnchangedSeries[] = [];
   let withoutComparison = 0;
   for (const entry of entries) {
     const series = byServer.get(entry.name);
@@ -163,12 +165,18 @@ export function collectChanges(
     // The isolation rule lives in plottableSeries; a diff only ever spans the
     // run it keeps, so a change of harness can never read as a change of server.
     const { rows: comparable } = plottableSeries(series);
-    const change = latestChange(entry.name, comparable, loadToolVectors(entry.name, root));
-    if (change) changes.push(change);
+    // Three readings, three sections. Every entry with a row in history lands
+    // in exactly one, which is what lets the page state a total that sums.
+    const reading = readSeries(entry.name, comparable, loadToolVectors(entry.name, root));
+    if (reading.kind === 'changed') changes.push(reading.change);
+    else if (reading.kind === 'unchanged') unchanged.push(reading.held);
     else withoutComparison++;
   }
   const newest = rows.map((r) => r.date).sort();
-  return { summary: summarize(changes, withoutComparison), measuredAt: newest[newest.length - 1] ?? '' };
+  return {
+    summary: summarize(changes, withoutComparison, unchanged),
+    measuredAt: newest[newest.length - 1] ?? '',
+  };
 }
 
 function attributionLines(c: CostChange): string[] {
@@ -227,6 +235,65 @@ function attributionLines(c: CostChange): string[] {
   return out;
 }
 
+/**
+ * The held costs. A section rather than a count, because "unchanged at 1,003
+ * since 2026-08-18, across four sweeps" is the most reassuring thing this data
+ * holds and it was previously unsayable: the reading shared a `null` with "no
+ * second comparable measurement", so the page reported both as an absence.
+ */
+function unchangedLines(summary: RegressionSummary): string[] {
+  const md: string[] = ['## Unchanged', ''];
+  if (summary.unchanged.length === 0) {
+    md.push(
+      `No server on record has two or more comparable measurements that agree — every server ` +
+        `measured more than once under its current isolation has moved at least once.`,
+    );
+    md.push('');
+    return md;
+  }
+  const sweeps = summary.unchanged.map((u) => u.sweeps);
+  md.push(
+    `**${summary.unchanged.length} server${summary.unchanged.length === 1 ? ' has' : 's have'} been measured ` +
+      `${Math.min(...sweeps) === 2 ? 'at least twice' : `${Math.min(...sweeps)}+ times`} under the same isolation ` +
+      `and ${summary.unchanged.length === 1 ? 'has' : 'have'} not moved** — same tokens, same tool count, every ` +
+      `time. That is a measured fact about the server, not a missing one: the definitions in a context window ` +
+      `today are the definitions that were there on the date in the window column, confirmed on every sweep ` +
+      `since. \`since\` is when the cost was first recorded at this number, never when it was last looked at.`,
+  );
+  md.push('');
+  md.push('| server | window | tokens | tools | sweeps |');
+  md.push('|---|---|---:|---:|---:|');
+  for (const u of summary.unchanged) {
+    const link = `[${mdCell(u.server)}](../docs/servers/${encodeURIComponent(u.server)}.md)`;
+    const window =
+      u.since === u.measuredThrough
+        ? mdCell(u.since)
+        : `${mdCell(u.since)} → ${mdCell(u.measuredThrough)}`;
+    md.push(`| ${link} | ${window} | ${n(u.tokens)} | ${n(u.toolCount)} | ${u.sweeps} |`);
+  }
+  md.push('');
+  return md;
+}
+
+/**
+ * The servers there is genuinely nothing to compare yet. Narrower than it was:
+ * a cost that has held is now published as held, so what remains here really is
+ * a first measurement or a series broken by an isolation change.
+ */
+function notComparedLines(summary: RegressionSummary): string[] {
+  return [
+    '## Not compared (and why)',
+    '',
+    `${summary.withoutComparison} server(s) carry a measurement but no second comparable one — a first ` +
+      `measurement, or every earlier run taken under different isolation. They appear on the ` +
+      `[leaderboard](leaderboard.md) with today's number and no delta, which is the honest reading: ` +
+      `a cost with nothing yet to compare it to. A cost that *has* been compared and did not move is ` +
+      `above, under [Unchanged](#unchanged) — the two are different facts and this page counted them ` +
+      `as one until 2026-09-05.`,
+    '',
+  ];
+}
+
 export function renderRegressions(summary: RegressionSummary, measuredAt: string): string {
   const md: string[] = [];
   md.push('# How the cost of the measured set has moved');
@@ -249,13 +316,24 @@ export function renderRegressions(summary: RegressionSummary, measuredAt: string
       `server that stopped starting reads as a gap in its series, never as a drop to zero.`,
   );
   md.push('');
+  // Stated so a reader can check it: every server with a row in history is in
+  // exactly one of the three sections, and the three add up. They did not used
+  // to — a held cost was counted as one with nothing to compare against.
+  const total = summary.changes.length + summary.unchanged.length + summary.withoutComparison;
+  md.push(
+    `Every server with a measurement on record is in exactly one of the three sections below: ` +
+      `**${summary.changes.length} moved**, **${summary.unchanged.length} held the same cost across every ` +
+      `comparable measurement**, and **${summary.withoutComparison} ${summary.withoutComparison === 1 ? 'has' : 'have'} ` +
+      `no second comparable measurement yet** — ${summary.changes.length} + ${summary.unchanged.length} + ` +
+      `${summary.withoutComparison} = ${total}.`,
+  );
+  md.push('');
 
   if (summary.changes.length === 0) {
-    md.push(
-      `**Nothing moved.** No server on record has two comparable measurements that differ. ` +
-        `${summary.withoutComparison} server(s) have a measurement but no second comparable one to diff against.`,
-    );
+    md.push(`**Nothing moved.** No server on record has two comparable measurements that differ.`);
     md.push('');
+    md.push(...unchangedLines(summary));
+    md.push(...notComparedLines(summary));
     return md.join('\n') + '\n';
   }
 
@@ -299,15 +377,8 @@ export function renderRegressions(summary: RegressionSummary, measuredAt: string
     }
   }
 
-  md.push('## Not compared (and why)');
-  md.push('');
-  md.push(
-    `${summary.withoutComparison} server(s) carry a measurement but no second comparable one — first ` +
-      `measurement, or every earlier run taken under different isolation. They appear on the ` +
-      `[leaderboard](leaderboard.md) with today's number and no delta, which is the honest reading: ` +
-      `a cost with nothing yet to compare it to.`,
-  );
-  md.push('');
+  md.push(...unchangedLines(summary));
+  md.push(...notComparedLines(summary));
   return md.join('\n') + '\n';
 }
 

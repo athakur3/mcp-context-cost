@@ -13,10 +13,12 @@ import {
   latestChange,
   mechanismOf,
   parseToolVectorFile,
+  readSeries,
   summarize,
   type DatedMeasurement,
   type ToolVectorEntry,
   type ToolVectorFile,
+  type UnchangedSeries,
 } from '../src/core/regression.js';
 import { plottableSeries, type HistoryRow } from '../src/sweep/history.js';
 import { collectChanges, renderRegressions } from '../src/sweep/regressions.js';
@@ -65,6 +67,57 @@ describe('latestChange — which pair a movement is measured across', () => {
     expect(latestChange('new', [row('2026-09-03', 500, 4)])).toBeNull();
   });
 
+  /**
+   * The distinction the report published for weeks as one number. A cost
+   * confirmed on four sweeps and a cost measured once say opposite things
+   * about how much a reader can trust the number, and `latestChange` answers
+   * null to both — so anything that *counts* has to ask `readSeries`.
+   */
+  it('holds "has not moved" apart from "nothing to compare"', () => {
+    const flat = readSeries('flat', [
+      row('2026-08-19', 500, 4),
+      row('2026-08-26', 500, 4),
+      row('2026-09-03', 500, 4),
+    ]);
+    expect(flat.kind).toBe('unchanged');
+    expect(flat.kind === 'unchanged' && flat.held).toMatchObject({
+      server: 'flat',
+      tokens: 500,
+      toolCount: 4,
+      since: '2026-08-19',
+      measuredThrough: '2026-09-03',
+      sweeps: 3,
+    });
+
+    expect(readSeries('new', [row('2026-09-03', 500, 4)]).kind).toBe('incomparable');
+    // A series of failures carries no comparable measurement either — and is
+    // never read as a run of identical zeroes.
+    expect(
+      readSeries('broken', [
+        row('2026-08-19', 0, 0, 'docker', 'startup-failure'),
+        row('2026-09-03', 0, 0, 'docker', 'startup-failure'),
+      ]).kind,
+    ).toBe('incomparable');
+  });
+
+  it('dates a held cost from when it arrived, not from the start of the series', () => {
+    // Moved once, then held: `since` is the first sweep at the *new* number.
+    const held = readSeries('s', [
+      row('2026-08-19', 1132, 12),
+      row('2026-08-26', 2062, 15),
+      row('2026-09-03', 2062, 15),
+    ]);
+    // A series that moved is a movement, not a hold — the walk found the change.
+    expect(held.kind).toBe('changed');
+
+    const flat = readSeries('s', [
+      row('2026-08-19', 900, 4),
+      row('2026-08-26', 900, 4),
+    ]);
+    expect(flat.kind === 'unchanged' && flat.held.since).toBe('2026-08-19');
+    expect(flat.kind === 'unchanged' && flat.held.sweeps).toBe(2);
+  });
+
   it('never compares across an isolation change', () => {
     // plottableSeries owns the rule; this asserts the diff honours the run it keeps.
     const series = [row('2026-08-16', 900, 4, ''), row('2026-08-17', 400, 4, 'host'), row('2026-08-19', 500, 4, 'docker')];
@@ -81,6 +134,14 @@ describe('latestChange — which pair a movement is measured across', () => {
     ]);
     // The failure contributes nothing, so the two real numbers are equal: no movement.
     expect(c).toBeNull();
+    // …and the two that remain are a comparison that held, not an absence of one.
+    const reading = readSeries('s', [
+      row('2026-08-19', 2378, 9),
+      row('2026-08-26', 0, 0, 'docker', 'startup-failure'),
+      row('2026-09-03', 2378, 9),
+    ]);
+    expect(reading.kind).toBe('unchanged');
+    expect(reading.kind === 'unchanged' && reading.held.sweeps).toBe(2);
   });
 });
 
@@ -217,8 +278,18 @@ describe('the rendered report', () => {
     ...over,
   });
 
+  const held = (over: Partial<UnchangedSeries> = {}): UnchangedSeries => ({
+    server: 'steady',
+    tokens: 1003,
+    toolCount: 1,
+    since: '2026-08-18',
+    measuredThrough: '2026-09-03',
+    sweeps: 4,
+    ...over,
+  });
+
   it('states the aggregate, marks the called-out rows, and dates the window', () => {
-    const text = renderRegressions(summarize([change()], 3), '2026-09-03');
+    const text = renderRegressions(summarize([change()], 3, []), '2026-09-03');
     expect(text).toContain('1 server moved upward and 0 moved down');
     expect(text).toContain('2026-08-19 → 2026-08-26, held to 2026-09-03');
     expect(text).toContain('+500 (+50.0%)');
@@ -226,19 +297,52 @@ describe('the rendered report', () => {
   });
 
   it('says a breakdown is unavailable instead of estimating one', () => {
-    const text = renderRegressions(summarize([change()], 0), '2026-09-03');
+    const text = renderRegressions(summarize([change()], 0, []), '2026-09-03');
     expect(text).toContain('per-tool breakdown unavailable');
     expect(text).not.toMatch(/approximately|roughly|estimated/i);
   });
 
   it('reports an empty set as nothing having moved, not as an empty page', () => {
-    const text = renderRegressions(summarize([], 81), '2026-09-03');
+    const text = renderRegressions(summarize([], 81, []), '2026-09-03');
     expect(text).toContain('Nothing moved');
     expect(text).toContain('81 server(s)');
+    // Even with nothing moving, the other two sections are still the page.
+    expect(text).toContain('## Unchanged');
+    expect(text).toContain('## Not compared (and why)');
   });
 
   it('accounts for servers with nothing to compare against', () => {
-    expect(renderRegressions(summarize([change()], 71), '2026-09-03')).toContain('71 server(s) carry a measurement');
+    expect(renderRegressions(summarize([change()], 71, []), '2026-09-03')).toContain(
+      '71 server(s) carry a measurement',
+    );
+  });
+
+  /**
+   * The reader's check on this page: three sections, every measured server in
+   * exactly one, and the arithmetic printed so it can be audited without
+   * counting rows. Before 2026-09-05 a held cost was counted under "no second
+   * comparable measurement", which made that number describe the schedule
+   * rather than the data.
+   */
+  it('publishes held costs as their own section and states a total that sums', () => {
+    const text = renderRegressions(
+      summarize([change()], 3, [held(), held({ server: 'quiet', tokens: 32, sweeps: 2, since: '2026-08-26' })]),
+      '2026-09-03',
+    );
+    expect(text).toContain('**1 moved**');
+    expect(text).toContain('**2 held the same cost across every comparable measurement**');
+    expect(text).toContain('1 + 2 + 3 = 6');
+    expect(text).toContain('## Unchanged');
+    expect(text).toContain('| [steady](../docs/servers/steady.md) | 2026-08-18 → 2026-09-03 | 1,003 | 1 | 4 |');
+    // Longest-held first, so the most established number leads.
+    expect(text.indexOf('steady')).toBeLessThan(text.indexOf('quiet'));
+    // A hold is stated as a measurement, never as an absence of one.
+    expect(text).not.toMatch(/2 server\(s\) carry a measurement but no second comparable/);
+  });
+
+  it('says so plainly when no server has held a cost', () => {
+    const text = renderRegressions(summarize([change()], 3, []), '2026-09-03');
+    expect(text).toContain('No server on record has two or more comparable measurements that agree');
   });
 });
 

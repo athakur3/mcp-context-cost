@@ -251,14 +251,44 @@ export interface CostChange {
   attribution: ToolAttribution | null;
 }
 
+/**
+ * A cost that has been measured more than once, under the same isolation, and
+ * has not moved.
+ *
+ * Published because it is a measured fact and not the absence of one. The
+ * report used to swallow it: `latestChange` returned null both for this and
+ * for "there is nothing to compare", and the page counted every null the same
+ * way — so a number four sweeps had confirmed read exactly like a number
+ * measured once.
+ */
+export interface UnchangedSeries {
+  server: string;
+  tokens: number;
+  toolCount: number;
+  /** The first date this cost was recorded — when it became this, not when it was last looked at. */
+  since: string;
+  /** The newest measurement on record. */
+  measuredThrough: string;
+  /** How many comparable measurements carry this same cost, `since` included. */
+  sweeps: number;
+}
+
+/**
+ * What one server's series supports. Three readings, and they are three
+ * different claims: the cost moved, the cost was confirmed and held, or there
+ * is not yet a second comparable measurement to say either.
+ */
+export type SeriesReading =
+  | { kind: 'changed'; change: CostChange }
+  | { kind: 'unchanged'; held: UnchangedSeries }
+  | { kind: 'incomparable' };
+
 export function isSignificant(deltaTokens: number, deltaPct: number): boolean {
   return Math.abs(deltaPct) >= SIGNIFICANT_PCT && Math.abs(deltaTokens) >= SIGNIFICANT_TOKENS;
 }
 
 /**
- * The most recent comparable *movement* for one server, or null when there
- * isn't one: fewer than two comparable measurements, or a series that has never
- * changed.
+ * What one server's history supports, as one of three readings.
  *
  * Deliberately not "the newest pair". A server that grew 82% one week and held
  * that cost since has a newest pair of zero, and reporting only that would hide
@@ -268,17 +298,23 @@ export function isSignificant(deltaTokens: number, deltaPct: number): boolean {
  * actually happened — `2026-08-19 → 2026-08-26`, not a span up to today.
  * `measuredThrough` then carries how long the new cost has held.
  *
+ * Where that walk ends decides the reading. Reaching the start of the series
+ * means every comparable measurement agrees, which is `unchanged` — a fact
+ * about the server. Having fewer than two comparable rows to walk means there
+ * is nothing to compare, which is `incomparable` — an absence. The two used
+ * to share one `null` return, and the report counted them together.
+ *
  * `rows` is that server's history, already narrowed to the run a trend may be
  * drawn across (`plottableSeries`), so the isolation rule is applied once, in
  * the place that owns it.
  */
-export function latestChange(
+export function readSeries(
   server: string,
   rows: DatedMeasurement[],
   vectors?: ToolVectorFile | null,
-): CostChange | null {
+): SeriesReading {
   const usable = rows.filter((r) => r.status === 'measured' || r.status === 'dynamic');
-  if (usable.length < 2) return null;
+  if (usable.length < 2) return { kind: 'incomparable' };
   const newest = usable[usable.length - 1]!;
   // Walk back over measurements identical to the newest: the first of that run
   // is when the current cost arrived.
@@ -288,12 +324,24 @@ export function latestChange(
     if (prev.tokens !== newest.tokens || prev.toolCount !== newest.toolCount) break;
     toIdx--;
   }
-  if (toIdx === 0) return null; // the series has never changed
+  /** The trailing run reaches back this far, and every row in it agrees. */
+  const held = (): SeriesReading => ({
+    kind: 'unchanged',
+    held: {
+      server,
+      tokens: newest.tokens,
+      toolCount: newest.toolCount,
+      since: usable[toIdx]!.date,
+      measuredThrough: newest.date,
+      sweeps: usable.length - toIdx,
+    },
+  });
+  if (toIdx === 0) return held(); // every comparable measurement agrees
   const to = usable[toIdx]!;
   const from = usable[toIdx - 1]!;
   const deltaTokens = to.tokens - from.tokens;
   const deltaTools = to.toolCount - from.toolCount;
-  if (deltaTokens === 0 && deltaTools === 0) return null;
+  if (deltaTokens === 0 && deltaTools === 0) return held();
   const deltaPct = from.tokens > 0 ? (deltaTokens / from.tokens) * 100 : 0;
 
   // Attribution needs both sides on record. Matched by *cost as of that date*,
@@ -330,21 +378,39 @@ export function latestChange(
   }
 
   return {
-    server,
-    fromDate: from.date,
-    toDate: to.date,
-    fromTokens: from.tokens,
-    toTokens: to.tokens,
-    deltaTokens,
-    deltaPct,
-    fromToolCount: from.toolCount,
-    toToolCount: to.toolCount,
-    deltaTools,
-    mechanism: mechanismOf(deltaTokens, deltaTools),
-    significant: isSignificant(deltaTokens, deltaPct),
-    measuredThrough: newest.date,
-    attribution,
+    kind: 'changed',
+    change: {
+      server,
+      fromDate: from.date,
+      toDate: to.date,
+      fromTokens: from.tokens,
+      toTokens: to.tokens,
+      deltaTokens,
+      deltaPct,
+      fromToolCount: from.toolCount,
+      toToolCount: to.toolCount,
+      deltaTools,
+      mechanism: mechanismOf(deltaTokens, deltaTools),
+      significant: isSignificant(deltaTokens, deltaPct),
+      measuredThrough: newest.date,
+      attribution,
+    },
   };
+}
+
+/**
+ * The most recent comparable movement, or null when there was none. Kept as
+ * the narrow question `readSeries` answers in full, for the callers that only
+ * ever wanted a movement — but a caller that publishes a count must ask
+ * `readSeries`, because null here is two different facts.
+ */
+export function latestChange(
+  server: string,
+  rows: DatedMeasurement[],
+  vectors?: ToolVectorFile | null,
+): CostChange | null {
+  const reading = readSeries(server, rows, vectors);
+  return reading.kind === 'changed' ? reading.change : null;
 }
 
 export interface RegressionSummary {
@@ -354,11 +420,30 @@ export interface RegressionSummary {
   significant: number;
   /** Net tokens the measured set gained (or lost) across every listed movement. */
   netTokens: number;
-  /** Servers with a measurement but no second comparable one to diff against. */
+  /**
+   * Servers measured more than once under the same isolation whose cost has
+   * not moved. Counted apart from `withoutComparison`, which they were folded
+   * into while both readings shared one `null`.
+   */
+  unchanged: UnchangedSeries[];
+  /**
+   * Servers with no second comparable measurement to diff against — a first
+   * measurement, or every earlier run taken under different isolation. Not
+   * "has not moved": that is `unchanged`.
+   */
   withoutComparison: number;
 }
 
-export function summarize(changes: CostChange[], withoutComparison: number): RegressionSummary {
+/**
+ * `unchanged` is required rather than defaulted: every reading a caller
+ * classifies belongs to exactly one of the three, and a default would let a
+ * caller that forgot them publish a total that quietly does not sum.
+ */
+export function summarize(
+  changes: CostChange[],
+  withoutComparison: number,
+  unchanged: UnchangedSeries[],
+): RegressionSummary {
   const sorted = [...changes].sort((a, b) => Math.abs(b.deltaPct) - Math.abs(a.deltaPct));
   return {
     changes: sorted,
@@ -366,6 +451,9 @@ export function summarize(changes: CostChange[], withoutComparison: number): Reg
     shrank: sorted.filter((c) => c.deltaTokens < 0).length,
     significant: sorted.filter((c) => c.significant).length,
     netTokens: sorted.reduce((a, c) => a + c.deltaTokens, 0),
+    // Longest-held first: the sentence this section exists to publish is "this
+    // number has been the same since <date>", so the oldest `since` leads.
+    unchanged: [...unchanged].sort((a, b) => a.since.localeCompare(b.since) || b.tokens - a.tokens),
     withoutComparison,
   };
 }
