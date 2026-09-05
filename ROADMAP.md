@@ -57,40 +57,102 @@ reading, the re-sweep cadence. They are all on the distribution track.
 ## Phase 3 — Others can add servers safely
 
 **Goal.** A `servers.yaml` pull request from a stranger gets a measured number before any job
-holding `contents: write` ever runs its launch command.
+holding `contents: write` ever runs its launch command — and *after* merge, too.
 
-**Scope.**
-- [ ] **A `pull_request` job with read-only permissions** that diffs `servers.yaml` against
-      the base branch, measures only the entries the PR added, and prints the number in the
-      check log. It pushes nothing; the rotation publishes it later under its own rules.
-- [ ] **CONTRIBUTING.md** stating what an entry needs — the subcommand lesson (`agent-device
-      mcp`, `githits mcp`, `emailmd`, `hana-cli`: a registry id does not reveal it), a
-      `timeoutSeconds` taken from a measured cold install and not a guess, env var names only,
-      and that a measurement from a laptop is never accepted as the published one.
-- [ ] **Commit the registry scan.** The 2026-09-04 long-tail expansion came from a script that
-      was never committed; the only record of the method is a comment in `servers.yaml`. Land
-      it as `tools/scan-registry.ts` (page `/v0/servers`, dedupe by name keeping the latest
-      active, rank via npm bulk / pypistats), then run the uncapped rescan and the tier-2 pass
-      from its output.
-- [ ] **Schedule the adoption reading.** `npm run adoption` is manual and needs a token; the
-      page is dated 2026-09-03 and its date is most of its meaning. A monthly workflow using the
-      Actions token keeps the one number the project keeps about itself from going stale.
+**The premise check, 2026-09-05.** Three of the four items were wrong about the mechanism, the
+fourth held, and the walk along a stranger's actual path found the goal sentence itself was only
+true on the pull request. The pattern is now exact three phases running: every item that quoted
+a record held, every item that inferred did not. What the records established:
+
+- **The goal was false after merge.** `resweep.yml` holds `contents: write` and checks out with
+  `actions/checkout@v5`, whose default `persist-credentials: true` leaves the token in
+  `.git/config` while an entry's launch command runs. Nothing in the phase listed it. One line
+  fixes it — `persist-credentials: false`, the token supplied only to the push — and it is the
+  boundary the whole phase claims.
+- **Half the first exit was already met.** `ci.yml` runs on every pull request, fork or not,
+  under a read-only token, and its `npm test` runs `validateServers` over the checked-out
+  `servers.yaml` — a malformed entry already fails. The other half could not pass at all: a
+  pull request that appends a real entry is red today in `npm test` (the published-stats drift
+  test asserts regen would rewrite nothing) and again in the readiness gate (a commit touching
+  `servers.yaml` with no changelog bullet). The order that goes green is append → regen →
+  changelog bullet → `npm test` → gate, and nothing told a contributor so.
+- **"Measures only the entries the PR added" does not reach the goal.** A pull request that
+  changes an existing entry's `command`, `dockerImage`, `aptPackages`, `needsGit`, `env` or
+  `envValues` changes what the write-token rotation launches next, and "added" never sees it.
+  The set to measure is added *and relaunched*.
+- **The read-only token is not the whole boundary, and the item implied it was.** The launch
+  runs in Docker with the bridge network on by design — credential-free, not an airgap; egress
+  is not prevented. And a first-time contributor's workflows do not run unattended: repository
+  policy already holds them for a maintainer's *Approve and run*. The read-only job is what makes
+  that click safe, which is the right shape.
+- **`sweep-all` cannot be the measuring command** — it always persists, then rewrites
+  `results/` and `docs/`. The job needs its own script with `persist: false`, which
+  `measureServer` already takes. Nor can the README's own "Measure your own server" instruction
+  be followed by a contributor: `npm run sweep` writes `results/<name>/measurement.json`,
+  `badges/<name>.json` and a `history.csv` row into the tree by default, and there was no flag
+  not to. The only in-repo measuring path violated the laptop rule.
+- **The registry scan had the least evidence behind it.** The tier-2 pass it proposed to run
+  landed on 2026-09-04. The "14,283 servers" and the 500-page cap exist in a memory file, not
+  in this repository — live, uncapped, it is 27,244 latest names in 405 seconds. The registry
+  deduplicates server-side (`version=latest`), `limit` is capped at 100, and the step that
+  actually chose the entries — provenance by org and repo — was never a script. What was "at
+  risk of being lost" was a human judgment. The scan is still worth having, reproducibly, with
+  that stated.
+- **`servers.yaml` carried a refuted claim.** The `agent-device` comment said the bare launch
+  prints help and exits 0, one of 68 subcommands; the 0.12.0 refutation found the only captured
+  record is exit 1 with nothing on stderr and the count unsourced. `hana-cli` is not a subcommand
+  case either — it declares a separate bin, and its failure is an upstream packaging bug. And of
+  seventeen `timeoutSeconds` values, one carries a measured basis.
+- **The adoption workflow held**, with amendments: the 2026-09-19 reading is a dispatch of it
+  rather than a cron that first fires in October; a job holding a write token needs
+  `timeout-minutes`; an *unresolved* reading advances the page's date with no number, which the
+  exit as written would have accepted.
+
+**Scope**, in build order — the dependency decides it.
+- [ ] **`persist-credentials: false`** on every write-token checkout, the token reaching only
+      the push, held by a test in `test/workflows.test.ts`.
+- [ ] **The adoption workflow** — monthly cron plus `workflow_dispatch`, `timeout-minutes`,
+      `npm test` before the commit as the other scheduled jobs do, and it never commits an
+      unresolved reading. `--render-only` on the tool, so a renderer change can be re-rendered
+      offline without advancing `checkedAt`.
+- [ ] **`--no-persist` on `npm run sweep`**, and the README's measuring instruction rewritten
+      to use it: a contributor checks a number; CI publishes one.
+- [ ] **The `pull_request` measurement job.** `src/sweep/pr-check.ts` diffs `servers.yaml` by
+      name against the base, runs `validateServers` first, measures added and relaunched entries
+      with `persist: false` in Docker, caps the count per pull request and refuses above it
+      before any launch, lists a self-containerised (`docker run …`) command rather than running
+      it from a pull request, prints the number, writes nothing. `permissions: contents: read`,
+      no secrets, `timeout-minutes` derived from the retry arithmetic.
+- [ ] **CONTRIBUTING.md**, after the job it describes. The add-an-entry order that goes green;
+      env var names only and what `envValues` is for; a `timeoutSeconds` from a measured cold
+      install; the subcommand lesson as the records state it (`agent-device mcp`, `githits
+      mcp`, `emailmd`); a laptop number is never the published one; what a reviewer checks before
+      *Approve and run*; and what happens after merge — the entry sits `not-yet-run` until its
+      rotation slot comes round, which is a fact `docs/METHODOLOGY.md` currently states as
+      shorter than it is.
+- [ ] **`tools/scan-registry.ts`**, honest scope: crawl `version=latest`, keep `active`, rank by
+      live weekly downloads, draft entries in the schema's shape or refuse with a reason, emit
+      the two owner strings the provenance judgment uses, write only to the path the operator
+      names, and print a one-line summary an expansion commit can quote.
+- [ ] **Correct `servers.yaml`'s `agent-device` comment** to what the record establishes.
 
 **Exit.**
-- A test PR adding a malformed entry fails the schema check; one adding a real entry shows
-  its measured tokens in the check without pushing.
-- `tools/scan-registry.ts` exists and the next `servers.yaml` expansion commit cites its
-  output.
-- The adoption workflow has run once on schedule and `docs/adoption.md`'s date advanced.
+- Every workflow holding `contents: write` checks out without persisting credentials, and a
+  test says so.
+- A pull request appending a real entry, with regen and a changelog bullet committed, is green
+  in `ci.yml` and shows the entry's measured tokens in `pr-check.yml` without writing anything;
+  one changing an existing entry's launch fields measures that entry too.
+- The adoption workflow has run once by dispatch and once on schedule, and `docs/adoption.md`
+  carries a count from each.
+- `npm run sweep -- --no-persist` writes nothing under `results/`, `badges/` or `history.csv`.
+- `npm run scan-registry -- --out <path>` writes one dated file there and nothing elsewhere.
 
 **Why here.** Contributions follow distribution, and the safety check must exist before the
-first outside PR arrives — not after. Runs beside phase 4; the two share no files.
+first outside pull request arrives — not after. Runs beside phase 4; the two share no files.
 
-**Order within it.** The registry scan first: the method behind 106 candidates exists today only
-as a comment in `servers.yaml` and a script that was never committed, so it is the item whose
-cost of delay is losing something. Then the adoption workflow, because a reading that is manual
-and needs a token is a reading that stops happening. The `pull_request` job and CONTRIBUTING are
-worth most once there is someone to contribute — the reading is what will say whether there is.
+**Left to the maintainer.** `main` is unprotected, with no CODEOWNERS and no pull-request
+template; the merge is guarded only by the click. Whether to protect the branch is a repository
+setting, not a build item.
 
 ---
 
