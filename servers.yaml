@@ -378,6 +378,11 @@ servers:
     category: vendor-official
     repo: https://github.com/pinecone-io/pinecone-mcp
   - name: heroku
+    # Upstream regression, filed by someone else and confirmed by us on
+    # 2026-09-05: heroku/heroku-mcp-server#249. PR #248 stripped the `.js`
+    # extensions from two SDK imports, so `dist/index.js` imports an
+    # extensionless deep path that Node's ESM loader will not resolve. Still
+    # broken in 1.2.7, the current `latest`; 1.2.5 was the last that started.
     command: npx -y @heroku/mcp-server
     package: '@heroku/mcp-server'
     env: [HEROKU_API_KEY]
@@ -815,6 +820,11 @@ servers:
     category: community
     repo: https://github.com/MatanYemini/bitbucket-mcp
   - name: hana-cli
+    # Upstream packaging bug, filed 2026-09-05:
+    # SAP-samples/hana-developer-cli-tool-example#231. The published package
+    # declares `bin.hana-cli-mcp`, and that entrypoint imports three subpaths of
+    # `@modelcontextprotocol/sdk` — which appears in none of its 50 declared
+    # dependencies, so a registry install can never start it.
     command: npx -y -p hana-cli hana-cli-mcp
     package: hana-cli
     env: []
@@ -831,6 +841,14 @@ servers:
     category: community
     repo: https://github.com/cyanheads/clinicaltrialsgov-mcp-server
   - name: accessibility-scanner
+    # Node 24, because the package says so: `engines.node` is
+    # `^24.15.0 || >=26.0.0` and the default isolation image is node:22-slim.
+    # Published as a startup-failure (`ERR_PACKAGE_PATH_NOT_EXPORTED` out of
+    # playwright-core) until 2026-09-05, which was the symptom of running it on
+    # an engine it does not support, not a defect in the package — on
+    # node:24-slim it starts and measures. Checked before reporting anything
+    # upstream, which is what stopped a wrong issue being filed.
+    dockerImage: public.ecr.aws/docker/library/node:24-slim
     command: npx -y mcp-accessibility-scanner
     package: mcp-accessibility-scanner
     env: []
