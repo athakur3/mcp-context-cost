@@ -51,12 +51,12 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 
 ## Over time
 
-| date | tokens | tools | measured in | change |
-|---|---:|---:|---|---:|
-| 2026-08-16 | 5,258 | 24 | not recorded | — |
-| 2026-08-19 | 5,462 | 25 | docker | +204 |
-| 2026-09-03 | 6,928 | 28 | docker | +1,466 |
-| 2026-09-04 | 6,928 | 28 | docker | no change |
+| date | tokens | tools | release | measured in | change |
+|---|---:|---:|---|---|---:|
+| 2026-08-16 | 5,258 | 24 | not recorded | not recorded | — |
+| 2026-08-19 | 5,462 | 25 | not recorded | docker | +204 |
+| 2026-09-03 | 6,928 | 28 | not recorded | docker | +1,466 |
+| 2026-09-04 | 6,928 | 28 | 1.29.1 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

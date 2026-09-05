@@ -24,11 +24,11 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 
 ## Over time
 
-| date | tokens | tools | measured in | change |
-|---|---:|---:|---|---:|
-| 2026-08-18 | 238 | 1 | docker | — |
-| 2026-09-02 | 238 | 1 | docker | no change |
-| 2026-09-04 | 238 | 1 | docker | no change |
+| date | tokens | tools | release | measured in | change |
+|---|---:|---:|---|---|---:|
+| 2026-08-18 | 238 | 1 | not recorded | docker | — |
+| 2026-09-02 | 238 | 1 | not recorded | docker | no change |
+| 2026-09-04 | 238 | 1 | 1.29.1 | docker | no change |
 
 Full series: [results/history.csv](https://github.com/athakur3/mcp-context-cost/blob/main/results/history.csv).
 

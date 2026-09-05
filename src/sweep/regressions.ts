@@ -179,6 +179,48 @@ export function collectChanges(
   };
 }
 
+/**
+ * Which release a movement came from, as far as the records go.
+ *
+ * `measurement.json` has always carried `serverVersion`, but only for the
+ * newest sweep, so until the series carried it too this page could say a
+ * movement was "a real upstream release" and never which one. It is written
+ * only from what both rows recorded: a movement whose earlier row predates the
+ * column names nothing, because nothing on disk knows.
+ */
+function releaseCell(c: CostChange): string {
+  if (!c.fromVersion || !c.toVersion) return '—';
+  // Equal versions across a cost movement is the more interesting reading, and
+  // it is stated rather than blanked: the definitions changed while the server
+  // went on calling itself the same thing.
+  if (c.fromVersion === c.toVersion) return `still \`${mdCell(c.toVersion)}\``;
+  return `\`${mdCell(c.fromVersion)}\` → \`${mdCell(c.toVersion)}\``;
+}
+
+/** What the release column does and does not claim, given what is on record. */
+function releaseNote(summary: RegressionSummary): string[] {
+  const named = summary.changes.filter((c) => c.fromVersion && c.toVersion);
+  const same = named.filter((c) => c.fromVersion === c.toVersion);
+  const out = [
+    `The **release** column is what the two servers reported at \`initialize\`, on the two days ` +
+      `either side of the movement. \`—\` means at least one of those rows does not record a version: ` +
+      `either the server reports none, or the row was written before \`history.csv\` carried the ` +
+      `column, and neither is something to fill in with a guess. ` +
+      `${named.length} of ${summary.changes.length} movement${summary.changes.length === 1 ? '' : 's'} ` +
+      `can name both sides today; the rest fill in as the rotation re-measures them.`,
+  ];
+  if (same.length) {
+    out.push('');
+    out.push(
+      `**still \`x\`** means the cost moved while the version did not — ${same.length} ` +
+        `${same.length === 1 ? 'movement' : 'movements'} here. That is not a contradiction: an unpinned ` +
+        `dependency can change a server's tool definitions without the server itself cutting a release, ` +
+        `and the context window pays for it either way.`,
+    );
+  }
+  return out;
+}
+
 function attributionLines(c: CostChange): string[] {
   const out: string[] = [];
   if (!c.attribution) {
@@ -347,14 +389,14 @@ export function renderRegressions(summary: RegressionSummary, measuredAt: string
       `absolute alone would headline drift on an expensive one). Everything comparable is listed either way.`,
   );
   md.push('');
-  md.push('| server | window | tokens | change | tools | what moved |');
-  md.push('|---|---|---:|---:|---:|---|');
+  md.push('| server | window | release | tokens | change | tools | what moved |');
+  md.push('|---|---|---|---:|---:|---:|---|');
   for (const c of summary.changes) {
     const link = `[${mdCell(c.server)}](../docs/servers/${encodeURIComponent(c.server)}.md)`;
     const mark = c.significant ? ' **·**' : '';
     const held = c.measuredThrough !== c.toDate ? `, held to ${mdCell(c.measuredThrough)}` : '';
     md.push(
-      `| ${link}${mark} | ${mdCell(c.fromDate)} → ${mdCell(c.toDate)}${held} | ` +
+      `| ${link}${mark} | ${mdCell(c.fromDate)} → ${mdCell(c.toDate)}${held} | ${releaseCell(c)} | ` +
         `${n(c.fromTokens)} → ${n(c.toTokens)} | ${signed(c.deltaTokens)} (${signedPct(c.deltaPct)}) | ` +
         `${c.deltaTools === 0 ? '—' : signed(c.deltaTools)} | ${MECHANISM_WORDS[c.mechanism]} |`,
     );
@@ -362,15 +404,23 @@ export function renderRegressions(summary: RegressionSummary, measuredAt: string
   md.push('');
   md.push(`Rows marked **·** clear both thresholds.`);
   md.push('');
+  md.push(...releaseNote(summary));
+  md.push('');
 
   const detailed = summary.changes.filter((c) => c.significant);
   if (detailed.length) {
     md.push('## Where the tokens went');
     md.push('');
     for (const c of detailed) {
+      const release =
+        c.fromVersion && c.toVersion
+          ? c.fromVersion === c.toVersion
+            ? `, still \`${mdCell(c.toVersion)}\``
+            : `, \`${mdCell(c.fromVersion)}\` → \`${mdCell(c.toVersion)}\``
+          : '';
       md.push(
         `**${mdCell(c.server)}** ${signed(c.deltaTokens)} (${signedPct(c.deltaPct)}), ` +
-          `${mdCell(c.fromDate)} → ${mdCell(c.toDate)}:`,
+          `${mdCell(c.fromDate)} → ${mdCell(c.toDate)}${release}:`,
       );
       md.push(...attributionLines(c));
       md.push('');

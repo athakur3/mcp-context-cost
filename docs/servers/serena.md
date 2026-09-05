@@ -64,11 +64,11 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 
 ## Over time
 
-| date | tokens | tools | measured in | change |
-|---|---:|---:|---|---:|
-| 2026-08-17 | 8,204 | 29 | not recorded | — |
-| 2026-08-19 | 8,204 | 29 | docker | no change |
-| 2026-09-04 | 8,204 | 29 | docker | no change |
+| date | tokens | tools | release | measured in | change |
+|---|---:|---:|---|---|---:|
+| 2026-08-17 | 8,204 | 29 | not recorded | not recorded | — |
+| 2026-08-19 | 8,204 | 29 | not recorded | docker | no change |
+| 2026-09-04 | 8,204 | 29 | 1.7.1.dev0 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

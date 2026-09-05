@@ -28,9 +28,24 @@ export interface HistoryRow {
    * refuse to draw such a step; see `plottableSeries`.
    */
   isolation: string;
+  /**
+   * The version the server reported at `initialize`, or `''` when it reported
+   * none and when the row predates this column.
+   *
+   * `measurement.json` has always recorded it, but only for the newest sweep —
+   * so the moment a re-sweep overwrote the file, the question "which release
+   * did this movement come from" became unanswerable, and the regression
+   * report could say only that a movement was "a real upstream release". The
+   * series is where it has to live for a diff to reach both sides of it.
+   *
+   * Never back-filled. A row written before this column carries `''` and reads
+   * as not recorded, because that is what it is: nothing on disk says what
+   * version produced a number measured three weeks ago.
+   */
+  version: string;
 }
 
-export const HISTORY_HEADER = 'date,server,tokens,toolCount,status,isolation';
+export const HISTORY_HEADER = 'date,server,tokens,toolCount,status,isolation,version';
 
 function csvCell(s: unknown): string {
   const v = String(s ?? '');
@@ -65,11 +80,12 @@ export function parseHistory(text: string): HistoryRow[] {
   const rows: HistoryRow[] = [];
   for (const line of text.split('\n')) {
     if (!line.trim() || line.startsWith('date,')) continue;
-    const [date, server, tokens, toolCount, status, isolation] = splitCsvLine(line);
+    const [date, server, tokens, toolCount, status, isolation, version] = splitCsvLine(line);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date ?? '') || !server) continue;
     if (!/^\d+$/.test(tokens ?? '') || !/^\d+$/.test(toolCount ?? '')) continue;
-    // A 5-field row is a pre-`isolation` write: its conditions are unknown, and
-    // unknown is recorded as unknown rather than back-filled with a guess.
+    // A short row is an earlier write — 5 fields predate `isolation`, 6 predate
+    // `version`. Both are recorded as unknown rather than back-filled with a
+    // guess, which is the same rule the columns themselves exist to keep.
     rows.push({
       date,
       server,
@@ -77,6 +93,7 @@ export function parseHistory(text: string): HistoryRow[] {
       toolCount: Number(toolCount),
       status: status ?? '',
       isolation: isolation ?? '',
+      version: version ?? '',
     });
   }
   return rows;
@@ -85,7 +102,15 @@ export function parseHistory(text: string): HistoryRow[] {
 export function formatHistory(rows: HistoryRow[]): string {
   const sorted = [...rows].sort((a, b) => a.date.localeCompare(b.date) || a.server.localeCompare(b.server));
   const lines = sorted.map((r) =>
-    [csvCell(r.date), csvCell(r.server), r.tokens, r.toolCount, csvCell(r.status), csvCell(r.isolation)].join(','),
+    [
+      csvCell(r.date),
+      csvCell(r.server),
+      r.tokens,
+      r.toolCount,
+      csvCell(r.status),
+      csvCell(r.isolation),
+      csvCell(r.version),
+    ].join(','),
   );
   return [HISTORY_HEADER, ...lines].join('\n') + '\n';
 }
@@ -121,6 +146,9 @@ export function rowFor(server: string, m: Measurement): HistoryRow | null {
     toolCount: m.toolCount,
     status: m.status,
     isolation: isolationOf(m),
+    // Some servers report no version at `initialize` at all (`aws-documentation`
+    // is the one in the current set). Absent is recorded as absent.
+    version: typeof m.serverVersion === 'string' ? m.serverVersion : '',
   };
 }
 

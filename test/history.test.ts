@@ -60,6 +60,7 @@ describe('history rows', () => {
       toolCount: 9,
       status: 'measured',
       isolation: 'docker',
+      version: '',
     });
   });
 
@@ -81,15 +82,17 @@ describe('history rows', () => {
 
 describe('csv round trip', () => {
   const rows: HistoryRow[] = [
-    { date: '2026-08-16', server: 'memory', tokens: 2378, toolCount: 9, status: 'measured', isolation: 'docker' },
-    { date: '2026-08-09', server: 'github', tokens: 54422, toolCount: 44, status: 'measured', isolation: 'host' },
+    // eslint-disable-next-line -- one row versioned and one not, because both
+    // shapes are in the committed file and both have to round-trip.
+    { date: '2026-08-16', server: 'memory', tokens: 2378, toolCount: 9, status: 'measured', isolation: 'docker', version: '2026.7.4' },
+    { date: '2026-08-09', server: 'github', tokens: 54422, toolCount: 44, status: 'measured', isolation: 'host', version: '' },
   ];
 
   it('writes a header and sorts by date then server', () => {
     const lines = formatHistory(rows).trim().split('\n');
     expect(lines[0]).toBe(HISTORY_HEADER);
-    expect(lines[1]).toBe('2026-08-09,github,54422,44,measured,host');
-    expect(lines[2]).toBe('2026-08-16,memory,2378,9,measured,docker');
+    expect(lines[1]).toBe('2026-08-09,github,54422,44,measured,host,');
+    expect(lines[2]).toBe('2026-08-16,memory,2378,9,measured,docker,2026.7.4');
   });
 
   it('round-trips through parseHistory', () => {
@@ -100,7 +103,7 @@ describe('csv round trip', () => {
 
   it('escapes and re-reads a server name containing a comma', () => {
     const odd: HistoryRow[] = [
-      { date: '2026-08-16', server: 'a,b "c"', tokens: 1, toolCount: 1, status: 'measured', isolation: 'docker' },
+      { date: '2026-08-16', server: 'a,b "c"', tokens: 1, toolCount: 1, status: 'measured', isolation: 'docker', version: '' },
     ];
     expect(parseHistory(formatHistory(odd))).toEqual(odd);
   });
@@ -110,7 +113,7 @@ describe('csv round trip', () => {
       `${HISTORY_HEADER}\n\nnonsense\n2026-13,x,1,1,measured\n2026-08-16,x,NaN,1,measured\n2026-08-16,ok,5,2,measured\n`,
     );
     expect(parsed).toEqual([
-      { date: '2026-08-16', server: 'ok', tokens: 5, toolCount: 2, status: 'measured', isolation: '' },
+      { date: '2026-08-16', server: 'ok', tokens: 5, toolCount: 2, status: 'measured', isolation: '', version: '' },
     ]);
   });
 });
@@ -144,7 +147,7 @@ describe('appendHistory', () => {
     const r = appendHistory(root);
     expect(r).toEqual({ rows: 2, added: 2 });
     expect(history()).toBe(
-      `${HISTORY_HEADER}\n2026-08-16,github,54422,44,measured,docker\n2026-08-16,memory,2378,9,measured,docker\n`,
+      `${HISTORY_HEADER}\n2026-08-16,github,54422,44,measured,docker,\n2026-08-16,memory,2378,9,measured,docker,\n`,
     );
   });
 
@@ -163,7 +166,7 @@ describe('appendHistory', () => {
     writeResult('memory', measurement({ totalTokens: 2400 })); // re-swept same day
     appendHistory(root);
     expect(parseHistory(history())).toEqual([
-      { date: '2026-08-16', server: 'memory', tokens: 2400, toolCount: 9, status: 'measured', isolation: 'docker' },
+      { date: '2026-08-16', server: 'memory', tokens: 2400, toolCount: 9, status: 'measured', isolation: 'docker', version: '' },
     ]);
 
     writeResult('memory', measurement({ measuredAt: '2026-08-23T06:17:00.000Z', totalTokens: 2500 }));
@@ -202,14 +205,52 @@ describe('isolation is recorded, not guessed', () => {
 
   it('reads a pre-isolation 5-field row as unknown rather than assuming docker', () => {
     expect(parseHistory(`${HISTORY_HEADER}\n2026-08-16,memory,2378,9,measured\n`)).toEqual([
-      { date: '2026-08-16', server: 'memory', tokens: 2378, toolCount: 9, status: 'measured', isolation: '' },
+      { date: '2026-08-16', server: 'memory', tokens: 2378, toolCount: 9, status: 'measured', isolation: '', version: '' },
     ]);
   });
 
   it('records the isolation a sweep actually ran under', () => {
     writeResult('memory', measurement({ isolation: { docker: false } }));
     appendHistory(root);
-    expect(history().trim().split('\n')[1]).toBe('2026-08-16,memory,2378,9,measured,host');
+    expect(history().trim().split('\n')[1]).toBe('2026-08-16,memory,2378,9,measured,host,');
+  });
+});
+
+/**
+ * The version is what lets a movement name the release it came from. It lives
+ * in the series rather than only in `measurement.json` because the file holds
+ * one sweep and a diff needs two — the moment a re-sweep overwrites it, the
+ * earlier side is gone.
+ */
+describe('the version is recorded, not guessed', () => {
+  it('reads what the server reported at initialize', () => {
+    expect(rowFor('memory', measurement({ serverVersion: '2026.7.4' }))?.version).toBe('2026.7.4');
+  });
+
+  it('records nothing when the server reported no version', () => {
+    // `aws-documentation` is the entry in the current set that does this, and
+    // an empty cell says so rather than implying the field was never asked for.
+    expect(rowFor('memory', measurement({ serverVersion: undefined }))?.version).toBe('');
+  });
+
+  it('reads a pre-version 6-field row as not recorded', () => {
+    const [row] = parseHistory(`${HISTORY_HEADER}\n2026-08-16,memory,2378,9,measured,docker\n`);
+    expect(row?.version).toBe('');
+    expect(row?.isolation).toBe('docker');
+  });
+
+  it('never back-fills an earlier row from a later measurement', () => {
+    // The whole point: the version of a number measured three weeks ago is not
+    // on disk anywhere, and today's measurement is not evidence about it.
+    writeResult('memory', measurement({ serverVersion: '2.0.0' }));
+    writeFileSync(
+      join(root, 'results', 'history.csv'),
+      `${HISTORY_HEADER}\n2026-08-09,memory,2000,9,measured,docker\n`,
+    );
+    appendHistory(root);
+    const rows = parseHistory(history());
+    expect(rows.find((r) => r.date === '2026-08-09')?.version).toBe('');
+    expect(rows.find((r) => r.date === '2026-08-16')?.version).toBe('2.0.0');
   });
 });
 

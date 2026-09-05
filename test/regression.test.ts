@@ -15,6 +15,7 @@ import {
   parseToolVectorFile,
   readSeries,
   summarize,
+  vectorEntryOf,
   type DatedMeasurement,
   type ToolVectorEntry,
   type ToolVectorFile,
@@ -32,13 +33,21 @@ import type { ServerEntry } from '../src/sweep/report.js';
  * capture that was never kept.
  */
 
-const row = (date: string, tokens: number, toolCount: number, isolation = 'docker', status = 'measured'): HistoryRow => ({
+const row = (
+  date: string,
+  tokens: number,
+  toolCount: number,
+  isolation = 'docker',
+  status = 'measured',
+  version = '',
+): HistoryRow => ({
   date,
   server: 's',
   tokens,
   toolCount,
   status,
   isolation,
+  version,
 });
 
 describe('latestChange — which pair a movement is measured across', () => {
@@ -274,6 +283,8 @@ describe('the rendered report', () => {
     mechanism: 'tools-added' as const,
     significant: true,
     measuredThrough: '2026-09-03',
+    fromVersion: '',
+    toVersion: '',
     attribution: null,
     ...over,
   });
@@ -353,5 +364,103 @@ describe('the committed report is the one the data derives', () => {
     const doc = parse(readFileSync(join(repoRoot, 'servers.yaml'), 'utf8')) as { servers: ServerEntry[] };
     const { summary, measuredAt } = collectChanges(doc.servers, repoRoot);
     expect(renderRegressions(summary, measuredAt)).toBe(committed);
+  });
+});
+
+/**
+ * Naming the release is what turns "a real upstream release landed in your
+ * context window" into a sentence a reader can act on. The rule that makes it
+ * trustworthy is the same one the isolation column follows: what is not on
+ * record is reported as not on record, never inferred from a neighbouring row.
+ */
+describe('a movement names the release it came from', () => {
+  const renderable = {
+    server: 'demo',
+    fromDate: '2026-08-19',
+    toDate: '2026-08-26',
+    fromTokens: 1000,
+    toTokens: 1500,
+    deltaTokens: 500,
+    deltaPct: 50,
+    fromToolCount: 4,
+    toToolCount: 6,
+    deltaTools: 2,
+    mechanism: 'tools-added' as const,
+    significant: true,
+    measuredThrough: '2026-09-03',
+    fromVersion: '',
+    toVersion: '',
+    attribution: null,
+  };
+
+  const changed = (fromV: string, toV: string) => {
+    const reading = readSeries('s', [
+      row('2026-08-19', 1000, 4, 'docker', 'measured', fromV),
+      row('2026-08-26', 1500, 6, 'docker', 'measured', toV),
+    ]);
+    expect(reading.kind).toBe('changed');
+    return reading.kind === 'changed' ? reading.change : null!;
+  };
+
+  it('carries both sides through from the history rows', () => {
+    const c = changed('1.28.0', '1.29.1');
+    expect([c.fromVersion, c.toVersion]).toEqual(['1.28.0', '1.29.1']);
+  });
+
+  it('names neither side when the earlier row predates the column', () => {
+    const c = changed('', '1.29.1');
+    expect(c.fromVersion).toBe('');
+    // The later side is still carried — the report decides what a half-known
+    // pair may say, and the diff does not throw the known half away.
+    expect(c.toVersion).toBe('1.29.1');
+  });
+
+  it('prints the pair, and the em dash when a side is missing', () => {
+    const versioned = renderRegressions(
+      summarize([{ ...renderable, fromVersion: '1.28.0', toVersion: '1.29.1' }], 0, []),
+      '2026-09-03',
+    );
+    expect(versioned).toContain('`1.28.0` → `1.29.1`');
+    expect(versioned).toContain('1 of 1 movement can name both sides today');
+
+    const unversioned = renderRegressions(summarize([renderable], 0, []), '2026-09-03');
+    expect(unversioned).toContain('0 of 1 movement can name both sides today');
+    expect(unversioned).not.toContain('still `');
+  });
+
+  it('states plainly when the cost moved and the version did not', () => {
+    // The reading worth having: an unpinned dependency changed the definitions
+    // without the server cutting a release, and the window pays either way.
+    const text = renderRegressions(
+      summarize([{ ...renderable, fromVersion: '1.29.1', toVersion: '1.29.1' }], 0, []),
+      '2026-09-03',
+    );
+    expect(text).toContain('still `1.29.1`');
+    expect(text).toContain('the cost moved while the version did not');
+  });
+
+  it('keeps the version on the capture a vector stores', () => {
+    const m = {
+      status: 'measured',
+      totalTokens: 100,
+      canonicalSha256: 'a'.repeat(64),
+      measuredAt: '2026-08-26T00:00:00.000Z',
+      serverVersion: '1.29.1',
+      tools: [{ name: 't', tokens: 100 }],
+    } as unknown as Parameters<typeof vectorEntryOf>[0];
+    expect(vectorEntryOf(m)?.version).toBe('1.29.1');
+    // Absent stays absent rather than becoming an empty string in the JSON.
+    expect(vectorEntryOf({ ...m, serverVersion: undefined } as typeof m)).not.toHaveProperty('version');
+  });
+
+  it('reads a stored vector back, and ignores a version that is not a string', () => {
+    const file = (version: unknown) =>
+      JSON.stringify({
+        method: 'cost-regression/v1',
+        server: 's',
+        entries: [{ date: '2026-08-26', canonicalSha256: 'b'.repeat(64), totalTokens: 100, tools: [], version }],
+      });
+    expect(parseToolVectorFile(file('1.29.1'))?.entries[0]?.version).toBe('1.29.1');
+    expect(parseToolVectorFile(file(129))?.entries[0]).not.toHaveProperty('version');
   });
 });

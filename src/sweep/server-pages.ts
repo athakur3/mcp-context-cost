@@ -166,8 +166,8 @@ export function renderServerPage(
     const comparableFrom = plottable.rows[0]?.date;
     md.push('## Over time');
     md.push('');
-    md.push('| date | tokens | tools | measured in | change |');
-    md.push('|---|---:|---:|---|---:|');
+    md.push('| date | tokens | tools | release | measured in | change |');
+    md.push('|---|---:|---:|---|---|---:|');
     history.forEach((h, i) => {
       const prev = history[i - 1];
       const comparable = prev && (!prev.isolation || !h.isolation || prev.isolation === h.isolation);
@@ -180,7 +180,13 @@ export function renderServerPage(
             ? 'no change'
             : `${delta! > 0 ? '+' : ''}${fmt(delta!)}`;
       md.push(
-        `| ${mdCell(h.date)} | ${fmt(h.tokens)} | ${h.toolCount} | ${mdCell(h.isolation || 'not recorded')} | ${change} |`,
+        `| ${mdCell(h.date)} | ${fmt(h.tokens)} | ${h.toolCount} | ` +
+          // Same rule as the isolation cell beside it: what the row does not
+          // record is printed as not recorded, never carried over from the row
+          // above. A server that reports no version at `initialize` reads the
+          // same way as a row written before the column existed, which is
+          // accurate — in both cases nothing on disk says.
+          `${mdCell(h.version || 'not recorded')} | ${mdCell(h.isolation || 'not recorded')} | ${change} |`,
       );
     });
     md.push('');

@@ -43,6 +43,8 @@ export interface DatedMeasurement {
   tokens: number;
   toolCount: number;
   status: string;
+  /** What the server called itself at `initialize`, or `''` when not recorded. */
+  version?: string;
 }
 
 /** Method identifier, versioned independently of METHODOLOGY_VERSION. */
@@ -72,6 +74,14 @@ export interface ToolVectorEntry {
   canonicalSha256: string;
   totalTokens: number;
   tools: ToolVector[];
+  /**
+   * The version the server reported at `initialize`, absent when it reported
+   * none or when the entry was stored before this field existed. Entries are
+   * deduped by capture and never rewritten, so an existing one does not gain a
+   * version retroactively — which is correct: identical bytes are the same
+   * definitions, and what upstream called them that day is not on record.
+   */
+  version?: string;
 }
 
 export interface ToolVectorFile {
@@ -110,6 +120,7 @@ export function parseToolVectorFile(text: string): ToolVectorFile | null {
       date: e.date,
       canonicalSha256: e.canonicalSha256,
       totalTokens: e.totalTokens,
+      ...(typeof e.version === 'string' && e.version ? { version: e.version } : {}),
       tools: e.tools
         .filter((t): t is ToolVector => !!t && typeof t.name === 'string' && typeof t.tokens === 'number')
         .map((t) => ({ name: t.name, tokens: t.tokens })),
@@ -132,6 +143,7 @@ export function vectorEntryOf(m: Measurement): ToolVectorEntry | null {
     date,
     canonicalSha256: m.canonicalSha256,
     totalTokens: m.totalTokens,
+    ...(m.serverVersion ? { version: m.serverVersion } : {}),
     tools: m.tools.map((t) => ({ name: t.name, tokens: t.tokens })),
   };
 }
@@ -238,6 +250,17 @@ export interface CostChange {
   fromToolCount: number;
   toToolCount: number;
   deltaTools: number;
+  /**
+   * What the server called itself on each side, or `''` where the row does not
+   * say. Never inferred: a movement whose earlier row predates the version
+   * column names no release, because nothing on disk records which one it was.
+   *
+   * The two being *equal* is a reading in its own right, and a common one —
+   * the cost moved while the version did not, which means the change came from
+   * a dependency the server does not pin rather than from its own release.
+   */
+  fromVersion: string;
+  toVersion: string;
   mechanism: Mechanism;
   /** True when the movement clears both thresholds. */
   significant: boolean;
@@ -390,6 +413,8 @@ export function readSeries(
       fromToolCount: from.toolCount,
       toToolCount: to.toolCount,
       deltaTools,
+      fromVersion: from.version ?? '',
+      toVersion: to.version ?? '',
       mechanism: mechanismOf(deltaTokens, deltaTools),
       significant: isSignificant(deltaTokens, deltaPct),
       measuredThrough: newest.date,

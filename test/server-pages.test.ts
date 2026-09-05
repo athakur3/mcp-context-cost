@@ -92,18 +92,20 @@ describe('renderServerPage', () => {
 
   it('shows the series only once there is more than one date', () => {
     const one = [
-      { date: '2026-08-16', server: 'demo', tokens: 1000, toolCount: 2, status: 'measured', isolation: 'docker' },
+      { date: '2026-08-16', server: 'demo', tokens: 1000, toolCount: 2, status: 'measured', isolation: 'docker', version: '' },
     ];
     expect(renderServerPage(entry, measurement(), one)).not.toContain('## Over time');
 
     const two = [
       ...one,
-      { date: '2026-08-23', server: 'demo', tokens: 1200, toolCount: 3, status: 'measured', isolation: 'docker' },
+      // The newer row names its release and the older one does not, which is
+      // the shape of the committed file while the rotation fills the column in.
+      { date: '2026-08-23', server: 'demo', tokens: 1200, toolCount: 3, status: 'measured', isolation: 'docker', version: '1.29.1' },
     ];
     const md = renderServerPage(entry, measurement(), two);
     expect(md).toContain('## Over time');
-    expect(md).toContain('| 2026-08-23 | 1,200 | 3 | docker | +200 |');
-    expect(md).toContain('| 2026-08-16 | 1,000 | 2 | docker | — |');
+    expect(md).toContain('| 2026-08-23 | 1,200 | 3 | 1.29.1 | docker | +200 |');
+    expect(md).toContain('| 2026-08-16 | 1,000 | 2 | not recorded | docker | — |');
   });
 });
 
