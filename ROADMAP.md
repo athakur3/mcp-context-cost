@@ -109,15 +109,15 @@ a record held, every item that inferred did not. What the records established:
   exit as written would have accepted.
 
 **Scope**, in build order — the dependency decides it.
-- [ ] **`persist-credentials: false`** on every write-token checkout, the token reaching only
+- [x] **`persist-credentials: false`** on every write-token checkout, the token reaching only
       the push, held by a test in `test/workflows.test.ts`.
-- [ ] **The adoption workflow** — monthly cron plus `workflow_dispatch`, `timeout-minutes`,
+- [x] **The adoption workflow** — monthly cron plus `workflow_dispatch`, `timeout-minutes`,
       `npm test` before the commit as the other scheduled jobs do, and it never commits an
       unresolved reading. `--render-only` on the tool, so a renderer change can be re-rendered
       offline without advancing `checkedAt`.
-- [ ] **`--no-persist` on `npm run sweep`**, and the README's measuring instruction rewritten
+- [x] **`--no-persist` on `npm run sweep`**, and the README's measuring instruction rewritten
       to use it: a contributor checks a number; CI publishes one.
-- [ ] **The `pull_request` measurement job.** `src/sweep/pr-check.ts` diffs `servers.yaml` by
+- [x] **The `pull_request` measurement job.** `src/sweep/pr-check.ts` diffs `servers.yaml` by
       name against the base, runs `validateServers` first, measures added and relaunched entries
       with `persist: false` in Docker, caps the count per pull request and refuses above it
       before any launch, lists a self-containerised (`docker run …`) command rather than running
@@ -130,11 +130,11 @@ a record held, every item that inferred did not. What the records established:
       *Approve and run*; and what happens after merge — the entry sits `not-yet-run` until its
       rotation slot comes round, which is a fact `docs/METHODOLOGY.md` currently states as
       shorter than it is.
-- [ ] **`tools/scan-registry.ts`**, honest scope: crawl `version=latest`, keep `active`, rank by
+- [x] **`tools/scan-registry.ts`**, honest scope: crawl `version=latest`, keep `active`, rank by
       live weekly downloads, draft entries in the schema's shape or refuse with a reason, emit
       the two owner strings the provenance judgment uses, write only to the path the operator
       names, and print a one-line summary an expansion commit can quote.
-- [ ] **Correct `servers.yaml`'s `agent-device` comment** to what the record establishes.
+- [x] **Correct `servers.yaml`'s `agent-device` comment** to what the record establishes.
 
 **Exit.**
 - Every workflow holding `contents: write` checks out without persisting credentials, and a
@@ -143,7 +143,10 @@ a record held, every item that inferred did not. What the records established:
   in `ci.yml` and shows the entry's measured tokens in `pr-check.yml` without writing anything;
   one changing an existing entry's launch fields measures that entry too.
 - The adoption workflow has run once by dispatch and once on schedule, and `docs/adoption.md`
-  carries a count from each.
+  carries a count from each. *Dispatch: run 33985123134 on 2026-09-05, committed as `0a9e5f5`,
+  zero adopters — the Actions token was accepted by code search, which until that run was
+  GitHub's claim rather than this repository's record. The scheduled half is the 1st of the
+  month.*
 - `npm run sweep -- --no-persist` writes nothing under `results/`, `badges/` or `history.csv`.
 - `npm run scan-registry -- --out <path>` writes one dated file there and nothing elsewhere.
 
