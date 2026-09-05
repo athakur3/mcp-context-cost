@@ -89,7 +89,7 @@ Every candidate server appears in published results with exactly one status:
 | `timeout` | no response within the configured timeout (recorded per measurement) |
 | `not-applicable` | this harness cannot run it — an OS or architecture the package does not ship for, or a backing service the isolation deliberately does not provide |
 | `remote-auth-wall` | OAuth-gated remote server; listed, not measured |
-| `not-yet-run` | candidate not yet swept (appears in interim leaderboards only) |
+| `not-yet-run` | candidate not yet swept — a merged entry carries this status on the published leaderboard until its rotation slot comes round (see [Trends over time](#trends-over-time--same-conditions-or-no-line)) |
 
 **A failure is retried before it is published.** Two of these statuses can be produced by
 the machine doing the measuring rather than by the server, so neither is published on a

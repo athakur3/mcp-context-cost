@@ -468,6 +468,7 @@ public, one click each:
 [re-sweep runs](https://github.com/athakur3/mcp-context-cost/actions/workflows/resweep.yml)
 and [self-badge runs](https://github.com/athakur3/mcp-context-cost/actions/workflows/self-badge.yml).
 See [ROADMAP.md](ROADMAP.md) for what's next — contributions welcome, especially new
-`servers.yaml` entries.
+`servers.yaml` entries; [CONTRIBUTING.md](CONTRIBUTING.md) says what an entry needs, the
+order of steps that leaves a pull request green, and where its number comes from.
 
 MIT © 2026
