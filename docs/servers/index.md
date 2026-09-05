@@ -95,7 +95,7 @@ No page: there is no number to show. The reason is recorded per candidate.
 | server | status |
 |---|---|
 | gdrive | auth-required |
-| redis-legacy | startup-failure |
+| redis-legacy | not-applicable |
 | azure | startup-failure |
 | magic | auth-required |
 | stripe | auth-required |
@@ -106,7 +106,7 @@ No page: there is no number to show. The reason is recorded per candidate.
 | zapier | remote-auth-wall |
 | vercel | remote-auth-wall |
 | gmail | auth-required |
-| slack | auth-required |
+| slack | startup-failure |
 | kubernetes-containers | not-applicable |
 | hana-cli | startup-failure |
 | accessibility-scanner | startup-failure |

@@ -113,7 +113,7 @@ The **session start** column is what a client puts in context when it *defers* t
 | server | status | note |
 |---|---|---|
 | gdrive | auth-required | **[deprecated by its publisher](https://www.npmjs.com/package/@modelcontextprotocol/server-gdrive) — 2025.1.14, read 2026-09-05.** server exited (code 1); stderr tail: Credentials not found. Please run with 'auth' argument first. |
-| redis-legacy | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: \[Redis Retry\] Attempt 1/5 failed \[Redis Retry\] Next attempt in 1000m |
+| redis-legacy | not-applicable | needs a Redis at 127.0.0.1:6379; the isolation deliberately provides no backing services — server exited (code 1); stderr tail: \[Redis Retry\] Attempt 1/5 fail |
 | azure | startup-failure | reproduced with the shared package cache bypassed; server exited (code 0); stderr tail: r(System.Diagnostics.Tracing.EventSourceSettings, System.String\[\]) |
 | magic | auth-required | server error -32001: Not authenticated - your API key is missing or was reset. Get a fresh key at https://21st.dev/mcp and update your MCP config (x-api-key / B |
 | stripe | auth-required | server exited (code 1); stderr tail: 🚨  Error initializing Stripe MCP server:     Invalid API key format. Expected sk_* (secret key) or rk_* (restricted key).  |
@@ -124,7 +124,7 @@ The **session start** column is what a client puts in context when it *defers* t
 | zapier | remote-auth-wall |  |
 | vercel | remote-auth-wall |  |
 | gmail | auth-required | server exited (code 1); stderr tail: Error: OAuth keys file not found. Please place gcp-oauth.keys.json in current directory or /tmp/.gmail-mcp |
-| slack | auth-required | server exited (code 1); stderr tail: {"level":"error","timestamp":"2026-09-05T05:41:58Z","message":"Request failed","app":"slack-mcp-server","error":"tls: faile |
+| slack | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: {"level":"error","timestamp":"2026-09-05T05:53:48Z","message":"Request f |
 | kubernetes-containers | not-applicable | needs a kubeconfig with a cluster context; the isolation deliberately has neither — server exited (code 1); stderr tail: Error: unable to create kubernetes targ |
 | hana-cli | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: purchased (at exorbitant rates) by contacting i@izs.me node:internal/mod |
 | accessibility-scanner | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: node:internal/modules/esm/resolve:314   return new ERR_PACKAGE_PATH_NOT_ |

@@ -15,7 +15,7 @@ sqlite,268,6,measured,official-reference,14798,https://pypistats.org/packages/mc
 google-maps,549,7,measured,official-reference,5204,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-google-maps (npm weekly),,,30,false,30,0,550,v0.2.5
 gdrive,,,auth-required,official-reference,4907,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-gdrive (npm weekly),,,,,,,,
 gitlab,336,9,measured,official-reference,4666,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-gitlab (npm weekly),,,33,false,33,0,336,v0.2.5
-redis-legacy,,,startup-failure,official-reference,1464,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-redis (npm weekly),,,,,,,,
+redis-legacy,,,not-applicable,official-reference,1464,https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-redis (npm weekly),,,,,,,,
 playwright,4024,24,measured,vendor-official,4819822,https://api.npmjs.org/downloads/point/last-week/@playwright/mcp (npm weekly),,,91,false,91,0,3409,v0.2.5
 context7,1052,2,measured,vendor-official,1169818,https://api.npmjs.org/downloads/point/last-week/@upstash/context7-mcp (npm weekly),,,135,false,9,126,983,v0.2.5
 github,54622,44,measured,vendor-official,32282,"https://api.github.com/repos/github/github-mcp-server (GitHub stars; Go binary/docker, no npm)",,,556,false,179,377,10803,v0.2.5
@@ -73,7 +73,7 @@ gmail,,,auth-required,community,26678,https://api.npmjs.org/downloads/point/last
 pandoc,1425,1,measured,community,23590,https://pypistats.org/packages/mcp-pandoc (PyPI weekly),,,5,false,5,0,1426,v0.2.5
 obsidian,2062,15,measured,community,23503,https://pypistats.org/packages/mcp-obsidian (PyPI weekly),,,92,false,92,0,2064,v0.2.5
 searxng,1537,4,measured,community,22508,https://api.npmjs.org/downloads/point/last-week/mcp-searxng (npm weekly),,,27,false,27,0,1490,v0.2.5
-slack,,,auth-required,community,16956,https://api.npmjs.org/downloads/point/last-week/slack-mcp-server (npm weekly),,,,,,,,
+slack,,,startup-failure,community,16956,https://api.npmjs.org/downloads/point/last-week/slack-mcp-server (npm weekly),,,,,,,,
 playwright-community,2920,33,measured,community,16066,https://api.npmjs.org/downloads/point/last-week/@executeautomation/playwright-mcp-server (npm weekly),,,158,false,158,0,2925,v0.2.5
 arxiv,3960,19,measured,community,13984,https://pypistats.org/packages/arxiv-mcp-server (PyPI weekly),,,84,false,84,0,3696,v0.2.5
 mysql,393,3,measured,community,13634,https://pypistats.org/packages/mysql-mcp-server (PyPI weekly),,,12,false,12,0,332,v0.2.5
