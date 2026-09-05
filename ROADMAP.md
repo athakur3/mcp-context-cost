@@ -2,8 +2,9 @@
 
 Where this project is headed, and what a contributor can pick up. What already shipped is in
 [CHANGELOG.md](CHANGELOG.md) and the git history — **a phase leaves this file when it ships**,
-so the plan stays short and stays forward-looking. Phases 0 and 1 shipped on 2026-09-05 and
-have left it; what they corrected is in the changelog sections for `0.12.0` and `0.13.0`.
+so the plan stays short and stays forward-looking. Phases 0, 1 and 2 shipped on 2026-09-05 and
+have left it; what they built, and what they corrected, is in the changelog sections for
+`0.12.0`, `0.13.0` and `0.13.1` and in the Unreleased section above them.
 
 Dated **2026-09-05**. Every item names the evidence it rests on, so you can check whether it is
 still true before starting it. Items marked *(maintainer)* need an account or a decision only
@@ -38,38 +39,10 @@ ordered ahead of the technical ones; it ran on **2026-09-05**. The next reading 
 
 | phase | goal | window | exit, in one line |
 |---|---|---|---|
-| **2** | Sweeps that are cheaper and say more | two things left | corroboration survives truncation; every divergence row describes its capture |
 | **3** | Others can add servers safely | 2026-09-21 → 10-09 | a stranger's entry is measured read-only before any write-token job runs it |
 | **4** | `audit` reaches the stacks people run | 2026-10-05 → 10-23 | remote entries measured; three more clients, each with a who-pays row |
 | **5** | The data tells its second story | from 2026-10-16 | state-of report #2 with per-tool attribution; rotation length decided on evidence |
 | **∥** | Distribution *(maintainer)* | continuing | a badge merged somewhere that is not this repository |
-
----
-
-## Phase 2 — what is left of it
-
-Seven of its eight items shipped in `0.13.0`, and the finding was that half the "broken
-servers" in this set were broken by this harness rather than by their authors. Two things did
-not close with it.
-
-- [ ] **`not-applicable` corroboration survives a growing evidence tail.** A declared entry is
-      only published as `not-applicable` when the failure's own text still contains the
-      declared evidence — the guard that stops a stale annotation absorbing a real breakage.
-      But the text it searches is a *truncated* tail (`evidenceTail` in `src/sweep/client.ts`
-      keeps both ends of 600 characters and elides the middle), so an entry whose output grows
-      until its evidence line falls into the elided middle reverts to `startup-failure` on its
-      own — silently, and about someone else's working software. Not hypothetical: of the five
-      entries declaring today, two are already having their middle elided, and the narrowest
-      surviving margin is 64 characters. Wants a rule that does not depend on how much the
-      server printed.
-- [ ] **Every divergence row describes the capture it was computed from.** `--only` selections
-      merge into `results/divergence.json`, so a row outside the selection keeps its old
-      numbers and goes stale the moment its capture moves. `isCurrent` catches this and the
-      page prints `—` rather than a wrong number, which is the right failure — but as of
-      2026-09-05 seven of twenty-four rows are stale, `github` among them, and the README's
-      Claude table draws a comparison from a cell it is therefore not printing. One bare
-      divergence run refreshes every row; the durable fix is that a merge cannot leave a row
-      describing a capture that no longer exists.
 
 ---
 
