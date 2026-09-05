@@ -9,10 +9,18 @@ while reading it.
 
 - **`accessibility-scanner` measures, and was never upstream's problem.** It published
   `ERR_PACKAGE_PATH_NOT_EXPORTED` out of `playwright-core` and was on its way to being reported
-  as a broken package. It declares `engines.node` of `^24.15.0 || >=26.0.0`; the isolation image
-  is `node:22-slim`, and npm's `EBADENGINE` warning was the whole story. The entry names
-  `node:24-slim` now and it measures 8,959 tokens across 33 tools. Sixth row this project was
-  publishing as a defect in someone else's software.
+  as a broken package. The package declares `engines.node` of `^24.15.0 || >=26.0.0` and the
+  isolation image is `node:22-slim`; on `node:24-slim` it starts and measures 8,959 tokens
+  across 33 tools, so the exports error was the symptom of an unsupported engine rather than a
+  defect. Sixth row this project was publishing as a defect in someone else's software.
+
+  Worth recording is *why* the record did not say so. npm announces the mismatch as
+  `npm warn EBADENGINE`, and the evidence tail drops `npm warn`/`npm notice` lines as
+  installer noise (`client.ts`), so what survived into the published record was the downstream
+  module-resolution error and a bare `Node.js v22.23.2` — everything except the line that
+  explained it. The rule earns its place most of the time, and this is the case where it cost
+  a true reading; the version was in the record all along for anyone who thought to check it
+  against the package's own `engines`.
 - **The one real upstream bug is filed.** `hana-cli` publishes `bin.hana-cli-mcp`, whose
   entrypoint imports three subpaths of `@modelcontextprotocol/sdk` — a package absent from all
   50 of its declared dependencies, so it resolves in a checkout and never from the registry
