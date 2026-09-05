@@ -12,7 +12,7 @@ marked *(maintainer)* need a decision or an account only the maintainer has.
 ## Where it stands
 
 106 candidates, 83 measured, six published columns (tokens, session start, Claude,
-mcp-tokens, movement, tool shape), 625 tests, four workflows, three weeks of history, and
+mcp-tokens, movement, tool shape), 644 tests, four workflows, three weeks of history, and
 `0.12.0` on npm as of 2026-09-05. The measurement and its gates are further along than their
 audience: the adoption reading of
 2026-09-03 found zero projects displaying the badge, and the repository has one star. So the
@@ -26,7 +26,7 @@ site is ready for them.
 | phase | goal | window | exit, in one line |
 |---|---|---|---|
 | **0** | Ship what trunk already holds | **done 2026-09-05** | 0.12.0 on npm, with a dated changelog section |
-| **1** | Every published sentence is established | by the 2026-09-09 sweep; hard stop 2026-09-16 | eight items, each held by a test; `slack` re-measured; one bot run ends "no change to publish" |
+| **1** | Every published sentence is established | by the 2026-09-09 sweep; hard stop 2026-09-16 | **code complete 2026-09-05**; eight items, each held by a test; one CI re-measure left |
 | **2** | Sweeps that are cheaper and say more | 2026-09-10 → 2026-09-25 | movements name releases; `anki` declared; Claude column refreshed by the re-sweep; four issues filed |
 | **3** | Others can add servers safely | 2026-09-21 → 2026-10-09 | a stranger's entry is measured read-only before any write-token job runs it |
 | **4** | `audit` reaches the stacks people run | 2026-10-05 → 2026-10-23 | remote entries measured; three more clients, each with a who-pays row |
@@ -50,27 +50,27 @@ writing that section is what found it.
 **Goal.** The site does not contradict itself when someone arrives from a post.
 
 **Scope.**
-- [ ] **The movement report calls a held cost "nothing to compare".** `latestChange` returns
+- [x] **The movement report calls a held cost "nothing to compare".** `latestChange` returns
       null both for "fewer than two comparable rows" and for "the series never changed", and
       `regressions.ts` counts every null as `withoutComparison`, so the page says *66 servers
       carry a measurement but no second comparable one*. `history.csv` has 79 of the 81
       measured servers with two or more Docker rows: most of the 66 were measured again and
       held. Publish "unchanged at N since <date>, across k sweeps" — the most reassuring fact
       the data holds, currently unsaid. Reproduction in `test/regression.test.ts`.
-- [ ] **README prose that carries a number by hand.** "nine servers ratcheting upward against
+- [x] **README prose that carries a number by hand.** "nine servers ratcheting upward against
       one that got cheaper" sits ninety lines below the regen-maintained "11 moved up against
       6 that moved down"; "82 curated candidates" against 106 in `servers.yaml`. Neither is in
       `published-stats.ts`. Add them to the claim list, or reword so the sentence carries no
       number for the data to contradict.
-- [ ] **A dashboard that always diffs.** `dashboard.ts` stamps `new Date()` into the page, so
+- [x] **A dashboard that always diffs.** `dashboard.ts` stamps `new Date()` into the page, so
       `docs/dashboard.html` changes on every regen and the bots' "no change to publish" guard
       has never once fired. Stamp the newest measurement date instead.
-- [ ] **Declare what the words already allow.** `redis-legacy`'s record contains
+- [x] **Declare what the words already allow.** `redis-legacy`'s record contains
       `ECONNREFUSED 127.0.0.1:6379`, which the existing evidence rule can match today.
       `grafana` (a Grafana at `localhost:3000`) qualifies if its timeout note carries a
       matchable line now that stderr survives into timeouts; otherwise it waits for the probe
       in phase 2. Both are backing-service absences, which is what `not-applicable` is for.
-- [ ] **The auth classifier matches inside other words, and one record is wrong today.**
+- [x] **The auth classifier matches inside other words, and one record is wrong today.**
       `classifyFailure` tests a bare `auth` alternative, which matches inside `authority`, so
       `slack` is published as `auth-required` on the strength of "tls: failed to verify
       certificate: x509: certificate signed by unknown authority" — a record that reports this
@@ -79,32 +79,66 @@ writing that section is what found it.
       previously published as `auth-required`. Both are named in the 0.12.0 changelog and
       neither is fixed. Word-boundary the pattern, keep the six genuine auth records passing,
       and re-measure through CI rather than editing the published record.
-- [ ] **`not-applicable` reaches only one of the three sweep paths.** `measureServer` takes the
+- [x] **`not-applicable` reaches only one of the three sweep paths.** `measureServer` takes the
       option, and `sweep-all.ts` passes it; `cross-check.ts` and `session-start.ts` iterate the
       same entries and omit it, so either would publish a declared entry as `startup-failure` —
       the assertion about someone else's software the bucket exists to prevent. Latent only
       because the three declared servers are absent from those two outputs. Two lines and a
       structural test that every `ServerEntry` call site forwards the field.
-- [ ] **A docstring that claims more than the record.** `src/core/types.ts` says `local-mcp`
+- [x] **A docstring that claims more than the record.** `src/core/types.ts` says `local-mcp`
       was published as a startup failure "for weeks"; the record was a day old. It ships inside
       `dist/`, so it is a published sentence like any other.
-- [ ] **A `deprecated` annotation.** `gdrive`, `elasticsearch` and `neon` are deprecated
+- [x] **A `deprecated` annotation.** `gdrive`, `elasticsearch` and `neon` are deprecated
       upstream (`neon` points at `mcp.neon.tech`) and each is published as a bare failure. An
       entry field naming the replacement lets the row say "superseded by X" — a fact about the
       package, stated as one — while the entry is still attempted every sweep.
 
 **Exit.**
-- `regressions.md` has an *Unchanged* section, and its section counts sum to the measured
-  total; a test holds the two null cases apart.
-- No number in README, `docs/index.md` or METHODOLOGY sits outside the claim list; the
-  drift-guard test fails if one is added.
-- A dispatched re-sweep of one unchanged server (`servers=memory`) ends with "no change to
-  publish" and pushes nothing.
-- The leaderboard shows `redis-legacy` as `not-applicable` with its evidence, and the three
-  deprecated rows name their replacement.
-- `slack` no longer reads `auth-required` on a TLS failure, re-measured in CI, and a test holds
-  the six genuine auth records passing.
-- A test fails if any `ServerEntry` call site stops forwarding `notApplicable`.
+- ✅ `regressions.md` has an *Unchanged* section, and its section counts sum to the measured
+  total; a test holds the two null cases apart. (17 + 64 + 2 = 83: only **two** of the 66 were
+  ever really without a comparison.)
+- ✅ Every count of the measured set in README, `docs/index.md` or METHODOLOGY is either
+  regen-maintained or in a written-down static list with the reason it cannot drift;
+  `test/page-numbers.test.ts` fails if a third kind is added. Re-introducing either original
+  sentence fails a test.
+- ✅ Regenerating from unchanged results rewrites nothing — **replaces** "a dispatched re-sweep
+  of `servers=memory` ends with *no change to publish*", which was unreachable and, on the
+  evidence, wrong to want. See *Found while building* below.
+- ✅ The three deprecated rows name their replacement, on the leaderboard and on the server
+  page. ⏳ `redis-legacy` reads `not-applicable` on the leaderboard — declared, corroborated by
+  the record on disk, published by the next CI measurement of it.
+- ✅ A test holds the six genuine auth records passing and both false positives failing.
+  ⏳ `slack` stops reading `auth-required` — the code no longer classifies it that way; the
+  published record moves when CI re-measures.
+- ✅ A test fails if any `ServerEntry` call site stops forwarding `notApplicable`.
+
+**What is left.** One dispatch, and only the maintainer can make it:
+`gh workflow run resweep.yml -f servers=slack,redis-legacy`, from a main that carries this
+work. Nothing here publishes a status; a status is published by a measurement, and a
+measurement comes from CI.
+
+**Found while building** — four things the plan above had wrong, each verified:
+- **The bots' guard does not fire for the reason this file gave.** `sweep-all` regenerates
+  history, the movement report and the leaderboard — not the dashboard — so the wall-clock
+  stamp in `dashboard.ts` was never what the guard saw. What it sees is
+  `results/<server>/measurement.json`, whose `measuredAt` is fresh on every measured server:
+  any run that measured anything has something to publish. And it *should*. A new history row
+  for an unchanged server is exactly what makes "unchanged at N across k sweeps" provable —
+  the fix in the first item depends on the behaviour the third item wanted to remove. The
+  dashboard stamp was still wrong and is still fixed: it now dates the newest measurement, so
+  regen is byte-stable and a bot commit's diff carries only what moved.
+- **`grafana` is not a backing-service absence.** Its record does not say a Grafana is
+  missing; it says `msg="Starting Grafana MCP server using SSE transport" address=0.0.0.0:8000`
+  — the container came up and served SSE while this harness waited on stdio. That is a
+  transport mismatch in our own launch command, not something a port probe would corroborate.
+  Left undeclared, with the reason written into `servers.yaml`. **This changes phase 2**, below.
+- **`elasticsearch` is not published as a bare failure.** It measures cleanly at 374 tokens
+  and is deprecated — a clean number for a package nobody should adopt, which is worse than a
+  failure row, not better. So the annotation renders beside measured rows too, not only in the
+  "not measured" table.
+- **A third hand-written number, on the same page.** The guard found README's own copy of the
+  divergence ratio range — "measured at 0.20×–1.92× across 20 servers" — three numbers written
+  by hand beside the two sentences regen already kept true. Now a claim.
 
 **Why here.** The claim the project makes is that a published number describes the server.
 Four of these are the project failing its own rule — two on its own front page, and two found
@@ -133,7 +167,10 @@ a retry.
       the status still cannot be asserted by declaration alone — and a server that hangs
       silently becomes declarable. `anki` is the case: no `timeoutSeconds`, so 240s and then
       480s on the doubled budget, every cycle, to learn that a desktop application is absent.
-      Together with `grafana` that is about twenty minutes of runner time per cycle. A probe
+      `grafana` is **not** a second case for this, as of 2026-09-05: its record says the
+      container served SSE on `0.0.0.0:8000` while this harness waited on stdio, so its six
+      minutes a cycle are a transport mismatch in our own launch command and want a command
+      fix, not a probe. `anki` alone is about eight minutes a cycle. A probe
       also closes the hole the 0.12.0 changelog documents: corroboration is a substring test
       against the truncated evidence, so a declared entry whose output grows until its evidence
       line falls in the elided middle reverts to `startup-failure` on its own.
