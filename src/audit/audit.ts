@@ -23,6 +23,7 @@ import {
 import { identify, type CaptureIndex, type CaptureVerdict } from '../core/capture-index.js';
 import type { Measurement, MeasurementStatus, ToolMeasurement } from '../core/types.js';
 import type { ConfiguredServer, LoadedConfig } from './config.js';
+import type { RemoteProbe } from './remote.js';
 import {
   evaluateDeferral,
   PUBLISHED_WIRE_TO_CLIENT_RATIO,
@@ -35,7 +36,16 @@ import { formatDiff, formatGate, type AuditDiff, type IncreaseGate } from './dif
 
 export const DEFAULT_CONTEXT_WINDOW = 200_000;
 
-export type AuditStatus = MeasurementStatus | 'remote-not-measurable';
+/**
+ * A server's status in a report: the measurement statuses, plus two that only
+ * a remote endpoint can have. `auth-walled` — it answered the unauthenticated
+ * `initialize` with 401 or 403: it works, and it wants a credential this audit
+ * does not hold. `unreachable` — no MCP answer came back at all: a connection
+ * failure, a timeout, or a status that is neither an answer nor a wall. Before
+ * 2026-09-06 every `url` entry was `remote-not-measurable`, which said nothing
+ * about the endpoint and under-counted exactly the stacks the audit is for.
+ */
+export type AuditStatus = MeasurementStatus | 'auth-walled' | 'unreachable';
 
 export interface AuditServerResult {
   name: string;
@@ -49,6 +59,10 @@ export interface AuditServerResult {
   url?: string;
   /** Names only — a server's env values never enter a report. */
   envVarNames: string[];
+  /** Names only, and only for a remote entry that carries any — values never enter a report. */
+  headerNames?: string[];
+  /** Claude Code's `alwaysLoad: true`, read from the entry: loads at session start whatever the setting. */
+  alwaysLoad?: true;
   canonicalSha256?: string | null;
   /**
    * Anthropic-request cost from the published Claude divergence run, only when
@@ -269,7 +283,30 @@ export function serverKey(s: ConfiguredServer): string {
  */
 function envSignature(s: ConfiguredServer): string {
   const env = s.env ?? {};
-  return JSON.stringify(Object.keys(env).sort().map((k) => [k, env[k]]));
+  const headers = s.headers ?? {};
+  return JSON.stringify([
+    Object.keys(env).sort().map((k) => [k, env[k]]),
+    // A remote's headers decide what it serves the way env decides for a
+    // process: a bearer token selects an account, and an account its tools.
+    Object.keys(headers).sort().map((k) => [k, headers[k]]),
+  ]);
+}
+
+/**
+ * Every value an entry would spawn or send — env values, header values — so
+ * that none of them reaches a report by way of a server's own stderr. Values
+ * shorter than four characters are left alone: replacing every "1" in a
+ * message is not redaction.
+ */
+function secrets(s: ConfiguredServer): string[] {
+  return [...Object.values(s.env ?? {}), ...Object.values(s.headers ?? {})].filter((v) => v.length >= 4);
+}
+
+function redact(text: string | undefined, values: string[]): string | undefined {
+  if (!text) return text;
+  let out = text;
+  for (const v of values) out = out.split(v).join('<redacted>');
+  return out;
 }
 
 /**
@@ -289,7 +326,6 @@ export function collapsedKeys(configs: LoadedConfig[]): Set<string> {
   for (const cfg of configs) {
     if (cfg.error) continue;
     for (const s of cfg.servers) {
-      if (s.transport !== 'stdio') continue;
       const key = serverKey(s);
       const seen = envs.get(key);
       if (seen) seen.add(envSignature(s));
@@ -361,7 +397,12 @@ function attachDeferral(
           client: group[0].client,
           sources: group.map((c) => c.source),
           servers: group.flatMap((c) =>
-            c.servers.map((s) => ({ tokens: s.tokens ?? 0, claudeTokens: s.claudeTokens })),
+            c.servers.map((s) => ({
+              name: s.name,
+              tokens: s.tokens ?? 0,
+              claudeTokens: s.claudeTokens,
+              ...(s.alwaysLoad ? { alwaysLoad: true } : {}),
+            })),
           ),
           skippedCount: group.reduce((a, c) => a + c.skipped.length, 0),
           sharedMeasurements: group.reduce((a, c) => a + (opts.shared.get(c) ?? 0), 0),
@@ -409,6 +450,12 @@ export function buildReport(
      * the report says, rather than reporting a default it did not establish.
      */
     settings?: ToolSearchSource[];
+    /**
+     * What each remote endpoint said to an unauthenticated `initialize`, keyed
+     * by `serverKey`. `runAudit` supplies it from `probeRemotes`; omitted, a
+     * remote entry is reported as not probed rather than as anything else.
+     */
+    remotes?: Map<string, RemoteProbe>;
   } = {},
 ): AuditReport {
   const contextWindow = opts.contextWindow ?? DEFAULT_CONTEXT_WINDOW;
@@ -458,17 +505,34 @@ export function buildReport(
         command: s.command,
         url: s.url,
         envVarNames: s.envVarNames,
+        ...(s.headerNames?.length ? { headerNames: s.headerNames } : {}),
+        ...(s.alwaysLoad ? { alwaysLoad: true as const } : {}),
       };
+      const none = { tokens: null, toolCount: null, share: null };
       if (s.transport === 'remote') {
-        skipped.push({
-          ...base,
-          status: 'remote-not-measurable',
-          tokens: null,
-          toolCount: null,
-          share: null,
-          notes: `remote endpoint (${s.url ?? 'url'}) — stdio measurement does not apply`,
-        });
-        continue;
+        const probe = opts.remotes?.get(serverKey(s));
+        if (!probe) {
+          skipped.push({ ...base, ...none, status: 'unreachable', notes: `${s.url ?? 'url'} — not probed` });
+          continue;
+        }
+        if (probe.kind === 'auth-walled') {
+          // The server's own words: the status it sent and the header it named
+          // its authorization server with. A wall is a working server this
+          // audit holds no credential for; the session that holds one pays
+          // this server on top of the total below, which is therefore a floor.
+          skipped.push({
+            ...base,
+            ...none,
+            status: 'auth-walled',
+            notes: `${s.url} answered ${probe.detail} — wants a credential this audit does not hold`,
+          });
+          continue;
+        }
+        if (probe.kind === 'unreachable') {
+          skipped.push({ ...base, ...none, status: 'unreachable', notes: `${s.url}: ${probe.detail}` });
+          continue;
+        }
+        // Open: measured through the bridge, and read below like any launch.
       }
       const m = measured.get(serverKey(s));
       if (!m) {
@@ -482,7 +546,7 @@ export function buildReport(
           tokens: null,
           toolCount: null,
           share: null,
-          notes: m.notes?.split('\n')[0]?.slice(0, 200),
+          notes: redact(m.notes?.split('\n')[0]?.slice(0, 200), secrets(s)),
         });
         continue;
       }
@@ -496,7 +560,7 @@ export function buildReport(
         share: null, // filled once the total is known
         canonicalSha256: m.canonicalSha256,
         claudeTokens: opts.divergence ? (isCurrent(divRow, m.canonicalSha256 ?? null) ? divRow.claudeDelta : null) : undefined,
-        notes: m.status === 'dynamic' ? m.notes : undefined,
+        notes: m.status === 'dynamic' ? redact(m.notes, secrets(s)) : undefined,
       });
       for (const t of m.tools) {
         tools.push({ server: s.name, tool: t.name, tokens: t.tokens });
@@ -574,10 +638,11 @@ export function buildReport(
     // server that failed to start contributes 0, so the stack reads lighter
     // than it is and the budget passes on a number that is missing a server —
     // exactly the PR the README says this gate catches. The server-level gate
-    // (core/server-diff.ts) already refuses this; so does this one now.
-    const unestablished = results.flatMap((c) =>
-      c.skipped.filter((s) => s.status !== 'remote-not-measurable').map((s) => `${c.source}: ${s.name} (${s.status})`),
-    );
+    // (core/server-diff.ts) already refuses this; so does this one now. Every
+    // skipped row counts: an auth-walled endpoint is a working server the
+    // session pays for with its credential, and an unreachable one is a cost
+    // this could not establish, not a cost of zero.
+    const unestablished = results.flatMap((c) => c.skipped.map((s) => `${c.source}: ${s.name} (${s.status})`));
     const over = (worst?.totalTokens ?? 0) > opts.budget;
     report.budget = {
       limit: opts.budget,
@@ -737,6 +802,17 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
     lines.push(`  These ${d.sources.length} config files are read into one ${d.client} session:`);
     for (const s of d.sources) lines.push(`    ${s}`);
     lines.push('  so they face the question below together, as their sum.');
+  }
+
+  // Read from the entries, so it is stated up front rather than listed among
+  // the conditions a reader has to check: whatever the setting says, these load.
+  if (d.mechanism === 'tool search' && d.alwaysLoad.servers.length) {
+    const n = d.alwaysLoad.servers.length;
+    lines.push(
+      `  ${n} server${n === 1 ? ' is' : 's are'} pinned "alwaysLoad": true and load${n === 1 ? 's' : ''} at session start whatever`,
+    );
+    lines.push(`  the setting says: ${d.alwaysLoad.servers.join(', ')} — ${d.alwaysLoad.tokens.toLocaleString()} wire tokens,`);
+    lines.push('  left out of any threshold comparison below.');
   }
 
   if (d.mode === 'client-unknown') {

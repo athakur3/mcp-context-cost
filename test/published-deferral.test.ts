@@ -128,6 +128,8 @@ interface Machine {
   client?: string;
   env?: ToolSearchEnv;
   settings?: ToolSearchSource[];
+  /** The stack, when the case is about what is in it; one 5,000-token server otherwise. */
+  servers?: { name?: string; tokens: number; alwaysLoad?: boolean }[];
 }
 
 /** What a page says about that machine, verbatim. */
@@ -142,6 +144,8 @@ interface Case {
   mode: string;
   unresolved?: NonNullable<ToolSearchSetting['unresolved']>;
   thresholdShare?: number | null;
+  /** Which side of the threshold the resolver puts the machine on, when the case is about that. */
+  crosses?: boolean | null;
   /** A whole row of the page's deferral table. */
   row?: Claim;
   /** A sentence outside the table — the refusals, and the clients rule. */
@@ -314,17 +318,44 @@ const CASES: Case[] = [
     },
   },
   {
-    what: 'the four discovered clients with no default on record are said to pay in full',
+    what: 'the nine discovered clients with no default on record are said to pay in full',
     machines: [
       { client: 'claude-desktop' },
       { client: 'cursor' },
       { client: 'vscode' },
       { client: 'windsurf' },
+      { client: 'codex' },
+      { client: 'gemini' },
+      { client: 'zed' },
+      { client: 'kiro' },
+      { client: 'goose' },
     ],
     mode: 'no-deferral-on-record',
     prose: {
-      README: '**Clients with no default deferral on record** — Claude Desktop, Cursor, VS Code, Windsurf.',
-      METHODOLOGY: 'No default deferral is on record for Claude Desktop, Cursor, VS Code or Windsurf',
+      README:
+        '**Clients with no default deferral on record** — Claude Desktop, Cursor, VS Code, Windsurf, Codex CLI, Gemini CLI, Zed, Kiro, Goose.',
+      METHODOLOGY:
+        'No default deferral is on record for Claude Desktop, Cursor, VS Code, Windsurf, Codex CLI, Gemini CLI, Zed, Kiro or Goose',
+    },
+  },
+  {
+    what: 'a server pinned alwaysLoad: true loads whatever the setting says, and is left out of the threshold count',
+    machines: [
+      {
+        env: { ENABLE_TOOL_SEARCH: 'auto' },
+        // 30,000 pinned tokens would be over the 10% line on their own; the
+        // 1,000 the client would otherwise defer are what the question is put to.
+        servers: [{ name: 'core', tokens: 30_000, alwaysLoad: true }, { tokens: 1_000 }],
+      },
+    ],
+    mode: 'threshold',
+    thresholdShare: TOOL_SEARCH_AUTO_SHARE,
+    crosses: false,
+    row: {
+      README:
+        '| a server pinned `"alwaysLoad": true` in its entry | loads at session start whatever the setting says — read from the entry, named with its tokens, and left out of any threshold comparison |',
+      METHODOLOGY:
+        '| the entry itself | `alwaysLoad: true` | loads at session start whatever the setting says — read from the entry, named with its tokens, and left out of any threshold comparison |',
     },
   },
   {
@@ -343,7 +374,7 @@ const verdictFor = (m: Machine): DeferralVerdict =>
     {
       client: m.client ?? 'claude-code',
       sources: ['/machine/.mcp.json'],
-      servers: [{ tokens: 5_000 }],
+      servers: m.servers ?? [{ tokens: 5_000 }],
       skippedCount: 0,
       sharedMeasurements: 0,
     },
@@ -358,6 +389,7 @@ describe('the published deferral tables describe the resolver', () => {
         expect(verdict.mode, `the resolver answers ${JSON.stringify(m)} differently from the page`).toBe(c.mode);
         expect(verdict.setting?.unresolved ?? null).toBe(c.unresolved ?? null);
         if (c.thresholdShare !== undefined) expect(verdict.thresholdShare).toBe(c.thresholdShare);
+        if (c.crosses !== undefined) expect(verdict.crosses, `the resolver puts ${JSON.stringify(m)} on a side the page does not`).toBe(c.crosses);
       }
       for (const page of PAGES) {
         const row = c.row?.[page];

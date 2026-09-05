@@ -60,28 +60,55 @@ reading, the re-sweep cadence. They are all on the distribution track.
 **Goal.** `audit` measures what is in the config, not the subset the harness finds
 convenient.
 
+**The premise check, 2026-09-06.** Two of the three items were right about the symptom and
+wrong about the mechanism; the third held. The pattern is exact four phases running. What the
+records established:
+
+- **"Route no-auth remotes through the bridge" would open a browser.** Against an OAuth-walled
+  endpoint `mcp-remote` opens a browser window and waits for the callback — its README says so
+  — and in a headless run it waits until this harness's timeout, so the row would read
+  `timeout`. Probing the endpoints themselves settled the mechanism: an unauthenticated
+  `initialize` gets `401` with a `WWW-Authenticate: Bearer …` header from Linear, Zapier and
+  Vercel, and `200` from DeepWiki, Microsoft Learn, Cloudflare Docs and Hugging Face. The
+  answer is the row, and only an endpoint that answered is handed to the bridge.
+- **Windsurf spells a remote `serverUrl`**, and `toServer` looked for `url` alone: a Windsurf
+  remote was dropped from the audit as if it were not configured. Found by reading the page
+  the item named.
+- **The clients' shapes had to be read, not remembered.** Zed's documented form is flat
+  (`command`, `args`, `env`, or `url` with `headers`), and an `extension`-provided entry
+  carries no launch at all; Gemini spells remotes two ways (`url` is SSE, `httpUrl` is
+  streamable HTTP); Goose's documentation moved domains and its extension types are `stdio`
+  and `streamable_http` with `cmd`/`uri`, SSE unsupported; Cline's extension path exists only
+  in third-party guides and is left out; Kiro is fully documented and is in. Five clients had
+  first-hand pages, not three.
+- **The dated re-read held**, and a summarising fetch of the page did not: it reported the
+  `ENABLE_TOOL_SEARCH` table gone, while the raw page has it unchanged. A summary is not a
+  record. Four things had moved around the table — see the changelog.
+
 **Scope.**
-- [ ] **Remote entries.** A config entry with a `url` is skipped as `remote-not-measurable`
-      while `measure --remote` already bridges through `mcp-remote`. Vendor servers are moving
-      to hosted endpoints, so the skip under-counts exactly the stacks the audit is for. Route
-      no-auth remotes through the bridge; report OAuth-walled ones as auth-walled in those
-      words, with the URL, never as "not measurable".
-- [ ] **More clients**, in order of user base: Codex CLI (`~/.codex/config.toml` — TOML,
-      which means a parser decision for a package that today depends on two things), Gemini
-      CLI (`~/.gemini/settings.json`), Zed (`context_servers`), then Goose, Cline, Kiro. Each
-      needs its "no default deferral on record" row in the who-pays table as much as its path
-      in `config.ts`: discovery without the posture would publish a number with no statement
-      of who pays it.
-- [ ] **Re-read the deferral model, dated.** The who-pays table is a model of Claude Code's
-      documentation read 2026-08-20. A dated re-read each month is the floor; the measured
-      version is phase 5's stretch item.
+- [x] **Remote entries.** A pre-flight probe decides `auth-walled` (in the server's words, with
+      the URL and its header) or `unreachable` (with the reason); an open endpoint is measured
+      through the `mcp-remote` bridge and joins the total. `remote-not-measurable` is gone.
+      Header values are sent and never reported; a value a server echoes back is redacted.
+- [x] **More clients**: Codex CLI (TOML — the parser decision is `smol-toml`, a third
+      dependency), Gemini CLI, Zed, Kiro and Goose, each with a fixture test, a discovery path,
+      a no-record who-pays row and a line in the README's client list. Cline is out until its
+      extension path has a first-hand source.
+- [x] **Re-read the deferral model, dated.** Re-read 2026-09-06; the read-on date has advanced
+      and the four changes are recorded in `src/audit/deferral.ts` and METHODOLOGY. One of them
+      became code: `alwaysLoad: true` is read from the entry and counted rather than listed.
 
 **Exit.**
 - A fixture config with an `http` entry produces a number or an auth-walled line; the
-  status `remote-not-measurable` no longer appears in output.
+  status `remote-not-measurable` no longer appears in output. *Met 2026-09-06:
+  `test/remote-bridge.test.ts` measures the reference "everything" server over streamable HTTP
+  through the bridge; `test/remote.test.ts` prints the auth-walled line for a local `401` and
+  asserts the old status word appears nowhere.*
 - Each added client has a fixture test, a discovery path, a who-pays row, and a line in the
-  README's client list.
+  README's client list. *Met for Codex CLI, Gemini CLI, Zed, Kiro and Goose
+  (`test/audit-clients.test.ts`, `test/published-deferral.test.ts`).*
 - METHODOLOGY's "read on" date for the deferral model has advanced, with any change noted.
+  *Met: read 2026-08-20, re-read 2026-09-06, four changes noted.*
 
 **Why here.** Independent of the sweep. Ordered after phase 2 because the people distribution
 brings are audit users, and this is the audit they will run.

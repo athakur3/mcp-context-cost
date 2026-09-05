@@ -233,6 +233,10 @@ names** in context and fetch the definition only when the model reaches for one.
 session-start bill is a different quantity, and the headline number says nothing about it —
 so it is measured too, and published in the `session start` column of the
 [leaderboard](https://github.com/athakur3/mcp-context-cost/blob/main/results/leaderboard.md).
+It is the wire cost of that list, not what a particular client loads: Claude Code "truncates
+tool descriptions and server instructions at 2KB each" (its MCP documentation, read
+2026-09-06), so for a server whose instructions run past that, this column is more than that
+client loads.
 
 **What it is.** Two parts, counted separately with the same `o200k_base` tokenizer and added:
 
@@ -285,10 +289,12 @@ because of anything in this section. It is what `audit` answers for a config it 
 and it is stated here because a number nobody can attribute to a payer is not a cost.
 
 **Where the cost is paid in full.** No default deferral is on record for Claude Desktop,
-Cursor, VS Code or Windsurf: for a config read by one of those, every request carries the
-whole total. That is an absence of a record about the client, not a measurement of it, and
-`audit` prints it in those words — the same rule this project follows for every value it has
-not observed. A config passed as `--config <path>` is read the same way, because which client
+Cursor, VS Code, Windsurf, Codex CLI, Gemini CLI, Zed, Kiro or Goose: for a config read by one
+of those, every request carries the whole total. Each client's own configuration page was
+read on 2026-09-06 and says nothing about deferring tool definitions — Windsurf's states a
+cap of 100 tools, which is a different thing. That is an absence of a record about the
+client, not a measurement of it, and `audit` prints it in those words — the same rule this
+project follows for every value it has not observed. A config passed as `--config <path>` is read the same way, because which client
 reads that file is not knowable from the file.
 
 **Where it is deferred away.** Claude Code defers MCP tool definitions by default, through
@@ -307,6 +313,7 @@ in it, does not spoil an answer that variable would not have decided:
 | 3. `ANTHROPIC_BASE_URL` | host other than `api.anthropic.com`, or a value that does not parse | loads up front. Consulted only while `ENABLE_TOOL_SEARCH` is unset |
 | at 1, 2 or 3 | set by the place that would decide, to something that is not a readable string — an `env` block holding a JSON boolean, a number or `null` | **unreadable** — the variable is set there and what it is set to is unknown, so no posture is claimed and the report says whether these tokens are deferred cannot be said from it. A settings file holding `false` rather than `"false"` is this row, not the `false` row above |
 | | otherwise / nothing set anywhere | the documented default: every definition deferred, no threshold |
+| the entry itself | `alwaysLoad: true` | loads at session start whatever the setting says — read from the entry, named with its tokens, and left out of any threshold comparison |
 
 **Two places set them, and both are read.** Claude Code takes those variables from the shell
 it starts in *and* from the `env` block of its own settings files, so `audit` opens all of
@@ -325,6 +332,14 @@ unknown rather than as a file this audit could not open. Reading only the shell 
 earlier version reported "NOT loaded up front at any size" on a machine that had switched
 deferral off in
 `~/.claude/settings.json`.
+
+**A pinned server is counted, not listed.** An entry carrying `alwaysLoad: true` loads at
+session start whatever the setting says (Claude Code's MCP documentation, §"Exempt a server
+from deferral", read 2026-09-06). `audit` reads it from the entry, names those servers with
+their tokens, and leaves them out of any threshold comparison, since the documented `auto`
+mode counts only "the tools it would otherwise defer". The per-tool form — a tool whose
+`_meta` carries `"anthropic/alwaysLoad": true` — is not read from a capture and stays a
+listed condition.
 
 **Configs one session loads together face the question together.** Claude Code reads
 `~/.claude.json` and `<cwd>/.mcp.json` into one session, so the threshold question is put to
@@ -357,11 +372,30 @@ for the reader to check, never folded into the verdict. And deferring has its ow
 [session-start load](#session-start-load), where one server in the published set costs a
 deferring client *more* than an eager one.
 
+**Remote entries.** A `url` entry is asked what it says to an unauthenticated `initialize`
+before anything is launched, and the answer is the row: an endpoint that answers is measured
+through the `mcp-remote` bridge and joins the total as any server does; one that answers
+`401` or `403` is `auth-walled`, quoting the status and the `WWW-Authenticate` header it sent,
+with the URL, and makes the total a floor; one that gives no MCP answer is `unreachable`, with
+the reason. The probe exists because the bridge alone would open a browser against an
+OAuth-walled endpoint on a developer machine, and would read `timeout` in a headless run — a
+word that blames the clock for a credential. Probed 2026-09-06: Linear, Zapier and Vercel
+answer `401` with a `WWW-Authenticate: Bearer …` header; DeepWiki, Microsoft Learn, Cloudflare
+Docs and Hugging Face answer `200`. Header values an entry carries are sent
+and never reported; only their names are.
+
 **Source, and its date.** All of the above is a model of another product's documented
 behaviour, not an observation of it: Claude Code MCP documentation, §"Scale with MCP tool
-search", read **2026-08-20**. Nothing here measured Claude Code deferring or not deferring
-anything. If that documentation changes, this section and `src/audit/deferral.ts` are what
-have to change with it.
+search", read **2026-08-20** and re-read **2026-09-06**. On the re-read the value table
+stands as quoted, and four things moved around it, each recorded in
+`src/audit/deferral.ts`: tool search is on by default on Google Cloud's Agent Platform for
+the Claude 4.5 generation and later (before v2.1.221 it was off there for every model);
+managed settings can keep tool search on under `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` from
+v2.1.227, an override this audit does not read, so that variable still resolves as "off"
+here; `alwaysLoad` is an entry field on every server type, now read as above; and tool
+descriptions and server instructions are truncated at 2 KB each. Nothing here measured
+Claude Code deferring or not deferring anything. If that documentation changes, this section
+and `src/audit/deferral.ts` are what have to change with it.
 
 ## CLI cross-check <a id="cli-cross-check"></a>
 

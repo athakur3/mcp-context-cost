@@ -358,7 +358,8 @@ if (cmd === 'audit') {
       );
     else
       console.error(
-        `no MCP config found. Looked in the standard Claude Desktop / Claude Code / Cursor / VS Code / Windsurf locations.${where}\n` +
+        `no MCP config found. Looked in the standard Claude Desktop / Claude Code / Cursor / VS Code / Windsurf / ` +
+          `Codex CLI / Gemini CLI / Zed / Kiro / Goose locations.${where}\n` +
           `Point at one explicitly: mcp-context-cost audit --config <path/to/mcp.json>`,
       );
     process.exit(1);

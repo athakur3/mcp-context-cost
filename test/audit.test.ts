@@ -279,7 +279,9 @@ describe('buildReport', () => {
     const r = buildReport(cfg([ok, broken, remote]), measured, { generatedAt: 'T' });
     const c = r.configs[0];
     expect(c.servers.map((s) => s.name)).toEqual(['ok']);
-    expect(c.skipped.map((s) => s.status).sort()).toEqual(['remote-not-measurable', 'startup-failure']);
+    // A remote nobody probed is not called anything about the endpoint — only unprobed.
+    expect(c.skipped.map((s) => s.status).sort()).toEqual(['startup-failure', 'unreachable']);
+    expect(c.skipped.find((s) => s.name === 'linear')?.notes).toBe('https://x/sse — not probed');
     expect(c.totalTokens).toBe(c.servers[0].tokens);
   });
 
@@ -594,7 +596,9 @@ describe('audit CLI', () => {
     expect(report.configs).toHaveLength(1);
     expect(report.configs[0].servers[0]).toMatchObject({ name: 'memory', status: 'measured' });
     expect(report.configs[0].totalTokens).toBeGreaterThan(1000);
-    expect(report.configs[0].skipped[0]).toMatchObject({ name: 'linear', status: 'remote-not-measurable' });
+    // `mcp.example` resolves nowhere: the endpoint was asked, and the answer is the failure's own code.
+    expect(report.configs[0].skipped[0]).toMatchObject({ name: 'linear', status: 'unreachable' });
+    expect(report.configs[0].skipped[0].notes).toMatch(/^https:\/\/mcp\.example\/sse: /);
     // audit runs in someone's own project — it must not write results/ or badges/
     expect(readdirSync(dir).sort()).toEqual(['mcp.json']);
   }, 200_000);
@@ -1381,7 +1385,7 @@ describe('deferral — reading the mode that is actually in force', () => {
 
   describe('the other clients this tool discovers', () => {
     it('records the absence of a deferral rule, with no threshold and no setting', () => {
-      for (const client of ['claude-desktop', 'cursor', 'vscode', 'windsurf']) {
+      for (const client of ['claude-desktop', 'cursor', 'vscode', 'windsurf', 'codex', 'gemini', 'zed', 'kiro', 'goose']) {
         expect(verdict(client, [84_455], { env: auto })).toMatchObject({
           mode: 'no-deferral-on-record',
           mechanism: null,
@@ -1396,6 +1400,46 @@ describe('deferral — reading the mode that is actually in force', () => {
     it('says the client is unknown for a config named with --config', () => {
       expect(verdict('explicit', [84_455]).mode).toBe('client-unknown');
       expect(verdict('some-client-shipped-after-this-was-written', [1]).mode).toBe('client-unknown');
+    });
+  });
+
+  describe('a server pinned alwaysLoad: true, read from its entry', () => {
+    const pinned = (client: string, servers: { name: string; tokens: number; alwaysLoad?: boolean }[], env?: ToolSearchEnv) =>
+      evaluateDeferral(
+        { client, sources: [CFG], servers, skippedCount: 0, sharedMeasurements: 0 },
+        { contextWindow: cw, env },
+      );
+
+    it('is named with its tokens in every claude-code mode, and stays out of the threshold count', () => {
+      const servers = [
+        { name: 'core', tokens: 30_000, alwaysLoad: true },
+        { name: 'rest', tokens: 1_000 },
+      ];
+      const deferred = pinned('claude-code', servers);
+      expect(deferred.mode).toBe('defers-all');
+      expect(deferred.alwaysLoad).toEqual({ servers: ['core'], tokens: 30_000 });
+      expect(deferred.wireTokens).toBe(31_000);
+
+      // 30,000 pinned tokens would be over the 20,000 line on their own; they
+      // are not what the client would otherwise defer, so the question is put
+      // to the 1,000 that are.
+      const thresholded = pinned('claude-code', servers, auto);
+      expect(thresholded.mode).toBe('threshold');
+      expect(thresholded.crosses).toBe(false);
+      expect(thresholded.clientTokens!.high).toBeLessThan(threshold);
+      expect(thresholded.alwaysLoad).toEqual({ servers: ['core'], tokens: 30_000 });
+    });
+
+    it('is carried but decides nothing for a client with no deferral on record', () => {
+      const v = pinned('cursor', [{ name: 'core', tokens: 5, alwaysLoad: true }]);
+      expect(v.mode).toBe('no-deferral-on-record');
+      expect(v.alwaysLoad).toEqual({ servers: ['core'], tokens: 5 });
+    });
+
+    it('no longer lists the entry-level form among the conditions a reader has to check', () => {
+      const v = pinned('claude-code', [{ name: 'a', tokens: 1 }]);
+      expect(v.exceptions.some((e) => e.includes('"alwaysLoad": true, whose tools'))).toBe(false);
+      expect(v.exceptions.some((e) => e.includes('anthropic/alwaysLoad'))).toBe(true);
     });
   });
 

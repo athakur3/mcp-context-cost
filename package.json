@@ -53,6 +53,7 @@
   },
   "dependencies": {
     "js-tiktoken": "^1.0.21",
+    "smol-toml": "1.8.0",
     "yaml": "^2.9.0"
   },
   "devDependencies": {

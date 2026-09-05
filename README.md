@@ -60,10 +60,21 @@ claude-desktop  ~/Library/Application Support/Claude/claude_desktop_config.json
 ```
 
 It finds configs for Claude Desktop, Claude Code (`~/.claude.json`, `.mcp.json`), Cursor,
-VS Code (`.vscode/mcp.json`), and Windsurf — or pass `--config <path>`. Servers are measured
-by the same path as the published leaderboard (dual `tools/list` capture, `o200k_base` over
+VS Code (`.vscode/mcp.json`), Windsurf, Codex CLI (`~/.codex/config.toml`), Gemini CLI
+(`~/.gemini/settings.json`), Zed (`context_servers`), Kiro (`~/.kiro/settings/mcp.json`) and
+Goose (`~/.config/goose/config.yaml`) — or pass `--config <path>`. Servers are measured by
+the same path as the published leaderboard (dual `tools/list` capture, `o200k_base` over
 canonical JSON), so a server in both places gets the same number. Nothing is written to your
 project, and env var **values** are never read into the output — only their names.
+
+A remote entry — `url`, or the client's own spelling of it — is first asked what it says to
+an unauthenticated `initialize`. An endpoint that answers is measured through the
+`mcp-remote` bridge, the path the leaderboard's remote rows already take. One that answers
+`401` or `403` is reported **auth-walled**, quoting the status and the `WWW-Authenticate`
+header it sent, with the URL: a working server this audit holds no credential for, so the
+total above it is a floor. One that answers nothing usable is **unreachable**, with the
+reason. Header values an entry carries are sent and never printed — only their names are —
+and nothing here ever opens a browser.
 
 Totals are reported per config file, never merged: a context window belongs to one client
 session, so summing Cursor's servers into Claude Desktop's total would describe a session
@@ -75,8 +86,9 @@ Not every client puts every tool definition in context on every request, so the 
 is not automatically your bill. Which client reads the config, and how that client is
 configured **on this machine**, decides it — and `audit` reads that rather than assuming it.
 
-**Clients with no default deferral on record** — Claude Desktop, Cursor, VS Code, Windsurf.
-The total is what every request carries, as in the example above. That sentence is an
+**Clients with no default deferral on record** — Claude Desktop, Cursor, VS Code, Windsurf,
+Codex CLI, Gemini CLI, Zed, Kiro, Goose. The total is what every request carries, as in the
+example above. That sentence is an
 absence of a record about those clients, not a measurement of them, and the report says so
 in those words.
 
@@ -97,6 +109,7 @@ deferral off in a settings file is not a machine running the default:
 | `ANTHROPIC_BASE_URL` off `api.anthropic.com` | falls back to loading up front — consulted only while `ENABLE_TOOL_SEARCH` is unset |
 | anything else in `ENABLE_TOOL_SEARCH` | not a documented value, so nothing is claimed from it |
 | any of the three set, in a settings `env` block, to something that is not a string — a JSON boolean, a number, `null` | it is set there and what it is set to is unknown, so no posture is claimed: the report says whether these tokens are deferred cannot be said from it |
+| a server pinned `"alwaysLoad": true` in its entry | loads at session start whatever the setting says — read from the entry, named with its tokens, and left out of any threshold comparison |
 
 On a machine where none of them is set, the same stack reads:
 
@@ -114,7 +127,7 @@ On a machine where none of them is set, the same stack reads:
     a Microsoft Foundry deployment hosted on Azure, which rejects tool search server-side
     Google Cloud's Agent Platform on a model earlier than the Claude 4.5 generation
     a model without support for tool_reference blocks (before Sonnet 4.5 / Haiku 4.5 / Opus 4.5)
-    a server pinned with "alwaysLoad": true, whose tools load at session start regardless
+    a tool whose _meta carries "anthropic/alwaysLoad": true, which this audit does not read from a capture
 ```
 
 Set `ENABLE_TOOL_SEARCH=false` in that shell and the same config reports the opposite —
@@ -133,7 +146,7 @@ settings file exists and cannot be read, when the place that would decide sets t
 to something that is not a string, and when `ENABLE_TOOL_SEARCH` holds a value Claude Code
 does not document; and it will not pass an absence of a record off as a measurement. The
 first two print as unanswered questions. The third prints as an answer that names
-itself: for the four discovered clients with no default on record — `claude-desktop`, `cursor`, `vscode`, `windsurf` — the tokens are counted as
+itself: for the nine discovered clients with no default on record — `claude-desktop`, `cursor`, `vscode`, `windsurf`, `codex`, `gemini`, `zed`, `kiro`, `goose` — the tokens are counted as
 loaded up front, and the report says so in those words, "an absence of a record about the
 client, not a measurement of it".
 Full model, sources and dates: [METHODOLOGY §who pays the number](docs/METHODOLOGY.md#who-pays).
@@ -344,7 +357,7 @@ number is *not*, config policy, failure taxonomy, frozen color bands, known dive
 |---|---|
 | `src/core/` | the measurement spec, executable — canonical form, tokenizer, bands, badge JSON |
 | `src/sweep/` | raw-wire MCP stdio client + Dockerized batch sweep + leaderboard/dashboard generators |
-| `src/audit/` | client-config discovery (5 clients, JSONC-tolerant), the per-stack report, and the baseline diff |
+| `src/audit/` | client-config discovery (10 clients; JSON with comments, TOML, YAML), the remote probe, the per-stack report, and the baseline diff |
 | `src/cli.ts` | `audit` (measure your own stack), `verify` (re-derive any published number), `measure` |
 | `spec/fixtures/` | golden vectors shared by the TypeScript and bash implementations |
 | `tools/` | the scripts that call a network API — the Claude divergence run, the adoption reading, the registry scan — kept out of the package so the library stays offline |

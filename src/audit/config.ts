@@ -3,21 +3,37 @@
  *
  * The leaderboard measures servers one at a time; `audit` measures the set a
  * person actually has installed. That set lives in a client config file, and
- * every client spells it slightly differently:
+ * every client spells it slightly differently — each shape below is the one
+ * its client's own documentation shows, read on the date given:
  *
- *   Claude Desktop / Claude Code / Cursor / Windsurf   { "mcpServers": { ... } }
- *   VS Code (.vscode/mcp.json)                         { "servers": { ... } }
- *   Claude Code (~/.claude.json)                       also { "projects": { "<dir>": { "mcpServers": ... } } }
+ *   Claude Desktop / Claude Code / Cursor / Windsurf / Kiro   { "mcpServers": { ... } }   JSON
+ *   VS Code (.vscode/mcp.json)                                { "servers": { ... } }      JSON
+ *   Claude Code (~/.claude.json)                              also { "projects": { "<dir>": { "mcpServers": ... } } }
+ *   Gemini CLI (~/.gemini/settings.json, 2026-09-06)          { "mcpServers": { ... } }, remotes as `url` (SSE) or `httpUrl`
+ *   Zed (~/.config/zed/settings.json, 2026-09-06)             { "context_servers": { ... } }, comments allowed
+ *   Codex CLI (~/.codex/config.toml, 2026-09-06)              [mcp_servers.<name>]         TOML
+ *   Goose (~/.config/goose/config.yaml, 2026-09-06)           extensions: { <name>: { type: stdio | streamable_http } }   YAML
+ *
+ * A remote is `url` in most files, `serverUrl` in Windsurf's, `httpUrl` or
+ * `url` in Gemini's, `uri` in Goose's. An entry is off under `disabled: true`
+ * (Claude, Cursor, Kiro), `enabled = false` (Codex, Goose), a name in Gemini's
+ * `mcp.excluded` list, or a name in the project's `disabledMcpServers` list in
+ * `~/.claude.json`.
  *
  * Everything here is pure (paths in, servers out) so the discovery rules are
  * testable without touching a real home directory.
  *
  * Env var VALUES are read (a server usually needs its key to start) but are
  * never written to a report: report builders pick fields explicitly and only
- * `envVarNames` is ever serialized.
+ * `envVarNames` is ever serialized. Header values a remote entry carries (a
+ * static bearer token, or one Codex sources from an environment variable by
+ * name) are held to the same rule: sent with the request, never reported —
+ * only `headerNames` is.
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { parse as parseToml } from 'smol-toml';
+import { parse as parseYaml } from 'yaml';
 import {
   TOOL_SEARCH_VARS,
   type ToolSearchEnv,
@@ -40,8 +56,19 @@ export interface ConfiguredServer {
   envVarNames: string[];
   /** Values, needed to spawn the server. NEVER serialize this. */
   env?: Record<string, string>;
-  /** Remote endpoint — recorded so the report can say why it was skipped. */
+  /** Remote endpoint — probed, then measured through the bridge or reported as walled. */
   url?: string;
+  /** Names only — a remote entry's header values never enter a report. Absent means none. */
+  headerNames?: string[];
+  /** Values, sent with the probe and the bridge. NEVER serialize this. */
+  headers?: Record<string, string>;
+  /**
+   * Claude Code's `alwaysLoad: true`: this server's tools load at session
+   * start whatever the tool-search setting says (its MCP documentation, §"Exempt
+   * a server from deferral", read 2026-09-06). Read from the entry, so the
+   * deferral verdict can count it rather than list it as a condition.
+   */
+  alwaysLoad?: true;
 }
 
 /**
@@ -98,32 +125,110 @@ export function parseJsonc(text: string): unknown {
   return JSON.parse(out);
 }
 
+/** Every key any of the documented shapes uses; a client reads the ones it spells. */
 interface RawEntry {
   command?: string;
+  /** Goose spells the launcher `cmd`. */
+  cmd?: string;
   args?: unknown;
   env?: Record<string, unknown>;
+  /** Goose spells the values `envs`. */
+  envs?: Record<string, unknown>;
   url?: string;
+  /** Windsurf's remote endpoint. */
+  serverUrl?: string;
+  /** Gemini's streamable-HTTP endpoint (`url` there is the SSE one). */
+  httpUrl?: string;
+  /** Goose's remote endpoint. */
+  uri?: string;
   type?: string;
   transport?: string;
+  /** Zed: `extension` entries are provided by an extension, not launched from this file. */
+  source?: string;
   disabled?: boolean;
+  /** Codex and Goose spell the switch the other way round. */
+  enabled?: boolean;
+  headers?: Record<string, unknown>;
+  /** Codex: static headers. */
+  http_headers?: Record<string, unknown>;
+  /** Codex: header name → environment variable that holds its value. */
+  env_http_headers?: Record<string, unknown>;
+  /** Codex: environment variable that holds the bearer token. */
+  bearer_token_env_var?: string;
+  alwaysLoad?: boolean;
 }
 
-function toServer(name: string, raw: RawEntry, client: string, source: string): ConfiguredServer | null {
-  if (raw.disabled === true) return null;
+const firstString = (...vs: unknown[]): string | undefined =>
+  vs.find((v): v is string => typeof v === 'string' && v.trim() !== '');
+
+/**
+ * The headers a remote entry would send, by name and by value.
+ *
+ * Codex sources two of its forms from the environment by name
+ * (`bearer_token_env_var`, `env_http_headers`), so a name the config carries
+ * is recorded whether or not this process can see a value for it — the config
+ * says the header exists; only the process decides whether it can be sent.
+ */
+function collectHeaders(
+  raw: RawEntry,
+  processEnv: Record<string, string | undefined>,
+): { names: string[]; values: Record<string, string> } {
+  const values: Record<string, string> = {};
+  const names = new Set<string>();
+  for (const block of [raw.headers, raw.http_headers]) {
+    for (const [k, v] of Object.entries(block ?? {})) {
+      names.add(k);
+      if (typeof v === 'string') values[k] = v;
+    }
+  }
+  for (const [k, v] of Object.entries(raw.env_http_headers ?? {})) {
+    names.add(k);
+    const fromEnv = typeof v === 'string' ? processEnv[v] : undefined;
+    if (fromEnv !== undefined) values[k] = fromEnv;
+  }
+  if (typeof raw.bearer_token_env_var === 'string') {
+    names.add('Authorization');
+    const token = processEnv[raw.bearer_token_env_var];
+    if (token !== undefined) values.Authorization = `Bearer ${token}`;
+  }
+  return { names: [...names].sort(), values };
+}
+
+function toServer(
+  name: string,
+  raw: RawEntry,
+  client: string,
+  source: string,
+  processEnv: Record<string, string | undefined>,
+): ConfiguredServer | null {
+  if (raw.disabled === true || raw.enabled === false) return null;
   const env: Record<string, string> = {};
-  for (const [k, v] of Object.entries(raw.env ?? {})) {
+  for (const [k, v] of Object.entries(raw.env ?? raw.envs ?? {})) {
     if (typeof v === 'string') env[k] = v;
   }
   const envVarNames = Object.keys(env).sort();
+  const pinned = raw.alwaysLoad === true ? { alwaysLoad: true as const } : {};
 
-  // Remote entries carry a url (and sometimes type http/sse) instead of a command.
-  if (!raw.command && typeof raw.url === 'string') {
-    return { name, client, source, transport: 'remote', url: raw.url, envVarNames };
+  const command = firstString(raw.command, raw.cmd);
+  const url = firstString(raw.url, raw.serverUrl, raw.httpUrl, raw.uri);
+  // Remote entries carry an endpoint (and sometimes a type) instead of a command.
+  if (!command && url) {
+    const { names, values } = collectHeaders(raw, processEnv);
+    return {
+      name,
+      client,
+      source,
+      transport: 'remote',
+      url,
+      envVarNames,
+      ...(names.length ? { headerNames: names, headers: values } : {}),
+      ...pinned,
+    };
   }
-  if (typeof raw.command !== 'string' || raw.command.trim() === '') return null;
+  if (!command) return null;
 
   const args = Array.isArray(raw.args) ? raw.args.filter((a): a is string => typeof a === 'string') : [];
-  const argv = [raw.command, ...args];
+  const argv = [command, ...args];
   return {
     name,
     client,
@@ -134,6 +239,7 @@ function toServer(name: string, raw: RawEntry, client: string, source: string): 
     argv,
     envVarNames,
     env: envVarNames.length ? env : undefined,
+    ...pinned,
   };
 }
 
@@ -144,10 +250,16 @@ function toServer(name: string, raw: RawEntry, client: string, source: string): 
  */
 export function extractServers(
   doc: unknown,
-  meta: { client: string; source: string; cwd?: string },
+  meta: { client: string; source: string; cwd?: string; env?: Record<string, string | undefined> },
 ): ConfiguredServer[] {
   return extractDeclaration(doc, meta).servers;
 }
+
+/** Goose extension types this file can launch; `builtin` and `platform` live inside goose itself. */
+const GOOSE_LAUNCHABLE = new Set(['stdio', 'streamable_http']);
+
+const stringList = (v: unknown): string[] =>
+  Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : [];
 
 /**
  * What one config document declares, servers and switched-off entries both.
@@ -160,32 +272,55 @@ export function extractServers(
  */
 export function extractDeclaration(
   doc: unknown,
-  meta: { client: string; source: string; cwd?: string },
+  meta: { client: string; source: string; cwd?: string; env?: Record<string, string | undefined> },
 ): { servers: ConfiguredServer[]; disabled: string[] } {
   if (!doc || typeof doc !== 'object') return { servers: [], disabled: [] };
   const d = doc as Record<string, unknown>;
   const out: ConfiguredServer[] = [];
   const off: string[] = [];
+  const processEnv = meta.env ?? {};
 
-  const addBlock = (block: unknown) => {
+  // Names a list elsewhere in the same file switches off: Gemini's
+  // `mcp.excluded` ("Servers in this list will not be connected to"), and the
+  // per-project `disabledMcpServers` Claude Code writes into `~/.claude.json`
+  // when a server is toggled off in its /mcp panel (both read 2026-09-06).
+  const listedOff = new Set<string>();
+  const mcp = d.mcp;
+  if (mcp && typeof mcp === 'object') for (const n of stringList((mcp as Record<string, unknown>).excluded)) listedOff.add(n);
+  const project =
+    meta.cwd && d.projects && typeof d.projects === 'object'
+      ? ((d.projects as Record<string, unknown>)[meta.cwd] as Record<string, unknown> | undefined)
+      : undefined;
+  if (project && typeof project === 'object') for (const n of stringList(project.disabledMcpServers)) listedOff.add(n);
+
+  const addBlock = (block: unknown, launchable: (raw: RawEntry) => boolean = () => true) => {
     if (!block || typeof block !== 'object') return;
     for (const [name, raw] of Object.entries(block as Record<string, unknown>)) {
       if (!raw || typeof raw !== 'object') continue;
+      const entry = raw as RawEntry;
+      if (!launchable(entry)) continue;
       // Recorded before `toServer` drops it, which is the only difference this
       // can still see: an entry it returns null for because the person turned
       // it off, rather than because it is malformed or absent.
-      if ((raw as RawEntry).disabled === true) off.push(name);
-      const s = toServer(name, raw as RawEntry, meta.client, meta.source);
+      if (entry.disabled === true || entry.enabled === false || listedOff.has(name)) {
+        off.push(name);
+        continue;
+      }
+      const s = toServer(name, entry, meta.client, meta.source, processEnv);
       if (s) out.push(s);
     }
   };
 
   addBlock(d.mcpServers);
   addBlock(d.servers); // VS Code
-  if (meta.cwd && d.projects && typeof d.projects === 'object') {
-    const project = (d.projects as Record<string, unknown>)[meta.cwd];
-    if (project && typeof project === 'object') addBlock((project as Record<string, unknown>).mcpServers);
-  }
+  // Zed: an `extension` entry is provided by an installed extension, and
+  // nothing in this file says how to launch it.
+  addBlock(d.context_servers, (raw) => raw.source !== 'extension');
+  addBlock(d.mcp_servers); // Codex
+  // Goose: only the two types that name a process or an endpoint are servers
+  // this file can reach; `builtin` and `platform` are goose's own.
+  addBlock(d.extensions, (raw) => typeof raw.type === 'string' && GOOSE_LAUNCHABLE.has(raw.type));
+  if (project && typeof project === 'object') addBlock(project.mcpServers);
 
   // A name can legitimately appear in both blocks of the same file; keep the first.
   const seen = new Set<string>();
@@ -199,6 +334,8 @@ export function extractDeclaration(
 export interface ConfigCandidate {
   client: string;
   path: string;
+  /** How the file is written. Absent means JSON, with comments and trailing commas tolerated. */
+  format?: 'json' | 'toml' | 'yaml';
 }
 
 /** Every place a client config is known to live, whether or not it exists. */
@@ -216,6 +353,15 @@ export function configCandidates(env: {
         ? join(env.appData ?? join(home, 'AppData', 'Roaming'), 'Claude', 'claude_desktop_config.json')
         : join(home, '.config', 'Claude', 'claude_desktop_config.json');
 
+  // Paths each client's own documentation gives, read 2026-09-06. Zed's user
+  // settings path is documented for macOS and Linux only; Goose's Windows path
+  // is under %APPDATA%\Block\goose. A project-level file is nominated wherever
+  // the client documents one (Codex: trusted projects; Gemini, Zed, Kiro).
+  const appData = env.appData ?? join(home, 'AppData', 'Roaming');
+  const goose =
+    platform === 'win32'
+      ? join(appData, 'Block', 'goose', 'config', 'config.yaml')
+      : join(home, '.config', 'goose', 'config.yaml');
   return [
     { client: 'claude-desktop', path: desktop },
     { client: 'claude-code', path: join(home, '.claude.json') },
@@ -224,7 +370,23 @@ export function configCandidates(env: {
     { client: 'cursor', path: join(cwd, '.cursor', 'mcp.json') },
     { client: 'vscode', path: join(cwd, '.vscode', 'mcp.json') },
     { client: 'windsurf', path: join(home, '.codeium', 'windsurf', 'mcp_config.json') },
+    { client: 'codex', path: join(home, '.codex', 'config.toml'), format: 'toml' },
+    { client: 'codex', path: join(cwd, '.codex', 'config.toml'), format: 'toml' },
+    { client: 'gemini', path: join(home, '.gemini', 'settings.json') },
+    { client: 'gemini', path: join(cwd, '.gemini', 'settings.json') },
+    ...(platform === 'win32' ? [] : [{ client: 'zed', path: join(home, '.config', 'zed', 'settings.json') }]),
+    { client: 'zed', path: join(cwd, '.zed', 'settings.json') },
+    { client: 'kiro', path: join(home, '.kiro', 'settings', 'mcp.json') },
+    { client: 'kiro', path: join(cwd, '.kiro', 'settings', 'mcp.json') },
+    { client: 'goose', path: goose, format: 'yaml' },
   ];
+}
+
+/** Parse one config file's text in the format its candidate declares. */
+export function parseConfigText(text: string, format: ConfigCandidate['format'] = 'json'): unknown {
+  if (format === 'toml') return parseToml(text);
+  if (format === 'yaml') return parseYaml(text);
+  return parseJsonc(text);
 }
 
 export interface LoadedConfig {
@@ -252,7 +414,11 @@ export interface LoadedConfig {
 }
 
 /** Read + parse the candidates that exist. Unreadable files are reported, not thrown. */
-export function loadConfigs(candidates: ConfigCandidate[], cwd: string): LoadedConfig[] {
+export function loadConfigs(
+  candidates: ConfigCandidate[],
+  cwd: string,
+  processEnv: Record<string, string | undefined> = process.env,
+): LoadedConfig[] {
   const out: LoadedConfig[] = [];
   // Running from your home directory nominates `~/.cursor/mcp.json` twice —
   // once as the home candidate, once as the cwd one. Loaded twice it is
@@ -265,8 +431,8 @@ export function loadConfigs(candidates: ConfigCandidate[], cwd: string): LoadedC
     if (seen.has(c.path)) continue;
     seen.add(c.path);
     try {
-      const doc = parseJsonc(readFileSync(c.path, 'utf8'));
-      const { servers, disabled } = extractDeclaration(doc, { client: c.client, source: c.path, cwd });
+      const doc = parseConfigText(readFileSync(c.path, 'utf8'), c.format);
+      const { servers, disabled } = extractDeclaration(doc, { client: c.client, source: c.path, cwd, env: processEnv });
       // A config with no MCP block at all (e.g. a ~/.claude.json holding only
       // session history) is not worth a line in the report — it has no total.
       // It is still worth carrying: it is the evidence that a client is on this

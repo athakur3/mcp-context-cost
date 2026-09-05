@@ -12,6 +12,7 @@ import { parseToolShapeBaseline, type ToolShapeBaseline } from '../core/tool-sha
 import { parseCaptureIndex, type CaptureIndex } from '../core/capture-index.js';
 import { buildReport, serverKey, type AuditReport } from './audit.js';
 import { toolSearchEnv, type ToolSearchEnv, type ToolSearchSource } from './deferral.js';
+import { DEFAULT_PROBE_TIMEOUT_MS, probeRemote, type RemoteProbe } from './remote.js';
 import {
   configCandidates,
   loadConfigs,
@@ -67,6 +68,12 @@ export interface AuditOptions {
    * those files off the machine being audited (`discoverSettings`).
    */
   settings?: ToolSearchSource[];
+  /**
+   * What each remote endpoint said to an unauthenticated `initialize`, keyed
+   * like `measureAll`'s map. `runAudit` probes them (`probeRemotes`); a test can
+   * state the answers instead of reaching a network.
+   */
+  remotes?: Map<string, RemoteProbe>;
   onProgress?: (name: string, done: number, total: number) => void;
 }
 
@@ -132,7 +139,60 @@ export function discoverSettings(opts: AuditOptions = {}): ToolSearchSource[] {
   );
 }
 
-/** Measure every distinct stdio server across the given configs, once each. */
+/**
+ * Ask every distinct remote endpoint what it says to an unauthenticated
+ * `initialize`, once each. This comes before any launch — remote.ts says why an
+ * endpoint is asked before the bridge is pointed at it.
+ */
+export async function probeRemotes(configs: LoadedConfig[], opts: AuditOptions = {}): Promise<Map<string, RemoteProbe>> {
+  const unique = new Map<string, ConfiguredServer>();
+  for (const cfg of configs) {
+    for (const s of cfg.servers) {
+      if (s.transport !== 'remote' || !s.url) continue;
+      if (!unique.has(serverKey(s))) unique.set(serverKey(s), s);
+    }
+  }
+  const out = new Map<string, RemoteProbe>();
+  // One HTTP exchange each; the launch timeout is the wrong bound for it.
+  const timeoutMs = Math.min(opts.timeoutMs ?? DEFAULT_PROBE_TIMEOUT_MS, DEFAULT_PROBE_TIMEOUT_MS);
+  await Promise.all(
+    [...unique].map(async ([key, s]) => {
+      out.set(key, await probeRemote(s.url!, { headers: s.headers, timeoutMs }));
+    }),
+  );
+  return out;
+}
+
+/**
+ * The bridge launch for an endpoint that answered without a credential.
+ *
+ * `argv` is exact, for the host path; `command` is the same launch as one
+ * shell line, for the docker path, which runs it through `sh -lc` (docker.ts).
+ * Both carry the entry's header values, as a stdio launch carries env values.
+ * `display` carries the names only, and is the form a report may print.
+ */
+export function bridgeLaunch(s: ConfiguredServer): { argv: string[]; command: string; display: string } {
+  const url = s.url ?? '';
+  const argv = ['npx', '-y', 'mcp-remote', url];
+  const display = [...argv];
+  // mcp-remote refuses a plain-http endpoint unless told it is on purpose.
+  if (/^http:/i.test(url)) {
+    argv.push('--allow-http');
+    display.push('--allow-http');
+  }
+  for (const [k, v] of Object.entries(s.headers ?? {})) {
+    argv.push('--header', `${k}: ${v}`);
+    display.push('--header', k);
+  }
+  const shellQuote = (a: string) => (/^[A-Za-z0-9_@%+=:,./-]+$/.test(a) ? a : `'${a.replace(/'/g, `'\\''`)}'`);
+  return { argv, command: argv.map(shellQuote).join(' '), display: display.join(' ') };
+}
+
+/**
+ * Measure every distinct server across the given configs, once each: each
+ * stdio server by its launch, and each remote endpoint the probe found open
+ * through the bridge. A walled or unreachable endpoint is not launched at all.
+ */
 export async function measureAll(
   configs: LoadedConfig[],
   opts: AuditOptions = {},
@@ -140,7 +200,7 @@ export async function measureAll(
   const unique = new Map<string, ConfiguredServer>();
   for (const cfg of configs) {
     for (const s of cfg.servers) {
-      if (s.transport !== 'stdio') continue;
+      if (s.transport === 'remote' && opts.remotes?.get(serverKey(s))?.kind !== 'open') continue;
       // Two clients pointing at the same argv are one measurement, not two.
       if (!unique.has(serverKey(s))) unique.set(serverKey(s), s);
     }
@@ -154,8 +214,9 @@ export async function measureAll(
   const worker = async () => {
     for (let next = queue.shift(); next; next = queue.shift()) {
       const [key, s] = next;
-      const m = await measureServer(s.name, s.command ?? '', {
-        argv: s.argv,
+      const launch = s.transport === 'remote' ? bridgeLaunch(s) : null;
+      const m = await measureServer(s.name, launch ? launch.command : (s.command ?? ''), {
+        argv: launch ? launch.argv : s.argv,
         env: s.env,
         timeoutMs: opts.timeoutMs ?? 60_000,
         docker: opts.docker,
@@ -172,7 +233,8 @@ export async function measureAll(
 
 export async function runAudit(opts: AuditOptions = {}): Promise<AuditReport> {
   const configs = discover(opts);
-  const measured = await measureAll(configs, opts);
+  const remotes = opts.remotes ?? (await probeRemotes(configs, opts));
+  const measured = await measureAll(configs, { ...opts, remotes });
 
   let divergence: DivergenceRun | null = null;
   let divergenceProblem: string | undefined;
@@ -206,6 +268,7 @@ export async function runAudit(opts: AuditOptions = {}): Promise<AuditReport> {
     captureIndex,
     env: opts.env ?? toolSearchEnv(process.env),
     settings: opts.settings ?? discoverSettings(opts),
+    remotes,
   });
   if (divergenceProblem) report.problems.push(divergenceProblem);
   if (toolShapeProblem) report.problems.push(toolShapeProblem);

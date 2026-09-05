@@ -7,6 +7,96 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+Phase 4 of the roadmap — `audit` reaches the stacks people actually run — and the hour of
+checking that came first held two of its three items to their symptom and refuted each on its
+mechanism; the third, the dated re-read, found the model's source still standing and four
+things moved around it. The pattern is exact four phases running: every item that quoted a
+record held, every item that inferred did not. What reaches an installer is a new module,
+`dist/audit/remote.js`, a third dependency, and an `audit` report whose status words have
+changed: `auth-walled` and `unreachable` are new, `remote-not-measurable` is gone.
+
+- **`audit` measures remote entries, and says in the server's own words which ones it
+  cannot.** Every `url` entry used to be skipped as `remote-not-measurable`, which said nothing
+  about the endpoint and under-counted exactly the stacks the audit is for. The roadmap's
+  mechanism — hand every url to the `mcp-remote` bridge the sweep already measures open
+  endpoints through — was wrong on a developer machine: against an OAuth-walled endpoint
+  mcp-remote opens a browser window and waits for the callback (its README), and in a
+  headless run it waits until this harness's timeout and the row reads `timeout`, a word that
+  blames the clock for a credential. So the endpoint is asked first, with the request every
+  MCP session begins with — `initialize` over streamable HTTP, then a GET with an event-stream
+  `accept` for an SSE endpoint that refuses POST — and the answer is the row. Probed
+  2026-09-06: `mcp.linear.app/mcp`, `mcp.zapier.com/api/mcp/mcp` and `mcp.vercel.com` answer
+  `401` with a `WWW-Authenticate: Bearer …` header naming the OAuth resource;
+  `mcp.deepwiki.com/mcp`, `learn.microsoft.com/api/mcp`,
+  `docs.mcp.cloudflare.com/sse` and `huggingface.co/mcp` answer `200` with a session or a
+  stream. An endpoint that answers is measured through the bridge and joins the total as any
+  server does (`test/remote-bridge.test.ts` holds it end to end against the reference
+  "everything" server on its streamable-HTTP transport); one that answers `401` or `403` is
+  **`auth-walled`**, quoting the status and the header, with the URL, and makes the total a
+  floor; one that gives no MCP answer — a connection failure, a timeout, a `404`, a `200`
+  carrying HTML — is **`unreachable`**, with the reason. Only an endpoint that answered
+  without a credential is handed to the bridge, so the bridge never has a reason to open a
+  browser. Header values an entry carries — a static bearer token, or one Codex sources from
+  an environment variable by name — are sent with the probe and the bridge, as env values are
+  spawned into a stdio server, and never written to a report; only `headerNames` is. The same
+  goes the other way now: a value the server echoed into its own failure text is redacted
+  before that text reaches a report. And `--budget` counts every skipped row against the
+  total, because an auth-walled endpoint is a working server the session pays for with its
+  credential, and a cost this could not establish is not a cost of zero.
+- **Five more clients' configs are discovered, each in the shape its own documentation shows,
+  read 2026-09-06.** Codex CLI (`~/.codex/config.toml` and a trusted project's
+  `.codex/config.toml`: `[mcp_servers.<name>]`, `enabled = false`, `url` with
+  `bearer_token_env_var`, `http_headers` and `env_http_headers`), Gemini CLI
+  (`~/.gemini/settings.json` and `.gemini/settings.json`: `command`, `url` for SSE, `httpUrl`
+  for streamable HTTP, `headers`, and the `mcp.excluded` list honoured as switched off), Zed
+  (`context_servers` in `~/.config/zed/settings.json` and `.zed/settings.json`, a file that
+  carries comments; an `extension`-provided entry is left alone, since nothing in the file
+  says how to launch it), Kiro (`~/.kiro/settings/mcp.json` and `.kiro/settings/mcp.json`) and
+  Goose (`~/.config/goose/config.yaml`, `%APPDATA%\Block\goose\config\config.yaml` on
+  Windows: `extensions` of type `stdio` with `cmd`/`envs` and `streamable_http` with `uri`;
+  `builtin` and `platform` are goose's own and are not launched from the file). The roadmap
+  asked for three, in order of user base; five had first-hand pages. Cline stays out: its
+  CLI's `~/.cline/mcp.json` is documented, but the extension's `globalStorage` path — the one
+  most people have — turned up only in third-party guides, and a path this reads is a claim
+  about someone else's software. Codex is TOML, which the package had no parser for; the
+  decision is `smol-toml` 1.8.0 (BSD-3, no dependencies of its own), the package's third
+  dependency after `js-tiktoken` and `yaml`, rather than a hand-rolled subset that would read a
+  hand-edited file wrong without saying so. Each new client has a who-pays row: no default
+  deferral is on record for any of the five — their pages say nothing about deferring tool
+  definitions, and Windsurf's states a cap of 100 tools, which is a different thing — and the
+  report says so in those words. Goose's docs moved domains between the roadmap and the build
+  (`block.github.io/goose` now redirects to `goose-docs.ai`), and the tool-router page a
+  search engine still lists there is a 404, so no row was written from it.
+- **Windsurf's remotes were being dropped.** Its documentation spells a remote endpoint
+  `serverUrl`, not `url`; `toServer` looked for `url` alone and returned nothing for the
+  entry, so a Windsurf config with a remote server audited as if that server were not there.
+- **What Claude Code's own file adds is read too.** An entry pinned `alwaysLoad: true` loads
+  at session start whatever the tool-search setting says (its MCP documentation, §"Exempt a
+  server from deferral"); it was listed among the conditions a reader had to check, and it is
+  now read from the entry, named with its tokens in the deferral verdict, and left out of any
+  threshold comparison, since the documented `auto` mode counts only "the tools it would
+  otherwise defer". The per-tool form — `"anthropic/alwaysLoad": true` in a tool's `_meta` — is
+  not read from a capture and stays a listed condition. And the per-project
+  `disabledMcpServers` list Claude Code writes into `~/.claude.json` when a server is toggled
+  off in its `/mcp` panel is honoured: a server on that list for this project is switched off,
+  not measured. Not read: `disabledMcpjsonServers` in a settings file, which rejects a
+  project's `.mcp.json` server from a different file than the one declaring it, and the
+  `${VAR}` expansion Claude Code and Gemini apply to env values, which this passes through
+  verbatim.
+- **The deferral model is re-read, dated 2026-09-06, and the four things that moved are
+  recorded.** The first read of the page through a summarising fetch reported the
+  `ENABLE_TOOL_SEARCH` table gone; the raw page has it, unchanged, at §"Configure tool
+  search" — a summary is not a record. Around it: tool search is on by default on Google
+  Cloud's Agent Platform for the Claude 4.5 generation and later ("Before v2.1.221, Claude
+  Code disabled tool search for all models on Google Cloud's Agent Platform unless you set
+  `ENABLE_TOOL_SEARCH=true`"), which the exception already named only for earlier models;
+  under `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` "your organization can keep tool search on
+  through managed settings, on Claude Code v2.1.227 or later", an override this audit does not
+  read, so that variable still resolves as "off" here and the page says so; `alwaysLoad` is an
+  entry field, now read as above; and "Claude Code truncates tool descriptions and server
+  instructions at 2KB each", which bounds what a deferring session loads at start and is noted
+  beside the session-start column, whose number is the wire cost of that list and not any one
+  client's. `docs/METHODOLOGY.md`'s read-on date has advanced, with the changes.
 ## 0.14.0 — 2026-09-05
 
 Phase 3 of the roadmap — others can add servers safely — and the hour of checking that came

@@ -84,8 +84,9 @@ const STATIC_COUNTS: { file: PageFile; text: string; why: string }[] = [
   { file: 'docs/METHODOLOGY.md', text: 'three fields an Anthropic tool', why: 'the Anthropic tool schema has three request fields — a fact about the API, not about this data' },
 
   // --- frozen or externally fixed ---
-  { file: 'README.md', text: '5 clients', why: 'the number of client config formats `audit` discovers — moves when code moves, and the deferral table test already reads the page against the resolver' },
-  { file: 'README.md', text: 'four discovered clients', why: 'the same discovery set, in the audit walkthrough — a property of the code, not of the sweep' },
+  { file: 'README.md', text: '10 clients', why: 'the number of client config formats `audit` discovers — moves when code moves, and the deferral table test already reads the page against the resolver' },
+  { file: 'README.md', text: 'nine discovered clients', why: 'the same discovery set less Claude Code, in the audit walkthrough — a property of the code, not of the sweep' },
+  { file: 'docs/METHODOLOGY.md', text: '100 tools', why: "Windsurf's documented tool cap, a fact about that client read 2026-09-06, not about this data" },
   { file: 'README.md', text: '1,200 tokens', why: 'an illustrative release-size figure in the badge pitch, not a measurement' },
   { file: 'docs/METHODOLOGY.md', text: '5 servers', why: 'the harness-guard floor, a constant in `harness-guard.ts`' },
   { file: 'docs/METHODOLOGY.md', text: '25 tokens', why: '`SIGNIFICANT_TOKENS`, a constant in `core/regression.ts`' },

@@ -37,11 +37,34 @@
  *     generation; `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` "keeps tool search
  *     off. You can't override it by setting `ENABLE_TOOL_SEARCH` yourself."
  *     A server with `alwaysLoad: true` loads at session start regardless.
+ *   - The same page, re-read 2026-09-06 (the roadmap's dated re-read). The
+ *     value table stands as quoted, and four things moved around it:
+ *     (1) on Google Cloud's Agent Platform, tool search is on by default for
+ *     the Claude 4.5 generation and later "the same as on the Anthropic API"
+ *     — "Before v2.1.221, Claude Code disabled tool search for all models on
+ *     Google Cloud's Agent Platform unless you set ENABLE_TOOL_SEARCH=true";
+ *     the exception below already names only the earlier models. (2) Under
+ *     `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`, "your organization can keep
+ *     tool search on through managed settings, on Claude Code v2.1.227 or
+ *     later" — on a direct connection or a gateway, not on a cloud provider.
+ *     This audit reads the managed settings file for the three variables and
+ *     nothing else, so that override is not read here and the variable is
+ *     still resolved as "off". (3) `alwaysLoad: true` is an entry field on
+ *     every server type, and a tool can carry `"anthropic/alwaysLoad": true`
+ *     in its `_meta`. The entry form is read from the config now
+ *     (`DeferralServer.alwaysLoad`) and counted rather than listed; the
+ *     per-tool form is still a listed condition. (4) "Claude Code truncates
+ *     tool descriptions and server instructions at 2KB each", which bounds what
+ *     a deferring session loads at start — noted beside the session-start
+ *     metric in METHODOLOGY, not applied to any number here.
  *
- * No default deferral is on record here for the other four clients this tool
- * discovers. That is an absence of a record, not a measurement of those
- * clients, and it is printed as such — the same rule the rest of this project
- * follows for a value it has not observed.
+ * No default deferral is on record here for the other clients this tool
+ * discovers — Claude Desktop, Cursor, VS Code, Windsurf, and from 2026-09-06
+ * Codex CLI, Gemini CLI, Zed, Kiro and Goose, whose configuration pages were
+ * read that day and say nothing about deferring tool definitions. That is an
+ * absence of a record, not a measurement of those clients, and it is printed
+ * as such — the same rule the rest of this project follows for a value it has
+ * not observed.
  */
 import type { DivergenceRun } from '../core/divergence.js';
 
@@ -520,8 +543,17 @@ export function wireToClientRatio(run?: DivergenceRun | null): WireToClientRatio
 
 /** One measured server, as the deferral arithmetic needs it. */
 export interface DeferralServer {
+  /** For naming the servers a verdict singles out; the arithmetic never reads it. */
+  name?: string;
   /** o200k tokens over the wire capture — the audit's own unit. */
   tokens: number;
+  /**
+   * The entry is pinned `alwaysLoad: true`, so its tools load at session start
+   * whatever the tool-search setting says, and it does not count toward a
+   * threshold — the documented `auto` mode counts "the tools it would
+   * otherwise defer".
+   */
+  alwaysLoad?: boolean;
   /**
    * Anthropic's own count for this server from a current divergence row, when
    * `--claude` supplied one. `null` means no current match, `undefined` means
@@ -620,10 +652,31 @@ export interface DeferralVerdict {
   sharedMeasurements: number;
   /** Conditions this cannot read, under which a deferring client pays in full. */
   exceptions: string[];
+  /**
+   * Servers in this scope pinned `alwaysLoad: true` in their entry, and their
+   * wire tokens. Read from the config, so it is stated rather than listed as a
+   * condition: whatever the mode, these load at session start.
+   */
+  alwaysLoad: { servers: string[]; tokens: number };
 }
 
-/** Clients this tool discovers that have no default deferral on record. */
-const NO_DEFERRAL_ON_RECORD = new Set(['claude-desktop', 'cursor', 'vscode', 'windsurf']);
+/**
+ * Clients this tool discovers that have no default deferral on record. Each
+ * client's own MCP configuration page was read on the date config.ts gives
+ * and says nothing about deferring tool definitions — Windsurf's states a cap
+ * of 100 tools, which is a different thing and not a deferral.
+ */
+const NO_DEFERRAL_ON_RECORD = new Set([
+  'claude-desktop',
+  'cursor',
+  'vscode',
+  'windsurf',
+  'codex',
+  'gemini',
+  'zed',
+  'kiro',
+  'goose',
+]);
 
 /**
  * Where deferral does not apply even when the machine's setting says it should.
@@ -635,7 +688,7 @@ const EXCEPTIONS = [
   'a Microsoft Foundry deployment hosted on Azure, which rejects tool search server-side',
   "Google Cloud's Agent Platform on a model earlier than the Claude 4.5 generation",
   'a model without support for tool_reference blocks (before Sonnet 4.5 / Haiku 4.5 / Opus 4.5)',
-  'a server pinned with "alwaysLoad": true, whose tools load at session start regardless',
+  'a tool whose _meta carries "anthropic/alwaysLoad": true, which this audit does not read from a capture',
 ];
 
 function estimate(servers: DeferralServer[], ratio: WireToClientRatio): ClientSideEstimate {
@@ -695,6 +748,11 @@ export function evaluateDeferral(
   const wireTokens = scope.servers.reduce((a, s) => a + s.tokens, 0);
   const isFloor = scope.skippedCount > 0;
   const sharedMeasurements = scope.sharedMeasurements;
+  const pinned = scope.servers.filter((s) => s.alwaysLoad === true);
+  const alwaysLoad = {
+    servers: pinned.map((s) => s.name ?? '(unnamed)'),
+    tokens: pinned.reduce((a, s) => a + s.tokens, 0),
+  };
 
   // Every field a verdict carries, at its "nothing to say" value. Each mode
   // below overrides only what it can actually answer.
@@ -719,6 +777,7 @@ export function evaluateDeferral(
     distanceTokens: null,
     crosses: null,
     exceptions: [],
+    alwaysLoad,
   };
 
   if (scope.client !== 'claude-code') {
@@ -783,7 +842,12 @@ export function evaluateDeferral(
   }
 
   const ratio = wireToClientRatio(opts.divergence);
-  const clientTokens = estimate(scope.servers, ratio);
+  // Only what the client would otherwise defer is held against the threshold;
+  // a pinned server loads either way and is not part of the question.
+  const clientTokens = estimate(
+    scope.servers.filter((s) => s.alwaysLoad !== true),
+    ratio,
+  );
 
   // At-or-above, on the documented "defers all of them once the definitions
   // reach 10%". A range that is entirely over is over even if it is a floor:
