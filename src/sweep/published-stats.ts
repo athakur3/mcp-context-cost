@@ -28,7 +28,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DEFAULT_CONTEXT_WINDOW } from '../audit/audit.js';
-import { wireToClientRatio } from '../audit/deferral.js';
+import { BAND_PRECISION, wireToClientRatio } from '../audit/deferral.js';
 import { fieldSelectionShare, isCurrent } from '../core/divergence.js';
 import { sessionStartLoad } from '../core/session-start.js';
 import { isGood } from './harness-guard.js';
@@ -313,7 +313,11 @@ export const PAGE_CLAIMS: Claim[] = [
     // page-number guard: three numbers written by hand beside the two
     // sentences regen already kept true.
     template: 'measured at {f}×–{f}× across {n} servers)',
-    values: (s) => [s.claude.ratioMin.toFixed(2), s.claude.ratioMax.toFixed(2), fmt(s.claude.ratioServers)],
+    values: (s) => [
+      s.claude.ratioMin.toFixed(BAND_PRECISION),
+      s.claude.ratioMax.toFixed(BAND_PRECISION),
+      fmt(s.claude.ratioServers),
+    ],
   },
   {
     file: 'README.md',
@@ -432,13 +436,21 @@ export const PAGE_CLAIMS: Claim[] = [
     // different sources for one number is the drift this file exists to end, so
     // both pages state the run and the constant is guarded separately.
     template: 'band ({f}×–{f}×\nacross {n} servers)',
-    values: (s) => [s.claude.ratioMin.toFixed(2), s.claude.ratioMax.toFixed(2), fmt(s.claude.ratioServers)],
+    values: (s) => [
+      s.claude.ratioMin.toFixed(BAND_PRECISION),
+      s.claude.ratioMax.toFixed(BAND_PRECISION),
+      fmt(s.claude.ratioServers),
+    ],
   },
   {
     file: 'docs/METHODOLOGY.md',
     id: 'divergence:ratio-range',
     template: 'it ranged from {f}× to {f}× across the {n} servers in the run,',
-    values: (s) => [s.claude.ratioMin.toFixed(2), s.claude.ratioMax.toFixed(2), fmt(s.claude.ratioServers)],
+    values: (s) => [
+      s.claude.ratioMin.toFixed(BAND_PRECISION),
+      s.claude.ratioMax.toFixed(BAND_PRECISION),
+      fmt(s.claude.ratioServers),
+    ],
   },
   {
     file: 'docs/METHODOLOGY.md',

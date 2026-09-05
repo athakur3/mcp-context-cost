@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
+import { readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { measuringArch, observedArch } from '../src/sweep/run.js';
 import { containerPlatform, platformFromUname } from '../src/sweep/docker.js';
+import type { Measurement } from '../src/core/types.js';
 
 /**
  * `local-mcp` sat published as a startup failure on the strength of a run whose
@@ -98,5 +101,80 @@ describe('observedArch — what gets written into the record', () => {
     expect(
       await observedArch({ docker: true, note: 'command is itself a docker run (host-spawned container)' }),
     ).toBeUndefined();
+  });
+});
+
+/**
+ * Every record made since the field shipped says which machine made it.
+ *
+ * The tests above hold the three ways the value is *derived*. This one holds
+ * the thing they exist for: that the records on disk actually carry it. A
+ * field that is merely available fixes nothing — `local-mcp` sat published as
+ * a startup failure whose real finding was the machine, and what a reader
+ * needed was the record saying so.
+ *
+ * Two records may legitimately not say. One made before 0.12.0, where the
+ * field shipped: absent there means unknown, which is true, and back-filling a
+ * guess is the failure this project exists to prevent. And one whose command
+ * is itself a `docker run`: the harness never chose that container and cannot
+ * see inside it, so `observedArch` returns nothing rather than a claim about
+ * someone else's container.
+ */
+describe('the published records say which machine made them', () => {
+  const repoRoot = join(import.meta.dirname, '..');
+  const resultsDir = join(repoRoot, 'results');
+
+  /**
+   * The boundary, read from the changelog rather than written down here: the
+   * section for the release that added the field carries its own date, and a
+   * date copied into a test is the drift this repository keeps finding.
+   */
+  const shipped = /^## 0\.12\.0 — (\d{4}-\d{2}-\d{2})$/m.exec(
+    readFileSync(join(repoRoot, 'CHANGELOG.md'), 'utf8'),
+  )?.[1];
+
+  /** The note `run.ts` writes for a container this harness did not launch. */
+  const HOST_SPAWNED = 'command is itself a docker run (host-spawned container)';
+
+  const records = readdirSync(resultsDir, { withFileTypes: true })
+    .filter((e) => e.isDirectory())
+    .map((e) => {
+      const file = join(resultsDir, e.name, 'measurement.json');
+      try {
+        return { name: e.name, m: JSON.parse(readFileSync(file, 'utf8')) as Measurement };
+      } catch {
+        return null;
+      }
+    })
+    .filter((r): r is { name: string; m: Measurement } => r !== null);
+
+  it('reads the boundary and finds records on both sides of it', () => {
+    expect(shipped, 'CHANGELOG has a dated 0.12.0 section — the release that added isolation.arch').toBeDefined();
+    expect(records.length).toBeGreaterThan(50);
+    expect(records.some((r) => (r.m.measuredAt ?? '') >= shipped!)).toBe(true);
+  });
+
+  it('names the note that stands in for an architecture, as run.ts writes it', () => {
+    // Quoted from the source rather than restated, so renaming the note fails
+    // here instead of quietly widening the exemption below.
+    expect(readFileSync(join(repoRoot, 'src', 'sweep', 'run.ts'), 'utf8')).toContain(HOST_SPAWNED);
+  });
+
+  it('carries isolation.arch on every record measured since, or says why not', () => {
+    const since = records.filter((r) => typeof r.m.measuredAt === 'string' && r.m.measuredAt >= shipped!);
+    expect(since.length).toBeGreaterThan(0);
+    for (const { name, m } of since) {
+      const iso = m.isolation ?? {};
+      if (iso.docker === true && iso.image === undefined) {
+        // The host-spawned case. Absent is the honest answer, and the note is
+        // what makes it readable as an answer rather than an omission.
+        expect(iso.arch, `${name}: a container this harness did not launch has no architecture to report`).toBeUndefined();
+        expect(iso.note ?? '', `${name}: absent arch with nothing saying why`).toContain(HOST_SPAWNED);
+        continue;
+      }
+      expect(iso.arch, `${name} (${m.measuredAt}) was measured after ${shipped} without recording its architecture`).toMatch(
+        /^[a-z0-9]+\/[a-z0-9][a-z0-9/.]*$/,
+      );
+    }
   });
 });

@@ -516,6 +516,58 @@ export const PUBLISHED_WIRE_TO_CLIENT_RATIO: WireToClientRatio = {
   source: 'the published claude-opus-5 divergence run',
 };
 
+/**
+ * The decimal places the band is published at.
+ *
+ * Not a display choice: it is the precision a snapshot of the band has to stay
+ * accurate to, because two numbers that round the same way decide the same
+ * above/below verdict against a client threshold, and two that do not, do not.
+ * The pages print the band to this many places (`published-stats.ts`) and
+ * `bandSnapshotProblem` judges a snapshot at the same width, so "still right"
+ * means the same thing in both places.
+ */
+export const BAND_PRECISION = 2;
+
+/**
+ * Is a snapshot of the band still an honest description of `derived`? The
+ * problem in words, or `null` when the snapshot may lag but does not mislead.
+ *
+ * Two callers, one rule. The suite asks it of `PUBLISHED_WIRE_TO_CLIENT_RATIO`
+ * against the run committed beside it. The release readiness gate asks it of
+ * the constant the *last release* shipped against the run on trunk — that band
+ * is what an installed package states offline, and nothing except cutting a
+ * release can move it, so a release being due is exactly what a finding there
+ * means.
+ *
+ * Deliberately not an equality check, and the first version of this rule was
+ * one: it demanded agreement and went red on the next bot commit, which had
+ * done nothing but measure a server for the first time. The run grows whenever
+ * a sweep reaches a new server, and the bot that commits it cannot edit a
+ * TypeScript constant. A snapshot is allowed to lag. It is not allowed to be
+ * wrong:
+ *
+ * - the **band** must still be right to the precision it is published at,
+ *   because it decides an above/below verdict against a client threshold;
+ * - the **count** must never exceed the run, because a snapshot claiming more
+ *   servers than were measured is a fabricated number rather than an old one.
+ */
+export function bandSnapshotProblem(
+  snapshot: Pick<WireToClientRatio, 'low' | 'high' | 'servers'>,
+  derived: Pick<WireToClientRatio, 'low' | 'high' | 'servers'>,
+): string | null {
+  const at = (n: number) => n.toFixed(BAND_PRECISION);
+  if (snapshot.servers > derived.servers) {
+    return `it is measured across ${snapshot.servers} servers where the run holds ${derived.servers}`;
+  }
+  if (at(snapshot.low) !== at(derived.low) || at(snapshot.high) !== at(derived.high)) {
+    return (
+      `it states ${at(snapshot.low)}×–${at(snapshot.high)}× where the run derives ` +
+      `${at(derived.low)}×–${at(derived.high)}×`
+    );
+  }
+  return null;
+}
+
 /** Derive the band from a supplied divergence run, falling back to the published one. */
 export function wireToClientRatio(run?: DivergenceRun | null): WireToClientRatio {
   if (!run) return PUBLISHED_WIRE_TO_CLIENT_RATIO;

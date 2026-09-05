@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DEFAULT_CONTEXT_WINDOW } from '../src/audit/audit.js';
 import {
+  bandSnapshotProblem,
   evaluateDeferral,
   wireToClientRatio,
   PUBLISHED_WIRE_TO_CLIENT_RATIO,
@@ -498,16 +499,44 @@ describe('the published deferral tables describe the resolver', () => {
   it('is a snapshot of the committed divergence run that may lag but never overstates', () => {
     const run = parseDivergence(readFileSync(join(repoRoot, 'results', 'divergence.json'), 'utf8'));
     expect(run, 'results/divergence.json must parse — the constant is a snapshot of it').not.toBeNull();
-    const derived = wireToClientRatio(run);
+    // Asked of `bandSnapshotProblem` rather than restated here, because the
+    // release readiness gate asks the same question of the constant the *last
+    // release* shipped, and one rule written twice is how the two would come to
+    // mean different things.
     expect(
-      PUBLISHED_WIRE_TO_CLIENT_RATIO.servers,
-      'the published band claims more servers than the run holds',
-    ).toBeLessThanOrEqual(derived.servers);
-    expect(derived.low.toFixed(2), 'PUBLISHED_WIRE_TO_CLIENT_RATIO.low no longer matches the run').toBe(
-      PUBLISHED_WIRE_TO_CLIENT_RATIO.low.toFixed(2),
-    );
-    expect(derived.high.toFixed(2), 'PUBLISHED_WIRE_TO_CLIENT_RATIO.high no longer matches the run').toBe(
-      PUBLISHED_WIRE_TO_CLIENT_RATIO.high.toFixed(2),
-    );
+      bandSnapshotProblem(PUBLISHED_WIRE_TO_CLIENT_RATIO, wireToClientRatio(run)),
+      'PUBLISHED_WIRE_TO_CLIENT_RATIO no longer describes results/divergence.json',
+    ).toBeNull();
+  });
+
+  /**
+   * The rule itself, at its two edges. What makes it worth stating precisely is
+   * that the first version of it was an equality check, and equality failed on
+   * the next bot commit — one that had done nothing but measure a server for
+   * the first time. Lag is the normal state of a release-time snapshot; being
+   * wrong is not.
+   */
+  describe('bandSnapshotProblem', () => {
+    const run = { low: 0.19, high: 1.93, servers: 86 };
+
+    it('passes a snapshot that agrees, and one that merely lags behind the run', () => {
+      expect(bandSnapshotProblem(run, run)).toBeNull();
+      expect(bandSnapshotProblem({ ...run, servers: 23 }, run)).toBeNull();
+      // Inside the precision the band is published at: two numbers that round
+      // the same way decide the same above/below verdict.
+      expect(bandSnapshotProblem({ ...run, high: 1.9349 }, run)).toBeNull();
+    });
+
+    it('refuses a snapshot measured across more servers than the run holds', () => {
+      // Not an old number but an invented one: nobody measured that many.
+      expect(bandSnapshotProblem({ ...run, servers: 87 }, run)).toContain('87 servers where the run holds 86');
+    });
+
+    it('refuses a band that has moved at the precision it is published at', () => {
+      expect(bandSnapshotProblem({ ...run, high: 1.94 }, run)).toContain('0.19×–1.94×');
+      expect(bandSnapshotProblem({ ...run, low: 0.2 }, run)).toContain('0.20×–1.93×');
+      // The five-fold move of 2026-09-05, which is what this exists to catch.
+      expect(bandSnapshotProblem(run, { ...run, high: 10.88 })).toContain('the run derives 0.19×–10.88×');
+    });
   });
 });

@@ -29,6 +29,8 @@ import { createHash } from 'node:crypto';
 import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { bandSnapshotProblem, wireToClientRatio } from '../src/audit/deferral.js';
+import { parseDivergence } from '../src/core/divergence.js';
 
 const root = process.cwd();
 const git = (...args: string[]) => execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();
@@ -126,6 +128,100 @@ function changelogCoversTheCommits(): Finding[] {
   ];
 }
 
+/**
+ * The three numbers of `PUBLISHED_WIRE_TO_CLIENT_RATIO` as one revision of
+ * `deferral.ts` states them, or null if the constant is not in that shape.
+ *
+ * A regex over source, which is the trade this check accepts: the alternative
+ * is building a past revision to import it, and a shape change here reads as
+ * "could not be read" rather than as a pass.
+ */
+function bandLiteral(source: string): { low: number; high: number; servers: number } | null {
+  const body = /PUBLISHED_WIRE_TO_CLIENT_RATIO[^=]*=\s*\{([\s\S]*?)\n\};/.exec(source)?.[1];
+  if (body === undefined) return null;
+  // Anchored at the start of a line, so the prose inside the literal — which
+  // quotes older readings of these very numbers — cannot answer for them.
+  const field = (name: string): number | null => {
+    const m = new RegExp(`^\\s*${name}:\\s*([\\d.]+),`, 'm').exec(body);
+    return m ? Number(m[1]) : null;
+  };
+  const [low, high, servers] = [field('low'), field('high'), field('servers')];
+  if (low === null || high === null || servers === null) return null;
+  return { low, high, servers };
+}
+
+/**
+ * The band an installed package states offline, against the data on trunk.
+ *
+ * `results/divergence.json` does not ship, so with no live run to read, the
+ * installed `audit` converts wire tokens to client tokens through the constant
+ * compiled into it — and that constant is a snapshot of a run that keeps
+ * moving. The suite holds the constant *on trunk* to the run committed beside
+ * it, which is the same rule one step earlier; nothing was watching the one
+ * users actually have. It can only be moved by cutting a release, so this is a
+ * release-readiness question by construction.
+ *
+ * The released bytes are read at the last version-bump commit — the tree that
+ * version was cut from. A release cut from a later tree would carry a *newer*
+ * constant than this reads, so the error is toward reporting drift that has
+ * already been fixed, never toward missing drift that is live.
+ */
+function theReleasedBandStillDescribesTheData(): Finding[] {
+  const since = git('log', '--format=%H', '--grep=^Version .* -> .*', '-1');
+  if (!since) return [];
+  const divergence = join(root, 'results', 'divergence.json');
+  if (!existsSync(divergence)) return [];
+  const run = parseDivergence(readFileSync(divergence, 'utf8'));
+  // A run that does not parse is a broken artifact, and the suite says so with
+  // a better message than this could. Silence here rather than a second voice.
+  if (!run) return [];
+
+  let releasedSource: string;
+  try {
+    releasedSource = execFileSync('git', ['show', `${since}:src/audit/deferral.ts`], {
+      cwd: root,
+      encoding: 'utf8',
+      maxBuffer: 32 * 1024 * 1024,
+    });
+  } catch {
+    // A shallow clone, or a release from before the file existed. Nothing to
+    // compare against is not the same as agreement, so it says which it is.
+    return [
+      {
+        kind: 'look',
+        what: 'the band the last release published could not be read',
+        detail: `\`git show ${since.slice(0, 7)}:src/audit/deferral.ts\` failed — a shallow clone cannot answer this.`,
+      },
+    ];
+  }
+  const released = bandLiteral(releasedSource);
+  if (!released) {
+    return [
+      {
+        kind: 'look',
+        what: 'the band the last release published could not be read',
+        detail:
+          `PUBLISHED_WIRE_TO_CLIENT_RATIO was not in the expected shape at ${since.slice(0, 7)}. ` +
+          'If the constant was renamed or restructured, this check has to move with it.',
+      },
+    ];
+  }
+  const problem = bandSnapshotProblem(released, wireToClientRatio(run));
+  if (!problem) return [];
+  return [
+    {
+      kind: 'stale',
+      what: 'the band the last release published no longer describes the data',
+      detail:
+        `The installed package converts wire tokens to client tokens through the band compiled ` +
+        `into it, and ${problem}.\nThat band decides an above/below verdict against a client ` +
+        `threshold, so an install is answering threshold questions from a number the data has ` +
+        `moved past. Update PUBLISHED_WIRE_TO_CLIENT_RATIO in src/audit/deferral.ts from the ` +
+        `current run and cut a release; nothing else can reach an installed copy.`,
+    },
+  ];
+}
+
 const DECLARES = /^\s*(?:export\s+const\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*[:=]\s*(\d[\d_.]*)\s*[,;]?\s*$/;
 const DATA_SHAPED = /servers?|count|total|tokens|runSize|min|max|low|high|median|share|ratio/i;
 /** A count of the current data. Deliberately not dates: a comment saying what was
@@ -186,7 +282,12 @@ function main(): number {
     console.error('run this from the repository root');
     return 2;
   }
-  const findings = [...regenIsAFixedPoint(), ...changelogCoversTheCommits(), ...numbersWrittenIntoSource()];
+  const findings = [
+    ...regenIsAFixedPoint(),
+    ...changelogCoversTheCommits(),
+    ...theReleasedBandStillDescribesTheData(),
+    ...numbersWrittenIntoSource(),
+  ];
 
   if (process.argv.includes('--json')) {
     console.log(JSON.stringify(findings, null, 2));

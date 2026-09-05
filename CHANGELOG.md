@@ -38,6 +38,27 @@ while reading it.
   keeps the sentence it was written under, because it states the date it was read on and a
   dated reading is not edited afterwards.
 
+- **Two numbers nobody was watching: the band an installed copy states, and the machine a
+  record was made on.** Both were proposed when the work that created them shipped, and
+  neither was built. The first: `results/divergence.json` does not ship, so with no live run
+  to read, the installed `audit` converts wire tokens to client tokens through the constant
+  compiled into it — and that constant is a snapshot of a run that keeps moving. The suite
+  holds the constant *on trunk* to the run committed beside it, and nothing held the one users
+  actually have; only cutting a release can move that one, which makes it a release-readiness
+  question. `tools/release-readiness.ts` now reads the constant at the last version-bump
+  commit — the tree that version was cut from — and asks `bandSnapshotProblem`, the same rule
+  the suite asks of trunk: a snapshot may lag, it may not be wrong. The band must still be
+  right to the two places it is published at, because it decides an above/below verdict
+  against a client threshold, and the count must never exceed the run, because a snapshot
+  naming more servers than were measured is a fabricated number rather than an old one. Both
+  callers ask one function now, and the three pages that print the band quote one precision.
+  The second: `isolation.arch` exists because `local-mcp` sat published as a startup failure
+  whose real finding was the machine it ran on, and a field that is merely *available* fixes
+  nothing. Every record measured since 0.12.0, the release that added it, now has to carry
+  it — or be the one case that honestly cannot, a command that is itself a `docker run`, where
+  the harness never chose the container and says so in the note instead. The boundary date is
+  read from the changelog's own 0.12.0 heading rather than written into the test.
+
 ## 0.15.0 — 2026-09-05
 
 Phase 4 of the roadmap — `audit` reaches the stacks people actually run — and the hour of
