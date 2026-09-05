@@ -71,6 +71,52 @@ describe('classifyFailure reads this harness’s own phrasing', () => {
       classifyFailure('timeout after 240000ms waiting for initialize; stderr tail: connecting…'),
     ).toBe('timeout');
   });
+
+  /**
+   * The published statuses these two produced. An unbounded `auth` alternative
+   * matched inside `authority` and an unbounded `token` inside
+   * `PublicKeyToken`, so a TLS trust failure in this harness's own container
+   * and a .NET assembly name were each published as "this server wants a
+   * credential" — a claim about someone else's software that the record did
+   * not support.
+   */
+  it('does not read a credential request into a word that merely contains one', () => {
+    const tls =
+      'server exited (code 1); stderr tail: {"level":"error","message":"Request failed",' +
+      '"error":"tls: failed to verify certificate: x509: certificate signed by unknown authority"}';
+    expect(classifyFailure(tls)).toBe('startup-failure');
+
+    const dotnet =
+      'server exited (code 0); stderr tail: System.Private.CoreLib, Version=9.0.0.0, ' +
+      'Culture=neutral, PublicKeyToken=null';
+    expect(classifyFailure(dotnet)).toBe('startup-failure');
+
+    // Neither is a near miss of a real one: a tokenizer is not a token either.
+    expect(classifyFailure('server exited (code 1); stderr tail: tokenizer init failed')).toBe(
+      'startup-failure',
+    );
+  });
+
+  /**
+   * The six records that genuinely say so, in the words they actually use.
+   * Bounding the pattern is only correct if it still reads every one of them —
+   * `tracker_token` in particular, where `\b` would have failed because it
+   * counts `_` as part of the word.
+   */
+  it('still reads every phrasing a measured server has actually used', () => {
+    const genuine: Record<string, string> = {
+      gdrive: "Credentials not found. Please run with 'auth' argument first.",
+      gmail: 'Error: OAuth keys file not found. Please place gcp-oauth.keys.json in current directory',
+      keboola: "Client error '401 Unauthorized' for url 'https://connection.keboola.com/v2/storage/tokens/verify'",
+      magic: 'Not authenticated - your API key is missing or was reset.',
+      stripe: 'Invalid API key format. Expected sk_* (secret key) or rk_* (restricted key).',
+      'yandex-tracker':
+        'Value error, tracker_token or tracker_iam_token or tracker_sa_* must be set when oauth_enabled is False',
+    };
+    for (const [server, tail] of Object.entries(genuine)) {
+      expect(classifyFailure(`server exited (code 1); stderr tail: ${tail}`), server).toBe('auth-required');
+    }
+  });
 });
 
 describe('the declarations in servers.yaml', () => {
@@ -81,6 +127,36 @@ describe('the declarations in servers.yaml', () => {
     for (const s of declaring) {
       expect(s.notApplicable!.reason.trim(), `${s.name} reason`).not.toBe('');
       expect(s.notApplicable!.evidence.trim(), `${s.name} evidence`).not.toBe('');
+    }
+  });
+
+  /**
+   * A declaration this repository publishes has to be one the data actually
+   * supports, or it is an annotation that will never fire while the entry goes
+   * on being published as the failure the bucket exists to avoid.
+   *
+   * `redis-legacy` was declared on 2026-09-05 against the record below, whose
+   * words the existing evidence rule already matched. `grafana` was considered
+   * the same day and deliberately left undeclared: a Grafana at localhost:3000
+   * is genuinely absent, but its record says the container came up and served
+   * SSE while this harness waited on stdio — so declaring it would assert a
+   * cause its own evidence does not carry.
+   *
+   * Going red here means the failure changed upstream and the annotation needs
+   * revisiting, which is the outcome to want: it is the same staleness the
+   * evidence requirement exists to catch, one level up.
+   */
+  it('is corroborated by the record on disk, not merely asserted', () => {
+    for (const s of declaring) {
+      const p = join(repoRoot, 'results', s.name, 'measurement.json');
+      if (!existsSync(p)) continue;
+      const m = JSON.parse(readFileSync(p, 'utf8')) as Measurement;
+      if (isGood(m.status)) continue; // it measured: the declaration is dormant, not wrong
+      expect(
+        String(m.notes ?? '').toLowerCase(),
+        `${s.name}: its declared evidence is not in its current record — either the failure ` +
+          `changed upstream, or the evidence was never in the words`,
+      ).toContain(s.notApplicable!.evidence.toLowerCase());
     }
   });
 

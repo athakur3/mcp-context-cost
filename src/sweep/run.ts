@@ -23,15 +23,38 @@ import type { Measurement } from '../core/types.js';
  * fall in the last few hundred bytes — see `evidenceTail` in client.ts, which
  * exists because a truncated message was being filed as a broken server.
  */
+/**
+ * Words that mean a server wanted a credential, bounded so they mean it.
+ *
+ * `\b` is the wrong boundary here. It counts `_` and digits as word
+ * characters, so `\btoken\b` misses `tracker_token` — the exact phrasing
+ * `yandex-tracker` uses to say its credential is missing. Letters are the
+ * boundary instead, which keeps `tracker_token` and `oauth_enabled` while
+ * rejecting the two records that made the unbounded version a bug:
+ *
+ * - `authority`, in "x509: certificate signed by unknown authority" — this
+ *   harness's container not trusting a CA, published as `auth-required` for
+ *   `slack`.
+ * - `PublicKeyToken`, in a .NET assembly name — published as `auth-required`
+ *   for `azure`.
+ *
+ * Both said "this server wants a credential" about a record that said nothing
+ * of the kind. Alternatives that are already whole words nobody's stack trace
+ * contains by accident (`credential`, `forbidden`, and the `authenticat` /
+ * `authoriz` stems) stay unbounded so they still match their own plurals and
+ * inflections; `401` takes `\b`, because there a digit *is* a boundary and
+ * `1401` is not a status code.
+ */
+export const AUTH_EVIDENCE =
+  /(?<![a-z])(?:o?auth|tokens?|api.?keys?)(?![a-z])|unauthori[sz]|authenticat|authori[sz]|credential|forbidden|\b401\b/i;
+
 export function classifyFailure(msg: string): 'timeout' | 'auth-required' | 'startup-failure' {
   // Matched against this harness's own phrasing, not the bare word: these
   // messages carry the server's stderr, and a server that prints "connection
   // timeout" before dying did not time out — it exited, and saying otherwise
   // blames the clock for a breakage.
   if (/timeout after \d+ms waiting for/.test(msg)) return 'timeout';
-  return /auth|unauthorized|401|forbidden|credential|api.?key|token/i.test(msg)
-    ? 'auth-required'
-    : 'startup-failure';
+  return AUTH_EVIDENCE.test(msg) ? 'auth-required' : 'startup-failure';
 }
 
 /**

@@ -143,6 +143,9 @@ servers:
   - name: redis-legacy
     command: npx -y @modelcontextprotocol/server-redis redis://localhost:6379
     package: '@modelcontextprotocol/server-redis'
+    notApplicable:
+      reason: needs a Redis at 127.0.0.1:6379; the isolation deliberately provides no backing services
+      evidence: ECONNREFUSED 127.0.0.1:6379
     env: []
     metric: 1464
     metricSource: https://api.npmjs.org/downloads/point/last-week/@modelcontextprotocol/server-redis (npm weekly)
@@ -404,6 +407,13 @@ servers:
     category: vendor-official
     repo: https://github.com/grafana/mcp-grafana
     timeoutSeconds: 180
+    # Not declared not-applicable, though a Grafana at localhost:3000 is
+    # absent: nothing in the record says so. The 2026-09-04 timeout's evidence
+    # is `msg="Starting Grafana MCP server using SSE transport" address=0.0.0.0:8000`
+    # — the container came up and served SSE while this harness waited on
+    # stdio, so the failure on record is a transport mismatch, not a missing
+    # backing service. Declaring it would be asserting a cause the evidence
+    # does not carry. Needs the launch command looked at, not a declaration.
   - name: browserbase
     command: npx -y @browserbasehq/mcp
     package: '@browserbasehq/mcp'
