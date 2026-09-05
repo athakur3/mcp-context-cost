@@ -1,0 +1,5 @@
+# One maintainer. This file exists so a pull request requests that review by
+# itself rather than waiting to be noticed, and so the reviewer of a
+# servers.yaml change is on record as the person who read CONTRIBUTING.md's
+# "what the reviewer checks" list before clicking Approve and run.
+*  @athakur3

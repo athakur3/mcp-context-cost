@@ -511,3 +511,44 @@ describe('the page states no live count', () => {
     expect(hits.map((h) => h[0])).toEqual([]);
   });
 });
+
+/**
+ * The pull-request template is CONTRIBUTING.md's "Add an entry" order as a
+ * checklist a contributor sees at the moment they open the PR. Two documents
+ * stating one procedure is the drift this repository keeps finding, so the
+ * template is held to the same records the guide is: the regen command, the
+ * changelog bullet, the local check that writes nothing, and names-only env.
+ */
+describe('the pull-request template', () => {
+  const template = readFileSync(join(repoRoot, '.github', 'pull_request_template.md'), 'utf8');
+  const guide = readFileSync(join(repoRoot, 'CONTRIBUTING.md'), 'utf8');
+
+  it('exists, and points at the guide it summarises', () => {
+    expect(template).toContain('CONTRIBUTING.md');
+  });
+
+  it('names the same steps the guide does, and no step the guide does not', () => {
+    for (const step of ['npx tsx src/sweep/regen.ts', '## Unreleased', 'npm test', 'tools/release-readiness.ts', '--no-persist']) {
+      expect(template, step).toContain(step);
+      expect(guide, `${step} is in the guide the template summarises`).toContain(step);
+    }
+  });
+
+  it('says env holds names only, and that nothing under results/ belongs in the diff', () => {
+    expect(template).toMatch(/names only/i);
+    expect(template).toContain('results/');
+  });
+
+  it('carries no live count', () => {
+    expect(template).not.toMatch(/\b\d+ (servers|entries|candidates|files|values)\b/);
+  });
+});
+
+describe('CODEOWNERS', () => {
+  it('routes every path to a reviewer, so a pull request asks for review by itself', () => {
+    const owners = readFileSync(join(repoRoot, '.github', 'CODEOWNERS'), 'utf8');
+    const rule = owners.split('\n').find((l) => l.trim().startsWith('*'));
+    expect(rule, 'a catch-all rule').toBeDefined();
+    expect(rule).toMatch(/@[A-Za-z0-9-]+/);
+  });
+});
