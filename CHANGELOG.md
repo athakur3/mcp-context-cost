@@ -10,8 +10,11 @@ while reading it.
 Phase 3 of the roadmap — others can add servers safely — and the hour of checking that came
 first found the phase's own goal sentence was false where it mattered most. Three of its four
 items were wrong about the mechanism and the fourth held; the pattern is exact three phases
-running. None of this ships bytes to an installer except the `--no-persist` flag; the rest is
-what the repository does with a stranger's pull request.
+running. What reaches an installer is two new modules under `dist/sweep/` — the pull-request check
+and the registry scan — and two exports beside them, `isSelfContainerised` and `ENV_NAME`; the
+installed bin's three subcommands are untouched, and `--no-persist` is a flag on the checkout's
+`npm run sweep`, not on it. The rest is what the repository does with a stranger's pull
+request.
 
 - **A stranger's launch command never runs in a process that can push — after merge, too.**
   The phase promised it, and on the pull request it was true: `ci.yml` runs under a read-only
@@ -29,8 +32,16 @@ what the repository does with a stranger's pull request.
   would otherwise launch first: entries the pull request *added*, and entries whose launch
   fields (`command`, `dockerImage`, `aptPackages`, `needsGit`, `env`, `envValues`,
   `timeoutSeconds`, `notApplicable`) it *changed*. It measures with `persist: false` in Docker,
-  writes nothing, prints the number, and refuses above a per-request cap before any launch —
-  the cap derived from the retry arithmetic, since one 240-second entry can cost 720. A
+  writes nothing, and prints the number. Four refusals come before any launch, all exit 2 so
+  that "nothing ran" reads differently from "the entry failed": a head that does not parse —
+  the parser's message, never its stack trace, which the first draft let through with exit 1,
+  the code reserved for an entry that launched and failed — one that fails the schema, more
+  entries than the cap of four, and, because the schema bounds `timeoutSeconds` only below, a
+  selection whose worst case would exceed what the cap was sized to. The cap comes from the
+  retry arithmetic: one 240-second entry can cost 720, so four cost 2,880 seconds, which is
+  what the job's `timeout-minutes` was sized to. The count alone never held that bound — one
+  entry declaring `timeoutSeconds: 4000` would have had the runner killed at the job limit
+  with its line unprinted, the silent failure the cap exists to prevent in another form. A
   self-containerised command (`docker run …`, the form `github`, `grafana` and `terraform`
   take) is listed rather than run from a pull request; a maintainer measures it by dispatch
   after review. `.github/workflows/pr-check.yml` runs it on `pull_request` for `servers.yaml`,
@@ -43,7 +54,16 @@ what the repository does with a stranger's pull request.
   `badges/<name>.json` and a `history.csv` row into the tree by default, and there was no flag
   not to — the one in-repo measuring path a contributor would follow violated the rule that a
   laptop's number is never the published one. The instruction now uses the flag, and a test
-  reads the README to keep it that way.
+  reads the README to keep it that way. The section around it says why: published records
+  come from CI, with `local-mcp` as the record behind the rule, stated as the record states it
+  — a failing record made on an arm64 laptop whose stderr named an architecture the record
+  itself did not carry, which is why every measurement now records `isolation.arch`, and an
+  entry that then proved unavailable on both architectures. The same sentence had been written
+  three times in one night saying the finding was the laptop — in the README, in
+  `CONTRIBUTING.md` and in `resweep.yml`'s header — and all three now say what the record
+  says. `resweep.yml` had also kept a duration already struck from `src/core/types.ts`, that
+  `local-mcp` spent "weeks" published wrong: the failing record landed on 2026-09-04 and the
+  entry was declared `not-applicable` on 2026-09-05.
 - **The adoption reading is taken on a schedule, and only a count gets committed.**
   `.github/workflows/adoption.yml` runs monthly and on dispatch, under the Actions token
   (`tools/measure-adoption.ts` already fell back to it), with `timeout-minutes` the tool's own
@@ -52,9 +72,12 @@ what the repository does with a stranger's pull request.
   would have accepted a page whose date advanced with no number on it. `--render-only`
   re-renders `docs/adoption.md` from the committed reading without a token and without
   advancing `checkedAt`, so a wording change to the renderer no longer needs a network run to
-  keep the page and the reading equal; a test asserts they are. GitHub's documentation says the
-  Actions token is accepted by code search; no run in this repository has shown it yet, and the
-  workflow says so until the first dispatch is green.
+  keep the page and the reading equal; a test asserts they are. That the Actions token is accepted by
+  code search was GitHub's documentation until the first dispatch: run 33985123134 on
+  2026-09-05 ran the four searches under `github.token`, resolved the reading and committed it
+  as `0a9e5f5` — zero adopters, forty third-party files naming the project and none carrying
+  the badge — and `docs/adoption.md` carries that reading, dated, in place of the one from
+  2026-09-03. The scheduled half of the exit is the first of the month.
 - **The registry scan is written down, as a crawl and a ranking with the human step left
   where it was.** `tools/scan-registry.ts` walks `registry.modelcontextprotocol.io/v0/servers`
   with `version=latest` — the registry deduplicates server-side; the client keeps `active` —
@@ -63,7 +86,15 @@ what the repository does with a stranger's pull request.
   on 429), drafts entries in the schema's shape or refuses each with its reason, emits the two
   owner strings the provenance judgment reads, writes one dated file to the path the operator
   names and nothing anywhere else, and prints a summary line an expansion commit can quote. The
-  pure parts live in `src/sweep/registry-scan.ts` and are tested from live-derived fixtures. It
+  pure parts live in `src/sweep/registry-scan.ts` and are tested from live-derived fixtures.
+  Its one-page smoke run found two defects before the first real use. A crawl whose unscoped
+  names came to one more than a multiple of the bulk limit sent the trailing name to the bulk
+  endpoint alone, which answers a single name in the flat shape, so `pretrip-mcp` was refused
+  for a reason that was false while the single endpoint answered 90 for it — a lone name now
+  goes to the single endpoint, and the bulk parser refuses the flat shape outright. And a
+  `runtimeHint` other than `npx` or `uvx` that came with arguments was drafted as the record's
+  own account, when `node dist/index.js <pkg>` is a line the harness starts nothing with — any
+  other hint marks the draft guessed. It
   claims nothing about provenance beyond emitting its inputs: the 2026-09-04 selection was a
   human judgment by org and repo, and the numbers that had been attached to it — a count and a
   page cap — were in a memory file rather than in this repository.
@@ -80,16 +111,31 @@ what the repository does with a stranger's pull request.
   *Approve and run*; the wait after merge — `not-yet-run` until the rotation slot, which is
   dealt by position, so up to six Wednesdays — and that a maintainer *may* dispatch sooner, not
   a promise; what gets in, including that an entry expected to fail is a finding and that no
-  metric floor is on record. Thirty-eight tests hold it, each derived from the file it cites —
+  metric floor is on record. Forty-one tests hold it, each derived from the file it cites —
   the field table from `FIELDS`, the categories from the validator's own message, the commands
   from `servers.yaml`, the weekday and shard count from `resweep.yml`, the laptop rule quoted
   from `ROADMAP.md` — and three of them were mutation-checked before commit. One sentence of
   `docs/METHODOLOGY.md` moved with it: the `not-yet-run` row said such a row appears "in interim
   leaderboards only"; a merged entry carries the status on the published leaderboard until its
   slot comes round.
+- **A pull request asks for its review by itself, opens on the checklist that goes green, and
+  the merge gate stays on the click.** `.github/CODEOWNERS` routes every path to the
+  maintainer, so a stranger's pull request requests review the moment it opens rather than
+  waiting to be noticed; `.github/pull_request_template.md` is `CONTRIBUTING.md`'s add-an-entry
+  order as a checklist at the moment it matters, held by a test to the guide it summarises so
+  the two cannot state one procedure two ways. Neither blocks anything on its own, and the
+  ruleset that would — decided 2026-09-06 — cannot: `main` now refuses deletion and force-push
+  (ruleset 22351158, no bypass actors), but requiring a pull request or a green check would
+  break every scheduled job on its next run, because four workflows push to `main` with
+  `GITHUB_TOKEN` and on a personal repository GitHub refuses the Actions app as a bypass actor
+  — "Actor GitHub Actions integration must be part of the ruleset source or owner
+  organization". The route around it, a write-access deploy key as the bypass actor, is
+  written down and declined: a long-lived credential in the job that runs a stranger's command
+  is the posture this phase tightened.
 - **A registry-scan lookup that gives up refuses that candidate; it no longer kills the run.**
-  The scan's first real use crawled for seven minutes, then died on one package's `429` from
-  pypistats after six attempts — and wrote nothing, because the file is written last. A failed
+  The scan's first real use crawled forty pages, then died on one package: pypistats answered
+  `429` to six attempts over six minutes for `decimalai-mcp`, and the run wrote nothing,
+  because the file is written last. A failed
   download lookup is now a fact about that candidate: it is refused with the reason the lookup
   gave, the rest are ranked, and when pypistats has rate-limited the run the remaining PyPI
   lookups are marked unmetered with that reason rather than asked a few hundred more times. The
