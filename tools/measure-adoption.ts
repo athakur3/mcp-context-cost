@@ -12,11 +12,27 @@
  * under test; this file is the part that fetches.
  *
  * Exits non-zero when the reading could not be established. A search that fell
- * over must not publish a zero, and it must not publish it quietly either.
+ * over must not publish a zero, and it must not publish it quietly either. The
+ * files are written first and the exit decided after, on purpose: a hand run
+ * gets to read what failed, and the scheduled caller —
+ * `.github/workflows/adoption.yml`, which is also how a reading is taken
+ * without handling a token (`workflow_dispatch`) — stops at the failing step
+ * and never reaches its commit. An unresolved reading is never published; the
+ * page date does not advance without a count.
  *
  * The token is read from MCP_CTX_GITHUB_TOKEN, falling back to GITHUB_TOKEN so
  * it can run in CI. Code search needs an authenticated request; without one
  * this refuses to run rather than reporting an empty result.
+ *
+ *   npx tsx tools/measure-adoption.ts --render-only
+ *
+ * re-renders `docs/adoption.md` from the committed reading and touches nothing
+ * else — no network, no token, `checkedAt` as it was. It exists because the
+ * page is held to be exactly what the JSON renders (test/measure-adoption.test.ts),
+ * so a wording change to `renderAdoptionPage` turns the suite red until the
+ * page is rebuilt; before this flag the only way to rebuild it was a full run,
+ * which also moves the date, and a date moved for a wording change is a date
+ * where the date is not the point.
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -44,6 +60,37 @@ const PER_PAGE = 100;
 /** Pages collected per query. Exceeding this marks the query truncated, never silently cut. */
 const MAX_PAGES = 3;
 
+const root = process.cwd();
+const outPath = join(root, 'results', 'badge-adoption.json');
+const pagePath = join(root, 'docs', 'adoption.md');
+
+const args = process.argv.slice(2);
+const unknown = args.filter((a) => a !== '--render-only');
+if (unknown.length) {
+  console.error(`unknown argument(s): ${unknown.join(' ')} — the only flag is --render-only`);
+  process.exit(2);
+}
+
+if (args.includes('--render-only')) {
+  // Offline by construction: the committed reading is the input, and the only
+  // output is the page. A missing reading renders as "nobody has looked", which
+  // is the true page for that state; a reading that is there but will not
+  // parse is refused, because rendering it as "nobody has looked" would be a
+  // false page written over a real one.
+  let run: AdoptionRun | null = null;
+  if (existsSync(outPath)) {
+    run = parseAdoption(readFileSync(outPath, 'utf8'));
+    if (!run) {
+      console.error(`${outPath} does not parse as a reading — refusing to render over it.`);
+      process.exit(1);
+    }
+  }
+  mkdirSync(dirname(pagePath), { recursive: true });
+  writeFileSync(pagePath, renderAdoptionPage(run));
+  console.log(`wrote docs/adoption.md from ${run ? `the reading of ${run.checkedAt}` : 'no reading'} (no network, checkedAt untouched)`);
+  process.exit(0);
+}
+
 const token = process.env.MCP_CTX_GITHUB_TOKEN ?? process.env.GITHUB_TOKEN;
 if (!token) {
   console.error('MCP_CTX_GITHUB_TOKEN (or GITHUB_TOKEN) is not set — refusing to run.');
@@ -51,7 +98,6 @@ if (!token) {
   process.exit(1);
 }
 
-const root = process.cwd();
 const headers = {
   authorization: `Bearer ${token}`,
   accept: 'application/vnd.github+json',
@@ -136,7 +182,6 @@ for (const c of candidates.values()) {
   console.log(`${c.repo}/${c.path}: ${kind}`);
 }
 
-const outPath = join(root, 'results', 'badge-adoption.json');
 const previous = existsSync(outPath) ? parseAdoption(readFileSync(outPath, 'utf8')) : null;
 const sightings: Sighting[] = mergeSightings(previous?.sightings ?? [], fresh, checkedAt);
 
@@ -154,7 +199,7 @@ const run: AdoptionRun = {
 
 mkdirSync(dirname(outPath), { recursive: true });
 writeFileSync(outPath, JSON.stringify(run, null, 2) + '\n');
-const pagePath = join(root, 'docs', 'adoption.md');
+mkdirSync(dirname(pagePath), { recursive: true });
 writeFileSync(pagePath, renderAdoptionPage(run));
 
 console.log(

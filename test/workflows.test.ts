@@ -459,3 +459,106 @@ describe('every workflow that can push', () => {
   }
 });
 
+/**
+ * The adoption reading is the one number the project keeps about itself, and
+ * its date is most of its meaning. Every property here is only observable on
+ * the first of a month, with nobody watching.
+ */
+describe('adoption workflow', () => {
+  const adoption = readFileSync(join(wfDir, 'adoption.yml'), 'utf8');
+  const runLines = (yaml: string) =>
+    yaml
+      .split('\n')
+      .map((l) => l.trim())
+      .filter((l) => l.startsWith('run:'));
+  /** The five cron fields: minute, hour, day of month, month, day of week. */
+  const cronFields = (yaml: string) => /cron: '([^']*)'/.exec(yaml)![1].trim().split(/\s+/);
+  /** The document as Actions reads it — comments gone, which is the point for the checks below. */
+  interface Step {
+    name?: string;
+    run?: string;
+    env?: Record<string, string>;
+    'continue-on-error'?: boolean;
+  }
+  const doc = parse(adoption) as { jobs: Record<string, { steps: Step[] }> };
+  const steps = Object.values(doc.jobs).flatMap((j) => j.steps);
+  const reading = steps.find((s) => s.run === 'npm run adoption');
+
+  it('takes the reading with the Actions token and no repository secret', () => {
+    // The tool already falls back from MCP_CTX_GITHUB_TOKEN to GITHUB_TOKEN;
+    // wiring a secret in would be a second token to rotate for no reason.
+    expect(runLines(adoption).filter((l) => l.includes('npm run adoption')).length).toBe(1);
+    expect(reading?.env?.GITHUB_TOKEN).toBe('${{ github.token }}');
+    expect(JSON.stringify(doc)).not.toContain('secrets.');
+    expect(JSON.stringify(doc)).not.toContain('MCP_CTX_GITHUB_TOKEN');
+  });
+
+  it('never commits an unresolved reading', () => {
+    // The tool writes both files and THEN exits 1 when the count could not be
+    // established. A failing run step stops the job, so the commit step is
+    // only reached on a resolved reading — provided the reading step is not
+    // allowed to fail quietly and comes before the commit. The page date never
+    // advances without a count.
+    const tool = readFileSync(join(import.meta.dirname, '..', 'tools', 'measure-adoption.ts'), 'utf8');
+    expect(tool).toContain('process.exit(run.unresolved ? 1 : 0)');
+    expect(reading).toBeDefined();
+    expect(reading!['continue-on-error']).toBeUndefined();
+    expect(adoption.indexOf('npm run adoption')).toBeLessThan(adoption.indexOf('git commit'));
+  });
+
+  it('runs the suite before it commits, because a bot push starts no CI run', () => {
+    const test = adoption.indexOf('npm test');
+    expect(test).toBeGreaterThan(adoption.indexOf('npm run adoption'));
+    expect(test).toBeLessThan(adoption.indexOf('git commit'));
+  });
+
+  it('commits only the reading and the page rendered from it', () => {
+    // Regen does not produce docs/adoption.md and the README's sentence about
+    // adoption carries no number, so nothing else in the tree moves with it.
+    const adds = adoption
+      .split('\n')
+      .map((l) => l.trim())
+      .filter((l) => l.startsWith('git add '));
+    expect(adds.length).toBeGreaterThan(0);
+    for (const l of adds) {
+      expect(l.slice('git add '.length).split(/\s+/).sort()).toEqual(['docs/adoption.md', 'results/badge-adoption.json']);
+    }
+    expect(adoption).not.toContain('regen.ts');
+  });
+
+  it('rebases before pushing', () => {
+    const rebase = adoption.indexOf('git pull --rebase origin main');
+    expect(rebase).toBeGreaterThan(adoption.indexOf('git commit'));
+    expect(rebase).toBeLessThan(adoption.indexOf('git push'));
+  });
+
+  it('is scheduled by day of month, in an hour neither weekly pusher uses', () => {
+    // self-badge does not rebase, so a push racing it loses that week's badge;
+    // resweep can run for hours. The neighbours' hours are read from their
+    // ymls, the way dayOf does above, so moving one of them cannot leave this
+    // passing while saying nothing.
+    const [, hour, dayOfMonth, , dayOfWeek] = cronFields(adoption);
+    expect(dayOfMonth).not.toBe('*');
+    expect(dayOfWeek).toBe('*');
+    for (const other of [workflow, resweep]) expect(hour).not.toBe(cronFields(other)[1]);
+  });
+
+  it('can be dispatched — that is how a reading is taken between slots', () => {
+    expect(adoption).toMatch(/^\s*workflow_dispatch:/m);
+  });
+
+  it("has a budget of its own, because the tool's fetches carry none", () => {
+    // Bare `fetch` with no AbortSignal: a hung response would otherwise hold a
+    // write-token job for GitHub's default, which is hours. Smaller than the
+    // sweep's, which pays for cold installs; this pays for a few dozen API calls.
+    const budget = (yaml: string) => Number(/timeout-minutes: (\d+)/.exec(yaml)![1]);
+    expect(/timeout-minutes: (\d+)/.test(adoption)).toBe(true);
+    expect(budget(adoption)).toBeGreaterThan(0);
+    expect(budget(adoption)).toBeLessThan(budget(resweep));
+  });
+
+  it('holds contents: write and a concurrency group, like every job that pushes', () => {
+    expect(adoption).toMatch(/permissions:\n\s*contents: write/);
+    expect(adoption).toMatch(/concurrency:\n\s*group: adoption/);
+  });
+});
