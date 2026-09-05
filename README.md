@@ -364,9 +364,11 @@ That prints the number and writes nothing. Published records
 (`results/<name>/measurement.json`, `badges/<name>.json`, the `history.csv`
 row) come from CI: a developer machine is a different architecture under
 different load, and a measurement taken there describes it rather than the
-server. `local-mcp` was published as a startup failure from an arm64 laptop
-when the finding was the laptop, and it took recording `isolation.arch` on
-every measurement to tell the two apart. To get your server into the
+server. `local-mcp`'s failing record was made on an arm64 laptop, and its
+stderr named an architecture the record itself did not — which is why every
+measurement now records `isolation.arch`. The entry turned out to be
+unavailable on both architectures, and a record that says where it was made
+is what lets that be told from a broken server. To get your server into the
 leaderboard, add an entry to `servers.yaml` and open a pull request; the check
 on that PR measures the entry read-only, and the rotation publishes it after
 merge.

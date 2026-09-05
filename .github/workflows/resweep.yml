@@ -24,10 +24,11 @@
 # `servers` measures a named set instead, in minutes rather than the ~70 a full
 # slice takes. It exists so that re-measuring a handful of entries never needs a
 # laptop: a developer machine is a different architecture under different load,
-# and a measurement taken there describes it rather than the server. `local-mcp`
-# was published as a startup failure from an arm64 laptop — the record landed
-# on 2026-09-04 and was declared the next day — whose real finding was the
-# machine. Measurements come from here.
+# and a measurement taken there describes it rather than the server. `local-mcp`'s
+# failing record was made on an arm64 laptop and its stderr named an architecture
+# the record itself did not; the entry turned out to be unavailable on both, and
+# a record that says where it was made is what told that from a broken server.
+# Measurements come from here.
 name: Rotating re-sweep
 on:
   schedule:

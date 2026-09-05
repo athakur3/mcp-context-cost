@@ -190,7 +190,6 @@ describe('the launch command', () => {
     .split('\n')
     .map((l) => l.trim())
     .filter((l) => l.startsWith('- `'));
-  const subcommandItems = items.slice(0, items.findIndex((l) => l.includes('hana-cli')) < 0 ? items.length : undefined);
 
   it('quotes each subcommand example as the command servers.yaml runs, and none of them is a bare package', () => {
     for (const name of ['agent-device', 'githits', 'emailmd']) {
@@ -202,7 +201,6 @@ describe('the launch command', () => {
 
   it('does not list hana-cli among the subcommand examples — it is a separate bin with an upstream bug', () => {
     const e = entry('hana-cli');
-    for (const l of subcommandItems) expect(l).not.toContain('hana-cli');
     expect(items.some((l) => l.includes('hana-cli'))).toBe(false);
     expect(text).toContain(e.command);
     expect(text).toMatch(/not a subcommand|different case/);

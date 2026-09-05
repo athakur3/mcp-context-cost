@@ -123,7 +123,7 @@ a record held, every item that inferred did not. What the records established:
       before any launch, lists a self-containerised (`docker run …`) command rather than running
       it from a pull request, prints the number, writes nothing. `permissions: contents: read`,
       no secrets, `timeout-minutes` derived from the retry arithmetic.
-- [ ] **CONTRIBUTING.md**, after the job it describes. The add-an-entry order that goes green;
+- [x] **CONTRIBUTING.md**, after the job it describes. The add-an-entry order that goes green;
       env var names only and what `envValues` is for; a `timeoutSeconds` from a measured cold
       install; the subcommand lesson as the records state it (`agent-device mcp`, `githits
       mcp`, `emailmd`); a laptop number is never the published one; what a reviewer checks before
@@ -141,7 +141,9 @@ a record held, every item that inferred did not. What the records established:
   test says so.
 - A pull request appending a real entry, with regen and a changelog bullet committed, is green
   in `ci.yml` and shows the entry's measured tokens in `pr-check.yml` without writing anything;
-  one changing an existing entry's launch fields measures that entry too.
+  one changing an existing entry's launch fields measures that entry too. *Held by the suite in
+  host mode and structurally for the workflow; the end-to-end run on GitHub's runner is a real
+  pull request, which is the maintainer's to open on a public repository.*
 - The adoption workflow has run once by dispatch and once on schedule, and `docs/adoption.md`
   carries a count from each. *Dispatch: run 33985123134 on 2026-09-05, committed as `0a9e5f5`,
   zero adopters — the Actions token was accepted by code search, which until that run was

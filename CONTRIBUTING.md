@@ -169,20 +169,22 @@ server's own words when it did not measure — followed by
 and exits 0 for `measured` or `dynamic`, 1 otherwise (`src/sweep/run.ts`). Three things to
 know about it:
 
-- **It runs the command line alone.** The CLI does not read `servers.yaml`: `env`,
-  `envValues`, `needsGit`, `aptPackages`, `dockerImage` and `notApplicable` are not applied
-  unless you pass what the CLI takes (`--timeout <ms>`, `--docker`, `--docker-image`). A server
-  that wants a variable will fail differently here than in the check, which applies the
-  entry. The default budget is sixty seconds; a cold install under Docker may need
+- **It runs the command line alone.** The CLI does not read `servers.yaml`, and its flags are
+  `--timeout <ms>`, `--docker` and `--docker-image`. Of an entry's fields only `dockerImage`
+  has one; `env`, `envValues`, `needsGit`, `aptPackages` and `notApplicable` are not applied
+  at all, so a server that wants a variable fails differently here than in the check, which
+  applies the whole entry. The default budget is sixty seconds; a cold install under Docker may need
   `--timeout 240000`, the rotation's budget.
 - **Without `--no-persist` the same command writes** `results/<name>/measurement.json`,
   `badges/<name>.json` and a `results/history.csv` row into your checkout, and nothing in
   `.gitignore` refuses them. Those files must not be in the pull request.
 - **The number it prints is never the published one.** The roadmap's not-planned list states
   the rule: "Publishing any measurement taken on a developer machine. CI measures; the
-  laptop probes." The record behind it is `local-mcp`, published as a startup failure from
-  an arm64 laptop when the finding was the laptop — it took recording `isolation.arch` on
-  every measurement to tell the two apart ("A record says which machine made it",
+  laptop probes." The record behind it is `local-mcp`: its failing record was made on an
+  arm64 laptop and its stderr named an architecture the record itself did not, which is why
+  every measurement now records `isolation.arch`. The entry then turned out to be unavailable
+  on both architectures, and a record that says where it was made is what let that be told
+  from a broken server ("A record says which machine made it",
   [CHANGELOG 0.12.0](CHANGELOG.md)), and `resweep.yml`'s header says why re-measuring a
   handful of entries never needs a laptop: a developer machine is a different architecture
   under different load, and a measurement taken there describes it rather than the server.
@@ -252,10 +254,9 @@ or list tools without real credentials", and the second slice of the long-tail b
 A `command` that is itself a `docker run` carries its placeholders inline, because the
 harness does not wrap a command that is already a container. `github` puts
 `-e GITHUB_PERSONAL_ACCESS_TOKEN=dummy` on the line — the `NAME=dummy` shape. `grafana` puts
-`-e GRAFANA_URL=http://localhost:3000` beside `-e GRAFANA_SERVICE_ACCOUNT_TOKEN=dummy` — a
-shaped localhost URL for the variable the server parses and `dummy` for the one it only
-carries, the same judgment `envValues` makes for a wrapped command. List the names in `env`
-as well, so the record carries them.
+`-e GRAFANA_URL=http://localhost:3000` beside `-e GRAFANA_SERVICE_ACCOUNT_TOKEN=dummy`. Its
+entry records no rule for which shape each takes, so do not read one into it. List the names
+in `env` as well, so the record carries them.
 
 ## What happens on the pull request
 

@@ -67,6 +67,26 @@ what the repository does with a stranger's pull request.
   claims nothing about provenance beyond emitting its inputs: the 2026-09-04 selection was a
   human judgment by org and repo, and the numbers that had been attached to it — a count and a
   page cap — were in a memory file rather than in this repository.
+- **`CONTRIBUTING.md` says what an entry needs, in the order that goes green, and is held to
+  the records it cites.** What an entry is, from the schema; the add-an-entry order that a red
+  pull request taught — append, regen, a changelog bullet, `npm test`, the gate; the launch
+  command as the records state it (`agent-device mcp`, `githits mcp`, `emailmd` need their
+  subcommand; `hana-cli` is a separate bin with an upstream bug, not a subcommand case; `anki`
+  and `grafana` need their stdio flag); checking locally with `--no-persist`, and why a
+  laptop's number is never the published one; a `timeoutSeconds` from a measured cold install,
+  read off the pull-request check's line, with the one entry whose value carries a recorded
+  basis named as the shape rather than the others counted as a precedent; env names only and
+  what `envValues` is for; what the pull request runs and what a reviewer checks before
+  *Approve and run*; the wait after merge — `not-yet-run` until the rotation slot, which is
+  dealt by position, so up to six Wednesdays — and that a maintainer *may* dispatch sooner, not
+  a promise; what gets in, including that an entry expected to fail is a finding and that no
+  metric floor is on record. Thirty-eight tests hold it, each derived from the file it cites —
+  the field table from `FIELDS`, the categories from the validator's own message, the commands
+  from `servers.yaml`, the weekday and shard count from `resweep.yml`, the laptop rule quoted
+  from `ROADMAP.md` — and three of them were mutation-checked before commit. One sentence of
+  `docs/METHODOLOGY.md` moved with it: the `not-yet-run` row said such a row appears "in interim
+  leaderboards only"; a merged entry carries the status on the published leaderboard until its
+  slot comes round.
 - **`servers.yaml` no longer says of `agent-device` what the record refutes.** Its comment had
   the bare launch printing help and exiting 0, one of 68 subcommands; the only captured record
   is exit 1 with nothing on stderr, and the count was never sourced. The comment says that and
