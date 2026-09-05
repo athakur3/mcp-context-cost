@@ -7,7 +7,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { captureTools } from './client.js';
+import { captureTools, clampNotes } from './client.js';
 import {
   DockerHarnessFault,
   defaultImageFor,
@@ -264,8 +264,12 @@ export async function measureServer(
           : opts;
     let r: Measurement;
     try {
-      const first = await captureTools(buildSpec(noSharedCache), attemptOpts);
-      const second = await captureTools(buildSpec(noSharedCache), attemptOpts);
+      // The declared evidence travels with the launch, because the truncation
+      // that could lose it happens inside the client, before anything here sees
+      // the message it will be classified from.
+      const captureOpts = { ...attemptOpts, keepEvidence: opts.notApplicable?.evidence };
+      const first = await captureTools(buildSpec(noSharedCache), captureOpts);
+      const second = await captureTools(buildSpec(noSharedCache), captureOpts);
       r = measureTools(first.tools, {
         serverName: first.serverInfo?.name ?? name,
         serverVersion: first.serverInfo?.version,
@@ -292,7 +296,7 @@ export async function measureServer(
         launchCommand: command,
         // The declared reason leads, but the raw failure stays behind it: the
         // record has to remain checkable against the run that produced it.
-        notes: (declared ? `${declared} — ${msg}` : msg).slice(0, 700),
+        notes: clampNotes(declared ? `${declared} — ${msg}` : msg, 700, opts.notApplicable?.evidence),
       });
     }
     const iso = isolation ?? { docker: false };

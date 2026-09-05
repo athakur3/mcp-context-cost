@@ -26,6 +26,9 @@ interface Pending {
 
 const PROTOCOL_VERSION = '2025-06-18';
 
+/** How an elided middle is marked, in every layout here. */
+const ELISION = ' […] ';
+
 /**
  * The part of a dead server's stderr worth keeping as evidence.
  *
@@ -46,11 +49,24 @@ const PROTOCOL_VERSION = '2025-06-18';
  * Noise is only dropped while something else survives. A package that fails
  * *inside* npm (EBADPLATFORM, a failed postinstall) has npm's own lines as its
  * only evidence, and a server whose whole output is a stack keeps the stack.
+ *
+ * `required` is the phrase a declared entry's published status depends on
+ * (`notApplicable.evidence` in servers.yaml). Everything else here is a budget
+ * decision — how much of a long failure is worth publishing — but this one is
+ * not. The entry says "this failure is the harness's, and here is the sentence
+ * that proves it", and `notApplicableReason` re-reads that sentence out of what
+ * survives: elide it and the declaration turns itself off, the row reverts to
+ * `startup-failure`, and this project publishes that someone else's working
+ * software is broken. The evidence is therefore kept whatever the budget, and
+ * everything else competes for what is left — the rule the old one lacked, and
+ * the reason it depended on how much the server happened to print.
  */
-export function evidenceTail(stderr: string, limit = 600): string {
-  const withoutNoise = drop(stderr, (l) => /^npm (warn|notice)\b/.test(l));
-  const withoutFrames = drop(withoutNoise, (l) => /^at\s/.test(l));
-  return bothEnds(withoutFrames, limit);
+export function evidenceTail(stderr: string, limit = 600, required?: string): string {
+  const needle = required ? required.toLowerCase() : undefined;
+  const protect = (l: string) => needle !== undefined && l.toLowerCase().includes(needle);
+  const withoutNoise = drop(stderr, (l) => /^npm (warn|notice)\b/.test(l), protect);
+  const withoutFrames = drop(withoutNoise, (l) => /^at\s/.test(l), protect);
+  return bothEnds(withoutFrames, limit, needle);
 }
 
 /**
@@ -68,9 +84,20 @@ export function evidenceTail(stderr: string, limit = 600): string {
  * and the middle is what goes. The split leans towards the head because a
  * message that precedes its own noise is the more common shape here.
  */
-function bothEnds(text: string, limit: number): string {
+function bothEnds(text: string, limit: number, needle?: string): string {
+  const kept = bothEndsPlain(text, limit);
+  if (needle === undefined) return kept;
+  // Only pay for the anchored layout when the ordinary one lost the phrase and
+  // the raw text actually had it. An entry whose evidence never appeared is a
+  // declaration that does not hold, and must keep failing as one.
+  if (kept.toLowerCase().includes(needle)) return kept;
+  if (!text.toLowerCase().includes(needle)) return kept;
+  return aroundRequired(text, limit, needle);
+}
+
+function bothEndsPlain(text: string, limit: number): string {
   if (text.length <= limit) return text;
-  const elision = '\n […] \n';
+  const elision = `\n${ELISION}\n`;
   const budget = Math.max(0, limit - elision.length);
   const lines = text.split('\n');
 
@@ -106,11 +133,101 @@ function bothEnds(text: string, limit: number): string {
   return `${headText}${elision}${tail.out.join('\n')}`;
 }
 
-/** Drop matching lines, keeping the input whole if that would leave nothing. */
-function drop(text: string, isNoise: (trimmedLine: string) => boolean): string {
+/**
+ * Keep the line the declared evidence is on, then spend what is left on context.
+ *
+ * Head before tail, the same lean `bothEndsPlain` takes and for the same reason:
+ * an explanation usually precedes its own aftermath. The elisions are marked, so
+ * a reader of the record can see that something was dropped around the sentence
+ * that was not.
+ */
+function aroundRequired(text: string, limit: number, needle: string): string {
+  const lines = text.split('\n');
+  const k = lines.findIndex((l) => l.toLowerCase().includes(needle));
+  // Both elisions and the newlines joining at most five chunks, reserved before
+  // the anchor is sized: the budget is a published-record limit, and a layout
+  // that keeps the evidence by overrunning it has only moved the problem.
+  const reserve = 2 * ELISION.length + 4;
+  const anchor = windowAround(lines[k], needle, Math.max(needle.length, limit - reserve));
+
+  let budget = limit - anchor.length - reserve;
+  const head: string[] = [];
+  for (let i = 0; i < k; i++) {
+    const cost = lines[i].length + 1;
+    if (cost > budget) break;
+    head.push(lines[i]);
+    budget -= cost;
+  }
+  const tail: string[] = [];
+  for (let i = lines.length - 1; i > k; i--) {
+    const cost = lines[i].length + 1;
+    if (cost > budget) break;
+    tail.unshift(lines[i]);
+    budget -= cost;
+  }
+
+  const chunks: string[] = [];
+  if (head.length) chunks.push(head.join('\n'));
+  if (head.length < k) chunks.push(ELISION);
+  chunks.push(anchor);
+  if (tail.length < lines.length - 1 - k) chunks.push(ELISION);
+  if (tail.length) chunks.push(tail.join('\n'));
+  return chunks.join('\n');
+}
+
+/**
+ * A single line that alone overruns the budget, kept as a window around the
+ * match rather than from its start — a structured log puts the whole message on
+ * one line, and the phrase that matters can sit anywhere in it.
+ */
+function windowAround(line: string, needle: string, limit: number): string {
+  if (line.length <= limit) return line;
+  const at = line.toLowerCase().indexOf(needle);
+  const lead = Math.max(0, Math.floor((limit - needle.length) / 2));
+  const start = Math.max(0, Math.min(at - lead, line.length - limit));
+  return line.slice(start, start + limit);
+}
+
+/**
+ * Cut a record's notes to `limit` without cutting away the evidence its own
+ * status rests on.
+ *
+ * The same rule as `evidenceTail`, one layer up and for a different reason. The
+ * classifier reads the message *before* this cut, so this one cannot change a
+ * published status — it can only leave a record asserting `not-applicable` with
+ * the sentence that justifies it deleted, which is a claim published without its
+ * evidence. `windows-mcp` sits at exactly the cap today, so the margin here is
+ * one character of growth in somebody else's error message.
+ */
+export function clampNotes(text: string, limit: number, required?: string): string {
+  if (text.length <= limit) return text;
+  const plain = text.slice(0, limit);
+  if (!required) return plain;
+  const needle = required.toLowerCase();
+  if (plain.toLowerCase().includes(needle)) return plain;
+  const at = text.toLowerCase().indexOf(needle);
+  if (at < 0) return plain;
+  const room = Math.max(0, limit - ELISION.length);
+  const width = Math.min(room, Math.max(needle.length, Math.floor(room / 2)));
+  const start = Math.max(0, Math.min(at - Math.floor((width - needle.length) / 2), text.length - width));
+  return text.slice(0, Math.max(0, room - width)) + ELISION + text.slice(start, start + width);
+}
+
+/**
+ * Drop matching lines, keeping the input whole if that would leave nothing.
+ *
+ * `isProtected` outranks `isNoise`: safari-mcp declares `EBADPLATFORM`, which npm
+ * prints on a line of its own, and a filter that reaches it first would delete
+ * the evidence before any budget was even applied.
+ */
+function drop(
+  text: string,
+  isNoise: (trimmedLine: string) => boolean,
+  isProtected: (trimmedLine: string) => boolean = () => false,
+): string {
   const kept = text
     .split('\n')
-    .filter((l) => !isNoise(l.trim()))
+    .filter((l) => isProtected(l.trim()) || !isNoise(l.trim()))
     .join('\n')
     .trim();
   return kept || text.trim();
@@ -124,7 +241,13 @@ export class McpStdioClient {
   private stderrChunks: string[] = [];
   private exited: Promise<void>;
 
-  constructor(command: string, args: string[], env: Record<string, string | undefined>) {
+  constructor(
+    command: string,
+    args: string[],
+    env: Record<string, string | undefined>,
+    /** Phrase this entry's declared status depends on — see `evidenceTail`. */
+    private keepEvidence?: string,
+  ) {
     this.child = spawn(command, args, {
       env: { ...env },
       stdio: ['pipe', 'pipe', 'pipe'],
@@ -146,7 +269,7 @@ export class McpStdioClient {
         resolve();
       });
       this.child.on('exit', (code) => {
-        const tail = evidenceTail(this.stderrTail);
+        const tail = evidenceTail(this.stderrTail, undefined, this.keepEvidence);
         this.deadReason = `server exited (code ${code})${tail ? `; stderr tail: ${tail}` : ''}`;
         for (const p of this.pending.values()) p.reject(new Error(this.deadReason));
         this.pending.clear();
@@ -204,7 +327,7 @@ export class McpStdioClient {
         // without this a timed-out record carries no evidence at all — it says
         // only that we waited. What the server managed to print before it
         // stopped answering is usually the whole explanation.
-        const tail = evidenceTail(this.stderrTail);
+        const tail = evidenceTail(this.stderrTail, undefined, this.keepEvidence);
         reject(
           new Error(
             `timeout after ${timeoutMs}ms waiting for ${method}${tail ? `; stderr tail: ${tail}` : ''}`,
@@ -248,15 +371,16 @@ export class McpStdioClient {
  */
 export async function captureTools(
   spec: string | { command: string; argv: string[] },
-  opts: { timeoutMs?: number; env?: Record<string, string> } = {},
+  opts: { timeoutMs?: number; env?: Record<string, string>; keepEvidence?: string } = {},
 ): Promise<WireCapture> {
   const timeoutMs = opts.timeoutMs ?? 60_000;
   const [cmd, ...args] = typeof spec === 'string' ? splitCommand(spec) : [spec.command, ...spec.argv];
-  const client = new McpStdioClient(cmd, args, {
-    PATH: process.env.PATH,
-    HOME: process.env.HOME,
-    ...opts.env,
-  });
+  const client = new McpStdioClient(
+    cmd,
+    args,
+    { PATH: process.env.PATH, HOME: process.env.HOME, ...opts.env },
+    opts.keepEvidence,
+  );
   try {
     const init = await client.request(
       'initialize',

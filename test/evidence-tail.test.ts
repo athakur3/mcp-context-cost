@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { evidenceTail } from '../src/sweep/client.js';
+import { evidenceTail, clampNotes } from '../src/sweep/client.js';
 import { classifyFailure, notApplicableReason } from '../src/sweep/run.js';
 
 /**
@@ -146,5 +146,104 @@ describe('evidenceTail', () => {
       if (line === '' || line.trim() === '[…]') continue;
       expect(text.split('\n')).toContain(line);
     }
+  });
+});
+
+/**
+ * A declared entry whose output grew until its evidence line sat in the middle:
+ * npm noise and stack frames are gone, and what is left is still longer than the
+ * budget, with the sentence that justifies the declaration nowhere near either
+ * end. Before the evidence was passed down, this is the shape that turned a
+ * declaration off by itself and republished a working server as broken.
+ */
+const BURIED = [
+  ...Array.from({ length: 30 }, (_, i) => `preflight check ${i}: ok, continuing to the next step`),
+  'The Windows/Linux Go server is in preview — check https://local-mcp.com for updates.',
+  ...Array.from({ length: 30 }, (_, i) => `shutting down worker ${i} and releasing its handles`),
+].join('\n');
+
+const DECLARED = {
+  reason: 'the vendor ships no Linux server yet',
+  evidence: 'The Windows/Linux Go server is in preview',
+};
+
+describe('evidenceTail keeps the evidence a declared status rests on', () => {
+  it('is the whole bug: without it the middle goes, and the declaration goes with it', () => {
+    const blind = evidenceTail(BURIED);
+    expect(blind).not.toContain(DECLARED.evidence);
+    expect(notApplicableReason(DECLARED, blind)).toBeNull();
+
+    const kept = evidenceTail(BURIED, 600, DECLARED.evidence);
+    expect(kept).toContain(DECLARED.evidence);
+    expect(notApplicableReason(DECLARED, kept)).toBe(DECLARED.reason);
+  });
+
+  it('does not buy the evidence by overrunning the budget', () => {
+    // A layout that keeps the sentence by ignoring the limit has only moved the
+    // problem into the record, which is where the 700-character cap then cuts it.
+    for (const limit of [120, 200, 300, 600]) {
+      const kept = evidenceTail(BURIED, limit, DECLARED.evidence);
+      expect(kept.length).toBeLessThanOrEqual(limit);
+      expect(kept).toContain(DECLARED.evidence);
+    }
+  });
+
+  it('still cuts on line boundaries around the line it anchors on', () => {
+    const kept = evidenceTail(BURIED, 300, DECLARED.evidence);
+    const source = BURIED.split('\n');
+    for (const line of kept.split('\n')) {
+      if (line === '' || line.trim() === '[…]') continue;
+      expect(source).toContain(line);
+    }
+  });
+
+  it('outranks the noise filters, because npm prints some evidence itself', () => {
+    // safari-mcp declares EBADPLATFORM, and npm prints it on a line of its own.
+    // A filter that reaches it first deletes the evidence before any budget runs.
+    const noisy = ['npm warn EBADPLATFORM safari-mcp@2.17.1 is darwin-only', 'something else entirely'].join('\n');
+    expect(evidenceTail(noisy)).not.toContain('EBADPLATFORM');
+    expect(evidenceTail(noisy, 600, 'EBADPLATFORM')).toContain('EBADPLATFORM');
+  });
+
+  it('never conjures evidence that was not printed', () => {
+    // The declaration has to keep failing when the server fails a different way —
+    // that is the guard the whole mechanism exists for, and this must not weaken it.
+    const different = Array.from({ length: 60 }, (_, i) => `panic: unrelated failure ${i}`).join('\n');
+    const kept = evidenceTail(different, 600, DECLARED.evidence);
+    expect(notApplicableReason(DECLARED, kept)).toBeNull();
+  });
+
+  it('windows around the match when the evidence is on one over-long line', () => {
+    const line = `${'x'.repeat(900)} ${DECLARED.evidence} ${'y'.repeat(900)}`;
+    const kept = evidenceTail(`${line}\nand a second line`, 400, DECLARED.evidence);
+    expect(kept.length).toBeLessThanOrEqual(400);
+    expect(kept).toContain(DECLARED.evidence);
+  });
+});
+
+describe('clampNotes', () => {
+  it('leaves a record that fits exactly as it is', () => {
+    expect(clampNotes('short enough', 700, 'enough')).toBe('short enough');
+  });
+
+  it('cuts plainly when the evidence is already inside the kept prefix', () => {
+    const text = `${DECLARED.evidence} — ${'tail padding '.repeat(80)}`;
+    expect(clampNotes(text, 200, DECLARED.evidence)).toBe(text.slice(0, 200));
+  });
+
+  it('keeps the evidence when a blind cut would have removed it', () => {
+    // windows-mcp's record sits at exactly the 700-character cap today, so the
+    // margin here is one character of growth in somebody else's error message.
+    const text = `${'a reason long enough to fill the front of the record. '.repeat(14)}${DECLARED.evidence} trailing`;
+    expect(text.slice(0, 700)).not.toContain(DECLARED.evidence);
+    const kept = clampNotes(text, 700, DECLARED.evidence);
+    expect(kept.length).toBeLessThanOrEqual(700);
+    expect(kept).toContain(DECLARED.evidence);
+    expect(notApplicableReason(DECLARED, kept)).toBe(DECLARED.reason);
+  });
+
+  it('cuts plainly when there is no declaration to protect', () => {
+    const text = 'z'.repeat(900);
+    expect(clampNotes(text, 700)).toBe(text.slice(0, 700));
   });
 });
