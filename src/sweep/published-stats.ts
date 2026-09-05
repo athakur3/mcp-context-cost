@@ -300,8 +300,13 @@ export const PAGE_CLAIMS: Claim[] = [
   {
     file: 'README.md',
     id: 'divergence-run-size',
-    template: 'The run holds {n} rows — the top {n} measured servers by tokens when it ran',
-    values: (s) => [fmt(s.claude.runSize), fmt(s.claude.runSize)],
+    // "the top N" was the selection rule until 2026-09-05, when the run widened
+    // to every measured server and the rotation began refreshing each slice
+    // beside the sweep that measures it. The words now say what the run is
+    // rather than a rank, so they stay true while the count regen maintains
+    // climbs from 20 toward the measured set.
+    template: 'The run holds {n} rows — the measured servers it covered when it last ran',
+    values: (s) => [fmt(s.claude.runSize)],
   },
   {
     file: 'README.md',
@@ -379,7 +384,7 @@ export const PAGE_CLAIMS: Claim[] = [
   {
     file: 'docs/METHODOLOGY.md',
     id: 'divergence:ratio-range',
-    template: 'it ranged from {f}× to {f}× across the top {n},',
+    template: 'it ranged from {f}× to {f}× across the {n} servers in the run,',
     values: (s) => [s.claude.ratioMin.toFixed(2), s.claude.ratioMax.toFixed(2), fmt(s.claude.runSize)],
   },
   {

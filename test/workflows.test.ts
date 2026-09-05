@@ -178,6 +178,49 @@ describe('the re-sweep cross-checks the slice it just measured', () => {
 });
 
 /**
+ * The Claude column used to be refreshed only by the Monday self-badge job
+ * while re-sweeps land on Wednesdays, so a re-measured row printed `—` for five
+ * days each cycle — including `github`, the heaviest server in the set, on the
+ * front page's own Claude table on 2026-09-05. Refreshing it here is what
+ * closes that window, and these pin the two properties that make the row
+ * trustworthy: the same slice, and no power to break the sweep.
+ */
+describe('the re-sweep refreshes the Claude column for the slice it just measured', () => {
+  const runLine = (needle: string) =>
+    resweep
+      .split('\n')
+      .map((l) => l.trim())
+      .find((l) => l.startsWith('run:') && l.includes(needle));
+
+  it('selects with the same string the sweep and the cross-check use', () => {
+    // A Claude row filed beside a capture from a different set would be a
+    // number about one measurement printed against another.
+    const divergence = runLine('measure-divergence.ts');
+    expect(divergence).toBeDefined();
+    expect(divergence).toContain('${SELECT}');
+  });
+
+  it('is best-effort — an API hiccup must not block the sweep commit', () => {
+    expect(resweep).toMatch(/Claude column[^]*?continue-on-error: true[^]*?measure-divergence\.ts/);
+  });
+
+  it('runs before the commit step, which is what regenerates the pages', () => {
+    // The leaderboard's Claude cells are written by regen, and regen runs
+    // inside the commit step after the rebase. A refresh afterwards would land
+    // in the tree with nothing left to render it.
+    expect(resweep.indexOf('measure-divergence.ts')).toBeLessThan(resweep.indexOf('Commit refreshed measurements'));
+  });
+
+  it('stages the run as a measurement, not as a derived file', () => {
+    // The commit step clears unstaged aggregates with `git checkout -- .`
+    // before rebasing. divergence.json is written by an API call, not derived
+    // from results/, so leaving it to the regen commit would discard it.
+    const staged = resweep.slice(0, resweep.indexOf('git checkout -q -- .'));
+    expect(staged).toContain('git add results/divergence.json');
+  });
+});
+
+/**
  * Regen patches the numbers the front page states (published-stats.ts), so a
  * scheduled job that commits fresh data without committing README.md publishes
  * a leaderboard the README then contradicts — the drift the patching exists to

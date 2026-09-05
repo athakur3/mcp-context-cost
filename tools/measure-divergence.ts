@@ -1,13 +1,24 @@
 /**
  * Measure the Claude divergence column and write results/divergence.json.
  *
- *   MCP_CTX_ANTHROPIC_KEY=... npx tsx tools/measure-divergence.ts [count]
+ *   MCP_CTX_ANTHROPIC_KEY=... npx tsx tools/measure-divergence.ts
+ *   ... tools/measure-divergence.ts --only slack,redis          # touch up two
+ *   ... tools/measure-divergence.ts --shards 6 [--shard-index 2] # this week's slice
+ *   ... tools/measure-divergence.ts 20                           # top 20 by tokens
  *
  * This is the one part of the pipeline that talks to a network API, so it lives
  * outside src/ (and outside the published package): the library, the CLI, and
- * every generated artifact stay offline and dependency-free. Run bare it writes
- * THE run — the top 20 by tokens today, whole; with a count it is a touch-up
- * that measures that many from the top and preserves every other row.
+ * every generated artifact stay offline and dependency-free.
+ *
+ * Run bare it writes THE run — every measured server, whole. Any selection
+ * makes it a touch-up: it measures that subset and preserves every other row,
+ * the same merge rule the cross-check runner uses, so a weekly slice fills its
+ * own rows in without deleting the rest of the column.
+ *
+ * The selection flags are the sweep's, spelled the same way and refusing the
+ * same combination, because the re-sweep workflow hands all three runners one
+ * `SELECT` string: if they disagreed about what it selects, a cross-check row
+ * and a Claude row could end up describing different captures.
  *
  * The key is read from MCP_CTX_ANTHROPIC_KEY, deliberately not ANTHROPIC_API_KEY:
  * that name is picked up by other Anthropic tooling in the same shell.
@@ -16,6 +27,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import Anthropic from '@anthropic-ai/sdk';
 import { parse } from 'yaml';
+import { selectShard, shardIndexForDate } from '../src/sweep/shard.js';
 import type { Measurement } from '../src/core/types.js';
 import {
   DIVERGENCE_METHOD,
@@ -40,20 +52,51 @@ const PROBE_TOOL = {
 
 const root = process.cwd();
 
+function arg(name: string): string | undefined {
+  const i = process.argv.indexOf(`--${name}`);
+  return i >= 0 ? process.argv[i + 1] : undefined;
+}
+
 /**
- * Bare, this writes the whole run: the top RUN_SIZE by tokens today, exactly —
- * never a preserved row the refresh no longer covers, so the published claim
- * "the top N when it ran" cannot rot as ranks shift. With a count argument it
- * is a touch-up: measure that many from the top, preserve the rest of the run.
+ * Bare, this writes the whole run: every measured server, exactly — never a
+ * preserved row the refresh no longer covers.
  *
- * The bare default used to be 15 against a published run of 20, so ranks 16–20
- * were carried forward from the original run and never refreshed on the weekly
- * cadence — observed 2026-09-03: `blender`, rank 19, blank behind its
- * 2026-08-26 capture while the 15 rows above it refreshed twice.
+ * It used to be the top 20, and the column was refreshed only by the Monday
+ * self-badge job. Re-sweeps land on Wednesdays, so a re-measured row's Claude
+ * cell went blank for five days each cycle: on 2026-09-05 the front page's own
+ * "what it costs on Claude" table showed `—` for `github`, the heaviest server
+ * in the set. Running it beside the sweep fixes the timing; covering every
+ * measured server is what makes the rank a row happens to hold stop deciding
+ * whether it has a Claude number at all.
+ *
+ * The earlier bug in the other direction is worth keeping in view: the bare
+ * default was once 15 against a published run of 20, so ranks 16–20 were
+ * carried forward and never refreshed — `blender`, rank 19, sat blank behind
+ * its 2026-08-26 capture while the 15 rows above it refreshed twice. A bare
+ * run replacing the whole file is what prevents that; a *selection* merges.
  */
-const RUN_SIZE = 20;
-const touchUp = process.argv[2] !== undefined;
-const topN = touchUp ? Number(process.argv[2]) : RUN_SIZE;
+const only = arg('only')?.split(',');
+const shards = arg('shards') === undefined ? undefined : Number(arg('shards'));
+const shardIndexArg = arg('shard-index') === undefined ? undefined : Number(arg('shard-index'));
+/** Legacy positional: measure this many from the top, preserving the rest. */
+const topNArg = process.argv[2] !== undefined && !process.argv[2].startsWith('--') ? Number(process.argv[2]) : undefined;
+
+if (shards !== undefined && only) {
+  // Same refusal as sweep-all and the cross-check runner, same reason: a slice
+  // that belongs to no cycle must not be producible by accident.
+  console.error('--shards and --only both select servers; pass one or the other');
+  process.exit(2);
+}
+if (shardIndexArg !== undefined && shards === undefined) {
+  console.error('--shard-index needs --shards');
+  process.exit(2);
+}
+if (topNArg !== undefined && (Number.isNaN(topNArg) || topNArg <= 0)) {
+  console.error(`expected a positive count, got '${process.argv[2]}'`);
+  process.exit(2);
+}
+/** Any selection preserves the rows it did not measure; a bare run replaces them. */
+const touchUp = only !== undefined || shards !== undefined || topNArg !== undefined;
 
 const apiKey = process.env.MCP_CTX_ANTHROPIC_KEY;
 if (!apiKey) {
@@ -82,8 +125,32 @@ for (const entry of doc.servers) {
   if (typeof m.totalTokens !== 'number' || !Array.isArray(m.rawToolsCapture)) continue;
   candidates.push({ name: entry.name, m });
 }
+// Ranked by tokens whatever the selection, so the log reads heaviest-first and
+// the legacy positional count still means "from the top".
 candidates.sort((a, b) => (b.m.totalTokens as number) - (a.m.totalTokens as number));
-const selected = candidates.slice(0, Math.max(0, topN));
+let selected = candidates;
+if (only) selected = selected.filter((c) => only.includes(c.name));
+if (shards !== undefined) {
+  // Sharded over the same list the sweep shards — servers.yaml order, not this
+  // one — so the slice measured here is the slice measured there.
+  const index = shardIndexArg ?? shardIndexForDate(new Date(), shards);
+  const slice = new Set(
+    selectShard(
+      doc.servers.filter((e) => !(e as { remote?: boolean }).remote).map((e) => e.name),
+      shards,
+      index,
+    ),
+  );
+  selected = selected.filter((c) => slice.has(c.name));
+  console.log(`shard ${index + 1}/${shards}: ${selected.map((c) => c.name).join(', ') || '(none measured)'}`);
+}
+if (topNArg !== undefined) selected = selected.slice(0, topNArg);
+if (selected.length === 0) {
+  // Nothing to measure is not nothing to say: silently writing back the previous
+  // run would look like a refresh that happened.
+  console.log('no measured server matched the selection — divergence.json left as it is');
+  process.exit(0);
+}
 
 const count = async (tools?: unknown[]): Promise<number> => {
   const r = await client.messages.countTokens({

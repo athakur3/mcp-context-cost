@@ -210,7 +210,7 @@ opposite directions, and a single ratio hides the larger one:
    328 tokens more than no tools at all, which is an upper bound on the fixed part.
 
 Because the effects can cancel or compound, the Claude number is **not** a fixed multiple of
-the badge — it ranged from 0.20× to 1.92× across the top 20, and it reorders the leaderboard:
+the badge — it ranged from 0.20× to 1.92× across the 20 servers in the run, and it reorders the leaderboard:
 github is the heaviest server on o200k and notion is the heaviest on Claude.
 
 **What it is not.** It is not any client's context bill either. `count_tokens` is Anthropic's

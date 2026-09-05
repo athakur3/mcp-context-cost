@@ -122,6 +122,25 @@ jobs:
         # commit — a row that misses a week reads silence, not a stale number.
         continue-on-error: true
         run: npx tsx src/sweep/cross-check.ts --docker ${SELECT} --concurrency 2 --default-timeout 240
+      - name: Refresh the Claude column for what this run measured
+        # Same slice, same sitting. The column used to be refreshed only by the
+        # Monday self-badge job while re-sweeps land on Wednesdays, so a row
+        # re-measured here printed `—` in the Claude table for five days each
+        # cycle — on 2026-09-05 that included `github`, the heaviest server in
+        # the set, on the front page's own "what it costs on Claude" table.
+        #
+        # `${SELECT}` is the same string the two steps above select with, so a
+        # Claude row and the capture it sits beside cannot come from different
+        # sets. A selection merges into the existing run rather than replacing
+        # it, so the rows this slice does not cover keep last week's numbers.
+        #
+        # Best-effort, like the cross-check: an API hiccup here must not block
+        # the sweep's own commit, which is the job's reason to exist. A missing
+        # Claude cell reads as silence, which is what it is.
+        continue-on-error: true
+        env:
+          MCP_CTX_ANTHROPIC_KEY: ${{ secrets.MCP_CTX_ANTHROPIC_KEY }}
+        run: npx tsx tools/measure-divergence.ts ${SELECT}
       - name: Commit refreshed measurements
         # Regen runs inside this step, *after* the rebase, and that ordering is
         # the point rather than a detail.
@@ -161,13 +180,18 @@ jobs:
           if git diff --cached --quiet; then echo "no change to publish"; exit 0; fi
           git reset -q
 
-          # What was measured rather than derived: the per-server records and
-          # the cross-check rows. Disjoint sets touch disjoint files, so this
-          # commit rebases cleanly. cross-check.json may be absent — that step
-          # is allowed to fail without blocking the sweep's own commit.
+          # What was measured rather than derived: the per-server records, the
+          # cross-check rows and the Claude column. Disjoint sets touch disjoint
+          # files, so this commit rebases cleanly. Both JSON files may be absent
+          # or unchanged — those steps are allowed to fail without blocking the
+          # sweep's own commit — and both must be staged HERE rather than left
+          # to the regen commit below, because the `git checkout -- .` that
+          # clears the aggregates for the rebase would otherwise discard them.
+          # They are measurements, not derived files.
           records=0
           git add results/*/ badges/
           if [ -f results/cross-check.json ]; then git add results/cross-check.json; fi
+          if [ -f results/divergence.json ]; then git add results/divergence.json; fi
           if ! git diff --cached --quiet; then
             records=1
             git commit -q -m "chore: ${WHAT}"
