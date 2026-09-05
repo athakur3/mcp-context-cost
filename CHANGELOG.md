@@ -60,6 +60,13 @@ behind one of them.
   the audit converts with, and the count beside the band is the number of rows that produced it
   rather than the number in the file — `gitlab` sits in the run with an API error and a zero
   delta, and "across 87 servers" counted it.
+- **The scheduled jobs run the guards before they publish.** A push made with `GITHUB_TOKEN`
+  does not start a workflow, so CI has never fired on a bot commit — not once, on any of them.
+  The jobs that move published data were the only ones whose changes nothing checked, which is
+  exactly backwards, and it is why the band above sat wrong on the front page for an hour with a
+  green tick beside it. `self-badge` and `resweep` now run the suite after regenerating and
+  before committing. A drift guard is not a heuristic: one failing means the page the job is
+  about to publish would state something the data does not, so it stops rather than pushes.
 
 ## 0.13.1 — 2026-09-05
 

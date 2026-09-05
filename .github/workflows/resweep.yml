@@ -141,6 +141,15 @@ jobs:
         env:
           MCP_CTX_ANTHROPIC_KEY: ${{ secrets.MCP_CTX_ANTHROPIC_KEY }}
         run: npx tsx tools/measure-divergence.ts ${SELECT}
+      - name: The guards CI would have run, in the job that moves the data
+        # A push made with GITHUB_TOKEN does not start a workflow, so no CI run
+        # has ever fired on a bot commit: on 2026-09-05 a refresh here widened
+        # the divergence run, moved a published band five-fold and left the suite
+        # red on main with nothing reporting it. The drift guards are exact, not
+        # heuristic — one failing means a page this job is about to publish would
+        # state something the data does not — so this stops before the commit
+        # below rather than after it.
+        run: npm test
       - name: Commit refreshed measurements
         # Regen runs inside this step, *after* the rebase, and that ordering is
         # the point rather than a detail.
