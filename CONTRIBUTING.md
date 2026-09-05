@@ -66,9 +66,10 @@ written. It is published unverified, on the day it was read, and it goes stale f
 A pull request that appends an entry and stops there is red today — not in review, in CI.
 `npm test` reads the committed `servers.yaml` and asserts that regenerating the published
 pages would change nothing (`test/published-stats.test.ts`), and a new row changes the
-candidate count and adds a `not-yet-run` line to the leaderboard; then the readiness gate
-(`tools/release-readiness.ts`) fails a commit touching `servers.yaml` when the changelog says
-nothing about it. The order that goes green:
+candidate count and adds a `not-yet-run` line to the leaderboard; and the readiness gate
+(`tools/release-readiness.ts`) fails any non-`chore:` commit since the last release that
+touches `servers.yaml` while `## Unreleased` in `CHANGELOG.md` carries no bullet at all. The
+order that goes green:
 
 1. **Append the entry at the end of the file.** Never insert it in the middle:
    `src/sweep/shard.ts` deals rotation slots by position, so an insertion shifts every entry
@@ -84,12 +85,17 @@ nothing about it. The order that goes green:
 3. **Add one bullet under `## Unreleased` in `CHANGELOG.md` naming the entry.** The gate's
    second check, "the changelog says nothing about work that ships", fails any non-`chore:`
    commit since the last release that touches `servers.yaml` while that section has no
-   bullet. The `chore:` prefix belongs to the bots' commits; write the bullet.
+   bullet. It tests only that a bullet exists (`section.includes('\n- ')` in
+   `tools/release-readiness.ts`) and never reads what the bullet says, so a section that
+   already carries someone else's bullet lets an unmentioned entry through. Naming the entry
+   is the convention, not the gate; the line `src/sweep/pr-check.ts` prints at the end of
+   every run says the same — add a bullet, or start the commit subject with `chore:`. That
+   prefix belongs to the bots' commits; write the bullet.
 4. **Run `npm test`.** The suite validates the whole file (`test/servers-schema.test.ts`), so a
    misspelled key, a value in `env`, a category outside the enum or a duplicate name fails
    here in the schema's own words, before anyone reads the diff.
-5. **Run `npx tsx tools/release-readiness.ts`.** It is what `ci.yml` runs last, and it says
-   `ready` or names the stale file.
+5. **Run `npx tsx tools/release-readiness.ts`.** It is the readiness step in `ci.yml` (the
+   badge golden tests run after it), and it says `ready` or names the stale file.
 
 Commit nothing under `results/`, `badges/` or `docs/servers/<name>.md` for the new entry.
 Those come from CI after merge — see [after merge](#after-merge).
@@ -182,8 +188,11 @@ know about it:
   under different load, and a measurement taken there describes it rather than the server.
 
 Use the command above rather than a hand-written `docker run` probe. The harness caps every
-launch and force-removes the container afterwards; a working MCP server never exits on its
-own, so a probe without that cap waits until something kills it.
+launch, and `measureServer` force-removes every container it created in its `finally` block
+(`docker rm -f`, `src/sweep/run.ts`) because, as the comment above that block records, some
+servers don't exit on stdin close (background timers keep the event loop alive) — the
+container outlives the CLI that started it. A hand-written probe has neither the cap nor the
+cleanup.
 
 ## timeoutSeconds
 
@@ -240,9 +249,13 @@ That is a finding, not a defect in the entry: the taxonomy in
 or list tools without real credentials", and the second slice of the long-tail block in
 `servers.yaml` was added expecting exactly that status — findings, not omissions.
 
-A `command` that is itself a `docker run` carries its dummies inline (`-e NAME=dummy`, as
-`github` and `grafana` do), because the harness does not wrap a command that is already a
-container; list the names in `env` as well, so the record carries them.
+A `command` that is itself a `docker run` carries its placeholders inline, because the
+harness does not wrap a command that is already a container. `github` puts
+`-e GITHUB_PERSONAL_ACCESS_TOKEN=dummy` on the line — the `NAME=dummy` shape. `grafana` puts
+`-e GRAFANA_URL=http://localhost:3000` beside `-e GRAFANA_SERVICE_ACCOUNT_TOKEN=dummy` — a
+shaped localhost URL for the variable the server parses and `dummy` for the one it only
+carries, the same judgment `envValues` makes for a wrapped command. List the names in `env`
+as well, so the record carries them.
 
 ## What happens on the pull request
 

@@ -170,6 +170,11 @@ describe('add an entry', () => {
     expect(gate).toContain('the changelog says nothing about work that ships');
     expect(gate).toMatch(/git\('diff', '--name-only'.*'servers\.yaml'/);
     expect(text).toContain('the changelog says nothing about work that ships');
+    // The gate's whole test of the section is an emptiness test; the document
+    // says so, and quotes the expression, so the two move together.
+    expect(gate).toContain("section.includes('\\n- ')");
+    expect(text).toContain("section.includes('\\n- ')");
+    expect(flat(text)).toContain('never reads what the bullet says');
   });
 
   it('says to append rather than insert, for the reason shard.ts states', () => {
@@ -255,14 +260,26 @@ describe('check it locally', () => {
   });
 
   it('hands out no raw docker probe recipe', () => {
-    // The harness caps every launch; a working MCP server never exits on its
-    // own, so a hand-written `docker run` without a cap hangs until killed.
+    // The harness caps every launch and force-removes every container it
+    // created (run.ts `finally`); a hand-written `docker run` has neither.
     for (const line of contributing.split('\n')) {
       if (line.trimStart().startsWith('- `docker run')) continue; // a quoted servers.yaml command
       if (line.includes('mcp/grafana')) continue;
       expect(line).not.toMatch(/^\s*(?:\$ )?docker run/);
       expect(line).not.toMatch(/timeout \d+ docker/);
     }
+  });
+
+  it('gives run.ts\'s reason for the cleanup, in run.ts\'s words', () => {
+    // The document once said every working MCP server never exits; the
+    // record says some. The sentence quotes the comment above the `finally`.
+    const run = read('src/sweep/run.ts');
+    const reason = "some servers don't exit on stdin close";
+    expect(run).toContain(reason);
+    expect(run).toMatch(/spawn\('docker', \['rm', '-f'/);
+    expect(flat(text)).toContain(reason);
+    expect(text).toContain('`docker rm -f`');
+    expect(flat(text)).not.toMatch(/never exits on its own/);
   });
 });
 
@@ -303,6 +320,19 @@ describe('env', () => {
     expect(validateEntry({ ...base(), env: ['API_KEY=x'] }, 0).some((p) => p.field === 'env')).toBe(true);
     expect(text).toContain('`NAME=dummy`');
     expect(read('src/sweep/docker.ts')).toContain("?? 'dummy'");
+  });
+
+  it('quotes what the self-containerised examples carry on their lines', () => {
+    // github is the pure NAME=dummy shape; grafana carries a shaped localhost
+    // URL beside its dummy. The document says which is which, in the
+    // entries' own flags, so a change to either command line surfaces here.
+    for (const name of ['github', 'grafana']) {
+      const cmd = entry(name).command;
+      expect(cmd.startsWith('docker run')).toBe(true);
+      for (const flag of cmd.match(/-e \S+=\S+/g)!) expect(text).toContain(`\`${flag}\``);
+    }
+    expect(entry('github').command).toMatch(/-e \S+=dummy/);
+    expect(entry('grafana').command).toMatch(/-e \S+=http:\/\/localhost/);
   });
 
   it('describes envValues by the entries that use it', () => {
@@ -347,6 +377,21 @@ describe('what happens on the pull request', () => {
       expect(ci!.runs.some((l) => l.includes(needle))).toBe(true);
     }
     expect(text).toContain('npm test');
+  });
+
+  it('places the readiness gate in ci.yml where the yml has it', () => {
+    // The add-an-entry step that says to run the gate once claimed it was
+    // what ci.yml runs last; the yml's last run: line is the badge golden
+    // tests. The claim is allowed only when the yml's own last line makes it.
+    const ci = prWorkflows.find((w) => w.file === 'ci.yml')!;
+    const last = ci.runs[ci.runs.length - 1];
+    const step = section('Add an entry')
+      .split(/\n(?=\d+\. )/)
+      .find((s) => s.includes('**Run `npx tsx tools/release-readiness.ts`'))!;
+    expect(step).toBeDefined();
+    if (!last.includes('release-readiness')) expect(flat(step)).not.toMatch(/runs last/);
+    const after = ci.runs.slice(ci.runs.findIndex((l) => l.includes('release-readiness')) + 1);
+    if (after.some((l) => l.includes('badge'))) expect(flat(step)).toContain('badge golden tests run after it');
   });
 
   it('states the check\'s permissions and its run-line flags as the yml has them', () => {
