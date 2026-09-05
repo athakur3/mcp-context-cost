@@ -101,6 +101,14 @@ what the repository does with a stranger's pull request.
   `validateServers` refused the set as duplicates before anything launched. `mcp`, `mcp-server`,
   `server`, `cli` and `mcp-cli` now carry the scope — `trusty-squire-mcp` — while a distinctive
   segment still stands alone, as the file names things.
+- **`codehealth-mcp` joins the candidates — the first entry to arrive by the contributor path.**
+  Drafted by the registry scan on its first real use, chosen from the twelve highest-ranked npm
+  drafts with no required env after running them through `pr-check` locally, and appended with
+  its provenance judgment written into the entry: scope `@codescene`, repository under
+  `codescene-oss`. It needs `aptPackages: [unzip]` — the package downloads its own binary as a
+  zip — so the pull request that adds it is also the first to exercise a phase-2 entry field
+  through the phase-3 read-only check. It sits `not-yet-run` until its rotation slot; the
+  rotation publishes the number.
 - **`servers.yaml` no longer says of `agent-device` what the record refutes.** Its comment had
   the bare launch printing help and exiting 0, one of 68 subcommands; the only captured record
   is exit 1 with nothing on stderr, and the count was never sourced. The comment says that and

@@ -271,7 +271,7 @@ sample of that range; the full range is in
 | filesystem (reference) | 2,823 | 14 |
 | markitdown | 64 | 1 |
 
-*(87 of 106 popular servers measured, each row dated by its own most recent sweep — full table in
+*(87 of 107 popular servers measured, each row dated by its own most recent sweep — full table in
 [results/leaderboard.md](results/leaderboard.md); every failure is listed with its reason.
 Each measured server also has a [detail page](https://athakur3.github.io/mcp-context-cost/servers/)
 showing which tools its tokens are in.)*
@@ -349,7 +349,7 @@ number is *not*, config policy, failure taxonomy, frozen color bands, known dive
 | `spec/fixtures/` | golden vectors shared by the TypeScript and bash implementations |
 | `tools/` | the scripts that call a network API — the Claude divergence run, the adoption reading, the registry scan — kept out of the package so the library stays offline |
 | `upstream/` | `badge.sh` + composite-action patch + bash tests — the self-serve badge recipe, carried here |
-| `servers.yaml` | 106 curated candidates with live install metrics and provenance |
+| `servers.yaml` | 107 curated candidates with live install metrics and provenance |
 | `results/` · `badges/` | measurements, leaderboard, history series, shields endpoint JSONs |
 | `docs/` | methodology, dashboard, and a generated page per measured server |
 

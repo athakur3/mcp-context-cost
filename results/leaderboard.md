@@ -1,6 +1,6 @@
 # MCP server context-cost leaderboard
 
-Tokens = o200k_base count of the canonical `tools/list` bytes ([methodology v1.0](../docs/METHODOLOGY.md)). Measured 87/106 candidates; every candidate is listed — failures are findings, not omissions. Server names link to their per-tool breakdown.
+Tokens = o200k_base count of the canonical `tools/list` bytes ([methodology v1.0](../docs/METHODOLOGY.md)). Measured 87/107 candidates; every candidate is listed — failures are findings, not omissions. Server names link to their per-tool breakdown.
 
 The **claude** column is the same tools measured through Anthropic's `count_tokens` on `claude-opus-5` (2026-09-05, method `tools-delta/v1`): the tokens the server's tools add to a request, measured for the top 86. It is not a rescaling of the o200k column — two effects pull in opposite directions, and the [per-server pages](../docs/servers/) break both out. See [Claude divergence](../docs/METHODOLOGY.md#claude-divergence).
 
@@ -135,4 +135,5 @@ The **session start** column is what a client puts in context when it *defers* t
 | windows-mcp | not-applicable | Windows only — it depends on pywin32, which publishes no Linux wheels — server exited (code 1); stderr tail:  when resolving tool dependencies:   ╰─▶ Because on |
 | yandex-tracker | auth-required | server exited (code 1); stderr tail: Downloading grpcio-tools (2.6MiB) Downloading yandexcloud (6.3MiB)  Downloaded grpcio-tools  Downloaded yandexcloud Install |
 | safari-mcp | not-applicable | macOS only — the package declares os darwin and npm refuses to install it on Linux — server exited (code 1); stderr tail: npm error code EBADPLATFORM npm error  |
+| codehealth-mcp | not-yet-run |  |
 
