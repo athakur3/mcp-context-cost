@@ -113,7 +113,7 @@ The **session start** column is what a client puts in context when it *defers* t
 | server | status | note |
 |---|---|---|
 | gdrive | auth-required | **[deprecated by its publisher](https://www.npmjs.com/package/@modelcontextprotocol/server-gdrive) — 2025.1.14, read 2026-09-05.** server exited (code 1); stderr tail: Credentials not found. Please run with 'auth' argument first. |
-| redis-legacy | startup-failure | server exited (code 1); stderr tail: lhost:6379 \[Redis Error\] Stack: Error: connect ECONNREFUSED 127.0.0.1:6379 \[Redis Reconnecting\] Connection lost, attemp |
+| redis-legacy | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: \[Redis Retry\] Attempt 1/5 failed \[Redis Retry\] Next attempt in 1000m |
 | azure | startup-failure | reproduced with the shared package cache bypassed; server exited (code 0); stderr tail: r(System.Diagnostics.Tracing.EventSourceSettings, System.String\[\]) |
 | magic | auth-required | server error -32001: Not authenticated - your API key is missing or was reset. Get a fresh key at https://21st.dev/mcp and update your MCP config (x-api-key / B |
 | stripe | auth-required | server exited (code 1); stderr tail: 🚨  Error initializing Stripe MCP server:     Invalid API key format. Expected sk_* (secret key) or rk_* (restricted key).  |
