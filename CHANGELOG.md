@@ -7,6 +7,8 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+## 0.15.0 — 2026-09-05
+
 Phase 4 of the roadmap — `audit` reaches the stacks people actually run — and the hour of
 checking that came first held two of its three items to their symptom and refuted each on its
 mechanism; the third, the dated re-read, found the model's source still standing and four
