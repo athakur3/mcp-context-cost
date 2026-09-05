@@ -49,6 +49,32 @@ widening run is also what exposed the drift in the last entry below.
   published at, and a count that never exceeds the run. The rule behind it, which this
   repository broke twice in one day in opposite directions: a number derived somewhere should be
   derived everywhere, or stated once and quoted.
+- **Two published artifacts are dated by their data, not by the clock.**
+  `results/capture-index.json` and `results/tool-shape.json` were stamped with the moment they
+  were written, so each claimed to be as fresh as the last run over them rather than as fresh
+  as the data behind them — and regenerating on any later day produced a diff whether or not
+  anything had moved. Both now carry the newest measurement date they describe, which is the
+  rule the dashboard was moved to for the same reason. `buildToolShapeBaseline` still defaults
+  to today for a caller that supplies no measurement dates.
+
+- **README stated a tool-shape baseline the data had left behind.** It said 1,150 tools across
+  81 servers, in prose and again inside the `--suggest` sample block a reader compares their
+  own output against, while `results/tool-shape.json` held 1,430 across 87. Both figures are
+  maintained claims now. The page guard had been excusing them as "regen-maintained in
+  results/tool-shape.json" and nothing maintained them — `PublishedStats` did not read the
+  file at all. A false reason in the static list is worse than no entry, because it answers
+  the question that would otherwise have found the drift.
+
+- **The repository refuses a stale release, and cutting one is a single action.** Nothing here
+  ships to npm; it is trunk, which this section describes. `npm run check:release` fails when
+  regenerating would rewrite a committed artifact — meaning what is published is not what the
+  data says — or when commits that ship bytes leave the Unreleased section empty, and CI runs
+  it on every push so a release is never a cleanup job. Findings it cannot decide, such as a
+  number written into source, print without failing. `release.yml` runs the gate, the suite,
+  the cut, the two-commit bump, the push, the publish and the verification from npm in order;
+  it dispatches `publish.yml` rather than absorbing it, because npm's trust is bound to that
+  workflow and it is the one path that cannot be tested without publishing.
+
 ## 0.13.0 — 2026-09-05
 
 Seven servers changed status in this release and **not one of them changed because the server
