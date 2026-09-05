@@ -1,8 +1,9 @@
 # Roadmap
 
 Six phases, in order. Each has one goal, a scope, and an exit that can be checked rather
-than declared. Phases 0, 1 and 2 are sequential; 3 and 4 run in parallel once 1 is done; 5 is
-gated by the calendar, not by work. Contributions welcome on any item.
+than declared. Phases 0 and 1 are done and the distribution track shipped on 2026-09-05, so
+**phase 2 is next**; 3 and 4 run in parallel; 5 is gated by the calendar, not by work.
+Contributions welcome on any item.
 
 Dated **2026-09-05**, against 0.12.0 on npm and the data of 2026-09-04. Each item names the
 evidence it rests on, so a reader can check whether it is still true before picking it up.
@@ -26,9 +27,10 @@ audience: the adoption reading of
 2026-09-03 found zero projects displaying the badge, and the repository has one star. So the
 phases below do two different kinds of work — keeping the published data honest, which is the
 discipline the project exists for, and getting it in front of the people it is for. Every
-technical item here is worth less than one adopter — which is why, as of 2026-09-05, the
-distribution track is ordered ahead of the technical ones rather than beside them. Its gate
-was the end of phase 1, and the site no longer contradicts itself.
+technical item here is worth less than one adopter — which is why the distribution track was
+ordered ahead of the technical ones. It ran on 2026-09-05: the listing is live, three posts
+are out and five badge pull requests are open, so it no longer blocks this file. That zero is
+now a dated reading with six asks behind it rather than an absence of asking.
 
 ## The phases at a glance
 
@@ -36,8 +38,8 @@ was the end of phase 1, and the site no longer contradicts itself.
 |---|---|---|---|
 | **0** | Ship what trunk already holds | **done 2026-09-05** | 0.12.0 on npm, with a dated changelog section |
 | **1** | Every published sentence is established | **done 2026-09-05** | eight items, each held by a test; `slack` and `redis-legacy` re-measured in CI |
-| **∥** | **Distribution** *(maintainer)* | **next — unblocked 2026-09-05** | one of: Marketplace listing, a badge PR merged, a post published |
-| **2** | Sweeps that are cheaper and say more | 2026-09-10 → 2026-09-25 | movements name releases; `anki` declared; Claude column refreshed by the re-sweep; four issues filed |
+| **∥** | **Distribution** *(maintainer)* | **shipped 2026-09-05** | listing live and three posts published; five badge PRs open |
+| **2** | Sweeps that are cheaper and say more — **next** | 2026-09-10 → 2026-09-25 | movements name releases; `anki` declared; Claude column refreshed by the re-sweep; four issues filed |
 | **3** | Others can add servers safely | 2026-09-21 → 2026-10-09 | a stranger's entry is measured read-only before any write-token job runs it |
 | **4** | `audit` reaches the stacks people run | 2026-10-05 → 2026-10-23 | remote entries measured; three more clients, each with a who-pays row |
 | **5** | The data tells its second story | from 2026-10-16 | state-of report #2 with per-tool attribution; rotation length decided on evidence |
@@ -75,22 +77,38 @@ forward:
   on. `elasticsearch` was not a bare failure but a clean number for a deprecated package,
   which is worse. And the new number guard found a third hand-written figure on the front page.
 
-**The distribution track is unblocked as of today.** Its gate was the end of this phase.
+**The distribution track was unblocked by this phase, and ran the same day.** See below.
 
 ---
 
-## Distribution *(maintainer)* — the next thing, unblocked 2026-09-05
+## Distribution *(maintainer)* — shipped 2026-09-05
 
-Zero adopters after three weeks is the number that matters most in this file, and this
-section sat under phase 5 until 2026-09-05 while saying so. Its gate was the end of phase 1,
-and phase 1 is done, so it is ordered where its own argument puts it: **before phase 2**, not
-beside it. Phases 2 to 5 keep the data honest for an audience that does not exist yet. The action is
-already at `athakur3/mcp-context-cost@v1` and could be listed on the GitHub Marketplace; the
-badge is good news for most servers it would land on (`chrome-devtools` at 5,717 tokens on
-3.3M installs a week, `postgres` at 32); the state-of report is written and dated. Marketplace
-listing, awesome-mcp entries, badge pull requests to measured servers, and one post are each
-the maintainer's move, and any one of them outweighs the rest of this file. Phase 1 closed on
-2026-09-05, which was the gate: the site no longer contradicts itself, so the moment is now.
+Zero adopters after three weeks was the number that mattered most in this file, and it sat
+under phase 5 until 2026-09-05 while saying so. Moved above the technical phases that day,
+the track then ran in one day rather than the five it was given.
+
+**Two of its three exits are met.** The Action is listed on the GitHub Marketplace under
+Continuous integration and Code quality, on the existing `v1` tag. Three posts are published:
+r/mcp with the required showcase flair, the Cursor forum under Showcase → Built for Cursor,
+and the MCP community Discord's `#showcase` forum. The third exit, a merged badge pull
+request, is not ours to close: five are open.
+
+Also out: an entry in `awesome-mcp-devtools`, ten repository topics, dated movement issues to
+`obsidian` and `blender`, and a submission to Console.dev.
+
+**What the day corrected.** Four of the eight badge targets had already been approached on
+2026-08-16, and nothing in this file or the adoption reading recorded it: `clickhouse`
+declined in words, `playwright` closed without comment, `qdrant` and `exa` are still open and
+unanswered. None was re-sent. So the zero reads differently — not that nobody has been asked,
+but that of six asks two were declined and two are still sitting. **Any outreach now starts by
+listing what this account already sent that repository** (`gh pr list --repo <r> --state all
+--author athakur3`, and the same for issues). A second unsolicited pull request to a
+maintainer who declined is the one move here that costs more than it wins.
+
+**Still open:** a Show HN on Wednesday 2026-09-09 after that morning's re-sweep, and a dated
+adoption reading from 2026-09-19 that decides the code levers (a Claude Code plugin, an
+MCP-server mode, a native shields service). Neither blocks any technical phase. The plan and
+the response log are at https://claude.ai/code/artifact/42d26d8e-b533-4bde-a424-49f98adf800b
 
 ---
 
