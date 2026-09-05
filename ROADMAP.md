@@ -1,228 +1,75 @@
 # Roadmap
 
-Six phases, in order. Each has one goal, a scope, and an exit that can be checked rather
-than declared. Phases 0 and 1 are done, the distribution track shipped on 2026-09-05, and
-**phase 2 is done**; 3 and 4 run in parallel; 5 is gated by the calendar,
-not by work. Contributions welcome on any item.
+Where this project is headed, and what a contributor can pick up. What already shipped is in
+[CHANGELOG.md](CHANGELOG.md) and the git history — **a phase leaves this file when it ships**,
+so the plan stays short and stays forward-looking. Phases 0 and 1 shipped on 2026-09-05 and
+have left it; what they corrected is in the changelog sections for `0.12.0` and `0.13.0`.
 
-Dated **2026-09-05**, against 0.13.1 on npm and the data of that day. Each item names the
-evidence it rests on, so a reader can check whether it is still true before picking it up.
-Forward-looking only: what already shipped lives in the code and the git history. Items
-marked *(maintainer)* need a decision or an account only the maintainer has.
+Dated **2026-09-05**. Every item names the evidence it rests on, so you can check whether it is
+still true before starting it. Items marked *(maintainer)* need an account or a decision only
+the maintainer has. Contributions welcome on any item, especially new `servers.yaml` entries.
 
-**Check an item's premise before starting it.** Four of phase 1's eight items were wrong
-about *why* — not about the symptom, which was real every time, but about the mechanism
-behind it — and phase 2 then ran the same way: two of its seven, one of which dissolved on
-contact with the record. The pattern has been exact both times: every item that quoted the
-record held up, and every item that inferred a cause from a category did not. So the first hour of a phase re-reads the
-records its items name and either confirms the sentence or rewrites it. That hour would have
-saved most of phase 1's rework, and it is the same discipline this project applies to its own
-published numbers — a claim is worth what its evidence is worth, including a claim in here.
+**This file states dated readings, never live counts.** A reading carries the day it was taken
+and stays true; a count is wrong by the next sweep, and a plan is the last place anyone thinks
+to look for a stale number. The current figures are on the [README](README.md) and the
+[dashboard](https://athakur3.github.io/mcp-context-cost/dashboard.html), stated once, where
+regen keeps them honest.
+
+**Check an item's premise before starting it.** Four of phase 1's eight items were wrong about
+*why* — not about the symptom, which was real every time, but about the mechanism behind it —
+and phase 2 then ran the same way: two of its seven, one of which dissolved on contact with the
+record. The pattern has been exact both times: every item that quoted the record held up, and
+every item that inferred a cause from a category did not. So the first hour of a phase re-reads
+the records its items name and either confirms the sentence or rewrites it. That hour would
+have saved most of phase 1's rework, and it is the same discipline this project applies to its
+own published numbers — a claim is worth what its evidence is worth, including a claim in here.
 
 ## Where it stands
 
-106 candidates, 85 measured and rising, six published columns (tokens, session start, Claude,
-mcp-tokens, movement, tool shape), 682 tests, four workflows, three weeks of history, and
-`0.13.1` on npm as of 2026-09-05 — 0.13.0 carried phases 1 and 2 together, since 0.12.0 went
-out before phase 1 started, and 0.13.1 is the first release cut by `release.yml` rather than by
-hand. The measurement and its gates are further along than their
-audience: the adoption reading of
-2026-09-03 found zero projects displaying the badge, and the repository has one star. So the
-phases below do two different kinds of work — keeping the published data honest, which is the
-discipline the project exists for, and getting it in front of the people it is for. Every
-technical item here is worth less than one adopter — which is why the distribution track was
-ordered ahead of the technical ones. It ran on 2026-09-05: the listing is live, three posts
-are out and five badge pull requests are open, so it no longer blocks this file. That zero is
-now a dated reading with six asks behind it rather than an absence of asking.
+The measurement and its gates are further along than their audience. The adoption reading of
+**2026-09-03** found zero projects displaying the badge, against one star and three weeks of
+published history. So the work here is two kinds — keeping the published data honest, which is
+the discipline the project exists for, and getting it in front of the people it is for. Every
+technical item below is worth less than one adopter, which is why the distribution track was
+ordered ahead of the technical ones; it ran on **2026-09-05**. The next reading is due
+**2026-09-19**, and it decides the code levers.
 
 ## The phases at a glance
 
 | phase | goal | window | exit, in one line |
 |---|---|---|---|
-| **0** | Ship what trunk already holds | **done 2026-09-05** | 0.12.0 on npm, with a dated changelog section |
-| **1** | Every published sentence is established | **done 2026-09-05** | eight items, each held by a test; `slack` and `redis-legacy` re-measured in CI |
-| **∥** | **Distribution** *(maintainer)* | **shipped 2026-09-05** | listing live and three posts published; five badge PRs open |
-| **2** | Sweeps that are cheaper and say more — **done 2026-09-05**, released as 0.13.0 | 2026-09-05 | movements name releases; six rows healed; Claude column refreshed by the re-sweep; the one real upstream bug filed |
-| **3** | Others can add servers safely | 2026-09-21 → 2026-10-09 | a stranger's entry is measured read-only before any write-token job runs it |
-| **4** | `audit` reaches the stacks people run | 2026-10-05 → 2026-10-23 | remote entries measured; three more clients, each with a who-pays row |
+| **2** | Sweeps that are cheaper and say more | two things left | corroboration survives truncation; every divergence row describes its capture |
+| **3** | Others can add servers safely | 2026-09-21 → 10-09 | a stranger's entry is measured read-only before any write-token job runs it |
+| **4** | `audit` reaches the stacks people run | 2026-10-05 → 10-23 | remote entries measured; three more clients, each with a who-pays row |
 | **5** | The data tells its second story | from 2026-10-16 | state-of report #2 with per-tool attribution; rotation length decided on evidence |
+| **∥** | Distribution *(maintainer)* | continuing | a badge merged somewhere that is not this repository |
 
 ---
 
-## Phase 0 — Ship what trunk already holds · done 2026-09-05
+## Phase 2 — what is left of it
 
-`0.12.0` is on npm, published first-attempt through the pinned OIDC path, with
-`## 0.12.0 — 2026-09-05` in the changelog and the published tarball re-deriving a published
-number. Nothing was needed for the `v1` tag. Per this file's forward-looking rule the detail
-lives in the git history and the changelog; what it left behind is in phase 1 below, because
-writing that section is what found it.
+Seven of its eight items shipped in `0.13.0`, and the finding was that half the "broken
+servers" in this set were broken by this harness rather than by their authors. Two things did
+not close with it.
 
----
-
-## Phase 1 — Every published sentence is established · done 2026-09-05
-
-All eight items shipped, each held by a test (644, from 625), and the two published statuses
-that needed a measurement rather than an edit were re-measured in CI: `slack` no longer reads
-`auth-required` on a TLS trust failure in this harness's own container, and `redis-legacy`
-reads `not-applicable` with its declared reason and the raw failure behind it. Per this file's
-forward-looking rule the detail is in the git history; the movement report now says
-**17 moved + 64 held + 2 without = 83**, where it used to call 66 held costs an absence.
-
-Four things this file asserted turned out to be wrong, and only one of them still points
-forward:
-
-- **`grafana` is not a backing-service absence.** Its record says the container came up and
-  served SSE on `0.0.0.0:8000` while this harness waited on stdio — a transport mismatch in
-  our own launch command, not something a port probe would corroborate. It was left undeclared
-  with the reason written into the entry. Phase 2 then found `anki` to be the same bug, which
-  closed the probe item altogether — both entries pass a stdio flag now and both measure.
-- The bots' "no change to publish" guard was never blocked by the dashboard stamp; the exit
-  that rested on it was unreachable, and wanted the behaviour phase 1's own first item depends
-  on. `elasticsearch` was not a bare failure but a clean number for a deprecated package,
-  which is worse. And the new number guard found a third hand-written figure on the front page.
-
-**The distribution track was unblocked by this phase, and ran the same day.** See below.
-
----
-
-## Distribution *(maintainer)* — shipped 2026-09-05
-
-Zero adopters after three weeks was the number that mattered most in this file, and it sat
-under phase 5 until 2026-09-05 while saying so. Moved above the technical phases that day,
-the track then ran in one day rather than the five it was given.
-
-**Two of its three exits are met.** The Action is listed on the GitHub Marketplace under
-Continuous integration and Code quality, on the existing `v1` tag. Three posts are published:
-r/mcp with the required showcase flair, the Cursor forum under Showcase → Built for Cursor,
-and the MCP community Discord's `#showcase` forum. The third exit, a merged badge pull
-request, is not ours to close: five are open.
-
-Also out: an entry in `awesome-mcp-devtools`, ten repository topics, dated movement issues to
-`obsidian` and `blender`, and a submission to Console.dev.
-
-**What the day corrected.** Four of the eight badge targets had already been approached on
-2026-08-16, and nothing in this file or the adoption reading recorded it: `clickhouse`
-declined in words, `playwright` closed without comment, `qdrant` and `exa` are still open and
-unanswered. None was re-sent. So the zero reads differently — not that nobody has been asked,
-but that of six asks two were declined and two are still sitting. **Any outreach now starts by
-listing what this account already sent that repository** (`gh pr list --repo <r> --state all
---author athakur3`, and the same for issues). A second unsolicited pull request to a
-maintainer who declined is the one move here that costs more than it wins.
-
-**Still open:** a Show HN on Wednesday 2026-09-09 after that morning's re-sweep, and a dated
-adoption reading from 2026-09-19 that decides the code levers (a Claude Code plugin, an
-MCP-server mode, a native shields service). Neither blocks any technical phase. The plan and
-the response log are at https://claude.ai/code/artifact/42d26d8e-b533-4bde-a424-49f98adf800b
-
----
-
-## Phase 2 — Sweeps that are cheaper and say more · **in progress**
-
-**Goal.** A movement names the release that caused it, and a harness limitation never costs
-a retry.
-
-**All seven items are done (2026-09-05).** The premise check this file mandates paid for
-itself three times over: two items were wrong about the mechanism, one dissolved entirely, and the
-probe item then found that **half the "broken servers" in this set were broken by us** —
-`anki`, `grafana`, `azure` and `hevy` all publish real statuses now, and only `local-mcp`
-turned out to be a fact about someone else's release schedule.
-
-**Scope.**
-- [x] **A schema test over `servers.yaml` in CI** — done 2026-09-05. `validateServers` in
-      `src/sweep/servers-schema.ts`, run by the suite CI already runs. The plan had two things
-      wrong. `notApplicable` and `deprecated` were *already* checked, by their own test files;
-      what nothing checked was entry shape — required fields, unique names, types, and a key
-      nobody reads, which is the real hole because YAML makes a misspelled key an absent field.
-      And remote entries are not `remote` xor `command`: they keep the endpoint *in* `command`,
-      and both directions are now checked. The field table is
-      `satisfies Record<keyof ServerEntry, …>`, so a field added to the type without being
-      declared fails typecheck.
-- [x] **Name the release a movement came from** — done 2026-09-05. `history.csv` has a seventh
-      column and `ToolVectorEntry` an optional field; `regressions.md` and the per-server pages
-      carry a **release** column. Short rows read as not recorded and nothing is back-filled, so
-      it says `0 of 17` movements can name both sides today and fills in as the rotation
-      re-measures. It can also now say `still 1.29.1` — the cost moved while the version did
-      not, which is a dependency the server does not pin rather than a release.
-- [x] ~~**Corroborate `not-applicable` by probe as well as by words.**~~ **Not built, and the
-      item is closed: its only case was a bug in this repository.** `anki` was the case — twelve
-      minutes a cycle to establish, supposedly, that a desktop application is absent. Run in the
-      isolation it prints a banner and serves HTTP on `127.0.0.1:3000` while this harness waits
-      on stdio, exactly the mismatch phase 1 found in `grafana`; `ankimcp --help` names
-      `--stdio`. `grafana` is the same story one level down: the binary's own default transport
-      *is* stdio, and the `mcp/grafana` image's ENTRYPOINT hard-codes
-      `--transport sse --address 0.0.0.0:8000`. Both entries now pass a stdio flag, and probed
-      that way both **measure** — anki 20,037 tokens across 50 tools, grafana 16,774 across 65,
-      in under a minute where they had been spending twenty-one. With both timeouts explained
-      the probe has zero cases, and this file does not widen a bucket without one. The
-      truncation hole it would also have closed is still open and is listed below on its own.
-- [x] **`isolation.arch` can name the wrong machine** — done 2026-09-05, and the obvious fix
-      was also wrong. `docker image inspect` reports the variant the local store prefers: on
-      this machine it answered `linux/arm64` for a tag whose container, under
-      `DOCKER_DEFAULT_PLATFORM=linux/amd64`, came up `x86_64` — the same wrong answer as the
-      host inference. `containerPlatform` starts a container and reads `uname -sm`. A command
-      that is itself a `docker run` records no `arch` at all, because this harness did not
-      choose that container.
-- [x] **The Claude column refreshes in the job that re-measures, and covers every row** — done
-      2026-09-05. `resweep.yml` refreshes it after the cross-check, selecting with the same
-      `${SELECT}` string, and a bare run now covers every measured server rather than the top
-      20. `divergence.json` is staged with the measurements rather than the derived files, or
-      the rebase would discard it. Two published sentences that claimed a rank now state the
-      count regen maintains.
-- [ ] **`not-applicable` corroboration survives a growing evidence tail.** Split out of the
-      probe item above, which is closed. Corroboration is a substring test against the
-      *truncated* tail, so a declared entry whose output grows until its evidence line falls in
-      the elided middle reverts to `startup-failure` on its own — silently, and about someone
-      else's working software. Four entries declare today. Wants a rule that does not depend on
-      how much the server printed.
-- [x] **Probe before telling anyone anything** — done 2026-09-05, and it is the item that paid
-      for the one below. Six failure rows probed; **three were ours**. `azure` measures (15,239
-      tokens, 68 tools) once `libicu72` and `libssl3` are in the container — the ICU hypothesis
-      was right and its proposed fix was not, since the env var only clears ICU and lands on
-      libssl. `hevy`'s failure was our own dummy key: with `HEVY_API_KEY` empty it says a key is
-      required and reads `auth-required`. `local-mcp` is a platform absence the vendor states in
-      words ("The Windows/Linux Go server is in preview"), on **both** architectures, so the
-      arm64 reading was half the story. Entries gain `aptPackages` for the first of those — the
-      `needsGit` argument, not the `OTEL_SDK_DISABLED` one.
-- [x] **Heal failure rows upstream, one reproduction each** — done 2026-09-05, and re-verifying
-      each against the *current* published version before writing anything narrowed it in both
-      directions again. Of the three: `heroku` is real and **someone had already filed it**
-      (heroku/heroku-mcp-server#249, open, against 1.2.6) — a second issue would have been the
-      move that costs more than it wins, so what we had that the report did not went in as a
-      comment: it still reproduces on 1.2.7 on a different OS and Node major, and the subpath is
-      absent from the SDK's exports map entirely. `accessibility-scanner` was **not upstream**:
-      it declares `engines.node` of `^24.15.0 || >=26.0.0` against an isolation image of
-      node:22-slim, and on node:24-slim it measures. Only `hana-cli` needed filing, as
-      SAP-samples/hana-developer-cli-tool-example#231 — its published `bin.hana-cli-mcp` imports
-      a package absent from all 50 of its declared dependencies.
-
-**Exit.**
-- ~~Every movement in `regressions.md` whose two records both carry a version names both.~~
-  Met by construction; `0 of 17` today, and the page says why.
-- ~~`anki` reads `not-applicable` with probe evidence, and the slice containing it finishes at
-  least twelve minutes faster.~~ Superseded: `anki` and `grafana` both **measure**, and the
-  slice loses twenty-one minutes rather than twelve. Checkable once CI has run them — the
-  numbers above were probed on a laptop and are not published.
-- After a re-sweep dispatch that touches `github`, the front page's Claude cell for it is a
-  number.
-- ~~`azure` and `local-mcp` each have a probe result recorded, whichever way it went.~~ Both
-  do, and both moved: `azure` measures and `local-mcp` is declared.
-- ~~Three upstream issues filed~~ — **one**, and that is the result rather than a shortfall.
-  Four candidates became three when `hevy` turned out to be ours, three became two when
-  `heroku` turned out to be already filed, and two became one when `accessibility-scanner`
-  turned out to be our base image. Links are in `servers.yaml`.
-
-**Released.** `0.13.0` is on npm, published first-attempt through the pinned OIDC path, with
-its own dated changelog section and the published tarball re-deriving `azure` — the server this
-phase healed. Writing the section found that it was incomplete: phase 1's five changes had been
-sitting unreleased since 0.12.0 went out *before* that phase started, so the release carries
-both. Refuting it afterwards, as 0.12.0's cut established, found two more errors in entries
-written the same day.
-
-**Why here.** The version column and probe evidence are schema; they ship together as 0.13.0
-after phase 0 has cleared the previous batch. The declarations in phase 1 come first because
-they need no code.
-
-**Size.** A week.
+- [ ] **`not-applicable` corroboration survives a growing evidence tail.** A declared entry is
+      only published as `not-applicable` when the failure's own text still contains the
+      declared evidence — the guard that stops a stale annotation absorbing a real breakage.
+      But the text it searches is a *truncated* tail (`evidenceTail` in `src/sweep/client.ts`
+      keeps both ends of 600 characters and elides the middle), so an entry whose output grows
+      until its evidence line falls into the elided middle reverts to `startup-failure` on its
+      own — silently, and about someone else's working software. Not hypothetical: of the five
+      entries declaring today, two are already having their middle elided, and the narrowest
+      surviving margin is 64 characters. Wants a rule that does not depend on how much the
+      server printed.
+- [ ] **Every divergence row describes the capture it was computed from.** `--only` selections
+      merge into `results/divergence.json`, so a row outside the selection keeps its old
+      numbers and goes stale the moment its capture moves. `isCurrent` catches this and the
+      page prints `—` rather than a wrong number, which is the right failure — but as of
+      2026-09-05 seven of twenty-four rows are stale, `github` among them, and the README's
+      Claude table draws a comparison from a cell it is therefore not printing. One bare
+      divergence run refreshes every row; the durable fix is that a merge cannot leave a row
+      describing a capture that no longer exists.
 
 ---
 
@@ -232,8 +79,6 @@ they need no code.
 holding `contents: write` ever runs its launch command.
 
 **Scope.**
-- [ ] *(The schema test moved to phase 2 on 2026-09-05: phase 2 adds a fourth structured
-      entry field, and the check has to exist before the field does.)*
 - [ ] **A `pull_request` job with read-only permissions** that diffs `servers.yaml` against
       the base branch, measures only the entries the PR added, and prints the number in the
       check log. It pushes nothing; the rotation publishes it later under its own rules.
@@ -308,10 +153,9 @@ the runner allows.
 - [ ] **State-of report #2.** Tool vectors accrue from 2026-09-04 and the rotation is six
       weeks, so from about **2026-10-16** both sides of nearly every movement are on record.
       The September edition could say which servers moved; this one can say which tools, and
-      by phase 2 which releases. It can also say what held: as of 2026-09-05 the movement
-      report separates 64 confirmed-unchanged costs from the 2 with nothing to compare, and
-      "most servers do not move, and the ones that do move up" is a finding the first edition
-      could not state.
+      which releases. It can also say what held — the movement report separates confirmed
+      unchanged costs from the ones with nothing to compare, and "most servers do not move, and
+      the ones that do move up" is a finding the first edition could not state.
 - [ ] **A shorter rotation, decided on evidence.** A movement's window can be six weeks wide,
       and a window that wide describes the schedule rather than the server (`resweep.yml` says
       as much at its top). Dispatch `shards=3` once, time it against the 120-minute cap, and
@@ -329,13 +173,32 @@ whatever anyone does.
 
 ---
 
+## Distribution *(maintainer)* — continuing
+
+The track ran on 2026-09-05: the Action is listed on the GitHub Marketplace, three posts are
+published (r/mcp with the required showcase flair, the Cursor forum, and the MCP community
+Discord's `#showcase`), an entry is in `awesome-mcp-devtools`, and badge pull requests and
+dated movement issues are open. The remaining exit is not ours to close — a badge merged in
+somebody else's README.
+
+**Still open:** a Show HN on **2026-09-09** after that morning's re-sweep, and the dated
+adoption reading from **2026-09-19** that decides the code levers (a Claude Code plugin, an
+MCP-server mode, a native shields service). Neither blocks a technical phase.
+
+**Before any outreach, list what this account already sent that repository** — `gh pr list
+--repo <r> --state all --author athakur3`, and the same for issues. Four of the 2026-09-05
+badge targets had already been approached on 2026-08-16 and nothing recorded it: one declined
+in words, one closed without comment, two are still open and unanswered. A second unsolicited
+pull request to a maintainer who declined is the one move here that costs more than it wins.
+
+---
+
 ## Decisions that are the maintainer's, not bugs
 
 - **`elasticsearch` and `OTEL_SDK_DISABLED=true`.** With it the cross-check row becomes
   comparable (confirmed: 4 tools, 374, +0.0%); without it the row is `—`. Adding it changes
   launch conditions away from what a plain `npx -y` user runs. Either answer is defensible;
-  the entry should say which was chosen and why. `azure` may pose the same question after
-  its phase-2 probe.
+  the entry should say which was chosen and why.
 - **`--budget` per config file or per Claude Code session.** The README states per-file
   totals as a product rule, while the deferral model treats Claude Code as reading two files
   into one session. Changing the gate's denominator is a product decision.
