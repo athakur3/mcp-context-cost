@@ -7,6 +7,8 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+## 0.13.2 — 2026-09-05
+
 Both entries below close the same rule, found in two places on the same day: **a truncation may
 never remove the evidence a published claim rests on.** Phase 2 had left one item open and, when
 its exits were checked rather than taken on trust, a second thing of the same shape was sitting
