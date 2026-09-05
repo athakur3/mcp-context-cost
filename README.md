@@ -218,11 +218,11 @@ Add `--suggest` to place each of your tools in the measured set's tool-shape dis
 ([method](docs/METHODOLOGY.md#tool-shape)) and get advice only where the data can point at
 something. Only descriptions draw advice — schemas are functional surface; descriptions are
 prose every request carries — and only descriptions at or above the 90th percentile of the
-1,150 measured tools:
+1,430 measured tools:
 
 ```
   suggest — descriptions at or above the 90th percentile of measured tools
-  (baseline 2026-09-03: 1,150 tools across 81 measured servers):
+  (baseline 2026-09-05: 1,430 tools across 87 measured servers):
     stub · wordy — 345 tokens: description 321 (p92), schema 14
       rewriting the description toward the measured median (27) would recover ≈294 tokens on every request
     1 of 2 tools sit inside the distribution — no advice where nothing is measurably unusual.

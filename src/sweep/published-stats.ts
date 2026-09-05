@@ -25,7 +25,7 @@
  * never a silent skip), and only the slots are ever rewritten — spliced in
  * place, so the page's own line wrapping survives.
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DEFAULT_CONTEXT_WINDOW } from '../audit/audit.js';
 import { fieldSelectionShare, isCurrent } from '../core/divergence.js';
@@ -63,6 +63,14 @@ export interface PublishedStats {
     ratioMin: number;
     ratioMax: number;
   };
+  /**
+   * The published tool-shape baseline, which README quotes twice — once in
+   * prose and once inside the `--suggest` sample output. Both were hand-written
+   * and `STATIC_COUNTS` excused them as regen-maintained, which was not true of
+   * either: the file said 1,430 tools across 87 servers while the page said
+   * 1,150 across 81, and every test passed.
+   */
+  toolShape: { toolCount: number; serverCount: number; generatedAt: string };
   deferralCostlierCount: number;
   /** Servers whose most recent cost movement went up / down (cost-regression/v1). */
   movement: { grew: number; shrank: number };
@@ -174,7 +182,15 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
     throw new Error('README quotes `verify` on results/github, which has no current measurement');
   }
 
+  const shape = (() => {
+    const p = join(root, 'results', 'tool-shape.json');
+    if (!existsSync(p)) throw new Error('results/tool-shape.json is missing — README states its numbers');
+    const j = JSON.parse(readFileSync(p, 'utf8')) as { toolCount: number; serverCount: number; generatedAt: string };
+    return { toolCount: j.toolCount, serverCount: j.serverCount, generatedAt: j.generatedAt };
+  })();
+
   return {
+    toolShape: shape,
     candidateTotal: rows.length,
     measuredCount: measured.length,
     max,
@@ -287,6 +303,20 @@ export const PAGE_CLAIMS: Claim[] = [
     // sentences regen already kept true.
     template: 'measured at {f}×–{f}× across {n} servers)',
     values: (s) => [s.claude.ratioMin.toFixed(2), s.claude.ratioMax.toFixed(2), fmt(s.claude.runSize)],
+  },
+  {
+    file: 'README.md',
+    id: 'tool-shape:prose',
+    template: 'only descriptions at or above the 90th percentile of the {n} measured tools:',
+    values: (s) => [fmt(s.toolShape.toolCount)],
+  },
+  {
+    file: 'README.md',
+    id: 'tool-shape:sample-header',
+    // Inside the `--suggest` sample block. A reader compares their own output
+    // against it, so a stale baseline line there is read as a current one.
+    template: '(baseline {w}: {n} tools across {n} measured servers):',
+    values: (s) => [s.toolShape.generatedAt, fmt(s.toolShape.toolCount), fmt(s.toolShape.serverCount)],
   },
   {
     file: 'README.md',

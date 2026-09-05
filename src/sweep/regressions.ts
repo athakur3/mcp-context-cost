@@ -121,9 +121,19 @@ export function writeCaptureIndex(entries: ServerEntry[], root = process.cwd()):
     current[entry.name] = vectors.entries[vectors.entries.length - 1]!.canonicalSha256;
   }
   for (const sha of ambiguous) delete captures[sha];
+  // Dated by the newest capture it indexes, not by the moment it was written —
+  // the same rule the dashboard was moved to. A clock stamp makes the file
+  // claim to be as fresh as the run that regenerated it, when what a reader
+  // needs to know is how far the data behind it reaches. It also means
+  // regenerating over unchanged vectors produces no diff, which is what lets a
+  // release gate ask "is anything derived here stale?" and get a real answer.
+  const newest = Object.values(captures)
+    .map((c) => c.date)
+    .sort()
+    .pop();
   const index: CaptureIndex = {
     method: CAPTURE_INDEX_METHOD,
-    generatedAt: new Date().toISOString().slice(0, 10),
+    generatedAt: newest ?? '',
     // Key order sorted so a re-run over unchanged vectors produces no diff noise.
     captures: Object.fromEntries(Object.entries(captures).sort(([a], [b]) => a.localeCompare(b))),
     current: Object.fromEntries(Object.entries(current).sort(([a], [b]) => a.localeCompare(b))),

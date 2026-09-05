@@ -92,7 +92,7 @@ const STATIC_COUNTS: { file: PageFile; text: string; why: string }[] = [
   { file: 'docs/METHODOLOGY.md', text: '57 measured servers', why: 'the frozen band derivation: the size of the 2026-08-16 sweep the bands were cut against, which is history and must not move' },
   { file: 'docs/METHODOLOGY.md', text: '2,676 tokens', why: 'part of the same frozen 2026-08-16 distribution' },
   { file: 'docs/METHODOLOGY.md', text: '328 tokens', why: 'part of the same frozen 2026-08-16 distribution' },
-  { file: 'README.md', text: '1,150 measured tools', why: 'the tool-shape baseline size — regen-maintained in `results/tool-shape.json`, whose own drift-guard test asserts the committed file re-derives' },
+
 ];
 
 describe('every count on the front pages is maintained or deliberately static', () => {
