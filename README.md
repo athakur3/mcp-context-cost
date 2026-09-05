@@ -126,7 +126,7 @@ costs **more** than loading the definitions would.
 
 Three things the report will not do: it will not convert between units silently (in
 threshold mode the stack is compared as a range, because the audit counts wire bytes and the
-threshold is counted in what the client sends to the API — measured at 0.20×–1.92× across 23
+threshold is counted in what the client sends to the API — measured at 0.20×–1.92× across 24
 servers); it will not claim a posture the machine did not state readably, which is four
 refusals and not one — when two places set the same variable to different values, when a
 settings file exists and cannot be read, when the place that would decide sets the variable
@@ -204,8 +204,8 @@ INCREASE FAIL:
 Add `--claude` to annotate each server with its Anthropic-request cost from the published
 [Claude divergence](docs/METHODOLOGY.md#claude-divergence) run — an exact number when the
 published capture hash matches what you have installed, `—` (silence, not a stale guess)
-when it doesn't. The run holds 23 rows — the measured servers it covered when it last ran —
-and [results/leaderboard.md](results/leaderboard.md) prints a claude number for the 15 that
+when it doesn't. The run holds 24 rows — the measured servers it covered when it last ran —
+and [results/leaderboard.md](results/leaderboard.md) prints a claude number for the 16 that
 still match today and silence for the rest. Most installs will show a mix:
 
 ```
@@ -256,7 +256,7 @@ Flags: `--json` (full report on stdout, progress on stderr), `--budget N`,
 
 The number `audit` gives you is the same measurement, run across a curated set of public
 servers — which is how you can tell it is a measurement and not this tool's opinion. It also
-shows what you are choosing between: across the 86 servers measured, cost spans **1,700×**,
+shows what you are choosing between: across the 87 servers measured, cost spans **1,700×**,
 from `postgres` at 32 tokens to `github` at 54,622. The table below is a
 sample of that range; the full range is in
 [results/leaderboard.md](results/leaderboard.md).
@@ -271,7 +271,7 @@ sample of that range; the full range is in
 | filesystem (reference) | 2,823 | 14 |
 | markitdown | 64 | 1 |
 
-*(86 of 106 popular servers measured, each row dated by its own most recent sweep — full table in
+*(87 of 106 popular servers measured, each row dated by its own most recent sweep — full table in
 [results/leaderboard.md](results/leaderboard.md); every failure is listed with its reason.
 Each measured server also has a [detail page](https://athakur3.github.io/mcp-context-cost/servers/)
 showing which tools its tokens are in.)*

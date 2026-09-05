@@ -26,6 +26,12 @@
       "totalTokens": 5045,
       "toolCount": 5
     },
+    "09ec3a887ad0244e50e5f3ae1ae117d1dc3979ba5e96be187961d55b5022c8fa": {
+      "server": "accessibility-scanner",
+      "date": "2026-09-05",
+      "totalTokens": 8959,
+      "toolCount": 33
+    },
     "0ba9e9185e3d5c167bbaf0dcfeb499f27020c307f1387a3b85374f849f0a38a7": {
       "server": "basic-memory",
       "date": "2026-09-02",
@@ -580,6 +586,7 @@
     }
   },
   "current": {
+    "accessibility-scanner": "09ec3a887ad0244e50e5f3ae1ae117d1dc3979ba5e96be187961d55b5022c8fa",
     "agent-device": "61a100d3f94ba6e81eedcbd151cfff7ce5e6acd36906571c7035e0b09a681dca",
     "agentphone": "eec89a7ec71ac3e9e65fb8477bf594b4ce9af01b572bcc5d7e9fbbcc85f4e813",
     "airbnb": "79c3109b4fa4e4735ba1071cacbd98948c6aba20b70c9a4295a78e84850a81e0",

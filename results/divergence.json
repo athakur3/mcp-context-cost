@@ -5,6 +5,13 @@
   "baselineTokens": 7,
   "probeDelta": 328,
   "servers": {
+    "accessibility-scanner": {
+      "o200kFull": 8959,
+      "o200kMapped": 7904,
+      "claudeDelta": 14301,
+      "toolCount": 33,
+      "capturedSha256": "09ec3a887ad0244e50e5f3ae1ae117d1dc3979ba5e96be187961d55b5022c8fa"
+    },
     "anki": {
       "o200kFull": 20037,
       "o200kMapped": 9357,

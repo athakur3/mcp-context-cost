@@ -14,6 +14,16 @@
   "measuredAt": "2026-09-05",
   "isolation": "docker (same images, limits and package caches as a sweep)",
   "servers": {
+    "accessibility-scanner": {
+      "ourTokens": 8959,
+      "ourMappedTokens": 7904,
+      "cliTokens": 7918,
+      "ourToolCount": 33,
+      "cliToolCount": 33,
+      "toolSetMatches": true,
+      "dynamic": false,
+      "capturedSha256": "09ec3a887ad0244e50e5f3ae1ae117d1dc3979ba5e96be187961d55b5022c8fa"
+    },
     "agent-device": {
       "ourTokens": 53669,
       "ourMappedTokens": 40105,

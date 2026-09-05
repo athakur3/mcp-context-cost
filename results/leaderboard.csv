@@ -91,7 +91,7 @@ obsidian-rest,10173,12,measured,community,5784,https://api.npmjs.org/downloads/p
 bitbucket-mcp,6156,47,measured,community,5033,https://api.npmjs.org/downloads/point/last-week/bitbucket-mcp (npm weekly),,,230,false,230,0,6156,v0.2.5
 hana-cli,,,startup-failure,vendor-official,3854,https://api.npmjs.org/downloads/point/last-week/hana-cli (npm weekly),,,,,,,,
 clinicaltrialsgov,5134,7,measured,community,3123,https://api.npmjs.org/downloads/point/last-week/clinicaltrialsgov-mcp-server (npm weekly),,,54,false,54,0,2874,v0.2.5
-accessibility-scanner,,,startup-failure,community,3068,https://api.npmjs.org/downloads/point/last-week/mcp-accessibility-scanner (npm weekly),,,,,,,,
+accessibility-scanner,8959,33,measured,community,3068,https://api.npmjs.org/downloads/point/last-week/mcp-accessibility-scanner (npm weekly),14301,claude-opus-5,353,false,121,232,7918,v0.2.5
 keboola,,,auth-required,vendor-official,2907,https://pypistats.org/packages/keboola-mcp-server (PyPI weekly),,,,,,,,
 octocode,13552,14,measured,community,1797,https://api.npmjs.org/downloads/point/last-week/octocode-mcp (npm weekly),,,791,false,64,727,13122,v0.2.5
 anki,20037,50,measured,community,1716,https://api.npmjs.org/downloads/point/last-week/@ankimcp/anki-mcp-server (npm weekly),16189,claude-opus-5,179,false,179,0,9371,v0.2.5

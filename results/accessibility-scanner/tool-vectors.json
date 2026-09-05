@@ -1,0 +1,146 @@
+{
+  "method": "cost-regression/v1",
+  "server": "accessibility-scanner",
+  "entries": [
+    {
+      "date": "2026-09-05",
+      "canonicalSha256": "09ec3a887ad0244e50e5f3ae1ae117d1dc3979ba5e96be187961d55b5022c8fa",
+      "totalTokens": 8959,
+      "version": "3.3.2",
+      "tools": [
+        {
+          "name": "browser_close",
+          "tokens": 108
+        },
+        {
+          "name": "browser_resize",
+          "tokens": 148
+        },
+        {
+          "name": "browser_console_messages",
+          "tokens": 112
+        },
+        {
+          "name": "browser_handle_dialog",
+          "tokens": 153
+        },
+        {
+          "name": "browser_evaluate",
+          "tokens": 214
+        },
+        {
+          "name": "browser_file_upload",
+          "tokens": 150
+        },
+        {
+          "name": "browser_fill_form",
+          "tokens": 266
+        },
+        {
+          "name": "browser_install",
+          "tokens": 136
+        },
+        {
+          "name": "browser_press_key",
+          "tokens": 151
+        },
+        {
+          "name": "browser_type",
+          "tokens": 234
+        },
+        {
+          "name": "browser_navigate",
+          "tokens": 134
+        },
+        {
+          "name": "browser_navigate_back",
+          "tokens": 113
+        },
+        {
+          "name": "browser_network_requests",
+          "tokens": 116
+        },
+        {
+          "name": "browser_network_request",
+          "tokens": 171
+        },
+        {
+          "name": "browser_take_screenshot",
+          "tokens": 410
+        },
+        {
+          "name": "browser_session_open",
+          "tokens": 187
+        },
+        {
+          "name": "browser_session_close",
+          "tokens": 129
+        },
+        {
+          "name": "browser_snapshot",
+          "tokens": 174
+        },
+        {
+          "name": "browser_find",
+          "tokens": 239
+        },
+        {
+          "name": "browser_click",
+          "tokens": 204
+        },
+        {
+          "name": "browser_drag",
+          "tokens": 217
+        },
+        {
+          "name": "browser_drop",
+          "tokens": 273
+        },
+        {
+          "name": "browser_hover",
+          "tokens": 158
+        },
+        {
+          "name": "browser_select_option",
+          "tokens": 197
+        },
+        {
+          "name": "scan_page",
+          "tokens": 854
+        },
+        {
+          "name": "browser_tabs",
+          "tokens": 172
+        },
+        {
+          "name": "browser_navigation_timeout",
+          "tokens": 167
+        },
+        {
+          "name": "browser_default_timeout",
+          "tokens": 174
+        },
+        {
+          "name": "browser_wait_for",
+          "tokens": 168
+        },
+        {
+          "name": "audit_site",
+          "tokens": 1100
+        },
+        {
+          "name": "scan_page_matrix",
+          "tokens": 989
+        },
+        {
+          "name": "audit_keyboard",
+          "tokens": 643
+        },
+        {
+          "name": "audit_screen_reader",
+          "tokens": 296
+        }
+      ]
+    }
+  ]
+}
