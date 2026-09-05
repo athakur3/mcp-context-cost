@@ -37,12 +37,20 @@ ordered ahead of the technical ones; it ran on **2026-09-05**. The next reading 
 
 ## The phases at a glance
 
-| phase | goal | window | exit, in one line |
+**Phases carry an order, not a schedule.** Nothing here has a start date, because a date on
+development work is wrong in both directions: it rushes what is not ready and, more often,
+delays what is. This file said phase 3 opened on 2026-09-21 for no better reason than that
+phase 2 had been drawn as running to the 25th — and phase 2 finished on the 5th, five days
+before it was scheduled to begin. The column below says what a phase is waiting for, which is
+the only thing that was ever true. Dates live where a date is the point: a post, a dated
+reading, the re-sweep cadence. They are all on the distribution track.
+
+| phase | goal | waiting on | exit, in one line |
 |---|---|---|---|
-| **3** | Others can add servers safely | 2026-09-21 → 10-09 | a stranger's entry is measured read-only before any write-token job runs it |
-| **4** | `audit` reaches the stacks people run | 2026-10-05 → 10-23 | remote entries measured; three more clients, each with a who-pays row |
-| **5** | The data tells its second story | from 2026-10-16 | state-of report #2 with per-tool attribution; rotation length decided on evidence |
-| **∥** | Distribution *(maintainer)* | continuing | a badge merged somewhere that is not this repository |
+| **3** | Others can add servers safely | nothing | a stranger's entry is measured read-only before any write-token job runs it |
+| **4** | `audit` reaches the stacks people run | nothing; shares no files with 3 | remote entries measured; three more clients, each with a who-pays row |
+| **5** | The data tells its second story | tool vectors on both sides of most movements | state-of report #2 with per-tool attribution; rotation length decided on evidence |
+| **∥** | Distribution *(maintainer)* | its own calendar, and someone else's answer | a badge merged somewhere that is not this repository |
 
 ---
 
@@ -76,9 +84,13 @@ holding `contents: write` ever runs its launch command.
 - The adoption workflow has run once on schedule and `docs/adoption.md`'s date advanced.
 
 **Why here.** Contributions follow distribution, and the safety check must exist before the
-first outside PR arrives — not after. Runs in parallel with phase 4; the two share no files.
+first outside PR arrives — not after. Runs beside phase 4; the two share no files.
 
-**Size.** Three to four days.
+**Order within it.** The registry scan first: the method behind 106 candidates exists today only
+as a comment in `servers.yaml` and a script that was never committed, so it is the item whose
+cost of delay is losing something. Then the adoption workflow, because a reading that is manual
+and needs a token is a reading that stops happening. The `pull_request` job and CONTRIBUTING are
+worth most once there is someone to contribute — the reading is what will say whether there is.
 
 ---
 
@@ -113,8 +125,6 @@ convenient.
 **Why here.** Independent of the sweep, so it runs beside phase 3. Ordered after phase 2
 because the people distribution brings are audit users, and this is the audit they will run.
 
-**Size.** A week, most of it clients.
-
 ---
 
 ## Phase 5 — The data tells its second story
@@ -123,10 +133,11 @@ because the people distribution brings are audit users, and this is the audit th
 the runner allows.
 
 **Scope.**
-- [ ] **State-of report #2.** Tool vectors accrue from 2026-09-04 and the rotation is six
-      weeks, so from about **2026-10-16** both sides of nearly every movement are on record.
-      The September edition could say which servers moved; this one can say which tools, and
-      which releases. It can also say what held — the movement report separates confirmed
+- [ ] **State-of report #2.** Waiting on data rather than on a date: tool vectors began
+      accruing 2026-09-04 and a movement needs one on both sides, so the report can be written
+      once the rotation has come round — sooner if the rotation is shortened, which is the item
+      below. The September edition could say which servers moved; this one can say which tools,
+      and which releases. It can also say what held — the movement report separates confirmed
       unchanged costs from the ones with nothing to compare, and "most servers do not move, and
       the ones that do move up" is a finding the first edition could not state.
 - [ ] **A shorter rotation, decided on evidence.** A movement's window can be six weeks wide,
@@ -141,8 +152,9 @@ the runner allows.
 **Exit.** Report #2 published and dated; the shard count in `resweep.yml` carries a comment
 with the timing that chose it.
 
-**Why here.** Gated by the calendar: the attribution data does not exist before mid-October
-whatever anyone does.
+**Why here.** The only phase with a real wait in it, and it is a wait for data rather than for
+a date: the attribution does not exist until the rotation has measured both sides of a movement,
+whatever anyone does. Shortening the rotation is the one lever on it.
 
 ---
 
