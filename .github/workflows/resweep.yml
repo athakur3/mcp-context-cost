@@ -25,8 +25,9 @@
 # slice takes. It exists so that re-measuring a handful of entries never needs a
 # laptop: a developer machine is a different architecture under different load,
 # and a measurement taken there describes it rather than the server. `local-mcp`
-# spent weeks published as a startup failure whose real finding was that the
-# machine was arm64. Measurements come from here.
+# was published as a startup failure from an arm64 laptop — the record landed
+# on 2026-09-04 and was declared the next day — whose real finding was the
+# machine. Measurements come from here.
 name: Rotating re-sweep
 on:
   schedule:
