@@ -2,6 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/mcp-context-cost)](https://www.npmjs.com/package/mcp-context-cost)
 [![CI](https://github.com/athakur3/mcp-context-cost/actions/workflows/ci.yml/badge.svg)](https://github.com/athakur3/mcp-context-cost/actions/workflows/ci.yml)
+[![GitHub Marketplace](https://img.shields.io/badge/GitHub%20Marketplace-MCP%20context%20cost-blue?logo=github)](https://github.com/marketplace/actions/mcp-context-cost)
 
 Two entry points: `audit`, for the config you run (below), and a GitHub Action, for the
 server you publish — five lines in a workflow that fail a pull request adding more context
