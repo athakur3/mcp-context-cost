@@ -8,7 +8,14 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { captureTools } from './client.js';
-import { DockerHarnessFault, defaultImageFor, dockerize, ensureImage, isDockerRunFailure } from './docker.js';
+import {
+  DockerHarnessFault,
+  defaultImageFor,
+  dockerize,
+  ensureImage,
+  containerPlatform,
+  isDockerRunFailure,
+} from './docker.js';
 import { measureTools, failedMeasurement, canonicalString } from '../core/canonical.js';
 import { toBadge } from '../core/badge.js';
 import type { Measurement } from '../core/types.js';
@@ -58,7 +65,8 @@ export function classifyFailure(msg: string): 'timeout' | 'auth-required' | 'sta
 }
 
 /**
- * The architecture a measurement ran on, in Docker's vocabulary (`linux/amd64`).
+ * The architecture the *measuring process* is running on, in Docker's
+ * vocabulary (`darwin/arm64`, `linux/amd64`).
  *
  * Worth recording because a package can ship builds for some architectures and
  * not others, and then the *machine* decides the result. `local-mcp` sat
@@ -66,12 +74,33 @@ export function classifyFailure(msg: string): 'timeout' | 'auth-required' | 'sta
  * was that the laptop was arm64 and the package ships no arm64 runtime — and
  * the record gave a reader no way to notice.
  *
- * Containers are linux whatever the host is; with no explicit `--platform` they
- * take the host's architecture, so that is the half worth reporting.
+ * Only correct for an uncontained run, where this process *is* the machine the
+ * server ran on. It used to answer for containers too, by assuming the platform
+ * half was `linux` and keeping the host's architecture — which is wrong the
+ * moment `DOCKER_DEFAULT_PLATFORM` is set or the image has no manifest for the
+ * host and is emulated. Containers are answered by `containerPlatform`, which
+ * asks a container instead of inferring from the machine that starts one.
  */
-export function measuringArch(docker: boolean): string {
+export function measuringArch(): string {
   const arch = process.arch === 'x64' ? 'amd64' : process.arch;
-  return `${docker ? 'linux' : process.platform}/${arch}`;
+  return `${process.platform}/${arch}`;
+}
+
+/**
+ * The `arch` to record for one isolation, or undefined when nothing observed it.
+ *
+ * Three cases, and the third is why this is not a fallback chain. An uncontained
+ * run is observed by this process, which *is* the machine the server ran on. A
+ * container this harness built is observed by asking a container. A command that
+ * is *itself* a `docker run` names no image here at all — the harness never
+ * chose it and cannot see inside it — so the field stays absent, which the
+ * record already defines as unknown. Guessing the host's architecture there
+ * would be a claim about a container this code did not launch.
+ */
+export async function observedArch(iso: Measurement['isolation']): Promise<string | undefined> {
+  if (!iso?.docker) return measuringArch();
+  if (!iso.image) return undefined;
+  return (await containerPlatform(iso.image)) ?? undefined;
 }
 
 /**
@@ -264,7 +293,8 @@ export async function measureServer(
       });
     }
     const iso = isolation ?? { docker: false };
-    r.isolation = { ...iso, arch: measuringArch(iso.docker) };
+    const arch = await observedArch(iso);
+    r.isolation = { ...iso, ...(arch ? { arch } : {}) };
     r.timeoutMs = attemptOpts.timeoutMs ?? 60_000;
     return r;
   }

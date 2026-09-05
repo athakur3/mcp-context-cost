@@ -90,22 +90,25 @@ export function isDockerRunFailure(message: string): boolean {
 
 export interface EnsureImageOptions {
   /** Run one docker invocation — injectable so tests never need a daemon. */
-  run?: (args: string[]) => Promise<{ code: number | null; stderr: string }>;
+  run?: (args: string[]) => Promise<{ code: number | null; stdout?: string; stderr: string }>;
   /** Waits between pull attempts; attempts = delays + 1. */
   delaysMs?: number[];
   sleep?: (ms: number) => Promise<void>;
 }
 
-function runDocker(args: string[]): Promise<{ code: number | null; stderr: string }> {
+function runDocker(args: string[]): Promise<{ code: number | null; stdout: string; stderr: string }> {
   return import('node:child_process').then(
     ({ spawn }) =>
       new Promise((resolve) => {
-        const child = spawn('docker', args, { stdio: ['ignore', 'ignore', 'pipe'] });
+        const child = spawn('docker', args, { stdio: ['ignore', 'pipe', 'pipe'] });
+        let stdout = '';
         let stderr = '';
+        child.stdout.setEncoding('utf8');
+        child.stdout.on('data', (chunk: string) => (stdout = (stdout + chunk).slice(-4000)));
         child.stderr.setEncoding('utf8');
         child.stderr.on('data', (chunk: string) => (stderr = (stderr + chunk).slice(-4000)));
-        child.on('error', (err) => resolve({ code: null, stderr: String(err.message) }));
-        child.on('exit', (code) => resolve({ code, stderr }));
+        child.on('error', (err) => resolve({ code: null, stdout, stderr: String(err.message) }));
+        child.on('exit', (code) => resolve({ code, stdout, stderr }));
       }),
   );
 }
@@ -162,6 +165,72 @@ export function ensureImage(image: string, opts: EnsureImageOptions = {}): Promi
   }
   return p;
 }
+
+/**
+ * `uname` names, in Docker's vocabulary. Explicit rather than derived: an
+ * unrecognised machine name returns nothing, because a mapping guessed from a
+ * pattern would be the same kind of inference this function exists to remove.
+ */
+const UNAME_ARCH: Record<string, string> = {
+  x86_64: 'amd64',
+  amd64: 'amd64',
+  aarch64: 'arm64',
+  arm64: 'arm64',
+  armv7l: 'arm/v7',
+  armv6l: 'arm/v6',
+  i386: '386',
+  i686: '386',
+  ppc64le: 'ppc64le',
+  s390x: 's390x',
+  riscv64: 'riscv64',
+};
+
+/** Parse `uname -sm` output into `<platform>/<arch>`, or null if it is not that. */
+export function platformFromUname(output: string): string | null {
+  const [kernel, machine] = output.trim().split(/\s+/);
+  const arch = UNAME_ARCH[(machine ?? '').toLowerCase()];
+  if (!kernel || !arch) return null;
+  return `${kernel.toLowerCase()}/${arch}`;
+}
+
+/**
+ * The platform a container for this image actually runs as, asked of a
+ * container rather than inferred from the machine that starts one.
+ *
+ * `isolation.arch` exists to tell a broken server apart from one that ships no
+ * build for the architecture it was tried on, and it was being derived instead
+ * of observed: the platform half was assumed to be `linux` and the
+ * architecture half was the *host's* `process.arch`. Nothing here passes
+ * `--platform`, but `docker run` honours `DOCKER_DEFAULT_PLATFORM` and an
+ * image with no manifest for the host is emulated — so an amd64 container on
+ * an Apple Silicon laptop recorded `linux/arm64`. A field that can be wrong
+ * about the one thing it exists to establish is worse than no field.
+ *
+ * The obvious cheap answer does not work, which is why this starts a
+ * container. `docker image inspect` reports the variant the local store
+ * prefers, and on this machine 2026-09-05 it answered `linux/arm64` for a tag
+ * whose container, under `DOCKER_DEFAULT_PLATFORM=linux/amd64`, came up as
+ * `x86_64` — the same wrong answer as the host inference, reached a different
+ * way. Only the container knows.
+ *
+ * One `docker run` per image, memoized for the life of the process, so a sweep
+ * pays it about twice: once for the node base and once for the python one.
+ * Returns null when docker cannot say, leaving `arch` absent — which the
+ * record already documents as "unknown, never the same as yours".
+ */
+export async function containerPlatform(image: string, opts: EnsureImageOptions = {}): Promise<string | null> {
+  const run = opts.run ?? runDocker;
+  if (!opts.run) {
+    const cached = platforms.get(image);
+    if (cached !== undefined) return cached;
+  }
+  const r = await run(['run', '--rm', '--pull=missing', image, 'uname', '-sm']);
+  const platform = r.code === 0 ? platformFromUname(String(r.stdout ?? '')) : null;
+  if (!opts.run) platforms.set(image, platform);
+  return platform;
+}
+
+const platforms = new Map<string, string | null>();
 
 export interface IsolationRecord {
   docker: boolean;
