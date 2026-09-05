@@ -5,7 +5,7 @@ than declared. Phases 0 and 1 are done, the distribution track shipped on 2026-0
 **phase 2 is done**; 3 and 4 run in parallel; 5 is gated by the calendar,
 not by work. Contributions welcome on any item.
 
-Dated **2026-09-05**, against 0.13.0 on npm and the data of that day. Each item names the
+Dated **2026-09-05**, against 0.13.1 on npm and the data of that day. Each item names the
 evidence it rests on, so a reader can check whether it is still true before picking it up.
 Forward-looking only: what already shipped lives in the code and the git history. Items
 marked *(maintainer)* need a decision or an account only the maintainer has.
@@ -23,8 +23,9 @@ published numbers — a claim is worth what its evidence is worth, including a c
 
 106 candidates, 85 measured and rising, six published columns (tokens, session start, Claude,
 mcp-tokens, movement, tool shape), 682 tests, four workflows, three weeks of history, and
-`0.13.0` on npm as of 2026-09-05 — cut for phase 2, and carrying phase 1 with it, since 0.12.0
-went out before that phase started. The measurement and its gates are further along than their
+`0.13.1` on npm as of 2026-09-05 — 0.13.0 carried phases 1 and 2 together, since 0.12.0 went
+out before phase 1 started, and 0.13.1 is the first release cut by `release.yml` rather than by
+hand. The measurement and its gates are further along than their
 audience: the adoption reading of
 2026-09-03 found zero projects displaying the badge, and the repository has one star. So the
 phases below do two different kinds of work — keeping the published data honest, which is the
