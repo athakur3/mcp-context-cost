@@ -146,6 +146,13 @@ jobs:
             npm view "mcp-context-cost@$VERSION" version >/dev/null 2>&1 && break
             echo "registry has not caught up; waiting"; sleep 15
           done
+          # Run from an empty directory, deliberately. Inside the checkout the
+          # repository's own package.json claims this package's name, so npx
+          # resolves the local bin instead of fetching the tarball — which is
+          # both an immediate `command not found` and, worse, a check that could
+          # have passed while proving nothing about what was published. 0.13.1
+          # is where that surfaced.
+          cd "$(mktemp -d)"
           npx -y "mcp-context-cost@$VERSION" verify --remote \
             "https://raw.githubusercontent.com/${{ github.repository }}/main/results/$server/measurement.json"
 

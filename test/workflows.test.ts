@@ -335,6 +335,18 @@ describe('release workflow', () => {
     expect(release).toMatch(/mcp-context-cost@\$VERSION" verify --remote/);
   });
 
+  it('fetches the tarball from outside the checkout, or it proves nothing', () => {
+    // The repository's own package.json claims this package's name, so npx run
+    // from the checkout resolves the local bin rather than the published one.
+    // In 0.13.1 that surfaced as `command not found` — loud, but the quiet
+    // version of the same mistake is a check that passes against the working
+    // tree and says nothing about what npm is serving.
+    const verify = release.indexOf('verify --remote');
+    const cd = release.lastIndexOf('cd "$(mktemp -d)"', verify);
+    expect(cd, 'the npm verification must run from an empty directory').toBeGreaterThan(-1);
+    expect(release.slice(cd, verify)).not.toContain('\n      - name:');
+  });
+
   it('has a dry run that stops before the first commit reaches main', () => {
     expect(at('Stop here on a dry run')).toBeLessThan(at('git push'));
     expect(release).toContain("if: inputs.dry_run");
