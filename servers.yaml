@@ -399,7 +399,12 @@ servers:
     category: vendor-official
     repo: https://www.pulumi.com/docs/iac/using-pulumi/mcp-server/ (GitHub repo not public)
   - name: grafana
-    command: docker run --rm -i -e GRAFANA_URL=http://localhost:3000 -e GRAFANA_SERVICE_ACCOUNT_TOKEN=dummy mcp/grafana
+    # `--transport stdio` overrides the image's own ENTRYPOINT, which is
+    # `/app/mcp-grafana --transport sse --address 0.0.0.0:8000` — read off
+    # `docker image inspect` 2026-09-05. The binary's *own* default is stdio;
+    # the image is what forces SSE, which is why the flag is on the command and
+    # not a note about the server. A later flag wins, verified by measuring.
+    command: docker run --rm -i -e GRAFANA_URL=http://localhost:3000 -e GRAFANA_SERVICE_ACCOUNT_TOKEN=dummy mcp/grafana --transport stdio
     package: mcp/grafana (docker)
     env: [GRAFANA_URL, GRAFANA_SERVICE_ACCOUNT_TOKEN]
     metric: 3358
@@ -407,13 +412,6 @@ servers:
     category: vendor-official
     repo: https://github.com/grafana/mcp-grafana
     timeoutSeconds: 180
-    # Not declared not-applicable, though a Grafana at localhost:3000 is
-    # absent: nothing in the record says so. The 2026-09-04 timeout's evidence
-    # is `msg="Starting Grafana MCP server using SSE transport" address=0.0.0.0:8000`
-    # — the container came up and served SSE while this harness waited on
-    # stdio, so the failure on record is a transport mismatch, not a missing
-    # backing service. Declaring it would be asserting a cause the evidence
-    # does not carry. Needs the launch command looked at, not a declaration.
   - name: browserbase
     command: npx -y @browserbasehq/mcp
     package: '@browserbasehq/mcp'
@@ -846,7 +844,16 @@ servers:
     category: community
     repo: https://github.com/bgauryy/octocode
   - name: anki
-    command: npx -y @ankimcp/anki-mcp-server
+    # `--stdio` because the package defaults to HTTP. Published as a 480s
+    # timeout until 2026-09-05, read as "a desktop application is absent" — but
+    # run in the isolation it prints an AnkiMCP banner and serves HTTP on
+    # 127.0.0.1:3000 while this harness waits on stdio. `ankimcp --help` names
+    # the flag and the package ships both `dist/main-http.js` and
+    # `dist/main-stdio.js`. Same class as `grafana` below, same lesson as
+    # `githits mcp` and `emailmd`: a registry package id does not reveal its
+    # invocation. Probed with the flag it measures without Anki installed —
+    # tools/list is static, only calling a tool needs AnkiConnect.
+    command: npx -y @ankimcp/anki-mcp-server --stdio
     package: '@ankimcp/anki-mcp-server'
     env: []
     metric: 1716

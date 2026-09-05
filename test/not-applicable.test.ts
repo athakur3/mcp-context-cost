@@ -137,10 +137,13 @@ describe('the declarations in servers.yaml', () => {
    *
    * `redis-legacy` was declared on 2026-09-05 against the record below, whose
    * words the existing evidence rule already matched. `grafana` was considered
-   * the same day and deliberately left undeclared: a Grafana at localhost:3000
-   * is genuinely absent, but its record says the container came up and served
-   * SSE while this harness waited on stdio — so declaring it would assert a
-   * cause its own evidence does not carry.
+   * the same day and deliberately left undeclared, because its record said the
+   * container came up and served SSE while this harness waited on stdio — a
+   * cause its own evidence did not carry. Refusing to declare it is what left
+   * the real question open, and the answer turned out to be a launch bug in
+   * this repository: the `mcp/grafana` image's ENTRYPOINT hard-codes
+   * `--transport sse`. Both it and `anki` now pass a stdio flag and measure.
+   * The bucket stayed honest by staying empty.
    *
    * Going red here means the failure changed upstream and the annotation needs
    * revisiting, which is the outcome to want: it is the same staleness the
