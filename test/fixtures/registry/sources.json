@@ -1,0 +1,51 @@
+{
+ "fetchedOn": "2026-09-05",
+ "note": "Verbatim responses. records.json holds records copied from these pages and from pages in the io.github range of the same walk, keyed by the role each plays in test/registry-scan.test.ts.",
+ "files": {
+  "page1.json": {
+   "url": "https://registry.modelcontextprotocol.io/v0/servers?version=latest&limit=100",
+   "status": 200
+  },
+  "page2.json": {
+   "url": "https://registry.modelcontextprotocol.io/v0/servers?version=latest&limit=100&cursor=ai.atlier/project-desk:4.7.0",
+   "status": 200
+  },
+  "records.json": {
+   "url": "https://registry.modelcontextprotocol.io/v0/servers?version=latest&limit=100&cursor=io.github.a/a:0.0.0 and the pages after it, plus page1/page2",
+   "status": 200
+  },
+  "npm-bulk.json": {
+   "url": "https://api.npmjs.org/downloads/point/last-week/chrome-devtools-mcp,comfyui-mcp,no-such-package-mcp-context-cost-zz",
+   "status": 200
+  },
+  "npm-bulk-scoped.json": {
+   "url": "https://api.npmjs.org/downloads/point/last-week/chrome-devtools-mcp,@ankimcp/anki-mcp-server",
+   "status": 400
+  },
+  "npm-bulk-130.json": {
+   "url": "https://api.npmjs.org/downloads/point/last-week/pkg-0,...,pkg-129 (130 names)",
+   "status": 400
+  },
+  "npm-single-scoped.json": {
+   "url": "https://api.npmjs.org/downloads/point/last-week/@ankimcp/anki-mcp-server",
+   "status": 200
+  },
+  "npm-single-unscoped.json": {
+   "url": "https://api.npmjs.org/downloads/point/last-week/chrome-devtools-mcp",
+   "status": 200
+  },
+  "npm-single-missing.json": {
+   "url": "https://api.npmjs.org/downloads/point/last-week/@ankimcp/no-such-package-zz",
+   "status": 404
+  },
+  "pypi-recent.json": {
+   "url": "https://pypistats.org/api/packages/basic-memory/recent",
+   "status": 200
+  },
+  "pypi-429.html": {
+   "url": "https://pypistats.org/api/packages/basic-memory/recent",
+   "status": 429,
+   "note": "The same URL, with the same User-Agent header, answered 429 on the request before the one that returned pypi-recent.json; the two differ only in when they were sent."
+  }
+ }
+}

@@ -1,0 +1,523 @@
+{
+ "npm-active-runtime-hint": {
+  "server": {
+   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+   "name": "ai.agenticaffiliate/affiliate-networks-mcp",
+   "description": "Affiliate network reporting in your AI client. Bring your own keys. Most adapters experimental.",
+   "title": "Affiliate Networks MCP",
+   "repository": {
+    "url": "https://github.com/bobberrisford/affiliatemcp",
+    "source": "github"
+   },
+   "version": "0.19.0",
+   "websiteUrl": "https://agenticaffiliate.ai",
+   "packages": [
+    {
+     "registryType": "npm",
+     "identifier": "affiliate-networks-mcp",
+     "version": "0.19.0",
+     "runtimeHint": "npx",
+     "transport": {
+      "type": "stdio"
+     }
+    }
+   ],
+   "remotes": [
+    {
+     "type": "streamable-http",
+     "url": "https://mcp.agenticaffiliate.ai/mcp"
+    }
+   ]
+  },
+  "_meta": {
+   "io.modelcontextprotocol.registry/official": {
+    "status": "active",
+    "statusChangedAt": "2026-07-29T07:26:14.414867Z",
+    "publishedAt": "2026-07-29T07:26:14.414867Z",
+    "updatedAt": "2026-07-29T07:26:14.414867Z",
+    "isLatest": true
+   }
+  }
+ },
+ "npm-no-repository": {
+  "server": {
+   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+   "name": "agency.kesey/pretrip",
+   "description": "Screen regulated-health marketing copy against source-cited rulesets, all 50 states.",
+   "title": "Pre-Trip compliance scanner",
+   "version": "1.0.1",
+   "websiteUrl": "https://scan.kesey.agency/developers/",
+   "packages": [
+    {
+     "registryType": "npm",
+     "identifier": "pretrip-mcp",
+     "version": "1.0.1",
+     "transport": {
+      "type": "stdio"
+     }
+    }
+   ]
+  },
+  "_meta": {
+   "io.modelcontextprotocol.registry/official": {
+    "status": "active",
+    "statusChangedAt": "2026-07-26T18:03:21.463557Z",
+    "publishedAt": "2026-07-26T18:03:21.463557Z",
+    "updatedAt": "2026-07-26T18:03:21.463557Z",
+    "isLatest": true
+   }
+  }
+ },
+ "npm-scoped": {
+  "server": {
+   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+   "name": "ai.adeu/adeu",
+   "description": "Automated DOCX Redlining Engine",
+   "repository": {
+    "url": "https://github.com/dealfluence/adeu",
+    "source": "github"
+   },
+   "version": "1.7.1",
+   "packages": [
+    {
+     "registryType": "npm",
+     "identifier": "@adeu/mcp-server",
+     "version": "1.7.1",
+     "transport": {
+      "type": "stdio"
+     }
+    }
+   ]
+  },
+  "_meta": {
+   "io.modelcontextprotocol.registry/official": {
+    "status": "active",
+    "statusChangedAt": "2026-05-16T13:54:48.18266Z",
+    "publishedAt": "2026-05-16T13:54:48.18266Z",
+    "updatedAt": "2026-05-16T13:54:48.18266Z",
+    "isLatest": true
+   }
+  }
+ },
+ "pypi-with-env": {
+  "server": {
+   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+   "name": "ai.anomalyarmor/armor-mcp",
+   "description": "Data observability tools for engineering teams: alerts, freshness, schema drift, lineage, quality.",
+   "title": "AnomalyArmor",
+   "repository": {
+    "url": "https://github.com/anomalyarmor/agents",
+    "source": "github",
+    "subfolder": "armor-mcp"
+   },
+   "version": "0.6.1",
+   "websiteUrl": "https://www.anomalyarmor.ai",
+   "packages": [
+    {
+     "registryType": "pypi",
+     "identifier": "armor-mcp",
+     "version": "0.6.1",
+     "transport": {
+      "type": "stdio"
+     },
+     "environmentVariables": [
+      {
+       "description": "AnomalyArmor API key (aa_live_*). Generate at https://app.anomalyarmor.ai/settings/api-keys.",
+       "isRequired": true,
+       "isSecret": true,
+       "name": "ARMOR_API_KEY"
+      }
+     ]
+    }
+   ],
+   "remotes": [
+    {
+     "type": "streamable-http",
+     "url": "https://mcp.anomalyarmor.ai/mcp"
+    }
+   ]
+  },
+  "_meta": {
+   "io.modelcontextprotocol.registry/official": {
+    "status": "active",
+    "statusChangedAt": "2026-04-18T00:51:37.350253Z",
+    "publishedAt": "2026-04-18T00:51:37.350253Z",
+    "updatedAt": "2026-04-18T00:51:37.350253Z",
+    "isLatest": true
+   }
+  }
+ },
+ "deprecated-latest": {
+  "server": {
+   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+   "name": "ai.agentplaybooks/agentplaybooks",
+   "description": "Manage portable AI agent playbooks, Agent Skills, MCP configurations, personas, and memory.",
+   "title": "AgentPlaybooks",
+   "repository": {
+    "url": "https://github.com/matebenyovszky/agentplaybooks",
+    "source": "github"
+   },
+   "version": "1.0.0",
+   "websiteUrl": "https://agentplaybooks.ai",
+   "icons": [
+    {
+     "src": "https://agentplaybooks.ai/icon.svg",
+     "mimeType": "image/svg+xml",
+     "sizes": [
+      "any"
+     ]
+    }
+   ],
+   "remotes": [
+    {
+     "type": "streamable-http",
+     "url": "https://agentplaybooks.ai/api/mcp/manage",
+     "headers": [
+      {
+       "description": "Bearer AgentPlaybooks user API key (for example: Bearer apb_live_...)",
+       "isRequired": true,
+       "isSecret": true,
+       "name": "Authorization"
+      }
+     ]
+    }
+   ]
+  },
+  "_meta": {
+   "io.modelcontextprotocol.registry/official": {
+    "status": "deprecated",
+    "statusChangedAt": "2026-08-01T20:44:36.793656Z",
+    "statusMessage": "Published accidentally as 1.0.0; use 0.2.0 as the early release.",
+    "publishedAt": "2026-08-01T20:24:13.359787Z",
+    "updatedAt": "2026-08-01T20:44:36.793656Z",
+    "isLatest": true
+   }
+  }
+ },
+ "remotes-only": {
+  "server": {
+   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+   "name": "ac.inference.sh/mcp",
+   "description": "run any ai model. compose agents, stack knowledge, connect tools. one api, pay per run.",
+   "title": "inference.sh",
+   "version": "2.0.1",
+   "remotes": [
+    {
+     "type": "streamable-http",
+     "url": "https://api.inference.sh/mcp"
+    }
+   ]
+  },
+  "_meta": {
+   "io.modelcontextprotocol.registry/official": {
+    "status": "active",
+    "statusChangedAt": "2026-07-27T10:44:51.359634Z",
+    "publishedAt": "2026-07-27T10:44:51.359634Z",
+    "updatedAt": "2026-07-27T10:44:51.359634Z",
+    "isLatest": true
+   }
+  }
+ },
+ "oci-only": {
+  "server": {
+   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+   "name": "ai.aliengiraffe/spotdb",
+   "description": "Ephemeral data sandbox for AI workflows with guardrails and security",
+   "repository": {
+    "url": "https://github.com/aliengiraffe/spotdb",
+    "source": "github"
+   },
+   "version": "0.1.0",
+   "packages": [
+    {
+     "registryType": "oci",
+     "identifier": "docker.io/aliengiraffe/spotdb:0.1.0",
+     "transport": {
+      "type": "stdio"
+     },
+     "environmentVariables": [
+      {
+       "description": "Optional API key for request authentication",
+       "format": "string",
+       "isSecret": true,
+       "name": "X-API-Key"
+      }
+     ]
+    }
+   ]
+  },
+  "_meta": {
+   "io.modelcontextprotocol.registry/official": {
+    "status": "active",
+    "statusChangedAt": "2025-10-09T17:05:17.793149Z",
+    "publishedAt": "2025-10-09T17:05:17.793149Z",
+    "updatedAt": "2025-10-09T17:05:17.793149Z",
+    "isLatest": true
+   }
+  }
+ },
+ "io-github-owners-agree": {
+  "server": {
+   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+   "name": "io.github.a1245582339/figma-designer",
+   "description": "Give AI agents full read & write access to Figma \u2014 50+ tools for design automation",
+   "repository": {
+    "url": "https://github.com/a1245582339/figma-designer",
+    "source": "github"
+   },
+   "version": "0.3.6",
+   "packages": [
+    {
+     "registryType": "npm",
+     "identifier": "figma-designer-mcp",
+     "version": "0.3.6",
+     "transport": {
+      "type": "stdio"
+     },
+     "environmentVariables": [
+      {
+       "description": "Figma Personal Access Token",
+       "isRequired": true,
+       "isSecret": true,
+       "name": "FIGMA_TOKEN"
+      },
+      {
+       "description": "WebSocket bridge port (default: 3055)",
+       "name": "FIGMA_BRIDGE_PORT"
+      }
+     ]
+    }
+   ]
+  },
+  "_meta": {
+   "io.modelcontextprotocol.registry/official": {
+    "status": "active",
+    "statusChangedAt": "2026-03-06T04:06:21.104739Z",
+    "publishedAt": "2026-03-06T04:06:21.104739Z",
+    "updatedAt": "2026-03-06T04:06:21.104739Z",
+    "isLatest": true
+   }
+  }
+ },
+ "io-github-owners-differ": {
+  "server": {
+   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+   "name": "io.github.aborruso/ckan-mcp-server",
+   "description": "MCP server for interacting with CKAN open data portals",
+   "repository": {
+    "url": "https://github.com/ondata/ckan-mcp-server",
+    "source": "github"
+   },
+   "version": "0.4.123",
+   "packages": [
+    {
+     "registryType": "npm",
+     "identifier": "@aborruso/ckan-mcp-server",
+     "version": "0.4.123",
+     "transport": {
+      "type": "stdio"
+     }
+    }
+   ]
+  },
+  "_meta": {
+   "io.modelcontextprotocol.registry/official": {
+    "status": "active",
+    "statusChangedAt": "2026-09-05T16:19:29.589614Z",
+    "publishedAt": "2026-09-05T16:19:29.589614Z",
+    "updatedAt": "2026-09-05T16:19:29.589614Z",
+    "isLatest": true
+   }
+  }
+ },
+ "io-github-pypi": {
+  "server": {
+   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+   "name": "io.github.a2cr/a2cr-mcp",
+   "description": "Save AI-agent handoff checkpoints, WorkStash notes, and WorkThreads in a local A2CR workspace.",
+   "title": "A2CR",
+   "repository": {
+    "url": "https://github.com/a2cr/a2cr",
+    "source": "github"
+   },
+   "version": "0.1.8",
+   "packages": [
+    {
+     "registryType": "pypi",
+     "identifier": "a2cr-mcp",
+     "version": "0.1.8",
+     "transport": {
+      "type": "stdio"
+     },
+     "environmentVariables": [
+      {
+       "description": "Optional path for the local A2CR SQLite database. Leave unset to use the OS default app-data location.",
+       "format": "string",
+       "name": "A2CR_LOCAL_DB"
+      }
+     ]
+    }
+   ]
+  },
+  "_meta": {
+   "io.modelcontextprotocol.registry/official": {
+    "status": "active",
+    "statusChangedAt": "2026-07-01T04:22:35.068256Z",
+    "publishedAt": "2026-07-01T04:22:35.068256Z",
+    "updatedAt": "2026-07-01T04:22:35.068256Z",
+    "isLatest": true
+   }
+  }
+ },
+ "io-github-runtime-arguments": {
+  "server": {
+   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+   "name": "io.github.aarifmms/keyblind",
+   "description": "Encrypted secrets vault for AI agents \u2014 secrets resolved at runtime, never seen by LLMs.",
+   "title": "Keyblind",
+   "repository": {
+    "url": "https://github.com/aarifmms/keyblind",
+    "source": "github"
+   },
+   "version": "0.1.4",
+   "websiteUrl": "https://github.com/aarifmms/keyblind",
+   "packages": [
+    {
+     "registryType": "npm",
+     "registryBaseUrl": "https://registry.npmjs.org",
+     "identifier": "keyblind",
+     "version": "0.1.4",
+     "runtimeHint": "npx",
+     "transport": {
+      "type": "stdio"
+     },
+     "runtimeArguments": [
+      {
+       "value": "-y",
+       "type": "positional"
+      },
+      {
+       "value": "keyblind",
+       "type": "positional",
+       "valueHint": "package_name"
+      }
+     ],
+     "packageArguments": [
+      {
+       "value": "start",
+       "type": "positional"
+      }
+     ]
+    }
+   ]
+  },
+  "_meta": {
+   "io.modelcontextprotocol.registry/official": {
+    "status": "active",
+    "statusChangedAt": "2026-05-27T05:57:18.405916Z",
+    "publishedAt": "2026-05-27T05:57:18.405916Z",
+    "updatedAt": "2026-05-27T05:57:18.405916Z",
+    "isLatest": true
+   }
+  }
+ },
+ "io-github-package-arguments": {
+  "server": {
+   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+   "name": "io.github.aa-on-ai/agentic-design-system",
+   "description": "Render web and SwiftUI evidence, run explicit visual judgment, and trace ADS UI decisions.",
+   "title": "Agentic Design System",
+   "repository": {
+    "url": "https://github.com/aa-on-ai/agentic-design-system",
+    "source": "github",
+    "subfolder": "packages/ads-mcp"
+   },
+   "version": "0.3.0",
+   "websiteUrl": "https://agentic-design-system.vercel.app/mcp",
+   "icons": [
+    {
+     "src": "https://agentic-design-system.vercel.app/brand/ads-mark.png",
+     "mimeType": "image/png",
+     "sizes": [
+      "512x512"
+     ]
+    }
+   ],
+   "packages": [
+    {
+     "registryType": "npm",
+     "registryBaseUrl": "https://registry.npmjs.org",
+     "identifier": "ads-mcp",
+     "version": "0.3.0",
+     "transport": {
+      "type": "stdio"
+     },
+     "packageArguments": [
+      {
+       "value": "--root",
+       "type": "positional"
+      },
+      {
+       "description": "Absolute path to the project ADS may read and write.",
+       "isRequired": true,
+       "format": "filepath",
+       "type": "positional",
+       "valueHint": "project_root"
+      }
+     ]
+    }
+   ]
+  },
+  "_meta": {
+   "io.modelcontextprotocol.registry/official": {
+    "status": "active",
+    "statusChangedAt": "2026-08-04T14:58:24.715054Z",
+    "publishedAt": "2026-08-04T14:58:24.715054Z",
+    "updatedAt": "2026-08-04T14:58:24.715054Z",
+    "isLatest": true
+   }
+  }
+ },
+ "io-github-bad-env-name": {
+  "server": {
+   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+   "name": "io.github.aruxojuyu665/twocaptcha-mcp",
+   "description": "Full 2Captcha API (43 tools) for Claude Code: 31 captcha solvers + management + webhook.",
+   "title": "2Captcha MCP",
+   "repository": {
+    "url": "https://github.com/aruxojuyu665/2Captcha-MCP",
+    "source": "github"
+   },
+   "version": "0.6.1",
+   "packages": [
+    {
+     "registryType": "pypi",
+     "registryBaseUrl": "https://pypi.org",
+     "identifier": "twocaptcha-mcp",
+     "version": "0.6.1",
+     "runtimeHint": "uvx",
+     "transport": {
+      "type": "stdio"
+     },
+     "environmentVariables": [
+      {
+       "description": "2Captcha account API key (https://2captcha.com/setting)",
+       "isRequired": true,
+       "isSecret": true,
+       "name": "2Captcha_API_KEY"
+      }
+     ]
+    }
+   ]
+  },
+  "_meta": {
+   "io.modelcontextprotocol.registry/official": {
+    "status": "active",
+    "statusChangedAt": "2026-05-05T04:10:27.04097Z",
+    "publishedAt": "2026-05-05T04:10:27.04097Z",
+    "updatedAt": "2026-05-05T04:10:27.04097Z",
+    "isLatest": true
+   }
+  }
+ }
+}
