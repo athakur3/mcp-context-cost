@@ -81,6 +81,16 @@ jobs:
       SELECT: >-
         ${{ inputs.servers && format('--only {0}', inputs.servers)
         || format('--shards {0}{1}', inputs.shards || '6', inputs.shard_index && format(' --shard-index {0}', inputs.shard_index) || '') }}
+      # What the commit message calls this run. A targeted run says so: reading
+      # "this week's server shard" over a commit that touched three named
+      # servers would misdescribe the history for anyone bisecting it later.
+      #
+      # Here rather than in a step because two steps below can write the commit
+      # — the records one and, when the rebase left nothing to amend, the push
+      # one — and one sweep must not be able to describe itself two ways.
+      WHAT: >-
+        ${{ inputs.servers && format('targeted re-measure ({0})', inputs.servers)
+        || 'rotating re-sweep of this week''s server shard' }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -159,18 +169,10 @@ jobs:
         env:
           MCP_CTX_ANTHROPIC_KEY: ${{ secrets.MCP_CTX_ANTHROPIC_KEY }}
         run: npx tsx tools/measure-divergence.ts ${SELECT}
-      - name: The guards CI would have run, in the job that moves the data
-        # A push made with GITHUB_TOKEN does not start a workflow, so no CI run
-        # has ever fired on a bot commit: on 2026-09-05 a refresh here widened
-        # the divergence run, moved a published band five-fold and left the suite
-        # red on main with nothing reporting it. The drift guards are exact, not
-        # heuristic — one failing means a page this job is about to publish would
-        # state something the data does not — so this stops before the commit
-        # below rather than after it.
-        run: npm test
-      - name: Commit refreshed measurements
-        # Regen runs inside this step, *after* the rebase, and that ordering is
-        # the point rather than a detail.
+      - name: Stage what was measured, rebase onto main, and rebuild the derived files
+        id: rebuild
+        # Regen runs here, *after* the rebase, and that ordering is the point
+        # rather than a detail.
         #
         # Everything under results/ except the per-server directories is derived
         # from them: the leaderboard, history.csv, the pages, the numbers regen
@@ -186,20 +188,9 @@ jobs:
         # `appendHistory` folds every measurement.json and is idempotent, so the
         # rebuild is correct whatever the rebase brought in.
         #
-        # README.md is committed because regen patches the front page's numbers
-        # from this data — leaving it out publishes a leaderboard the README
-        # then contradicts.
-        env:
-          # A targeted run says so: reading "this week's server shard" over a
-          # commit that touched three named servers would misdescribe the
-          # history for anyone bisecting it later.
-          WHAT: >-
-            ${{ inputs.servers && format('targeted re-measure ({0})', inputs.servers)
-            || 'rotating re-sweep of this week''s server shard' }}
-          # The only step that holds the write token (the checkout above did
-          # not keep it). It reaches git on the push command line, never the
-          # remote's stored URL, so nothing in the tree carries it afterwards.
-          GITHUB_TOKEN: ${{ github.token }}
+        # This step holds no token. It commits locally and fetches a public
+        # repository anonymously; the push is the last step, and the only one
+        # the token reaches.
         run: |
           set -euo pipefail
           git config user.name "mcp-context-cost bot"
@@ -208,7 +199,11 @@ jobs:
           # Is there anything at all to publish? Asked over the whole tree, so a
           # run that only produced a cross-check row still publishes it.
           git add -A results/ badges/ docs/ README.md
-          if git diff --cached --quiet; then echo "no change to publish"; exit 0; fi
+          if git diff --cached --quiet; then
+            echo "no change to publish"
+            echo "publish=no" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           git reset -q
 
           # What was measured rather than derived: the per-server records, the
@@ -241,11 +236,55 @@ jobs:
           # no credential.
           git pull --rebase origin main
 
-          # Re-derive the aggregates from the merged tree.
+          # Re-derive the aggregates from the merged tree. The guards below read
+          # exactly what this writes, and the push after them publishes it.
           npx tsx src/sweep/regen.ts
+
+          echo "records=$records" >> "$GITHUB_OUTPUT"
+          echo "publish=yes" >> "$GITHUB_OUTPUT"
+      - name: The guards CI would have run, in the job that moves the data
+        if: steps.rebuild.outputs.publish == 'yes'
+        # A push made with GITHUB_TOKEN does not start a workflow, so no CI run
+        # has ever fired on a bot commit: on 2026-09-05 a refresh here widened
+        # the divergence run, moved a published band five-fold and left the suite
+        # red on main with nothing reporting it. The drift guards are exact, not
+        # heuristic — one failing means a page this job is about to publish would
+        # state something the data does not — so this stops before the push
+        # below rather than after it.
+        #
+        # It runs after the rebuild step, and that ordering is the whole of what
+        # it is worth. `sweep-all` writes the leaderboard, history.csv and the
+        # tool vectors; the capture index, the tool-shape baseline, the server
+        # pages, the dashboard and the numbers patched into README come from
+        # `regen.ts` alone. Between the sweep and regen the tree is therefore
+        # *known* to be inconsistent, and three drift guards fail by
+        # construction. Placed before the rebuild — as it was when it was added
+        # — this step could only ever report that regen had not run yet, which
+        # is exactly what it did on 2026-09-06 (run 33997431756, the first
+        # re-sweep after it landed): three failures, the commit skipped, and 34
+        # fresh measurements thrown away. Here it reads the bytes the push
+        # publishes.
+        run: npm test
+      - name: Commit refreshed measurements
+        if: steps.rebuild.outputs.publish == 'yes'
+        # README.md is committed because regen patches the front page's numbers
+        # from this data — leaving it out publishes a leaderboard the README
+        # then contradicts.
+        env:
+          # Whether the step above already committed the records, so this one
+          # amends that commit rather than leaving a sweep described twice.
+          # Through the environment rather than pasted into the script, for the
+          # reason the SELECT block states.
+          RECORDS: ${{ steps.rebuild.outputs.records }}
+          # The only step that holds the write token (the checkout above did
+          # not keep it). It reaches git on the push command line, never the
+          # remote's stored URL, so nothing in the tree carries it afterwards.
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
           git add -A results/ badges/ docs/ README.md
           if ! git diff --cached --quiet; then
-            if [ "$records" = 1 ]; then
+            if [ "$RECORDS" = 1 ]; then
               git commit -q --amend --no-edit
             else
               git commit -q -m "chore: ${WHAT}"

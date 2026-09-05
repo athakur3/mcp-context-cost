@@ -7,6 +7,23 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **The rotating re-sweep could not publish anything, and nothing had noticed.** The step that
+  runs the suite before a bot commit exists because a push made with `GITHUB_TOKEN` starts no
+  workflow, so no CI run has ever fired on one — and it sat *before* the regen it depends on.
+  `sweep-all` writes the leaderboard, `history.csv` and the tool vectors; the capture index,
+  the tool-shape baseline, the server pages, the dashboard and the numbers patched into README
+  come from `regen.ts` alone, which the job runs inside its commit step, after the rebase.
+  Between the sweep and regen the tree is therefore *known* to be inconsistent, and the drift
+  guards — which are exact, not heuristic — fail by construction. So the guard could only ever
+  report the ordering. It did: run 33997431756 on 2026-09-06, the first re-sweep since the
+  guard landed, measured its slice, failed three guards, skipped the commit and discarded 34
+  fresh measurements; the next scheduled Wednesday would have done the same. The job now
+  stages what it measured, rebases, and rebuilds the derived files in one step, runs the suite
+  against *that* tree, and pushes it — so the guard reads the bytes the push publishes rather
+  than a tree that never existed anywhere. The regen-after-rebase ordering is unchanged and is
+  still the reason two sweeps on one day do not lose a run to a merge nobody can resolve.
+  `test/workflows.test.ts` holds the order for both jobs that publish data.
+
 ## 0.15.0 — 2026-09-05
 
 Phase 4 of the roadmap — `audit` reaches the stacks people actually run — and the hour of

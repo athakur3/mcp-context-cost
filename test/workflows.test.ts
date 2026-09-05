@@ -255,6 +255,37 @@ describe('every scheduled job that publishes data also publishes the front page'
 });
 
 /**
+ * The guard the two publishing jobs run in place of the CI run a bot push never
+ * starts — and the ordering that decides whether it can ever pass.
+ *
+ * `sweep-all` writes the leaderboard, history.csv and the tool vectors.
+ * `regen.ts` writes the capture index, the tool-shape baseline, the server
+ * pages, the dashboard and the numbers patched into README. So between a sweep
+ * and regen the tree is *known* to be inconsistent, and the exact drift guards
+ * fail by construction: a suite run there reports the ordering rather than the
+ * data. It did exactly that — run 33997431756 on 2026-09-06, the first
+ * re-sweep after the guard was added, failed three of them, skipped its commit
+ * and threw away 34 fresh measurements. The guard is worth having only where
+ * it reads the bytes the push publishes.
+ */
+describe('the publishing jobs check the tree they are about to push', () => {
+  for (const [name, yaml] of [
+    ['self-badge', workflow],
+    ['resweep', resweep],
+  ] as const) {
+    it(`${name} runs the suite after regen and before the push`, () => {
+      const at = (needle: string) => {
+        const i = yaml.indexOf(needle);
+        expect(i, `${name} runs ${needle}`).toBeGreaterThan(-1);
+        return i;
+      };
+      expect(at('regen.ts'), `${name}: the suite reads a tree regen has not rebuilt`).toBeLessThan(at('npm test'));
+      expect(at('npm test'), `${name}: the suite cannot stop a push that happens first`).toBeLessThan(at('git push'));
+    });
+  }
+});
+
+/**
  * CHANGELOG's own preamble: cutting a version renames the `Unreleased` heading
  * to that version and dates it. 0.8.0 shipped with the rename skipped — npm
  * served bytes the changelog said were unreleased for thirteen days — so the
