@@ -14,6 +14,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          # The write token stays out of the checkout. By default checkout
+          # stores it in .git/config for the whole job, including the sweep
+          # step below, which executes a launch command. That command is pinned
+          # and this project's own choice, but the rule is the one resweep.yml
+          # states: a launch command must never run in a process that can
+          # push. The token is handed to the commit step alone.
+          persist-credentials: false
       - uses: actions/setup-node@v5
         with:
           node-version: 22
@@ -60,9 +68,19 @@ jobs:
         # README.md is included because regen patches the numbers the front page
         # states (src/sweep/published-stats.ts) — this job refreshes the Claude
         # divergence run, which moves the count of rows that still match it.
+        #
+        # No rebase before the push: this job takes minutes, and its Monday
+        # slot is kept clear by the other pushers (see the cron comments in
+        # resweep.yml and adoption.yml). A dispatch of either during this run
+        # would make this push fail and lose the week's badge, not theirs.
+        env:
+          # The only step that holds the write token (the checkout above did
+          # not keep it). It reaches git on the push command line, never the
+          # remote's stored URL.
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           git config user.name "mcp-context-cost bot"
           git config user.email "actions@users.noreply.github.com"
           git add badges/ results/ docs/ README.md
           git diff --cached --quiet || git commit -m "chore: refresh self-badge measurement"
-          git push
+          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}" HEAD:main

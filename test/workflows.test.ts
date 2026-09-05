@@ -382,3 +382,250 @@ describe('the suite CI runs', () => {
     expect(offenders).toEqual([]);
   });
 });
+
+/**
+ * The write token and the launch command must never be in the same process.
+ *
+ * actions/checkout stores the job's token in .git/config by default, where it
+ * sits for every later step. In resweep.yml that included the sweep step, which
+ * executes the launch command of every servers.yaml entry in the slice. The
+ * dockerized ones cannot see the workspace, but a `docker `-prefixed command is
+ * spawned on the host with the workspace as its cwd (src/sweep/run.ts,
+ * src/sweep/client.ts), the github, grafana and terraform entries in
+ * servers.yaml already have that shape, and a stranger's entry of the same
+ * shape would have read a write token every Wednesday — after the read-only PR
+ * job had said it was fine. The phase-3 sentence "no job holding contents:
+ * write ever runs a launch command with the token in reach" was true of the PR
+ * job and false of the schedule.
+ *
+ * So: every workflow that can push checks out with `persist-credentials: false`,
+ * and in every workflow that launches a server the token reaches git on the
+ * push command line of the one step that pushes — no other step, no job env.
+ * (release.yml holds `GH_TOKEN` job-wide for the gh CLI; it launches nothing,
+ * so the second half does not bind it, and its checkout comment says so.)
+ * Asserted over the directory rather than a list, so the next workflow that
+ * holds `contents: write` is held to it the day it is added.
+ */
+describe('every workflow that can push', () => {
+  interface Step {
+    name?: string;
+    uses?: string;
+    run?: string;
+    env?: Record<string, string>;
+    with?: Record<string, unknown>;
+  }
+  /** `permissions:` is a map, or the `read-all` / `write-all` shorthand. */
+  type Permissions = string | Record<string, string>;
+  interface Workflow {
+    permissions?: Permissions;
+    jobs: Record<string, { permissions?: Permissions; env?: Record<string, string>; steps: Step[] }>;
+  }
+  /**
+   * Whether a job's token can push. A missing `permissions:` block is not
+   * read-only: it is the repository default, which GitHub can set to
+   * read-and-write, so a workflow with no block is treated as able to push and
+   * has to say `contents: read` to leave this rule. That is the choice made for
+   * ci.yml — declaring read there, rather than adding `persist-credentials:
+   * false` to a job that pushes nothing — because a token that cannot push
+   * needs no keeping out of .git/config. Before this, `canPush` looked only for
+   * an explicit `contents: write`, and ci.yml, with no block and credentials
+   * kept, was invisible to a rule that claims to cover the directory.
+   */
+  const grants = (p?: Permissions) => (p === undefined ? true : typeof p === 'string' ? p === 'write-all' : p.contents === 'write');
+  const canPush = (wf: Workflow) => Object.values(wf.jobs).some((j) => grants(j.permissions ?? wf.permissions));
+  const workflows = readdirSync(wfDir)
+    .filter((f) => f.endsWith('.yml'))
+    .map((f) => [f, parse(readFileSync(join(wfDir, f), 'utf8')) as Workflow] as const);
+  const writers = workflows.filter(([, wf]) => canPush(wf));
+
+  const refersToToken = (v: unknown) => typeof v === 'string' && /github\.token|secrets\.GITHUB_TOKEN/.test(v);
+  const holdsToken = (env?: Record<string, unknown>) => Object.values(env ?? {}).some(refersToToken);
+
+  /**
+   * A step that launches servers.yaml entries: the sweep, the full sweep, and
+   * the cross-check, which launches the slice again through mcp-tokens
+   * (src/sweep/cross-check.ts:168-197 spawns the entry command — on the host
+   * when it is `docker `-prefixed). The first attempt at this rule matched only
+   * `npm run sweep`, so a token added to the cross-check step's env would have
+   * passed.
+   */
+  const LAUNCH_STEP = /npm run sweep\b|npm run sweep:all|src\/sweep\/cross-check\.ts/;
+
+  it('is not an empty set — the bots push, so the rule has something to hold', () => {
+    expect(writers.length).toBeGreaterThan(0);
+  });
+
+  it('is a rule with something outside it — a read-only workflow says so rather than defaulting to it', () => {
+    // If every workflow were a writer, `contents: read` would never have been
+    // asserted anywhere and the default-is-write reading of `canPush` would be
+    // untested. ci.yml and publish.yml declare read.
+    expect(workflows.length).toBeGreaterThan(writers.length);
+    // And every workflow declares, at the top or on each job: one without a
+    // block is a writer by the reading above, so it would be held to the
+    // checkout rule for a push it never makes — the fix is to declare, not to
+    // exempt.
+    for (const [file, wf] of workflows) {
+      const declared = wf.permissions !== undefined || Object.values(wf.jobs).every((j) => j.permissions !== undefined);
+      expect(declared, `${file} declares what its token may do`).toBe(true);
+    }
+  });
+
+  for (const [file, wf] of writers) {
+    it(`${file} checks out without keeping the token`, () => {
+      const checkouts = Object.values(wf.jobs)
+        .flatMap((j) => j.steps)
+        .filter((s) => s.uses?.startsWith('actions/checkout'));
+      expect(checkouts.length).toBeGreaterThan(0);
+      for (const s of checkouts) expect(s.with?.['persist-credentials'], `${file}: ${s.uses}`).toBe(false);
+    });
+
+    it(`${file} hands the token to the push, and never to a launch command`, () => {
+      const jobs = Object.values(wf.jobs);
+      // In a workflow that launches anything, the push step is the only place
+      // the token may appear: not the launch step alone, because a token in
+      // the job env or in a neighbouring step's env is one edit away from the
+      // launch step's process, and that edit would not fail a narrower check.
+      const launches = jobs.some((j) => j.steps.some((s) => LAUNCH_STEP.test(s.run ?? '')));
+      for (const job of jobs) {
+        if (launches) expect(holdsToken(job.env), `${file}: the job env holds the token in a workflow that launches servers`).toBe(false);
+        for (const s of job.steps) {
+          const run = s.run ?? '';
+          const label = s.name ?? s.uses ?? run;
+          // Inlining `${{ github.token }}` into a script would paste the secret
+          // into the shell text; it goes through env or not at all.
+          expect(run, label).not.toMatch(/github\.token/);
+          if (/git push/.test(run)) {
+            // The documented form: token on the command line, never written to
+            // the remote's URL, so the tree carries nothing after the push.
+            expect(run).toMatch(/git push "https:\/\/x-access-token:\$\{GITHUB_TOKEN\}@github\.com\/\$\{GITHUB_REPOSITORY\}"/);
+            expect(s.env?.GITHUB_TOKEN, `${file}: push step "${label}" has no token to push with`).toBe('${{ github.token }}');
+          } else if (launches) {
+            expect(holdsToken(s.env) || holdsToken(s.with), `${file}: step "${label}" can see the token in a workflow that launches servers`).toBe(false);
+          }
+        }
+      }
+    });
+  }
+
+  it('the launch-step predicate matches every launching step the two measuring jobs run', () => {
+    // The predicate is a constant, so this is what keeps it honest: every
+    // launch command the two ymls actually execute — found by a looser net
+    // than the predicate itself casts — is one it matches. Both jobs launch,
+    // so both have to contribute a line.
+    for (const [name, yaml] of [
+      ['self-badge', workflow],
+      ['resweep', resweep],
+    ] as const) {
+      const launching = yaml
+        .split('\n')
+        .map((l) => l.trim())
+        .filter((l) => l.startsWith('run:') && /npm run sweep|cross-check\.ts/.test(l));
+      expect(launching.length, `${name} launches servers`).toBeGreaterThan(0);
+      for (const l of launching) expect(l, l).toMatch(LAUNCH_STEP);
+    }
+  });
+});
+
+/**
+ * The adoption reading is the one number the project keeps about itself, and
+ * its date is most of its meaning. Every property here is only observable on
+ * the first of a month, with nobody watching.
+ */
+describe('adoption workflow', () => {
+  const adoption = readFileSync(join(wfDir, 'adoption.yml'), 'utf8');
+  const runLines = (yaml: string) =>
+    yaml
+      .split('\n')
+      .map((l) => l.trim())
+      .filter((l) => l.startsWith('run:'));
+  /** The five cron fields: minute, hour, day of month, month, day of week. */
+  const cronFields = (yaml: string) => /cron: '([^']*)'/.exec(yaml)![1].trim().split(/\s+/);
+  /** The document as Actions reads it — comments gone, which is the point for the checks below. */
+  interface Step {
+    name?: string;
+    run?: string;
+    env?: Record<string, string>;
+    'continue-on-error'?: boolean;
+  }
+  const doc = parse(adoption) as { jobs: Record<string, { steps: Step[] }> };
+  const steps = Object.values(doc.jobs).flatMap((j) => j.steps);
+  const reading = steps.find((s) => s.run === 'npm run adoption');
+
+  it('takes the reading with the Actions token and no repository secret', () => {
+    // The tool already falls back from MCP_CTX_GITHUB_TOKEN to GITHUB_TOKEN;
+    // wiring a secret in would be a second token to rotate for no reason.
+    expect(runLines(adoption).filter((l) => l.includes('npm run adoption')).length).toBe(1);
+    expect(reading?.env?.GITHUB_TOKEN).toBe('${{ github.token }}');
+    expect(JSON.stringify(doc)).not.toContain('secrets.');
+    expect(JSON.stringify(doc)).not.toContain('MCP_CTX_GITHUB_TOKEN');
+  });
+
+  it('never commits an unresolved reading', () => {
+    // The tool writes both files and THEN exits 1 when the count could not be
+    // established. A failing run step stops the job, so the commit step is
+    // only reached on a resolved reading — provided the reading step is not
+    // allowed to fail quietly and comes before the commit. The page date never
+    // advances without a count.
+    const tool = readFileSync(join(import.meta.dirname, '..', 'tools', 'measure-adoption.ts'), 'utf8');
+    expect(tool).toContain('process.exit(run.unresolved ? 1 : 0)');
+    expect(reading).toBeDefined();
+    expect(reading!['continue-on-error']).toBeUndefined();
+    expect(adoption.indexOf('npm run adoption')).toBeLessThan(adoption.indexOf('git commit'));
+  });
+
+  it('runs the suite before it commits, because a bot push starts no CI run', () => {
+    const test = adoption.indexOf('npm test');
+    expect(test).toBeGreaterThan(adoption.indexOf('npm run adoption'));
+    expect(test).toBeLessThan(adoption.indexOf('git commit'));
+  });
+
+  it('commits only the reading and the page rendered from it', () => {
+    // Regen does not produce docs/adoption.md and the README's sentence about
+    // adoption carries no number, so nothing else in the tree moves with it.
+    const adds = adoption
+      .split('\n')
+      .map((l) => l.trim())
+      .filter((l) => l.startsWith('git add '));
+    expect(adds.length).toBeGreaterThan(0);
+    for (const l of adds) {
+      expect(l.slice('git add '.length).split(/\s+/).sort()).toEqual(['docs/adoption.md', 'results/badge-adoption.json']);
+    }
+    expect(adoption).not.toContain('regen.ts');
+  });
+
+  it('rebases before pushing', () => {
+    const rebase = adoption.indexOf('git pull --rebase origin main');
+    expect(rebase).toBeGreaterThan(adoption.indexOf('git commit'));
+    expect(rebase).toBeLessThan(adoption.indexOf('git push'));
+  });
+
+  it('is scheduled by day of month, in an hour neither weekly pusher uses', () => {
+    // self-badge does not rebase, so a push racing it loses that week's badge;
+    // resweep can run for hours. The neighbours' hours are read from their
+    // ymls, the way dayOf does above, so moving one of them cannot leave this
+    // passing while saying nothing.
+    const [, hour, dayOfMonth, , dayOfWeek] = cronFields(adoption);
+    expect(dayOfMonth).not.toBe('*');
+    expect(dayOfWeek).toBe('*');
+    for (const other of [workflow, resweep]) expect(hour).not.toBe(cronFields(other)[1]);
+  });
+
+  it('can be dispatched — that is how a reading is taken between slots', () => {
+    expect(adoption).toMatch(/^\s*workflow_dispatch:/m);
+  });
+
+  it("has a budget of its own, because the tool's fetches carry none", () => {
+    // Bare `fetch` with no AbortSignal: a hung response would otherwise hold a
+    // write-token job for GitHub's default, which is hours. Smaller than the
+    // sweep's, which pays for cold installs; this pays for a few dozen API calls.
+    const budget = (yaml: string) => Number(/timeout-minutes: (\d+)/.exec(yaml)![1]);
+    expect(/timeout-minutes: (\d+)/.test(adoption)).toBe(true);
+    expect(budget(adoption)).toBeGreaterThan(0);
+    expect(budget(adoption)).toBeLessThan(budget(resweep));
+  });
+
+  it('holds contents: write and a concurrency group, like every job that pushes', () => {
+    expect(adoption).toMatch(/permissions:\n\s*contents: write/);
+    expect(adoption).toMatch(/concurrency:\n\s*group: adoption/);
+  });
+});

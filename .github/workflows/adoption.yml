@@ -1,0 +1,109 @@
+# The one number this project keeps about itself, taken on a schedule.
+#
+# docs/adoption.md says how many repositories outside this one display the
+# badge, and on what day someone last looked. Its date is most of its meaning
+# (src/core/adoption.ts: "a dated observation, not a live counter"). Both
+# readings on record were taken by hand with a personal token (8c28b79,
+# 525053f), and a reading that needs a human and a token is one that stops
+# being taken. This job takes it with the Actions token instead.
+#
+# What is committed is only ever a reading that resolved. tools/measure-adoption.ts
+# writes results/badge-adoption.json and docs/adoption.md and THEN exits 1 when
+# the count could not be established — a failed or truncated query, an
+# unreadable candidate. A failing `run` step stops the job, so the commit step
+# below is never reached on that exit: the page date never advances without a
+# count. The job is red, the last resolved reading still stands on the page,
+# and the files the tool wrote are in the run's workspace for a human to read.
+# (The core module can carry an unresolved reading, `lastResolved`; the bot
+# chooses not to publish one, because "could not be established on the 1st"
+# on top of "3 on the 20th" is a status line, not a measurement.)
+#
+# The token: the tool reads MCP_CTX_GITHUB_TOKEN and falls back to GITHUB_TOKEN
+# (tools/measure-adoption.ts). Per GitHub's REST docs (Search code: GitHub App
+# installation access tokens are accepted and "the fine-grained token does not
+# require any permissions"; 10 requests a minute, and the tool spaces its
+# searches wider than that) the Actions token — an installation token — should
+# be enough, so no repository secret is wired in. That is GitHub's claim, not
+# yet demonstrated by a run in this repository: no run here has hit
+# /search/code with github.token, and the first workflow_dispatch is the proof.
+# If the endpoint rejects the token, the reading fails to resolve and this job
+# goes red before committing anything, as above. The fallback, should that
+# happen, is a fine-grained PAT in the MCP_CTX_GITHUB_TOKEN secret, which the
+# tool prefers — and which would also mean relaxing the no-`secrets.` assertion
+# in test/workflows.test.ts, deliberately, with the failed run as the reason.
+name: Adoption reading
+on:
+  schedule:
+    # Day of month, not weekday, and a morning neither of the weekly pushers
+    # uses: self-badge pushes on Mondays at 06:17 and does not rebase, so a
+    # push racing it would lose that week's badge; resweep starts Wednesdays
+    # at 03:11 and can run for two hours. A dispatch is the maintainer's call
+    # and should keep clear of Monday 06:17 for the same reason.
+    - cron: '37 8 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# A dispatch landing on the scheduled slot would race it to the push.
+concurrency:
+  group: adoption
+  cancel-in-progress: false
+
+jobs:
+  reading:
+    runs-on: ubuntu-latest
+    # The whole run is a few dozen API calls spaced seconds apart — minutes,
+    # not hours. The tool's fetches carry no timeout of their own, so without
+    # this a hung search or contents response would hold a write-token job for
+    # GitHub's six-hour default.
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # No launch command runs here, but the rule is the same as in every
+          # job holding contents: write (resweep.yml states it): the token is
+          # handed to the step that pushes, not left in .git/config.
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Take the reading
+        # Not continue-on-error, deliberately: exit 1 means the count could
+        # not be established, and the commit step must not run (see the header).
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: npm run adoption
+      - name: The guards CI would have run, in the job that moves the data
+        # A push made with GITHUB_TOKEN does not start a workflow, so no CI run
+        # has ever fired on a bot commit: on 2026-09-05 a refresh in the
+        # self-badge job widened the divergence run, moved a published band
+        # five-fold and left the suite red on main with nothing reporting it.
+        # Here the guard with teeth is the one that holds docs/adoption.md to
+        # be exactly what results/badge-adoption.json renders — so this stops
+        # before the commit below rather than after it.
+        run: npm test
+      - name: Commit the reading
+        # Only the reading and the page rendered from it. Nothing else derives
+        # from this file: regen does not produce docs/adoption.md and the
+        # README's one sentence about adoption carries no number, so README.md
+        # is not staged here, unlike in the two measuring jobs.
+        env:
+          # The only step that holds the write token (the checkout above did
+          # not keep it). It reaches git on the push command line, never the
+          # remote's stored URL.
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git config user.name "mcp-context-cost bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add results/badge-adoption.json docs/adoption.md
+          if git diff --cached --quiet; then echo "no change to publish"; exit 0; fi
+          git commit -q -m "chore: refresh badge-adoption reading"
+          # Cheap insurance against a dispatch overlapping a bot push. An
+          # anonymous fetch: the repository is public and the checkout kept no
+          # credential.
+          git pull --rebase origin main
+          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}" HEAD:main
