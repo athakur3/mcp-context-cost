@@ -1,6 +1,6 @@
 {
   "name": "mcp-context-cost",
-  "version": "0.13.2",
+  "version": "0.14.0",
   "description": "Measure what your MCP servers cost in context tokens — audit your own config, or badge the server you publish",
   "type": "module",
   "license": "MIT",
