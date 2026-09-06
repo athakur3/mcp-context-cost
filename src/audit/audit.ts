@@ -768,6 +768,40 @@ function sharedMeasurementLines(
   return lines;
 }
 
+/**
+ * What the threshold below is a share *of*, said where the threshold is said.
+ *
+ * The setting is a percentage of the context window, so the token figure it
+ * resolves to is only as right as the window this audit assumed. That window is
+ * a property of the model the client runs, which no config file states and this
+ * audit therefore cannot read: it uses 200,000 unless `--context` overrides it.
+ * A model with a larger window puts the threshold proportionally higher, and a
+ * stack that clears a 20,000-token threshold does not clear a 100,000-token one.
+ *
+ * This is stated rather than silently assumed because the error has a direction.
+ * A window assumed too small makes the threshold too small, which pushes the
+ * verdict toward "at or above" — toward telling a reader their tool definitions
+ * are deferred, and therefore not charged, when the client's own larger
+ * threshold would have loaded every one of them up front. Of the two ways to be
+ * wrong here, that is the one that costs somebody tokens they were told they
+ * would not pay, so it does not get to be a footnote.
+ *
+ * Only threshold mode reaches this. The default defers everything at any size,
+ * where no window and no arithmetic enter the answer at all.
+ */
+function thresholdAssumptionLines(d: DeferralVerdict): string[] {
+  const share = d.thresholdShare ?? 0;
+  if (!(share > 0) || d.thresholdTokens === null || d.thresholdTokens === undefined) return [];
+  const window = Math.round(d.thresholdTokens / share);
+  return [
+    `  That token figure assumes a ${n(window)}-token context window, which is a`,
+    '  property of the model in use and not of your config, so this audit cannot',
+    '  read it — pass --context to set it. A model with a larger window has a',
+    '  proportionally larger threshold, and the same stack can fall on either',
+    '  side of it depending on which model the client runs.',
+  ];
+}
+
 /** Where a threshold is in play, the unknown size is the whole verdict. */
 const SIDE_UNKNOWN = [
   '  either direction — which side of the threshold this stack falls on cannot be',
@@ -886,6 +920,7 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
   lines.push(`  ${d.client} defers tool definitions above a threshold here (${d.mechanism}):`);
   lines.push(`  ${settingPhrase(d)}, so deferral activates once the`);
   lines.push(`  definitions reach ${n(t)} tokens — ${pct(d.thresholdShare ?? 0)} of the context window.`);
+  lines.push(...thresholdAssumptionLines(d));
   lines.push(...postureSourceLines(d));
 
   const c = d.clientTokens;

@@ -1184,6 +1184,65 @@ describe('deferral — reading the mode that is actually in force', () => {
       expect(verdict('claude-code', [], { env: { ENABLE_TOOL_SEARCH: 'auto:0' } }).crosses).toBe(true);
     });
 
+    /**
+     * The threshold is a percentage, and a percentage of the wrong number is the
+     * wrong number. Which window a client uses is a property of its model, which
+     * no config file states, so this audit assumes one — and an assumption that
+     * decides a verdict has to be visible next to the verdict.
+     *
+     * Why this direction matters rather than just the arithmetic: a window
+     * assumed too small makes the threshold too small, which pushes the answer
+     * toward "at or above" — toward telling a reader their definitions are
+     * deferred and not charged, when a client on a larger window would have
+     * loaded every one of them up front. Observed 2026-09-06: a session on a
+     * model with a 1,000,000-token window logged its threshold as 100,000 where
+     * this audit's default assumption gives 20,000.
+     */
+    describe('the threshold says what window it is a share of', () => {
+      // Local fixtures rather than the ones above: the threshold only exists for
+      // claude-code, and those are declared against claude-desktop.
+      const server = {
+        name: 'a',
+        client: 'claude-code',
+        source: CFG,
+        transport: 'stdio' as const,
+        command: 'node a.js',
+        argv: ['node', 'a.js'],
+        envVarNames: [],
+      };
+      const withEnv = (env: ToolSearchEnv, contextWindow?: number) => {
+        const configs = [{ client: 'claude-code', source: CFG, servers: [server] }] as Parameters<
+          typeof buildReport
+        >[0];
+        const measured = new Map([[serverKey(server), measurement('a')]]);
+        return formatReport(buildReport(configs, measured, { env, generatedAt: 'T', contextWindow }));
+      };
+
+      it('names the assumed window, and the threshold is that share of it', () => {
+        const out = withEnv(auto);
+        expect(out).toContain(`assumes a ${cw.toLocaleString('en-US')}-token context window`);
+        expect(out).toContain(`reach ${threshold.toLocaleString('en-US')} tokens`);
+        expect(out).toContain('--context');
+      });
+
+      it('tracks a window the caller supplies, rather than restating the default', () => {
+        // The case that motivated it: told the window the client actually used,
+        // the audit reproduces the threshold that client logged.
+        const out = withEnv(auto, 1_000_000);
+        expect(out).toContain('assumes a 1,000,000-token context window');
+        expect(out).toContain('reach 100,000 tokens');
+        expect(out).not.toContain('assumes a 200,000-token context window');
+      });
+
+      it('says nothing about a window where no threshold decides anything', () => {
+        // The default defers at any size. No window enters that answer, and a
+        // caveat about one would invent a doubt the mode does not have.
+        const out = withEnv({});
+        expect(out).toContain('with no threshold');
+        expect(out).not.toContain('assumes a');
+      });
+    });
+
     it('refuses to guess at a value Claude Code does not document', () => {
       for (const value of ['yes', 'TRUE', 'auto:101', 'auto:', '1']) {
         expect(verdict('claude-code', [12_000], { env: { ENABLE_TOOL_SEARCH: value } })).toMatchObject({

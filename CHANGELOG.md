@@ -65,6 +65,22 @@ while reading it.
   the harness never chose the container and says so in the note instead. The boundary date is
   read from the changelog's own 0.12.0 heading rather than written into the test.
 
+- **The `auto` threshold now says what window it is a share of.** `ENABLE_TOOL_SEARCH=auto`
+  defers once tool definitions reach a *percentage* of the context window, so the token figure
+  the audit prints is only as right as the window it assumed — and it assumed 200,000 without
+  saying so anywhere near the verdict. Which window a client uses is a property of its model,
+  which no config file states and this audit cannot read. Observed 2026-09-06 on one machine:
+  a session on a model with a 1,000,000-token window logged its own threshold as `100000`, where
+  this audit's default assumption gives 20,000. Told the right window with `--context 1000000`,
+  the audit reproduces `100,000` exactly, so the arithmetic was never wrong — the assumption
+  behind it was invisible. The report now states the assumed window beside the threshold and
+  points at `--context`. The direction is why it is not a footnote: a window assumed too small
+  makes the threshold too small, which pushes the verdict toward *at or above* — toward telling
+  a reader their definitions are deferred, and therefore not charged, when a client on a larger
+  window would have loaded every one up front. Of the two ways to be wrong here, that is the one
+  that costs somebody tokens they were told they would not pay. Only threshold mode reaches
+  this: the default defers at any size, where no window and no arithmetic enter the answer.
+
 ## 0.15.0 — 2026-09-05
 
 Phase 4 of the roadmap — `audit` reaches the stacks people actually run — and the hour of
