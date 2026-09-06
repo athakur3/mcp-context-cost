@@ -87,6 +87,20 @@ const STATIC_COUNTS: { file: PageFile; text: string; why: string }[] = [
   { file: 'README.md', text: '10 clients', why: 'the number of client config formats `audit` discovers — moves when code moves, and the deferral table test already reads the page against the resolver' },
   { file: 'README.md', text: 'nine discovered clients', why: 'the same discovery set less Claude Code, in the audit walkthrough — a property of the code, not of the sweep' },
   { file: 'docs/METHODOLOGY.md', text: '100 tools', why: "Windsurf's documented tool cap, a fact about that client read 2026-09-06, not about this data" },
+  {
+    file: 'docs/METHODOLOGY.md',
+    text: '197 tokens',
+    why:
+      'a dated reading from one capability-probe run in CI on 2026-09-06, stated with its date — ' +
+      'it describes what that run saw, not the current data, the same way the adoption reading does. ' +
+      'Regen cannot maintain it because nothing in results/ holds it: the probe writes no published ' +
+      'record by design. Retake it with tools/capability-probe.ts and re-date the sentence.',
+  },
+  {
+    file: 'docs/METHODOLOGY.md',
+    text: '197 tokens on one server',
+    why: 'the same dated reading, matched a second time by the longer span',
+  },
   { file: 'README.md', text: '1,200 tokens', why: 'an illustrative release-size figure in the badge pitch, not a measurement' },
   { file: 'docs/METHODOLOGY.md', text: '5 servers', why: 'the harness-guard floor, a constant in `harness-guard.ts`' },
   { file: 'docs/METHODOLOGY.md', text: '25 tokens', why: '`SIGNIFICANT_TOKENS`, a constant in `core/regression.ts`' },

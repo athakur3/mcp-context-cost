@@ -12,6 +12,8 @@ Precisely:
 
 1. Connect to the MCP server and call `initialize`, then `tools/list`, following pagination
    (`nextCursor`) to exhaustion. Concatenate the `tools` arrays in server-returned order.
+   The `initialize` declares **no client capabilities** — see "What the client declares" below,
+   because that choice is visible in the number.
 2. **Canonical form** = UTF-8 of `JSON.stringify(tools)` over the **parsed** result value:
    no added whitespace, first-occurrence key order, standard JSON.parse semantics (duplicate
    keys last-wins, numbers re-serialized per ECMA-404). Defined on the parsed value rather
@@ -21,6 +23,30 @@ Precisely:
 
 That's all. No model calls, no API keys, no sampling — the same input yields the same number
 on anyone's machine, in any language with a tiktoken port.
+
+
+### What the client declares, and why it is part of the number
+
+This harness sends `capabilities: {}` at `initialize`. It can do nothing on the client side, and
+it says so. That is not a neutral posture: the protocol lets a server decide which tools to
+expose based on what the client declares, so a server may show a smaller set to this harness than
+to a client that declares more. Where that happens, the number published here is a **floor**.
+
+Measured in CI on 2026-09-06 (`tools/capability-probe.ts`, run under the same isolation as a
+sweep, each entry captured twice and differing only in the declaration): of the **87** entries
+that could be compared, **one** exposes a different tool set to a client declaring `roots` and
+`elicitation` — the reference `everything` server, which gains `get-roots-list` and
+`trigger-elicitation-request`, two tools and 197 tokens. That server exists to exercise every
+part of the protocol, so it is the one entry where this was most likely to show. No other server
+moved, none lost a tool, and no server's status changed between the two postures.
+
+So the floor is real and it is narrow, and this harness keeps declaring nothing. Declaring more
+would change the published number and the `canonicalSha256` of every affected capture, which is a
+methodology change; on this evidence it would buy 197 tokens on one server built to demonstrate
+the feature. The probe stays in the repository so the reading can be retaken when the set grows,
+and it declares only what this client can answer truthfully — an empty root list and a declined
+elicitation. It does not declare `sampling`, which would claim it can ask a model for a
+completion.
 
 ## Reproduce it
 

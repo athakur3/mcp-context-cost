@@ -26,6 +26,23 @@ while reading it.
   declares decides published numbers and their hashes, so moving it is a methodology decision;
   this is the evidence that decision wants, gathered first.
 
+- **The answer: one server in eighty-seven.** The probe above ran across the whole set in CI,
+  under sweep isolation, each entry captured twice. Of the **87** entries that could be compared,
+  **one** exposes a different tool set to a client declaring `roots` and `elicitation`: the
+  reference `everything` server, which gains `get-roots-list` and `trigger-elicitation-request`,
+  two tools and 197 tokens. That is the server built to exercise every part of the protocol, so
+  it is the one entry where this was most likely to show. Nothing else moved, no server lost a
+  tool, and no server's status differed between the two postures. So the floor this harness
+  measures against is real and it is narrow, and **it keeps declaring nothing**: declaring more
+  would move the published number and the `canonicalSha256` of every affected capture, and on
+  this evidence it would buy 197 tokens on one demonstration server. `docs/METHODOLOGY.md` now
+  states the choice and the reading, because a reader is entitled to know that the number is a
+  floor and by how much. The first run of the probe reported 24 entries as "not comparable" and
+  seven of those were the probe's own fault — it passed the timeout and the env var names but not
+  the image, the env values or the apt packages, so seven servers this project publishes as
+  measured never launched properly. "Not comparable" reads as a fact about a server; it was a
+  fact about the instrument. Fixed, re-run, and the seven are in the 87.
+
 ## 0.16.0 — 2026-09-06
 
 
