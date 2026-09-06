@@ -476,7 +476,16 @@ describe('release workflow', () => {
     expect(loops.length, 'expected the waits this rule is about').toBeGreaterThan(1);
     for (const rest of loops) {
       const after = rest.slice(rest.indexOf('done') + 'done'.length);
-      expect(after.slice(0, 500), 'a wait that can exhaust must fail loudly').toMatch(/exit 1/);
+      // The guard must be the next thing that RUNS, not merely something within
+      // N characters of `done`. The first version of this looked at a 500-char
+      // window and went red when the comment above the guard grew — length is
+      // not the property, order is.
+      const nextCommand =
+        after
+          .split('\n')
+          .map((l) => l.trim())
+          .filter((l) => l !== '' && !l.startsWith('#'))[0] ?? '';
+      expect(nextCommand, 'a wait that can exhaust must fail loudly, before anything else runs').toMatch(/exit 1/);
     }
   });
 
