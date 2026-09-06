@@ -19,7 +19,10 @@ while reading it.
   identical conditions, differing only in the declaration, and reports the difference.
   `capability-probe.yml` runs it read-only: no write token anywhere in the job, both captures
   with `persist: false`, and the answer leaves as a downloadable artifact rather than a commit,
-  so nothing published can move even if the probe is wrong. The posture it compares against
+  so nothing published can move even if the probe is wrong. It writes that summary after every
+  row rather than once at the end, because measuring every entry twice is the longest job in the
+  repository and the likeliest to meet its 120-minute cap: a run that stops at 99 servers should
+  report the 99 it reached, not nothing. The posture it compares against
   declares only what this harness can answer truthfully — an empty root list and a declined
   elicitation are states a real client can be in, while `sampling` would claim it can ask a
   model for a completion, which it cannot. **Nothing is changed by this.** What the sweep
