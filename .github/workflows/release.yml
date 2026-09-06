@@ -148,6 +148,12 @@ jobs:
         # it publishes. A release that cannot do that for itself has not been
         # verified, only uploaded. The server is chosen from the data so this
         # never asks about a row that stopped measuring.
+        #
+        # THIS STEP RUNS AFTER THE PUBLISH, AND FAILING IT ROLLS NOTHING BACK.
+        # `$VERSION` is on the registry by the time this starts and stays there.
+        # Red here means the tarball has not been *proven* yet — re-run this
+        # check, by hand if need be. It never means the release was undone, and
+        # anyone reading a red run should not go looking for a rollback.
         run: |
           set -euo pipefail
           server=$(node -e "
@@ -158,19 +164,46 @@ jobs:
             if(!ok.length){console.error('no measured server to verify against');process.exit(1);}
             console.log(ok[0]);")
           echo "verifying against $server"
-          for _ in $(seq 1 10); do
-            npm view "mcp-context-cost@$VERSION" version >/dev/null 2>&1 && break
-            echo "registry has not caught up; waiting"; sleep 15
-          done
           # Run from an empty directory, deliberately. Inside the checkout the
           # repository's own package.json claims this package's name, so npx
           # resolves the local bin instead of fetching the tarball — which is
           # both an immediate `command not found` and, worse, a check that could
           # have passed while proving nothing about what was published. 0.13.1
-          # is where that surfaced.
+          # is where that surfaced. The retry below sits inside this directory
+          # for the same reason: a probe run from the checkout would pass
+          # instantly and prove nothing.
           cd "$(mktemp -d)"
-          npx -y "mcp-context-cost@$VERSION" verify --remote \
-            "https://raw.githubusercontent.com/${{ github.repository }}/main/results/$server/measurement.json"
+          # The wait retries the real command rather than a proxy for it, and
+          # 0.17.0 is why. This step used to wait on
+          # `npm view "mcp-context-cost@$VERSION"` and then run npx; the wait
+          # passed on its first attempt and npx failed with ETARGET seconds
+          # later. The two do not read the same document. The registry serves a
+          # full packument to `Accept: application/json` and an abbreviated one
+          # to `application/vnd.npm.install-v1+json` from the same URL under
+          # `Vary: accept-encoding, accept` — separately cached objects, each
+          # with its own ETag and its own `max-age=300`. `npm view` reads the
+          # first; npx resolves against the second. So a green probe on one says
+          # nothing about the other, and there is no probe worth keeping: only
+          # the command itself resolves the path the command takes.
+          #
+          # Retrying npx makes progress because its resolution re-fetches rather
+          # than reusing what the failed attempt cached, measured on npm 11.
+          # Seven waits of 45s outlast the 300s the registry sets.
+          attempts=8
+          ok=
+          for attempt in $(seq 1 "$attempts"); do
+            if npx -y "mcp-context-cost@$VERSION" verify --remote \
+                 "https://raw.githubusercontent.com/${{ github.repository }}/main/results/$server/measurement.json"; then
+              ok=1
+              break
+            fi
+            echo "attempt $attempt of $attempts did not verify — either $VERSION is not being served yet, or the check itself failed"
+            if [ "$attempt" -lt "$attempts" ]; then sleep 45; fi
+          done
+          # Without this the loop falls through with status 0 after its last
+          # attempt and the step passes having proved nothing — which is what
+          # the loop it replaced did, silently, on every release it ran in.
+          [ -n "${ok:-}" ] || { echo "the published tarball never re-derived $server in $attempts attempts"; exit 1; }
 
       - name: What is left for a human
         if: '!inputs.dry_run'

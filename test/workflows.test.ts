@@ -432,6 +432,56 @@ describe('release workflow', () => {
     expect(release.slice(cd, verify)).not.toContain('\n      - name:');
   });
 
+  /**
+   * 0.17.0 published cleanly and then failed this step with `ETARGET`. The step
+   * waited on `npm view "<pkg>@$VERSION"`, which passed on its first attempt,
+   * and then ran `npx`, which could not resolve the same version seconds later.
+   * They read different documents: the registry serves a full packument to
+   * `Accept: application/json` and an abbreviated one to
+   * `application/vnd.npm.install-v1+json`, from one URL under
+   * `Vary: accept-encoding, accept` — separately cached, each with its own ETag
+   * and its own `max-age`. Waiting on either says nothing about the other, so
+   * the only wait worth having is around the command itself.
+   */
+  it('retries the command that resolves the tarball, not a proxy for it', () => {
+    const verify = release.indexOf('verify --remote');
+    const cd = release.lastIndexOf('cd "$(mktemp -d)"', verify);
+    // Inside the temp dir, so the retried command is the one that proves
+    // something — a probe run from the checkout would pass instantly.
+    expect(release.slice(cd, verify)).toMatch(/for \w+ in \$\(seq /);
+  });
+
+  it('gates the proof on no registry endpoint but the one npx resolves', () => {
+    // Comments may discuss `npm view` — this is about what runs.
+    const commands = release
+      .split('\n')
+      .filter((l) => !/^\s*#/.test(l))
+      .join('\n');
+    expect(commands).not.toContain('npm view');
+  });
+
+  /**
+   * The loop this replaced had no guard after it: ten failed probes fell
+   * through with status 0 straight into the command they were meant to be
+   * waiting for. Verified against the old shape, where a wait that never
+   * succeeds still exits 0 and the step continues. Every bounded wait in this
+   * file has to say so out loud instead.
+   */
+  it('never falls through a bounded wait as though it had succeeded', () => {
+    const loops = release.split(/for \w+ in \$\(seq /).slice(1);
+    expect(loops.length, 'expected the waits this rule is about').toBeGreaterThan(1);
+    for (const rest of loops) {
+      const after = rest.slice(rest.indexOf('done') + 'done'.length);
+      expect(after.slice(0, 500), 'a wait that can exhaust must fail loudly').toMatch(/exit 1/);
+    }
+  });
+
+  it('says a failure here is not a rollback', () => {
+    // This step runs after the publish. Someone reading a red run must not go
+    // looking for a release that was undone; nothing here can undo one.
+    expect(release).toMatch(/RUNS AFTER THE PUBLISH/);
+  });
+
   it('has a dry run that stops before the first commit reaches main', () => {
     expect(at('Stop here on a dry run')).toBeLessThan(at('git push'));
     expect(release).toContain("if: inputs.dry_run");

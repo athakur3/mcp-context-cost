@@ -7,6 +7,22 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **The release's own proof step waited on the wrong document, and could not fail.** `0.17.0`
+  published cleanly and then went red on the last step with `ETARGET`: the step waited on
+  `npm view "mcp-context-cost@$VERSION"`, which passed on its first attempt, and then ran `npx`,
+  which could not resolve that version seconds later. They do not read the same thing. The
+  registry serves a **full** packument to `Accept: application/json` and an **abbreviated** one
+  to `application/vnd.npm.install-v1+json` from the same URL under
+  `Vary: accept-encoding, accept` — separately cached objects, each with its own ETag and its own
+  `max-age=300`, which can differ in age by minutes. `npm view` reads the first and `npx`
+  resolves against the second, so a green probe on one says nothing about the other. There is no
+  better probe, either: only the command itself resolves the path the command takes. The wait now
+  wraps the `npx` invocation, inside the temp directory that makes it prove anything at all.
+  The second bug was quieter and had been there longer: the old loop had **no guard after it**,
+  so ten failed probes fell through with status 0 into the very command they were waiting for —
+  it could never have failed, on any release it ran in. The published tarball was fine throughout
+  and was verified by hand minutes later. Four tests, each of which fails against the old step.
+
 ## 0.17.0 — 2026-09-06
 
 - **A probe for a question the published numbers cannot answer about themselves.** Every
