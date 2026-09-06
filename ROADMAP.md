@@ -21,9 +21,12 @@ regen keeps them honest.
 phase 2 then ran the same way, two of its seven, one of which dissolved on contact with the
 record; phase 3 the same again, three of its four, and its goal sentence was false in the one
 place no item looked, the job that runs after merge; and phase 4 the same, two of its three,
-one of them a mechanism that would have opened a browser on the user's machine. The pattern
-has been exact four times: every item that quoted the record held up, and every item that
-inferred a cause from a category did not. So the first hour of a phase re-reads the records
+one of them a mechanism that would have opened a browser on the user's machine. Then phase 5's
+stretch item, before a line of it was built: its instrument turned out to be a documented
+condition that switches off the behaviour it would have measured, and the hour spent finding
+that out also found a live defect in `audit` and shipped the fix as `0.16.0`. The pattern has
+been exact five times: every item that quoted the record held up, and every item that inferred
+a cause from a category did not. So the first hour of a phase re-reads the records
 its items name and either confirms the sentence or rewrites it. That hour would have saved
 most of phase 1's rework, and it is the same discipline this project applies to its own
 published numbers — a claim is worth what its evidence is worth, including a claim in here.
@@ -93,7 +96,10 @@ beside the number they chose. What remains here is the report, and it waits on d
       `console` exporter, which needs no endpoint and no credential and reports per-request
       token usage. Whether either records what this needs is unverified. Both spend real
       requests on a real account *(maintainer)*, which is the only part of this that is not a
-      code question.
+      code question. **The premise hour of 2026-09-06 already paid for itself twice over**: it
+      refuted the mechanism above, and it found that `audit` printed its `auto` threshold as a
+      token figure without ever saying which context window that figure assumed — a window it
+      cannot read, and one whose size decides the verdict. Corrected and released as `0.16.0`.
 - [ ] **Routine:** vitest 5 (major), `@anthropic-ai/sdk` 0.124; neither blocks anything.
 
 **Exit.** Report #2 published and dated. The other half — the shard count in `resweep.yml`
