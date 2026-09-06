@@ -73,6 +73,41 @@ export interface ServerEntry {
    * context cost nobody is watching.
    */
   deprecated?: Deprecation;
+  /**
+   * A different project of the same name that this row does **not** measure.
+   *
+   * `name` is the only thing the leaderboard shows about an entry — the package
+   * id and the repo are on the server page, one click away — so a row whose
+   * name is shared with a better-known project reads as that project to anyone
+   * who does not click. That is not hypothetical: `octocode` here is the npm
+   * package `octocode-mcp` from `bgauryy/octocode`, and someone who works on
+   * `Muvon/octocode`, an unrelated Rust project with the same name, read the
+   * row as theirs and posted a public correction about how their server had
+   * been filed.
+   *
+   * Declared per entry rather than detected, because there is no way to detect
+   * it: two unrelated projects picking one word is a fact about the world, and
+   * the only honest source is someone noticing. Renaming the entry is the
+   * alternative and a much larger one — `name` keys `results/<name>/`,
+   * `badges/<name>.json`, the capture index and every history row, so it is a
+   * change to a published identifier rather than to a label.
+   */
+  nameCollision?: NameCollision;
+}
+
+/**
+ * The other project, as a dated reading — the same shape a deprecation takes,
+ * for the same reason: it is a claim about something outside this repository,
+ * so it carries where it was read and when. A project can be renamed, archived
+ * or absorbed without anything here moving.
+ */
+export interface NameCollision {
+  /** The other project, as its own owner writes it — e.g. `Muvon/octocode`. */
+  project: string;
+  /** Where it was read. */
+  source: string;
+  /** The day it was read. */
+  readOn: string;
 }
 
 /**
@@ -114,6 +149,12 @@ const mdLink = (url: unknown) => encodeURI(String(url ?? '')).replace(/\)/g, '%2
  * Returns '' for an entry with no deprecation, so a caller can splice it in
  * without branching.
  */
+/** `https://github.com/owner/repo` → `owner/repo`; anything else is left alone. */
+export function shortRepo(url: string): string {
+  const m = /^https?:\/\/(?:www\.)?github\.com\/([^/]+\/[^/#?]+)/.exec(url);
+  return m ? m[1].replace(/\.git$/, '') : url;
+}
+
 export function deprecationText(entry: ServerEntry): string {
   const d = entry.deprecated;
   if (!d) return '';
@@ -360,6 +401,35 @@ export function writeLeaderboard(
     for (const r of deprecated) {
       const status = r.entry.remote ? 'remote-auth-wall' : (r.m?.status ?? 'not-yet-run');
       md.push(`| ${mdCell(r.entry.name)} | ${status} | ${deprecationText(r.entry)} |`);
+    }
+    md.push('');
+  }
+  // Same rule as the deprecation section above: derived, and gone when no entry
+  // declares one. It is a section rather than a column because the fact belongs
+  // to a handful of rows and a column would put an empty cell on the other
+  // hundred — and because what a reader needs here is a sentence, not a cell.
+  const collided = rows.filter((r) => r.entry.nameCollision);
+  if (collided.length > 0) {
+    md.push('## Same name, different project');
+    md.push('');
+    md.push(
+      `A row here is named for the package it launches, and ${collided.length === 1 ? 'one name is' : 'these names are'} ` +
+        `shared with an unrelated project. The table above shows only the name, so ` +
+        `${collided.length === 1 ? 'that row' : 'those rows'} can be read as the wrong software by anyone who does not ` +
+        `open the page — which has already happened once, publicly. What each row actually measures is its launch ` +
+        `command and its source repository, both on its detail page.`,
+    );
+    md.push('');
+    md.push('| server | measures | not to be confused with |');
+    md.push('|---|---|---|');
+    for (const r of collided) {
+      const c = r.entry.nameCollision!;
+      const measures = r.entry.repo
+        ? `\`${mdCell(r.entry.package ?? r.entry.command)}\` — [${mdCell(shortRepo(r.entry.repo))}](${mdLink(r.entry.repo)})`
+        : `\`${mdCell(r.entry.package ?? r.entry.command)}\``;
+      md.push(
+        `| ${mdCell(r.entry.name)} | ${measures} | [${mdCell(c.project)}](${mdLink(c.source)}), read ${mdCell(c.readOn)} |`,
+      );
     }
     md.push('');
   }

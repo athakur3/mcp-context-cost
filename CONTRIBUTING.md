@@ -35,6 +35,7 @@ and no others:
 | `envValues` | optional | A shaped placeholder for a name in `env`, for a server that parses the variable before `tools/list`. See [env](#env-names-never-values). |
 | `notApplicable` | optional | A declared harness limitation — `reason` and the `evidence` text the failure must contain. Corroborated on every sweep, never taken on trust: [METHODOLOGY](docs/METHODOLOGY.md#failure-taxonomy--no-silent-drops). |
 | `deprecated` | optional | The package's own deprecation: `version`, `source` URL, `readOn` date, optional `replacement`. The row stays and is annotated. |
+| `nameCollision` | optional | A different project of the same name that this entry does **not** measure: `project`, `source` URL, `readOn` date. The leaderboard shows only `name`, so a shared one can be read as the wrong software; this puts the distinction on the leaderboard and the server page. Renaming the entry is not the fix — `name` keys `results/`, `badges/`, the capture index and every history row. |
 
 Which fields are required, and what each check says when it fails, is the table `FIELDS`
 and the validator in `src/sweep/servers-schema.ts`; `test/contributing.test.ts` holds this

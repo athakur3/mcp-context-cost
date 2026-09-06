@@ -872,6 +872,17 @@ servers:
     category: vendor-official
     repo: https://github.com/keboola/mcp-server
   - name: octocode
+    # Two unrelated projects are called octocode and this row is the smaller
+    # one: the npm package `octocode-mcp`, published by Guy Bary from
+    # `bgauryy/octocode` (MIT, 19.1.0 on the registry 2026-09-07). The other is
+    # `Muvon/octocode`, an Apache-2.0 Rust binary with a built-in MCP server,
+    # and it has never been measured here — nothing in this file launches it.
+    # Recorded because someone who works on the Muvon one read this row as
+    # theirs and posted a public correction about how their server had been
+    # filed. The leaderboard prints only `name`, which is what made that
+    # possible; `nameCollision` puts the distinction in the leaderboard's own
+    # words. Renaming the entry would be the other fix and a far bigger one —
+    # `name` keys results/, badges/, the capture index and every history row.
     command: npx -y octocode-mcp
     package: octocode-mcp
     env: []
@@ -879,6 +890,10 @@ servers:
     metricSource: https://api.npmjs.org/downloads/point/last-week/octocode-mcp (npm weekly)
     category: community
     repo: https://github.com/bgauryy/octocode
+    nameCollision:
+      project: Muvon/octocode
+      source: https://github.com/Muvon/octocode
+      readOn: '2026-09-07'
   - name: anki
     # `--stdio` because the package defaults to HTTP. Published as a 480s
     # timeout until 2026-09-05, read as "a desktop application is absent" — but

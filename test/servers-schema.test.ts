@@ -119,6 +119,28 @@ describe('an entry is rejected when', () => {
     expect(fields({ deprecated: { ...dep, source: 'npm' } })).toEqual(['deprecated']);
   });
 
+  const coll = { project: 'Muvon/octocode', source: 'https://github.com/Muvon/octocode', readOn: '2026-09-07' };
+
+  it('accepts a name collision that carries where and when it was read', () => {
+    expect(check({ nameCollision: coll })).toEqual([]);
+  });
+
+  it('rejects a name collision missing its evidence or its date', () => {
+    expect(fields({ nameCollision: { ...coll, source: 'github' } })).toEqual(['nameCollision']);
+    expect(fields({ nameCollision: { ...coll, readOn: 'September' } })).toEqual(['nameCollision']);
+    expect(fields({ nameCollision: { ...coll, project: '' } })).toEqual(['nameCollision']);
+    expect(fields({ nameCollision: { ...coll, extra: 'x' } })).toEqual(['nameCollision']);
+    expect(fields({ nameCollision: 'Muvon/octocode' })).toEqual(['nameCollision']);
+  });
+
+  it('rejects a collision pointing at the entry own repo, which names nothing', () => {
+    // The field exists to name a project this row is NOT. Aimed at the entry's
+    // own repository it is a sentence that reassures and says nothing.
+    expect(fields({ repo: 'https://github.com/x/y', nameCollision: { ...coll, source: 'https://github.com/x/y' } })).toEqual([
+      'nameCollision',
+    ]);
+  });
+
   it('a remote entry names a package instead of an endpoint', () => {
     expect(fields({ remote: true })).toEqual(['command']);
     expect(check({ remote: true, command: 'https://mcp.example.com/sse' })).toEqual([]);

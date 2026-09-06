@@ -13,6 +13,7 @@
 | canonical SHA-256 | `17bae5bf5a76df127b4ddba609724a2a52b86400700daa315562e18f1082304f` |
 | category | community |
 | source | https://github.com/bgauryy/octocode |
+| not to be confused with | Muvon/octocode (https://github.com/Muvon/octocode, read 2026-09-07) — an unrelated project of the same name, not measured here |
 
 ## Where the tokens are
 

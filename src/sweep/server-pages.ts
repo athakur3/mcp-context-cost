@@ -134,6 +134,17 @@ export function renderServerPage(
   md.push(`| canonical SHA-256 | \`${mdCell(m.canonicalSha256)}\` |`);
   if (entry.category) md.push(`| category | ${mdCell(entry.category)} |`);
   if (entry.repo) md.push(`| source | ${mdCell(entry.repo)} |`);
+  // The page already names the package, the launch command and the repo, so a
+  // reader who reads it can tell which project this is. This row is for the
+  // reader who arrives from a badge, sees a familiar name in the heading, and
+  // has no reason to suspect there are two — which is the person the collision
+  // actually caught.
+  if (entry.nameCollision) {
+    md.push(
+      `| not to be confused with | ${mdCell(entry.nameCollision.project)} ` +
+        `(${mdCell(entry.nameCollision.source)}, read ${mdCell(entry.nameCollision.readOn)}) — an unrelated project of the same name, not measured here |`,
+    );
+  }
   md.push('');
   if (m.status === 'dynamic') {
     md.push(

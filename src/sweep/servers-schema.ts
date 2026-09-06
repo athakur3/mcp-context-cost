@@ -60,6 +60,7 @@ const FIELDS = {
   envValues: 'optional',
   notApplicable: 'optional',
   deprecated: 'optional',
+  nameCollision: 'optional',
 } as const satisfies Record<keyof ServerEntry, 'required' | 'optional'>;
 
 export const knownFields = Object.keys(FIELDS) as (keyof typeof FIELDS)[];
@@ -229,6 +230,33 @@ export function validateEntry(raw: unknown, index: number): SchemaProblem[] {
       }
       for (const key of Object.keys(dep)) {
         if (!['version', 'source', 'readOn', 'replacement'].includes(key)) bad(`unknown key ${key}`, 'deprecated');
+      }
+    }
+  }
+
+  const coll = e.nameCollision;
+  if (coll !== undefined) {
+    if (!isPlainObject(coll)) bad('must be a mapping with project, source and readOn', 'nameCollision');
+    else {
+      for (const key of ['project', 'source', 'readOn'] as const) {
+        const v = coll[key];
+        if (typeof v !== 'string' || v.trim() === '') bad(`${key} is required and must be non-empty`, 'nameCollision');
+      }
+      // Same rule as a deprecation, and for the same reason: this is a claim
+      // about a project outside this repository, so it names where it was read.
+      if (typeof coll.source === 'string' && !/^https?:\/\//.test(coll.source)) {
+        bad('source must be a URL — a published claim carries its evidence', 'nameCollision');
+      }
+      if (typeof coll.readOn === 'string' && !/^\d{4}-\d{2}-\d{2}$/.test(coll.readOn)) {
+        bad('readOn must be YYYY-MM-DD', 'nameCollision');
+      }
+      // The whole point of the field is to name something this row is *not*.
+      // A declaration pointing at the entry's own repository says nothing.
+      if (typeof coll.source === 'string' && typeof e.repo === 'string' && coll.source === e.repo) {
+        bad('source is this entry\'s own repo — the field names a different project', 'nameCollision');
+      }
+      for (const key of Object.keys(coll)) {
+        if (!['project', 'source', 'readOn'].includes(key)) bad(`unknown key ${key}`, 'nameCollision');
       }
     }
   }

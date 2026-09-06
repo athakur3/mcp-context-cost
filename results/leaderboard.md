@@ -112,6 +112,14 @@ The **session start** column is what a client puts in context when it *defers* t
 | neon | startup-failure | [superseded by the remote MCP server at mcp.neon.tech](https://www.npmjs.com/package/@neondatabase/mcp-server-neon) — 0.6.5, read 2026-09-05 |
 | elasticsearch | measured | [superseded by v0.4.0 or later, shipped differently — see the upstream README](https://www.npmjs.com/package/@elastic/mcp-server-elasticsearch) — 0.3.1, read 2026-09-05 |
 
+## Same name, different project
+
+A row here is named for the package it launches, and one name is shared with an unrelated project. The table above shows only the name, so that row can be read as the wrong software by anyone who does not open the page — which has already happened once, publicly. What each row actually measures is its launch command and its source repository, both on its detail page.
+
+| server | measures | not to be confused with |
+|---|---|---|
+| octocode | `octocode-mcp` — [bgauryy/octocode](https://github.com/bgauryy/octocode) | [Muvon/octocode](https://github.com/Muvon/octocode), read 2026-09-07 |
+
 ## Not measured (and why)
 
 | server | status | note |

@@ -106,6 +106,22 @@ while reading it.
   and its share are now derived from the capture by `heaviestDroppedField` and patched in by the
   same regen that maintains the numbers beside them. They move when the capture moves.
 
+- **Two projects are called octocode and the leaderboard only ever showed the name.** This
+  repository's `octocode` row is the npm package `octocode-mcp`, published from
+  `bgauryy/octocode`. `Muvon/octocode` is an unrelated Apache-2.0 Rust project with a built-in
+  MCP server, and nothing here has ever launched it. Someone who works on the second one read
+  the row as theirs and posted a public correction about how their server had been filed —
+  reasonably, because the leaderboard prints `name` and nothing else, and the package id and
+  repository are one click away on the detail page. Entries may now declare `nameCollision`
+  (`project`, `source` URL, `readOn` date, validated like a deprecation and rejected if it
+  points at the entry's own repo), the leaderboard grows a derived **Same name, different
+  project** section that says what each row measures and what it is not, and the server page
+  carries the same line for a reader who arrived from a badge. Declared, never detected: two
+  projects picking one word is a fact about the world and the only honest source is someone
+  noticing. **The entry is not renamed** — `name` keys `results/<name>/`, `badges/<name>.json`,
+  the capture index and every history row, so a rename moves published identifiers to fix a
+  label.
+
 ## 0.16.0 — 2026-09-06
 
 
