@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y figma-developer-mcp --stdio` |
-| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | FIGMA_API_KEY |
 | canonical SHA-256 | `c1409e496bb0262b3dd4d78de8da42d1b79d5704fcf693e1455c5b3dff0f2604` |
 | category | community |

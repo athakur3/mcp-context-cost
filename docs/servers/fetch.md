@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `uvx --with "mcp\<2" mcp-server-fetch` |
-| isolation | docker · ghcr.io/astral-sh/uv:python3.12-bookworm-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · ghcr.io/astral-sh/uv:python3.12-bookworm-slim · network bridge · architecture not on record · network enabled for package fetch; clean FS, no host cred |
 | env vars supplied | none |
 | canonical SHA-256 | `5d0a1b56f6c08786d7d764b6f4376fba201015e5a5995b6b39c14350bd4aeeb3` |
 | category | official-reference |

@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `docker run -i --rm hashicorp/terraform-mcp-server` |
-| isolation | docker · command is itself a docker run (host-spawned container) |
+| isolation | docker · linux/amd64 · command is itself a docker run (host-spawned container) |
 | env vars supplied | none |
 | canonical SHA-256 | `7205f4d29a1a97d6fa9d13d2e9b3c2ccc5e8dda8539cf836d5895380c56c4b3b` |
 | category | vendor-official |

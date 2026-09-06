@@ -8,7 +8,7 @@
 | status | dynamic |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `uvx mcp-atlassian` |
-| isolation | docker · ghcr.io/astral-sh/uv:python3.12-bookworm-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · ghcr.io/astral-sh/uv:python3.12-bookworm-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | JIRA_URL, JIRA_USERNAME, JIRA_API_TOKEN |
 | canonical SHA-256 | `7e46d900cd08847d2710e0e0a1ec66d6f3d415c01ca2e8e6c5a9e357a9d5b4c1` |
 | category | community |

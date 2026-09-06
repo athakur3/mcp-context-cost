@@ -240,3 +240,43 @@ describe('serverPageUrl', () => {
     expect(serverPageUrl('demo')).toBe('https://athakur3.github.io/mcp-context-cost/servers/demo.html');
   });
 });
+
+/**
+ * A number is only as portable as the machine that made it, and until now the
+ * page said everything about the conditions except that one.
+ *
+ * `isolation.arch` has been recorded since 0.12.0 and rendered nowhere, so a
+ * reader saw the image and the network and not the architecture — the condition
+ * that decides whether a package could run at all. `local-mcp` is why the field
+ * exists: published as a broken server on the strength of a run whose real
+ * finding was the machine. A field recorded and never shown fixes nothing.
+ */
+
+/**
+ * A number is only as portable as the machine that made it, and the page said
+ * everything about the conditions except that one.
+ *
+ * `isolation.arch` has been recorded since 0.12.0 and rendered nowhere, so a
+ * reader saw the image and the network but not the architecture — the condition
+ * that decides whether a package could run at all. `local-mcp` is why the field
+ * exists: it was published as a broken server on the strength of a run whose
+ * real finding was the machine. A field recorded and never shown fixes nothing.
+ */
+describe('the page says which machine made the number', () => {
+  it('prints the architecture beside the image', () => {
+    const md = renderServerPage(entry, measurement({ isolation: { docker: true, image: 'node:22-slim', network: 'bridge', arch: 'linux/amd64' } }));
+    expect(md).toContain('docker · node:22-slim · network bridge · linux/amd64');
+  });
+
+  it('says an absent architecture is not on record, rather than leaving it out', () => {
+    // Absent means unknown. Omitting it reads as "the same as yours", which is
+    // the claim this field exists to stop anyone making.
+    const md = renderServerPage(entry, measurement({ isolation: { docker: true, image: 'node:22-slim', network: 'bridge' } }));
+    expect(md).toContain('architecture not on record');
+  });
+
+  it('names the machine for an uncontained run too', () => {
+    const md = renderServerPage(entry, measurement({ isolation: { docker: false, arch: 'darwin/arm64' } }));
+    expect(md).toContain('host process (no container) · darwin/arm64');
+  });
+});

@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @modelcontextprotocol/server-slack` |
-| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | SLACK_BOT_TOKEN, SLACK_TEAM_ID |
 | canonical SHA-256 | `5939f969618ff709e86ff0599b80cc8f418db8904b4304a6eeb82a25f30ccd81` |
 | category | official-reference |

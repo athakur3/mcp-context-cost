@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y bitbucket-mcp` |
-| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | BITBUCKET_TOKEN |
 | canonical SHA-256 | `e131b1d46e30c0d05f07995aa167fa323ec1003719d861dbe27c82c94ad803cf` |
 | category | community |

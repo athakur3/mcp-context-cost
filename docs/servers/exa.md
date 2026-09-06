@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y exa-mcp-server` |
-| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · architecture not on record · network enabled for package fetch; clean FS, no host credent |
 | env vars supplied | EXA_API_KEY |
 | canonical SHA-256 | `8c3c954e5a791807875357bc783cc67385bd7bb53ee31b659e83015b36ed99a9` |
 | category | vendor-official |

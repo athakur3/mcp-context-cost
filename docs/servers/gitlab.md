@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @modelcontextprotocol/server-gitlab` |
-| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | GITLAB_PERSONAL_ACCESS_TOKEN |
 | canonical SHA-256 | `d51fb022687ee403f9710c9fae31ac91dbc796f5c52a3fcdbe0a91c387aa9365` |
 | category | official-reference |

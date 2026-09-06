@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `uvx --from mysql-mcp-server mysql_mcp_server` |
-| isolation | docker · ghcr.io/astral-sh/uv:python3.12-bookworm-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · ghcr.io/astral-sh/uv:python3.12-bookworm-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE |
 | canonical SHA-256 | `48f53cd914e3137feabfb3087abdb3bb54df46907d605a4cf97fac272bba2afb` |
 | category | community |

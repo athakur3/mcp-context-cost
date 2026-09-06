@@ -34,11 +34,26 @@ function isMeasured(m: Measurement | null): m is Measurement {
   return !!m && (m.status === 'measured' || m.status === 'dynamic') && typeof m.totalTokens === 'number';
 }
 
+/**
+ * The conditions a number was made under, including the machine.
+ *
+ * `isolation.arch` has been recorded since 0.12.0 and was rendered nowhere, so
+ * a reader could see the image and the network a measurement ran under but not
+ * the architecture — the one condition that decides whether a package could run
+ * at all. `local-mcp` is why the field exists: it was published as a broken
+ * server on the strength of a run whose real finding was the machine.
+ *
+ * Absent is printed as "architecture not on record" rather than omitted,
+ * because the record's own rule is that absent means unknown and never "the
+ * same as yours". Thirty-two of the published records predate the field and
+ * will say so until the rotation re-measures them.
+ */
 function isolationText(m: Measurement): string {
   const iso = m.isolation;
   if (!iso) return 'not recorded';
-  if (!iso.docker) return 'host process (no container)';
-  return ['docker', iso.image, iso.network ? `network ${iso.network}` : '', iso.note]
+  const arch = iso.arch ?? 'architecture not on record';
+  if (!iso.docker) return `host process (no container) · ${arch}`;
+  return ['docker', iso.image, iso.network ? `network ${iso.network}` : '', arch, iso.note]
     .filter(Boolean)
     .join(' · ');
 }

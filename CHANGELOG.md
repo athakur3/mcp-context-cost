@@ -57,6 +57,23 @@ while reading it.
   threshold, by design. No number from any one machine is published — the reader measures their
   own, which is the only version of this claim worth making.
 
+- **Every server page now says which machine made the number.** `isolation.arch` has been
+  recorded on each measurement since 0.12.0 and was rendered nowhere, so a reader could see the
+  image and the network a number was captured under but not the architecture — the one condition
+  that decides whether a package could run at all. `local-mcp` is exactly why the field exists:
+  published as a broken server on the strength of a run whose real finding was the machine. A
+  field recorded and never shown fixes nothing. The pages print it beside the image, and records
+  made before the field shipped read `architecture not on record` rather than borrowing a value
+  from their neighbours, because absent means unknown and never "the same as yours".
+  METHODOLOGY gains a short section saying the thing the dataset could not say about itself:
+  **every published number was measured on Linux on an x86-64 runner, and nothing here has been
+  measured on macOS or Windows.** It also states why a package's *declared* platform support is
+  not promoted into a claim about where it runs — a declaration that restricts is enforced, and
+  npm's refusal to install `safari-mcp` off macOS is quoted in that entry's record, while a
+  declaration that permits is the author's word and can be false: `local-mcp` widened its
+  declaration to include Linux on 2026-08-14 and still had no Linux runtime when this project
+  measured it three weeks later. So the restricting kind is cited and the permitting kind is not.
+
 ## 0.16.0 — 2026-09-06
 
 

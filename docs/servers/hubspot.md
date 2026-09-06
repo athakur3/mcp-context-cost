@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @hubspot/mcp-server` |
-| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | PRIVATE_APP_ACCESS_TOKEN |
 | canonical SHA-256 | `3389dd469cfc2f46f06e4be24ba13ff95595ee30fd8dd62df81809a95daf3791` |
 | category | vendor-official |

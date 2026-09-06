@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `docker run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN=dummy ghcr.io/github/github-mcp-server` |
-| isolation | docker · command is itself a docker run (host-spawned container) |
+| isolation | docker · linux/amd64 · command is itself a docker run (host-spawned container) |
 | env vars supplied | GITHUB_PERSONAL_ACCESS_TOKEN |
 | canonical SHA-256 | `40d73048f0112cd8282ee61d586632738f6746678ece24f8f61f4dcc4b8b2135` |
 | category | vendor-official |

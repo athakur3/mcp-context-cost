@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @browserbasehq/mcp` |
-| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | BROWSERBASE_API_KEY, BROWSERBASE_PROJECT_ID |
 | canonical SHA-256 | `1dc53461369d7cb64ea8151f33283db371951cf44289471f6156e35cd1ae28bb` |
 | category | vendor-official |

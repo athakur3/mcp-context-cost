@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `uvx mcp-neo4j-cypher` |
-| isolation | docker · ghcr.io/astral-sh/uv:python3.12-bookworm-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · ghcr.io/astral-sh/uv:python3.12-bookworm-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD |
 | canonical SHA-256 | `2e66ec7b2ea28f25f5b986a65cc950c06febad089b2c3033be49e15548f9c432` |
 | category | vendor-official |

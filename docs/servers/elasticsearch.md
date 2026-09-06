@@ -9,7 +9,7 @@
 | package | [superseded by v0.4.0 or later, shipped differently — see the upstream README](https://www.npmjs.com/package/@elastic/mcp-server-elasticsearch) — 0.3.1, read 2026-09-05 |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @elastic/mcp-server-elasticsearch` |
-| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | ES_URL, ES_API_KEY |
 | canonical SHA-256 | `76a005f840c738f5788e7b5801fdc12194713fce1ed435ad500f891a2b2dd13c` |
 | category | vendor-official |

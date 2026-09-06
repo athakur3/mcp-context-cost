@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @apify/actors-mcp-server` |
-| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · architecture not on record · network enabled for package fetch; clean FS, no host credent |
 | env vars supplied | APIFY_TOKEN |
 | canonical SHA-256 | `4dd4565165c7066d8e8ef666f79cd8b323bad3d7f66b4d34fbe769f07e979453` |
 | category | vendor-official |

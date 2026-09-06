@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y firecrawl-mcp` |
-| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | FIRECRAWL_API_KEY |
 | canonical SHA-256 | `3b7694bcedabac9706eba0c497c1fb4591121db0fd25e4e87e4802a001e34cd6` |
 | category | vendor-official |

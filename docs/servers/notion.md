@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @notionhq/notion-mcp-server` |
-| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · architecture not on record · network enabled for package fetch; clean FS, no host credent |
 | env vars supplied | NOTION_TOKEN |
 | canonical SHA-256 | `f9544e7c84986529d5bc4a1c9357bbbb9c2f458133904075319f8fec7d716da9` |
 | category | vendor-official |

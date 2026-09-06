@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `docker run --rm -i -e GRAFANA_URL=http://localhost:3000 -e GRAFANA_SERVICE_ACCOUNT_TOKEN=dummy mcp/grafana --transport stdio` |
-| isolation | docker · command is itself a docker run (host-spawned container) |
+| isolation | docker · architecture not on record · command is itself a docker run (host-spawned container) |
 | env vars supplied | GRAFANA_URL, GRAFANA_SERVICE_ACCOUNT_TOKEN |
 | canonical SHA-256 | `f35587d4d6afaf90c68d7b861793a9e980bb6817b389fdb2391d365e7358beab` |
 | category | vendor-official |

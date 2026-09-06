@@ -8,7 +8,7 @@
 | status | dynamic |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @wonderwhy-er/desktop-commander` |
-| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | none |
 | canonical SHA-256 | `ed461d75b5dc273d9389408e032abece8af3bdca493ecf120be6924ef902004a` |
 | category | community |

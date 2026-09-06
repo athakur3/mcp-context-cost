@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @azure/mcp@latest server start` |
-| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials, installed libicu72 libs |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials, installed |
 | env vars supplied | none |
 | canonical SHA-256 | `0539db0747ec02a1bfb4167d12146549e697758d0977f487126116c1fa2a6a26` |
 | category | vendor-official |

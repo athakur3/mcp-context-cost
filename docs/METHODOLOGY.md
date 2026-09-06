@@ -102,6 +102,29 @@ the same facts, without reading the capture by hand.
   Commands that are already `docker run …` are host-spawned containers and recorded as such.
   No real tokens or secrets are ever present in the environment.
 
+### Which machine a number applies to
+
+**Every published number here was measured on Linux, on an x86-64 GitHub runner.** Nothing in
+this repository has been measured on macOS or on Windows, and no number here is a claim about
+either. Each record carries the machine that made it in `isolation.arch`, and each server page
+prints it beside the image; records made before 0.12.0, which is where the field shipped, say
+`architecture not on record` rather than borrowing the value from their neighbours. Absent means
+unknown, never "the same as yours".
+
+That matters because a package can run on one platform and not another, and then the machine
+decides the result rather than the server. `local-mcp` is the case that taught it: published as a
+broken server on the strength of a run whose real finding was the architecture. It is also why
+this page does not promote a package's *declared* platform support into a claim about where it
+runs. A declaration that **restricts** is enforced — npm refuses to install `safari-mcp` off
+macOS, and the refusal is quoted in its record. A declaration that **permits** is the author's
+word and can be false: `local-mcp` widened its declaration to include Linux on 2026-08-14 and
+still had no Linux runtime three weeks later, when this project measured it. So a restricting
+declaration is evidence and a permissive one is not, and only the first is ever cited here.
+
+A row that could not be measured says which kind of blocker it hit, in its own words: a platform
+the package refuses to install on, or a backing service the isolation deliberately does not
+provide. The first would measure on a different machine; the second would not measure on any.
+
 ## Failure taxonomy — no silent drops
 
 Every candidate server appears in published results with exactly one status:

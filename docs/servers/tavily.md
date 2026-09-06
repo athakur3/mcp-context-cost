@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y tavily-mcp` |
-| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | TAVILY_API_KEY |
 | canonical SHA-256 | `b2bcd45339fe42caa0f55e5ca1196091b2dcda4b868fedd209177b54f2ef51ef` |
 | category | vendor-official |

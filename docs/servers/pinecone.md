@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @pinecone-database/mcp` |
-| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | PINECONE_API_KEY |
 | canonical SHA-256 | `cc8ffaadb37615f11747b0a1eafd8541cfb2f31064adcd4973860f8f03bab377` |
 | category | vendor-official |

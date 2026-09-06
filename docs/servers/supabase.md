@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @supabase/mcp-server-supabase@latest` |
-| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · architecture not on record · network enabled for package fetch; clean FS, no host credent |
 | env vars supplied | SUPABASE_ACCESS_TOKEN |
 | canonical SHA-256 | `8ad33a05f12e8c0f535683508468dd970df8715f01fc82235b2b039718aeebf7` |
 | category | vendor-official |

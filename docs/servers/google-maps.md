@@ -8,7 +8,7 @@
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @modelcontextprotocol/server-google-maps` |
-| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · network enabled for package fetch; clean FS, no host credentials |
+| isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | GOOGLE_MAPS_API_KEY |
 | canonical SHA-256 | `a88e204db09aa56954e3e041d6a9814aee9ac888fdfc7d5cb47aec1877441986` |
 | category | official-reference |
