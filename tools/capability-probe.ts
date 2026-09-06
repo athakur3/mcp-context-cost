@@ -84,11 +84,32 @@ const names = (m: Measurement | null): Set<string> =>
   new Set(((m?.tools ?? []) as { name?: string }[]).map((t) => String(t.name ?? '')));
 
 async function probe(entry: ServerEntry): Promise<Row> {
+  // Every option a real sweep passes, because the comparison is only worth
+  // anything if both halves launch the way the published row was launched. The
+  // first version of this passed the timeout and the dummy env and nothing
+  // else, and seven servers that are published as `measured` failed on both
+  // sides for want of their image, their apt packages or their env values —
+  // reported as "not comparable" when the truth was that the probe never ran
+  // them properly. A gap in coverage that reads as a finding is worse than a
+  // gap that reads as a gap.
+  const e = entry as ServerEntry & {
+    timeoutSeconds?: number;
+    dockerImage?: string;
+    envValues?: Record<string, string>;
+    needsGit?: boolean;
+    aptPackages?: string[];
+    notApplicable?: { reason: string; evidence: string };
+  };
   const run = async (posture: ClientPosture) =>
     measureServer(entry.name, entry.command, {
       docker,
-      timeoutMs: ((entry as { timeoutSeconds?: number }).timeoutSeconds ?? defaultTimeout) * 1000,
+      timeoutMs: (e.timeoutSeconds ?? defaultTimeout) * 1000,
+      dockerImage: e.dockerImage,
       dummyEnv: entry.env ?? [],
+      dummyEnvValues: e.envValues,
+      needsGit: e.needsGit,
+      aptPackages: e.aptPackages,
+      notApplicable: e.notApplicable,
       persist: false, // the whole reason this is safe to run: nothing under results/ moves
       posture,
     }).catch(() => null);
