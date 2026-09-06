@@ -6,7 +6,7 @@ so the plan stays short and stays forward-looking. Phases 0, 1 and 2 shipped on 
 phase 3 followed as `0.14.0` and phase 4 as `0.15.0`; all five have left it, and what they
 built, and what they corrected, is in the changelog sections from `0.12.0` to `0.15.0`.
 
-Dated **2026-09-06**. Every item names the evidence it rests on, so you can check whether it is
+Dated **2026-09-07**. Every item names the evidence it rests on, so you can check whether it is
 still true before starting it. Items marked *(maintainer)* need an account or a decision only
 the maintainer has. Contributions welcome on any item, especially new `servers.yaml` entries.
 
@@ -96,7 +96,18 @@ beside the number they chose. What remains here is the report, and it waits on d
       `console` exporter, which needs no endpoint and no credential and reports per-request
       token usage. Whether either records what this needs is unverified. Both spend real
       requests on a real account *(maintainer)*, which is the only part of this that is not a
-      code question. **The premise hour of 2026-09-06 already paid for itself twice over**: it
+      code question. **Update, 2026-09-06: the debug-log path was tried and it works, so the
+      measurement now exists and only the decision to publish it does not.** Claude Code writes
+      its own deferral decision to the log before it sends anything, which reaches the unset
+      default that a recorder cannot. The default defers every MCP tool definition; `auto` and
+      `auto:N` do not defer at ordinary sizes and cost an extra `count_tokens` call; the
+      project's own projection came within about 4% of what was actually sent. None of it is
+      published, because it was measured on a developer machine and a client can only be
+      measured where it runs — which is a line for the maintainer to draw rather than a thing
+      to fix, and the item stays open on exactly that. What the same session found in passing is
+      already shipped: `audit`'s unstated context-window assumption as `0.16.0`, and the
+      harness's own capability posture, measured across the whole set in CI and settled at one
+      server in eighty-seven, in `0.17.0`. **The premise hour of 2026-09-06 already paid for itself twice over**: it
       refuted the mechanism above, and it found that `audit` printed its `auto` threshold as a
       token figure without ever saying which context window that figure assumed — a window it
       cannot read, and one whose size decides the verdict. Corrected and released as `0.16.0`.
