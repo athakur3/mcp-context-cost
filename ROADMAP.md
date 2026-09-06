@@ -76,8 +76,24 @@ beside the number they chose. What remains here is the report, and it waits on d
       unchanged costs from the ones with nothing to compare, and "most servers do not move, and
       the ones that do move up" is a finding the first edition could not state.
 - [ ] **Stretch: replace the documented deferral model with a measured one.** Nothing here has
-      measured a client deferring or not. An instrumented session that counts what actually
-      reached the API would be the first measurement of its kind published anywhere.
+      measured a client deferring or not, and it would be the first measurement of its kind
+      published anywhere. **The premise hour of 2026-09-06 refuted this item's obvious
+      mechanism**, so read this before starting it. "An instrumented session that counts what
+      actually reached the API" invites a local recorder on `ANTHROPIC_BASE_URL` — which is
+      itself a documented condition that switches deferral off: *"Claude Code disables it when
+      `ANTHROPIC_BASE_URL` points to a non-first-party host, since most proxies don't forward
+      `tool_reference` blocks"* (Claude Code MCP docs, §Configure tool search, raw page read
+      2026-09-06). The instrument would measure itself, and report "loads everything up front"
+      for a client whose default is the opposite. The same sentence gives the way through —
+      *"Set `ENABLE_TOOL_SEARCH` explicitly to override that fallback"* — so `true` and `false`
+      are observable behind a recorder while the **unset default is not**, and the default is
+      the row the audit's headline verdict rests on. Two first-party paths would leave the base
+      URL alone and so could reach the default, and neither has been tried: the debug log
+      (`--debug`, `--debug-file`, `CLAUDE_CODE_DEBUG_LOGS_DIR`), and the OpenTelemetry
+      `console` exporter, which needs no endpoint and no credential and reports per-request
+      token usage. Whether either records what this needs is unverified. Both spend real
+      requests on a real account *(maintainer)*, which is the only part of this that is not a
+      code question.
 - [ ] **Routine:** vitest 5 (major), `@anthropic-ai/sdk` 0.124; neither blocks anything.
 
 **Exit.** Report #2 published and dated. The other half — the shard count in `resweep.yml`
