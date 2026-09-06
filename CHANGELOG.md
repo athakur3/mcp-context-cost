@@ -7,6 +7,8 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+## 0.16.0 — 2026-09-06
+
 
 What reaches an installer is `audit`: a threshold that now states the assumption underneath it,
 and two new exports. Everything else here is the machinery that keeps the published numbers
