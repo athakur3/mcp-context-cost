@@ -255,6 +255,60 @@ describe('every scheduled job that publishes data also publishes the front page'
 });
 
 /**
+ * The capability probe measures every server twice and publishes nothing, and
+ * both halves of that are load-bearing.
+ *
+ * It exists to answer whether a server's tool list depends on what the client
+ * declares at `initialize` — which means running each entry's launch command
+ * twice, under a posture no published measurement used. A result from the
+ * experimental half must never reach `results/`, or the leaderboard would
+ * quietly start describing a client this project does not ship. The probe
+ * passes `persist: false` on both captures, and the job holds no write token to
+ * commit with even if it did.
+ */
+describe('the capability probe answers a question without publishing one', () => {
+  const probe = readFileSync(join(wfDir, 'capability-probe.yml'), 'utf8');
+  const scriptRaw = readFileSync(join(import.meta.dirname, '..', 'tools', 'capability-probe.ts'), 'utf8');
+  /**
+   * Comments stripped, because the first version of the assertion below passed
+   * against the docblock's own description of the flag while the flag itself
+   * had been deleted. A test that reads the prose is checking that someone
+   * wrote a sentence, which is the failure this whole repository is about.
+   */
+  const script = scriptRaw.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/[^\n]*/g, '$1');
+
+  it('captures with persist: false, which is the only reason it is safe to run', () => {
+    expect(script).toContain('persist: false');
+    // Both captures come from one call site, so one flag covers the pair.
+    expect(script.match(/measureServer\(/g) ?? []).toHaveLength(1);
+  });
+
+  it('declares only capabilities the harness can answer truthfully', () => {
+    // `sampling` would say this client can ask a model for a completion. It
+    // cannot, and a probe that lies to the server it measures is worthless.
+    const client = readFileSync(join(import.meta.dirname, '..', 'src', 'sweep', 'client.ts'), 'utf8');
+    const posture = /export const DECLARING_POSTURE[\s\S]*?\n\};/.exec(client)![0];
+    expect(posture).toContain('roots');
+    expect(posture).toContain('elicitation');
+    expect(posture).not.toContain('sampling');
+    // Every declared capability has an answer beside it in the same object.
+    for (const method of ['roots/list', 'elicitation/create']) expect(posture).toContain(method);
+  });
+
+  it('runs read-only and holds no token, in a job that launches strangers commands', () => {
+    expect(probe).toMatch(/permissions:\n\s*contents: read/);
+    expect(probe).not.toMatch(/github\.token|GITHUB_TOKEN|secrets\./);
+    expect(probe).toMatch(/persist-credentials: false/);
+    expect(probe).not.toContain('git push');
+  });
+
+  it('leaves its answer where a reader can fetch it, rather than committing it', () => {
+    expect(probe).toContain('actions/upload-artifact');
+    expect(probe).not.toContain('git commit');
+  });
+});
+
+/**
  * The guard the two publishing jobs run in place of the CI run a bot push never
  * starts — and the ordering that decides whether it can ever pass.
  *

@@ -7,6 +7,25 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **A probe for a question the published numbers cannot answer about themselves.** Every
+  measurement here was captured by a client declaring `capabilities: {}` at `initialize` — it
+  can do nothing, and says so. That is not a neutral posture: the protocol lets a server shape
+  its tool list around what the client declares, and at least one does. The reference
+  `everything` server exposes 13 tools to a client declaring nothing and 15 to one declaring
+  roots and elicitation, the extra two being `get-roots-list` and `trigger-elicitation-request`,
+  one per capability, worth 197 tokens in this project's own unit. For any server that gates
+  tools that way the published number is a floor, and the methodology does not say so. Nobody
+  knows how many servers that is, so `tools/capability-probe.ts` measures each entry twice under
+  identical conditions, differing only in the declaration, and reports the difference.
+  `capability-probe.yml` runs it read-only: no write token anywhere in the job, both captures
+  with `persist: false`, and the answer leaves as a downloadable artifact rather than a commit,
+  so nothing published can move even if the probe is wrong. The posture it compares against
+  declares only what this harness can answer truthfully — an empty root list and a declined
+  elicitation are states a real client can be in, while `sampling` would claim it can ask a
+  model for a completion, which it cannot. **Nothing is changed by this.** What the sweep
+  declares decides published numbers and their hashes, so moving it is a methodology decision;
+  this is the evidence that decision wants, gathered first.
+
 ## 0.16.0 — 2026-09-06
 
 

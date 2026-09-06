@@ -10,7 +10,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { captureTools, clampNotes } from './client.js';
+import { captureTools, clampNotes, type ClientPosture } from './client.js';
 import {
   DockerHarnessFault,
   defaultImageFor,
@@ -154,6 +154,14 @@ export interface MeasureOptions {
    * `audit` runs in the user's own directory and must not litter it.
    */
   persist?: boolean;
+  /**
+   * What the client declares at `initialize`, and how it answers what that
+   * invites. Every published measurement was taken declaring nothing, which is
+   * the default; a probe passes a different posture to find out whether a
+   * server gates tools on it. Changing the default would change published
+   * numbers, so it is a measurement decision and not a flag to flip lightly.
+   */
+  posture?: ClientPosture;
 }
 
 /**
@@ -290,7 +298,7 @@ export async function measureServer(
       // The declared evidence travels with the launch, because the truncation
       // that could lose it happens inside the client, before anything here sees
       // the message it will be classified from.
-      const captureOpts = { ...attemptOpts, keepEvidence: opts.notApplicable?.evidence };
+      const captureOpts = { ...attemptOpts, keepEvidence: opts.notApplicable?.evidence, posture: opts.posture };
       const first = await captureTools(buildSpec(noSharedCache), captureOpts);
       const second = await captureTools(buildSpec(noSharedCache), captureOpts);
       r = measureTools(first.tools, {

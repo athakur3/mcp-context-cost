@@ -1,0 +1,92 @@
+# Does a server's tool list depend on what the client says it can do?
+#
+# Every published number here was captured by a client declaring
+# `capabilities: {}` — it can do nothing, and says so. The protocol lets a
+# server shape its tool list around that declaration, and at least one does:
+# the reference `everything` server exposes 13 tools to a client declaring
+# nothing and 15 to one declaring roots and elicitation. For any server that
+# gates tools that way, the published number is a floor and the methodology
+# does not say so.
+#
+# Nobody knows how many servers that is. Two is a footnote; thirty means the
+# leaderboard measures a client nobody runs. This job answers that, and only
+# that. Changing what the sweep declares would move published numbers and their
+# hashes, which is a methodology decision — this is the evidence it wants first,
+# not the change itself.
+#
+# Dispatch-only, and it publishes nothing. `contents: read`, no write token
+# anywhere in the job, and the probe runs both of its captures with
+# `persist: false`, so no record, badge or history row can move even if
+# something here goes wrong. The result leaves as a run artifact, which a reader
+# can download and check, rather than as a commit.
+name: Capability probe
+on:
+  workflow_dispatch:
+    inputs:
+      servers:
+        description: 'Probe these named servers instead of the whole set (comma-separated)'
+        required: false
+        type: string
+
+# Read-only, said out loud, for the reason ci.yml states: without a block the
+# token takes the repository default, which can be read-and-write, and this job
+# executes the launch command of every entry it probes. A stranger's command
+# must never run in a process that can push.
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    # Each server is measured twice, so the budget is double a sweep's. The cap
+    # is the same as the re-sweep's because the failure mode is the same: a
+    # wedged runner should stop rather than run all day.
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # No token is wanted here at all, and leaving the default one in
+          # .git/config would put it in reach of every launch command below.
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Reject a server list that is not a list of server names
+        if: inputs.servers != ''
+        env:
+          SERVERS: ${{ inputs.servers }}
+        run: |
+          printf '%s' "$SERVERS" | grep -Eq '^[a-z0-9][a-z0-9._-]*(,[a-z0-9][a-z0-9._-]*)*$' \
+            || { echo "expected comma-separated server names, got: $SERVERS"; exit 2; }
+      - name: Probe each server twice, declaring nothing and then declaring
+        # `--docker` because the comparison has to hold every condition fixed
+        # except the declaration, and docker is the condition every published
+        # row was measured under. Concurrency 2 and the wider default timeout
+        # for the reasons resweep.yml states: fewer cores than the sweep default
+        # assumes, and no package cache surviving between jobs.
+        env:
+          SELECT: ${{ inputs.servers && format('--only {0}', inputs.servers) || '' }}
+        run: npx tsx tools/capability-probe.ts --docker ${SELECT} --concurrency 2 --default-timeout 240 --out capability-probe.json
+      - name: The answer, in the log as well as the artifact
+        run: |
+          python3 - <<'PY'
+          import json
+          d = json.load(open('capability-probe.json'))
+          print(f"declared: {d['declared']}")
+          print(f"{d['moved']} of {d['comparable']} comparable servers change their tool list")
+          for n in d['movedNames']:
+              r = next(r for r in d['rows'] if r['name'] == n)
+              print(f"  {n}: {r['minimalTools']} -> {r['declaringTools']} tools, "
+                    f"{r['minimalTokens']} -> {r['declaringTokens']} tokens, gained {r['gained']}")
+          print(f"{d['probed'] - d['comparable']} not comparable")
+          PY
+      - uses: actions/upload-artifact@v4
+        # Always: a probe that half finished still answers more than nothing,
+        # and the rows it did get are what a reader would want to see.
+        if: always()
+        with:
+          name: capability-probe
+          path: capability-probe.json
+          if-no-files-found: warn

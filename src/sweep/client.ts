@@ -233,6 +233,52 @@ function drop(
   return kept || text.trim();
 }
 
+/**
+ * A client posture: what it declares at `initialize`, and how it answers the
+ * requests that declaration invites. The two live in one object because they
+ * are one decision — a client that declares `roots` and then returns
+ * "method not found" to `roots/list` has told the server something untrue, and
+ * a server is entitled to shape its tool list around the answer.
+ *
+ * This exists because the default posture, `{}`, is not neutral. A server may
+ * gate tools on what the client can do: measured 2026-09-06, the reference
+ * `everything` server exposes 13 tools to a client declaring nothing and 15 to
+ * one declaring roots and elicitation. So the published number for such a
+ * server is a floor, and which posture the sweep runs with is a measurement
+ * decision rather than a detail.
+ *
+ * `sampling` is deliberately absent. Declaring it says this client can ask a
+ * model for a completion, and it cannot; there is no honest minimal answer to
+ * `sampling/createMessage`, unlike an empty root list or a declined
+ * elicitation, both of which are ordinary states a real client can be in.
+ */
+export interface ClientPosture {
+  /** Sent verbatim as `capabilities` in `initialize`. */
+  capabilities: Record<string, unknown>;
+  /** Answers to server-initiated requests, by method. Every declared capability needs one. */
+  answers: Record<string, unknown>;
+}
+
+/** What the sweep has always declared: nothing, and so nothing to answer. */
+export const MINIMAL_POSTURE: ClientPosture = { capabilities: {}, answers: {} };
+
+/**
+ * The two capabilities this harness can answer truthfully.
+ *
+ * `roots/list` returns an empty list: this client exposes no filesystem roots,
+ * which is a true statement about it rather than a refusal. `elicitation/create`
+ * declines: the protocol provides for a user declining to answer, and an
+ * unattended sweep has no user, so declining is the honest reply and not a
+ * failure to implement one.
+ */
+export const DECLARING_POSTURE: ClientPosture = {
+  capabilities: { roots: { listChanged: false }, elicitation: {} },
+  answers: {
+    'roots/list': { roots: [] },
+    'elicitation/create': { action: 'decline' },
+  },
+};
+
 export class McpStdioClient {
   private child;
   private buffer = '';
@@ -247,6 +293,11 @@ export class McpStdioClient {
     env: Record<string, string | undefined>,
     /** Phrase this entry's declared status depends on — see `evidenceTail`. */
     private keepEvidence?: string,
+    /**
+     * Answers to server-initiated requests, one per declared capability. Empty
+     * by default, which is correct only while `initialize` declares nothing.
+     */
+    private answers: Record<string, unknown> = {},
   ) {
     this.child = spawn(command, args, {
       env: { ...env },
@@ -298,6 +349,8 @@ export class McpStdioClient {
         // collide with ours, so 'method' presence is checked before id dispatch.
         if (msg.id !== undefined && msg.id !== null) {
           if (msg.method === 'ping') this.send({ jsonrpc: '2.0', id: msg.id, result: {} });
+          else if (Object.hasOwn(this.answers, msg.method))
+            this.send({ jsonrpc: '2.0', id: msg.id, result: this.answers[msg.method] });
           else this.send({ jsonrpc: '2.0', id: msg.id, error: { code: -32601, message: 'method not found' } });
         }
         continue;
@@ -371,22 +424,34 @@ export class McpStdioClient {
  */
 export async function captureTools(
   spec: string | { command: string; argv: string[] },
-  opts: { timeoutMs?: number; env?: Record<string, string>; keepEvidence?: string } = {},
+  opts: {
+    timeoutMs?: number;
+    env?: Record<string, string>;
+    keepEvidence?: string;
+    /**
+     * What to declare at `initialize`, and how to answer what that invites.
+     * Defaults to declaring nothing, which is what every published measurement
+     * was taken with.
+     */
+    posture?: ClientPosture;
+  } = {},
 ): Promise<WireCapture> {
   const timeoutMs = opts.timeoutMs ?? 60_000;
+  const posture = opts.posture ?? MINIMAL_POSTURE;
   const [cmd, ...args] = typeof spec === 'string' ? splitCommand(spec) : [spec.command, ...spec.argv];
   const client = new McpStdioClient(
     cmd,
     args,
     { PATH: process.env.PATH, HOME: process.env.HOME, ...opts.env },
     opts.keepEvidence,
+    posture.answers,
   );
   try {
     const init = await client.request(
       'initialize',
       {
         protocolVersion: PROTOCOL_VERSION,
-        capabilities: {},
+        capabilities: posture.capabilities,
         clientInfo: { name: 'mcp-context-cost', version: '0.1.0' },
       },
       timeoutMs,
