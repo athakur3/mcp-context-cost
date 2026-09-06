@@ -115,6 +115,43 @@ async function probe(entry: ServerEntry): Promise<Row> {
 
 const rows: Row[] = [];
 const queue = [...entries];
+
+/**
+ * The summary, rewritten after every row rather than once at the end.
+ *
+ * This job measures every entry twice, so it is the longest-running thing in
+ * the repository and the likeliest to meet the runner's cap. A file written
+ * only on the last line means a run that times out at 99 servers reports
+ * nothing, and the artifact step's `if: always()` would upload an absent file.
+ * Partial coverage answers "how many servers gate their tools" perfectly well
+ * as long as it says how far it got, which `selected` against `probed` does.
+ */
+function writeSummary(): void {
+  const sorted = [...rows].sort((a, b) => a.name.localeCompare(b.name));
+  const cmp = sorted.filter(
+    (r) => ['measured', 'dynamic'].includes(r.minimalStatus) && ['measured', 'dynamic'].includes(r.declaringStatus),
+  );
+  const mv = cmp.filter((r) => r.gained.length > 0 || r.lost.length > 0);
+  writeFileSync(
+    outPath,
+    JSON.stringify(
+      {
+        method: 'capability-probe/v1',
+        declared: DECLARING_POSTURE.capabilities,
+        docker,
+        selected: entries.length,
+        probed: sorted.length,
+        comparable: cmp.length,
+        moved: mv.length,
+        movedNames: mv.map((r) => r.name),
+        extraTokens: mv.reduce((n, r) => n + ((r.declaringTokens ?? 0) - (r.minimalTokens ?? 0)), 0),
+        rows: sorted,
+      },
+      null,
+      2,
+    ) + '\n',
+  );
+}
 console.log(
   `probing ${entries.length} server(s), each twice (docker=${docker}, concurrency=${concurrency}); nothing under results/ is written`,
 );
@@ -126,6 +163,7 @@ await Promise.all(
       if (!entry) return;
       const row = await probe(entry);
       rows.push(row);
+      writeSummary(); // so a run that meets the cap still reports what it reached
       const moved = row.gained.length > 0 || row.lost.length > 0;
       const verdict = moved
         ? `MOVED +${row.gained.length}/-${row.lost.length}: ${[...row.gained, ...row.lost.map((n) => `-${n}`)].join(', ')}`
@@ -140,31 +178,22 @@ await Promise.all(
   }),
 );
 
-rows.sort((a, b) => a.name.localeCompare(b.name));
-const comparable = rows.filter(
-  (r) => ['measured', 'dynamic'].includes(r.minimalStatus) && ['measured', 'dynamic'].includes(r.declaringStatus),
-);
-const moved = comparable.filter((r) => r.gained.length > 0 || r.lost.length > 0);
-const summary = {
-  method: 'capability-probe/v1',
-  declared: DECLARING_POSTURE.capabilities,
-  docker,
-  probed: rows.length,
-  comparable: comparable.length,
-  moved: moved.length,
-  movedNames: moved.map((r) => r.name),
-  extraTokens: moved.reduce((n, r) => n + ((r.declaringTokens ?? 0) - (r.minimalTokens ?? 0)), 0),
-  rows,
+writeSummary();
+const summary = JSON.parse(readFileSync(outPath, 'utf8')) as {
+  probed: number;
+  comparable: number;
+  moved: number;
+  movedNames: string[];
+  extraTokens: number;
 };
-writeFileSync(outPath, JSON.stringify(summary, null, 2) + '\n');
 
 console.log(
-  `\n${moved.length} of ${comparable.length} comparable server(s) change their tool list when the client ` +
+  `\n${summary.moved} of ${summary.comparable} comparable server(s) change their tool list when the client ` +
     `declares ${Object.keys(DECLARING_POSTURE.capabilities).join(' and ')}` +
-    (moved.length > 0 ? `: ${moved.map((r) => r.name).join(', ')}` : ''),
+    (summary.moved > 0 ? `: ${summary.movedNames.join(', ')}` : ''),
 );
-if (moved.length > 0) {
+if (summary.moved > 0) {
   console.log(`those servers publish ${summary.extraTokens} fewer tokens than a declaring client would load.`);
 }
-console.log(`${rows.length - comparable.length} not comparable (a capture failed on one side or both).`);
+console.log(`${summary.probed - summary.comparable} not comparable (a capture failed on one side or both).`);
 console.log(`written: ${outPath}`);
