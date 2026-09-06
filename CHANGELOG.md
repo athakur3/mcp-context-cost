@@ -7,6 +7,8 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+## 0.17.0 — 2026-09-06
+
 - **A probe for a question the published numbers cannot answer about themselves.** Every
   measurement here was captured by a client declaring `capabilities: {}` at `initialize` — it
   can do nothing, and says so. That is not a neutral posture: the protocol lets a server shape
