@@ -17,7 +17,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | search | 159 | 42.5% | 15 | 135 |
 | get_mappings | 76 | 20.3% | 8 | 56 |

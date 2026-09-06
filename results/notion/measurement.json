@@ -10,145 +10,193 @@
       "name": "API-get-user",
       "tokens": 604,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 564
+      "inputSchemaTokens": 564,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 12
     },
     {
       "name": "API-get-users",
       "tokens": 663,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 622
+      "inputSchemaTokens": 622,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 12
     },
     {
       "name": "API-get-self",
       "tokens": 595,
       "descriptionTokens": 17,
-      "inputSchemaTokens": 551
+      "inputSchemaTokens": 551,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 12
     },
     {
       "name": "API-post-search",
       "tokens": 1097,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 1056
+      "inputSchemaTokens": 1056,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 12
     },
     {
       "name": "API-get-block-children",
       "tokens": 693,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 650
+      "inputSchemaTokens": 650,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "API-patch-block-children",
       "tokens": 713,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 669
+      "inputSchemaTokens": 669,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "API-retrieve-a-block",
       "tokens": 612,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 569
+      "inputSchemaTokens": 569,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "API-update-a-block",
       "tokens": 727,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 685
+      "inputSchemaTokens": 685,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "API-delete-a-block",
       "tokens": 611,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 569
+      "inputSchemaTokens": 569,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "API-retrieve-a-page",
       "tokens": 680,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 637
+      "inputSchemaTokens": 637,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "API-patch-page",
       "tokens": 889,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 848
+      "inputSchemaTokens": 848,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 12
     },
     {
       "name": "API-post-page",
       "tokens": 819,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 779
+      "inputSchemaTokens": 779,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 12
     },
     {
       "name": "API-retrieve-a-page-property",
       "tokens": 704,
       "descriptionTokens": 16,
-      "inputSchemaTokens": 657
+      "inputSchemaTokens": 657,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "API-retrieve-a-comment",
       "tokens": 687,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 645
+      "inputSchemaTokens": 645,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "API-create-a-comment",
       "tokens": 725,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 684
+      "inputSchemaTokens": 684,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "API-query-data-source",
       "tokens": 770,
       "descriptionTokens": 15,
-      "inputSchemaTokens": 727
+      "inputSchemaTokens": 727,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "API-retrieve-a-data-source",
       "tokens": 618,
       "descriptionTokens": 15,
-      "inputSchemaTokens": 572
+      "inputSchemaTokens": 572,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "API-update-a-data-source",
       "tokens": 721,
       "descriptionTokens": 15,
-      "inputSchemaTokens": 676
+      "inputSchemaTokens": 676,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "API-create-a-data-source",
       "tokens": 688,
       "descriptionTokens": 15,
-      "inputSchemaTokens": 643
+      "inputSchemaTokens": 643,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "API-list-data-source-templates",
       "tokens": 640,
       "descriptionTokens": 17,
-      "inputSchemaTokens": 592
+      "inputSchemaTokens": 592,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "API-retrieve-a-database",
       "tokens": 613,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 569
+      "inputSchemaTokens": 569,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "API-move-page",
       "tokens": 641,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 600
+      "inputSchemaTokens": 600,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 12
     },
     {
       "name": "API-retrieve-page-markdown",
       "tokens": 706,
       "descriptionTokens": 49,
-      "inputSchemaTokens": 626
+      "inputSchemaTokens": 626,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "API-update-page-markdown",
       "tokens": 1282,
       "descriptionTokens": 62,
-      "inputSchemaTokens": 1189
+      "inputSchemaTokens": 1189,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     }
   ],
   "canonicalSha256": "f9544e7c84986529d5bc4a1c9357bbbb9c2f458133904075319f8fec7d716da9",

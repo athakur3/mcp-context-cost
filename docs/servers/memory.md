@@ -16,17 +16,17 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
-|---|---:|---:|---:|---:|
-| search_nodes | 323 | 13.6% | 11 | 51 |
-| open_nodes | 322 | 13.5% | 10 | 51 |
-| create_entities | 294 | 12.4% | 8 | 111 |
-| create_relations | 294 | 12.4% | 17 | 106 |
-| read_graph | 291 | 12.2% | 5 | 24 |
-| add_observations | 249 | 10.5% | 10 | 97 |
-| delete_relations | 225 | 9.5% | 7 | 115 |
-| delete_observations | 212 | 8.9% | 9 | 98 |
-| delete_entities | 166 | 7.0% | 11 | 53 |
+| tool | tokens | share | description | input schema | output schema |
+|---|---:|---:|---:|---:|---:|
+| search_nodes | 323 | 13.6% | 11 | 51 | 207 |
+| open_nodes | 322 | 13.5% | 10 | 51 | 207 |
+| create_entities | 294 | 12.4% | 8 | 111 | 121 |
+| create_relations | 294 | 12.4% | 17 | 106 | 116 |
+| read_graph | 291 | 12.2% | 5 | 24 | 207 |
+| add_observations | 249 | 10.5% | 10 | 97 | 85 |
+| delete_relations | 225 | 9.5% | 7 | 115 | 48 |
+| delete_observations | 212 | 8.9% | 9 | 98 | 48 |
+| delete_entities | 166 | 7.0% | 11 | 53 | 48 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
 

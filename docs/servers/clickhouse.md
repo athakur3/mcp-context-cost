@@ -16,11 +16,11 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
-|---|---:|---:|---:|---:|
-| list_tables | 353 | 55.9% | 63 | 230 |
-| run_query | 201 | 31.8% | 121 | 24 |
-| list_databases | 78 | 12.3% | 5 | 14 |
+| tool | tokens | share | description | input schema | output schema |
+|---|---:|---:|---:|---:|---:|
+| list_tables | 353 | 55.9% | 63 | 230 | 28 |
+| run_query | 201 | 31.8% | 121 | 24 | 28 |
+| list_databases | 78 | 12.3% | 5 | 14 | 28 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
 

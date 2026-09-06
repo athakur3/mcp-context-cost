@@ -16,24 +16,24 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
-|---|---:|---:|---:|---:|
-| list_records | 395 | 9.4% | 5 | 269 |
-| describe_table | 354 | 8.5% | 7 | 260 |
-| upload_attachment | 347 | 8.3% | 48 | 198 |
-| list_tables | 340 | 8.1% | 7 | 239 |
-| list_comments | 325 | 7.8% | 5 | 122 |
-| create_comment | 310 | 7.4% | 6 | 118 |
-| search_records | 277 | 6.6% | 6 | 150 |
-| update_records | 265 | 6.3% | 9 | 129 |
-| update_field | 214 | 5.1% | 7 | 114 |
-| create_table | 212 | 5.1% | 7 | 112 |
-| create_field | 206 | 4.9% | 7 | 106 |
-| create_record | 205 | 4.9% | 7 | 96 |
-| delete_records | 202 | 4.8% | 5 | 92 |
-| update_table | 195 | 4.7% | 7 | 95 |
-| get_record | 186 | 4.4% | 6 | 84 |
-| list_bases | 151 | 3.6% | 6 | 24 |
+| tool | tokens | share | description | input schema | output schema |
+|---|---:|---:|---:|---:|---:|
+| list_records | 395 | 9.4% | 5 | 269 | 86 |
+| describe_table | 354 | 8.5% | 7 | 260 | 52 |
+| upload_attachment | 347 | 8.3% | 48 | 198 | 61 |
+| list_tables | 340 | 8.1% | 7 | 239 | 59 |
+| list_comments | 325 | 7.8% | 5 | 122 | 163 |
+| create_comment | 310 | 7.4% | 6 | 118 | 145 |
+| search_records | 277 | 6.6% | 6 | 150 | 86 |
+| update_records | 265 | 6.3% | 9 | 129 | 86 |
+| update_field | 214 | 5.1% | 7 | 114 | 52 |
+| create_table | 212 | 5.1% | 7 | 112 | 52 |
+| create_field | 206 | 4.9% | 7 | 106 | 52 |
+| create_record | 205 | 4.9% | 7 | 96 | 61 |
+| delete_records | 202 | 4.8% | 5 | 92 | 64 |
+| update_table | 195 | 4.7% | 7 | 95 | 52 |
+| get_record | 186 | 4.4% | 6 | 84 | 61 |
+| list_bases | 151 | 3.6% | 6 | 24 | 84 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
 

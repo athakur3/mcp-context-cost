@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | perplexity_ask | 131 | 98.5% | 38 | 80 |
 

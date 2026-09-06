@@ -280,3 +280,57 @@ describe('the page says which machine made the number', () => {
     expect(md).toContain('host process (no container) · darwin/arm64');
   });
 });
+
+/**
+ * Output schemas are about a sixth of every published token across the set, and
+ * until the attribution existed the per-tool table could show a 1,092-token tool
+ * whose description and input schema were 24 tokens each, with no way to see
+ * that a 995-token output schema was the rest of it. The column exists to
+ * answer that, and it stays off the two thirds of pages with nothing to put in
+ * it — a column of zeroes is a worse page, not a more complete one.
+ */
+describe('the per-tool table names the output schema when there is one', () => {
+  it('adds the column, and only for a server that ships one', () => {
+    const md = renderServerPage(
+      entry,
+      measurement({
+        tools: [
+          { name: 'search', tokens: 700, descriptionTokens: 100, inputSchemaTokens: 60, outputSchemaTokens: 500, annotationsTokens: 20 },
+          { name: 'fetch', tokens: 280, descriptionTokens: 40, inputSchemaTokens: 200, outputSchemaTokens: 0, annotationsTokens: 0 },
+        ],
+      }),
+    );
+    expect(md).toContain('| tool | tokens | share | description | input schema | output schema |');
+    expect(md).toContain('| search | 700 | 70.0% | 100 | 60 | 500 |');
+    expect(md).toContain('| fetch | 280 | 28.0% | 40 | 200 | 0 |');
+  });
+
+  it('leaves the column off when every tool reports zero', () => {
+    const md = renderServerPage(
+      entry,
+      measurement({
+        tools: [{ name: 'search', tokens: 700, descriptionTokens: 100, inputSchemaTokens: 560, outputSchemaTokens: 0, annotationsTokens: 0 }],
+      }),
+    );
+    expect(md).toContain('| tool | tokens | share | description | input schema |');
+    expect(md).not.toContain('output schema');
+  });
+
+  it('leaves it off for a record written before the field existed', () => {
+    // Absent is not zero anywhere else in this project, and it must not become
+    // zero here: a pre-attribution record has nothing to say about output
+    // schemas, so the page says nothing about them.
+    const md = renderServerPage(entry, measurement());
+    expect(md).not.toContain('output schema');
+  });
+
+  it('never counts annotations as a column, only in the record', () => {
+    const md = renderServerPage(
+      entry,
+      measurement({
+        tools: [{ name: 'search', tokens: 700, descriptionTokens: 100, inputSchemaTokens: 560, outputSchemaTokens: 0, annotationsTokens: 90 }],
+      }),
+    );
+    expect(md).not.toContain('annotations |');
+  });
+});

@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | slack_reply_to_thread | 124 | 18.2% | 8 | 102 |
 | slack_get_thread_replies | 110 | 16.2% | 7 | 88 |

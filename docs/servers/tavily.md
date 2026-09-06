@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | tavily_search | 615 | 37.2% | 29 | 574 |
 | tavily_crawl | 412 | 24.9% | 20 | 379 |

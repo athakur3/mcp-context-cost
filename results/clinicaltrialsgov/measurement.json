@@ -10,43 +10,57 @@
       "name": "clinicaltrials_search_studies",
       "tokens": 1257,
       "descriptionTokens": 51,
-      "inputSchemaTokens": 884
+      "inputSchemaTokens": 884,
+      "outputSchemaTokens": 268,
+      "annotationsTokens": 20
     },
     {
       "name": "clinicaltrials_get_study_record",
       "tokens": 279,
       "descriptionTokens": 38,
-      "inputSchemaTokens": 65
+      "inputSchemaTokens": 65,
+      "outputSchemaTokens": 120,
+      "annotationsTokens": 20
     },
     {
       "name": "clinicaltrials_get_study_count",
       "tokens": 677,
       "descriptionTokens": 59,
-      "inputSchemaTokens": 450
+      "inputSchemaTokens": 450,
+      "outputSchemaTokens": 111,
+      "annotationsTokens": 20
     },
     {
       "name": "clinicaltrials_get_field_values",
       "tokens": 527,
       "descriptionTokens": 46,
-      "inputSchemaTokens": 118
+      "inputSchemaTokens": 118,
+      "outputSchemaTokens": 308,
+      "annotationsTokens": 20
     },
     {
       "name": "clinicaltrials_get_field_definitions",
       "tokens": 737,
       "descriptionTokens": 153,
-      "inputSchemaTokens": 224
+      "inputSchemaTokens": 224,
+      "outputSchemaTokens": 304,
+      "annotationsTokens": 20
     },
     {
       "name": "clinicaltrials_get_study_results",
       "tokens": 928,
       "descriptionTokens": 52,
-      "inputSchemaTokens": 318
+      "inputSchemaTokens": 318,
+      "outputSchemaTokens": 502,
+      "annotationsTokens": 20
     },
     {
       "name": "clinicaltrials_find_eligible",
       "tokens": 727,
       "descriptionTokens": 35,
-      "inputSchemaTokens": 281
+      "inputSchemaTokens": 281,
+      "outputSchemaTokens": 357,
+      "annotationsTokens": 20
     }
   ],
   "canonicalSha256": "acdc9b99e581c7493a98e8c0fac919bbe384ac3205227c15891b94d6ddcf4825",

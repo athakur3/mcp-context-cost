@@ -16,22 +16,22 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
-|---|---:|---:|---:|---:|
-| read_media_file | 290 | 10.3% | 47 | 34 |
-| read_text_file | 256 | 9.1% | 97 | 78 |
-| edit_file | 245 | 8.7% | 35 | 118 |
-| search_files | 218 | 7.7% | 79 | 60 |
-| read_multiple_files | 210 | 7.4% | 58 | 71 |
-| directory_tree | 202 | 7.2% | 72 | 51 |
-| list_directory_with_sizes | 201 | 7.1% | 56 | 62 |
-| move_file | 192 | 6.8% | 57 | 43 |
-| read_file | 179 | 6.3% | 19 | 78 |
-| create_directory | 177 | 6.3% | 51 | 34 |
-| write_file | 174 | 6.2% | 39 | 43 |
-| list_directory | 166 | 5.9% | 53 | 34 |
-| get_file_info | 162 | 5.7% | 47 | 34 |
-| list_allowed_directories | 149 | 5.3% | 41 | 24 |
+| tool | tokens | share | description | input schema | output schema |
+|---|---:|---:|---:|---:|---:|
+| read_media_file | 290 | 10.3% | 47 | 34 | 167 |
+| read_text_file | 256 | 9.1% | 97 | 78 | 39 |
+| edit_file | 245 | 8.7% | 35 | 118 | 39 |
+| search_files | 218 | 7.7% | 79 | 60 | 39 |
+| read_multiple_files | 210 | 7.4% | 58 | 71 | 39 |
+| directory_tree | 202 | 7.2% | 72 | 51 | 39 |
+| list_directory_with_sizes | 201 | 7.1% | 56 | 62 | 39 |
+| move_file | 192 | 6.8% | 57 | 43 | 39 |
+| read_file | 179 | 6.3% | 19 | 78 | 39 |
+| create_directory | 177 | 6.3% | 51 | 34 | 39 |
+| write_file | 174 | 6.2% | 39 | 43 | 39 |
+| list_directory | 166 | 5.9% | 53 | 34 | 39 |
+| get_file_info | 162 | 5.7% | 47 | 34 | 39 |
+| list_allowed_directories | 149 | 5.3% | 41 | 24 | 39 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
 

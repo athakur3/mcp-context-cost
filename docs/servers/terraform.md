@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | search_providers | 484 | 23.5% | 132 | 293 |
 | get_provider_capabilities | 305 | 14.8% | 138 | 110 |

@@ -10,19 +10,25 @@
       "name": "ask_question",
       "tokens": 148,
       "descriptionTokens": 19,
-      "inputSchemaTokens": 76
+      "inputSchemaTokens": 76,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 0
     },
     {
       "name": "read_wiki_contents",
       "tokens": 104,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 41
+      "inputSchemaTokens": 41,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 0
     },
     {
       "name": "read_wiki_structure",
       "tokens": 108,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 41
+      "inputSchemaTokens": 41,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "3735162916165ab23696fc91fbf626bd99a36ddcd1e15746e91e16c7e336b379",

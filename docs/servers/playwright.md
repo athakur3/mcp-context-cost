@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | browser_take_screenshot | 329 | 8.2% | 23 | 268 |
 | browser_fill_form | 255 | 6.3% | 4 | 214 |

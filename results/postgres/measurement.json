@@ -10,7 +10,9 @@
       "name": "query",
       "tokens": 30,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 14
+      "inputSchemaTokens": 14,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "bbdb8dd9b6d3cd9b855597127ad5268e3fa4e3355e616b3dc102f4ed12cca454",

@@ -10,409 +10,545 @@
       "name": "documentation",
       "tokens": 258,
       "descriptionTokens": 141,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "azd",
       "tokens": 236,
       "descriptionTokens": 118,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "foundry",
       "tokens": 223,
       "descriptionTokens": 104,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "arm",
       "tokens": 203,
       "descriptionTokens": 85,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "get_azure_bestpractices",
       "tokens": 454,
       "descriptionTokens": 318,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "aks",
       "tokens": 256,
       "descriptionTokens": 138,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "appconfig",
       "tokens": 213,
       "descriptionTokens": 95,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "applens",
       "tokens": 231,
       "descriptionTokens": 111,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "appservice",
       "tokens": 192,
       "descriptionTokens": 74,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "role",
       "tokens": 212,
       "descriptionTokens": 93,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 9
     },
     {
       "name": "azurebackup",
       "tokens": 242,
       "descriptionTokens": 122,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "datadog",
       "tokens": 212,
       "descriptionTokens": 92,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "managedlustre",
       "tokens": 224,
       "descriptionTokens": 104,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "azuremigrate",
       "tokens": 280,
       "descriptionTokens": 158,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 10
     },
     {
       "name": "azureterraform",
       "tokens": 220,
       "descriptionTokens": 103,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 6
     },
     {
       "name": "azureterraformbestpractices",
       "tokens": 214,
       "descriptionTokens": 90,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "deploy",
       "tokens": 232,
       "descriptionTokens": 116,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 6
     },
     {
       "name": "deviceregistry",
       "tokens": 220,
       "descriptionTokens": 97,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "eventgrid",
       "tokens": 191,
       "descriptionTokens": 73,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "acr",
       "tokens": 197,
       "descriptionTokens": 79,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "advisor",
       "tokens": 230,
       "descriptionTokens": 113,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "bicepschema",
       "tokens": 221,
       "descriptionTokens": 100,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 9
     },
     {
       "name": "cosmos",
       "tokens": 200,
       "descriptionTokens": 82,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "cloudarchitect",
       "tokens": 188,
       "descriptionTokens": 70,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "communication",
       "tokens": 187,
       "descriptionTokens": 70,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "compute",
       "tokens": 367,
       "descriptionTokens": 242,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "confidentialledger",
       "tokens": 208,
       "descriptionTokens": 89,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "containerapps",
       "tokens": 198,
       "descriptionTokens": 79,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "eventhubs",
       "tokens": 201,
       "descriptionTokens": 81,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "fileshares",
       "tokens": 183,
       "descriptionTokens": 65,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "foundryextensions",
       "tokens": 250,
       "descriptionTokens": 127,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "functionapp",
       "tokens": 185,
       "descriptionTokens": 68,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 6
     },
     {
       "name": "functions",
       "tokens": 209,
       "descriptionTokens": 93,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 6
     },
     {
       "name": "grafana",
       "tokens": 208,
       "descriptionTokens": 89,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "insights",
       "tokens": 216,
       "descriptionTokens": 95,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 9
     },
     {
       "name": "iothub",
       "tokens": 189,
       "descriptionTokens": 68,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 9
     },
     {
       "name": "keyvault",
       "tokens": 186,
       "descriptionTokens": 68,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "kusto",
       "tokens": 216,
       "descriptionTokens": 98,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "loadtesting",
       "tokens": 214,
       "descriptionTokens": 96,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "marketplace",
       "tokens": 185,
       "descriptionTokens": 68,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 6
     },
     {
       "name": "quota",
       "tokens": 192,
       "descriptionTokens": 74,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "monitor",
       "tokens": 289,
       "descriptionTokens": 172,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 6
     },
     {
       "name": "applicationinsights",
       "tokens": 207,
       "descriptionTokens": 87,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "mysql",
       "tokens": 210,
       "descriptionTokens": 91,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 9
     },
     {
       "name": "policy",
       "tokens": 196,
       "descriptionTokens": 79,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "postgres",
       "tokens": 211,
       "descriptionTokens": 92,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 9
     },
     {
       "name": "pricing",
       "tokens": 229,
       "descriptionTokens": 112,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "redis",
       "tokens": 218,
       "descriptionTokens": 102,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 6
     },
     {
       "name": "resilience",
       "tokens": 232,
       "descriptionTokens": 112,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "resourcehealth",
       "tokens": 198,
       "descriptionTokens": 80,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "search",
       "tokens": 240,
       "descriptionTokens": 123,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "speech",
       "tokens": 243,
       "descriptionTokens": 125,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "servicebus",
       "tokens": 246,
       "descriptionTokens": 128,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "servicefabric",
       "tokens": 216,
       "descriptionTokens": 97,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "signalr",
       "tokens": 195,
       "descriptionTokens": 76,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "sreagent",
       "tokens": 219,
       "descriptionTokens": 99,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "sql",
       "tokens": 212,
       "descriptionTokens": 95,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "storage",
       "tokens": 285,
       "descriptionTokens": 164,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "storagesync",
       "tokens": 219,
       "descriptionTokens": 98,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 9
     },
     {
       "name": "virtualdesktop",
       "tokens": 201,
       "descriptionTokens": 83,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "wellarchitectedframework",
       "tokens": 223,
       "descriptionTokens": 100,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 10
     },
     {
       "name": "workbooks",
       "tokens": 212,
       "descriptionTokens": 94,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "extension_azqr",
       "tokens": 322,
       "descriptionTokens": 151,
-      "inputSchemaTokens": 91
+      "inputSchemaTokens": 91,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 34
     },
     {
       "name": "extension_cli_generate",
       "tokens": 217,
       "descriptionTokens": 49,
-      "inputSchemaTokens": 91
+      "inputSchemaTokens": 91,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "extension_cli_install",
       "tokens": 216,
       "descriptionTokens": 65,
-      "inputSchemaTokens": 67
+      "inputSchemaTokens": 67,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 33
     },
     {
       "name": "group_list",
       "tokens": 188,
       "descriptionTokens": 35,
-      "inputSchemaTokens": 75
+      "inputSchemaTokens": 75,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "group_resource_list",
       "tokens": 231,
       "descriptionTokens": 54,
-      "inputSchemaTokens": 97
+      "inputSchemaTokens": 97,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 34
     },
     {
       "name": "subscription_list",
       "tokens": 219,
       "descriptionTokens": 110,
-      "inputSchemaTokens": 34
+      "inputSchemaTokens": 34,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 33
     }
   ],
   "canonicalSha256": "0539db0747ec02a1bfb4167d12146549e697758d0977f487126116c1fa2a6a26",

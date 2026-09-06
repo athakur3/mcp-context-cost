@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | git_log | 289 | 19.9% | 4 | 246 |
 | git_branch | 219 | 15.1% | 3 | 177 |

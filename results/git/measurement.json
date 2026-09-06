@@ -10,73 +10,97 @@
       "name": "git_status",
       "tokens": 75,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 31
+      "inputSchemaTokens": 31,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "git_diff_unstaged",
       "tokens": 104,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 51
+      "inputSchemaTokens": 51,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "git_diff_staged",
       "tokens": 98,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 50
+      "inputSchemaTokens": 50,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "git_diff",
       "tokens": 106,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 61
+      "inputSchemaTokens": 61,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "git_commit",
       "tokens": 88,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 44
+      "inputSchemaTokens": 44,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "git_add",
       "tokens": 97,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 51
+      "inputSchemaTokens": 51,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "git_reset",
       "tokens": 76,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 31
+      "inputSchemaTokens": 31,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "git_log",
       "tokens": 289,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 246
+      "inputSchemaTokens": 246,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "git_create_branch",
       "tokens": 123,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 74
+      "inputSchemaTokens": 74,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "git_checkout",
       "tokens": 89,
       "descriptionTokens": 3,
-      "inputSchemaTokens": 47
+      "inputSchemaTokens": 47,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "git_show",
       "tokens": 89,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 44
+      "inputSchemaTokens": 44,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "git_branch",
       "tokens": 219,
       "descriptionTokens": 3,
-      "inputSchemaTokens": 177
+      "inputSchemaTokens": 177,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     }
   ],
   "canonicalSha256": "9710fb8f79f50348c138ee513e344f7fc9ac0e912a728d8aeda847cd04ed64f1",

@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | alerting_manage_rules | 1,368 | 8.2% | 96 | 1,238 |
 | update_dashboard | 1,006 | 6.0% | 498 | 466 |

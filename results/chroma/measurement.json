@@ -10,79 +10,105 @@
       "name": "chroma_list_collections",
       "tokens": 151,
       "descriptionTokens": 64,
-      "inputSchemaTokens": 64
+      "inputSchemaTokens": 64,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "chroma_create_collection",
       "tokens": 185,
       "descriptionTokens": 85,
-      "inputSchemaTokens": 82
+      "inputSchemaTokens": 82,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "chroma_peek_collection",
       "tokens": 104,
       "descriptionTokens": 36,
-      "inputSchemaTokens": 50
+      "inputSchemaTokens": 50,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "chroma_get_collection_info",
       "tokens": 79,
       "descriptionTokens": 26,
-      "inputSchemaTokens": 35
+      "inputSchemaTokens": 35,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "chroma_get_collection_count",
       "tokens": 80,
       "descriptionTokens": 27,
-      "inputSchemaTokens": 35
+      "inputSchemaTokens": 35,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "chroma_modify_collection",
       "tokens": 156,
       "descriptionTokens": 48,
-      "inputSchemaTokens": 91
+      "inputSchemaTokens": 91,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "chroma_fork_collection",
       "tokens": 120,
       "descriptionTokens": 48,
-      "inputSchemaTokens": 54
+      "inputSchemaTokens": 54,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "chroma_delete_collection",
       "tokens": 73,
       "descriptionTokens": 22,
-      "inputSchemaTokens": 34
+      "inputSchemaTokens": 34,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "chroma_add_documents",
       "tokens": 194,
       "descriptionTokens": 62,
-      "inputSchemaTokens": 114
+      "inputSchemaTokens": 114,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "chroma_query_documents",
       "tokens": 546,
       "descriptionTokens": 310,
-      "inputSchemaTokens": 167
+      "inputSchemaTokens": 167,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "chroma_get_documents",
       "tokens": 610,
       "descriptionTokens": 337,
-      "inputSchemaTokens": 200
+      "inputSchemaTokens": 200,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "chroma_update_documents",
       "tokens": 382,
       "descriptionTokens": 184,
-      "inputSchemaTokens": 165
+      "inputSchemaTokens": 165,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "chroma_delete_documents",
       "tokens": 155,
       "descriptionTokens": 79,
-      "inputSchemaTokens": 54
+      "inputSchemaTokens": 54,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "eb0b416a1586989ce3f646259f9f96d0ae6d7b62342aa30393b10ecb7c03c707",

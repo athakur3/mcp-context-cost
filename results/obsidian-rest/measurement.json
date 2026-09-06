@@ -10,73 +10,97 @@
       "name": "obsidian_get_note",
       "tokens": 1523,
       "descriptionTokens": 41,
-      "inputSchemaTokens": 578
+      "inputSchemaTokens": 578,
+      "outputSchemaTokens": 858,
+      "annotationsTokens": 14
     },
     {
       "name": "obsidian_list_notes",
       "tokens": 774,
       "descriptionTokens": 75,
-      "inputSchemaTokens": 197
+      "inputSchemaTokens": 197,
+      "outputSchemaTokens": 456,
+      "annotationsTokens": 14
     },
     {
       "name": "obsidian_list_tags",
       "tokens": 249,
       "descriptionTokens": 59,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 118,
+      "annotationsTokens": 14
     },
     {
       "name": "obsidian_search_notes",
       "tokens": 1369,
       "descriptionTokens": 83,
-      "inputSchemaTokens": 368
+      "inputSchemaTokens": 368,
+      "outputSchemaTokens": 872,
+      "annotationsTokens": 14
     },
     {
       "name": "obsidian_open_in_ui",
       "tokens": 298,
       "descriptionTokens": 35,
-      "inputSchemaTokens": 121
+      "inputSchemaTokens": 121,
+      "outputSchemaTokens": 101,
+      "annotationsTokens": 7
     },
     {
       "name": "obsidian_write_note",
       "tokens": 933,
       "descriptionTokens": 129,
-      "inputSchemaTokens": 643
+      "inputSchemaTokens": 643,
+      "outputSchemaTokens": 114,
+      "annotationsTokens": 14
     },
     {
       "name": "obsidian_append_to_note",
       "tokens": 817,
       "descriptionTokens": 124,
-      "inputSchemaTokens": 570
+      "inputSchemaTokens": 570,
+      "outputSchemaTokens": 81,
+      "annotationsTokens": 7
     },
     {
       "name": "obsidian_patch_note",
       "tokens": 1028,
       "descriptionTokens": 58,
-      "inputSchemaTokens": 729
+      "inputSchemaTokens": 729,
+      "outputSchemaTokens": 201,
+      "annotationsTokens": 7
     },
     {
       "name": "obsidian_replace_in_note",
       "tokens": 812,
       "descriptionTokens": 54,
-      "inputSchemaTokens": 555
+      "inputSchemaTokens": 555,
+      "outputSchemaTokens": 162,
+      "annotationsTokens": 7
     },
     {
       "name": "obsidian_manage_frontmatter",
       "tokens": 878,
       "descriptionTokens": 41,
-      "inputSchemaTokens": 409
+      "inputSchemaTokens": 409,
+      "outputSchemaTokens": 386,
+      "annotationsTokens": 7
     },
     {
       "name": "obsidian_manage_tags",
       "tokens": 1052,
       "descriptionTokens": 96,
-      "inputSchemaTokens": 404
+      "inputSchemaTokens": 404,
+      "outputSchemaTokens": 513,
+      "annotationsTokens": 7
     },
     {
       "name": "obsidian_delete_note",
       "tokens": 438,
       "descriptionTokens": 41,
-      "inputSchemaTokens": 289
+      "inputSchemaTokens": 289,
+      "outputSchemaTokens": 69,
+      "annotationsTokens": 7
     }
   ],
   "canonicalSha256": "85d23a7fa63923641625701d0c5fff39249eb8b379c3c1a7a444fef6437d6bc4",

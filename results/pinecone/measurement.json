@@ -10,55 +10,73 @@
       "name": "search-docs",
       "tokens": 108,
       "descriptionTokens": 31,
-      "inputSchemaTokens": 43
+      "inputSchemaTokens": 43,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "list-indexes",
       "tokens": 371,
       "descriptionTokens": 32,
-      "inputSchemaTokens": 306
+      "inputSchemaTokens": 306,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "describe-index",
       "tokens": 423,
       "descriptionTokens": 67,
-      "inputSchemaTokens": 325
+      "inputSchemaTokens": 325,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "describe-index-stats",
       "tokens": 424,
       "descriptionTokens": 64,
-      "inputSchemaTokens": 325
+      "inputSchemaTokens": 325,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "create-index-for-model",
       "tokens": 856,
       "descriptionTokens": 80,
-      "inputSchemaTokens": 728
+      "inputSchemaTokens": 728,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "upsert-records",
       "tokens": 593,
       "descriptionTokens": 84,
-      "inputSchemaTokens": 457
+      "inputSchemaTokens": 457,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "search-records",
       "tokens": 1179,
       "descriptionTokens": 111,
-      "inputSchemaTokens": 1031
+      "inputSchemaTokens": 1031,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "rerank-documents",
       "tokens": 793,
       "descriptionTokens": 69,
-      "inputSchemaTokens": 687
+      "inputSchemaTokens": 687,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "cascading-search",
       "tokens": 1154,
       "descriptionTokens": 55,
-      "inputSchemaTokens": 1063
+      "inputSchemaTokens": 1063,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     }
   ],
   "canonicalSha256": "cc8ffaadb37615f11747b0a1eafd8541cfb2f31064adcd4973860f8f03bab377",

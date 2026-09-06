@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | render | 227 | 38.8% | 65 | 138 |
 | lint | 196 | 33.5% | 64 | 108 |

@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | pulumi-resource-search | 1,011 | 36.5% | 735 | 219 |
 | neo-task-launcher | 226 | 8.2% | 25 | 180 |

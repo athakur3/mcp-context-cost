@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | get_neo4j_schema | 238 | 45.5% | 109 | 50 |
 | read_neo4j_cypher | 143 | 27.3% | 13 | 56 |

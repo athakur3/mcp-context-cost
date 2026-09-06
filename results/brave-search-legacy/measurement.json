@@ -10,13 +10,17 @@
       "name": "brave_web_search",
       "tokens": 161,
       "descriptionTokens": 65,
-      "inputSchemaTokens": 84
+      "inputSchemaTokens": 84,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "brave_local_search",
       "tokens": 156,
       "descriptionTokens": 82,
-      "inputSchemaTokens": 61
+      "inputSchemaTokens": 61,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "727577fbcd5fe4e811453a32d9c9852ea877c90b8acf56e0cdf5eda15e97d803",

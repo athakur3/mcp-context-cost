@@ -10,169 +10,225 @@
       "name": "account_overview",
       "tokens": 81,
       "descriptionTokens": 22,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "list_numbers",
       "tokens": 128,
       "descriptionTokens": 21,
-      "inputSchemaTokens": 74
+      "inputSchemaTokens": 74,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "buy_number",
       "tokens": 223,
       "descriptionTokens": 48,
-      "inputSchemaTokens": 149
+      "inputSchemaTokens": 149,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "send_message",
       "tokens": 594,
       "descriptionTokens": 117,
-      "inputSchemaTokens": 448
+      "inputSchemaTokens": 448,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "get_messages",
       "tokens": 128,
       "descriptionTokens": 24,
-      "inputSchemaTokens": 71
+      "inputSchemaTokens": 71,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "list_calls",
       "tokens": 276,
       "descriptionTokens": 56,
-      "inputSchemaTokens": 184
+      "inputSchemaTokens": 184,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "get_call",
       "tokens": 175,
       "descriptionTokens": 29,
-      "inputSchemaTokens": 113
+      "inputSchemaTokens": 113,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "make_call",
       "tokens": 220,
       "descriptionTokens": 45,
-      "inputSchemaTokens": 146
+      "inputSchemaTokens": 146,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "make_conversation_call",
       "tokens": 400,
       "descriptionTokens": 86,
-      "inputSchemaTokens": 282
+      "inputSchemaTokens": 282,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "list_agents",
       "tokens": 112,
       "descriptionTokens": 31,
-      "inputSchemaTokens": 48
+      "inputSchemaTokens": 48,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "create_agent",
       "tokens": 763,
       "descriptionTokens": 64,
-      "inputSchemaTokens": 678
+      "inputSchemaTokens": 678,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "update_agent",
       "tokens": 721,
       "descriptionTokens": 44,
-      "inputSchemaTokens": 649
+      "inputSchemaTokens": 649,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "delete_agent",
       "tokens": 91,
       "descriptionTokens": 21,
-      "inputSchemaTokens": 44
+      "inputSchemaTokens": 44,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "get_agent",
       "tokens": 93,
       "descriptionTokens": 18,
-      "inputSchemaTokens": 42
+      "inputSchemaTokens": 42,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "attach_number",
       "tokens": 117,
       "descriptionTokens": 28,
-      "inputSchemaTokens": 62
+      "inputSchemaTokens": 62,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "detach_number",
       "tokens": 114,
       "descriptionTokens": 20,
-      "inputSchemaTokens": 67
+      "inputSchemaTokens": 67,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "list_voices",
       "tokens": 79,
       "descriptionTokens": 20,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "list_conversations",
       "tokens": 173,
       "descriptionTokens": 45,
-      "inputSchemaTokens": 92
+      "inputSchemaTokens": 92,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "get_conversation",
       "tokens": 119,
       "descriptionTokens": 16,
-      "inputSchemaTokens": 69
+      "inputSchemaTokens": 69,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "update_conversation",
       "tokens": 145,
       "descriptionTokens": 28,
-      "inputSchemaTokens": 89
+      "inputSchemaTokens": 89,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "list_contacts",
       "tokens": 145,
       "descriptionTokens": 22,
-      "inputSchemaTokens": 90
+      "inputSchemaTokens": 90,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "manage_contact",
       "tokens": 311,
       "descriptionTokens": 61,
-      "inputSchemaTokens": 220
+      "inputSchemaTokens": 220,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "get_usage",
       "tokens": 208,
       "descriptionTokens": 36,
-      "inputSchemaTokens": 139
+      "inputSchemaTokens": 139,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "get_webhook",
       "tokens": 105,
       "descriptionTokens": 23,
-      "inputSchemaTokens": 48
+      "inputSchemaTokens": 48,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "set_webhook",
       "tokens": 212,
       "descriptionTokens": 55,
-      "inputSchemaTokens": 126
+      "inputSchemaTokens": 126,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "delete_webhook",
       "tokens": 105,
       "descriptionTokens": 31,
-      "inputSchemaTokens": 47
+      "inputSchemaTokens": 47,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "test_webhook",
       "tokens": 122,
       "descriptionTokens": 39,
-      "inputSchemaTokens": 47
+      "inputSchemaTokens": 47,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "list_webhook_deliveries",
       "tokens": 172,
       "descriptionTokens": 37,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     }
   ],
   "canonicalSha256": "eec89a7ec71ac3e9e65fb8477bf594b4ce9af01b572bcc5d7e9fbbcc85f4e813",

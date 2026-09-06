@@ -10,43 +10,57 @@
       "name": "puppeteer_navigate",
       "tokens": 129,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 111
+      "inputSchemaTokens": 111,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "puppeteer_screenshot",
       "tokens": 142,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 117
+      "inputSchemaTokens": 117,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "puppeteer_click",
       "tokens": 47,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 28
+      "inputSchemaTokens": 28,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "puppeteer_fill",
       "tokens": 60,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 42
+      "inputSchemaTokens": 42,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "puppeteer_select",
       "tokens": 65,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 43
+      "inputSchemaTokens": 43,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "puppeteer_hover",
       "tokens": 47,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 28
+      "inputSchemaTokens": 28,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "puppeteer_evaluate",
       "tokens": 48,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 27
+      "inputSchemaTokens": 27,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "d9e46f0316917c1d140ffeebceefd4d31c16188780ac278baf347ff536015dd0",

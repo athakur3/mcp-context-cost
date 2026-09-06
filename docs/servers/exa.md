@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | web_search_exa | 289 | 59.5% | 113 | 119 |
 | web_fetch_exa | 195 | 40.1% | 56 | 87 |

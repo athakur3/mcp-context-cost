@@ -10,8 +10,10 @@ import {
   compileTemplate,
   computePublishedStats,
   floorToTwoSignificant,
+  heaviestDroppedField,
   verifyPublishedPages,
 } from '../src/sweep/published-stats.js';
+import { countTokens } from '../src/core/canonical.js';
 import type { ServerEntry } from '../src/sweep/report.js';
 
 /**
@@ -150,6 +152,43 @@ describe('the patch engine', () => {
     expect(floorToTwoSignificant(999)).toBe(990);
     expect(floorToTwoSignificant(99.9)).toBe(99);
     expect(floorToTwoSignificant(7)).toBe(7);
+  });
+
+  /**
+   * The sentence this feeds was hand-written and said most of github's capture
+   * was `annotations`/`outputSchema` metadata. github ships no `outputSchema`
+   * and 1.7% of annotations; the 78% being dropped was `icons`. A plausible
+   * claim nobody could have noticed going stale, so it is derived now.
+   */
+  describe('heaviestDroppedField', () => {
+    it('names the heaviest field an Anthropic request cannot carry, and its share', () => {
+      const capture = [
+        { name: 'a', description: 'd', inputSchema: { type: 'object' }, icons: { big: 'x'.repeat(400) } },
+        { name: 'b', description: 'd', inputSchema: { type: 'object' }, annotations: { readOnlyHint: true } },
+      ];
+      const total = countTokens(JSON.stringify(capture));
+      const got = heaviestDroppedField(capture, total);
+      expect(got.dropField).toBe('icons');
+      expect(got.dropSharePct).toBeGreaterThan(50);
+    });
+
+    it('never counts the three fields the request does carry', () => {
+      const capture = [{ name: 'a', description: 'x'.repeat(2000), inputSchema: { type: 'object' }, icons: { s: 'y' } }];
+      // The description dwarfs everything, and it is not dropped — so it must
+      // not be the answer.
+      expect(heaviestDroppedField(capture, countTokens(JSON.stringify(capture))).dropField).toBe('icons');
+    });
+
+    it('says none rather than guessing when a capture drops nothing', () => {
+      const capture = [{ name: 'a', description: 'd', inputSchema: { type: 'object' } }];
+      expect(heaviestDroppedField(capture, 50)).toEqual({ dropField: 'none', dropSharePct: 0 });
+      expect(heaviestDroppedField(null, 50).dropField).toBe('none');
+    });
+
+    it('breaks a tie on the field name, so the sentence does not flip between regenerations', () => {
+      const capture = [{ name: 'a', zzz: 'same', aaa: 'same' }];
+      expect(heaviestDroppedField(capture, 100).dropField).toBe('aaa');
+    });
   });
 
   it('every claim template has as many slots as its values function returns', () => {

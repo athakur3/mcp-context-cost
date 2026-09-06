@@ -16,12 +16,12 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
-|---|---:|---:|---:|---:|
-| hf_fs | 1,957 | 41.4% | 596 | 142 |
-| hf_whoami | 1,948 | 41.2% | 30 | 26 |
-| hub_repo_details | 453 | 9.6% | 76 | 327 |
-| hub_repo_search | 364 | 7.7% | 38 | 278 |
+| tool | tokens | share | description | input schema | output schema |
+|---|---:|---:|---:|---:|---:|
+| hf_fs | 1,957 | 41.4% | 596 | 142 | 1,059 |
+| hf_whoami | 1,948 | 41.2% | 30 | 26 | 1,832 |
+| hub_repo_details | 453 | 9.6% | 76 | 327 | 0 |
+| hub_repo_search | 364 | 7.7% | 38 | 278 | 0 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
 

@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | maps_distance_matrix | 124 | 22.6% | 10 | 102 |
 | maps_directions | 99 | 18.0% | 5 | 82 |

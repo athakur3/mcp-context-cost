@@ -10,37 +10,49 @@
       "name": "read_query",
       "tokens": 46,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 27
+      "inputSchemaTokens": 27,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "write_query",
       "tokens": 50,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 26
+      "inputSchemaTokens": 26,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "create_table",
       "tokens": 45,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 26
+      "inputSchemaTokens": 26,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "list_tables",
       "tokens": 28,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 9
+      "inputSchemaTokens": 9,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "describe_table",
       "tokens": 49,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 30
+      "inputSchemaTokens": 30,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "append_insight",
       "tokens": 49,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 30
+      "inputSchemaTokens": 30,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "d432983abc546eac2725c9db1a07f5f8dad0e6cbfb12f925c1d4fb61743d1c6b",

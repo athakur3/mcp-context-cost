@@ -10,247 +10,329 @@
       "name": "comfy_cli",
       "tokens": 2032,
       "descriptionTokens": 793,
-      "inputSchemaTokens": 1204
+      "inputSchemaTokens": 1204,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "enqueue_workflow",
       "tokens": 1536,
       "descriptionTokens": 835,
-      "inputSchemaTokens": 670
+      "inputSchemaTokens": 670,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "get_system_stats",
       "tokens": 625,
       "descriptionTokens": 336,
-      "inputSchemaTokens": 267
+      "inputSchemaTokens": 267,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "visualize_workflow",
       "tokens": 804,
       "descriptionTokens": 258,
-      "inputSchemaTokens": 519
+      "inputSchemaTokens": 519,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "create_workflow",
       "tokens": 1478,
       "descriptionTokens": 380,
-      "inputSchemaTokens": 1075
+      "inputSchemaTokens": 1075,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "queue",
       "tokens": 1351,
       "descriptionTokens": 851,
-      "inputSchemaTokens": 471
+      "inputSchemaTokens": 471,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "search_custom_nodes",
       "tokens": 515,
       "descriptionTokens": 266,
-      "inputSchemaTokens": 225
+      "inputSchemaTokens": 225,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "download_model",
       "tokens": 3986,
       "descriptionTokens": 2111,
-      "inputSchemaTokens": 1823
+      "inputSchemaTokens": 1823,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "list_local_models",
       "tokens": 1731,
       "descriptionTokens": 978,
-      "inputSchemaTokens": 726
+      "inputSchemaTokens": 726,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "get_history",
       "tokens": 1040,
       "descriptionTokens": 596,
-      "inputSchemaTokens": 417
+      "inputSchemaTokens": 417,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "runpod",
       "tokens": 1570,
       "descriptionTokens": 960,
-      "inputSchemaTokens": 562
+      "inputSchemaTokens": 562,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "runpod_watch",
       "tokens": 530,
       "descriptionTokens": 378,
-      "inputSchemaTokens": 130
+      "inputSchemaTokens": 130,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "get_workflow",
       "tokens": 2521,
       "descriptionTokens": 1124,
-      "inputSchemaTokens": 1365
+      "inputSchemaTokens": 1365,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "save_workflow",
       "tokens": 808,
       "descriptionTokens": 511,
-      "inputSchemaTokens": 274
+      "inputSchemaTokens": 274,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "restart_comfyui",
       "tokens": 435,
       "descriptionTokens": 296,
-      "inputSchemaTokens": 115
+      "inputSchemaTokens": 115,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "get_image",
       "tokens": 2642,
       "descriptionTokens": 1151,
-      "inputSchemaTokens": 1462
+      "inputSchemaTokens": 1462,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "upload_image",
       "tokens": 1431,
       "descriptionTokens": 613,
-      "inputSchemaTokens": 792
+      "inputSchemaTokens": 792,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "clear_vram",
       "tokens": 142,
       "descriptionTokens": 50,
-      "inputSchemaTokens": 73
+      "inputSchemaTokens": 73,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "get_defaults",
       "tokens": 1102,
       "descriptionTokens": 643,
-      "inputSchemaTokens": 433
+      "inputSchemaTokens": 433,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "generate_image",
       "tokens": 3899,
       "descriptionTokens": 1278,
-      "inputSchemaTokens": 2586
+      "inputSchemaTokens": 2586,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "node_snapshot",
       "tokens": 344,
       "descriptionTokens": 184,
-      "inputSchemaTokens": 139
+      "inputSchemaTokens": 139,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "bisect",
       "tokens": 438,
       "descriptionTokens": 308,
-      "inputSchemaTokens": 105
+      "inputSchemaTokens": 105,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "install_custom_node",
       "tokens": 1614,
       "descriptionTokens": 837,
-      "inputSchemaTokens": 747
+      "inputSchemaTokens": 747,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "report_issue",
       "tokens": 750,
       "descriptionTokens": 419,
-      "inputSchemaTokens": 313
+      "inputSchemaTokens": 313,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "install_comfyui",
       "tokens": 2501,
       "descriptionTokens": 1412,
-      "inputSchemaTokens": 1035
+      "inputSchemaTokens": 1035,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "model_metadata",
       "tokens": 1022,
       "descriptionTokens": 742,
-      "inputSchemaTokens": 258
+      "inputSchemaTokens": 258,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "workspace",
       "tokens": 359,
       "descriptionTokens": 226,
-      "inputSchemaTokens": 110
+      "inputSchemaTokens": 110,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "list_api_nodes",
       "tokens": 557,
       "descriptionTokens": 276,
-      "inputSchemaTokens": 259
+      "inputSchemaTokens": 259,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "node_pack",
       "tokens": 2961,
       "descriptionTokens": 1401,
-      "inputSchemaTokens": 1521
+      "inputSchemaTokens": 1521,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "apply_manifest",
       "tokens": 625,
       "descriptionTokens": 237,
-      "inputSchemaTokens": 370
+      "inputSchemaTokens": 370,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "list_packs",
       "tokens": 2314,
       "descriptionTokens": 1681,
-      "inputSchemaTokens": 595
+      "inputSchemaTokens": 595,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "calculate",
       "tokens": 656,
       "descriptionTokens": 405,
-      "inputSchemaTokens": 215
+      "inputSchemaTokens": 215,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "train_prepare_dataset",
       "tokens": 1516,
       "descriptionTokens": 781,
-      "inputSchemaTokens": 704
+      "inputSchemaTokens": 704,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "train_start",
       "tokens": 1736,
       "descriptionTokens": 683,
-      "inputSchemaTokens": 1023
+      "inputSchemaTokens": 1023,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "train_doctor",
       "tokens": 560,
       "descriptionTokens": 330,
-      "inputSchemaTokens": 207
+      "inputSchemaTokens": 207,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "apps",
       "tokens": 898,
       "descriptionTokens": 360,
-      "inputSchemaTokens": 513
+      "inputSchemaTokens": 513,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "batch",
       "tokens": 742,
       "descriptionTokens": 350,
-      "inputSchemaTokens": 365
+      "inputSchemaTokens": 365,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "kitchen",
       "tokens": 623,
       "descriptionTokens": 379,
-      "inputSchemaTokens": 223
+      "inputSchemaTokens": 223,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "list_tools",
       "tokens": 126,
       "descriptionTokens": 44,
-      "inputSchemaTokens": 64
+      "inputSchemaTokens": 64,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "describe_tool",
       "tokens": 102,
       "descriptionTokens": 32,
-      "inputSchemaTokens": 52
+      "inputSchemaTokens": 52,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "call_tool",
       "tokens": 152,
       "descriptionTokens": 29,
-      "inputSchemaTokens": 105
+      "inputSchemaTokens": 105,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "47b201e9455f2aba4184e2f88c52939ea543f536e305490e17efd9d4730cde9d",

@@ -10,13 +10,17 @@
       "name": "get_figma_data",
       "tokens": 298,
       "descriptionTokens": 16,
-      "inputSchemaTokens": 245
+      "inputSchemaTokens": 245,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "download_figma_images",
       "tokens": 646,
       "descriptionTokens": 35,
-      "inputSchemaTokens": 574
+      "inputSchemaTokens": 574,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     }
   ],
   "canonicalSha256": "c1409e496bb0262b3dd4d78de8da42d1b79d5704fcf693e1455c5b3dff0f2604",

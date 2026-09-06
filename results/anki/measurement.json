@@ -10,301 +10,401 @@
       "name": "sync",
       "tokens": 192,
       "descriptionTokens": 45,
-      "inputSchemaTokens": 26
+      "inputSchemaTokens": 26,
+      "outputSchemaTokens": 59,
+      "annotationsTokens": 34
     },
     {
       "name": "get_due_cards",
       "tokens": 519,
       "descriptionTokens": 95,
-      "inputSchemaTokens": 193
+      "inputSchemaTokens": 193,
+      "outputSchemaTokens": 176,
+      "annotationsTokens": 26
     },
     {
       "name": "get_cards",
       "tokens": 540,
       "descriptionTokens": 98,
-      "inputSchemaTokens": 213
+      "inputSchemaTokens": 213,
+      "outputSchemaTokens": 176,
+      "annotationsTokens": 25
     },
     {
       "name": "present_card",
       "tokens": 404,
       "descriptionTokens": 77,
-      "inputSchemaTokens": 73
+      "inputSchemaTokens": 73,
+      "outputSchemaTokens": 196,
+      "annotationsTokens": 27
     },
     {
       "name": "rate_card",
       "tokens": 368,
       "descriptionTokens": 72,
-      "inputSchemaTokens": 104
+      "inputSchemaTokens": 104,
+      "outputSchemaTokens": 139,
+      "annotationsTokens": 25
     },
     {
       "name": "forgetCards",
       "tokens": 526,
       "descriptionTokens": 134,
-      "inputSchemaTokens": 105
+      "inputSchemaTokens": 105,
+      "outputSchemaTokens": 232,
+      "annotationsTokens": 27
     },
     {
       "name": "setDueDate",
       "tokens": 616,
       "descriptionTokens": 109,
-      "inputSchemaTokens": 197
+      "inputSchemaTokens": 197,
+      "outputSchemaTokens": 254,
+      "annotationsTokens": 27
     },
     {
       "name": "modelNames",
       "tokens": 247,
       "descriptionTokens": 29,
-      "inputSchemaTokens": 26
+      "inputSchemaTokens": 26,
+      "outputSchemaTokens": 137,
+      "annotationsTokens": 26
     },
     {
       "name": "modelFieldNames",
       "tokens": 257,
       "descriptionTokens": 27,
-      "inputSchemaTokens": 58
+      "inputSchemaTokens": 58,
+      "outputSchemaTokens": 116,
+      "annotationsTokens": 27
     },
     {
       "name": "modelStyling",
       "tokens": 307,
       "descriptionTokens": 23,
-      "inputSchemaTokens": 58
+      "inputSchemaTokens": 58,
+      "outputSchemaTokens": 170,
+      "annotationsTokens": 27
     },
     {
       "name": "createModel",
       "tokens": 570,
       "descriptionTokens": 58,
-      "inputSchemaTokens": 321
+      "inputSchemaTokens": 321,
+      "outputSchemaTokens": 137,
+      "annotationsTokens": 26
     },
     {
       "name": "updateModelStyling",
       "tokens": 407,
       "descriptionTokens": 54,
-      "inputSchemaTokens": 109
+      "inputSchemaTokens": 109,
+      "outputSchemaTokens": 187,
+      "annotationsTokens": 27
     },
     {
       "name": "modelTemplates",
       "tokens": 278,
       "descriptionTokens": 43,
-      "inputSchemaTokens": 58
+      "inputSchemaTokens": 58,
+      "outputSchemaTokens": 122,
+      "annotationsTokens": 27
     },
     {
       "name": "updateModelTemplates",
       "tokens": 442,
       "descriptionTokens": 112,
-      "inputSchemaTokens": 193
+      "inputSchemaTokens": 193,
+      "outputSchemaTokens": 81,
+      "annotationsTokens": 27
     },
     {
       "name": "addModelField",
       "tokens": 338,
       "descriptionTokens": 56,
-      "inputSchemaTokens": 142
+      "inputSchemaTokens": 142,
+      "outputSchemaTokens": 83,
+      "annotationsTokens": 28
     },
     {
       "name": "removeModelField",
       "tokens": 303,
       "descriptionTokens": 44,
-      "inputSchemaTokens": 130
+      "inputSchemaTokens": 130,
+      "outputSchemaTokens": 72,
+      "annotationsTokens": 28
     },
     {
       "name": "renameModelField",
       "tokens": 345,
       "descriptionTokens": 61,
-      "inputSchemaTokens": 133
+      "inputSchemaTokens": 133,
+      "outputSchemaTokens": 94,
+      "annotationsTokens": 28
     },
     {
       "name": "repositionModelField",
       "tokens": 341,
       "descriptionTokens": 64,
-      "inputSchemaTokens": 135
+      "inputSchemaTokens": 135,
+      "outputSchemaTokens": 83,
+      "annotationsTokens": 29
     },
     {
       "name": "addNote",
       "tokens": 570,
       "descriptionTokens": 87,
-      "inputSchemaTokens": 282
+      "inputSchemaTokens": 282,
+      "outputSchemaTokens": 148,
+      "annotationsTokens": 25
     },
     {
       "name": "addNotes",
       "tokens": 590,
       "descriptionTokens": 76,
-      "inputSchemaTokens": 283
+      "inputSchemaTokens": 283,
+      "outputSchemaTokens": 177,
+      "annotationsTokens": 26
     },
     {
       "name": "findNotes",
       "tokens": 332,
       "descriptionTokens": 80,
-      "inputSchemaTokens": 106
+      "inputSchemaTokens": 106,
+      "outputSchemaTokens": 92,
+      "annotationsTokens": 25
     },
     {
       "name": "notesInfo",
       "tokens": 432,
       "descriptionTokens": 37,
-      "inputSchemaTokens": 81
+      "inputSchemaTokens": 81,
+      "outputSchemaTokens": 260,
+      "annotationsTokens": 26
     },
     {
       "name": "updateNoteFields",
       "tokens": 560,
       "descriptionTokens": 65,
-      "inputSchemaTokens": 311
+      "inputSchemaTokens": 311,
+      "outputSchemaTokens": 129,
+      "annotationsTokens": 26
     },
     {
       "name": "deleteNotes",
       "tokens": 347,
       "descriptionTokens": 47,
-      "inputSchemaTokens": 119
+      "inputSchemaTokens": 119,
+      "outputSchemaTokens": 128,
+      "annotationsTokens": 25
     },
     {
       "name": "getTags",
       "tokens": 240,
       "descriptionTokens": 47,
-      "inputSchemaTokens": 49
+      "inputSchemaTokens": 49,
+      "outputSchemaTokens": 90,
+      "annotationsTokens": 25
     },
     {
       "name": "listDecks",
       "tokens": 750,
       "descriptionTokens": 95,
-      "inputSchemaTokens": 42
+      "inputSchemaTokens": 42,
+      "outputSchemaTokens": 558,
+      "annotationsTokens": 26
     },
     {
       "name": "deckStats",
       "tokens": 1306,
       "descriptionTokens": 210,
-      "inputSchemaTokens": 150
+      "inputSchemaTokens": 150,
+      "outputSchemaTokens": 893,
+      "annotationsTokens": 25
     },
     {
       "name": "createDeck",
       "tokens": 268,
       "descriptionTokens": 39,
-      "inputSchemaTokens": 64
+      "inputSchemaTokens": 64,
+      "outputSchemaTokens": 110,
+      "annotationsTokens": 25
     },
     {
       "name": "changeDeck",
       "tokens": 211,
       "descriptionTokens": 17,
-      "inputSchemaTokens": 67
+      "inputSchemaTokens": 67,
+      "outputSchemaTokens": 72,
+      "annotationsTokens": 27
     },
     {
       "name": "retrieveMediaFile",
       "tokens": 219,
       "descriptionTokens": 29,
-      "inputSchemaTokens": 56
+      "inputSchemaTokens": 56,
+      "outputSchemaTokens": 79,
+      "annotationsTokens": 26
     },
     {
       "name": "getMediaFilesNames",
       "tokens": 202,
       "descriptionTokens": 19,
-      "inputSchemaTokens": 46
+      "inputSchemaTokens": 46,
+      "outputSchemaTokens": 81,
+      "annotationsTokens": 26
     },
     {
       "name": "storeMediaFile",
       "tokens": 316,
       "descriptionTokens": 39,
-      "inputSchemaTokens": 138
+      "inputSchemaTokens": 138,
+      "outputSchemaTokens": 78,
+      "annotationsTokens": 32
     },
     {
       "name": "deleteMediaFile",
       "tokens": 201,
       "descriptionTokens": 31,
-      "inputSchemaTokens": 56
+      "inputSchemaTokens": 56,
+      "outputSchemaTokens": 59,
+      "annotationsTokens": 26
     },
     {
       "name": "addTags",
       "tokens": 258,
       "descriptionTokens": 36,
-      "inputSchemaTokens": 90
+      "inputSchemaTokens": 90,
+      "outputSchemaTokens": 78,
+      "annotationsTokens": 25
     },
     {
       "name": "removeTags",
       "tokens": 247,
       "descriptionTokens": 24,
-      "inputSchemaTokens": 90
+      "inputSchemaTokens": 90,
+      "outputSchemaTokens": 78,
+      "annotationsTokens": 25
     },
     {
       "name": "replaceTags",
       "tokens": 281,
       "descriptionTokens": 33,
-      "inputSchemaTokens": 107
+      "inputSchemaTokens": 107,
+      "outputSchemaTokens": 87,
+      "annotationsTokens": 25
     },
     {
       "name": "clearUnusedTags",
       "tokens": 169,
       "descriptionTokens": 36,
-      "inputSchemaTokens": 26
+      "inputSchemaTokens": 26,
+      "outputSchemaTokens": 50,
+      "annotationsTokens": 27
     },
     {
       "name": "collection_stats",
       "tokens": 1853,
       "descriptionTokens": 267,
-      "inputSchemaTokens": 221
+      "inputSchemaTokens": 221,
+      "outputSchemaTokens": 1311,
+      "annotationsTokens": 25
     },
     {
       "name": "review_stats",
       "tokens": 669,
       "descriptionTokens": 60,
-      "inputSchemaTokens": 181
+      "inputSchemaTokens": 181,
+      "outputSchemaTokens": 375,
+      "annotationsTokens": 25
     },
     {
       "name": "guiBrowse",
       "tokens": 371,
       "descriptionTokens": 62,
-      "inputSchemaTokens": 159
+      "inputSchemaTokens": 159,
+      "outputSchemaTokens": 96,
+      "annotationsTokens": 26
     },
     {
       "name": "guiSelectCard",
       "tokens": 268,
       "descriptionTokens": 72,
-      "inputSchemaTokens": 58
+      "inputSchemaTokens": 58,
+      "outputSchemaTokens": 81,
+      "annotationsTokens": 27
     },
     {
       "name": "guiSelectedNotes",
       "tokens": 229,
       "descriptionTokens": 60,
-      "inputSchemaTokens": 26
+      "inputSchemaTokens": 26,
+      "outputSchemaTokens": 87,
+      "annotationsTokens": 26
     },
     {
       "name": "guiAddCards",
       "tokens": 384,
       "descriptionTokens": 64,
-      "inputSchemaTokens": 170
+      "inputSchemaTokens": 170,
+      "outputSchemaTokens": 94,
+      "annotationsTokens": 27
     },
     {
       "name": "guiEditNote",
       "tokens": 252,
       "descriptionTokens": 70,
-      "inputSchemaTokens": 57
+      "inputSchemaTokens": 57,
+      "outputSchemaTokens": 70,
+      "annotationsTokens": 26
     },
     {
       "name": "guiDeckOverview",
       "tokens": 231,
       "descriptionTokens": 51,
-      "inputSchemaTokens": 55
+      "inputSchemaTokens": 55,
+      "outputSchemaTokens": 70,
+      "annotationsTokens": 26
     },
     {
       "name": "guiDeckBrowser",
       "tokens": 193,
       "descriptionTokens": 52,
-      "inputSchemaTokens": 26
+      "inputSchemaTokens": 26,
+      "outputSchemaTokens": 59,
+      "annotationsTokens": 26
     },
     {
       "name": "guiCurrentCard",
       "tokens": 413,
       "descriptionTokens": 97,
-      "inputSchemaTokens": 26
+      "inputSchemaTokens": 26,
+      "outputSchemaTokens": 233,
+      "annotationsTokens": 27
     },
     {
       "name": "guiShowQuestion",
       "tokens": 230,
       "descriptionTokens": 78,
-      "inputSchemaTokens": 26
+      "inputSchemaTokens": 26,
+      "outputSchemaTokens": 70,
+      "annotationsTokens": 26
     },
     {
       "name": "guiShowAnswer",
       "tokens": 230,
       "descriptionTokens": 78,
-      "inputSchemaTokens": 26
+      "inputSchemaTokens": 26,
+      "outputSchemaTokens": 70,
+      "annotationsTokens": 26
     },
     {
       "name": "guiUndo",
       "tokens": 213,
       "descriptionTokens": 62,
-      "inputSchemaTokens": 26
+      "inputSchemaTokens": 26,
+      "outputSchemaTokens": 70,
+      "annotationsTokens": 26
     }
   ],
   "canonicalSha256": "ff5c37e3ceea7d5f2514dc0b15b4443a9c6b10ce53fd9328f28be21759c69276",

@@ -10,19 +10,25 @@
       "name": "microsoft_docs_search",
       "tokens": 297,
       "descriptionTokens": 129,
-      "inputSchemaTokens": 42
+      "inputSchemaTokens": 42,
+      "outputSchemaTokens": 76,
+      "annotationsTokens": 26
     },
     {
       "name": "microsoft_code_sample_search",
       "tokens": 396,
       "descriptionTokens": 163,
-      "inputSchemaTokens": 111
+      "inputSchemaTokens": 111,
+      "outputSchemaTokens": 63,
+      "annotationsTokens": 27
     },
     {
       "name": "microsoft_docs_fetch",
       "tokens": 277,
       "descriptionTokens": 196,
-      "inputSchemaTokens": 30
+      "inputSchemaTokens": 30,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     }
   ],
   "canonicalSha256": "9e3f4a65f0dc136a6ffa5ed00f95785ec561e9a78413888da160e44ceb139346",

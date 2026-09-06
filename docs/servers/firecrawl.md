@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | firecrawl_search | 1,391 | 14.5% | 261 | 1,082 |
 | firecrawl_crawl | 911 | 9.5% | 98 | 769 |

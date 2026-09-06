@@ -10,31 +10,41 @@
       "name": "search_engine",
       "tokens": 186,
       "descriptionTokens": 41,
-      "inputSchemaTokens": 115
+      "inputSchemaTokens": 115,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 18
     },
     {
       "name": "scrape_as_markdown",
       "tokens": 115,
       "descriptionTokens": 37,
-      "inputSchemaTokens": 43
+      "inputSchemaTokens": 43,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "search_engine_batch",
       "tokens": 191,
       "descriptionTokens": 17,
-      "inputSchemaTokens": 142
+      "inputSchemaTokens": 142,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "scrape_batch",
       "tokens": 141,
       "descriptionTokens": 36,
-      "inputSchemaTokens": 73
+      "inputSchemaTokens": 73,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "discover",
       "tokens": 347,
       "descriptionTokens": 38,
-      "inputSchemaTokens": 281
+      "inputSchemaTokens": 281,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 17
     }
   ],
   "canonicalSha256": "bd26660364200a7866906bbfecc185e41ea6a42e43ed5d6380b1c3b77a699eae",

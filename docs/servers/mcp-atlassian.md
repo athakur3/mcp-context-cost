@@ -18,38 +18,38 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
-|---|---:|---:|---:|---:|
-| jira_update_proforma_form_answers | 800 | 4.6% | 507 | 145 |
-| jira_update_issue | 602 | 3.5% | 18 | 502 |
-| jira_get_issue | 567 | 3.3% | 54 | 428 |
-| jira_search | 555 | 3.2% | 12 | 461 |
-| jira_create_issue | 550 | 3.2% | 15 | 453 |
-| jira_create_customer_request | 464 | 2.7% | 8 | 370 |
-| jira_get_issue_sla | 463 | 2.7% | 161 | 201 |
-| jira_get_board_issues | 437 | 2.5% | 13 | 338 |
-| jira_search_assignable_users | 434 | 2.5% | 160 | 180 |
-| jira_get_field_options | 402 | 2.3% | 76 | 234 |
-| jira_create_issue_link | 391 | 2.3% | 8 | 299 |
-| jira_create_remote_issue_link | 377 | 2.2% | 56 | 231 |
-| jira_add_worklog | 363 | 2.1% | 10 | 268 |
-| jira_transition_issue | 355 | 2.1% | 9 | 264 |
-| jira_add_comment | 340 | 2.0% | 8 | 251 |
-| jira_move_issue | 312 | 1.8% | 87 | 133 |
-| jira_batch_create_issues | 308 | 1.8% | 8 | 214 |
-| jira_update_version | 306 | 1.8% | 48 | 174 |
-| jira_batch_create_versions | 290 | 1.7% | 9 | 197 |
-| jira_get_issue_development_info | 288 | 1.7% | 51 | 144 |
-| jira_get_agile_boards | 280 | 1.6% | 13 | 180 |
-| jira_get_issues_development_info | 274 | 1.6% | 27 | 152 |
-| jira_batch_get_changelogs | 264 | 1.5% | 12 | 160 |
-| jira_get_sprint_issues | 261 | 1.5% | 6 | 168 |
-| jira_get_project_epic_hierarchy | 261 | 1.5% | 72 | 92 |
-| jira_assign_issue | 256 | 1.5% | 46 | 126 |
-| jira_update_sprint | 251 | 1.4% | 4 | 164 |
-| jira_get_issue_dates | 248 | 1.4% | 38 | 122 |
-| jira_edit_comment | 242 | 1.4% | 9 | 152 |
-| jira_get_create_fields | 242 | 1.4% | 59 | 95 |
+| tool | tokens | share | description | input schema | output schema |
+|---|---:|---:|---:|---:|---:|
+| jira_update_proforma_form_answers | 800 | 4.6% | 507 | 145 | 28 |
+| jira_update_issue | 602 | 3.5% | 18 | 502 | 28 |
+| jira_get_issue | 567 | 3.3% | 54 | 428 | 28 |
+| jira_search | 555 | 3.2% | 12 | 461 | 28 |
+| jira_create_issue | 550 | 3.2% | 15 | 453 | 28 |
+| jira_create_customer_request | 464 | 2.7% | 8 | 370 | 28 |
+| jira_get_issue_sla | 463 | 2.7% | 161 | 201 | 28 |
+| jira_get_board_issues | 437 | 2.5% | 13 | 338 | 28 |
+| jira_search_assignable_users | 434 | 2.5% | 160 | 180 | 28 |
+| jira_get_field_options | 402 | 2.3% | 76 | 234 | 28 |
+| jira_create_issue_link | 391 | 2.3% | 8 | 299 | 28 |
+| jira_create_remote_issue_link | 377 | 2.2% | 56 | 231 | 28 |
+| jira_add_worklog | 363 | 2.1% | 10 | 268 | 28 |
+| jira_transition_issue | 355 | 2.1% | 9 | 264 | 28 |
+| jira_add_comment | 340 | 2.0% | 8 | 251 | 28 |
+| jira_move_issue | 312 | 1.8% | 87 | 133 | 28 |
+| jira_batch_create_issues | 308 | 1.8% | 8 | 214 | 28 |
+| jira_update_version | 306 | 1.8% | 48 | 174 | 28 |
+| jira_batch_create_versions | 290 | 1.7% | 9 | 197 | 28 |
+| jira_get_issue_development_info | 288 | 1.7% | 51 | 144 | 28 |
+| jira_get_agile_boards | 280 | 1.6% | 13 | 180 | 28 |
+| jira_get_issues_development_info | 274 | 1.6% | 27 | 152 | 28 |
+| jira_batch_get_changelogs | 264 | 1.5% | 12 | 160 | 28 |
+| jira_get_sprint_issues | 261 | 1.5% | 6 | 168 | 28 |
+| jira_get_project_epic_hierarchy | 261 | 1.5% | 72 | 92 | 28 |
+| jira_assign_issue | 256 | 1.5% | 46 | 126 | 28 |
+| jira_update_sprint | 251 | 1.4% | 4 | 164 | 28 |
+| jira_get_issue_dates | 248 | 1.4% | 38 | 122 | 28 |
+| jira_edit_comment | 242 | 1.4% | 9 | 152 | 28 |
+| jira_get_create_fields | 242 | 1.4% | 59 | 95 | 28 |
 
 *33 smaller tools omitted (6,189 tokens combined) — all of them are in the [raw capture](https://github.com/athakur3/mcp-context-cost/blob/main/results/mcp-atlassian/measurement.json).*
 

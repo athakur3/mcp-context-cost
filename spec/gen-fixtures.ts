@@ -1,8 +1,20 @@
 /**
  * Regenerates the golden fixture expectations. Run deliberately (never in CI):
  *   npx tsx spec/gen-fixtures.ts
- * A diff in expected-*.json is a methodology change and must bump
- * METHODOLOGY_VERSION.
+ *
+ * A diff in expected-*.json that moves `totalTokens`, `canonicalSha256` or the
+ * badge is a methodology change and must bump METHODOLOGY_VERSION. Those are
+ * the numbers other people published, and a changed one under an unchanged
+ * version is a silent redefinition.
+ *
+ * A diff that only *adds* a diagnostic field is not, and bumping for it would
+ * be its own false statement: the version is stamped into every measurement
+ * record, so raising it tells every reader the numbers were recomputed when
+ * nothing was. `outputSchemaTokens` and `annotationsTokens` arrived exactly
+ * that way — per-tool attribution of bytes that were already inside `tokens`,
+ * with the total and the hash byte-identical either side of the change.
+ *
+ * If you cannot say which of the two kinds your diff is, it is the first kind.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';

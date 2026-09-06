@@ -16,11 +16,11 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
-|---|---:|---:|---:|---:|
-| microsoft_code_sample_search | 396 | 40.7% | 163 | 111 |
-| microsoft_docs_search | 297 | 30.6% | 129 | 42 |
-| microsoft_docs_fetch | 277 | 28.5% | 196 | 30 |
+| tool | tokens | share | description | input schema | output schema |
+|---|---:|---:|---:|---:|---:|
+| microsoft_code_sample_search | 396 | 40.7% | 163 | 111 | 63 |
+| microsoft_docs_search | 297 | 30.6% | 129 | 42 | 76 |
+| microsoft_docs_fetch | 277 | 28.5% | 196 | 30 | 0 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
 

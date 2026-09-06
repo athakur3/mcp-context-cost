@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | search_papers | 516 | 13.0% | 211 | 273 |
 | watch_topic | 354 | 8.9% | 150 | 172 |

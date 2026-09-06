@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | ghSearchPullRequests | 1,799 | 13.3% | 178 | 1,564 |
 | localSearchCode | 1,755 | 13.0% | 153 | 1,547 |

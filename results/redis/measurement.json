@@ -10,319 +10,425 @@
       "name": "hset",
       "tokens": 220,
       "descriptionTokens": 73,
-      "inputSchemaTokens": 94
+      "inputSchemaTokens": 94,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "hget",
       "tokens": 138,
       "descriptionTokens": 45,
-      "inputSchemaTokens": 42
+      "inputSchemaTokens": 42,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "hdel",
       "tokens": 135,
       "descriptionTokens": 42,
-      "inputSchemaTokens": 42
+      "inputSchemaTokens": 42,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "hgetall",
       "tokens": 86,
       "descriptionTokens": 37,
-      "inputSchemaTokens": 30
+      "inputSchemaTokens": 30,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "hexists",
       "tokens": 138,
       "descriptionTokens": 45,
-      "inputSchemaTokens": 42
+      "inputSchemaTokens": 42,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "set_vector_in_hash",
       "tokens": 207,
       "descriptionTokens": 75,
-      "inputSchemaTokens": 68
+      "inputSchemaTokens": 68,
+      "outputSchemaTokens": 40,
+      "annotationsTokens": 0
     },
     {
       "name": "get_vector_from_hash",
       "tokens": 136,
       "descriptionTokens": 68,
-      "inputSchemaTokens": 48
+      "inputSchemaTokens": 48,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "json_set",
       "tokens": 228,
       "descriptionTokens": 94,
-      "inputSchemaTokens": 81
+      "inputSchemaTokens": 81,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "json_get",
       "tokens": 151,
       "descriptionTokens": 56,
-      "inputSchemaTokens": 44
+      "inputSchemaTokens": 44,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "json_del",
       "tokens": 150,
       "descriptionTokens": 55,
-      "inputSchemaTokens": 44
+      "inputSchemaTokens": 44,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "lpush",
       "tokens": 146,
       "descriptionTokens": 17,
-      "inputSchemaTokens": 87
+      "inputSchemaTokens": 87,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "rpush",
       "tokens": 146,
       "descriptionTokens": 17,
-      "inputSchemaTokens": 87
+      "inputSchemaTokens": 87,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "lpop",
       "tokens": 82,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 29
+      "inputSchemaTokens": 29,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "rpop",
       "tokens": 82,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 29
+      "inputSchemaTokens": 29,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "lrange",
       "tokens": 149,
       "descriptionTokens": 31,
-      "inputSchemaTokens": 55
+      "inputSchemaTokens": 55,
+      "outputSchemaTokens": 45,
+      "annotationsTokens": 0
     },
     {
       "name": "llen",
       "tokens": 76,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 28
+      "inputSchemaTokens": 28,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 0
     },
     {
       "name": "lrem",
       "tokens": 191,
       "descriptionTokens": 65,
-      "inputSchemaTokens": 76
+      "inputSchemaTokens": 76,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "delete",
       "tokens": 108,
       "descriptionTokens": 32,
-      "inputSchemaTokens": 28
+      "inputSchemaTokens": 28,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 0
     },
     {
       "name": "type",
       "tokens": 125,
       "descriptionTokens": 46,
-      "inputSchemaTokens": 28
+      "inputSchemaTokens": 28,
+      "outputSchemaTokens": 33,
+      "annotationsTokens": 0
     },
     {
       "name": "expire",
       "tokens": 139,
       "descriptionTokens": 46,
-      "inputSchemaTokens": 44
+      "inputSchemaTokens": 44,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 0
     },
     {
       "name": "rename",
       "tokens": 201,
       "descriptionTokens": 91,
-      "inputSchemaTokens": 47
+      "inputSchemaTokens": 47,
+      "outputSchemaTokens": 33,
+      "annotationsTokens": 0
     },
     {
       "name": "scan_keys",
       "tokens": 482,
       "descriptionTokens": 341,
-      "inputSchemaTokens": 58
+      "inputSchemaTokens": 58,
+      "outputSchemaTokens": 43,
+      "annotationsTokens": 0
     },
     {
       "name": "scan_all_keys",
       "tokens": 267,
       "descriptionTokens": 143,
-      "inputSchemaTokens": 46
+      "inputSchemaTokens": 46,
+      "outputSchemaTokens": 46,
+      "annotationsTokens": 0
     },
     {
       "name": "search_redis_documents",
       "tokens": 345,
       "descriptionTokens": 231,
-      "inputSchemaTokens": 31
+      "inputSchemaTokens": 31,
+      "outputSchemaTokens": 57,
+      "annotationsTokens": 0
     },
     {
       "name": "publish",
       "tokens": 132,
       "descriptionTokens": 42,
-      "inputSchemaTokens": 41
+      "inputSchemaTokens": 41,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 0
     },
     {
       "name": "subscribe",
       "tokens": 122,
       "descriptionTokens": 41,
-      "inputSchemaTokens": 28
+      "inputSchemaTokens": 28,
+      "outputSchemaTokens": 33,
+      "annotationsTokens": 0
     },
     {
       "name": "psubscribe",
       "tokens": 125,
       "descriptionTokens": 38,
-      "inputSchemaTokens": 30
+      "inputSchemaTokens": 30,
+      "outputSchemaTokens": 35,
+      "annotationsTokens": 0
     },
     {
       "name": "read_messages",
       "tokens": 202,
       "descriptionTokens": 77,
-      "inputSchemaTokens": 67
+      "inputSchemaTokens": 67,
+      "outputSchemaTokens": 34,
+      "annotationsTokens": 0
     },
     {
       "name": "unsubscribe",
       "tokens": 128,
       "descriptionTokens": 44,
-      "inputSchemaTokens": 31
+      "inputSchemaTokens": 31,
+      "outputSchemaTokens": 33,
+      "annotationsTokens": 0
     },
     {
       "name": "get_indexes",
       "tokens": 89,
       "descriptionTokens": 28,
-      "inputSchemaTokens": 15
+      "inputSchemaTokens": 15,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "get_index_info",
       "tokens": 134,
       "descriptionTokens": 49,
-      "inputSchemaTokens": 33
+      "inputSchemaTokens": 33,
+      "outputSchemaTokens": 30,
+      "annotationsTokens": 0
     },
     {
       "name": "get_indexed_keys_number",
       "tokens": 133,
       "descriptionTokens": 44,
-      "inputSchemaTokens": 35
+      "inputSchemaTokens": 35,
+      "outputSchemaTokens": 32,
+      "annotationsTokens": 0
     },
     {
       "name": "create_vector_index_hash",
       "tokens": 352,
       "descriptionTokens": 191,
-      "inputSchemaTokens": 100
+      "inputSchemaTokens": 100,
+      "outputSchemaTokens": 31,
+      "annotationsTokens": 0
     },
     {
       "name": "vector_search_hash",
       "tokens": 319,
       "descriptionTokens": 119,
-      "inputSchemaTokens": 123
+      "inputSchemaTokens": 123,
+      "outputSchemaTokens": 51,
+      "annotationsTokens": 0
     },
     {
       "name": "hybrid_search",
       "tokens": 510,
       "descriptionTokens": 271,
-      "inputSchemaTokens": 140
+      "inputSchemaTokens": 140,
+      "outputSchemaTokens": 51,
+      "annotationsTokens": 0
     },
     {
       "name": "dbsize",
       "tokens": 68,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 15
+      "inputSchemaTokens": 15,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "info",
       "tokens": 88,
       "descriptionTokens": 43,
-      "inputSchemaTokens": 27
+      "inputSchemaTokens": 27,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "client_list",
       "tokens": 36,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 15
+      "inputSchemaTokens": 15,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "sadd",
       "tokens": 184,
       "descriptionTokens": 64,
-      "inputSchemaTokens": 68
+      "inputSchemaTokens": 68,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "srem",
       "tokens": 136,
       "descriptionTokens": 43,
-      "inputSchemaTokens": 42
+      "inputSchemaTokens": 42,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "smembers",
       "tokens": 131,
       "descriptionTokens": 36,
-      "inputSchemaTokens": 29
+      "inputSchemaTokens": 29,
+      "outputSchemaTokens": 45,
+      "annotationsTokens": 0
     },
     {
       "name": "zadd",
       "tokens": 207,
       "descriptionTokens": 75,
-      "inputSchemaTokens": 79
+      "inputSchemaTokens": 79,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "zrange",
       "tokens": 203,
       "descriptionTokens": 78,
-      "inputSchemaTokens": 72
+      "inputSchemaTokens": 72,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "zrem",
       "tokens": 139,
       "descriptionTokens": 46,
-      "inputSchemaTokens": 42
+      "inputSchemaTokens": 42,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "xadd",
       "tokens": 193,
       "descriptionTokens": 70,
-      "inputSchemaTokens": 71
+      "inputSchemaTokens": 71,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "xrange",
       "tokens": 143,
       "descriptionTokens": 48,
-      "inputSchemaTokens": 44
+      "inputSchemaTokens": 44,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "xdel",
       "tokens": 144,
       "descriptionTokens": 48,
-      "inputSchemaTokens": 45
+      "inputSchemaTokens": 45,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "xgroup_create",
       "tokens": 215,
       "descriptionTokens": 80,
-      "inputSchemaTokens": 80
+      "inputSchemaTokens": 80,
+      "outputSchemaTokens": 30,
+      "annotationsTokens": 0
     },
     {
       "name": "xgroup_destroy",
       "tokens": 145,
       "descriptionTokens": 46,
-      "inputSchemaTokens": 46
+      "inputSchemaTokens": 46,
+      "outputSchemaTokens": 30,
+      "annotationsTokens": 0
     },
     {
       "name": "xreadgroup",
       "tokens": 317,
       "descriptionTokens": 138,
-      "inputSchemaTokens": 120
+      "inputSchemaTokens": 120,
+      "outputSchemaTokens": 30,
+      "annotationsTokens": 0
     },
     {
       "name": "xack",
       "tokens": 182,
       "descriptionTokens": 61,
-      "inputSchemaTokens": 69
+      "inputSchemaTokens": 69,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "set",
       "tokens": 214,
       "descriptionTokens": 69,
-      "inputSchemaTokens": 95
+      "inputSchemaTokens": 95,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 0
     },
     {
       "name": "get",
       "tokens": 125,
       "descriptionTokens": 36,
-      "inputSchemaTokens": 28
+      "inputSchemaTokens": 28,
+      "outputSchemaTokens": 41,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "92a01e079c4436e651586a0fa4117e21204dc481de169763e621253280225570",

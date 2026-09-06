@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | query_logs | 794 | 15.9% | 102 | 649 |
 | search_docs | 483 | 9.6% | 387 | 48 |

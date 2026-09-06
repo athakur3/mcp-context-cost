@@ -10,55 +10,73 @@
       "name": "find_organizations",
       "tokens": 308,
       "descriptionTokens": 70,
-      "inputSchemaTokens": 68
+      "inputSchemaTokens": 68,
+      "outputSchemaTokens": 124,
+      "annotationsTokens": 19
     },
     {
       "name": "find_projects",
       "tokens": 397,
       "descriptionTokens": 66,
-      "inputSchemaTokens": 211
+      "inputSchemaTokens": 211,
+      "outputSchemaTokens": 75,
+      "annotationsTokens": 19
     },
     {
       "name": "update_issue",
       "tokens": 1248,
       "descriptionTokens": 455,
-      "inputSchemaTokens": 710
+      "inputSchemaTokens": 710,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "search_events",
       "tokens": 1127,
       "descriptionTokens": 459,
-      "inputSchemaTokens": 597
+      "inputSchemaTokens": 597,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "analyze_issue_with_seer",
       "tokens": 641,
       "descriptionTokens": 331,
-      "inputSchemaTokens": 240
+      "inputSchemaTokens": 240,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "search_issues",
       "tokens": 853,
       "descriptionTokens": 377,
-      "inputSchemaTokens": 412
+      "inputSchemaTokens": 412,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "get_sentry_resource",
       "tokens": 632,
       "descriptionTokens": 346,
-      "inputSchemaTokens": 218
+      "inputSchemaTokens": 218,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "search_sentry_tools",
       "tokens": 592,
       "descriptionTokens": 247,
-      "inputSchemaTokens": 102
+      "inputSchemaTokens": 102,
+      "outputSchemaTokens": 177,
+      "annotationsTokens": 19
     },
     {
       "name": "execute_sentry_tool",
       "tokens": 286,
       "descriptionTokens": 138,
-      "inputSchemaTokens": 92
+      "inputSchemaTokens": 92,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     }
   ],
   "canonicalSha256": "11ef5fbfa5440a29377fedcd23abb764cf640ba03762911c8bfcd5b11a53aebd",

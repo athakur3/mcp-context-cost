@@ -16,15 +16,15 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
-|---|---:|---:|---:|---:|
-| project_memory | 3,279 | 30.0% | 285 | 2,030 |
-| search_parallel | 1,860 | 17.0% | 482 | 631 |
-| search | 1,737 | 15.9% | 478 | 612 |
-| project_memory_search | 1,436 | 13.1% | 208 | 261 |
-| extract | 1,249 | 11.4% | 330 | 511 |
-| scholar_search | 981 | 9.0% | 134 | 302 |
-| health | 404 | 3.7% | 50 | 24 |
+| tool | tokens | share | description | input schema | output schema |
+|---|---:|---:|---:|---:|---:|
+| project_memory | 3,279 | 30.0% | 285 | 2,030 | 917 |
+| search_parallel | 1,860 | 17.0% | 482 | 631 | 697 |
+| search | 1,737 | 15.9% | 478 | 612 | 599 |
+| project_memory_search | 1,436 | 13.1% | 208 | 261 | 917 |
+| extract | 1,249 | 11.4% | 330 | 511 | 358 |
+| scholar_search | 981 | 9.0% | 134 | 302 | 496 |
+| health | 404 | 3.7% | 50 | 24 | 281 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
 

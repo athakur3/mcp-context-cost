@@ -10,223 +10,297 @@
       "name": "ssh_execute",
       "tokens": 233,
       "descriptionTokens": 112,
-      "inputSchemaTokens": 103
+      "inputSchemaTokens": 103,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_upload",
       "tokens": 185,
       "descriptionTokens": 94,
-      "inputSchemaTokens": 73
+      "inputSchemaTokens": 73,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_download",
       "tokens": 176,
       "descriptionTokens": 85,
-      "inputSchemaTokens": 73
+      "inputSchemaTokens": 73,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_sync",
       "tokens": 477,
       "descriptionTokens": 174,
-      "inputSchemaTokens": 285
+      "inputSchemaTokens": 285,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_tail",
       "tokens": 230,
       "descriptionTokens": 95,
-      "inputSchemaTokens": 117
+      "inputSchemaTokens": 117,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_monitor",
       "tokens": 221,
       "descriptionTokens": 97,
-      "inputSchemaTokens": 106
+      "inputSchemaTokens": 106,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_history",
       "tokens": 200,
       "descriptionTokens": 97,
-      "inputSchemaTokens": 85
+      "inputSchemaTokens": 85,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_session_start",
       "tokens": 163,
       "descriptionTokens": 88,
-      "inputSchemaTokens": 56
+      "inputSchemaTokens": 56,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_session_send",
       "tokens": 193,
       "descriptionTokens": 92,
-      "inputSchemaTokens": 82
+      "inputSchemaTokens": 82,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_session_list",
       "tokens": 135,
       "descriptionTokens": 80,
-      "inputSchemaTokens": 36
+      "inputSchemaTokens": 36,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_session_close",
       "tokens": 152,
       "descriptionTokens": 82,
-      "inputSchemaTokens": 51
+      "inputSchemaTokens": 51,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_execute_group",
       "tokens": 291,
       "descriptionTokens": 135,
-      "inputSchemaTokens": 137
+      "inputSchemaTokens": 137,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_group_manage",
       "tokens": 297,
       "descriptionTokens": 125,
-      "inputSchemaTokens": 153
+      "inputSchemaTokens": 153,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_list_servers",
       "tokens": 138,
       "descriptionTokens": 94,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_deploy",
       "tokens": 333,
       "descriptionTokens": 106,
-      "inputSchemaTokens": 208
+      "inputSchemaTokens": 208,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_execute_sudo",
       "tokens": 242,
       "descriptionTokens": 111,
-      "inputSchemaTokens": 111
+      "inputSchemaTokens": 111,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_command_alias",
       "tokens": 192,
       "descriptionTokens": 81,
-      "inputSchemaTokens": 92
+      "inputSchemaTokens": 92,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_hooks",
       "tokens": 170,
       "descriptionTokens": 83,
-      "inputSchemaTokens": 69
+      "inputSchemaTokens": 69,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_profile",
       "tokens": 159,
       "descriptionTokens": 76,
-      "inputSchemaTokens": 65
+      "inputSchemaTokens": 65,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_connection_status",
       "tokens": 166,
       "descriptionTokens": 77,
-      "inputSchemaTokens": 70
+      "inputSchemaTokens": 70,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_tunnel_create",
       "tokens": 253,
       "descriptionTokens": 90,
-      "inputSchemaTokens": 143
+      "inputSchemaTokens": 143,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_tunnel_list",
       "tokens": 132,
       "descriptionTokens": 76,
-      "inputSchemaTokens": 36
+      "inputSchemaTokens": 36,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_tunnel_close",
       "tokens": 150,
       "descriptionTokens": 76,
-      "inputSchemaTokens": 54
+      "inputSchemaTokens": 54,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_key_manage",
       "tokens": 196,
       "descriptionTokens": 86,
-      "inputSchemaTokens": 91
+      "inputSchemaTokens": 91,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_alias",
       "tokens": 182,
       "descriptionTokens": 82,
-      "inputSchemaTokens": 82
+      "inputSchemaTokens": 82,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_backup_create",
       "tokens": 387,
       "descriptionTokens": 84,
-      "inputSchemaTokens": 284
+      "inputSchemaTokens": 284,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_backup_list",
       "tokens": 187,
       "descriptionTokens": 78,
-      "inputSchemaTokens": 90
+      "inputSchemaTokens": 90,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_backup_restore",
       "tokens": 286,
       "descriptionTokens": 90,
-      "inputSchemaTokens": 177
+      "inputSchemaTokens": 177,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_backup_schedule",
       "tokens": 279,
       "descriptionTokens": 85,
-      "inputSchemaTokens": 174
+      "inputSchemaTokens": 174,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_health_check",
       "tokens": 162,
       "descriptionTokens": 84,
-      "inputSchemaTokens": 59
+      "inputSchemaTokens": 59,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_service_status",
       "tokens": 176,
       "descriptionTokens": 85,
-      "inputSchemaTokens": 72
+      "inputSchemaTokens": 72,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_process_manager",
       "tokens": 309,
       "descriptionTokens": 99,
-      "inputSchemaTokens": 191
+      "inputSchemaTokens": 191,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_alert_setup",
       "tokens": 275,
       "descriptionTokens": 97,
-      "inputSchemaTokens": 159
+      "inputSchemaTokens": 159,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_db_dump",
       "tokens": 316,
       "descriptionTokens": 91,
-      "inputSchemaTokens": 206
+      "inputSchemaTokens": 206,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_db_import",
       "tokens": 292,
       "descriptionTokens": 90,
-      "inputSchemaTokens": 183
+      "inputSchemaTokens": 183,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_db_list",
       "tokens": 239,
       "descriptionTokens": 73,
-      "inputSchemaTokens": 147
+      "inputSchemaTokens": 147,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "ssh_db_query",
       "tokens": 270,
       "descriptionTokens": 77,
-      "inputSchemaTokens": 174
+      "inputSchemaTokens": 174,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "22ce75f27b9a8bf50f1cb77824b5769d6041d1f3c25032916b5201b1be31f5d7",

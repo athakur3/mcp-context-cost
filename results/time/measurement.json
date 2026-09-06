@@ -10,13 +10,17 @@
       "name": "get_current_time",
       "tokens": 105,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 59
+      "inputSchemaTokens": 59,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "convert_time",
       "tokens": 186,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 143
+      "inputSchemaTokens": 143,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     }
   ],
   "canonicalSha256": "7c6ff08840620894a66a103e02a8eb315013dd0a7d7c6cfb59b0fbe51f8a5d87",

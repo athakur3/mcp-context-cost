@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | obsidian_complex_search | 492 | 23.9% | 241 | 198 |
 | obsidian_patch_content | 263 | 12.8% | 69 | 182 |

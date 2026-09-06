@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | download_figma_images | 646 | 68.3% | 35 | 574 |
 | get_figma_data | 298 | 31.5% | 16 | 245 |

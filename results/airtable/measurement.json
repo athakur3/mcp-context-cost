@@ -10,97 +10,129 @@
       "name": "list_records",
       "tokens": 395,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 269
+      "inputSchemaTokens": 269,
+      "outputSchemaTokens": 86,
+      "annotationsTokens": 7
     },
     {
       "name": "search_records",
       "tokens": 277,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 150
+      "inputSchemaTokens": 150,
+      "outputSchemaTokens": 86,
+      "annotationsTokens": 7
     },
     {
       "name": "list_bases",
       "tokens": 151,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 84,
+      "annotationsTokens": 7
     },
     {
       "name": "list_tables",
       "tokens": 340,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 239
+      "inputSchemaTokens": 239,
+      "outputSchemaTokens": 59,
+      "annotationsTokens": 7
     },
     {
       "name": "describe_table",
       "tokens": 354,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 260
+      "inputSchemaTokens": 260,
+      "outputSchemaTokens": 52,
+      "annotationsTokens": 7
     },
     {
       "name": "get_record",
       "tokens": 186,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 84
+      "inputSchemaTokens": 84,
+      "outputSchemaTokens": 61,
+      "annotationsTokens": 7
     },
     {
       "name": "create_record",
       "tokens": 205,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 61,
+      "annotationsTokens": 13
     },
     {
       "name": "update_records",
       "tokens": 265,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 129
+      "inputSchemaTokens": 129,
+      "outputSchemaTokens": 86,
+      "annotationsTokens": 13
     },
     {
       "name": "delete_records",
       "tokens": 202,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 92
+      "inputSchemaTokens": 92,
+      "outputSchemaTokens": 64,
+      "annotationsTokens": 13
     },
     {
       "name": "create_table",
       "tokens": 212,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 112
+      "inputSchemaTokens": 112,
+      "outputSchemaTokens": 52,
+      "annotationsTokens": 13
     },
     {
       "name": "update_table",
       "tokens": 195,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 95
+      "inputSchemaTokens": 95,
+      "outputSchemaTokens": 52,
+      "annotationsTokens": 13
     },
     {
       "name": "create_field",
       "tokens": 206,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 106
+      "inputSchemaTokens": 106,
+      "outputSchemaTokens": 52,
+      "annotationsTokens": 13
     },
     {
       "name": "update_field",
       "tokens": 214,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 114
+      "inputSchemaTokens": 114,
+      "outputSchemaTokens": 52,
+      "annotationsTokens": 13
     },
     {
       "name": "create_comment",
       "tokens": 310,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 118
+      "inputSchemaTokens": 118,
+      "outputSchemaTokens": 145,
+      "annotationsTokens": 13
     },
     {
       "name": "list_comments",
       "tokens": 325,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 122
+      "inputSchemaTokens": 122,
+      "outputSchemaTokens": 163,
+      "annotationsTokens": 7
     },
     {
       "name": "upload_attachment",
       "tokens": 347,
       "descriptionTokens": 48,
-      "inputSchemaTokens": 198
+      "inputSchemaTokens": 198,
+      "outputSchemaTokens": 61,
+      "annotationsTokens": 13
     }
   ],
   "canonicalSha256": "5f90d662e26a77e01125999b97db0bf9204bb92bd0fc7297a28495986d80ec30",

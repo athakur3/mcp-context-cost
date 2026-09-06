@@ -10,13 +10,17 @@
       "name": "qdrant-find",
       "tokens": 85,
       "descriptionTokens": 39,
-      "inputSchemaTokens": 30
+      "inputSchemaTokens": 30,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "qdrant-store",
       "tokens": 101,
       "descriptionTokens": 15,
-      "inputSchemaTokens": 74
+      "inputSchemaTokens": 74,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "2bd5a36e7293bab6b8e62c28b7d210c5261f4b80331b176c1df6dc100a7e6fc4",

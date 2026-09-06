@@ -10,19 +10,25 @@
       "name": "get_neo4j_schema",
       "tokens": 238,
       "descriptionTokens": 109,
-      "inputSchemaTokens": 50
+      "inputSchemaTokens": 50,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 34
     },
     {
       "name": "read_neo4j_cypher",
       "tokens": 143,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 56
+      "inputSchemaTokens": 56,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 35
     },
     {
       "name": "write_neo4j_cypher",
       "tokens": 143,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 56
+      "inputSchemaTokens": 56,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 35
     }
   ],
   "canonicalSha256": "2e66ec7b2ea28f25f5b986a65cc950c06febad089b2c3033be49e15548f9c432",

@@ -16,21 +16,21 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
-|---|---:|---:|---:|---:|
-| gzip-file-as-resource | 247 | 14.5% | 45 | 146 |
-| get-structured-content | 195 | 11.4% | 12 | 50 |
-| simulate-research-query | 174 | 10.2% | 49 | 72 |
-| get-annotated-message | 147 | 8.6% | 14 | 77 |
-| trigger-long-running-operation | 128 | 7.5% | 11 | 62 |
-| get-resource-reference | 127 | 7.4% | 11 | 62 |
-| get-resource-links | 121 | 7.1% | 12 | 55 |
-| get-sum | 112 | 6.6% | 6 | 53 |
-| echo | 96 | 5.6% | 6 | 40 |
-| toggle-simulated-logging | 95 | 5.6% | 14 | 24 |
-| toggle-subscriber-updates | 90 | 5.3% | 11 | 24 |
-| get-env | 88 | 5.2% | 11 | 24 |
-| get-tiny-image | 86 | 5.0% | 7 | 24 |
+| tool | tokens | share | description | input schema | output schema |
+|---|---:|---:|---:|---:|---:|
+| gzip-file-as-resource | 247 | 14.5% | 45 | 146 | 0 |
+| get-structured-content | 195 | 11.4% | 12 | 50 | 75 |
+| simulate-research-query | 174 | 10.2% | 49 | 72 | 0 |
+| get-annotated-message | 147 | 8.6% | 14 | 77 | 0 |
+| trigger-long-running-operation | 128 | 7.5% | 11 | 62 | 0 |
+| get-resource-reference | 127 | 7.4% | 11 | 62 | 0 |
+| get-resource-links | 121 | 7.1% | 12 | 55 | 0 |
+| get-sum | 112 | 6.6% | 6 | 53 | 0 |
+| echo | 96 | 5.6% | 6 | 40 | 0 |
+| toggle-simulated-logging | 95 | 5.6% | 14 | 24 | 0 |
+| toggle-subscriber-updates | 90 | 5.3% | 11 | 24 | 0 |
+| get-env | 88 | 5.2% | 11 | 24 | 0 |
+| get-tiny-image | 86 | 5.0% | 7 | 24 | 0 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
 

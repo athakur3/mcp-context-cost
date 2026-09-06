@@ -10,85 +10,113 @@
       "name": "ghSearchCode",
       "tokens": 725,
       "descriptionTokens": 166,
-      "inputSchemaTokens": 504
+      "inputSchemaTokens": 504,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 33
     },
     {
       "name": "ghGetFileContent",
       "tokens": 1054,
       "descriptionTokens": 352,
-      "inputSchemaTokens": 642
+      "inputSchemaTokens": 642,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 34
     },
     {
       "name": "ghViewRepoStructure",
       "tokens": 544,
       "descriptionTokens": 60,
-      "inputSchemaTokens": 429
+      "inputSchemaTokens": 429,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 34
     },
     {
       "name": "ghSearchRepos",
       "tokens": 877,
       "descriptionTokens": 99,
-      "inputSchemaTokens": 724
+      "inputSchemaTokens": 724,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 33
     },
     {
       "name": "ghSearchPullRequests",
       "tokens": 1799,
       "descriptionTokens": 178,
-      "inputSchemaTokens": 1564
+      "inputSchemaTokens": 1564,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 34
     },
     {
       "name": "ghSearchIssues",
       "tokens": 1189,
       "descriptionTokens": 133,
-      "inputSchemaTokens": 1001
+      "inputSchemaTokens": 1001,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 33
     },
     {
       "name": "ghSearchCommits",
       "tokens": 1003,
       "descriptionTokens": 211,
-      "inputSchemaTokens": 735
+      "inputSchemaTokens": 735,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 33
     },
     {
       "name": "npmSearch",
       "tokens": 393,
       "descriptionTokens": 50,
-      "inputSchemaTokens": 293
+      "inputSchemaTokens": 293,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "localSearchCode",
       "tokens": 1755,
       "descriptionTokens": 153,
-      "inputSchemaTokens": 1547
+      "inputSchemaTokens": 1547,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 33
     },
     {
       "name": "localViewStructure",
       "tokens": 810,
       "descriptionTokens": 85,
-      "inputSchemaTokens": 670
+      "inputSchemaTokens": 670,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "localFindFiles",
       "tokens": 979,
       "descriptionTokens": 100,
-      "inputSchemaTokens": 827
+      "inputSchemaTokens": 827,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "localFindDeadCode",
       "tokens": 746,
       "descriptionTokens": 234,
-      "inputSchemaTokens": 458
+      "inputSchemaTokens": 458,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 33
     },
     {
       "name": "localGetFileContent",
       "tokens": 858,
       "descriptionTokens": 292,
-      "inputSchemaTokens": 509
+      "inputSchemaTokens": 509,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "lspGetSemantics",
       "tokens": 818,
       "descriptionTokens": 120,
-      "inputSchemaTokens": 643
+      "inputSchemaTokens": 643,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     }
   ],
   "canonicalSha256": "17bae5bf5a76df127b4ddba609724a2a52b86400700daa315562e18f1082304f",

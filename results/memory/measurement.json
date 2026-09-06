@@ -10,55 +10,73 @@
       "name": "create_entities",
       "tokens": 294,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 111
+      "inputSchemaTokens": 111,
+      "outputSchemaTokens": 121,
+      "annotationsTokens": 26
     },
     {
       "name": "create_relations",
       "tokens": 294,
       "descriptionTokens": 17,
-      "inputSchemaTokens": 106
+      "inputSchemaTokens": 106,
+      "outputSchemaTokens": 116,
+      "annotationsTokens": 26
     },
     {
       "name": "add_observations",
       "tokens": 249,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 97
+      "inputSchemaTokens": 97,
+      "outputSchemaTokens": 85,
+      "annotationsTokens": 26
     },
     {
       "name": "delete_entities",
       "tokens": 166,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 53
+      "inputSchemaTokens": 53,
+      "outputSchemaTokens": 48,
+      "annotationsTokens": 26
     },
     {
       "name": "delete_observations",
       "tokens": 212,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 98
+      "inputSchemaTokens": 98,
+      "outputSchemaTokens": 48,
+      "annotationsTokens": 26
     },
     {
       "name": "delete_relations",
       "tokens": 225,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 115
+      "inputSchemaTokens": 115,
+      "outputSchemaTokens": 48,
+      "annotationsTokens": 26
     },
     {
       "name": "read_graph",
       "tokens": 291,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 207,
+      "annotationsTokens": 26
     },
     {
       "name": "search_nodes",
       "tokens": 323,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 51
+      "inputSchemaTokens": 51,
+      "outputSchemaTokens": 207,
+      "annotationsTokens": 26
     },
     {
       "name": "open_nodes",
       "tokens": 322,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 51
+      "inputSchemaTokens": 51,
+      "outputSchemaTokens": 207,
+      "annotationsTokens": 26
     }
   ],
   "canonicalSha256": "d028274f76dc9aa2e622ae02a17ce313aa65d7b5935254ca53889d4094238abb",

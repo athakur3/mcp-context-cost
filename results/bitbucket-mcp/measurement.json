@@ -10,283 +10,377 @@
       "name": "listRepositories",
       "tokens": 177,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 162
+      "inputSchemaTokens": 162,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getRepository",
       "tokens": 56,
       "descriptionTokens": 3,
-      "inputSchemaTokens": 42
+      "inputSchemaTokens": 42,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getPullRequests",
       "tokens": 211,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 193
+      "inputSchemaTokens": 193,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "createPullRequest",
       "tokens": 190,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 173
+      "inputSchemaTokens": 173,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getPullRequest",
       "tokens": 178,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 159
+      "inputSchemaTokens": 159,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "updatePullRequest",
       "tokens": 105,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 89
+      "inputSchemaTokens": 89,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getPullRequestActivity",
       "tokens": 179,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 159
+      "inputSchemaTokens": 159,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "approvePullRequest",
       "tokens": 175,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 159
+      "inputSchemaTokens": 159,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "unapprovePullRequest",
       "tokens": 178,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 159
+      "inputSchemaTokens": 159,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "declinePullRequest",
       "tokens": 92,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 74
+      "inputSchemaTokens": 74,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "mergePullRequest",
       "tokens": 116,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 100
+      "inputSchemaTokens": 100,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getPullRequestComments",
       "tokens": 178,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 159
+      "inputSchemaTokens": 159,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getPullRequestDiff",
       "tokens": 80,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 61
+      "inputSchemaTokens": 61,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getPullRequestCommits",
       "tokens": 179,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 159
+      "inputSchemaTokens": 159,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "addPullRequestComment",
       "tokens": 220,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 195
+      "inputSchemaTokens": 195,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "addPendingPullRequestComment",
       "tokens": 202,
       "descriptionTokens": 16,
-      "inputSchemaTokens": 172
+      "inputSchemaTokens": 172,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "publishPendingComments",
       "tokens": 81,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 61
+      "inputSchemaTokens": 61,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getRepositoryBranchingModel",
       "tokens": 63,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 42
+      "inputSchemaTokens": 42,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getRepositoryBranchingModelSettings",
       "tokens": 65,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 42
+      "inputSchemaTokens": 42,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "updateRepositoryBranchingModelSettings",
       "tokens": 235,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 212
+      "inputSchemaTokens": 212,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getEffectiveRepositoryBranchingModel",
       "tokens": 65,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 42
+      "inputSchemaTokens": 42,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getProjectBranchingModel",
       "tokens": 63,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 42
+      "inputSchemaTokens": 42,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getProjectBranchingModelSettings",
       "tokens": 65,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 42
+      "inputSchemaTokens": 42,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "updateProjectBranchingModelSettings",
       "tokens": 235,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 212
+      "inputSchemaTokens": 212,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "createDraftPullRequest",
       "tokens": 173,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 154
+      "inputSchemaTokens": 154,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "publishDraftPullRequest",
       "tokens": 85,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 61
+      "inputSchemaTokens": 61,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "convertTodraft",
       "tokens": 81,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 61
+      "inputSchemaTokens": 61,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getPendingReviewPRs",
       "tokens": 114,
       "descriptionTokens": 21,
-      "inputSchemaTokens": 80
+      "inputSchemaTokens": 80,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "listPipelineRuns",
       "tokens": 258,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 240
+      "inputSchemaTokens": 240,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getPipelineRun",
       "tokens": 175,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 156
+      "inputSchemaTokens": 156,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "runPipeline",
       "tokens": 256,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 240
+      "inputSchemaTokens": 240,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "stopPipeline",
       "tokens": 73,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 58
+      "inputSchemaTokens": 58,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getPipelineSteps",
       "tokens": 76,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 58
+      "inputSchemaTokens": 58,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getPipelineStep",
       "tokens": 93,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 74
+      "inputSchemaTokens": 74,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getPipelineStepLogs",
       "tokens": 226,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 206
+      "inputSchemaTokens": 206,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getPullRequestComment",
       "tokens": 98,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 77
+      "inputSchemaTokens": 77,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "updatePullRequestComment",
       "tokens": 112,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 92
+      "inputSchemaTokens": 92,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "resolveComment",
       "tokens": 96,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 77
+      "inputSchemaTokens": 77,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "reopenComment",
       "tokens": 99,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 77
+      "inputSchemaTokens": 77,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getPullRequestDiffStat",
       "tokens": 82,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 61
+      "inputSchemaTokens": 61,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getPullRequestPatch",
       "tokens": 80,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 61
+      "inputSchemaTokens": 61,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getPullRequestTasks",
       "tokens": 80,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 61
+      "inputSchemaTokens": 61,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "createPullRequestTask",
       "tokens": 134,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 114
+      "inputSchemaTokens": 114,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getPullRequestTask",
       "tokens": 98,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 77
+      "inputSchemaTokens": 77,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "updatePullRequestTask",
       "tokens": 132,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 112
+      "inputSchemaTokens": 112,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getPullRequestStatuses",
       "tokens": 82,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 61
+      "inputSchemaTokens": 61,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "getEffectiveDefaultReviewers",
       "tokens": 63,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 42
+      "inputSchemaTokens": 42,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "e131b1d46e30c0d05f07995aa167fa323ec1003719d861dbe27c82c94ad803cf",

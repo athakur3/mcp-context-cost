@@ -346,7 +346,7 @@ now measured against a pinned model and published beside the badge, and they do 
 
 | server | badge (o200k) | Claude (`claude-opus-5`) | |
 |---|---:|---:|---|
-| github | 54,622 | **18,728** | most of the capture is `annotations`/`outputSchema` metadata Claude never sees |
+| github | 54,622 | **18,728** | 78% of the capture is `icons` metadata Claude never sees |
 | notion | 17,500 | **33,560** | almost no metadata to drop, so the tokenizer difference dominates |
 
 So the heaviest server on the badge is not the heaviest server on Claude. Per-server

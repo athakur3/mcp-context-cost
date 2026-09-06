@@ -12,19 +12,25 @@
         "name": "read_file",
         "tokens": 68,
         "descriptionTokens": 29,
-        "inputSchemaTokens": 29
+        "inputSchemaTokens": 29,
+        "outputSchemaTokens": 0,
+        "annotationsTokens": 0
       },
       {
         "name": "write_file",
         "tokens": 83,
         "descriptionTokens": 26,
-        "inputSchemaTokens": 47
+        "inputSchemaTokens": 47,
+        "outputSchemaTokens": 0,
+        "annotationsTokens": 0
       },
       {
         "name": "list_directory",
         "tokens": 43,
         "descriptionTokens": 14,
-        "inputSchemaTokens": 19
+        "inputSchemaTokens": 19,
+        "outputSchemaTokens": 0,
+        "annotationsTokens": 0
       }
     ],
     "canonicalSha256": "3f522f40413f9c1bec9d8dcdcbc5840f13b895580f9088967df8c171b9835656",

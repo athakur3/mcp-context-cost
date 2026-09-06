@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | chroma_get_documents | 610 | 21.5% | 337 | 200 |
 | chroma_query_documents | 546 | 19.2% | 310 | 167 |

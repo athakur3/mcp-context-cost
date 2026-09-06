@@ -29,6 +29,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DEFAULT_CONTEXT_WINDOW } from '../audit/audit.js';
 import { BAND_PRECISION, wireToClientRatio } from '../audit/deferral.js';
+import { countTokens } from '../core/canonical.js';
 import { fieldSelectionShare, isCurrent } from '../core/divergence.js';
 import { sessionStartLoad } from '../core/session-start.js';
 import { isGood } from './harness-guard.js';
@@ -53,7 +54,21 @@ export interface PublishedStats {
     currentCount: number;
     heaviestClaudeName: string | null;
     /** `claudeTokens` is null when the published row no longer matches the capture on disk. */
-    github: { badgeTokens: number; claudeTokens: number | null };
+    github: {
+      badgeTokens: number;
+      claudeTokens: number | null;
+      /**
+       * The single heaviest field in github's capture that an Anthropic tools
+       * array has nowhere to put, and its share of the capture. Derived rather
+       * than described, because the sentence it feeds was wrong for as long as
+       * it was hand-written: it named `annotations`/`outputSchema` as "most of
+       * the capture" while github ships no `outputSchema` at all and 1.7% of
+       * annotations. The dropped weight was `icons`, at 78%. A claim about
+       * which bytes are dropped has to come from the bytes.
+       */
+      dropField: string;
+      dropSharePct: number;
+    };
     notion: { badgeTokens: number; claudeTokens: number | null };
     /** The current row showing the largest field-selection effect, and its two counts. */
     widest: { server: string; full: number; mapped: number };
@@ -90,6 +105,43 @@ export const SAMPLE_SERVERS = [
   'filesystem',
   'markitdown',
 ] as const;
+
+/**
+ * The three fields an Anthropic tool definition carries. Everything else a
+ * server ships in `tools/list` is dropped before the request — see
+ * docs/METHODOLOGY.md#claude-divergence.
+ */
+const ANTHROPIC_TOOL_FIELDS = new Set(['name', 'description', 'inputSchema']);
+
+/**
+ * The heaviest field in a capture that an Anthropic request has nowhere to put,
+ * and what share of the capture it is.
+ *
+ * This exists because the README sentence it feeds was hand-written and wrong.
+ * It said most of github's capture was `annotations`/`outputSchema` metadata;
+ * github ships no `outputSchema` at all and 1.7% of annotations, and the weight
+ * being dropped was `icons` at 78%. The claim was plausible, unmaintained, and
+ * describing a different server's shape — so it is derived now, and it moves
+ * when the capture does.
+ *
+ * Ties break on the field name so the sentence does not flip between two
+ * equal-weight fields from one regeneration to the next.
+ */
+export function heaviestDroppedField(
+  capture: unknown[] | null,
+  totalTokens: number,
+): { dropField: string; dropSharePct: number } {
+  const tally = new Map<string, number>();
+  for (const tool of capture ?? []) {
+    for (const [k, v] of Object.entries((tool ?? {}) as Record<string, unknown>)) {
+      if (ANTHROPIC_TOOL_FIELDS.has(k)) continue;
+      tally.set(k, (tally.get(k) ?? 0) + countTokens(JSON.stringify(v)));
+    }
+  }
+  const top = [...tally].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0];
+  if (!top || totalTokens <= 0) return { dropField: 'none', dropSharePct: 0 };
+  return { dropField: top[0], dropSharePct: Math.round((100 * top[1]) / totalTokens) };
+}
 
 export function floorToTwoSignificant(n: number): number {
   const whole = Math.floor(n);
@@ -209,7 +261,11 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
       runSize: Object.keys(div.servers).length,
       currentCount: withClaude.length,
       heaviestClaudeName: heaviest?.entry.name ?? null,
-      github: { badgeTokens: badgeTokensOf('github'), claudeTokens: currentDivRow('github')?.claudeDelta ?? null },
+      github: {
+        badgeTokens: badgeTokensOf('github'),
+        claudeTokens: currentDivRow('github')?.claudeDelta ?? null,
+        ...heaviestDroppedField(githubRow.m.rawToolsCapture, githubRow.m.totalTokens),
+      },
       notion: { badgeTokens: badgeTokensOf('notion'), claudeTokens: currentDivRow('notion')?.claudeDelta ?? null },
       widest: { server: widest[0], full: widest[1].o200kFull, mapped: widest[1].o200kMapped },
       shareMin: Math.min(...shares),
@@ -362,8 +418,13 @@ export const PAGE_CLAIMS: Claim[] = [
   {
     file: 'README.md',
     id: 'claude-table:github',
-    template: '| github | {n} | **{q}** | most of the capture is `annotations`/`outputSchema` metadata Claude never sees |',
-    values: (s) => [fmt(s.claude.github.badgeTokens), q(s.claude.github.claudeTokens)],
+    template: '| github | {n} | **{q}** | {d}% of the capture is `{w}` metadata Claude never sees |',
+    values: (s) => [
+      fmt(s.claude.github.badgeTokens),
+      q(s.claude.github.claudeTokens),
+      String(s.claude.github.dropSharePct),
+      s.claude.github.dropField,
+    ],
   },
   {
     file: 'README.md',

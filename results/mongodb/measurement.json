@@ -10,163 +10,217 @@
       "name": "aggregate-db",
       "tokens": 256,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 89
+      "inputSchemaTokens": 89,
+      "outputSchemaTokens": 91,
+      "annotationsTokens": 24
     },
     {
       "name": "aggregate",
       "tokens": 524,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 345
+      "inputSchemaTokens": 345,
+      "outputSchemaTokens": 105,
+      "annotationsTokens": 23
     },
     {
       "name": "collection-indexes",
       "tokens": 338,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 59
+      "inputSchemaTokens": 59,
+      "outputSchemaTokens": 203,
+      "annotationsTokens": 25
     },
     {
       "name": "collection-schema",
       "tokens": 223,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 86
+      "inputSchemaTokens": 86,
+      "outputSchemaTokens": 63,
+      "annotationsTokens": 24
     },
     {
       "name": "collection-storage-size",
       "tokens": 183,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 59
+      "inputSchemaTokens": 59,
+      "outputSchemaTokens": 48,
+      "annotationsTokens": 25
     },
     {
       "name": "connect",
       "tokens": 195,
       "descriptionTokens": 40,
-      "inputSchemaTokens": 49
+      "inputSchemaTokens": 49,
+      "outputSchemaTokens": 41,
+      "annotationsTokens": 23
     },
     {
       "name": "count",
       "tokens": 202,
       "descriptionTokens": 22,
-      "inputSchemaTokens": 75
+      "inputSchemaTokens": 75,
+      "outputSchemaTokens": 39,
+      "annotationsTokens": 23
     },
     {
       "name": "create-collection",
       "tokens": 205,
       "descriptionTokens": 20,
-      "inputSchemaTokens": 59
+      "inputSchemaTokens": 59,
+      "outputSchemaTokens": 57,
+      "annotationsTokens": 25
     },
     {
       "name": "create-index",
       "tokens": 761,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 607
+      "inputSchemaTokens": 607,
+      "outputSchemaTokens": 80,
+      "annotationsTokens": 24
     },
     {
       "name": "db-stats",
       "tokens": 183,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 50
+      "inputSchemaTokens": 50,
+      "outputSchemaTokens": 52,
+      "annotationsTokens": 25
     },
     {
       "name": "delete-many",
       "tokens": 215,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 75
+      "inputSchemaTokens": 75,
+      "outputSchemaTokens": 59,
+      "annotationsTokens": 24
     },
     {
       "name": "disconnect",
       "tokens": 166,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 41
+      "inputSchemaTokens": 41,
+      "outputSchemaTokens": 49,
+      "annotationsTokens": 23
     },
     {
       "name": "drop-collection",
       "tokens": 209,
       "descriptionTokens": 22,
-      "inputSchemaTokens": 59
+      "inputSchemaTokens": 59,
+      "outputSchemaTokens": 59,
+      "annotationsTokens": 25
     },
     {
       "name": "drop-database",
       "tokens": 181,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 50
+      "inputSchemaTokens": 50,
+      "outputSchemaTokens": 50,
+      "annotationsTokens": 25
     },
     {
       "name": "drop-index",
       "tokens": 233,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 86
+      "inputSchemaTokens": 86,
+      "outputSchemaTokens": 70,
+      "annotationsTokens": 24
     },
     {
       "name": "explain",
       "tokens": 813,
       "descriptionTokens": 18,
-      "inputSchemaTokens": 628
+      "inputSchemaTokens": 628,
+      "outputSchemaTokens": 99,
+      "annotationsTokens": 24
     },
     {
       "name": "export",
       "tokens": 657,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 581
+      "inputSchemaTokens": 581,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 23
     },
     {
       "name": "find",
       "tokens": 375,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 209
+      "inputSchemaTokens": 209,
+      "outputSchemaTokens": 91,
+      "annotationsTokens": 23
     },
     {
       "name": "insert-many",
       "tokens": 260,
       "descriptionTokens": 31,
-      "inputSchemaTokens": 84
+      "inputSchemaTokens": 84,
+      "outputSchemaTokens": 78,
+      "annotationsTokens": 24
     },
     {
       "name": "list-collections",
       "tokens": 202,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 50
+      "inputSchemaTokens": 50,
+      "outputSchemaTokens": 75,
+      "annotationsTokens": 25
     },
     {
       "name": "list-connections",
       "tokens": 270,
       "descriptionTokens": 21,
-      "inputSchemaTokens": 29
+      "inputSchemaTokens": 29,
+      "outputSchemaTokens": 151,
+      "annotationsTokens": 25
     },
     {
       "name": "list-databases",
       "tokens": 207,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 41
+      "inputSchemaTokens": 41,
+      "outputSchemaTokens": 86,
+      "annotationsTokens": 26
     },
     {
       "name": "mongodb-logs",
       "tokens": 217,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 70
+      "inputSchemaTokens": 70,
+      "outputSchemaTokens": 69,
+      "annotationsTokens": 25
     },
     {
       "name": "rename-collection",
       "tokens": 233,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 82
+      "inputSchemaTokens": 82,
+      "outputSchemaTokens": 72,
+      "annotationsTokens": 25
     },
     {
       "name": "update-many",
       "tokens": 295,
       "descriptionTokens": 32,
-      "inputSchemaTokens": 101
+      "inputSchemaTokens": 101,
+      "outputSchemaTokens": 95,
+      "annotationsTokens": 24
     },
     {
       "name": "list-knowledge-sources",
       "tokens": 132,
       "descriptionTokens": 32,
-      "inputSchemaTokens": 29
+      "inputSchemaTokens": 29,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 27
     },
     {
       "name": "search-knowledge",
       "tokens": 189,
       "descriptionTokens": 36,
-      "inputSchemaTokens": 86
+      "inputSchemaTokens": 86,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     }
   ],
   "canonicalSha256": "c771e7295dc27668861b2a251566196a3e30b5b3ac282f7736aab96891bff300",

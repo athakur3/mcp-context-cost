@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | create_agent | 763 | 12.4% | 64 | 678 |
 | update_agent | 721 | 11.8% | 44 | 649 |

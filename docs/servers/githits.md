@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | search | 2,270 | 17.7% | 409 | 1,821 |
 | code_grep | 1,681 | 13.1% | 365 | 1,272 |

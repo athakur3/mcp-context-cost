@@ -23,6 +23,20 @@ export interface ToolMeasurement {
   tokens: number;
   descriptionTokens: number;
   inputSchemaTokens: number;
+  /**
+   * The two fields that used to sit inside `tokens` with nothing naming them.
+   * Across the measured set output schemas are about a sixth of every published
+   * token and annotations another thirtieth, so a reader could see that a tool
+   * was expensive without being able to see that its output schema was why.
+   *
+   * Optional because absent and zero are different claims, the same distinction
+   * `serverInstructions` draws below: `0` means the tool ships no such field,
+   * absent means the record predates the attribution. Every record written
+   * since carries both, and `tools/backfill-tool-attribution.ts` re-derives
+   * them for older ones out of the capture stored in the same file.
+   */
+  outputSchemaTokens?: number;
+  annotationsTokens?: number;
 }
 
 /**

@@ -10,37 +10,49 @@
       "name": "start",
       "tokens": 50,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "end",
       "tokens": 49,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "navigate",
       "tokens": 67,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 44
+      "inputSchemaTokens": 44,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "act",
       "tokens": 69,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 44
+      "inputSchemaTokens": 44,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "observe",
       "tokens": 69,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 44
+      "inputSchemaTokens": 44,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "extract",
       "tokens": 58,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 34
+      "inputSchemaTokens": 34,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "1dc53461369d7cb64ea8151f33283db371951cf44289471f6156e35cd1ae28bb",

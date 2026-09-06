@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | search_graph | 905 | 17.2% | 324 | 537 |
 | trace_path | 732 | 13.9% | 170 | 520 |

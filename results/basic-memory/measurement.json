@@ -10,139 +10,185 @@
       "name": "delete_note",
       "tokens": 398,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 293
+      "inputSchemaTokens": 293,
+      "outputSchemaTokens": 47,
+      "annotationsTokens": 13
     },
     {
       "name": "read_content",
       "tokens": 257,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 190
+      "inputSchemaTokens": 190,
+      "outputSchemaTokens": 10,
+      "annotationsTokens": 13
     },
     {
       "name": "build_context",
       "tokens": 687,
       "descriptionTokens": 195,
-      "inputSchemaTokens": 386
+      "inputSchemaTokens": 386,
+      "outputSchemaTokens": 43,
+      "annotationsTokens": 13
     },
     {
       "name": "recent_activity",
       "tokens": 636,
       "descriptionTokens": 61,
-      "inputSchemaTokens": 468
+      "inputSchemaTokens": 468,
+      "outputSchemaTokens": 50,
+      "annotationsTokens": 13
     },
     {
       "name": "search_notes",
       "tokens": 970,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 869
+      "inputSchemaTokens": 869,
+      "outputSchemaTokens": 43,
+      "annotationsTokens": 13
     },
     {
       "name": "read_note",
       "tokens": 501,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 404
+      "inputSchemaTokens": 404,
+      "outputSchemaTokens": 43,
+      "annotationsTokens": 13
     },
     {
       "name": "view_note",
       "tokens": 242,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 158
+      "inputSchemaTokens": 158,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "write_note",
       "tokens": 780,
       "descriptionTokens": 23,
-      "inputSchemaTokens": 662
+      "inputSchemaTokens": 662,
+      "outputSchemaTokens": 43,
+      "annotationsTokens": 20
     },
     {
       "name": "cloud_info",
       "tokens": 97,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 14
+      "inputSchemaTokens": 14,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "release_notes",
       "tokens": 98,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 14
+      "inputSchemaTokens": 14,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "canvas",
       "tokens": 381,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 287
+      "inputSchemaTokens": 287,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 20
     },
     {
       "name": "list_directory",
       "tokens": 352,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 268
+      "inputSchemaTokens": 268,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "edit_note",
       "tokens": 722,
       "descriptionTokens": 28,
-      "inputSchemaTokens": 606
+      "inputSchemaTokens": 606,
+      "outputSchemaTokens": 43,
+      "annotationsTokens": 13
     },
     {
       "name": "move_note",
       "tokens": 531,
       "descriptionTokens": 16,
-      "inputSchemaTokens": 427
+      "inputSchemaTokens": 427,
+      "outputSchemaTokens": 43,
+      "annotationsTokens": 13
     },
     {
       "name": "list_workspaces",
       "tokens": 161,
       "descriptionTokens": 16,
-      "inputSchemaTokens": 52
+      "inputSchemaTokens": 52,
+      "outputSchemaTokens": 43,
+      "annotationsTokens": 13
     },
     {
       "name": "list_memory_projects",
       "tokens": 234,
       "descriptionTokens": 86,
-      "inputSchemaTokens": 54
+      "inputSchemaTokens": 54,
+      "outputSchemaTokens": 43,
+      "annotationsTokens": 13
     },
     {
       "name": "create_memory_project",
       "tokens": 365,
       "descriptionTokens": 39,
-      "inputSchemaTokens": 234
+      "inputSchemaTokens": 234,
+      "outputSchemaTokens": 43,
+      "annotationsTokens": 13
     },
     {
       "name": "delete_project",
       "tokens": 241,
       "descriptionTokens": 41,
-      "inputSchemaTokens": 124
+      "inputSchemaTokens": 124,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "search",
       "tokens": 133,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 40
+      "inputSchemaTokens": 40,
+      "outputSchemaTokens": 40,
+      "annotationsTokens": 13
     },
     {
       "name": "fetch",
       "tokens": 135,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 39
+      "inputSchemaTokens": 39,
+      "outputSchemaTokens": 40,
+      "annotationsTokens": 13
     },
     {
       "name": "schema_validate",
       "tokens": 710,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 229
+      "inputSchemaTokens": 229,
+      "outputSchemaTokens": 427,
+      "annotationsTokens": 13
     },
     {
       "name": "schema_infer",
       "tokens": 314,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 214
+      "inputSchemaTokens": 214,
+      "outputSchemaTokens": 43,
+      "annotationsTokens": 13
     },
     {
       "name": "schema_diff",
       "tokens": 264,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 165
+      "inputSchemaTokens": 165,
+      "outputSchemaTokens": 43,
+      "annotationsTokens": 13
     }
   ],
   "canonicalSha256": "0ba9e9185e3d5c167bbaf0dcfeb499f27020c307f1387a3b85374f849f0a38a7",

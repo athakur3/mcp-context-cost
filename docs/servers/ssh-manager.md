@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | ssh_sync | 477 | 5.6% | 174 | 285 |
 | ssh_backup_create | 387 | 4.6% | 84 | 284 |

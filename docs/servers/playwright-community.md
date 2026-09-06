@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | playwright_get_visible_html | 228 | 7.8% | 31 | 184 |
 | playwright_resize | 205 | 7.0% | 39 | 155 |

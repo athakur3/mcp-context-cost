@@ -10,139 +10,185 @@
       "name": "cleanup",
       "tokens": 32,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 9
+      "inputSchemaTokens": 9,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "kubectl_get",
       "tokens": 286,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 252
+      "inputSchemaTokens": 252,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "kubectl_describe",
       "tokens": 161,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 128
+      "inputSchemaTokens": 128,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "kubectl_apply",
       "tokens": 224,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 194
+      "inputSchemaTokens": 194,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "kubectl_delete",
       "tokens": 322,
       "descriptionTokens": 16,
-      "inputSchemaTokens": 286
+      "inputSchemaTokens": 286,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "kubectl_create",
       "tokens": 945,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 919
+      "inputSchemaTokens": 919,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "kubectl_logs",
       "tokens": 308,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 276
+      "inputSchemaTokens": 276,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "kubectl_scale",
       "tokens": 148,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 124
+      "inputSchemaTokens": 124,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "kubectl_patch",
       "tokens": 287,
       "descriptionTokens": 19,
-      "inputSchemaTokens": 248
+      "inputSchemaTokens": 248,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "kubectl_rollout",
       "tokens": 292,
       "descriptionTokens": 19,
-      "inputSchemaTokens": 252
+      "inputSchemaTokens": 252,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "kubectl_context",
       "tokens": 178,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 145
+      "inputSchemaTokens": 145,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "kubectl_reconnect",
       "tokens": 76,
       "descriptionTokens": 44,
-      "inputSchemaTokens": 12
+      "inputSchemaTokens": 12,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "explain_resource",
       "tokens": 177,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 149
+      "inputSchemaTokens": 149,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "install_helm_chart",
       "tokens": 291,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 257
+      "inputSchemaTokens": 257,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "upgrade_helm_chart",
       "tokens": 226,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 199
+      "inputSchemaTokens": 199,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "uninstall_helm_chart",
       "tokens": 106,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 78
+      "inputSchemaTokens": 78,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "node_management",
       "tokens": 341,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 308
+      "inputSchemaTokens": 308,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "port_forward",
       "tokens": 91,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 61
+      "inputSchemaTokens": 61,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 6
     },
     {
       "name": "stop_port_forward",
       "tokens": 45,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 19
+      "inputSchemaTokens": 19,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "exec_in_pod",
       "tokens": 256,
       "descriptionTokens": 43,
-      "inputSchemaTokens": 193
+      "inputSchemaTokens": 193,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "list_api_resources",
       "tokens": 159,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 131
+      "inputSchemaTokens": 131,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "kubectl_generic",
       "tokens": 272,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 241
+      "inputSchemaTokens": 241,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "ping",
       "tokens": 43,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 12
+      "inputSchemaTokens": 12,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     }
   ],
   "canonicalSha256": "20126671be70fdb77743a595f195002612b03c889b348447ed9ff4d7057f8c1c",

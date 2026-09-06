@@ -10,43 +10,57 @@
       "name": "search",
       "tokens": 1737,
       "descriptionTokens": 478,
-      "inputSchemaTokens": 612
+      "inputSchemaTokens": 612,
+      "outputSchemaTokens": 599,
+      "annotationsTokens": 20
     },
     {
       "name": "scholar_search",
       "tokens": 981,
       "descriptionTokens": 134,
-      "inputSchemaTokens": 302
+      "inputSchemaTokens": 302,
+      "outputSchemaTokens": 496,
+      "annotationsTokens": 20
     },
     {
       "name": "search_parallel",
       "tokens": 1860,
       "descriptionTokens": 482,
-      "inputSchemaTokens": 631
+      "inputSchemaTokens": 631,
+      "outputSchemaTokens": 697,
+      "annotationsTokens": 20
     },
     {
       "name": "extract",
       "tokens": 1249,
       "descriptionTokens": 330,
-      "inputSchemaTokens": 511
+      "inputSchemaTokens": 511,
+      "outputSchemaTokens": 358,
+      "annotationsTokens": 20
     },
     {
       "name": "project_memory_search",
       "tokens": 1436,
       "descriptionTokens": 208,
-      "inputSchemaTokens": 261
+      "inputSchemaTokens": 261,
+      "outputSchemaTokens": 917,
+      "annotationsTokens": 20
     },
     {
       "name": "project_memory",
       "tokens": 3279,
       "descriptionTokens": 285,
-      "inputSchemaTokens": 2030
+      "inputSchemaTokens": 2030,
+      "outputSchemaTokens": 917,
+      "annotationsTokens": 20
     },
     {
       "name": "health",
       "tokens": 404,
       "descriptionTokens": 50,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 281,
+      "annotationsTokens": 20
     }
   ],
   "canonicalSha256": "64ca81a34311e1318d731b8fbf14e5f1759567e4a7bdaabf43f3553ee732ee41",

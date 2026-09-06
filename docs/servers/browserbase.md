@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | act | 69 | 19.0% | 6 | 44 |
 | observe | 69 | 19.0% | 6 | 44 |

@@ -10,49 +10,65 @@
       "name": "brave_web_search",
       "tokens": 1398,
       "descriptionTokens": 133,
-      "inputSchemaTokens": 1213
+      "inputSchemaTokens": 1213,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "brave_local_search",
       "tokens": 1417,
       "descriptionTokens": 157,
-      "inputSchemaTokens": 1213
+      "inputSchemaTokens": 1213,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "brave_video_search",
       "tokens": 690,
       "descriptionTokens": 86,
-      "inputSchemaTokens": 556
+      "inputSchemaTokens": 556,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "brave_image_search",
       "tokens": 818,
       "descriptionTokens": 67,
-      "inputSchemaTokens": 270
+      "inputSchemaTokens": 270,
+      "outputSchemaTokens": 432,
+      "annotationsTokens": 14
     },
     {
       "name": "brave_news_search",
       "tokens": 1004,
       "descriptionTokens": 249,
-      "inputSchemaTokens": 696
+      "inputSchemaTokens": 696,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "brave_summarizer",
       "tokens": 309,
       "descriptionTokens": 154,
-      "inputSchemaTokens": 103
+      "inputSchemaTokens": 103,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 15
     },
     {
       "name": "brave_llm_context",
       "tokens": 2554,
       "descriptionTokens": 177,
-      "inputSchemaTokens": 1537
+      "inputSchemaTokens": 1537,
+      "outputSchemaTokens": 787,
+      "annotationsTokens": 15
     },
     {
       "name": "brave_place_search",
       "tokens": 17295,
       "descriptionTokens": 351,
-      "inputSchemaTokens": 1145
+      "inputSchemaTokens": 1145,
+      "outputSchemaTokens": 15737,
+      "annotationsTokens": 14
     }
   ],
   "canonicalSha256": "ec3c4f85b22d1e4866faeb04af7038fc28568dc4a262416cea7ce77c63b2b015",

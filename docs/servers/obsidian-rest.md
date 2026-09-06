@@ -16,20 +16,20 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
-|---|---:|---:|---:|---:|
-| obsidian_get_note | 1,523 | 15.0% | 41 | 578 |
-| obsidian_search_notes | 1,369 | 13.5% | 83 | 368 |
-| obsidian_manage_tags | 1,052 | 10.3% | 96 | 404 |
-| obsidian_patch_note | 1,028 | 10.1% | 58 | 729 |
-| obsidian_write_note | 933 | 9.2% | 129 | 643 |
-| obsidian_manage_frontmatter | 878 | 8.6% | 41 | 409 |
-| obsidian_append_to_note | 817 | 8.0% | 124 | 570 |
-| obsidian_replace_in_note | 812 | 8.0% | 54 | 555 |
-| obsidian_list_notes | 774 | 7.6% | 75 | 197 |
-| obsidian_delete_note | 438 | 4.3% | 41 | 289 |
-| obsidian_open_in_ui | 298 | 2.9% | 35 | 121 |
-| obsidian_list_tags | 249 | 2.4% | 59 | 24 |
+| tool | tokens | share | description | input schema | output schema |
+|---|---:|---:|---:|---:|---:|
+| obsidian_get_note | 1,523 | 15.0% | 41 | 578 | 858 |
+| obsidian_search_notes | 1,369 | 13.5% | 83 | 368 | 872 |
+| obsidian_manage_tags | 1,052 | 10.3% | 96 | 404 | 513 |
+| obsidian_patch_note | 1,028 | 10.1% | 58 | 729 | 201 |
+| obsidian_write_note | 933 | 9.2% | 129 | 643 | 114 |
+| obsidian_manage_frontmatter | 878 | 8.6% | 41 | 409 | 386 |
+| obsidian_append_to_note | 817 | 8.0% | 124 | 570 | 81 |
+| obsidian_replace_in_note | 812 | 8.0% | 54 | 555 | 162 |
+| obsidian_list_notes | 774 | 7.6% | 75 | 197 | 456 |
+| obsidian_delete_note | 438 | 4.3% | 41 | 289 | 69 |
+| obsidian_open_in_ui | 298 | 2.9% | 35 | 121 | 101 |
+| obsidian_list_tags | 249 | 2.4% | 59 | 24 | 118 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
 

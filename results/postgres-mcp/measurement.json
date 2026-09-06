@@ -10,55 +10,73 @@
       "name": "list_schemas",
       "tokens": 862,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 16
+      "inputSchemaTokens": 16,
+      "outputSchemaTokens": 825,
+      "annotationsTokens": 0
     },
     {
       "name": "list_objects",
       "tokens": 916,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 73
+      "inputSchemaTokens": 73,
+      "outputSchemaTokens": 824,
+      "annotationsTokens": 0
     },
     {
       "name": "get_object_details",
       "tokens": 942,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 95
+      "inputSchemaTokens": 95,
+      "outputSchemaTokens": 825,
+      "annotationsTokens": 0
     },
     {
       "name": "explain_query",
       "tokens": 1147,
       "descriptionTokens": 23,
-      "inputSchemaTokens": 285
+      "inputSchemaTokens": 285,
+      "outputSchemaTokens": 825,
+      "annotationsTokens": 0
     },
     {
       "name": "analyze_workload_indexes",
       "tokens": 934,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 79
+      "inputSchemaTokens": 79,
+      "outputSchemaTokens": 827,
+      "annotationsTokens": 0
     },
     {
       "name": "analyze_query_indexes",
       "tokens": 968,
       "descriptionTokens": 16,
-      "inputSchemaTokens": 110
+      "inputSchemaTokens": 110,
+      "outputSchemaTokens": 826,
+      "annotationsTokens": 0
     },
     {
       "name": "analyze_db_health",
       "tokens": 1026,
       "descriptionTokens": 128,
-      "inputSchemaTokens": 56
+      "inputSchemaTokens": 56,
+      "outputSchemaTokens": 826,
+      "annotationsTokens": 0
     },
     {
       "name": "get_top_queries",
       "tokens": 957,
       "descriptionTokens": 21,
-      "inputSchemaTokens": 97
+      "inputSchemaTokens": 97,
+      "outputSchemaTokens": 825,
+      "annotationsTokens": 0
     },
     {
       "name": "execute_sql",
       "tokens": 878,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 34
+      "inputSchemaTokens": 34,
+      "outputSchemaTokens": 824,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "9bb1e5d26dd377de9dbfac88ffe77663a1169cddf66c6b1f52f57d3a740b0e54",

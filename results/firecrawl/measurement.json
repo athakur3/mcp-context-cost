@@ -10,163 +10,217 @@
       "name": "firecrawl_scrape",
       "tokens": 874,
       "descriptionTokens": 226,
-      "inputSchemaTokens": 600
+      "inputSchemaTokens": 600,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "firecrawl_map",
       "tokens": 240,
       "descriptionTokens": 106,
-      "inputSchemaTokens": 91
+      "inputSchemaTokens": 91,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     },
     {
       "name": "firecrawl_search",
       "tokens": 1391,
       "descriptionTokens": 261,
-      "inputSchemaTokens": 1082
+      "inputSchemaTokens": 1082,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     },
     {
       "name": "firecrawl_search_feedback",
       "tokens": 501,
       "descriptionTokens": 140,
-      "inputSchemaTokens": 315
+      "inputSchemaTokens": 315,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 28
     },
     {
       "name": "firecrawl_feedback",
       "tokens": 565,
       "descriptionTokens": 55,
-      "inputSchemaTokens": 464
+      "inputSchemaTokens": 464,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 29
     },
     {
       "name": "firecrawl_crawl",
       "tokens": 911,
       "descriptionTokens": 98,
-      "inputSchemaTokens": 769
+      "inputSchemaTokens": 769,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "firecrawl_check_crawl_status",
       "tokens": 115,
       "descriptionTokens": 33,
-      "inputSchemaTokens": 39
+      "inputSchemaTokens": 39,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     },
     {
       "name": "firecrawl_extract",
       "tokens": 189,
       "descriptionTokens": 47,
-      "inputSchemaTokens": 98
+      "inputSchemaTokens": 98,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 28
     },
     {
       "name": "firecrawl_agent",
       "tokens": 253,
       "descriptionTokens": 124,
-      "inputSchemaTokens": 86
+      "inputSchemaTokens": 86,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "firecrawl_agent_status",
       "tokens": 186,
       "descriptionTokens": 103,
-      "inputSchemaTokens": 39
+      "inputSchemaTokens": 39,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "firecrawl_interact",
       "tokens": 819,
       "descriptionTokens": 99,
-      "inputSchemaTokens": 675
+      "inputSchemaTokens": 675,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 27
     },
     {
       "name": "firecrawl_interact_stop",
       "tokens": 109,
       "descriptionTokens": 24,
-      "inputSchemaTokens": 43
+      "inputSchemaTokens": 43,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     },
     {
       "name": "firecrawl_parse",
       "tokens": 630,
       "descriptionTokens": 170,
-      "inputSchemaTokens": 413
+      "inputSchemaTokens": 413,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "firecrawl_monitor_create",
       "tokens": 380,
       "descriptionTokens": 134,
-      "inputSchemaTokens": 204
+      "inputSchemaTokens": 204,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 24
     },
     {
       "name": "firecrawl_monitor_list",
       "tokens": 129,
       "descriptionTokens": 22,
-      "inputSchemaTokens": 67
+      "inputSchemaTokens": 67,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 24
     },
     {
       "name": "firecrawl_monitor_get",
       "tokens": 102,
       "descriptionTokens": 23,
-      "inputSchemaTokens": 39
+      "inputSchemaTokens": 39,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 24
     },
     {
       "name": "firecrawl_monitor_update",
       "tokens": 150,
       "descriptionTokens": 47,
-      "inputSchemaTokens": 61
+      "inputSchemaTokens": 61,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 24
     },
     {
       "name": "firecrawl_monitor_delete",
       "tokens": 104,
       "descriptionTokens": 25,
-      "inputSchemaTokens": 39
+      "inputSchemaTokens": 39,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 24
     },
     {
       "name": "firecrawl_monitor_run",
       "tokens": 109,
       "descriptionTokens": 29,
-      "inputSchemaTokens": 39
+      "inputSchemaTokens": 39,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     },
     {
       "name": "firecrawl_monitor_checks",
       "tokens": 172,
       "descriptionTokens": 29,
-      "inputSchemaTokens": 102
+      "inputSchemaTokens": 102,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     },
     {
       "name": "firecrawl_monitor_check",
       "tokens": 242,
       "descriptionTokens": 89,
-      "inputSchemaTokens": 110
+      "inputSchemaTokens": 110,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     },
     {
       "name": "firecrawl_research_search_papers",
       "tokens": 346,
       "descriptionTokens": 90,
-      "inputSchemaTokens": 208
+      "inputSchemaTokens": 208,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     },
     {
       "name": "firecrawl_research_inspect_paper",
       "tokens": 191,
       "descriptionTokens": 42,
-      "inputSchemaTokens": 104
+      "inputSchemaTokens": 104,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     },
     {
       "name": "firecrawl_research_related_papers",
       "tokens": 247,
       "descriptionTokens": 78,
-      "inputSchemaTokens": 120
+      "inputSchemaTokens": 120,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 28
     },
     {
       "name": "firecrawl_research_read_paper",
       "tokens": 236,
       "descriptionTokens": 46,
-      "inputSchemaTokens": 144
+      "inputSchemaTokens": 144,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     },
     {
       "name": "firecrawl_research_search_github",
       "tokens": 135,
       "descriptionTokens": 32,
-      "inputSchemaTokens": 58
+      "inputSchemaTokens": 58,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "firecrawl_developer_search",
       "tokens": 259,
       "descriptionTokens": 93,
-      "inputSchemaTokens": 122
+      "inputSchemaTokens": 122,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     }
   ],
   "canonicalSha256": "3b7694bcedabac9706eba0c497c1fb4591121db0fd25e4e87e4802a001e34cd6",

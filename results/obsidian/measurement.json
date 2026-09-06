@@ -10,91 +10,121 @@
       "name": "obsidian_list_files_in_dir",
       "tokens": 74,
       "descriptionTokens": 15,
-      "inputSchemaTokens": 45
+      "inputSchemaTokens": 45,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "obsidian_list_files_in_vault",
       "tokens": 43,
       "descriptionTokens": 16,
-      "inputSchemaTokens": 12
+      "inputSchemaTokens": 12,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "obsidian_get_file_contents",
       "tokens": 62,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 38
+      "inputSchemaTokens": 38,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "obsidian_simple_search",
       "tokens": 105,
       "descriptionTokens": 30,
-      "inputSchemaTokens": 61
+      "inputSchemaTokens": 61,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "obsidian_patch_content",
       "tokens": 263,
       "descriptionTokens": 69,
-      "inputSchemaTokens": 182
+      "inputSchemaTokens": 182,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "obsidian_append_content",
       "tokens": 78,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 54
+      "inputSchemaTokens": 54,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "obsidian_put_content",
       "tokens": 146,
       "descriptionTokens": 69,
-      "inputSchemaTokens": 65
+      "inputSchemaTokens": 65,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "obsidian_delete_file",
       "tokens": 87,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 66
+      "inputSchemaTokens": 66,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "obsidian_complex_search",
       "tokens": 492,
       "descriptionTokens": 241,
-      "inputSchemaTokens": 198
+      "inputSchemaTokens": 198,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "obsidian_search_by_tag",
       "tokens": 167,
       "descriptionTokens": 82,
-      "inputSchemaTokens": 72
+      "inputSchemaTokens": 72,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "obsidian_get_frontmatter",
       "tokens": 97,
       "descriptionTokens": 48,
-      "inputSchemaTokens": 36
+      "inputSchemaTokens": 36,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "obsidian_batch_get_file_contents",
       "tokens": 84,
       "descriptionTokens": 15,
-      "inputSchemaTokens": 55
+      "inputSchemaTokens": 55,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "obsidian_get_periodic_note",
       "tokens": 135,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 112
+      "inputSchemaTokens": 112,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "obsidian_get_recent_periodic_notes",
       "tokens": 134,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 108
+      "inputSchemaTokens": 108,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "obsidian_get_recent_changes",
       "tokens": 93,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 72
+      "inputSchemaTokens": 72,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "6064f85a43ae17b2da72d1b87fd9435879e8b42bc320e1347e382f5c8a61b499",

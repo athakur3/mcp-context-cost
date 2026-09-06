@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | qdrant-store | 101 | 53.7% | 15 | 74 |
 | qdrant-find | 85 | 45.2% | 39 | 30 |

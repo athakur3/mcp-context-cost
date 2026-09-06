@@ -10,25 +10,33 @@
       "name": "searxng_web_search",
       "tokens": 825,
       "descriptionTokens": 153,
-      "inputSchemaTokens": 643
+      "inputSchemaTokens": 643,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "searxng_search_suggestions",
       "tokens": 118,
       "descriptionTokens": 23,
-      "inputSchemaTokens": 66
+      "inputSchemaTokens": 66,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "searxng_instance_info",
       "tokens": 163,
       "descriptionTokens": 34,
-      "inputSchemaTokens": 100
+      "inputSchemaTokens": 100,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "web_url_read",
       "tokens": 429,
       "descriptionTokens": 259,
-      "inputSchemaTokens": 145
+      "inputSchemaTokens": 145,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     }
   ],
   "canonicalSha256": "277906d8ed722cfce33b345e34effdc0a2c37c8effc4fc85c9f5d13888d6ea7f",

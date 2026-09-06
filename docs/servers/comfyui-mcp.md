@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | download_model | 3,986 | 7.9% | 2,111 | 1,823 |
 | generate_image | 3,899 | 7.7% | 1,278 | 2,586 |

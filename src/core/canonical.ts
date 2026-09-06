@@ -31,6 +31,34 @@ interface ToolLike {
   name?: string;
   description?: string;
   inputSchema?: unknown;
+  outputSchema?: unknown;
+  annotations?: unknown;
+}
+
+/**
+ * One tool's diagnostic breakdown, from the tool object alone.
+ *
+ * Exported and used by `measureTools` rather than inlined there, because two
+ * other callers have to agree with it exactly: the backfill that fills these
+ * fields in on records written before they existed, and the test that re-derives
+ * every published record's breakdown from that record's own capture. A second
+ * implementation of this arithmetic would be a second answer to the same
+ * question.
+ *
+ * A tool that ships no `outputSchema` or `annotations` records `0`. An absent
+ * key means something else — a record written before this existed — which is
+ * why `ToolMeasurement` makes them optional.
+ */
+export function measureTool(t: unknown): ToolMeasurement {
+  const tool = t as ToolLike;
+  return {
+    name: tool.name ?? '(unnamed)',
+    tokens: countTokens(JSON.stringify(t)),
+    descriptionTokens: tool.description ? countTokens(tool.description) : 0,
+    inputSchemaTokens: tool.inputSchema ? countTokens(JSON.stringify(tool.inputSchema)) : 0,
+    outputSchemaTokens: tool.outputSchema ? countTokens(JSON.stringify(tool.outputSchema)) : 0,
+    annotationsTokens: tool.annotations ? countTokens(JSON.stringify(tool.annotations)) : 0,
+  };
 }
 
 /**
@@ -54,15 +82,7 @@ export function measureTools(
   },
 ): Measurement {
   const canonical = canonicalString(tools);
-  const perTool: ToolMeasurement[] = tools.map((t) => {
-    const tool = t as ToolLike;
-    return {
-      name: tool.name ?? '(unnamed)',
-      tokens: countTokens(JSON.stringify(t)),
-      descriptionTokens: tool.description ? countTokens(tool.description) : 0,
-      inputSchemaTokens: tool.inputSchema ? countTokens(JSON.stringify(tool.inputSchema)) : 0,
-    };
-  });
+  const perTool: ToolMeasurement[] = tools.map(measureTool);
   return {
     methodologyVersion: METHODOLOGY_VERSION,
     provider: 'tiktoken',

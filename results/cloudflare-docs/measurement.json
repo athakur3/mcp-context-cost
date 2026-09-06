@@ -10,13 +10,17 @@
       "name": "search_cloudflare_documentation",
       "tokens": 351,
       "descriptionTokens": 140,
-      "inputSchemaTokens": 36
+      "inputSchemaTokens": 36,
+      "outputSchemaTokens": 137,
+      "annotationsTokens": 14
     },
     {
       "name": "migrate_pages_to_workers_guide",
       "tokens": 69,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 26
+      "inputSchemaTokens": 26,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     }
   ],
   "canonicalSha256": "a65649ac29928ffde9e8bf8796482b5aaeb17e79d02ea2f3b8b96f11ac32b604",

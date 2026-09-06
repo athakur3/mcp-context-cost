@@ -10,7 +10,9 @@
       "name": "convert_to_markdown",
       "tokens": 62,
       "descriptionTokens": 18,
-      "inputSchemaTokens": 31
+      "inputSchemaTokens": 31,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "d708fc0ae4f3fb818d01cc3d4da0b74c2e5591a7982735d6200b3d56ab74d66b",

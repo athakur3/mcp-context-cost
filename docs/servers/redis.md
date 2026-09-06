@@ -16,38 +16,38 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
-|---|---:|---:|---:|---:|
-| hybrid_search | 510 | 5.5% | 271 | 140 |
-| scan_keys | 482 | 5.2% | 341 | 58 |
-| create_vector_index_hash | 352 | 3.8% | 191 | 100 |
-| search_redis_documents | 345 | 3.7% | 231 | 31 |
-| vector_search_hash | 319 | 3.5% | 119 | 123 |
-| xreadgroup | 317 | 3.4% | 138 | 120 |
-| scan_all_keys | 267 | 2.9% | 143 | 46 |
-| json_set | 228 | 2.5% | 94 | 81 |
-| hset | 220 | 2.4% | 73 | 94 |
-| xgroup_create | 215 | 2.3% | 80 | 80 |
-| set | 214 | 2.3% | 69 | 95 |
-| set_vector_in_hash | 207 | 2.2% | 75 | 68 |
-| zadd | 207 | 2.2% | 75 | 79 |
-| zrange | 203 | 2.2% | 78 | 72 |
-| read_messages | 202 | 2.2% | 77 | 67 |
-| rename | 201 | 2.2% | 91 | 47 |
-| xadd | 193 | 2.1% | 70 | 71 |
-| lrem | 191 | 2.1% | 65 | 76 |
-| sadd | 184 | 2.0% | 64 | 68 |
-| xack | 182 | 2.0% | 61 | 69 |
-| json_get | 151 | 1.6% | 56 | 44 |
-| json_del | 150 | 1.6% | 55 | 44 |
-| lrange | 149 | 1.6% | 31 | 55 |
-| lpush | 146 | 1.6% | 17 | 87 |
-| rpush | 146 | 1.6% | 17 | 87 |
-| xgroup_destroy | 145 | 1.6% | 46 | 46 |
-| xdel | 144 | 1.6% | 48 | 45 |
-| xrange | 143 | 1.5% | 48 | 44 |
-| expire | 139 | 1.5% | 46 | 44 |
-| zrem | 139 | 1.5% | 46 | 42 |
+| tool | tokens | share | description | input schema | output schema |
+|---|---:|---:|---:|---:|---:|
+| hybrid_search | 510 | 5.5% | 271 | 140 | 51 |
+| scan_keys | 482 | 5.2% | 341 | 58 | 43 |
+| create_vector_index_hash | 352 | 3.8% | 191 | 100 | 31 |
+| search_redis_documents | 345 | 3.7% | 231 | 31 | 57 |
+| vector_search_hash | 319 | 3.5% | 119 | 123 | 51 |
+| xreadgroup | 317 | 3.4% | 138 | 120 | 30 |
+| scan_all_keys | 267 | 2.9% | 143 | 46 | 46 |
+| json_set | 228 | 2.5% | 94 | 81 | 29 |
+| hset | 220 | 2.4% | 73 | 94 | 29 |
+| xgroup_create | 215 | 2.3% | 80 | 80 | 30 |
+| set | 214 | 2.3% | 69 | 95 | 28 |
+| set_vector_in_hash | 207 | 2.2% | 75 | 68 | 40 |
+| zadd | 207 | 2.2% | 75 | 79 | 29 |
+| zrange | 203 | 2.2% | 78 | 72 | 29 |
+| read_messages | 202 | 2.2% | 77 | 67 | 34 |
+| rename | 201 | 2.2% | 91 | 47 | 33 |
+| xadd | 193 | 2.1% | 70 | 71 | 29 |
+| lrem | 191 | 2.1% | 65 | 76 | 29 |
+| sadd | 184 | 2.0% | 64 | 68 | 29 |
+| xack | 182 | 2.0% | 61 | 69 | 29 |
+| json_get | 151 | 1.6% | 56 | 44 | 29 |
+| json_del | 150 | 1.6% | 55 | 44 | 29 |
+| lrange | 149 | 1.6% | 31 | 55 | 45 |
+| lpush | 146 | 1.6% | 17 | 87 | 29 |
+| rpush | 146 | 1.6% | 17 | 87 | 29 |
+| xgroup_destroy | 145 | 1.6% | 46 | 46 | 30 |
+| xdel | 144 | 1.6% | 48 | 45 | 29 |
+| xrange | 143 | 1.5% | 48 | 44 | 29 |
+| expire | 139 | 1.5% | 46 | 44 | 28 |
+| zrem | 139 | 1.5% | 46 | 42 | 29 |
 
 *23 smaller tools omitted (2,553 tokens combined) — all of them are in the [raw capture](https://github.com/athakur3/mcp-context-cost/blob/main/results/redis/measurement.json).*
 

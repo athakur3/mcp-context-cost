@@ -10,61 +10,81 @@
       "name": "search-actors",
       "tokens": 2226,
       "descriptionTokens": 610,
-      "inputSchemaTokens": 504
+      "inputSchemaTokens": 504,
+      "outputSchemaTokens": 1026,
+      "annotationsTokens": 31
     },
     {
       "name": "fetch-actor-details",
       "tokens": 1534,
       "descriptionTokens": 219,
-      "inputSchemaTokens": 262
+      "inputSchemaTokens": 262,
+      "outputSchemaTokens": 983,
+      "annotationsTokens": 32
     },
     {
       "name": "call-actor",
       "tokens": 1875,
       "descriptionTokens": 377,
-      "inputSchemaTokens": 496
+      "inputSchemaTokens": 496,
+      "outputSchemaTokens": 922,
+      "annotationsTokens": 31
     },
     {
       "name": "get-actor-run",
       "tokens": 1290,
       "descriptionTokens": 192,
-      "inputSchemaTokens": 108
+      "inputSchemaTokens": 108,
+      "outputSchemaTokens": 922,
+      "annotationsTokens": 32
     },
     {
       "name": "get-dataset-items",
       "tokens": 664,
       "descriptionTokens": 130,
-      "inputSchemaTokens": 289
+      "inputSchemaTokens": 289,
+      "outputSchemaTokens": 182,
+      "annotationsTokens": 32
     },
     {
       "name": "get-key-value-store-record",
       "tokens": 341,
       "descriptionTokens": 102,
-      "inputSchemaTokens": 73
+      "inputSchemaTokens": 73,
+      "outputSchemaTokens": 99,
+      "annotationsTokens": 34
     },
     {
       "name": "abort-actor-run",
       "tokens": 1165,
       "descriptionTokens": 112,
-      "inputSchemaTokens": 69
+      "inputSchemaTokens": 69,
+      "outputSchemaTokens": 922,
+      "annotationsTokens": 32
     },
     {
       "name": "search-apify-docs",
       "tokens": 722,
       "descriptionTokens": 251,
-      "inputSchemaTokens": 291
+      "inputSchemaTokens": 291,
+      "outputSchemaTokens": 104,
+      "annotationsTokens": 33
     },
     {
       "name": "fetch-apify-docs",
       "tokens": 286,
       "descriptionTokens": 110,
-      "inputSchemaTokens": 64
+      "inputSchemaTokens": 64,
+      "outputSchemaTokens": 48,
+      "annotationsTokens": 33
     },
     {
       "name": "report-problem",
       "tokens": 347,
       "descriptionTokens": 95,
-      "inputSchemaTokens": 163
+      "inputSchemaTokens": 163,
+      "outputSchemaTokens": 30,
+      "annotationsTokens": 32
     }
   ],
   "canonicalSha256": "4dd4565165c7066d8e8ef666f79cd8b323bad3d7f66b4d34fbe769f07e979453",

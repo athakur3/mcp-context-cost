@@ -10,55 +10,73 @@
       "name": "netlify-coding-rules",
       "tokens": 124,
       "descriptionTokens": 32,
-      "inputSchemaTokens": 61
+      "inputSchemaTokens": 61,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "netlify-user-services-reader",
       "tokens": 147,
       "descriptionTokens": 17,
-      "inputSchemaTokens": 99
+      "inputSchemaTokens": 99,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "netlify-deploy-services-reader",
       "tokens": 261,
       "descriptionTokens": 24,
-      "inputSchemaTokens": 205
+      "inputSchemaTokens": 205,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "netlify-deploy-services-updater",
       "tokens": 254,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 208
+      "inputSchemaTokens": 208,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "netlify-team-services-reader",
       "tokens": 231,
       "descriptionTokens": 21,
-      "inputSchemaTokens": 179
+      "inputSchemaTokens": 179,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "netlify-project-services-reader",
       "tokens": 349,
       "descriptionTokens": 27,
-      "inputSchemaTokens": 291
+      "inputSchemaTokens": 291,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "netlify-project-services-updater",
       "tokens": 896,
       "descriptionTokens": 37,
-      "inputSchemaTokens": 827
+      "inputSchemaTokens": 827,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "netlify-extension-services-reader",
       "tokens": 265,
       "descriptionTokens": 23,
-      "inputSchemaTokens": 211
+      "inputSchemaTokens": 211,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "netlify-extension-services-updater",
       "tokens": 302,
       "descriptionTokens": 19,
-      "inputSchemaTokens": 251
+      "inputSchemaTokens": 251,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     }
   ],
   "canonicalSha256": "be8578ef35da6e632f7cee04f664676c4895a1320868eceec1150a55f6c21440",

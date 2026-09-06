@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | netlify-project-services-updater | 896 | 31.6% | 37 | 827 |
 | netlify-project-services-reader | 349 | 12.3% | 27 | 291 |

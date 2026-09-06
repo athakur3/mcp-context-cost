@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | airbnb_search | 319 | 65.6% | 16 | 291 |
 | airbnb_listing_details | 165 | 34.0% | 15 | 137 |

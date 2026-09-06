@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | get_azure_bestpractices | 454 | 3.0% | 318 | 96 |
 | compute | 367 | 2.4% | 242 | 96 |

@@ -145,11 +145,21 @@ export function renderServerPage(
 
   md.push('## Where the tokens are');
   md.push('');
-  md.push('| tool | tokens | share | description | schema |');
-  md.push('|---|---:|---:|---:|---:|');
+  // The output-schema column appears only on pages that have one. It is the
+  // field most likely to explain an expensive tool — about a sixth of every
+  // published token across the set, and the largest thing the breakdown used to
+  // leave unnamed — but only a third of measured servers ship one, and a column
+  // of zeroes on the rest would cost every reader something to tell them
+  // nothing. `annotations` is recorded per tool for the same reason and
+  // deliberately gets no column: at roughly 3% of the set it almost never
+  // explains a row, and it is in the measurement file for anyone who looks.
+  const hasOutput = shown.some((t) => (t.outputSchemaTokens ?? 0) > 0);
+  md.push(`| tool | tokens | share | description | input schema |${hasOutput ? ' output schema |' : ''}`);
+  md.push(`|---|---:|---:|---:|---:|${hasOutput ? '---:|' : ''}`);
   for (const t of shown) {
     md.push(
-      `| ${mdCell(t.name)} | ${fmt(t.tokens)} | ${pct(t.tokens)} | ${fmt(t.descriptionTokens)} | ${fmt(t.inputSchemaTokens)} |`,
+      `| ${mdCell(t.name)} | ${fmt(t.tokens)} | ${pct(t.tokens)} | ${fmt(t.descriptionTokens)} | ${fmt(t.inputSchemaTokens)} |` +
+        (hasOutput ? ` ${fmt(t.outputSchemaTokens ?? 0)} |` : ''),
     );
   }
   md.push('');

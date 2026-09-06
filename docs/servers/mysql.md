@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | get_table_sample | 139 | 35.4% | 47 | 61 |
 | get_schema_info | 133 | 33.8% | 68 | 34 |

@@ -10,379 +10,505 @@
       "name": "jira_get_user_profile",
       "tokens": 157,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 64
+      "inputSchemaTokens": 64,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_search_assignable_users",
       "tokens": 434,
       "descriptionTokens": 160,
-      "inputSchemaTokens": 180
+      "inputSchemaTokens": 180,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 14
     },
     {
       "name": "jira_get_issue_watchers",
       "tokens": 166,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 68
+      "inputSchemaTokens": 68,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 14
     },
     {
       "name": "jira_add_watcher",
       "tokens": 203,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 105
+      "inputSchemaTokens": 105,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 14
     },
     {
       "name": "jira_remove_watcher",
       "tokens": 211,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 115
+      "inputSchemaTokens": 115,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 14
     },
     {
       "name": "jira_get_issue",
       "tokens": 567,
       "descriptionTokens": 54,
-      "inputSchemaTokens": 428
+      "inputSchemaTokens": 428,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 12
     },
     {
       "name": "jira_search",
       "tokens": 555,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 461
+      "inputSchemaTokens": 461,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 12
     },
     {
       "name": "jira_search_fields",
       "tokens": 178,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 88
+      "inputSchemaTokens": 88,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 12
     },
     {
       "name": "jira_get_field_options",
       "tokens": 402,
       "descriptionTokens": 76,
-      "inputSchemaTokens": 234
+      "inputSchemaTokens": 234,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_get_project_issues",
       "tokens": 214,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 119
+      "inputSchemaTokens": 119,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_get_transitions",
       "tokens": 169,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 75
+      "inputSchemaTokens": 75,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_get_worklog",
       "tokens": 169,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 75
+      "inputSchemaTokens": 75,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_download_attachments",
       "tokens": 232,
       "descriptionTokens": 97,
-      "inputSchemaTokens": 75
+      "inputSchemaTokens": 75,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_get_issue_images",
       "tokens": 232,
       "descriptionTokens": 92,
-      "inputSchemaTokens": 79
+      "inputSchemaTokens": 79,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_get_agile_boards",
       "tokens": 280,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 180
+      "inputSchemaTokens": 180,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_get_board_issues",
       "tokens": 437,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 338
+      "inputSchemaTokens": 338,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_get_sprints_from_board",
       "tokens": 228,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 128
+      "inputSchemaTokens": 128,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 15
     },
     {
       "name": "jira_get_sprint_issues",
       "tokens": 261,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 168
+      "inputSchemaTokens": 168,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_get_link_types",
       "tokens": 132,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 41
+      "inputSchemaTokens": 41,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_create_issue",
       "tokens": 550,
       "descriptionTokens": 15,
-      "inputSchemaTokens": 453
+      "inputSchemaTokens": 453,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 12
     },
     {
       "name": "jira_batch_create_issues",
       "tokens": 308,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 214
+      "inputSchemaTokens": 214,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_batch_get_changelogs",
       "tokens": 264,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 160
+      "inputSchemaTokens": 160,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 15
     },
     {
       "name": "jira_update_issue",
       "tokens": 602,
       "descriptionTokens": 18,
-      "inputSchemaTokens": 502
+      "inputSchemaTokens": 502,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 12
     },
     {
       "name": "jira_assign_issue",
       "tokens": 256,
       "descriptionTokens": 46,
-      "inputSchemaTokens": 126
+      "inputSchemaTokens": 126,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 12
     },
     {
       "name": "jira_delete_issue",
       "tokens": 163,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 75
+      "inputSchemaTokens": 75,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 12
     },
     {
       "name": "jira_move_issue",
       "tokens": 312,
       "descriptionTokens": 87,
-      "inputSchemaTokens": 133
+      "inputSchemaTokens": 133,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 14
     },
     {
       "name": "jira_add_comment",
       "tokens": 340,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 251
+      "inputSchemaTokens": 251,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 12
     },
     {
       "name": "jira_edit_comment",
       "tokens": 242,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 152
+      "inputSchemaTokens": 152,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 12
     },
     {
       "name": "jira_add_worklog",
       "tokens": 363,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 268
+      "inputSchemaTokens": 268,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_link_to_epic",
       "tokens": 230,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 137
+      "inputSchemaTokens": 137,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_create_issue_link",
       "tokens": 391,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 299
+      "inputSchemaTokens": 299,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_create_remote_issue_link",
       "tokens": 377,
       "descriptionTokens": 56,
-      "inputSchemaTokens": 231
+      "inputSchemaTokens": 231,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 14
     },
     {
       "name": "jira_remove_issue_link",
       "tokens": 128,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 36
+      "inputSchemaTokens": 36,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_transition_issue",
       "tokens": 355,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 264
+      "inputSchemaTokens": 264,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 12
     },
     {
       "name": "jira_create_sprint",
       "tokens": 227,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 137
+      "inputSchemaTokens": 137,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 12
     },
     {
       "name": "jira_update_sprint",
       "tokens": 251,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 164
+      "inputSchemaTokens": 164,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 12
     },
     {
       "name": "jira_add_issues_to_sprint",
       "tokens": 167,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 70
+      "inputSchemaTokens": 70,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 14
     },
     {
       "name": "jira_move_issues_to_backlog",
       "tokens": 152,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 48
+      "inputSchemaTokens": 48,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 15
     },
     {
       "name": "jira_get_project_issue_types",
       "tokens": 204,
       "descriptionTokens": 55,
-      "inputSchemaTokens": 60
+      "inputSchemaTokens": 60,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 14
     },
     {
       "name": "jira_get_create_fields",
       "tokens": 242,
       "descriptionTokens": 59,
-      "inputSchemaTokens": 95
+      "inputSchemaTokens": 95,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_get_project_versions",
       "tokens": 155,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 61
+      "inputSchemaTokens": 61,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_get_project_components",
       "tokens": 154,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 61
+      "inputSchemaTokens": 61,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_get_all_projects",
       "tokens": 130,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 36
+      "inputSchemaTokens": 36,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_search_projects",
       "tokens": 205,
       "descriptionTokens": 33,
-      "inputSchemaTokens": 89
+      "inputSchemaTokens": 89,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 12
     },
     {
       "name": "jira_get_project_fields",
       "tokens": 168,
       "descriptionTokens": 42,
-      "inputSchemaTokens": 40
+      "inputSchemaTokens": 40,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_get_service_desk_for_project",
       "tokens": 172,
       "descriptionTokens": 22,
-      "inputSchemaTokens": 55
+      "inputSchemaTokens": 55,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 15
     },
     {
       "name": "jira_get_service_desk_queues",
       "tokens": 215,
       "descriptionTokens": 19,
-      "inputSchemaTokens": 101
+      "inputSchemaTokens": 101,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 15
     },
     {
       "name": "jira_get_queue_issues",
       "tokens": 229,
       "descriptionTokens": 20,
-      "inputSchemaTokens": 120
+      "inputSchemaTokens": 120,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_get_request_types",
       "tokens": 198,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 101
+      "inputSchemaTokens": 101,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_get_request_type_fields",
       "tokens": 169,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 69
+      "inputSchemaTokens": 69,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 14
     },
     {
       "name": "jira_create_customer_request",
       "tokens": 464,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 370
+      "inputSchemaTokens": 370,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_create_version",
       "tokens": 230,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 139
+      "inputSchemaTokens": 139,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 12
     },
     {
       "name": "jira_batch_create_versions",
       "tokens": 290,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 197
+      "inputSchemaTokens": 197,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_update_version",
       "tokens": 306,
       "descriptionTokens": 48,
-      "inputSchemaTokens": 174
+      "inputSchemaTokens": 174,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 12
     },
     {
       "name": "jira_get_issue_proforma_forms",
       "tokens": 158,
       "descriptionTokens": 27,
-      "inputSchemaTokens": 43
+      "inputSchemaTokens": 43,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_get_proforma_form_details",
       "tokens": 208,
       "descriptionTokens": 27,
-      "inputSchemaTokens": 93
+      "inputSchemaTokens": 93,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_update_proforma_form_answers",
       "tokens": 800,
       "descriptionTokens": 507,
-      "inputSchemaTokens": 145
+      "inputSchemaTokens": 145,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_get_issue_dates",
       "tokens": 248,
       "descriptionTokens": 38,
-      "inputSchemaTokens": 122
+      "inputSchemaTokens": 122,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_get_issue_sla",
       "tokens": 463,
       "descriptionTokens": 161,
-      "inputSchemaTokens": 201
+      "inputSchemaTokens": 201,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 13
     },
     {
       "name": "jira_get_issue_development_info",
       "tokens": 288,
       "descriptionTokens": 51,
-      "inputSchemaTokens": 144
+      "inputSchemaTokens": 144,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 14
     },
     {
       "name": "jira_get_issues_development_info",
       "tokens": 274,
       "descriptionTokens": 27,
-      "inputSchemaTokens": 152
+      "inputSchemaTokens": 152,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 14
     },
     {
       "name": "jira_get_project_epic_hierarchy",
       "tokens": 261,
       "descriptionTokens": 72,
-      "inputSchemaTokens": 92
+      "inputSchemaTokens": 92,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 15
     },
     {
       "name": "jira_get_cross_project_dependencies",
       "tokens": 236,
       "descriptionTokens": 52,
-      "inputSchemaTokens": 91
+      "inputSchemaTokens": 91,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 15
     }
   ],
   "canonicalSha256": "7e46d900cd08847d2710e0e0a1ec66d6f3d415c01ca2e8e6c5a9e357a9d5b4c1",

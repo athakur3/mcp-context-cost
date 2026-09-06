@@ -10,25 +10,33 @@
       "name": "hf_whoami",
       "tokens": 1948,
       "descriptionTokens": 30,
-      "inputSchemaTokens": 26
+      "inputSchemaTokens": 26,
+      "outputSchemaTokens": 1832,
+      "annotationsTokens": 35
     },
     {
       "name": "hub_repo_search",
       "tokens": 364,
       "descriptionTokens": 38,
-      "inputSchemaTokens": 278
+      "inputSchemaTokens": 278,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "hub_repo_details",
       "tokens": 453,
       "descriptionTokens": 76,
-      "inputSchemaTokens": 327
+      "inputSchemaTokens": 327,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "hf_fs",
       "tokens": 1957,
       "descriptionTokens": 596,
-      "inputSchemaTokens": 142
+      "inputSchemaTokens": 142,
+      "outputSchemaTokens": 1059,
+      "annotationsTokens": 64
     }
   ],
   "canonicalSha256": "a2e48e88545d92665679b878c9e66f4f902af2a11bccafc29cc6e627def941ae",

@@ -74,6 +74,38 @@ while reading it.
   declaration to include Linux on 2026-08-14 and still had no Linux runtime when this project
   measured it three weeks later. So the restricting kind is cited and the permitting kind is not.
 
+- **The per-tool table now names the output schema, which was the largest thing it left
+  unnamed.** A tool's row broke its tokens into a description and an input schema and folded
+  everything else — `outputSchema`, `annotations`, `title`, `icons`, `execution` — into the
+  tool's total with nothing pointing at it. Tokenizing each field across the 87 measured servers
+  (1,430 tools, 608,522 tokens) puts input schemas at 47.2% of every published token,
+  descriptions at 21.7% and **output schemas at 16.8%**, shipped by 30 of the 87. So on a third
+  of the pages a reader could see that a tool was expensive and not what made it so:
+  xcodebuildmcp's `snapshot_ui` is 2,139 tokens of which the description is 45 and the input
+  schema 51, and the 1,997-token output schema that is the rest of it appeared nowhere.
+  `ToolMeasurement` gains `outputSchemaTokens` and `annotationsTokens`, and the server pages
+  gain an output-schema column — only on the pages that have one, because a column of zeroes on
+  the other 57 is a worse page rather than a more complete one. Annotations are recorded per
+  tool and get no column, at roughly 3% of the set.
+
+  **No published number moves.** Both fields count bytes that were already inside `tokens`, and
+  `totalTokens` and `canonicalSha256` are counted over the canonical array, which is untouched —
+  byte-identical either side of the change, including in the golden spec fixture.
+  `tools/backfill-tool-attribution.ts` filled the fields in on all 87 existing records by
+  re-tokenizing the capture stored in each file, launching nothing and reaching no network; it
+  refuses to write any record whose stored numbers disagree with its own capture, and none did.
+  A test now re-derives every published record's whole per-tool breakdown from that record's own
+  capture, so a hand-edited number fails the suite.
+
+- **A README sentence that was wrong about which bytes get dropped, found by the attribution
+  above.** The Claude table said `most of the capture is \`annotations\`/\`outputSchema\` metadata
+  Claude never sees` about github. github ships **no `outputSchema` at all** and 924 tokens of
+  annotations — 1.7% of its capture. The 42,830 tokens an Anthropic request drops are `icons`,
+  78% of the whole thing. The claim was plausible, hand-written, and unmaintained, which is the
+  shape this project has been bitten by before, so the fix is not a better sentence: the field
+  and its share are now derived from the capture by `heaviestDroppedField` and patched in by the
+  same regen that maintains the numbers beside them. They move when the capture moves.
+
 ## 0.16.0 — 2026-09-06
 
 

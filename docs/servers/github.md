@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | issue_write | 2,050 | 3.8% | 14 | 779 |
 | list_issues | 1,787 | 3.3% | 33 | 501 |

@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | run_rollback_pipeline | 1,391 | 11.7% | 1,077 | 222 |
 | get_job_test_results | 1,283 | 10.8% | 772 | 442 |

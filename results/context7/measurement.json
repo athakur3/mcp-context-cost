@@ -10,13 +10,17 @@
       "name": "resolve-library-id",
       "tokens": 643,
       "descriptionTokens": 398,
-      "inputSchemaTokens": 176
+      "inputSchemaTokens": 176,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "query-docs",
       "tokens": 407,
       "descriptionTokens": 87,
-      "inputSchemaTokens": 273
+      "inputSchemaTokens": 273,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     }
   ],
   "canonicalSha256": "699d8b33d6d2d90ce7deb777994bb408e1e07bb08fa997042b7cce19e6c1ecec",

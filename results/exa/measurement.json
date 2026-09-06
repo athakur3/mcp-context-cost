@@ -10,13 +10,17 @@
       "name": "web_search_exa",
       "tokens": 289,
       "descriptionTokens": 113,
-      "inputSchemaTokens": 119
+      "inputSchemaTokens": 119,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "web_fetch_exa",
       "tokens": 195,
       "descriptionTokens": 56,
-      "inputSchemaTokens": 87
+      "inputSchemaTokens": 87,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     }
   ],
   "canonicalSha256": "8c3c954e5a791807875357bc783cc67385bd7bb53ee31b659e83015b36ed99a9",

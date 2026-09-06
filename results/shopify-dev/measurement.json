@@ -10,37 +10,49 @@
       "name": "feedback",
       "tokens": 794,
       "descriptionTokens": 421,
-      "inputSchemaTokens": 345
+      "inputSchemaTokens": 345,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "learn_shopify_api",
       "tokens": 2847,
       "descriptionTokens": 2425,
-      "inputSchemaTokens": 348
+      "inputSchemaTokens": 348,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "search_docs_chunks",
       "tokens": 301,
       "descriptionTokens": 29,
-      "inputSchemaTokens": 253
+      "inputSchemaTokens": 253,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "validate_component_codeblocks",
       "tokens": 1173,
       "descriptionTokens": 547,
-      "inputSchemaTokens": 550
+      "inputSchemaTokens": 550,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "validate_graphql_codeblocks",
       "tokens": 1273,
       "descriptionTokens": 202,
-      "inputSchemaTokens": 1043
+      "inputSchemaTokens": 1043,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "validate_theme",
       "tokens": 451,
       "descriptionTokens": 194,
-      "inputSchemaTokens": 236
+      "inputSchemaTokens": 236,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "6817cd262c23cdfbac2ac9e04b037d307d7d21907f9028707ae6dbac3f0a284d",

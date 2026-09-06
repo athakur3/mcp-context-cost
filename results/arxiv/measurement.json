@@ -10,115 +10,153 @@
       "name": "search_papers",
       "tokens": 516,
       "descriptionTokens": 211,
-      "inputSchemaTokens": 273
+      "inputSchemaTokens": 273,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "download_paper",
       "tokens": 353,
       "descriptionTokens": 125,
-      "inputSchemaTokens": 202
+      "inputSchemaTokens": 202,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "list_papers",
       "tokens": 157,
       "descriptionTokens": 81,
-      "inputSchemaTokens": 57
+      "inputSchemaTokens": 57,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "read_paper",
       "tokens": 275,
       "descriptionTokens": 115,
-      "inputSchemaTokens": 141
+      "inputSchemaTokens": 141,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "get_abstract",
       "tokens": 137,
       "descriptionTokens": 58,
-      "inputSchemaTokens": 54
+      "inputSchemaTokens": 54,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "semantic_search",
       "tokens": 226,
       "descriptionTokens": 125,
-      "inputSchemaTokens": 76
+      "inputSchemaTokens": 76,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "reindex",
       "tokens": 76,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 36
+      "inputSchemaTokens": 36,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "citation_graph",
       "tokens": 171,
       "descriptionTokens": 72,
-      "inputSchemaTokens": 75
+      "inputSchemaTokens": 75,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "export_citations",
       "tokens": 193,
       "descriptionTokens": 86,
-      "inputSchemaTokens": 82
+      "inputSchemaTokens": 82,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "watch_topic",
       "tokens": 354,
       "descriptionTokens": 150,
-      "inputSchemaTokens": 172
+      "inputSchemaTokens": 172,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "check_alerts",
       "tokens": 246,
       "descriptionTokens": 164,
-      "inputSchemaTokens": 50
+      "inputSchemaTokens": 50,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "list_watches",
       "tokens": 100,
       "descriptionTokens": 61,
-      "inputSchemaTokens": 14
+      "inputSchemaTokens": 14,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "unwatch_topic",
       "tokens": 120,
       "descriptionTokens": 44,
-      "inputSchemaTokens": 45
+      "inputSchemaTokens": 45,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "get_paper_latex",
       "tokens": 181,
       "descriptionTokens": 23,
-      "inputSchemaTokens": 131
+      "inputSchemaTokens": 131,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "list_paper_latex_sections",
       "tokens": 135,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 94
+      "inputSchemaTokens": 94,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "get_paper_latex_section",
       "tokens": 213,
       "descriptionTokens": 22,
-      "inputSchemaTokens": 162
+      "inputSchemaTokens": 162,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "get_paper_outline",
       "tokens": 141,
       "descriptionTokens": 27,
-      "inputSchemaTokens": 94
+      "inputSchemaTokens": 94,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "read_paper_section",
       "tokens": 184,
       "descriptionTokens": 21,
-      "inputSchemaTokens": 143
+      "inputSchemaTokens": 143,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "search_paper_text",
       "tokens": 180,
       "descriptionTokens": 35,
-      "inputSchemaTokens": 125
+      "inputSchemaTokens": 125,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     }
   ],
   "canonicalSha256": "2ee361441efca1de3e296a572bbe2d20fa88d5565c9d4f54a8a1523ee7f54251",

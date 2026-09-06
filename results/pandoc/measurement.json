@@ -10,7 +10,9 @@
       "name": "convert-contents",
       "tokens": 1423,
       "descriptionTokens": 996,
-      "inputSchemaTokens": 361
+      "inputSchemaTokens": 361,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "4d8f9de25d7aa74f0fb5e0c828a904d74b3934e62cb1032bc6cf0fada1f0d952",

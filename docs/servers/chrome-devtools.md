@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | emulate | 418 | 7.3% | 9 | 377 |
 | list_console_messages | 333 | 5.8% | 13 | 287 |

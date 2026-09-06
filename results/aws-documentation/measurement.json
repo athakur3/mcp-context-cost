@@ -10,31 +10,41 @@
       "name": "read_documentation",
       "tokens": 571,
       "descriptionTokens": 377,
-      "inputSchemaTokens": 125
+      "inputSchemaTokens": 125,
+      "outputSchemaTokens": 30,
+      "annotationsTokens": 0
     },
     {
       "name": "read_sections",
       "tokens": 634,
       "descriptionTokens": 467,
-      "inputSchemaTokens": 75
+      "inputSchemaTokens": 75,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     },
     {
       "name": "search_table",
       "tokens": 1361,
       "descriptionTokens": 658,
-      "inputSchemaTokens": 172
+      "inputSchemaTokens": 172,
+      "outputSchemaTokens": 464,
+      "annotationsTokens": 0
     },
     {
       "name": "search_documentation",
       "tokens": 1956,
       "descriptionTokens": 657,
-      "inputSchemaTokens": 239
+      "inputSchemaTokens": 239,
+      "outputSchemaTokens": 1007,
+      "annotationsTokens": 0
     },
     {
       "name": "recommend",
       "tokens": 521,
       "descriptionTokens": 325,
-      "inputSchemaTokens": 41
+      "inputSchemaTokens": 41,
+      "outputSchemaTokens": 120,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "096790f5b6a85d5faf9b4a09edbeddc34de23ed3c26c195bee05c42fb7f8b6a7",

@@ -10,91 +10,121 @@
       "name": "index_repository",
       "tokens": 510,
       "descriptionTokens": 224,
-      "inputSchemaTokens": 243
+      "inputSchemaTokens": 243,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "search_graph",
       "tokens": 905,
       "descriptionTokens": 324,
-      "inputSchemaTokens": 537
+      "inputSchemaTokens": 537,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "query_graph",
       "tokens": 577,
       "descriptionTokens": 407,
-      "inputSchemaTokens": 125
+      "inputSchemaTokens": 125,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "trace_path",
       "tokens": 732,
       "descriptionTokens": 170,
-      "inputSchemaTokens": 520
+      "inputSchemaTokens": 520,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "get_code_snippet",
       "tokens": 205,
       "descriptionTokens": 104,
-      "inputSchemaTokens": 56
+      "inputSchemaTokens": 56,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "get_graph_schema",
       "tokens": 78,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 19
+      "inputSchemaTokens": 19,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "get_architecture",
       "tokens": 324,
       "descriptionTokens": 121,
-      "inputSchemaTokens": 157
+      "inputSchemaTokens": 157,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "search_code",
       "tokens": 473,
       "descriptionTokens": 178,
-      "inputSchemaTokens": 253
+      "inputSchemaTokens": 253,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "list_projects",
       "tokens": 135,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 86
+      "inputSchemaTokens": 86,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "delete_project",
       "tokens": 68,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 19
+      "inputSchemaTokens": 19,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "index_status",
       "tokens": 307,
       "descriptionTokens": 200,
-      "inputSchemaTokens": 64
+      "inputSchemaTokens": 64,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "check_index_coverage",
       "tokens": 291,
       "descriptionTokens": 112,
-      "inputSchemaTokens": 134
+      "inputSchemaTokens": 134,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "detect_changes",
       "tokens": 411,
       "descriptionTokens": 123,
-      "inputSchemaTokens": 246
+      "inputSchemaTokens": 246,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "manage_adr",
       "tokens": 121,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 71
+      "inputSchemaTokens": 71,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "ingest_traces",
       "tokens": 119,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 64
+      "inputSchemaTokens": 64,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     }
   ],
   "canonicalSha256": "01a1bd0f450ccf86b0bf36b2b63749c70dc4add7b0a4d9621ce69e29c9db7b27",

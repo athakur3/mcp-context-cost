@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | resolve-library-id | 643 | 61.1% | 398 | 176 |
 | query-docs | 407 | 38.7% | 87 | 273 |

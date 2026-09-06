@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | audit_site | 1,100 | 12.3% | 12 | 1,046 |
 | scan_page_matrix | 989 | 11.0% | 14 | 932 |

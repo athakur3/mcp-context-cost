@@ -10,145 +10,193 @@
       "name": "session_show_defaults",
       "tokens": 1092,
       "descriptionTokens": 24,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 995,
+      "annotationsTokens": 25
     },
     {
       "name": "session_use_defaults_profile",
       "tokens": 598,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 89
+      "inputSchemaTokens": 89,
+      "outputSchemaTokens": 452,
+      "annotationsTokens": 26
     },
     {
       "name": "session_set_defaults",
       "tokens": 1616,
       "descriptionTokens": 18,
-      "inputSchemaTokens": 555
+      "inputSchemaTokens": 555,
+      "outputSchemaTokens": 995,
+      "annotationsTokens": 25
     },
     {
       "name": "session_clear_defaults",
       "tokens": 1197,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 142
+      "inputSchemaTokens": 142,
+      "outputSchemaTokens": 995,
+      "annotationsTokens": 25
     },
     {
       "name": "list_sims",
       "tokens": 585,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 29
+      "inputSchemaTokens": 29,
+      "outputSchemaTokens": 502,
+      "annotationsTokens": 25
     },
     {
       "name": "boot_sim",
       "tokens": 1019,
       "descriptionTokens": 22,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 925,
+      "annotationsTokens": 24
     },
     {
       "name": "open_sim",
       "tokens": 1019,
       "descriptionTokens": 22,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 925,
+      "annotationsTokens": 24
     },
     {
       "name": "build_sim",
       "tokens": 1081,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 88
+      "inputSchemaTokens": 88,
+      "outputSchemaTokens": 934,
+      "annotationsTokens": 24
     },
     {
       "name": "build_run_sim",
       "tokens": 1115,
       "descriptionTokens": 43,
-      "inputSchemaTokens": 79
+      "inputSchemaTokens": 79,
+      "outputSchemaTokens": 944,
+      "annotationsTokens": 25
     },
     {
       "name": "test_sim",
       "tokens": 1391,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 167
+      "inputSchemaTokens": 167,
+      "outputSchemaTokens": 1172,
+      "annotationsTokens": 24
     },
     {
       "name": "get_sim_app_path",
       "tokens": 842,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 53
+      "inputSchemaTokens": 53,
+      "outputSchemaTokens": 733,
+      "annotationsTokens": 26
     },
     {
       "name": "install_app_sim",
       "tokens": 739,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 47
+      "inputSchemaTokens": 47,
+      "outputSchemaTokens": 639,
+      "annotationsTokens": 25
     },
     {
       "name": "launch_app_sim",
       "tokens": 839,
       "descriptionTokens": 21,
-      "inputSchemaTokens": 91
+      "inputSchemaTokens": 91,
+      "outputSchemaTokens": 678,
+      "annotationsTokens": 25
     },
     {
       "name": "stop_app_sim",
       "tokens": 737,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 660,
+      "annotationsTokens": 25
     },
     {
       "name": "record_sim_video",
       "tokens": 2123,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 74
+      "inputSchemaTokens": 74,
+      "outputSchemaTokens": 1997,
+      "annotationsTokens": 25
     },
     {
       "name": "clean",
       "tokens": 1004,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 77
+      "inputSchemaTokens": 77,
+      "outputSchemaTokens": 879,
+      "annotationsTokens": 23
     },
     {
       "name": "discover_projs",
       "tokens": 870,
       "descriptionTokens": 37,
-      "inputSchemaTokens": 65
+      "inputSchemaTokens": 65,
+      "outputSchemaTokens": 721,
+      "annotationsTokens": 24
     },
     {
       "name": "list_schemes",
       "tokens": 736,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 59
+      "inputSchemaTokens": 59,
+      "outputSchemaTokens": 623,
+      "annotationsTokens": 25
     },
     {
       "name": "show_build_settings",
       "tokens": 717,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 640,
+      "annotationsTokens": 25
     },
     {
       "name": "get_app_bundle_id",
       "tokens": 685,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 45
+      "inputSchemaTokens": 45,
+      "outputSchemaTokens": 583,
+      "annotationsTokens": 26
     },
     {
       "name": "screenshot",
       "tokens": 2099,
       "descriptionTokens": 3,
-      "inputSchemaTokens": 54
+      "inputSchemaTokens": 54,
+      "outputSchemaTokens": 1997,
+      "annotationsTokens": 23
     },
     {
       "name": "snapshot_ui",
       "tokens": 2139,
       "descriptionTokens": 45,
-      "inputSchemaTokens": 51
+      "inputSchemaTokens": 51,
+      "outputSchemaTokens": 1997,
+      "annotationsTokens": 24
     },
     {
       "name": "get_coverage_report",
       "tokens": 1173,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 91
+      "inputSchemaTokens": 91,
+      "outputSchemaTokens": 1022,
+      "annotationsTokens": 25
     },
     {
       "name": "get_file_coverage",
       "tokens": 1176,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 92
+      "inputSchemaTokens": 92,
+      "outputSchemaTokens": 1022,
+      "annotationsTokens": 25
     }
   ],
   "canonicalSha256": "f467743f38a30d15da18709c500aa4e22186a755f0e3d2c97966ccd343978a5d",

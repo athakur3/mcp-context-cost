@@ -10,43 +10,57 @@
       "name": "maps_geocode",
       "tokens": 45,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 27
+      "inputSchemaTokens": 27,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "maps_reverse_geocode",
       "tokens": 56,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 38
+      "inputSchemaTokens": 38,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "maps_search_places",
       "tokens": 95,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 76
+      "inputSchemaTokens": 76,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "maps_place_details",
       "tokens": 50,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 31
+      "inputSchemaTokens": 31,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "maps_distance_matrix",
       "tokens": 124,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 102
+      "inputSchemaTokens": 102,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "maps_elevation",
       "tokens": 78,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 58
+      "inputSchemaTokens": 58,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "maps_directions",
       "tokens": 99,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 82
+      "inputSchemaTokens": 82,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "a88e204db09aa56954e3e041d6a9814aee9ac888fdfc7d5cb47aec1877441986",

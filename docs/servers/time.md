@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | convert_time | 186 | 63.5% | 5 | 143 |
 | get_current_time | 105 | 35.8% | 7 | 59 |

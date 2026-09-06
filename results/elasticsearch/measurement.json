@@ -10,25 +10,33 @@
       "name": "list_indices",
       "tokens": 72,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 56
+      "inputSchemaTokens": 56,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "get_mappings",
       "tokens": 76,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 56
+      "inputSchemaTokens": 56,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "search",
       "tokens": 159,
       "descriptionTokens": 15,
-      "inputSchemaTokens": 135
+      "inputSchemaTokens": 135,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "get_shards",
       "tokens": 65,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 45
+      "inputSchemaTokens": 45,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "76a005f840c738f5788e7b5801fdc12194713fce1ed435ad500f891a2b2dd13c",

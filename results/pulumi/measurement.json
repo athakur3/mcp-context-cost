@@ -10,73 +10,97 @@
       "name": "pulumi-registry-get-type",
       "tokens": 220,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 185
+      "inputSchemaTokens": 185,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "pulumi-registry-get-resource",
       "tokens": 214,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 182
+      "inputSchemaTokens": 182,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "pulumi-registry-get-function",
       "tokens": 217,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 185
+      "inputSchemaTokens": 185,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "pulumi-registry-list-resources",
       "tokens": 174,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 139
+      "inputSchemaTokens": 139,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "pulumi-registry-list-functions",
       "tokens": 173,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 139
+      "inputSchemaTokens": 139,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "pulumi-cli-preview",
       "tokens": 104,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 72
+      "inputSchemaTokens": 72,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "pulumi-cli-up",
       "tokens": 104,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 72
+      "inputSchemaTokens": 72,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "pulumi-cli-stack-output",
       "tokens": 123,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 90
+      "inputSchemaTokens": 90,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "pulumi-cli-refresh",
       "tokens": 104,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 72
+      "inputSchemaTokens": 72,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "deploy-to-aws",
       "tokens": 96,
       "descriptionTokens": 51,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "pulumi-resource-search",
       "tokens": 1011,
       "descriptionTokens": 735,
-      "inputSchemaTokens": 219
+      "inputSchemaTokens": 219,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "neo-task-launcher",
       "tokens": 226,
       "descriptionTokens": 25,
-      "inputSchemaTokens": 180
+      "inputSchemaTokens": 180,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "9eb845dee6bb274d3b93ba0ea67276b2829cb98cbe7ed01079eba7fb8263fa26",

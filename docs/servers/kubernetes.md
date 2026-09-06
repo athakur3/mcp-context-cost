@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | kubectl_create | 945 | 17.9% | 14 | 919 |
 | node_management | 341 | 6.5% | 14 | 308 |

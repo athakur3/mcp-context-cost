@@ -10,187 +10,249 @@
       "name": "select_device",
       "tokens": 434,
       "descriptionTokens": 254,
-      "inputSchemaTokens": 146
+      "inputSchemaTokens": 146,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_session_management",
       "tokens": 971,
       "descriptionTokens": 48,
-      "inputSchemaTokens": 891
+      "inputSchemaTokens": 891,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "appium_mobile_device_control",
       "tokens": 221,
       "descriptionTokens": 30,
-      "inputSchemaTokens": 164
+      "inputSchemaTokens": 164,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_geolocation",
       "tokens": 384,
       "descriptionTokens": 113,
-      "inputSchemaTokens": 245
+      "inputSchemaTokens": 245,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_mobile_device_info",
       "tokens": 216,
       "descriptionTokens": 37,
-      "inputSchemaTokens": 152
+      "inputSchemaTokens": 152,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_mobile_file",
       "tokens": 255,
       "descriptionTokens": 27,
-      "inputSchemaTokens": 202
+      "inputSchemaTokens": 202,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_driver_settings",
       "tokens": 261,
       "descriptionTokens": 59,
-      "inputSchemaTokens": 176
+      "inputSchemaTokens": 176,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "prepare_ios_simulator",
       "tokens": 348,
       "descriptionTokens": 157,
-      "inputSchemaTokens": 164
+      "inputSchemaTokens": 164,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_prepare_ios_real_device",
       "tokens": 356,
       "descriptionTokens": 179,
-      "inputSchemaTokens": 147
+      "inputSchemaTokens": 147,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_gesture",
       "tokens": 1308,
       "descriptionTokens": 94,
-      "inputSchemaTokens": 1188
+      "inputSchemaTokens": 1188,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_drag_and_drop",
       "tokens": 416,
       "descriptionTokens": 70,
-      "inputSchemaTokens": 319
+      "inputSchemaTokens": 319,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_perform_actions",
       "tokens": 623,
       "descriptionTokens": 80,
-      "inputSchemaTokens": 516
+      "inputSchemaTokens": 516,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_find_element",
       "tokens": 533,
       "descriptionTokens": 154,
-      "inputSchemaTokens": 344
+      "inputSchemaTokens": 344,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_mobile_press_key",
       "tokens": 267,
       "descriptionTokens": 30,
-      "inputSchemaTokens": 210
+      "inputSchemaTokens": 210,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_set_value",
       "tokens": 179,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 147
+      "inputSchemaTokens": 147,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_mobile_keyboard",
       "tokens": 222,
       "descriptionTokens": 43,
-      "inputSchemaTokens": 153
+      "inputSchemaTokens": 153,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_get_text",
       "tokens": 106,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 74
+      "inputSchemaTokens": 74,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_get_element_attribute",
       "tokens": 222,
       "descriptionTokens": 45,
-      "inputSchemaTokens": 149
+      "inputSchemaTokens": 149,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_mobile_clipboard",
       "tokens": 172,
       "descriptionTokens": 33,
-      "inputSchemaTokens": 112
+      "inputSchemaTokens": 112,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_get_active_element",
       "tokens": 115,
       "descriptionTokens": 37,
-      "inputSchemaTokens": 50
+      "inputSchemaTokens": 50,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_get_page_source",
       "tokens": 109,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 50
+      "inputSchemaTokens": 50,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_orientation",
       "tokens": 158,
       "descriptionTokens": 24,
-      "inputSchemaTokens": 108
+      "inputSchemaTokens": 108,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_alert",
       "tokens": 154,
       "descriptionTokens": 19,
-      "inputSchemaTokens": 110
+      "inputSchemaTokens": 110,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_screenshot",
       "tokens": 277,
       "descriptionTokens": 19,
-      "inputSchemaTokens": 212
+      "inputSchemaTokens": 212,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_get_window_size",
       "tokens": 103,
       "descriptionTokens": 26,
-      "inputSchemaTokens": 50
+      "inputSchemaTokens": 50,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_screen_recording",
       "tokens": 513,
       "descriptionTokens": 21,
-      "inputSchemaTokens": 465
+      "inputSchemaTokens": 465,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_app_lifecycle",
       "tokens": 444,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 403
+      "inputSchemaTokens": 403,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_mobile_permissions",
       "tokens": 479,
       "descriptionTokens": 23,
-      "inputSchemaTokens": 430
+      "inputSchemaTokens": 430,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_context",
       "tokens": 166,
       "descriptionTokens": 26,
-      "inputSchemaTokens": 115
+      "inputSchemaTokens": 115,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "generate_locators",
       "tokens": 132,
       "descriptionTokens": 37,
-      "inputSchemaTokens": 50
+      "inputSchemaTokens": 50,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "appium_generate_tests",
       "tokens": 151,
       "descriptionTokens": 71,
-      "inputSchemaTokens": 54
+      "inputSchemaTokens": 54,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     }
   ],
   "canonicalSha256": "d024ca5b97d52d5442da395ed92d1d107b6728db57cf1295bb87c5d3624c0e53",

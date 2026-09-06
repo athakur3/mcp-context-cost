@@ -16,16 +16,16 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
-|---|---:|---:|---:|---:|
-| brave_place_search | 17,295 | 67.9% | 351 | 1,145 |
-| brave_llm_context | 2,554 | 10.0% | 177 | 1,537 |
-| brave_local_search | 1,417 | 5.6% | 157 | 1,213 |
-| brave_web_search | 1,398 | 5.5% | 133 | 1,213 |
-| brave_news_search | 1,004 | 3.9% | 249 | 696 |
-| brave_image_search | 818 | 3.2% | 67 | 270 |
-| brave_video_search | 690 | 2.7% | 86 | 556 |
-| brave_summarizer | 309 | 1.2% | 154 | 103 |
+| tool | tokens | share | description | input schema | output schema |
+|---|---:|---:|---:|---:|---:|
+| brave_place_search | 17,295 | 67.9% | 351 | 1,145 | 15,737 |
+| brave_llm_context | 2,554 | 10.0% | 177 | 1,537 | 787 |
+| brave_local_search | 1,417 | 5.6% | 157 | 1,213 | 0 |
+| brave_web_search | 1,398 | 5.5% | 133 | 1,213 | 0 |
+| brave_news_search | 1,004 | 3.9% | 249 | 696 | 0 |
+| brave_image_search | 818 | 3.2% | 67 | 270 | 432 |
+| brave_video_search | 690 | 2.7% | 86 | 556 | 0 |
+| brave_summarizer | 309 | 1.2% | 154 | 103 | 0 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
 

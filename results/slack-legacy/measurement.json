@@ -10,49 +10,65 @@
       "name": "slack_list_channels",
       "tokens": 76,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 52
+      "inputSchemaTokens": 52,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "slack_post_message",
       "tokens": 70,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 49
+      "inputSchemaTokens": 49,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "slack_reply_to_thread",
       "tokens": 124,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 102
+      "inputSchemaTokens": 102,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "slack_add_reaction",
       "tokens": 95,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 74
+      "inputSchemaTokens": 74,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "slack_get_channel_history",
       "tokens": 73,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 53
+      "inputSchemaTokens": 53,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "slack_get_thread_replies",
       "tokens": 110,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 88
+      "inputSchemaTokens": 88,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "slack_get_users",
       "tokens": 80,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 53
+      "inputSchemaTokens": 53,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "slack_get_user_profile",
       "tokens": 51,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 29
+      "inputSchemaTokens": 29,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "5939f969618ff709e86ff0599b80cc8f418db8904b4304a6eeb82a25f30ccd81",

@@ -10,391 +10,521 @@
       "name": "add_activity_to_incident",
       "tokens": 152,
       "descriptionTokens": 40,
-      "inputSchemaTokens": 88
+      "inputSchemaTokens": 88,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "alerting_manage_routing",
       "tokens": 415,
       "descriptionTokens": 105,
-      "inputSchemaTokens": 265
+      "inputSchemaTokens": 265,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "alerting_manage_rules",
       "tokens": 1368,
       "descriptionTokens": 96,
-      "inputSchemaTokens": 1238
+      "inputSchemaTokens": 1238,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "analyze_loki_labels",
       "tokens": 360,
       "descriptionTokens": 49,
-      "inputSchemaTokens": 275
+      "inputSchemaTokens": 275,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "check_datasources_health",
       "tokens": 119,
       "descriptionTokens": 17,
-      "inputSchemaTokens": 67
+      "inputSchemaTokens": 67,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "create_annotation",
       "tokens": 259,
       "descriptionTokens": 28,
-      "inputSchemaTokens": 206
+      "inputSchemaTokens": 206,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "create_datasource",
       "tokens": 420,
       "descriptionTokens": 129,
-      "inputSchemaTokens": 259
+      "inputSchemaTokens": 259,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "create_folder",
       "tokens": 120,
       "descriptionTokens": 18,
-      "inputSchemaTokens": 77
+      "inputSchemaTokens": 77,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "create_incident",
       "tokens": 261,
       "descriptionTokens": 52,
-      "inputSchemaTokens": 189
+      "inputSchemaTokens": 189,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 6
     },
     {
       "name": "create_snapshot",
       "tokens": 184,
       "descriptionTokens": 19,
-      "inputSchemaTokens": 140
+      "inputSchemaTokens": 140,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "delete_snapshot",
       "tokens": 66,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 26
+      "inputSchemaTokens": 26,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "find_error_pattern_logs",
       "tokens": 170,
       "descriptionTokens": 31,
-      "inputSchemaTokens": 110
+      "inputSchemaTokens": 110,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 15
     },
     {
       "name": "find_slow_requests",
       "tokens": 159,
       "descriptionTokens": 22,
-      "inputSchemaTokens": 110
+      "inputSchemaTokens": 110,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 13
     },
     {
       "name": "generate_deeplink",
       "tokens": 563,
       "descriptionTokens": 115,
-      "inputSchemaTokens": 419
+      "inputSchemaTokens": 419,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 15
     },
     {
       "name": "get_alert_group",
       "tokens": 90,
       "descriptionTokens": 21,
-      "inputSchemaTokens": 34
+      "inputSchemaTokens": 34,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 22
     },
     {
       "name": "get_annotation_tags",
       "tokens": 91,
       "descriptionTokens": 17,
-      "inputSchemaTokens": 41
+      "inputSchemaTokens": 41,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "get_annotations",
       "tokens": 241,
       "descriptionTokens": 16,
-      "inputSchemaTokens": 193
+      "inputSchemaTokens": 193,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "get_assertions",
       "tokens": 269,
       "descriptionTokens": 23,
-      "inputSchemaTokens": 212
+      "inputSchemaTokens": 212,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "get_current_oncall_users",
       "tokens": 111,
       "descriptionTokens": 38,
-      "inputSchemaTokens": 36
+      "inputSchemaTokens": 36,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 22
     },
     {
       "name": "get_dashboard_by_uid",
       "tokens": 178,
       "descriptionTokens": 117,
-      "inputSchemaTokens": 27
+      "inputSchemaTokens": 27,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "get_dashboard_panel_queries",
       "tokens": 222,
       "descriptionTokens": 106,
-      "inputSchemaTokens": 81
+      "inputSchemaTokens": 81,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "get_dashboard_property",
       "tokens": 319,
       "descriptionTokens": 175,
-      "inputSchemaTokens": 101
+      "inputSchemaTokens": 101,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "get_dashboard_summary",
       "tokens": 104,
       "descriptionTokens": 40,
-      "inputSchemaTokens": 27
+      "inputSchemaTokens": 27,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "get_datasource",
       "tokens": 140,
       "descriptionTokens": 52,
-      "inputSchemaTokens": 56
+      "inputSchemaTokens": 56,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "get_incident",
       "tokens": 89,
       "descriptionTokens": 27,
-      "inputSchemaTokens": 29
+      "inputSchemaTokens": 29,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "get_oncall_shift",
       "tokens": 106,
       "descriptionTokens": 38,
-      "inputSchemaTokens": 33
+      "inputSchemaTokens": 33,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "get_panel_image",
       "tokens": 602,
       "descriptionTokens": 83,
-      "inputSchemaTokens": 484
+      "inputSchemaTokens": 484,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 22
     },
     {
       "name": "get_plugin",
       "tokens": 135,
       "descriptionTokens": 52,
-      "inputSchemaTokens": 52
+      "inputSchemaTokens": 52,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "get_sift_analysis",
       "tokens": 149,
       "descriptionTokens": 27,
-      "inputSchemaTokens": 87
+      "inputSchemaTokens": 87,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "get_sift_investigation",
       "tokens": 152,
       "descriptionTokens": 53,
-      "inputSchemaTokens": 61
+      "inputSchemaTokens": 61,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "get_snapshot",
       "tokens": 72,
       "descriptionTokens": 15,
-      "inputSchemaTokens": 26
+      "inputSchemaTokens": 26,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "grafana_api_request",
       "tokens": 236,
       "descriptionTokens": 46,
-      "inputSchemaTokens": 167
+      "inputSchemaTokens": 167,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
     },
     {
       "name": "install_plugin",
       "tokens": 164,
       "descriptionTokens": 40,
-      "inputSchemaTokens": 87
+      "inputSchemaTokens": 87,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     },
     {
       "name": "list_alert_groups",
       "tokens": 407,
       "descriptionTokens": 137,
-      "inputSchemaTokens": 235
+      "inputSchemaTokens": 235,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 22
     },
     {
       "name": "list_datasources",
       "tokens": 152,
       "descriptionTokens": 28,
-      "inputSchemaTokens": 91
+      "inputSchemaTokens": 91,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "list_incidents",
       "tokens": 134,
       "descriptionTokens": 29,
-      "inputSchemaTokens": 73
+      "inputSchemaTokens": 73,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "list_loki_label_names",
       "tokens": 223,
       "descriptionTokens": 62,
-      "inputSchemaTokens": 125
+      "inputSchemaTokens": 125,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "list_loki_label_values",
       "tokens": 271,
       "descriptionTokens": 74,
-      "inputSchemaTokens": 161
+      "inputSchemaTokens": 161,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "list_oncall_schedules",
       "tokens": 166,
       "descriptionTokens": 51,
-      "inputSchemaTokens": 79
+      "inputSchemaTokens": 79,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "list_oncall_teams",
       "tokens": 83,
       "descriptionTokens": 22,
-      "inputSchemaTokens": 25
+      "inputSchemaTokens": 25,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "list_oncall_users",
       "tokens": 171,
       "descriptionTokens": 55,
-      "inputSchemaTokens": 81
+      "inputSchemaTokens": 81,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "list_prometheus_label_names",
       "tokens": 366,
       "descriptionTokens": 33,
-      "inputSchemaTokens": 296
+      "inputSchemaTokens": 296,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 22
     },
     {
       "name": "list_prometheus_label_values",
       "tokens": 393,
       "descriptionTokens": 53,
-      "inputSchemaTokens": 303
+      "inputSchemaTokens": 303,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 22
     },
     {
       "name": "list_prometheus_metric_metadata",
       "tokens": 182,
       "descriptionTokens": 22,
-      "inputSchemaTokens": 123
+      "inputSchemaTokens": 123,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 22
     },
     {
       "name": "list_prometheus_metric_names",
       "tokens": 317,
       "descriptionTokens": 66,
-      "inputSchemaTokens": 214
+      "inputSchemaTokens": 214,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 22
     },
     {
       "name": "list_provisioning_repositories",
       "tokens": 149,
       "descriptionTokens": 70,
-      "inputSchemaTokens": 43
+      "inputSchemaTokens": 43,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "list_pyroscope_label_names",
       "tokens": 281,
       "descriptionTokens": 104,
-      "inputSchemaTokens": 135
+      "inputSchemaTokens": 135,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 22
     },
     {
       "name": "list_pyroscope_label_values",
       "tokens": 307,
       "descriptionTokens": 91,
-      "inputSchemaTokens": 172
+      "inputSchemaTokens": 172,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 22
     },
     {
       "name": "list_pyroscope_profile_types",
       "tokens": 267,
       "descriptionTokens": 99,
-      "inputSchemaTokens": 127
+      "inputSchemaTokens": 127,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 22
     },
     {
       "name": "list_sift_investigations",
       "tokens": 93,
       "descriptionTokens": 25,
-      "inputSchemaTokens": 30
+      "inputSchemaTokens": 30,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "list_snapshots",
       "tokens": 98,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 53
+      "inputSchemaTokens": 53,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "query_loki_logs",
       "tokens": 568,
       "descriptionTokens": 184,
-      "inputSchemaTokens": 348
+      "inputSchemaTokens": 348,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "query_loki_patterns",
       "tokens": 334,
       "descriptionTokens": 109,
-      "inputSchemaTokens": 191
+      "inputSchemaTokens": 191,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "query_loki_stats",
       "tokens": 408,
       "descriptionTokens": 196,
-      "inputSchemaTokens": 177
+      "inputSchemaTokens": 177,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "query_prometheus",
       "tokens": 438,
       "descriptionTokens": 79,
-      "inputSchemaTokens": 323
+      "inputSchemaTokens": 323,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "query_prometheus_histogram",
       "tokens": 391,
       "descriptionTokens": 91,
-      "inputSchemaTokens": 258
+      "inputSchemaTokens": 258,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 22
     },
     {
       "name": "query_pyroscope",
       "tokens": 404,
       "descriptionTokens": 94,
-      "inputSchemaTokens": 271
+      "inputSchemaTokens": 271,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "search_dashboards",
       "tokens": 133,
       "descriptionTokens": 30,
-      "inputSchemaTokens": 71
+      "inputSchemaTokens": 71,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "search_folders",
       "tokens": 80,
       "descriptionTokens": 23,
-      "inputSchemaTokens": 25
+      "inputSchemaTokens": 25,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "search_plugin_information",
       "tokens": 190,
       "descriptionTokens": 101,
-      "inputSchemaTokens": 57
+      "inputSchemaTokens": 57,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "suggest_loki_alloy_label_config",
       "tokens": 160,
       "descriptionTokens": 30,
-      "inputSchemaTokens": 91
+      "inputSchemaTokens": 91,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 22
     },
     {
       "name": "update_annotation",
       "tokens": 159,
       "descriptionTokens": 25,
-      "inputSchemaTokens": 103
+      "inputSchemaTokens": 103,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "update_dashboard",
       "tokens": 1006,
       "descriptionTokens": 498,
-      "inputSchemaTokens": 466
+      "inputSchemaTokens": 466,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 14
     },
     {
       "name": "update_datasource",
       "tokens": 187,
       "descriptionTokens": 26,
-      "inputSchemaTokens": 129
+      "inputSchemaTokens": 129,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "validate_provisioning_file",
       "tokens": 232,
       "descriptionTokens": 84,
-      "inputSchemaTokens": 110
+      "inputSchemaTokens": 110,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     }
   ],
   "canonicalSha256": "f35587d4d6afaf90c68d7b861793a9e980bb6817b389fdb2391d365e7358beab",

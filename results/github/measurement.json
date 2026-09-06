@@ -10,265 +10,353 @@
       "name": "add_comment_to_pending_review",
       "tokens": 1534,
       "descriptionTokens": 32,
-      "inputSchemaTokens": 284
+      "inputSchemaTokens": 284,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 29
     },
     {
       "name": "add_issue_comment",
       "tokens": 1517,
       "descriptionTokens": 65,
-      "inputSchemaTokens": 194
+      "inputSchemaTokens": 194,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 24
     },
     {
       "name": "add_reply_to_pull_request_comment",
       "tokens": 1454,
       "descriptionTokens": 51,
-      "inputSchemaTokens": 191
+      "inputSchemaTokens": 191,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 23
     },
     {
       "name": "assign_copilot_to_issue",
       "tokens": 1549,
       "descriptionTokens": 62,
-      "inputSchemaTokens": 150
+      "inputSchemaTokens": 150,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 22
     },
     {
       "name": "create_branch",
       "tokens": 801,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 87
+      "inputSchemaTokens": 87,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "create_or_update_file",
       "tokens": 1019,
       "descriptionTokens": 94,
-      "inputSchemaTokens": 209
+      "inputSchemaTokens": 209,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "create_pull_request",
       "tokens": 1391,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 173
+      "inputSchemaTokens": 173,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "create_repository",
       "tokens": 821,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 104
+      "inputSchemaTokens": 104,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "delete_file",
       "tokens": 826,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 107
+      "inputSchemaTokens": 107,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     },
     {
       "name": "fork_repository",
       "tokens": 1242,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 66
+      "inputSchemaTokens": 66,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "get_commit",
       "tokens": 937,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 221
+      "inputSchemaTokens": 221,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "get_file_contents",
       "tokens": 966,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 244
+      "inputSchemaTokens": 244,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 22
     },
     {
       "name": "get_label",
       "tokens": 1337,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 72
+      "inputSchemaTokens": 72,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 24
     },
     {
       "name": "get_latest_release",
       "tokens": 768,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 52
+      "inputSchemaTokens": 52,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "get_me",
       "tokens": 1096,
       "descriptionTokens": 35,
-      "inputSchemaTokens": 9
+      "inputSchemaTokens": 9,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "get_release_by_tag",
       "tokens": 802,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 78
+      "inputSchemaTokens": 78,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 23
     },
     {
       "name": "get_tag",
       "tokens": 784,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 66
+      "inputSchemaTokens": 66,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "get_team_members",
       "tokens": 1117,
       "descriptionTokens": 18,
-      "inputSchemaTokens": 47
+      "inputSchemaTokens": 47,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "get_teams",
       "tokens": 1102,
       "descriptionTokens": 19,
-      "inputSchemaTokens": 32
+      "inputSchemaTokens": 32,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "issue_read",
       "tokens": 1575,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 310
+      "inputSchemaTokens": 310,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "issue_write",
       "tokens": 2050,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 779
+      "inputSchemaTokens": 779,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 24
     },
     {
       "name": "list_branches",
       "tokens": 819,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 106
+      "inputSchemaTokens": 106,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "list_commits",
       "tokens": 1092,
       "descriptionTokens": 41,
-      "inputSchemaTokens": 345
+      "inputSchemaTokens": 345,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "list_issue_fields",
       "tokens": 1394,
       "descriptionTokens": 49,
-      "inputSchemaTokens": 91
+      "inputSchemaTokens": 91,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "list_issue_types",
       "tokens": 1359,
       "descriptionTokens": 24,
-      "inputSchemaTokens": 80
+      "inputSchemaTokens": 80,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "list_issues",
       "tokens": 1787,
       "descriptionTokens": 33,
-      "inputSchemaTokens": 501
+      "inputSchemaTokens": 501,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "list_pull_requests",
       "tokens": 1569,
       "descriptionTokens": 31,
-      "inputSchemaTokens": 332
+      "inputSchemaTokens": 332,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "list_releases",
       "tokens": 904,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 191
+      "inputSchemaTokens": 191,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "list_repository_collaborators",
       "tokens": 936,
       "descriptionTokens": 55,
-      "inputSchemaTokens": 173
+      "inputSchemaTokens": 173,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "list_tags",
       "tokens": 819,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 106
+      "inputSchemaTokens": 106,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "merge_pull_request",
       "tokens": 1259,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 124
+      "inputSchemaTokens": 124,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "pull_request_read",
       "tokens": 1737,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 515
+      "inputSchemaTokens": 515,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 24
     },
     {
       "name": "pull_request_review_write",
       "tokens": 1681,
       "descriptionTokens": 242,
-      "inputSchemaTokens": 213
+      "inputSchemaTokens": 213,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 30
     },
     {
       "name": "push_files",
       "tokens": 878,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 159
+      "inputSchemaTokens": 159,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "request_copilot_review",
       "tokens": 1426,
       "descriptionTokens": 29,
-      "inputSchemaTokens": 69
+      "inputSchemaTokens": 69,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "search_code",
       "tokens": 1075,
       "descriptionTokens": 33,
-      "inputSchemaTokens": 338
+      "inputSchemaTokens": 338,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "search_commits",
       "tokens": 1069,
       "descriptionTokens": 37,
-      "inputSchemaTokens": 327
+      "inputSchemaTokens": 327,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "search_issues",
       "tokens": 1678,
       "descriptionTokens": 34,
-      "inputSchemaTokens": 390
+      "inputSchemaTokens": 390,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "search_pull_requests",
       "tokens": 1595,
       "descriptionTokens": 18,
-      "inputSchemaTokens": 370
+      "inputSchemaTokens": 370,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "search_repositories",
       "tokens": 938,
       "descriptionTokens": 34,
-      "inputSchemaTokens": 199
+      "inputSchemaTokens": 199,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "search_users",
       "tokens": 1566,
       "descriptionTokens": 26,
-      "inputSchemaTokens": 158
+      "inputSchemaTokens": 158,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "sub_issue_write",
       "tokens": 1617,
       "descriptionTokens": 15,
-      "inputSchemaTokens": 347
+      "inputSchemaTokens": 347,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     },
     {
       "name": "update_pull_request",
       "tokens": 1419,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 202
+      "inputSchemaTokens": 202,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 20
     },
     {
       "name": "update_pull_request_branch",
       "tokens": 1315,
       "descriptionTokens": 16,
-      "inputSchemaTokens": 91
+      "inputSchemaTokens": 91,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 21
     }
   ],
   "canonicalSha256": "40d73048f0112cd8282ee61d586632738f6746678ece24f8f61f4dcc4b8b2135",

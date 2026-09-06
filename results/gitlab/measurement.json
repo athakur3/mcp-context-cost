@@ -10,55 +10,73 @@
       "name": "create_or_update_file",
       "tokens": 40,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 16
+      "inputSchemaTokens": 16,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "search_repositories",
       "tokens": 33,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 16
+      "inputSchemaTokens": 16,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "create_repository",
       "tokens": 33,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 16
+      "inputSchemaTokens": 16,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "get_file_contents",
       "tokens": 41,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 16
+      "inputSchemaTokens": 16,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "push_files",
       "tokens": 39,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 16
+      "inputSchemaTokens": 16,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "create_issue",
       "tokens": 36,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 16
+      "inputSchemaTokens": 16,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "create_merge_request",
       "tokens": 38,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 16
+      "inputSchemaTokens": 16,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "fork_repository",
       "tokens": 38,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 16
+      "inputSchemaTokens": 16,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "create_branch",
       "tokens": 36,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 16
+      "inputSchemaTokens": 16,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "d51fb022687ee403f9710c9fae31ac91dbc796f5c52a3fcdbe0a91c387aa9365",

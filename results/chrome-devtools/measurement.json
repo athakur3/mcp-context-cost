@@ -10,175 +10,233 @@
       "name": "click",
       "tokens": 156,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 120
+      "inputSchemaTokens": 120,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     },
     {
       "name": "close_page",
       "tokens": 106,
       "descriptionTokens": 16,
-      "inputSchemaTokens": 59
+      "inputSchemaTokens": 59,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     },
     {
       "name": "drag",
       "tokens": 154,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 117
+      "inputSchemaTokens": 117,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     },
     {
       "name": "emulate",
       "tokens": 418,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 377
+      "inputSchemaTokens": 377,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 12
     },
     {
       "name": "evaluate_script",
       "tokens": 320,
       "descriptionTokens": 27,
-      "inputSchemaTokens": 261
+      "inputSchemaTokens": 261,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 12
     },
     {
       "name": "fill",
       "tokens": 186,
       "descriptionTokens": 19,
-      "inputSchemaTokens": 137
+      "inputSchemaTokens": 137,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     },
     {
       "name": "fill_form",
       "tokens": 265,
       "descriptionTokens": 68,
-      "inputSchemaTokens": 166
+      "inputSchemaTokens": 166,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     },
     {
       "name": "get_console_message",
       "tokens": 131,
       "descriptionTokens": 19,
-      "inputSchemaTokens": 79
+      "inputSchemaTokens": 79,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 12
     },
     {
       "name": "get_network_request",
       "tokens": 215,
       "descriptionTokens": 24,
-      "inputSchemaTokens": 159
+      "inputSchemaTokens": 159,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     },
     {
       "name": "handle_dialog",
       "tokens": 141,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     },
     {
       "name": "hover",
       "tokens": 135,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 99
+      "inputSchemaTokens": 99,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     },
     {
       "name": "lighthouse_audit",
       "tokens": 197,
       "descriptionTokens": 30,
-      "inputSchemaTokens": 132
+      "inputSchemaTokens": 132,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 12
     },
     {
       "name": "list_console_messages",
       "tokens": 333,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 287
+      "inputSchemaTokens": 287,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 12
     },
     {
       "name": "list_network_requests",
       "tokens": 277,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 231
+      "inputSchemaTokens": 231,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     },
     {
       "name": "list_pages",
       "tokens": 70,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 29
+      "inputSchemaTokens": 29,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     },
     {
       "name": "navigate_page",
       "tokens": 266,
       "descriptionTokens": 21,
-      "inputSchemaTokens": 214
+      "inputSchemaTokens": 214,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     },
     {
       "name": "new_page",
       "tokens": 205,
       "descriptionTokens": 17,
-      "inputSchemaTokens": 157
+      "inputSchemaTokens": 157,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     },
     {
       "name": "performance_analyze_insight",
       "tokens": 188,
       "descriptionTokens": 24,
-      "inputSchemaTokens": 130
+      "inputSchemaTokens": 130,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     },
     {
       "name": "performance_start_trace",
       "tokens": 249,
       "descriptionTokens": 35,
-      "inputSchemaTokens": 182
+      "inputSchemaTokens": 182,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     },
     {
       "name": "performance_stop_trace",
       "tokens": 143,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 100
+      "inputSchemaTokens": 100,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     },
     {
       "name": "press_key",
       "tokens": 190,
       "descriptionTokens": 34,
-      "inputSchemaTokens": 124
+      "inputSchemaTokens": 124,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     },
     {
       "name": "resize_page",
       "tokens": 124,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 78
+      "inputSchemaTokens": 78,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 12
     },
     {
       "name": "select_page",
       "tokens": 125,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 83
+      "inputSchemaTokens": 83,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     },
     {
       "name": "take_heapsnapshot",
       "tokens": 137,
       "descriptionTokens": 24,
-      "inputSchemaTokens": 80
+      "inputSchemaTokens": 80,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     },
     {
       "name": "take_screenshot",
       "tokens": 278,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 236
+      "inputSchemaTokens": 236,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 12
     },
     {
       "name": "take_snapshot",
       "tokens": 211,
       "descriptionTokens": 62,
-      "inputSchemaTokens": 116
+      "inputSchemaTokens": 116,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 12
     },
     {
       "name": "type_text",
       "tokens": 137,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 96
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     },
     {
       "name": "upload_file",
       "tokens": 197,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 158
+      "inputSchemaTokens": 158,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     },
     {
       "name": "wait_for",
       "tokens": 161,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 118
+      "inputSchemaTokens": 118,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 11
     }
   ],
   "canonicalSha256": "151a59215c20049ea5934809670996c1d73977d468a65fa6b5624c2e24ca3ef4",

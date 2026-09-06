@@ -10,175 +10,233 @@
       "name": "search_docs",
       "tokens": 483,
       "descriptionTokens": 387,
-      "inputSchemaTokens": 48
+      "inputSchemaTokens": 48,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "list_organizations",
       "tokens": 83,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 29
+      "inputSchemaTokens": 29,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "get_organization",
       "tokens": 99,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 45
+      "inputSchemaTokens": 45,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "list_projects",
       "tokens": 98,
       "descriptionTokens": 27,
-      "inputSchemaTokens": 29
+      "inputSchemaTokens": 29,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "get_project",
       "tokens": 96,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 45
+      "inputSchemaTokens": 45,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "get_cost",
       "tokens": 149,
       "descriptionTokens": 36,
-      "inputSchemaTokens": 68
+      "inputSchemaTokens": 68,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 34
     },
     {
       "name": "confirm_cost",
       "tokens": 162,
       "descriptionTokens": 46,
-      "inputSchemaTokens": 72
+      "inputSchemaTokens": 72,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "create_project",
       "tokens": 279,
       "descriptionTokens": 39,
-      "inputSchemaTokens": 198
+      "inputSchemaTokens": 198,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "pause_project",
       "tokens": 90,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 41
+      "inputSchemaTokens": 41,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "restore_project",
       "tokens": 90,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 41
+      "inputSchemaTokens": 41,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "list_tables",
       "tokens": 189,
       "descriptionTokens": 33,
-      "inputSchemaTokens": 114
+      "inputSchemaTokens": 114,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "list_extensions",
       "tokens": 90,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 41
+      "inputSchemaTokens": 41,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "list_migrations",
       "tokens": 91,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 41
+      "inputSchemaTokens": 41,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "apply_migration",
       "tokens": 149,
       "descriptionTokens": 28,
-      "inputSchemaTokens": 78
+      "inputSchemaTokens": 78,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "execute_sql",
       "tokens": 143,
       "descriptionTokens": 43,
-      "inputSchemaTokens": 58
+      "inputSchemaTokens": 58,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "query_logs",
       "tokens": 794,
       "descriptionTokens": 102,
-      "inputSchemaTokens": 649
+      "inputSchemaTokens": 649,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "get_advisors",
       "tokens": 180,
       "descriptionTokens": 69,
-      "inputSchemaTokens": 66
+      "inputSchemaTokens": 66,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "get_project_url",
       "tokens": 93,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 41
+      "inputSchemaTokens": 41,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "get_publishable_keys",
       "tokens": 173,
       "descriptionTokens": 86,
-      "inputSchemaTokens": 41
+      "inputSchemaTokens": 41,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 33
     },
     {
       "name": "generate_typescript_types",
       "tokens": 96,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 41
+      "inputSchemaTokens": 41,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 33
     },
     {
       "name": "list_edge_functions",
       "tokens": 95,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 41
+      "inputSchemaTokens": 41,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "get_edge_function",
       "tokens": 110,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 52
+      "inputSchemaTokens": 52,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "deploy_edge_function",
       "tokens": 447,
       "descriptionTokens": 104,
-      "inputSchemaTokens": 277
+      "inputSchemaTokens": 277,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "create_branch",
       "tokens": 193,
       "descriptionTokens": 60,
-      "inputSchemaTokens": 91
+      "inputSchemaTokens": 91,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "list_branches",
       "tokens": 116,
       "descriptionTokens": 32,
-      "inputSchemaTokens": 41
+      "inputSchemaTokens": 41,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "delete_branch",
       "tokens": 88,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 41
+      "inputSchemaTokens": 41,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "merge_branch",
       "tokens": 96,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 41
+      "inputSchemaTokens": 41,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "reset_branch",
       "tokens": 122,
       "descriptionTokens": 19,
-      "inputSchemaTokens": 61
+      "inputSchemaTokens": 61,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "rebase_branch",
       "tokens": 111,
       "descriptionTokens": 26,
-      "inputSchemaTokens": 41
+      "inputSchemaTokens": 41,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     }
   ],
   "canonicalSha256": "8ad33a05f12e8c0f535683508468dd970df8715f01fc82235b2b039718aeebf7",

@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | puppeteer_screenshot | 142 | 26.3% | 11 | 117 |
 | puppeteer_navigate | 129 | 23.9% | 4 | 111 |

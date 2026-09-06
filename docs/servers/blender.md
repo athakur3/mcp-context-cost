@@ -16,36 +16,36 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
-|---|---:|---:|---:|---:|
-| download_polypizza_model | 490 | 7.1% | 341 | 84 |
-| generate_hyper3d_model_via_images | 484 | 7.0% | 300 | 113 |
-| search_polypizza_models | 448 | 6.5% | 279 | 105 |
-| download_sketchfab_model | 405 | 5.8% | 274 | 63 |
-| generate_hunyuan3d_model | 377 | 5.4% | 243 | 69 |
-| generate_hyper3d_model_via_text | 350 | 5.1% | 203 | 79 |
-| download_polyhaven_asset | 347 | 5.0% | 192 | 98 |
-| poll_rodin_job_status | 307 | 4.4% | 215 | 51 |
-| search_sketchfab_models | 305 | 4.4% | 153 | 94 |
-| search_polyhaven_assets | 258 | 3.7% | 141 | 62 |
-| set_texture | 257 | 3.7% | 141 | 63 |
-| get_polyhaven_categories | 223 | 3.2% | 122 | 48 |
-| get_sketchfab_model_preview | 220 | 3.2% | 146 | 48 |
-| execute_blender_code | 215 | 3.1% | 117 | 46 |
-| record_trajectory_feedback | 213 | 3.1% | 80 | 81 |
-| get_object_info | 210 | 3.0% | 112 | 48 |
-| import_generated_asset | 204 | 2.9% | 118 | 65 |
-| poll_hunyuan_job_status | 204 | 2.9% | 140 | 34 |
-| get_viewport_screenshot | 195 | 2.8% | 124 | 49 |
-| get_scene_info | 175 | 2.5% | 94 | 33 |
-| get_addon_status | 166 | 2.4% | 82 | 30 |
-| disable_telemetry | 159 | 2.3% | 76 | 30 |
-| import_generated_asset_hunyuan | 154 | 2.2% | 80 | 52 |
-| get_hunyuan3d_status | 120 | 1.7% | 31 | 33 |
-| get_hyper3d_status | 117 | 1.7% | 31 | 32 |
-| get_sketchfab_status | 108 | 1.6% | 25 | 31 |
-| get_polypizza_status | 108 | 1.6% | 25 | 31 |
-| get_polyhaven_status | 107 | 1.5% | 27 | 30 |
+| tool | tokens | share | description | input schema | output schema |
+|---|---:|---:|---:|---:|---:|
+| download_polypizza_model | 490 | 7.1% | 341 | 84 | 32 |
+| generate_hyper3d_model_via_images | 484 | 7.0% | 300 | 113 | 36 |
+| search_polypizza_models | 448 | 6.5% | 279 | 105 | 32 |
+| download_sketchfab_model | 405 | 5.8% | 274 | 63 | 32 |
+| generate_hunyuan3d_model | 377 | 5.4% | 243 | 69 | 34 |
+| generate_hyper3d_model_via_text | 350 | 5.1% | 203 | 79 | 36 |
+| download_polyhaven_asset | 347 | 5.0% | 192 | 98 | 31 |
+| poll_rodin_job_status | 307 | 4.4% | 215 | 51 | 0 |
+| search_sketchfab_models | 305 | 4.4% | 153 | 94 | 32 |
+| search_polyhaven_assets | 258 | 3.7% | 141 | 62 | 31 |
+| set_texture | 257 | 3.7% | 141 | 63 | 29 |
+| get_polyhaven_categories | 223 | 3.2% | 122 | 48 | 31 |
+| get_sketchfab_model_preview | 220 | 3.2% | 146 | 48 | 0 |
+| execute_blender_code | 215 | 3.1% | 117 | 46 | 31 |
+| record_trajectory_feedback | 213 | 3.1% | 80 | 81 | 31 |
+| get_object_info | 210 | 3.0% | 112 | 48 | 30 |
+| import_generated_asset | 204 | 2.9% | 118 | 65 | 0 |
+| poll_hunyuan_job_status | 204 | 2.9% | 140 | 34 | 0 |
+| get_viewport_screenshot | 195 | 2.8% | 124 | 49 | 0 |
+| get_scene_info | 175 | 2.5% | 94 | 33 | 30 |
+| get_addon_status | 166 | 2.4% | 82 | 30 | 31 |
+| disable_telemetry | 159 | 2.3% | 76 | 30 | 31 |
+| import_generated_asset_hunyuan | 154 | 2.2% | 80 | 52 | 0 |
+| get_hunyuan3d_status | 120 | 1.7% | 31 | 33 | 34 |
+| get_hyper3d_status | 117 | 1.7% | 31 | 32 | 33 |
+| get_sketchfab_status | 108 | 1.6% | 25 | 31 | 32 |
+| get_polypizza_status | 108 | 1.6% | 25 | 31 | 32 |
+| get_polyhaven_status | 107 | 1.5% | 27 | 30 | 31 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
 

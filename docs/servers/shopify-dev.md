@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | learn_shopify_api | 2,847 | 41.6% | 2,425 | 348 |
 | validate_graphql_codeblocks | 1,273 | 18.6% | 202 | 1,043 |

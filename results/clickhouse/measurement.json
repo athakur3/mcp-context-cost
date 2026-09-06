@@ -10,19 +10,25 @@
       "name": "list_databases",
       "tokens": 78,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 14
+      "inputSchemaTokens": 14,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 0
     },
     {
       "name": "list_tables",
       "tokens": 353,
       "descriptionTokens": 63,
-      "inputSchemaTokens": 230
+      "inputSchemaTokens": 230,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 0
     },
     {
       "name": "run_query",
       "tokens": 201,
       "descriptionTokens": 121,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "6f42fcefaf49e720fe8ec5acf8dafc7ae6065bf541957572b6a6abbe61f111d4",

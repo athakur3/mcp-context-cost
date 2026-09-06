@@ -10,7 +10,9 @@
       "name": "fetch",
       "tokens": 236,
       "descriptionTokens": 60,
-      "inputSchemaTokens": 165
+      "inputSchemaTokens": 165,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "5d0a1b56f6c08786d7d764b6f4376fba201015e5a5995b6b39c14350bd4aeeb3",

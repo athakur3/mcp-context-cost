@@ -16,17 +16,17 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
-|---|---:|---:|---:|---:|
-| update_issue | 1,248 | 20.5% | 455 | 710 |
-| search_events | 1,127 | 18.5% | 459 | 597 |
-| search_issues | 853 | 14.0% | 377 | 412 |
-| analyze_issue_with_seer | 641 | 10.5% | 331 | 240 |
-| get_sentry_resource | 632 | 10.4% | 346 | 218 |
-| search_sentry_tools | 592 | 9.7% | 247 | 102 |
-| find_projects | 397 | 6.5% | 66 | 211 |
-| find_organizations | 308 | 5.1% | 70 | 68 |
-| execute_sentry_tool | 286 | 4.7% | 138 | 92 |
+| tool | tokens | share | description | input schema | output schema |
+|---|---:|---:|---:|---:|---:|
+| update_issue | 1,248 | 20.5% | 455 | 710 | 0 |
+| search_events | 1,127 | 18.5% | 459 | 597 | 0 |
+| search_issues | 853 | 14.0% | 377 | 412 | 0 |
+| analyze_issue_with_seer | 641 | 10.5% | 331 | 240 | 0 |
+| get_sentry_resource | 632 | 10.4% | 346 | 218 | 0 |
+| search_sentry_tools | 592 | 9.7% | 247 | 102 | 177 |
+| find_projects | 397 | 6.5% | 66 | 211 | 75 |
+| find_organizations | 308 | 5.1% | 70 | 68 | 124 |
+| execute_sentry_tool | 286 | 4.7% | 138 | 92 | 0 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
 

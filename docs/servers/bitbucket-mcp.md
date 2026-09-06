@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | listPipelineRuns | 258 | 4.2% | 6 | 240 |
 | runPipeline | 256 | 4.2% | 5 | 240 |

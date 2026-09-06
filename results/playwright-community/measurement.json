@@ -10,199 +10,265 @@
       "name": "start_codegen_session",
       "tokens": 125,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 102
+      "inputSchemaTokens": 102,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "end_codegen_session",
       "tokens": 52,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 30
+      "inputSchemaTokens": 30,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "get_codegen_session",
       "tokens": 49,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 30
+      "inputSchemaTokens": 30,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "clear_codegen_session",
       "tokens": 51,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 30
+      "inputSchemaTokens": 30,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_navigate",
       "tokens": 174,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 157
+      "inputSchemaTokens": 157,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_screenshot",
       "tokens": 193,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 169
+      "inputSchemaTokens": 169,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_click",
       "tokens": 47,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 29
+      "inputSchemaTokens": 29,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_iframe_click",
       "tokens": 76,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 53
+      "inputSchemaTokens": 53,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_iframe_fill",
       "tokens": 91,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 68
+      "inputSchemaTokens": 68,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_fill",
       "tokens": 59,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 42
+      "inputSchemaTokens": 42,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_select",
       "tokens": 64,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 43
+      "inputSchemaTokens": 43,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_hover",
       "tokens": 46,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 28
+      "inputSchemaTokens": 28,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_upload_file",
       "tokens": 77,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 50
+      "inputSchemaTokens": 50,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_evaluate",
       "tokens": 47,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 27
+      "inputSchemaTokens": 27,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_console_logs",
       "tokens": 138,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 116
+      "inputSchemaTokens": 116,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_resize",
       "tokens": 205,
       "descriptionTokens": 39,
-      "inputSchemaTokens": 155
+      "inputSchemaTokens": 155,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_close",
       "tokens": 31,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 12
+      "inputSchemaTokens": 12,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_get",
       "tokens": 82,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 65
+      "inputSchemaTokens": 65,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_post",
       "tokens": 100,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 83
+      "inputSchemaTokens": 83,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_put",
       "tokens": 100,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 83
+      "inputSchemaTokens": 83,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_patch",
       "tokens": 100,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 83
+      "inputSchemaTokens": 83,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_delete",
       "tokens": 82,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 65
+      "inputSchemaTokens": 65,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_expect_response",
       "tokens": 99,
       "descriptionTokens": 26,
-      "inputSchemaTokens": 61
+      "inputSchemaTokens": 61,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_assert_response",
       "tokens": 99,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 75
+      "inputSchemaTokens": 75,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_custom_user_agent",
       "tokens": 55,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 33
+      "inputSchemaTokens": 33,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_get_visible_text",
       "tokens": 35,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 12
+      "inputSchemaTokens": 12,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_get_visible_html",
       "tokens": 228,
       "descriptionTokens": 31,
-      "inputSchemaTokens": 184
+      "inputSchemaTokens": 184,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_go_back",
       "tokens": 30,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 12
+      "inputSchemaTokens": 12,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_go_forward",
       "tokens": 30,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 12
+      "inputSchemaTokens": 12,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_drag",
       "tokens": 70,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 51
+      "inputSchemaTokens": 51,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_press_key",
       "tokens": 74,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 57
+      "inputSchemaTokens": 57,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_save_as_pdf",
       "tokens": 155,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 133
+      "inputSchemaTokens": 133,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "playwright_click_and_switch_tab",
       "tokens": 54,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 29
+      "inputSchemaTokens": 29,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "4af7a9d131b4506471d83cc2d014ffc39b784a16ff181cce05ae2d9f26dbe9ff",

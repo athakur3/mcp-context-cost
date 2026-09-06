@@ -10,13 +10,17 @@
       "name": "search",
       "tokens": 335,
       "descriptionTokens": 226,
-      "inputSchemaTokens": 58
+      "inputSchemaTokens": 58,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 0
     },
     {
       "name": "fetch_content",
       "tokens": 387,
       "descriptionTokens": 246,
-      "inputSchemaTokens": 88
+      "inputSchemaTokens": 88,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "61f82494284ccb413e9cb213ed93d7b79f43769229713b2748056a7f1018db14",

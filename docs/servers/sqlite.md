@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | write_query | 50 | 18.7% | 13 | 26 |
 | describe_table | 49 | 18.3% | 8 | 30 |

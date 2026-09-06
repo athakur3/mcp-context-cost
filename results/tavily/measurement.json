@@ -10,31 +10,41 @@
       "name": "tavily_search",
       "tokens": 615,
       "descriptionTokens": 29,
-      "inputSchemaTokens": 574
+      "inputSchemaTokens": 574,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "tavily_extract",
       "tokens": 178,
       "descriptionTokens": 15,
-      "inputSchemaTokens": 151
+      "inputSchemaTokens": 151,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "tavily_crawl",
       "tokens": 412,
       "descriptionTokens": 20,
-      "inputSchemaTokens": 379
+      "inputSchemaTokens": 379,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "tavily_map",
       "tokens": 288,
       "descriptionTokens": 18,
-      "inputSchemaTokens": 258
+      "inputSchemaTokens": 258,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "tavily_research",
       "tokens": 158,
       "descriptionTokens": 50,
-      "inputSchemaTokens": 95
+      "inputSchemaTokens": 95,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "b2bcd45339fe42caa0f55e5ca1196091b2dcda4b868fedd209177b54f2ef51ef",

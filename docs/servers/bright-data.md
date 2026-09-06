@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | discover | 347 | 35.5% | 38 | 281 |
 | search_engine_batch | 191 | 19.5% | 17 | 142 |

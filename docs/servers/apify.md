@@ -16,18 +16,18 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
-|---|---:|---:|---:|---:|
-| search-actors | 2,226 | 21.3% | 610 | 504 |
-| call-actor | 1,875 | 17.9% | 377 | 496 |
-| fetch-actor-details | 1,534 | 14.7% | 219 | 262 |
-| get-actor-run | 1,290 | 12.3% | 192 | 108 |
-| abort-actor-run | 1,165 | 11.1% | 112 | 69 |
-| search-apify-docs | 722 | 6.9% | 251 | 291 |
-| get-dataset-items | 664 | 6.4% | 130 | 289 |
-| report-problem | 347 | 3.3% | 95 | 163 |
-| get-key-value-store-record | 341 | 3.3% | 102 | 73 |
-| fetch-apify-docs | 286 | 2.7% | 110 | 64 |
+| tool | tokens | share | description | input schema | output schema |
+|---|---:|---:|---:|---:|---:|
+| search-actors | 2,226 | 21.3% | 610 | 504 | 1,026 |
+| call-actor | 1,875 | 17.9% | 377 | 496 | 922 |
+| fetch-actor-details | 1,534 | 14.7% | 219 | 262 | 983 |
+| get-actor-run | 1,290 | 12.3% | 192 | 108 | 922 |
+| abort-actor-run | 1,165 | 11.1% | 112 | 69 | 922 |
+| search-apify-docs | 722 | 6.9% | 251 | 291 | 104 |
+| get-dataset-items | 664 | 6.4% | 130 | 289 | 182 |
+| report-problem | 347 | 3.3% | 95 | 163 | 30 |
+| get-key-value-store-record | 341 | 3.3% | 102 | 73 | 99 |
+| fetch-apify-docs | 286 | 2.7% | 110 | 64 | 48 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
 

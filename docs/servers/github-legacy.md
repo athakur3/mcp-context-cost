@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | create_pull_request_review | 360 | 10.1% | 7 | 340 |
 | list_pull_requests | 226 | 6.4% | 6 | 208 |

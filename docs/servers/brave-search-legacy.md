@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | brave_web_search | 161 | 50.5% | 65 | 84 |
 | brave_local_search | 156 | 48.9% | 82 | 61 |

@@ -16,35 +16,35 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
-|---|---:|---:|---:|---:|
-| explain | 813 | 10.3% | 18 | 628 |
-| create-index | 761 | 9.6% | 6 | 607 |
-| export | 657 | 8.3% | 13 | 581 |
-| aggregate | 524 | 6.6% | 8 | 345 |
-| find | 375 | 4.7% | 9 | 209 |
-| collection-indexes | 338 | 4.3% | 6 | 59 |
-| update-many | 295 | 3.7% | 32 | 101 |
-| list-connections | 270 | 3.4% | 21 | 29 |
-| insert-many | 260 | 3.3% | 31 | 84 |
-| aggregate-db | 256 | 3.2% | 8 | 89 |
-| drop-index | 233 | 2.9% | 10 | 86 |
-| rename-collection | 233 | 2.9% | 9 | 82 |
-| collection-schema | 223 | 2.8% | 6 | 86 |
-| mongodb-logs | 217 | 2.7% | 8 | 70 |
-| delete-many | 215 | 2.7% | 13 | 75 |
-| drop-collection | 209 | 2.6% | 22 | 59 |
-| list-databases | 207 | 2.6% | 8 | 41 |
-| create-collection | 205 | 2.6% | 20 | 59 |
-| count | 202 | 2.5% | 22 | 75 |
-| list-collections | 202 | 2.5% | 7 | 50 |
-| connect | 195 | 2.5% | 40 | 49 |
-| search-knowledge | 189 | 2.4% | 36 | 86 |
-| collection-storage-size | 183 | 2.3% | 6 | 59 |
-| db-stats | 183 | 2.3% | 11 | 50 |
-| drop-database | 181 | 2.3% | 11 | 50 |
-| disconnect | 166 | 2.1% | 11 | 41 |
-| list-knowledge-sources | 132 | 1.7% | 32 | 29 |
+| tool | tokens | share | description | input schema | output schema |
+|---|---:|---:|---:|---:|---:|
+| explain | 813 | 10.3% | 18 | 628 | 99 |
+| create-index | 761 | 9.6% | 6 | 607 | 80 |
+| export | 657 | 8.3% | 13 | 581 | 0 |
+| aggregate | 524 | 6.6% | 8 | 345 | 105 |
+| find | 375 | 4.7% | 9 | 209 | 91 |
+| collection-indexes | 338 | 4.3% | 6 | 59 | 203 |
+| update-many | 295 | 3.7% | 32 | 101 | 95 |
+| list-connections | 270 | 3.4% | 21 | 29 | 151 |
+| insert-many | 260 | 3.3% | 31 | 84 | 78 |
+| aggregate-db | 256 | 3.2% | 8 | 89 | 91 |
+| drop-index | 233 | 2.9% | 10 | 86 | 70 |
+| rename-collection | 233 | 2.9% | 9 | 82 | 72 |
+| collection-schema | 223 | 2.8% | 6 | 86 | 63 |
+| mongodb-logs | 217 | 2.7% | 8 | 70 | 69 |
+| delete-many | 215 | 2.7% | 13 | 75 | 59 |
+| drop-collection | 209 | 2.6% | 22 | 59 | 59 |
+| list-databases | 207 | 2.6% | 8 | 41 | 86 |
+| create-collection | 205 | 2.6% | 20 | 59 | 57 |
+| count | 202 | 2.5% | 22 | 75 | 39 |
+| list-collections | 202 | 2.5% | 7 | 50 | 75 |
+| connect | 195 | 2.5% | 40 | 49 | 41 |
+| search-knowledge | 189 | 2.4% | 36 | 86 | 0 |
+| collection-storage-size | 183 | 2.3% | 6 | 59 | 48 |
+| db-stats | 183 | 2.3% | 11 | 50 | 52 |
+| drop-database | 181 | 2.3% | 11 | 50 | 50 |
+| disconnect | 166 | 2.1% | 11 | 41 | 49 |
+| list-knowledge-sources | 132 | 1.7% | 32 | 29 | 0 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
 

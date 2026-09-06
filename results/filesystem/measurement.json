@@ -10,85 +10,113 @@
       "name": "read_file",
       "tokens": 179,
       "descriptionTokens": 19,
-      "inputSchemaTokens": 78
+      "inputSchemaTokens": 78,
+      "outputSchemaTokens": 39,
+      "annotationsTokens": 13
     },
     {
       "name": "read_text_file",
       "tokens": 256,
       "descriptionTokens": 97,
-      "inputSchemaTokens": 78
+      "inputSchemaTokens": 78,
+      "outputSchemaTokens": 39,
+      "annotationsTokens": 13
     },
     {
       "name": "read_media_file",
       "tokens": 290,
       "descriptionTokens": 47,
-      "inputSchemaTokens": 34
+      "inputSchemaTokens": 34,
+      "outputSchemaTokens": 167,
+      "annotationsTokens": 13
     },
     {
       "name": "read_multiple_files",
       "tokens": 210,
       "descriptionTokens": 58,
-      "inputSchemaTokens": 71
+      "inputSchemaTokens": 71,
+      "outputSchemaTokens": 39,
+      "annotationsTokens": 13
     },
     {
       "name": "write_file",
       "tokens": 174,
       "descriptionTokens": 39,
-      "inputSchemaTokens": 43
+      "inputSchemaTokens": 43,
+      "outputSchemaTokens": 39,
+      "annotationsTokens": 26
     },
     {
       "name": "edit_file",
       "tokens": 245,
       "descriptionTokens": 35,
-      "inputSchemaTokens": 118
+      "inputSchemaTokens": 118,
+      "outputSchemaTokens": 39,
+      "annotationsTokens": 26
     },
     {
       "name": "create_directory",
       "tokens": 177,
       "descriptionTokens": 51,
-      "inputSchemaTokens": 34
+      "inputSchemaTokens": 34,
+      "outputSchemaTokens": 39,
+      "annotationsTokens": 26
     },
     {
       "name": "list_directory",
       "tokens": 166,
       "descriptionTokens": 53,
-      "inputSchemaTokens": 34
+      "inputSchemaTokens": 34,
+      "outputSchemaTokens": 39,
+      "annotationsTokens": 13
     },
     {
       "name": "list_directory_with_sizes",
       "tokens": 201,
       "descriptionTokens": 56,
-      "inputSchemaTokens": 62
+      "inputSchemaTokens": 62,
+      "outputSchemaTokens": 39,
+      "annotationsTokens": 13
     },
     {
       "name": "directory_tree",
       "tokens": 202,
       "descriptionTokens": 72,
-      "inputSchemaTokens": 51
+      "inputSchemaTokens": 51,
+      "outputSchemaTokens": 39,
+      "annotationsTokens": 13
     },
     {
       "name": "move_file",
       "tokens": 192,
       "descriptionTokens": 57,
-      "inputSchemaTokens": 43
+      "inputSchemaTokens": 43,
+      "outputSchemaTokens": 39,
+      "annotationsTokens": 26
     },
     {
       "name": "search_files",
       "tokens": 218,
       "descriptionTokens": 79,
-      "inputSchemaTokens": 60
+      "inputSchemaTokens": 60,
+      "outputSchemaTokens": 39,
+      "annotationsTokens": 13
     },
     {
       "name": "get_file_info",
       "tokens": 162,
       "descriptionTokens": 47,
-      "inputSchemaTokens": 34
+      "inputSchemaTokens": 34,
+      "outputSchemaTokens": 39,
+      "annotationsTokens": 13
     },
     {
       "name": "list_allowed_directories",
       "tokens": 149,
       "descriptionTokens": 41,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 39,
+      "annotationsTokens": 13
     }
   ],
   "canonicalSha256": "245b04832111268c3fcc72543af89fb2f8c109d8306c1b5b8c49dc45977e41e1",

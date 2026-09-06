@@ -10,19 +10,25 @@
       "name": "execute_sql",
       "tokens": 119,
       "descriptionTokens": 58,
-      "inputSchemaTokens": 32
+      "inputSchemaTokens": 32,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 18
     },
     {
       "name": "get_schema_info",
       "tokens": 133,
       "descriptionTokens": 68,
-      "inputSchemaTokens": 34
+      "inputSchemaTokens": 34,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "get_table_sample",
       "tokens": 139,
       "descriptionTokens": 47,
-      "inputSchemaTokens": 61
+      "inputSchemaTokens": 61,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     }
   ],
   "canonicalSha256": "48f53cd914e3137feabfb3087abdb3bb54df46907d605a4cf97fac272bba2afb",

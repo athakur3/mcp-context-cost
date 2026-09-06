@@ -10,151 +10,201 @@
       "name": "apply_formula",
       "tokens": 151,
       "descriptionTokens": 19,
-      "inputSchemaTokens": 72
+      "inputSchemaTokens": 72,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 12
     },
     {
       "name": "validate_formula_syntax",
       "tokens": 143,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 74
+      "inputSchemaTokens": 74,
+      "outputSchemaTokens": 31,
+      "annotationsTokens": 13
     },
     {
       "name": "format_range",
       "tokens": 472,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 408
+      "inputSchemaTokens": 408,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 12
     },
     {
       "name": "read_data_from_excel",
       "tokens": 293,
       "descriptionTokens": 107,
-      "inputSchemaTokens": 109
+      "inputSchemaTokens": 109,
+      "outputSchemaTokens": 31,
+      "annotationsTokens": 14
     },
     {
       "name": "write_data_to_excel",
       "tokens": 244,
       "descriptionTokens": 82,
-      "inputSchemaTokens": 90
+      "inputSchemaTokens": 90,
+      "outputSchemaTokens": 31,
+      "annotationsTokens": 14
     },
     {
       "name": "create_workbook",
       "tokens": 94,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 31
+      "inputSchemaTokens": 31,
+      "outputSchemaTokens": 30,
+      "annotationsTokens": 12
     },
     {
       "name": "create_worksheet",
       "tokens": 111,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 47
+      "inputSchemaTokens": 47,
+      "outputSchemaTokens": 30,
+      "annotationsTokens": 12
     },
     {
       "name": "create_chart",
       "tokens": 198,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 137
+      "inputSchemaTokens": 137,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 12
     },
     {
       "name": "create_pivot_table",
       "tokens": 219,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 152
+      "inputSchemaTokens": 152,
+      "outputSchemaTokens": 31,
+      "annotationsTokens": 13
     },
     {
       "name": "create_table",
       "tokens": 176,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 108
+      "inputSchemaTokens": 108,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 12
     },
     {
       "name": "copy_worksheet",
       "tokens": 126,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 63
+      "inputSchemaTokens": 63,
+      "outputSchemaTokens": 30,
+      "annotationsTokens": 12
     },
     {
       "name": "delete_worksheet",
       "tokens": 110,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 47
+      "inputSchemaTokens": 47,
+      "outputSchemaTokens": 30,
+      "annotationsTokens": 12
     },
     {
       "name": "rename_worksheet",
       "tokens": 126,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 63
+      "inputSchemaTokens": 63,
+      "outputSchemaTokens": 30,
+      "annotationsTokens": 12
     },
     {
       "name": "get_workbook_metadata",
       "tokens": 122,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 50
+      "inputSchemaTokens": 50,
+      "outputSchemaTokens": 31,
+      "annotationsTokens": 13
     },
     {
       "name": "merge_cells",
       "tokens": 140,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 78
+      "inputSchemaTokens": 78,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 12
     },
     {
       "name": "unmerge_cells",
       "tokens": 145,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 79
+      "inputSchemaTokens": 79,
+      "outputSchemaTokens": 30,
+      "annotationsTokens": 13
     },
     {
       "name": "get_merged_cells",
       "tokens": 117,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 48
+      "inputSchemaTokens": 48,
+      "outputSchemaTokens": 31,
+      "annotationsTokens": 14
     },
     {
       "name": "copy_range",
       "tokens": 185,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 120
+      "inputSchemaTokens": 120,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 12
     },
     {
       "name": "delete_range",
       "tokens": 161,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 95
+      "inputSchemaTokens": 95,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 12
     },
     {
       "name": "validate_excel_range",
       "tokens": 158,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 89
+      "inputSchemaTokens": 89,
+      "outputSchemaTokens": 30,
+      "annotationsTokens": 13
     },
     {
       "name": "get_data_validation_info",
       "tokens": 191,
       "descriptionTokens": 68,
-      "inputSchemaTokens": 48
+      "inputSchemaTokens": 48,
+      "outputSchemaTokens": 31,
+      "annotationsTokens": 14
     },
     {
       "name": "insert_rows",
       "tokens": 144,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 77
+      "inputSchemaTokens": 77,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 12
     },
     {
       "name": "insert_columns",
       "tokens": 144,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 77
+      "inputSchemaTokens": 77,
+      "outputSchemaTokens": 29,
+      "annotationsTokens": 12
     },
     {
       "name": "delete_sheet_rows",
       "tokens": 147,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 78
+      "inputSchemaTokens": 78,
+      "outputSchemaTokens": 30,
+      "annotationsTokens": 12
     },
     {
       "name": "delete_sheet_columns",
       "tokens": 147,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 78
+      "inputSchemaTokens": 78,
+      "outputSchemaTokens": 30,
+      "annotationsTokens": 12
     }
   ],
   "canonicalSha256": "cf374a8866847f36b743f5b59176d3908466f40c2d5d9b3cb0462ea47af40999",

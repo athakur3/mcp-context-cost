@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | get_file_contents | 41 | 12.2% | 13 | 16 |
 | create_or_update_file | 40 | 11.9% | 11 | 16 |

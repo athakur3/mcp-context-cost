@@ -18,7 +18,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | start_search | 1,351 | 11.4% | 1,078 | 158 |
 | start_process | 1,181 | 10.0% | 984 | 81 |

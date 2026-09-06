@@ -10,175 +10,233 @@
       "name": "create_text_file",
       "tokens": 162,
       "descriptionTokens": 22,
-      "inputSchemaTokens": 71
+      "inputSchemaTokens": 71,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 19
     },
     {
       "name": "replace_content",
       "tokens": 479,
       "descriptionTokens": 128,
-      "inputSchemaTokens": 282
+      "inputSchemaTokens": 282,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 18
     },
     {
       "name": "replace_in_files",
       "tokens": 801,
       "descriptionTokens": 225,
-      "inputSchemaTokens": 497
+      "inputSchemaTokens": 497,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 19
     },
     {
       "name": "replace_symbol_body",
       "tokens": 246,
       "descriptionTokens": 36,
-      "inputSchemaTokens": 138
+      "inputSchemaTokens": 138,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 19
     },
     {
       "name": "insert_after_symbol",
       "tokens": 205,
       "descriptionTokens": 24,
-      "inputSchemaTokens": 110
+      "inputSchemaTokens": 110,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 19
     },
     {
       "name": "insert_before_symbol",
       "tokens": 231,
       "descriptionTokens": 56,
-      "inputSchemaTokens": 105
+      "inputSchemaTokens": 105,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 19
     },
     {
       "name": "read_file",
       "tokens": 291,
       "descriptionTokens": 23,
-      "inputSchemaTokens": 202
+      "inputSchemaTokens": 202,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 18
     },
     {
       "name": "list_dir",
       "tokens": 277,
       "descriptionTokens": 30,
-      "inputSchemaTokens": 181
+      "inputSchemaTokens": 181,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 18
     },
     {
       "name": "find_file",
       "tokens": 180,
       "descriptionTokens": 25,
-      "inputSchemaTokens": 89
+      "inputSchemaTokens": 89,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 18
     },
     {
       "name": "search_for_pattern",
       "tokens": 524,
       "descriptionTokens": 48,
-      "inputSchemaTokens": 405
+      "inputSchemaTokens": 405,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 19
     },
     {
       "name": "get_symbols_overview",
       "tokens": 301,
       "descriptionTokens": 59,
-      "inputSchemaTokens": 171
+      "inputSchemaTokens": 171,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 19
     },
     {
       "name": "find_symbol",
       "tokens": 883,
       "descriptionTokens": 273,
-      "inputSchemaTokens": 530
+      "inputSchemaTokens": 530,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 18
     },
     {
       "name": "find_referencing_symbols",
       "tokens": 310,
       "descriptionTokens": 48,
-      "inputSchemaTokens": 190
+      "inputSchemaTokens": 190,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 20
     },
     {
       "name": "find_implementations",
       "tokens": 346,
       "descriptionTokens": 27,
-      "inputSchemaTokens": 249
+      "inputSchemaTokens": 249,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 19
     },
     {
       "name": "find_declaration",
       "tokens": 355,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 280
+      "inputSchemaTokens": 280,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 18
     },
     {
       "name": "get_diagnostics_for_file",
       "tokens": 338,
       "descriptionTokens": 52,
-      "inputSchemaTokens": 211
+      "inputSchemaTokens": 211,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 20
     },
     {
       "name": "rename_symbol",
       "tokens": 223,
       "descriptionTokens": 59,
-      "inputSchemaTokens": 97
+      "inputSchemaTokens": 97,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 18
     },
     {
       "name": "safe_delete_symbol",
       "tokens": 175,
       "descriptionTokens": 31,
-      "inputSchemaTokens": 75
+      "inputSchemaTokens": 75,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 19
     },
     {
       "name": "write_memory",
       "tokens": 232,
       "descriptionTokens": 74,
-      "inputSchemaTokens": 85
+      "inputSchemaTokens": 85,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 18
     },
     {
       "name": "read_memory",
       "tokens": 123,
       "descriptionTokens": 26,
-      "inputSchemaTokens": 31
+      "inputSchemaTokens": 31,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 18
     },
     {
       "name": "list_memories",
       "tokens": 101,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 25
+      "inputSchemaTokens": 25,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 18
     },
     {
       "name": "delete_memory",
       "tokens": 114,
       "descriptionTokens": 17,
-      "inputSchemaTokens": 31
+      "inputSchemaTokens": 31,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 18
     },
     {
       "name": "rename_memory",
       "tokens": 174,
       "descriptionTokens": 56,
-      "inputSchemaTokens": 47
+      "inputSchemaTokens": 47,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 18
     },
     {
       "name": "edit_memory",
       "tokens": 325,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 249
+      "inputSchemaTokens": 249,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 18
     },
     {
       "name": "execute_shell_command",
       "tokens": 330,
       "descriptionTokens": 79,
-      "inputSchemaTokens": 179
+      "inputSchemaTokens": 179,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 19
     },
     {
       "name": "activate_project",
       "tokens": 124,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 47
+      "inputSchemaTokens": 47,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 18
     },
     {
       "name": "get_current_config",
       "tokens": 105,
       "descriptionTokens": 22,
-      "inputSchemaTokens": 14
+      "inputSchemaTokens": 14,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 19
     },
     {
       "name": "onboarding",
       "tokens": 112,
       "descriptionTokens": 31,
-      "inputSchemaTokens": 14
+      "inputSchemaTokens": 14,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 18
     },
     {
       "name": "initial_instructions",
       "tokens": 135,
       "descriptionTokens": 52,
-      "inputSchemaTokens": 14
+      "inputSchemaTokens": 14,
+      "outputSchemaTokens": 28,
+      "annotationsTokens": 18
     }
   ],
   "canonicalSha256": "7d876a84707e0689df306366dc7c3225ae49762ca045d7604c7c9a2b20dfbc3c",

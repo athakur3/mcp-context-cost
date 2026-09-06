@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | search-records | 1,179 | 20.0% | 111 | 1,031 |
 | cascading-search | 1,154 | 19.5% | 55 | 1,063 |

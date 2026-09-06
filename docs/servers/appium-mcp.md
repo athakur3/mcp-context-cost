@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | appium_gesture | 1,308 | 12.7% | 94 | 1,188 |
 | appium_session_management | 971 | 9.5% | 48 | 891 |

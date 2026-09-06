@@ -10,145 +10,193 @@
       "name": "browser_close",
       "tokens": 70,
       "descriptionTokens": 3,
-      "inputSchemaTokens": 31
+      "inputSchemaTokens": 31,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 24
     },
     {
       "name": "browser_resize",
       "tokens": 107,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 66
+      "inputSchemaTokens": 66,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     },
     {
       "name": "browser_console_messages",
       "tokens": 181,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 139
+      "inputSchemaTokens": 139,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     },
     {
       "name": "browser_handle_dialog",
       "tokens": 112,
       "descriptionTokens": 3,
-      "inputSchemaTokens": 71
+      "inputSchemaTokens": 71,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     },
     {
       "name": "browser_evaluate",
       "tokens": 184,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 138
+      "inputSchemaTokens": 138,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     },
     {
       "name": "browser_file_upload",
       "tokens": 111,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 69
+      "inputSchemaTokens": 69,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 24
     },
     {
       "name": "browser_drop",
       "tokens": 243,
       "descriptionTokens": 34,
-      "inputSchemaTokens": 169
+      "inputSchemaTokens": 169,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 29
     },
     {
       "name": "browser_find",
       "tokens": 221,
       "descriptionTokens": 63,
-      "inputSchemaTokens": 121
+      "inputSchemaTokens": 121,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "browser_fill_form",
       "tokens": 255,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 214
+      "inputSchemaTokens": 214,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 24
     },
     {
       "name": "browser_press_key",
       "tokens": 110,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 66
+      "inputSchemaTokens": 66,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     },
     {
       "name": "browser_type",
       "tokens": 198,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 157
+      "inputSchemaTokens": 157,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 24
     },
     {
       "name": "browser_navigate",
       "tokens": 92,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 49
+      "inputSchemaTokens": 49,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "browser_navigate_back",
       "tokens": 78,
       "descriptionTokens": 9,
-      "inputSchemaTokens": 31
+      "inputSchemaTokens": 31,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 24
     },
     {
       "name": "browser_network_requests",
       "tokens": 184,
       "descriptionTokens": 24,
-      "inputSchemaTokens": 123
+      "inputSchemaTokens": 123,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     },
     {
       "name": "browser_network_request",
       "tokens": 207,
       "descriptionTokens": 33,
-      "inputSchemaTokens": 136
+      "inputSchemaTokens": 136,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "browser_run_code_unsafe",
       "tokens": 202,
       "descriptionTokens": 26,
-      "inputSchemaTokens": 133
+      "inputSchemaTokens": 133,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 29
     },
     {
       "name": "browser_take_screenshot",
       "tokens": 329,
       "descriptionTokens": 23,
-      "inputSchemaTokens": 268
+      "inputSchemaTokens": 268,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 25
     },
     {
       "name": "browser_snapshot",
       "tokens": 184,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 135
+      "inputSchemaTokens": 135,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 24
     },
     {
       "name": "browser_click",
       "tokens": 205,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 164
+      "inputSchemaTokens": 164,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 23
     },
     {
       "name": "browser_drag",
       "tokens": 183,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 140
+      "inputSchemaTokens": 140,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 24
     },
     {
       "name": "browser_hover",
       "tokens": 122,
       "descriptionTokens": 5,
-      "inputSchemaTokens": 81
+      "inputSchemaTokens": 81,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 24
     },
     {
       "name": "browser_select_option",
       "tokens": 162,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 119
+      "inputSchemaTokens": 119,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 24
     },
     {
       "name": "browser_tabs",
       "tokens": 154,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 107
+      "inputSchemaTokens": 107,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 24
     },
     {
       "name": "browser_wait_for",
       "tokens": 128,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 78
+      "inputSchemaTokens": 78,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 24
     }
   ],
   "canonicalSha256": "5d5d92a7c727ef75bd9a70f076039dbdbfd331c56f022915c2e89b76f7fc88f0",

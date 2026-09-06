@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | searxng_web_search | 825 | 53.7% | 153 | 643 |
 | web_url_read | 429 | 27.9% | 259 | 145 |

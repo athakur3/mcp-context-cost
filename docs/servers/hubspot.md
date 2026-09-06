@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | hubspot-search-objects | 964 | 10.5% | 318 | 576 |
 | hubspot-create-property | 879 | 9.6% | 246 | 569 |

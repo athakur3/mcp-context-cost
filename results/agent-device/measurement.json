@@ -10,343 +10,457 @@
       "name": "alert",
       "tokens": 633,
       "descriptionTokens": 32,
-      "inputSchemaTokens": 592
+      "inputSchemaTokens": 592,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "app-switcher",
       "tokens": 643,
       "descriptionTokens": 29,
-      "inputSchemaTokens": 567
+      "inputSchemaTokens": 567,
+      "outputSchemaTokens": 34,
+      "annotationsTokens": 0
     },
     {
       "name": "apps",
       "tokens": 644,
       "descriptionTokens": 23,
-      "inputSchemaTokens": 585
+      "inputSchemaTokens": 585,
+      "outputSchemaTokens": 25,
+      "annotationsTokens": 0
     },
     {
       "name": "appstate",
       "tokens": 750,
       "descriptionTokens": 4,
-      "inputSchemaTokens": 551
+      "inputSchemaTokens": 551,
+      "outputSchemaTokens": 182,
+      "annotationsTokens": 0
     },
     {
       "name": "artifacts",
       "tokens": 615,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 592
+      "inputSchemaTokens": 592,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "audio",
       "tokens": 647,
       "descriptionTokens": 28,
-      "inputSchemaTokens": 610
+      "inputSchemaTokens": 610,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "back",
       "tokens": 1213,
       "descriptionTokens": 28,
-      "inputSchemaTokens": 681
+      "inputSchemaTokens": 681,
+      "outputSchemaTokens": 493,
+      "annotationsTokens": 0
     },
     {
       "name": "batch",
       "tokens": 868,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 851
+      "inputSchemaTokens": 851,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "boot",
       "tokens": 732,
       "descriptionTokens": 31,
-      "inputSchemaTokens": 569
+      "inputSchemaTokens": 569,
+      "outputSchemaTokens": 121,
+      "annotationsTokens": 0
     },
     {
       "name": "capabilities",
       "tokens": 586,
       "descriptionTokens": 25,
-      "inputSchemaTokens": 551
+      "inputSchemaTokens": 551,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "click",
       "tokens": 2718,
       "descriptionTokens": 51,
-      "inputSchemaTokens": 1016
+      "inputSchemaTokens": 1016,
+      "outputSchemaTokens": 1640,
+      "annotationsTokens": 0
     },
     {
       "name": "clipboard",
       "tokens": 702,
       "descriptionTokens": 16,
-      "inputSchemaTokens": 592
+      "inputSchemaTokens": 592,
+      "outputSchemaTokens": 83,
+      "annotationsTokens": 0
     },
     {
       "name": "close",
       "tokens": 678,
       "descriptionTokens": 29,
-      "inputSchemaTokens": 640
+      "inputSchemaTokens": 640,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "debug",
       "tokens": 711,
       "descriptionTokens": 52,
-      "inputSchemaTokens": 650
+      "inputSchemaTokens": 650,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "devices",
       "tokens": 707,
       "descriptionTokens": 32,
-      "inputSchemaTokens": 551
+      "inputSchemaTokens": 551,
+      "outputSchemaTokens": 113,
+      "annotationsTokens": 0
     },
     {
       "name": "diff",
       "tokens": 800,
       "descriptionTokens": 24,
-      "inputSchemaTokens": 619
+      "inputSchemaTokens": 619,
+      "outputSchemaTokens": 146,
+      "annotationsTokens": 0
     },
     {
       "name": "doctor",
       "tokens": 880,
       "descriptionTokens": 71,
-      "inputSchemaTokens": 596
+      "inputSchemaTokens": 596,
+      "outputSchemaTokens": 202,
+      "annotationsTokens": 0
     },
     {
       "name": "events",
       "tokens": 588,
       "descriptionTokens": 13,
-      "inputSchemaTokens": 565
+      "inputSchemaTokens": 565,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "fill",
       "tokens": 4461,
       "descriptionTokens": 43,
-      "inputSchemaTokens": 968
+      "inputSchemaTokens": 968,
+      "outputSchemaTokens": 3439,
+      "annotationsTokens": 0
     },
     {
       "name": "find",
       "tokens": 1566,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 725
+      "inputSchemaTokens": 725,
+      "outputSchemaTokens": 817,
+      "annotationsTokens": 0
     },
     {
       "name": "focus",
       "tokens": 637,
       "descriptionTokens": 30,
-      "inputSchemaTokens": 598
+      "inputSchemaTokens": 598,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "gesture",
       "tokens": 980,
       "descriptionTokens": 35,
-      "inputSchemaTokens": 936
+      "inputSchemaTokens": 936,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "get",
       "tokens": 817,
       "descriptionTokens": 30,
-      "inputSchemaTokens": 778
+      "inputSchemaTokens": 778,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "home",
       "tokens": 634,
       "descriptionTokens": 24,
-      "inputSchemaTokens": 567
+      "inputSchemaTokens": 567,
+      "outputSchemaTokens": 32,
+      "annotationsTokens": 0
     },
     {
       "name": "hover",
       "tokens": 2478,
       "descriptionTokens": 56,
-      "inputSchemaTokens": 861
+      "inputSchemaTokens": 861,
+      "outputSchemaTokens": 1550,
+      "annotationsTokens": 0
     },
     {
       "name": "install",
       "tokens": 644,
       "descriptionTokens": 33,
-      "inputSchemaTokens": 602
+      "inputSchemaTokens": 602,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "install-from-source",
       "tokens": 637,
       "descriptionTokens": 19,
-      "inputSchemaTokens": 607
+      "inputSchemaTokens": 607,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "is",
       "tokens": 754,
       "descriptionTokens": 32,
-      "inputSchemaTokens": 713
+      "inputSchemaTokens": 713,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "keyboard",
       "tokens": 806,
       "descriptionTokens": 58,
-      "inputSchemaTokens": 584
+      "inputSchemaTokens": 584,
+      "outputSchemaTokens": 153,
+      "annotationsTokens": 0
     },
     {
       "name": "logs",
       "tokens": 610,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 586
+      "inputSchemaTokens": 586,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "longpress",
       "tokens": 2485,
       "descriptionTokens": 34,
-      "inputSchemaTokens": 880
+      "inputSchemaTokens": 880,
+      "outputSchemaTokens": 1559,
+      "annotationsTokens": 0
     },
     {
       "name": "metro",
       "tokens": 812,
       "descriptionTokens": 64,
-      "inputSchemaTokens": 739
+      "inputSchemaTokens": 739,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "network",
       "tokens": 610,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 588
+      "inputSchemaTokens": 588,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "open",
       "tokens": 1102,
       "descriptionTokens": 77,
-      "inputSchemaTokens": 1016
+      "inputSchemaTokens": 1016,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "orientation",
       "tokens": 674,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 596
+      "inputSchemaTokens": 596,
+      "outputSchemaTokens": 58,
+      "annotationsTokens": 0
     },
     {
       "name": "perf",
       "tokens": 772,
       "descriptionTokens": 63,
-      "inputSchemaTokens": 700
+      "inputSchemaTokens": 700,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "press",
       "tokens": 2670,
       "descriptionTokens": 30,
-      "inputSchemaTokens": 989
+      "inputSchemaTokens": 989,
+      "outputSchemaTokens": 1640,
+      "annotationsTokens": 0
     },
     {
       "name": "push",
       "tokens": 735,
       "descriptionTokens": 10,
-      "inputSchemaTokens": 602
+      "inputSchemaTokens": 602,
+      "outputSchemaTokens": 112,
+      "annotationsTokens": 0
     },
     {
       "name": "react-native",
       "tokens": 617,
       "descriptionTokens": 23,
-      "inputSchemaTokens": 584
+      "inputSchemaTokens": 584,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "record",
       "tokens": 998,
       "descriptionTokens": 39,
-      "inputSchemaTokens": 637
+      "inputSchemaTokens": 637,
+      "outputSchemaTokens": 311,
+      "annotationsTokens": 0
     },
     {
       "name": "reinstall",
       "tokens": 637,
       "descriptionTokens": 30,
-      "inputSchemaTokens": 597
+      "inputSchemaTokens": 597,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "replay",
       "tokens": 892,
       "descriptionTokens": 26,
-      "inputSchemaTokens": 747
+      "inputSchemaTokens": 747,
+      "outputSchemaTokens": 107,
+      "annotationsTokens": 0
     },
     {
       "name": "screenshot",
       "tokens": 717,
       "descriptionTokens": 30,
-      "inputSchemaTokens": 677
+      "inputSchemaTokens": 677,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "scroll",
       "tokens": 776,
       "descriptionTokens": 17,
-      "inputSchemaTokens": 750
+      "inputSchemaTokens": 750,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "session",
       "tokens": 663,
       "descriptionTokens": 24,
-      "inputSchemaTokens": 629
+      "inputSchemaTokens": 629,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "settings",
       "tokens": 665,
       "descriptionTokens": 27,
-      "inputSchemaTokens": 629
+      "inputSchemaTokens": 629,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "shutdown",
       "tokens": 749,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 551
+      "inputSchemaTokens": 551,
+      "outputSchemaTokens": 180,
+      "annotationsTokens": 0
     },
     {
       "name": "snapshot",
       "tokens": 813,
       "descriptionTokens": 30,
-      "inputSchemaTokens": 774
+      "inputSchemaTokens": 774,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "swipe",
       "tokens": 733,
       "descriptionTokens": 8,
-      "inputSchemaTokens": 715
+      "inputSchemaTokens": 715,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "test",
       "tokens": 881,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 722
+      "inputSchemaTokens": 722,
+      "outputSchemaTokens": 136,
+      "annotationsTokens": 0
     },
     {
       "name": "trace",
       "tokens": 776,
       "descriptionTokens": 34,
-      "inputSchemaTokens": 592
+      "inputSchemaTokens": 592,
+      "outputSchemaTokens": 139,
+      "annotationsTokens": 0
     },
     {
       "name": "trigger-app-event",
       "tokens": 722,
       "descriptionTokens": 32,
-      "inputSchemaTokens": 624
+      "inputSchemaTokens": 624,
+      "outputSchemaTokens": 53,
+      "annotationsTokens": 0
     },
     {
       "name": "tv-remote",
       "tokens": 773,
       "descriptionTokens": 48,
-      "inputSchemaTokens": 643
+      "inputSchemaTokens": 643,
+      "outputSchemaTokens": 69,
+      "annotationsTokens": 0
     },
     {
       "name": "type",
       "tokens": 640,
       "descriptionTokens": 28,
-      "inputSchemaTokens": 603
+      "inputSchemaTokens": 603,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "viewport",
       "tokens": 686,
       "descriptionTokens": 28,
-      "inputSchemaTokens": 610
+      "inputSchemaTokens": 610,
+      "outputSchemaTokens": 37,
+      "annotationsTokens": 0
     },
     {
       "name": "wait",
       "tokens": 788,
       "descriptionTokens": 41,
-      "inputSchemaTokens": 659
+      "inputSchemaTokens": 659,
+      "outputSchemaTokens": 77,
+      "annotationsTokens": 0
     },
     {
       "name": "help",
       "tokens": 142,
       "descriptionTokens": 100,
-      "inputSchemaTokens": 33
+      "inputSchemaTokens": 33,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "61a100d3f94ba6e81eedcbd151cfff7ce5e6acd36906571c7035e0b09a681dca",

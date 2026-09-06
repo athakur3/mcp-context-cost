@@ -10,127 +10,169 @@
       "name": "hubspot-get-user-details",
       "tokens": 250,
       "descriptionTokens": 163,
-      "inputSchemaTokens": 29
+      "inputSchemaTokens": 29,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "hubspot-list-objects",
       "tokens": 505,
       "descriptionTokens": 150,
-      "inputSchemaTokens": 294
+      "inputSchemaTokens": 294,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "hubspot-search-objects",
       "tokens": 964,
       "descriptionTokens": 318,
-      "inputSchemaTokens": 576
+      "inputSchemaTokens": 576,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "hubspot-batch-create-associations",
       "tokens": 628,
       "descriptionTokens": 146,
-      "inputSchemaTokens": 418
+      "inputSchemaTokens": 418,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 35
     },
     {
       "name": "hubspot-get-association-definitions",
       "tokens": 339,
       "descriptionTokens": 74,
-      "inputSchemaTokens": 205
+      "inputSchemaTokens": 205,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 33
     },
     {
       "name": "hubspot-list-associations",
       "tokens": 491,
       "descriptionTokens": 182,
-      "inputSchemaTokens": 247
+      "inputSchemaTokens": 247,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 33
     },
     {
       "name": "hubspot-batch-create-objects",
       "tokens": 563,
       "descriptionTokens": 146,
-      "inputSchemaTokens": 356
+      "inputSchemaTokens": 356,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "hubspot-batch-update-objects",
       "tokens": 498,
       "descriptionTokens": 188,
-      "inputSchemaTokens": 246
+      "inputSchemaTokens": 246,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 33
     },
     {
       "name": "hubspot-batch-read-objects",
       "tokens": 348,
       "descriptionTokens": 54,
-      "inputSchemaTokens": 237
+      "inputSchemaTokens": 237,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 33
     },
     {
       "name": "hubspot-list-properties",
       "tokens": 322,
       "descriptionTokens": 104,
-      "inputSchemaTokens": 163
+      "inputSchemaTokens": 163,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "hubspot-get-property",
       "tokens": 245,
       "descriptionTokens": 56,
-      "inputSchemaTokens": 136
+      "inputSchemaTokens": 136,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 33
     },
     {
       "name": "hubspot-create-property",
       "tokens": 879,
       "descriptionTokens": 246,
-      "inputSchemaTokens": 569
+      "inputSchemaTokens": 569,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "hubspot-update-property",
       "tokens": 669,
       "descriptionTokens": 112,
-      "inputSchemaTokens": 500
+      "inputSchemaTokens": 500,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "hubspot-create-engagement",
       "tokens": 569,
       "descriptionTokens": 251,
-      "inputSchemaTokens": 256
+      "inputSchemaTokens": 256,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "hubspot-get-engagement",
       "tokens": 127,
       "descriptionTokens": 19,
-      "inputSchemaTokens": 58
+      "inputSchemaTokens": 58,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "hubspot-update-engagement",
       "tokens": 530,
       "descriptionTokens": 217,
-      "inputSchemaTokens": 249
+      "inputSchemaTokens": 249,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 31
     },
     {
       "name": "hubspot-generate-feedback-link",
       "tokens": 173,
       "descriptionTokens": 89,
-      "inputSchemaTokens": 29
+      "inputSchemaTokens": 29,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 32
     },
     {
       "name": "hubspot-get-schemas",
       "tokens": 184,
       "descriptionTokens": 95,
-      "inputSchemaTokens": 29
+      "inputSchemaTokens": 29,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 33
     },
     {
       "name": "hubspot-get-link",
       "tokens": 422,
       "descriptionTokens": 122,
-      "inputSchemaTokens": 241
+      "inputSchemaTokens": 241,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 33
     },
     {
       "name": "hubspot-list-workflows",
       "tokens": 250,
       "descriptionTokens": 98,
-      "inputSchemaTokens": 94
+      "inputSchemaTokens": 94,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 34
     },
     {
       "name": "hubspot-get-workflow",
       "tokens": 200,
       "descriptionTokens": 91,
-      "inputSchemaTokens": 51
+      "inputSchemaTokens": 51,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 34
     }
   ],
   "canonicalSha256": "3389dd469cfc2f46f06e4be24ba13ff95595ee30fd8dd62df81809a95daf3791",

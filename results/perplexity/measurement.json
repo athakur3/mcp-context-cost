@@ -10,7 +10,9 @@
       "name": "perplexity_ask",
       "tokens": 131,
       "descriptionTokens": 38,
-      "inputSchemaTokens": 80
+      "inputSchemaTokens": 80,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "bf3f548ecca0308f30e544a03d3a36778dbbfba3a5ed12dab6d981dcbcc7a73c",

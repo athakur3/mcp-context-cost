@@ -16,7 +16,7 @@
 
 ## Where the tokens are
 
-| tool | tokens | share | description | schema |
+| tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | API-update-page-markdown | 1,282 | 7.3% | 62 | 1,189 |
 | API-post-search | 1,097 | 6.3% | 14 | 1,056 |

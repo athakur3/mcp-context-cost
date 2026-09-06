@@ -10,79 +10,105 @@
       "name": "get_build_failure_logs",
       "tokens": 1193,
       "descriptionTokens": 644,
-      "inputSchemaTokens": 487
+      "inputSchemaTokens": 487,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "find_flaky_tests",
       "tokens": 910,
       "descriptionTokens": 521,
-      "inputSchemaTokens": 326
+      "inputSchemaTokens": 326,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "get_latest_pipeline_status",
       "tokens": 1048,
       "descriptionTokens": 582,
-      "inputSchemaTokens": 413
+      "inputSchemaTokens": 413,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "get_job_test_results",
       "tokens": 1283,
       "descriptionTokens": 772,
-      "inputSchemaTokens": 442
+      "inputSchemaTokens": 442,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "config_helper",
       "tokens": 369,
       "descriptionTokens": 230,
-      "inputSchemaTokens": 94
+      "inputSchemaTokens": 94,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "run_pipeline",
       "tokens": 1103,
       "descriptionTokens": 579,
-      "inputSchemaTokens": 466
+      "inputSchemaTokens": 466,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "list_followed_projects",
       "tokens": 433,
       "descriptionTokens": 345,
-      "inputSchemaTokens": 43
+      "inputSchemaTokens": 43,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "rerun_workflow",
       "tokens": 585,
       "descriptionTokens": 297,
-      "inputSchemaTokens": 242
+      "inputSchemaTokens": 242,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "download_usage_api_data",
       "tokens": 995,
       "descriptionTokens": 637,
-      "inputSchemaTokens": 283
+      "inputSchemaTokens": 283,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "find_underused_resource_classes",
       "tokens": 488,
       "descriptionTokens": 282,
-      "inputSchemaTokens": 168
+      "inputSchemaTokens": 168,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "run_rollback_pipeline",
       "tokens": 1391,
       "descriptionTokens": 1077,
-      "inputSchemaTokens": 222
+      "inputSchemaTokens": 222,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
     },
     {
       "name": "list_component_versions",
       "tokens": 1242,
       "descriptionTokens": 969,
-      "inputSchemaTokens": 204
+      "inputSchemaTokens": 204,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     },
     {
       "name": "list_artifacts",
       "tokens": 870,
       "descriptionTokens": 478,
-      "inputSchemaTokens": 343
+      "inputSchemaTokens": 343,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 0
     }
   ],
   "canonicalSha256": "f4d995111363bc9a5c220871fb9e4c2d81372ef647572f5f4f19cb5d4bd08bbe",

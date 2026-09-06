@@ -10,97 +10,129 @@
       "name": "quick_start",
       "tokens": 122,
       "descriptionTokens": 59,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "get_example",
       "tokens": 474,
       "descriptionTokens": 201,
-      "inputSchemaTokens": 228
+      "inputSchemaTokens": 228,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "search_language",
       "tokens": 241,
       "descriptionTokens": 83,
-      "inputSchemaTokens": 117
+      "inputSchemaTokens": 117,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "feedback",
       "tokens": 428,
       "descriptionTokens": 153,
-      "inputSchemaTokens": 232
+      "inputSchemaTokens": 232,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "search",
       "tokens": 2270,
       "descriptionTokens": 409,
-      "inputSchemaTokens": 1821
+      "inputSchemaTokens": 1821,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "search_status",
       "tokens": 448,
       "descriptionTokens": 234,
-      "inputSchemaTokens": 174
+      "inputSchemaTokens": 174,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "code_files",
       "tokens": 1424,
       "descriptionTokens": 329,
-      "inputSchemaTokens": 1054
+      "inputSchemaTokens": 1054,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "code_read",
       "tokens": 1170,
       "descriptionTokens": 350,
-      "inputSchemaTokens": 777
+      "inputSchemaTokens": 777,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "code_grep",
       "tokens": 1681,
       "descriptionTokens": 365,
-      "inputSchemaTokens": 1272
+      "inputSchemaTokens": 1272,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "docs_list",
       "tokens": 404,
       "descriptionTokens": 145,
-      "inputSchemaTokens": 217
+      "inputSchemaTokens": 217,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "docs_read",
       "tokens": 410,
       "descriptionTokens": 126,
-      "inputSchemaTokens": 242
+      "inputSchemaTokens": 242,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "pkg_info",
       "tokens": 509,
       "descriptionTokens": 232,
-      "inputSchemaTokens": 233
+      "inputSchemaTokens": 233,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "pkg_vulns",
       "tokens": 778,
       "descriptionTokens": 369,
-      "inputSchemaTokens": 363
+      "inputSchemaTokens": 363,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "pkg_deps",
       "tokens": 805,
       "descriptionTokens": 247,
-      "inputSchemaTokens": 516
+      "inputSchemaTokens": 516,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "pkg_changelog",
       "tokens": 967,
       "descriptionTokens": 343,
-      "inputSchemaTokens": 573
+      "inputSchemaTokens": 573,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     },
     {
       "name": "pkg_upgrade_review",
       "tokens": 700,
       "descriptionTokens": 171,
-      "inputSchemaTokens": 486
+      "inputSchemaTokens": 486,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 19
     }
   ],
   "canonicalSha256": "1de4342682e058fb6395fc1a42dbcb9fa87838dc26852ba6810e57cc388ab81e",

@@ -10,79 +10,105 @@
       "name": "echo",
       "tokens": 96,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 40
+      "inputSchemaTokens": 40,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "get-annotated-message",
       "tokens": 147,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 77
+      "inputSchemaTokens": 77,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "get-env",
       "tokens": 88,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "get-resource-links",
       "tokens": 121,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 55
+      "inputSchemaTokens": 55,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "get-resource-reference",
       "tokens": 127,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 62
+      "inputSchemaTokens": 62,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "get-structured-content",
       "tokens": 195,
       "descriptionTokens": 12,
-      "inputSchemaTokens": 50
+      "inputSchemaTokens": 50,
+      "outputSchemaTokens": 75,
+      "annotationsTokens": 26
     },
     {
       "name": "get-sum",
       "tokens": 112,
       "descriptionTokens": 6,
-      "inputSchemaTokens": 53
+      "inputSchemaTokens": 53,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "get-tiny-image",
       "tokens": 86,
       "descriptionTokens": 7,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "gzip-file-as-resource",
       "tokens": 247,
       "descriptionTokens": 45,
-      "inputSchemaTokens": 146
+      "inputSchemaTokens": 146,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "toggle-simulated-logging",
       "tokens": 95,
       "descriptionTokens": 14,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "toggle-subscriber-updates",
       "tokens": 90,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 24
+      "inputSchemaTokens": 24,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "trigger-long-running-operation",
       "tokens": 128,
       "descriptionTokens": 11,
-      "inputSchemaTokens": 62
+      "inputSchemaTokens": 62,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     },
     {
       "name": "simulate-research-query",
       "tokens": 174,
       "descriptionTokens": 49,
-      "inputSchemaTokens": 72
+      "inputSchemaTokens": 72,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 26
     }
   ],
   "canonicalSha256": "e61b2e1761ff2f931d030faf1dc192ca70247e52ff31d8633431b69ba6e00b7e",
