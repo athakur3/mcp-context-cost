@@ -444,20 +444,24 @@ describe('release workflow', () => {
    * the only wait worth having is around the command itself.
    */
   it('retries the command that resolves the tarball, not a proxy for it', () => {
+    // The npx invocation must sit INSIDE the retry loop. An earlier version of
+    // this test only asked that a `for … $(seq` appear somewhere between the
+    // temp-dir cd and the first `verify --remote`, which the bug it was written
+    // for walks straight through: put any probe in the loop, leave npx after
+    // `done`, and it passes. Banning the string `npm view` did not save it
+    // either — `npm info`, `npm show` and `npm v` are documented aliases for
+    // the same command, and `curl` is not even an alias. Position is the
+    // property; spelling is not.
     const verify = release.indexOf('verify --remote');
     const cd = release.lastIndexOf('cd "$(mktemp -d)"', verify);
-    // Inside the temp dir, so the retried command is the one that proves
-    // something — a probe run from the checkout would pass instantly.
-    expect(release.slice(cd, verify)).toMatch(/for \w+ in \$\(seq /);
-  });
-
-  it('gates the proof on no registry endpoint but the one npx resolves', () => {
-    // Comments may discuss `npm view` — this is about what runs.
-    const commands = release
-      .split('\n')
-      .filter((l) => !/^\s*#/.test(l))
-      .join('\n');
-    expect(commands).not.toContain('npm view');
+    expect(cd, 'the retried command must run from an empty directory').toBeGreaterThan(-1);
+    const loop = release.indexOf('$(seq ', cd);
+    const doAt = release.indexOf('; do', loop);
+    const doneAt = release.indexOf('\n          done', doAt);
+    expect(doAt, 'expected a bounded retry after the temp-dir cd').toBeGreaterThan(-1);
+    expect(doneAt).toBeGreaterThan(doAt);
+    expect(verify, 'the verify must be retried, not run once after the loop').toBeGreaterThan(doAt);
+    expect(verify, 'the verify must be retried, not run once after the loop').toBeLessThan(doneAt);
   });
 
   /**

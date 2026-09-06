@@ -18,10 +18,16 @@ while reading it.
   resolves against the second, so a green probe on one says nothing about the other. There is no
   better probe, either: only the command itself resolves the path the command takes. The wait now
   wraps the `npx` invocation, inside the temp directory that makes it prove anything at all.
-  The second bug was quieter and had been there longer: the old loop had **no guard after it**,
-  so ten failed probes fell through with status 0 into the very command they were waiting for —
-  it could never have failed, on any release it ran in. The published tarball was fine throughout
-  and was verified by hand minutes later. Four tests, each of which fails against the old step.
+  A second defect came out of the same reading, and it arrived in the same commit rather than
+  before it: the old wait had **no guard after it**, so ten failed probes would have fallen through
+  with status 0 into the very command they were waiting for. That never happened — across the six
+  releases that ran the step the wait never once exhausted — so this is a hazard removed, not a
+  failure repaired. The distinction is the point: the *wait* could not have reported a problem, and
+  the *step* around it could and did, twice. The published tarball was fine throughout and was
+  verified by hand minutes later. Three tests, each of which fails against the old step, and the
+  one that certifies the retry now pins the npx call's position inside the loop rather than the
+  loop's mere presence — the weaker form was walked through by a reconstruction that probes
+  `npm info` and leaves npx outside.
 
 ## 0.17.0 — 2026-09-06
 

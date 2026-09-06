@@ -186,9 +186,13 @@ jobs:
           # nothing about the other, and there is no probe worth keeping: only
           # the command itself resolves the path the command takes.
           #
-          # Retrying npx makes progress because its resolution re-fetches rather
-          # than reusing what the failed attempt cached, measured on npm 11.
-          # Seven waits of 45s outlast the 300s the registry sets.
+          # Retrying npx makes progress: its resolution re-fetches rather than
+          # reusing what the failed attempt cached. That was measured on npm 11
+          # and this job runs npm 10 (setup-node pins Node 22, which bundles
+          # 10.9.x), so the schedule does not rest on it. It rests on the part
+          # that needs no version at all: seven waits of 45s put the last
+          # attempt past the 300s the registry sets on both documents, so it
+          # revalidates whatever the earlier ones did.
           attempts=8
           ok=
           for attempt in $(seq 1 "$attempts"); do
@@ -201,8 +205,12 @@ jobs:
             if [ "$attempt" -lt "$attempts" ]; then sleep 45; fi
           done
           # Without this the loop falls through with status 0 after its last
-          # attempt and the step passes having proved nothing — which is what
-          # the loop it replaced did, silently, on every release it ran in.
+          # attempt and the step passes having proved nothing. The wait this
+          # replaced had no such guard — and the hazard stayed latent: across
+          # the six releases that ran it, it never once exhausted (five times it
+          # passed on the first probe, and 0.14.0 waited once). So this guard
+          # removes something that could not have reported a failure, not
+          # something that ever swallowed one.
           [ -n "${ok:-}" ] || { echo "the published tarball never re-derived $server in $attempts attempts"; exit 1; }
 
       - name: What is left for a human
