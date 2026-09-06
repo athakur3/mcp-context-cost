@@ -7,79 +7,88 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
-- **The rotating re-sweep could not publish anything, and nothing had noticed.** The step that
-  runs the suite before a bot commit exists because a push made with `GITHUB_TOKEN` starts no
-  workflow, so no CI run has ever fired on one — and it sat *before* the regen it depends on.
-  `sweep-all` writes the leaderboard, `history.csv` and the tool vectors; the capture index,
-  the tool-shape baseline, the server pages, the dashboard and the numbers patched into README
-  come from `regen.ts` alone, which the job runs inside its commit step, after the rebase.
-  Between the sweep and regen the tree is therefore *known* to be inconsistent, and the drift
-  guards — which are exact, not heuristic — fail by construction. So the guard could only ever
-  report the ordering. It did: run 33997431756 on 2026-09-06, the first re-sweep since the
-  guard landed, measured its slice, failed three guards, skipped the commit and discarded 34
-  fresh measurements; the next scheduled Wednesday would have done the same. The job now
-  stages what it measured, rebases, and rebuilds the derived files in one step, runs the suite
-  against *that* tree, and pushes it — so the guard reads the bytes the push publishes rather
-  than a tree that never existed anywhere. The regen-after-rebase ordering is unchanged and is
-  still the reason two sweeps on one day do not lose a run to a merge nobody can resolve.
-  `test/workflows.test.ts` holds the order for both jobs that publish data.
 
-- **The rotation is three weeks wide, decided by dispatching it rather than by arguing about
-  it.** A movement in `results/regressions.md` carries a date window as wide as the cycle that
-  produced it, and a six-week window describes the observation schedule rather than the
-  server. The roadmap's lever was to dispatch one slice at `shards=3` and time it against the
-  job's 120-minute cap. Run 33997431756 (2026-09-06): 34 servers measured in 3m46s,
-  cross-checked in 2m44s, Claude column refreshed in 6s; run 33999205923 measured the same
-  slice again forty minutes later in 5m17s. The slowest weeks on record are the
-  two half-set slices of 2026-09-04 — 52 servers, 61m17s and 62m07s measuring — and even that
-  pair, which still carried the `anki` and `grafana` timeouts since fixed, leaves a third of
-  the list far inside the cap. So the schedule cuts the list into three, every row comes round
-  within three Wednesdays, and `resweep.yml` carries the timings that chose the number.
-  README, METHODOLOGY and CONTRIBUTING say three where they said six; the September article
-  keeps the sentence it was written under, because it states the date it was read on and a
-  dated reading is not edited afterwards. The first movements that can name a release on both
-  sides arrived with the same run: `results/regressions.md` read `0 of 17` when the column
-  shipped on 2026-09-05 and reads **2 of 18** a day later — `comfyui-mcp` `0.52.189` →
-  `0.52.199` for +136 tokens, and `desktop-commander` **still** `0.2.48` across +3, which is
-  the case the column was given that word for. Nothing was back-filled; the rotation is what
-  fills it in, and a three-week rotation fills it in twice as fast.
+What reaches an installer is `audit`: a threshold that now states the assumption underneath it,
+and two new exports. Everything else here is the machinery that keeps the published numbers
+honest, and three of the four items are the same shape — something that was supposed to be
+checked was not being checked, and nothing said so.
 
-- **Two numbers nobody was watching: the band an installed copy states, and the machine a
-  record was made on.** Both were proposed when the work that created them shipped, and
-  neither was built. The first: `results/divergence.json` does not ship, so with no live run
-  to read, the installed `audit` converts wire tokens to client tokens through the constant
-  compiled into it — and that constant is a snapshot of a run that keeps moving. The suite
-  holds the constant *on trunk* to the run committed beside it, and nothing held the one users
-  actually have; only cutting a release can move that one, which makes it a release-readiness
-  question. `tools/release-readiness.ts` now reads the constant at the last version-bump
-  commit — the tree that version was cut from — and asks `bandSnapshotProblem`, the same rule
-  the suite asks of trunk: a snapshot may lag, it may not be wrong. The band must still be
-  right to the two places it is published at, because it decides an above/below verdict
-  against a client threshold, and the count must never exceed the run, because a snapshot
-  naming more servers than were measured is a fabricated number rather than an old one. Both
-  callers ask one function now, and the three pages that print the band quote one precision.
-  The second: `isolation.arch` exists because `local-mcp` sat published as a startup failure
-  whose real finding was the machine it ran on, and a field that is merely *available* fixes
-  nothing. Every record measured since 0.12.0, the release that added it, now has to carry
-  it — or be the one case that honestly cannot, a command that is itself a `docker run`, where
-  the harness never chose the container and says so in the note instead. The boundary date is
-  read from the changelog's own 0.12.0 heading rather than written into the test.
+- **`audit` says what window its `auto` threshold is a share of.** `ENABLE_TOOL_SEARCH=auto`
+  defers once tool definitions reach a percentage of the context window, so the token figure the
+  report prints is only as right as the window behind it. The report stated that window twice
+  already, in the header and in the share line, but never as the *assumption the threshold rests
+  on*, and never with the flag that changes it. Which window a client uses is a property of its
+  model, which no config file states and this audit cannot read. Observed 2026-09-06 on one
+  machine, and unreachable to a reader: a session on a model with a 1,000,000-token window logged
+  its own threshold as `100000`, where this audit's default assumption gives 20,000. What a
+  reader *can* check is the arithmetic and the fix — `--context 1000000` makes the report print
+  100,000, so the assumption was the only thing wrong. The direction is why this is not a
+  footnote: `crosses` is `clientTokens.low >= thresholdTokens`, so a window assumed too small
+  makes the verdict read *at or above* more often, which is the answer that tells a reader their
+  definitions are deferred and therefore not charged when a client on a larger window would have
+  loaded every one up front. Only threshold mode reaches this; the default defers at any size,
+  where no window enters the answer.
 
-- **The `auto` threshold now says what window it is a share of.** `ENABLE_TOOL_SEARCH=auto`
-  defers once tool definitions reach a *percentage* of the context window, so the token figure
-  the audit prints is only as right as the window it assumed — and it assumed 200,000 without
-  saying so anywhere near the verdict. Which window a client uses is a property of its model,
-  which no config file states and this audit cannot read. Observed 2026-09-06 on one machine:
-  a session on a model with a 1,000,000-token window logged its own threshold as `100000`, where
-  this audit's default assumption gives 20,000. Told the right window with `--context 1000000`,
-  the audit reproduces `100,000` exactly, so the arithmetic was never wrong — the assumption
-  behind it was invisible. The report now states the assumed window beside the threshold and
-  points at `--context`. The direction is why it is not a footnote: a window assumed too small
-  makes the threshold too small, which pushes the verdict toward *at or above* — toward telling
-  a reader their definitions are deferred, and therefore not charged, when a client on a larger
-  window would have loaded every one up front. Of the two ways to be wrong here, that is the one
-  that costs somebody tokens they were told they would not pay. Only threshold mode reaches
-  this: the default defers at any size, where no window and no arithmetic enter the answer.
+- **Two snapshots nobody was comparing.** `results/divergence.json` does not ship, so an
+  installed copy converts wire tokens to client tokens through the constant compiled into it, and
+  that constant is a snapshot of a run that keeps moving. The suite held the constant *on trunk*
+  to the run committed beside it; nothing held the one on npm, which only a release can move.
+  `tools/release-readiness.ts` now reads that constant at the last version-bump commit and asks
+  `bandSnapshotProblem`, the same rule the suite asks of trunk — deliberately not equality, since
+  the run grows whenever a sweep reaches a new server and the bot that commits it cannot edit a
+  TypeScript constant. A snapshot may lag; it may not be wrong. Separately, `isolation.arch`
+  exists because `local-mcp` was published as a broken server when the finding was the machine,
+  and three tests held how that value is *derived* while nothing checked that the records carry
+  it: every record measured since 0.12.0 now must, or be the one case that honestly cannot, a
+  command that is itself a `docker run`. New exports: `BAND_PRECISION` and `bandSnapshotProblem`.
+  The band's precision is stated once and quoted everywhere it is printed: three regen-maintained
+  claims across README and METHODOLOGY, and the three places `audit` prints it in its own report,
+  which were still on literals until this release finished the job.
+
+- **The rotating re-sweep could not publish, and only a dispatch found it.** The step that runs
+  the suite before a bot commit exists because a push made with `GITHUB_TOKEN` starts no
+  workflow, so no CI run has ever fired on one. It was placed before the regen it depends on.
+  `sweep-all` writes the leaderboard, `history.csv`, `regressions.md` and the tool vectors; the
+  capture index, the tool-shape baseline, the server pages, the dashboard and the numbers patched
+  into README came from `regen.ts` alone, which ran inside the commit step after the rebase. So
+  between the sweep and regen the tree is *known* to be inconsistent, and three exact drift
+  guards failed by construction: the capture index, the published page numbers, and the
+  tool-shape baseline. Run 33997431756 on 2026-09-05, the first re-sweep after the guard landed
+  that morning, measured its slice, failed those three, skipped its commit and threw the slice
+  away. The next scheduled Wednesday would have done the same. The job now stages what it
+  measured, rebases, and rebuilds in one step, runs the suite against *that* tree, and pushes it,
+  so the guard reads the bytes the push publishes and the rebase sits inside the checked region.
+  Run 33999205923, forty minutes later, is the proof: green through the guard, and the slice
+  published. `test/workflows.test.ts` holds the order for both jobs that publish data, and fails
+  against the previous file.
+
+- **The rotation is three weeks wide, decided by dispatching it.** A movement in
+  `results/regressions.md` carries a date window as wide as the cycle that produced it, and six
+  weeks describes the observation schedule rather than the server. Two readings of the same
+  34-server slice on 2026-09-05, an hour apart on cold runners: measuring took 3m46s and 5m17s,
+  cross-checking 2m44s and 2m01s, against the job's 120-minute cap. 29 of those 34 produced a
+  number; the other five are auth-required, startup-failure and not-applicable records, which is
+  the ordinary shape of a slice. The long end is the three half-set runs of 2026-09-04, the
+  longest this job has recorded: 65m28s, 62m07s and 61m17s over slices of 52 and 51 servers, and
+  only the 61m17s one carried the `anki` and `grafana` timeouts since fixed. So the schedule now
+  cuts the list into three, every row comes round within three Wednesdays, and `resweep.yml`
+  carries the timings beside the number they chose. README, METHODOLOGY and CONTRIBUTING say
+  three where they said six; `docs/state-of-mcp-context-cost.md` keeps its six-week sentence,
+  because it states the day its numbers were read and a dated reading is not edited afterwards.
+
+- **What the rotation published while this was going on.** The slice that run 33999205923
+  finally pushed re-read 34 records and moved exactly two costs: `comfyui-mcp` 50,640 → 50,776
+  (+136, `0.52.189` → `0.52.199`) and `desktop-commander` 11,834 → 11,837 (+3, **still**
+  `0.2.48`, which is the case that word was added for). No status changed. What a reader sees
+  move is larger than those two rows: README — which ships — now says **13 moved up against 5
+  that moved down** where it said 11 and 6; `results/regressions.md` repartitions from
+  17 moved / 64 held / 6 uncompared to **18 / 64 / 5** with the net going +4,446 → +4,587; the
+  release column reads `2 of 18` movements able to name a release on both sides where it read
+  `0 of 17` eleven hours earlier the same day; `desktop-commander`'s published movement is
+  replaced rather than extended, flipping from a −2 downward mover to a +3 upward one; and the
+  two shields endpoints those projects can embed change value. Nothing is back-filled and
+  nothing can be — the rotation is what fills that column in, and at three weeks it fills twice
+  as fast.
 
 ## 0.15.0 — 2026-09-05
 

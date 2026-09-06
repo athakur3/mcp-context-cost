@@ -22,18 +22,19 @@
 # schedule rather than the server.
 #
 # That dispatch happened, which is why the default below is 3 and not the 6 it
-# ran with until 2026-09-06. Two readings, both inside the 120-minute cap:
-#   * shards=3, twice on 2026-09-06 over the same 34-server slice. Run
-#     33997431756 measured it in 3m46s and cross-checked in 2m44s; run
-#     33999205923, forty minutes later, took 5m17s and 2m01s and published.
-#     Two readings rather than one because a single run is an anecdote, and
-#     these two sit an hour apart on cold runners.
-#   * shards=2, runs 33838824251 and 33844680654 (2026-09-04), the slowest
-#     weeks on record here. 52-server slices, 61m17s and 62m07s measuring.
-#     Two of the four long poles that day were harness bugs since fixed (anki
-#     724s and grafana 540s were timeouts; both measure in seconds now), so
-#     that pair is an upper bound rather than a forecast — and a third of the
-#     list is smaller than a half of it either way.
+# ran with until 2026-09-05. Readings at both ends, all inside the cap above:
+#   * shards=3, twice on 2026-09-05 over the same 34-server slice, 29 of which
+#     produced a number. Run 33997431756 measured it in 3m46s and cross-checked
+#     in 2m44s; run 33999205923, forty minutes later, took 5m17s and 2m01s and
+#     published. Two readings rather than one because a single run is an
+#     anecdote, and these sit an hour apart on cold runners.
+#   * shards=2 on 2026-09-04, the three longest runs this job has recorded:
+#     65m28s (33844667750), 62m07s (33844680654) and 61m17s (33838824251),
+#     over slices of 52 and 51 servers out of 103 sweepable that day. Only the
+#     61m17s run carried the two harness bugs since fixed (anki 724s and
+#     grafana 540s, both timeouts, both measuring in seconds now), so that one
+#     is an upper bound while the other two are not discounted at all. A third
+#     of the list is smaller than a half of it either way.
 # Three weeks it is, so a movement's window in results/regressions.md is three
 # weeks wide rather than six.
 #

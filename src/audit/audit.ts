@@ -26,6 +26,7 @@ import type { ConfiguredServer, LoadedConfig } from './config.js';
 import type { RemoteProbe } from './remote.js';
 import {
   evaluateDeferral,
+  BAND_PRECISION,
   PUBLISHED_WIRE_TO_CLIENT_RATIO,
   SHELL_SOURCE,
   type DeferralVerdict,
@@ -979,7 +980,7 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
 /** "0.20×–1.92×", from whichever band the verdict was actually computed against. */
 function ratioBand(d: DeferralVerdict): string {
   const r = d.ratio ?? PUBLISHED_WIRE_TO_CLIENT_RATIO;
-  return `${r.low.toFixed(2)}×–${r.high.toFixed(2)}×`;
+  return `${r.low.toFixed(BAND_PRECISION)}×–${r.high.toFixed(BAND_PRECISION)}×`;
 }
 
 /** Human output. JSON output is the report object itself. */
@@ -1228,8 +1229,8 @@ export function formatReport(report: AuditReport): string {
     'These are wire tokens — what the server puts on the wire, counted with o200k_base. What your model is billed',
   );
   lines.push(
-    `differs per provider: measured ratios run ${PUBLISHED_WIRE_TO_CLIENT_RATIO.low.toFixed(2)}×–` +
-      `${PUBLISHED_WIRE_TO_CLIENT_RATIO.high.toFixed(2)}× on Anthropic requests. See docs/METHODOLOGY.md §claude-divergence.`,
+    `differs per provider: measured ratios run ${PUBLISHED_WIRE_TO_CLIENT_RATIO.low.toFixed(BAND_PRECISION)}×–` +
+      `${PUBLISHED_WIRE_TO_CLIENT_RATIO.high.toFixed(BAND_PRECISION)}× on Anthropic requests. See docs/METHODOLOGY.md §claude-divergence.`,
   );
   return lines.map((l) => l.replace(/\s+$/, '')).join('\n');
 }
