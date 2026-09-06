@@ -43,6 +43,20 @@ while reading it.
   measured never launched properly. "Not comparable" reads as a fact about a server; it was a
   fact about the instrument. Fixed, re-run, and the seven are in the 87.
 
+- **The README stops asking to be trusted about deferral.** Everything this project says about
+  which clients hold MCP tool definitions back is read from Anthropic's documentation, which is
+  exactly the kind of second-hand claim it refuses to leave unchecked in other people's numbers.
+  Claude Code writes its own decision to a debug log before it sends anything, so the page now
+  shows the two commands that make a reader's own machine answer, and what the three line shapes
+  mean: the startup guess, which is labelled optimistic because it can be revised; the
+  `Dynamic tool loading: 0/N deferred tools included` line that settles it; and the base-URL
+  fallback firing in the client's own words. It also says to read the later requests rather than
+  the first, because a stdio server can finish connecting after the first request has gone and an
+  early low count is a race rather than a finding. And it names the mode most likely to surprise:
+  `auto` reads as the careful setting and is the one that loads everything up front below its
+  threshold, by design. No number from any one machine is published — the reader measures their
+  own, which is the only version of this claim worth making.
+
 ## 0.16.0 — 2026-09-06
 
 

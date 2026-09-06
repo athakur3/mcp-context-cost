@@ -130,6 +130,40 @@ On a machine where none of them is set, the same stack reads:
     a tool whose _meta carries "anthropic/alwaysLoad": true, which this audit does not read from a capture
 ```
 
+**Do not take that table on trust — your own client will tell you.** Everything above is read
+from Anthropic's documentation, and documentation about someone else's product is exactly the
+kind of claim this project refuses to leave unchecked elsewhere. Claude Code writes its own
+decision to a debug log, before it sends anything, so you can check your machine rather than
+believe this page. In a directory with an `.mcp.json`:
+
+```bash
+claude --debug-file /tmp/cc.txt -p "ok"
+grep -E 'ToolSearch|Dynamic tool loading|Auto tool search' /tmp/cc.txt
+```
+
+Three line shapes answer three different questions:
+
+| the line | what it tells you |
+|---|---|
+| `[ToolSearch:optimistic] mode=…, ENABLE_TOOL_SEARCH=…, result=…` | which mode it picked at startup, and the value it read. **Optimistic is its own word for a guess** — it can be revised below |
+| `Dynamic tool loading: 0/N deferred tools included` | the one that settles it: how many of the `N` deferrable tools went into the request. `0/N` is deferral actually happening |
+| `[ToolSearch:optimistic] disabled: ANTHROPIC_BASE_URL=… is not a first-party Anthropic host` | the fallback in the table above, firing, in the client's own words |
+
+Read the *later* requests, not the first. A stdio server can finish connecting after the first
+request has already gone, so an early low count is a race rather than a finding.
+
+**The mode most likely to surprise you is `auto`.** It reads as the careful setting and it is the
+one that loads everything up front at ordinary sizes: below the threshold it does not defer, by
+design, and a line reading `Auto tool search disabled: … (threshold: …)` is that decision being
+made. The threshold is a *percentage of the context window*, so a model with a larger window has
+a proportionally larger one — pass `--context` to `audit` to compare against the window you
+actually run.
+
+None of this is free, and it is one trivial request. These are Claude Code's own debug lines
+rather than a documented interface, so they can change; the table above is what this project
+holds to a dated re-read. No other client discovered by `audit` writes anything comparable,
+which is why their rows say an absence of a record rather than a measurement.
+
 Set `ENABLE_TOOL_SEARCH=false` in that shell and the same config reports the opposite —
 `loads every tool definition up front here`, naming the variable and the place it was read
 from. Deferring is also not free: what a deferring client *does* load at session start —
