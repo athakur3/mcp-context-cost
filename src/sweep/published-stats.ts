@@ -30,11 +30,36 @@ import { join } from 'node:path';
 import { DEFAULT_CONTEXT_WINDOW } from '../audit/audit.js';
 import { BAND_PRECISION, wireToClientRatio } from '../audit/deferral.js';
 import { countTokens } from '../core/canonical.js';
-import { fieldSelectionShare, isCurrent } from '../core/divergence.js';
+import { fieldSelectionShare, isCurrent, mappedTokens } from '../core/divergence.js';
 import { sessionStartLoad } from '../core/session-start.js';
 import { isGood } from './harness-guard.js';
 import { loadDivergence, loadRows, loadSessionStartRun, type Row, type ServerEntry } from './report.js';
 import { collectChanges } from './regressions.js';
+
+/**
+ * One server as three numbers that are all true and mean different things.
+ *
+ * **A triple always has three slots.** Each leg is gated by what that leg
+ * depends on and by nothing else. `wire` and `mapped` depend only on the
+ * capture on disk, so they exist for every measured server and cannot go
+ * stale. `claude` additionally depends on an Anthropic API call, so it is the
+ * only leg that can ever be absent: it prints `—` when the divergence row is
+ * missing, stale against the capture, or carries an error. A missing leg
+ * prints `—` — never a blank, never a zero, never the wire figure repeated,
+ * and never a suppressed neighbour, which is the 0.11.2 staleness defect run
+ * backwards. **Prose that cannot be written with an em-dash in one of its
+ * slots is not written**, which is why no surface states the heaviest server's
+ * share of a context window: a share can only come honestly from the leg that
+ * can be null, and a `values()` that throws turns regen red on a schedule.
+ */
+export interface Triple {
+  /** o200k over the canonical `tools/list` bytes. The badge, and every ranking. */
+  wire: number;
+  /** o200k over the `name`/`description`/`input_schema` projection a request carries. */
+  mapped: number;
+  /** Anthropic's own count of that projection; null when stale, errored or absent. */
+  claude: number | null;
+}
 
 export interface PublishedStats {
   candidateTotal: number;
@@ -48,6 +73,8 @@ export interface PublishedStats {
   maxContextSharePct: number;
   /** The servers README's sample table names, with their current numbers. */
   sample: Record<string, { tokens: number; tools: number }>;
+  /** Every server any page states a number for, as all three of its numbers. */
+  triple: Record<string, Triple>;
   claude: {
     runSize: number;
     /** Rows the leaderboard prints a claude number for: measured AND capture-current. */
@@ -178,27 +205,54 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
   if (!div) throw new Error('results/divergence.json is missing — README states its numbers');
 
   /**
-   * A divergence row only where it still describes the capture on disk.
+   * The three numbers for one server, each leg gated by what it depends on.
    *
-   * The staleness gate is the whole discipline of this column, and skipping it
-   * here is how README came to print two different costs for github on one
-   * page: 54,422 from a row computed against bytes that no longer existed,
-   * beside 54,622 from the measurement. `withClaude` below already applied
-   * `isCurrent` to the very same run — the rule guarded one number and not its
-   * neighbour.
+   * `wire` comes from the measurement, never from a divergence row's copy of
+   * it: skipping that is how README came to print two different costs for
+   * github on one page — 54,422 from a row computed against bytes that no
+   * longer existed, beside 54,622 from the measurement.
+   *
+   * `mapped` is recomputed here rather than read from the row's `o200kMapped`
+   * for the same reason one layer along. The divergence run writes that field
+   * by calling this same function on these same bytes, so recomputing costs
+   * nothing and cannot disagree with the capture — and it means the middle leg
+   * exists for a server the run has never reached, and needs no API key.
+   *
+   * `claude` is gated on `isCurrent`, never on the shape of `claudeDelta`.
+   * `gitlab`'s row carries a literal `0` beside an `error`, so a test on the
+   * number's type would publish "0 tokens on Claude" about a server nobody has
+   * successfully counted.
    */
-  const currentDivRow = (name: string) => {
-    const d = div.servers[name];
-    if (!d) throw new Error(`README's Claude table names ${name}, which is not in the divergence run`);
-    const onDisk = rows.find((r) => r.entry.name === name)?.m?.canonicalSha256 ?? null;
-    return isCurrent(d, onDisk) ? d : null;
-  };
-  /** The badge number comes from the measurement, never from a divergence row's copy of it. */
-  const badgeTokensOf = (name: string) => {
+  const tripleOf = (name: string): Triple => {
     const r = measured.find((x) => x.entry.name === name);
-    if (!r) throw new Error(`README's Claude table names ${name}, which has no current measurement`);
-    return r.m.totalTokens!;
+    if (!r) throw new Error(`a page states numbers for ${name}, which has no current measurement`);
+    if (!r.m.rawToolsCapture) {
+      throw new Error(`${name} is measured but holds no capture, so its mapped count cannot be derived`);
+    }
+    const row = div.servers[name];
+    return {
+      wire: r.m.totalTokens!,
+      mapped: mappedTokens(r.m.rawToolsCapture),
+      claude: isCurrent(row, r.m.canonicalSha256 ?? null) ? row.claudeDelta : null,
+    };
   };
+
+  /**
+   * README's Claude table names these two servers in fixed words. A name the
+   * divergence run has never seen is an editorial mistake in the page rather
+   * than missing data, so it throws — unlike every other triple, whose `claude`
+   * leg is allowed to be absent and prints an em-dash.
+   */
+  for (const name of ['github', 'notion'] as const) {
+    if (!div.servers[name]) {
+      throw new Error(`README's Claude table names ${name}, which is not in the divergence run`);
+    }
+  }
+
+  const triple: PublishedStats['triple'] = {};
+  for (const name of new Set<string>([max.name, measured[1].entry.name, min.name, ...SAMPLE_SERVERS])) {
+    triple[name] = tripleOf(name);
+  }
 
   // Ranges are stated over the rows that are still current, for the same
   // reason: a range whose endpoint comes from a superseded capture describes a
@@ -257,16 +311,17 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
     spanTimes: floorToTwoSignificant(max.tokens / min.tokens),
     maxContextSharePct: Math.round((max.tokens / DEFAULT_CONTEXT_WINDOW) * 100),
     sample,
+    triple,
     claude: {
       runSize: Object.keys(div.servers).length,
       currentCount: withClaude.length,
       heaviestClaudeName: heaviest?.entry.name ?? null,
       github: {
-        badgeTokens: badgeTokensOf('github'),
-        claudeTokens: currentDivRow('github')?.claudeDelta ?? null,
+        badgeTokens: triple.github.wire,
+        claudeTokens: triple.github.claude,
         ...heaviestDroppedField(githubRow.m.rawToolsCapture, githubRow.m.totalTokens),
       },
-      notion: { badgeTokens: badgeTokensOf('notion'), claudeTokens: currentDivRow('notion')?.claudeDelta ?? null },
+      notion: { badgeTokens: triple.notion.wire, claudeTokens: triple.notion.claude },
       widest: { server: widest[0], full: widest[1].o200kFull, mapped: widest[1].o200kMapped },
       shareMin: Math.min(...shares),
       shareMax: Math.max(...shares),

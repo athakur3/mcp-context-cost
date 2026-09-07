@@ -14,6 +14,7 @@ import {
   verifyPublishedPages,
 } from '../src/sweep/published-stats.js';
 import { countTokens } from '../src/core/canonical.js';
+import { isCurrent, mappedTokens } from '../src/core/divergence.js';
 import type { ServerEntry } from '../src/sweep/report.js';
 
 /**
@@ -195,6 +196,82 @@ describe('the patch engine', () => {
     for (const c of PAGE_CLAIMS) {
       const slots = [...c.template.matchAll(/\{[ndwfq]\}/g)].length;
       expect(c.values(stats), `claim '${c.id}'`).toHaveLength(slots);
+    }
+  });
+});
+
+/**
+ * The triple: one server as three numbers that are all true and mean different
+ * things. The rules that matter are which leg may be absent and where each one
+ * comes from, because both have already been got wrong on a published page —
+ * README printed 54,422 beside 54,622 for github when the wire number was read
+ * from a divergence row's copy instead of from the measurement.
+ */
+describe('the triple', () => {
+  const div = JSON.parse(readFileSync(join(repoRoot, 'results', 'divergence.json'), 'utf8')) as {
+    servers: Record<string, { o200kFull: number; o200kMapped: number; claudeDelta: number; capturedSha256: string; error?: string }>;
+  };
+  const measurement = (name: string) =>
+    JSON.parse(readFileSync(join(repoRoot, 'results', name, 'measurement.json'), 'utf8')) as {
+      totalTokens: number | null;
+      canonicalSha256: string | null;
+      rawToolsCapture: unknown[] | null;
+    };
+
+  /**
+   * The middle leg is recomputed from the capture rather than read out of the
+   * run, which is only safe while the two derivations agree. They are the same
+   * function on the same bytes — `tools/measure-divergence.ts` writes
+   * `o200kMapped: mappedTokens(m.rawToolsCapture)` — so this fires if either
+   * side is ever changed without the other, and it covers every row rather than
+   * the handful any page names.
+   */
+  it('recomputes every published o200kMapped exactly, so the mapped leg needs no run', () => {
+    const mismatched: string[] = [];
+    for (const [name, row] of Object.entries(div.servers)) {
+      const m = measurement(name);
+      // Only rows still describing the capture on disk can be expected to
+      // agree; a stale row was computed from bytes that are gone.
+      if (m.canonicalSha256 !== row.capturedSha256) continue;
+      const recomputed = mappedTokens(m.rawToolsCapture ?? []);
+      if (recomputed !== row.o200kMapped) mismatched.push(`${name}: recomputed ${recomputed} vs published ${row.o200kMapped}`);
+    }
+    expect(mismatched, 'mappedTokens and results/divergence.json disagree').toEqual([]);
+  });
+
+  it('takes the wire leg from the measurement, never from the run\'s copy of it', () => {
+    for (const [name, t] of Object.entries(stats.triple)) {
+      expect(t.wire, `${name} wire`).toBe(measurement(name).totalTokens);
+    }
+  });
+
+  it('drops the Claude leg to null exactly when the row no longer describes the capture', () => {
+    for (const [name, t] of Object.entries(stats.triple)) {
+      const row = div.servers[name];
+      const current = isCurrent(row, measurement(name).canonicalSha256);
+      expect(t.claude === null, `${name}: claude leg vs isCurrent`).toBe(!current);
+      if (current) expect(t.claude).toBe(row.claudeDelta);
+    }
+  });
+
+  /**
+   * Why the gate is `isCurrent` and not a check on the number's shape. An
+   * errored row still carries a numeric `claudeDelta` — the literal `0` the
+   * divergence tool initialises it to — so `typeof d.claudeDelta === 'number'`
+   * would publish "0 tokens on Claude" about a server nobody has successfully
+   * counted. If this row ever stops looking like this, the reasoning behind the
+   * gate has changed and wants re-reading, not patching.
+   */
+  it('keeps a numeric zero on the one row whose Claude count errored', () => {
+    const errored = Object.entries(div.servers).filter(([, r]) => r.error);
+    expect(errored.map(([n]) => n)).toEqual(['gitlab']);
+    expect(typeof errored[0][1].claudeDelta).toBe('number');
+    expect(isCurrent(errored[0][1], measurement('gitlab').canonicalSha256)).toBe(false);
+  });
+
+  it('carries a triple for every server a page names', () => {
+    for (const name of [stats.max.name, stats.second.name, stats.min.name, ...SAMPLE_SERVERS]) {
+      expect(stats.triple[name], `no triple for ${name}`).toBeDefined();
     }
   });
 });
