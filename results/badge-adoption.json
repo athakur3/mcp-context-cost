@@ -1,6 +1,6 @@
 {
-  "method": "badge-sightings/v1",
-  "checkedAt": "2026-09-05",
+  "method": "badge-sightings/v2",
+  "checkedAt": "2026-09-07",
   "source": {
     "owner": "athakur3",
     "repo": "mcp-context-cost",
@@ -33,10 +33,10 @@
       "q": "\"mcp-context-cost\"",
       "why": "the widest net: anything naming the project, judged by its contents rather than by the query",
       "state": "ok",
-      "hits": 40
+      "hits": 42
     }
   ],
-  "candidates": 40,
+  "candidates": 42,
   "sightings": [
     {
       "repo": "bbingz/engram",
@@ -50,368 +50,386 @@
     {
       "repo": "BrennonTWilliams/little-loops",
       "path": ".issues/features/P3-FEAT-3137-ll-mcp-prompts-from-skills-surface.md",
-      "url": "https://github.com/BrennonTWilliams/little-loops/blob/3fdc0ecace5db6b6a652db1c726fedf71b3ba0bf/.issues/features/P3-FEAT-3137-ll-mcp-prompts-from-skills-surface.md",
-      "kind": "mention",
+      "url": "https://github.com/BrennonTWilliams/little-loops/blob/39a551644d598cd790bb4b6628d687f8521e32b2/.issues/features/P3-FEAT-3137-ll-mcp-prompts-from-skills-surface.md",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "jasonmichaelbell78-creator/sonash-v0",
       "path": ".claude/state/rewrite-synthesis-v2.js",
       "url": "https://github.com/jasonmichaelbell78-creator/sonash-v0/blob/984f1118c092554fe1796632f6cdf414e2e00a9b/.claude/state/rewrite-synthesis-v2.js",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "jasonmichaelbell78-creator/sonash-v0",
       "path": ".research/analysis/synthesis/synthesis.json",
       "url": "https://github.com/jasonmichaelbell78-creator/sonash-v0/blob/984f1118c092554fe1796632f6cdf414e2e00a9b/.research/analysis/synthesis/synthesis.json",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "jasonmichaelbell78-creator/sonash-v0",
       "path": ".research/analysis/synthesis/synthesis.md",
       "url": "https://github.com/jasonmichaelbell78-creator/sonash-v0/blob/984f1118c092554fe1796632f6cdf414e2e00a9b/.research/analysis/synthesis/synthesis.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
+    },
+    {
+      "repo": "lethanhson9901/repo-dashboard",
+      "path": "src/data/reddit/community_news/mcp.json",
+      "url": "https://github.com/lethanhson9901/repo-dashboard/blob/5ab17564048e162b49944667574266c1a49f4c08/src/data/reddit/community_news/mcp.json",
+      "kind": "mention",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-09-07",
+      "lastSeenAt": "2026-09-07"
+    },
+    {
+      "repo": "mgatorr/skipr",
+      "path": "specs/001-landing-waitlist/contracts/article-collection.md",
+      "url": "https://github.com/mgatorr/skipr/blob/db5e66857ee35a177437859a24978ef2f28bf6ce/specs/001-landing-waitlist/contracts/article-collection.md",
+      "kind": "phrase",
+      "foundBy": "project-name",
+      "firstSeenAt": "2026-09-07",
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "nikbearbrown/humanitarians-youtube",
       "path": "claude-for-computer-science/claude-liam-mcp-context-cost-meter/beat_sheet.json",
-      "url": "https://github.com/nikbearbrown/humanitarians-youtube/blob/cd11261b81a617dde8e42d77d66a03ac09228c46/claude-for-computer-science/claude-liam-mcp-context-cost-meter/beat_sheet.json",
-      "kind": "mention",
+      "url": "https://github.com/nikbearbrown/humanitarians-youtube/blob/8441749f23f8e4abfbe41a7cbc5ef2a847e77c7e/claude-for-computer-science/claude-liam-mcp-context-cost-meter/beat_sheet.json",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-09-03",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "nikbearbrown/humanitarians-youtube",
       "path": "claude-for-computer-science/mcp-context-cost-meter/beat_sheet.json",
-      "url": "https://github.com/nikbearbrown/humanitarians-youtube/blob/cd11261b81a617dde8e42d77d66a03ac09228c46/claude-for-computer-science/mcp-context-cost-meter/beat_sheet.json",
-      "kind": "mention",
+      "url": "https://github.com/nikbearbrown/humanitarians-youtube/blob/8441749f23f8e4abfbe41a7cbc5ef2a847e77c7e/claude-for-computer-science/mcp-context-cost-meter/beat_sheet.json",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-09-03",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "nikbearbrown/humanitarians-youtube",
       "path": "claude-for-computer-science/nbb-mcp-context-cost-meter/beat_sheet.json",
-      "url": "https://github.com/nikbearbrown/humanitarians-youtube/blob/cd11261b81a617dde8e42d77d66a03ac09228c46/claude-for-computer-science/nbb-mcp-context-cost-meter/beat_sheet.json",
-      "kind": "mention",
+      "url": "https://github.com/nikbearbrown/humanitarians-youtube/blob/8441749f23f8e4abfbe41a7cbc5ef2a847e77c7e/claude-for-computer-science/nbb-mcp-context-cost-meter/beat_sheet.json",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-09-03",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "nikbearbrown/humanitarians-youtube",
       "path": "claude-for-computer-science/nbb-mcp-context-cost-meter/concat.txt",
-      "url": "https://github.com/nikbearbrown/humanitarians-youtube/blob/cd11261b81a617dde8e42d77d66a03ac09228c46/claude-for-computer-science/nbb-mcp-context-cost-meter/concat.txt",
-      "kind": "mention",
+      "url": "https://github.com/nikbearbrown/humanitarians-youtube/blob/8441749f23f8e4abfbe41a7cbc5ef2a847e77c7e/claude-for-computer-science/nbb-mcp-context-cost-meter/concat.txt",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-09-03",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "nikbearbrown/humanitarians-youtube",
       "path": "claude-for-computer-science/nbb-mcp-context-cost-meter/FACTCHECK.md",
-      "url": "https://github.com/nikbearbrown/humanitarians-youtube/blob/cd11261b81a617dde8e42d77d66a03ac09228c46/claude-for-computer-science/nbb-mcp-context-cost-meter/FACTCHECK.md",
-      "kind": "mention",
+      "url": "https://github.com/nikbearbrown/humanitarians-youtube/blob/8441749f23f8e4abfbe41a7cbc5ef2a847e77c7e/claude-for-computer-science/nbb-mcp-context-cost-meter/FACTCHECK.md",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-09-03",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "nikbearbrown/humanitarians-youtube",
       "path": "claude-for-computer-science/nbb-mcp-context-cost-meter/PEDAGOGY.md",
-      "url": "https://github.com/nikbearbrown/humanitarians-youtube/blob/cd11261b81a617dde8e42d77d66a03ac09228c46/claude-for-computer-science/nbb-mcp-context-cost-meter/PEDAGOGY.md",
-      "kind": "mention",
+      "url": "https://github.com/nikbearbrown/humanitarians-youtube/blob/8441749f23f8e4abfbe41a7cbc5ef2a847e77c7e/claude-for-computer-science/nbb-mcp-context-cost-meter/PEDAGOGY.md",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-09-03",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "nikbearbrown/humanitarians-youtube",
       "path": "claude-for-computer-science/README.md",
-      "url": "https://github.com/nikbearbrown/humanitarians-youtube/blob/cd11261b81a617dde8e42d77d66a03ac09228c46/claude-for-computer-science/README.md",
-      "kind": "mention",
+      "url": "https://github.com/nikbearbrown/humanitarians-youtube/blob/8441749f23f8e4abfbe41a7cbc5ef2a847e77c7e/claude-for-computer-science/README.md",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-09-03",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "nikbearbrown/humanitarians-youtube",
       "path": "CONVERSION-LOG-hai.md",
-      "url": "https://github.com/nikbearbrown/humanitarians-youtube/blob/cd11261b81a617dde8e42d77d66a03ac09228c46/CONVERSION-LOG-hai.md",
-      "kind": "mention",
+      "url": "https://github.com/nikbearbrown/humanitarians-youtube/blob/8441749f23f8e4abfbe41a7cbc5ef2a847e77c7e/CONVERSION-LOG-hai.md",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-09-03",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "OneZero-Network/mcp-threat-intel",
       "path": "daily_owasp_flags.json",
-      "url": "https://github.com/OneZero-Network/mcp-threat-intel/blob/92c43327f6d31b3b6888978e0182b956aea62b66/daily_owasp_flags.json",
-      "kind": "mention",
+      "url": "https://github.com/OneZero-Network/mcp-threat-intel/blob/7dc78ec8a44440e68f63cb1100489ea0bf324c67/daily_owasp_flags.json",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/ai-agent-architecture",
       "path": "docs/faq/mcp-vs-skills.md",
       "url": "https://github.com/shuji-bonji/ai-agent-architecture/blob/325a9b1e85dd32994dba4ef89de8dc46827f7736/docs/faq/mcp-vs-skills.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/ai-agent-architecture",
       "path": "docs/glossary.md",
       "url": "https://github.com/shuji-bonji/ai-agent-architecture/blob/325a9b1e85dd32994dba4ef89de8dc46827f7736/docs/glossary.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-09-03",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/ai-agent-architecture",
       "path": "docs/ja/faq/mcp-vs-skills.md",
       "url": "https://github.com/shuji-bonji/ai-agent-architecture/blob/325a9b1e85dd32994dba4ef89de8dc46827f7736/docs/ja/faq/mcp-vs-skills.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/ai-agent-architecture",
       "path": "docs/ja/glossary.md",
       "url": "https://github.com/shuji-bonji/ai-agent-architecture/blob/325a9b1e85dd32994dba4ef89de8dc46827f7736/docs/ja/glossary.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-09-03",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/ai-agent-architecture",
       "path": "docs/ja/skills/vs-mcp.md",
       "url": "https://github.com/shuji-bonji/ai-agent-architecture/blob/325a9b1e85dd32994dba4ef89de8dc46827f7736/docs/ja/skills/vs-mcp.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/ai-agent-architecture",
       "path": "docs/ja/strategy/mcp-family.md",
       "url": "https://github.com/shuji-bonji/ai-agent-architecture/blob/325a9b1e85dd32994dba4ef89de8dc46827f7736/docs/ja/strategy/mcp-family.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/ai-agent-architecture",
       "path": "docs/skills/vs-mcp.md",
       "url": "https://github.com/shuji-bonji/ai-agent-architecture/blob/325a9b1e85dd32994dba4ef89de8dc46827f7736/docs/skills/vs-mcp.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/ai-agent-architecture",
       "path": "docs/strategy/mcp-family.md",
       "url": "https://github.com/shuji-bonji/ai-agent-architecture/blob/325a9b1e85dd32994dba4ef89de8dc46827f7736/docs/strategy/mcp-family.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/understanding-llm-through-claude-code",
       "path": "docs/.vitepress/locales/en.ts",
       "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/f8c84e221a4915e31726d9d328cb5e90a9f648f8/docs/.vitepress/locales/en.ts",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/understanding-llm-through-claude-code",
       "path": "docs/.vitepress/locales/ja.ts",
       "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/f8c84e221a4915e31726d9d328cb5e90a9f648f8/docs/.vitepress/locales/ja.ts",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/understanding-llm-through-claude-code",
       "path": "docs/06-tool-context/index.md",
       "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/f8c84e221a4915e31726d9d328cb5e90a9f648f8/docs/06-tool-context/index.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/understanding-llm-through-claude-code",
       "path": "docs/06-tool-context/mcp-context-cost.md",
       "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/f8c84e221a4915e31726d9d328cb5e90a9f648f8/docs/06-tool-context/mcp-context-cost.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/understanding-llm-through-claude-code",
       "path": "docs/06-tool-context/tool-search.md",
       "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/f8c84e221a4915e31726d9d328cb5e90a9f648f8/docs/06-tool-context/tool-search.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/understanding-llm-through-claude-code",
       "path": "docs/09-code-intelligence/vs-grep-vs-read.md",
       "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/f8c84e221a4915e31726d9d328cb5e90a9f648f8/docs/09-code-intelligence/vs-grep-vs-read.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/understanding-llm-through-claude-code",
       "path": "docs/appendix/claude-code-config-reference.md",
       "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/f8c84e221a4915e31726d9d328cb5e90a9f648f8/docs/appendix/claude-code-config-reference.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/understanding-llm-through-claude-code",
       "path": "docs/appendix/glossary.md",
       "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/f8c84e221a4915e31726d9d328cb5e90a9f648f8/docs/appendix/glossary.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-09-03",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/understanding-llm-through-claude-code",
       "path": "docs/ja/06-tool-context/index.md",
       "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/f8c84e221a4915e31726d9d328cb5e90a9f648f8/docs/ja/06-tool-context/index.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/understanding-llm-through-claude-code",
       "path": "docs/ja/06-tool-context/mcp-context-cost.md",
       "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/f8c84e221a4915e31726d9d328cb5e90a9f648f8/docs/ja/06-tool-context/mcp-context-cost.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/understanding-llm-through-claude-code",
       "path": "docs/ja/06-tool-context/tool-search.md",
       "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/f8c84e221a4915e31726d9d328cb5e90a9f648f8/docs/ja/06-tool-context/tool-search.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/understanding-llm-through-claude-code",
       "path": "docs/ja/09-code-intelligence/vs-grep-vs-read.md",
       "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/f8c84e221a4915e31726d9d328cb5e90a9f648f8/docs/ja/09-code-intelligence/vs-grep-vs-read.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/understanding-llm-through-claude-code",
       "path": "docs/ja/appendix/claude-code-config-reference.md",
       "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/f8c84e221a4915e31726d9d328cb5e90a9f648f8/docs/ja/appendix/claude-code-config-reference.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/understanding-llm-through-claude-code",
       "path": "docs/ja/appendix/glossary.md",
       "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/f8c84e221a4915e31726d9d328cb5e90a9f648f8/docs/ja/appendix/glossary.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-09-03",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/understanding-llm-through-claude-code",
       "path": "docs/ja/topics/mcp.md",
       "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/f8c84e221a4915e31726d9d328cb5e90a9f648f8/docs/ja/topics/mcp.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/understanding-llm-through-claude-code",
       "path": "docs/topics/mcp.md",
       "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/f8c84e221a4915e31726d9d328cb5e90a9f648f8/docs/topics/mcp.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/understanding-llm-through-claude-code",
       "path": "README.ja.md",
       "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/f8c84e221a4915e31726d9d328cb5e90a9f648f8/README.ja.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "shuji-bonji/understanding-llm-through-claude-code",
       "path": "README.md",
       "url": "https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/f8c84e221a4915e31726d9d328cb5e90a9f648f8/README.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-08-20",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     },
     {
       "repo": "weaver-engineering/agent-plugins-docs",
       "path": "notes/wvr-171-mcp-scoping-and-agent-human-input.md",
       "url": "https://github.com/weaver-engineering/agent-plugins-docs/blob/6317ec2f3b0272ba96a3819a13f23a74b809786d/notes/wvr-171-mcp-scoping-and-agent-human-input.md",
-      "kind": "mention",
+      "kind": "phrase",
       "foundBy": "project-name",
       "firstSeenAt": "2026-09-03",
-      "lastSeenAt": "2026-09-05"
+      "lastSeenAt": "2026-09-07"
     }
   ],
   "thirdPartyRepos": 0,
   "unresolved": null,
   "lastResolved": {
-    "checkedAt": "2026-09-05",
+    "checkedAt": "2026-09-07",
     "thirdPartyRepos": 0
   }
 }
