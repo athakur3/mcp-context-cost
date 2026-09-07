@@ -1,13 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import {
-  CHECK_CLAIMS,
-  PAGE_CLAIMS,
-  PAGE_FILES,
-  compileTemplate,
-  type PageFile,
-} from '../src/sweep/published-stats.js';
+import { PAGE_FILES, type PageFile } from '../src/sweep/published-stats.js';
+import { maintainedSpans, stripNonProse } from '../src/sweep/page-prose.js';
 
 /**
  * The drift guard for counts nobody maintains.
@@ -27,20 +22,6 @@ import {
 const repoRoot = join(import.meta.dirname, '..');
 
 /**
- * Numbers in code are not claims about the data: fenced blocks and inline code
- * are transcripts, commands and JSON — illustrations of shape, shown as they
- * were run. Link targets and URLs are addresses. Blanked rather than removed so
- * every offset still lines up with the raw text the claims are matched against.
- */
-const blank = (m: string) => m.replace(/[^\n]/g, ' ');
-const stripNonProse = (text: string) =>
-  text
-    .replace(/^```[\s\S]*?^```/gm, blank)
-    .replace(/`[^`\n]*`/g, blank)
-    .replace(/\]\([^)]*\)/g, blank)
-    .replace(/https?:\/\/\S+/g, blank);
-
-/**
  * A count of something this project measures: a numeral or a spelled-out
  * small number, then up to three words, then one of the nouns the data is
  * counted in. Spelled-out numbers are in scope precisely because one of the
@@ -48,21 +29,6 @@ const stripNonProse = (text: string) =>
  */
 const COUNT_CLAIM =
   /(?<![\w.,])(?:\d[\d,]*|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)(?![\w.,])(?:[ \t\n]+(?:[A-Za-z][\w'’-]*|\*\*|\*)){0,3}[ \t\n]+(?:servers?|candidates?|entries|rows?|tools?|tokens?|clients?|measurements?|sweeps?|movements?)\b/gi;
-
-/** Half-open ranges of the page that regen owns, from the claims themselves. */
-function maintainedSpans(file: PageFile, raw: string): [number, number][] {
-  const spans: [number, number][] = [];
-  const templates = [
-    ...PAGE_CLAIMS.filter((c) => c.file === file).map((c) => c.template),
-    ...CHECK_CLAIMS.filter((c) => c.file === file).map((c) => c.words),
-  ];
-  for (const template of templates) {
-    for (const m of raw.matchAll(compileTemplate(template))) {
-      spans.push([m.index, m.index + m[0].length]);
-    }
-  }
-  return spans;
-}
 
 /**
  * Counts that are deliberately static, each with the reason it cannot drift.
