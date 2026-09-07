@@ -79,6 +79,13 @@ export function measureTools(
      * "never asked", which session-start.ts refuses to read as zero.
      */
     instructions?: string | null;
+    /**
+     * The revision the server named at `initialize`. Omit it when nothing was
+     * captured; absent is not the same claim as "the server sent none". The
+     * half this pairs with, `requestedProtocolVersion`, is stamped on the
+     * record by the caller so it reaches failed measurements too.
+     */
+    negotiatedProtocolVersion?: string;
   },
 ): Measurement {
   const canonical = canonicalString(tools);
@@ -103,6 +110,10 @@ export function measureTools(
     // Left undefined (and so absent from the JSON) when the caller had nothing
     // to record, which is exactly how a pre-field measurement reads.
     serverInstructions: meta.instructions,
+    // Bare, never `?? null`: the property holding `undefined` is what keeps it
+    // out of the JSON, and a null would have every future record claiming the
+    // server named no revision.
+    negotiatedProtocolVersion: meta.negotiatedProtocolVersion,
   };
 }
 

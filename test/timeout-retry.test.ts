@@ -8,6 +8,7 @@ import {
   TIMEOUT_CONFIRMED_PREFIX,
   TIMEOUT_RETRY_FACTOR,
 } from '../src/sweep/run.js';
+import { PROTOCOL_VERSION } from '../src/core/protocol.js';
 
 /**
  * A stdio MCP server that hangs for its first `STUB_HANG_LAUNCHES` launches and
@@ -36,12 +37,16 @@ if (launched < Number(process.env.STUB_HANG_LAUNCHES ?? '0')) {
       buf = buf.slice(i + 1);
       if (!line) continue;
       const msg = JSON.parse(line);
-      if (msg.method === 'initialize')
+      if (msg.method === 'initialize') {
+        const v = process.env.STUB_PROTOCOL_VERSION ?? '2025-06-18';
         reply(msg.id, {
-          protocolVersion: '2025-06-18',
+          // 'none' omits the field entirely — a server violating a required
+          // field, which is a different fact from naming another revision.
+          ...(v === 'none' ? {} : { protocolVersion: v }),
           capabilities: {},
           serverInfo: { name: 'stub', version: '1.0.0' },
         });
+      }
       else if (msg.method === 'tools/list')
         reply(msg.id, {
           tools: [
@@ -73,12 +78,13 @@ afterAll(() => {
 });
 
 /** Each case gets its own launch counter, so the stub's state never leaks between tests. */
-function stubOpts(hangLaunches: number, timeoutMs: number) {
+function stubOpts(hangLaunches: number, timeoutMs: number, protocolVersion?: string) {
   return {
     argv: [process.execPath, stubPath],
     env: {
       STUB_STATE: join(dir, `state-${++seq}`),
       STUB_HANG_LAUNCHES: String(hangLaunches),
+      ...(protocolVersion ? { STUB_PROTOCOL_VERSION: protocolVersion } : {}),
     },
     timeoutMs,
     persist: false as const,
@@ -128,4 +134,36 @@ describe('measureServer timeout retry', () => {
     expect(m.status).toBe('measured');
     expect(m.timeoutMs).toBe(5_000);
   }, 20_000);
+});
+
+/**
+ * The stub replies with the same string this probe sends, so asserting that
+ * value would pass equally for an implementation that recorded the server's
+ * answer and one that echoed our own pin — and the difference between those two
+ * is the entire meaning of the field. So the stub is told to answer something
+ * else, through an env knob rather than by editing its literal:
+ * `src/core/protocol.ts` states that the stubs keep independent literals on
+ * purpose, because a fixture importing the constant could no longer catch the
+ * probe drifting.
+ */
+describe('the revision the server named', () => {
+  it('is recorded from the reply, not echoed from what we asked for', async () => {
+    const m = await measureServer('stub-negotiated', 'node stub.mjs', stubOpts(0, 5_000, '2025-03-26'));
+    expect(m.negotiatedProtocolVersion).toBe('2025-03-26');
+    expect(m.requestedProtocolVersion).toBe(PROTOCOL_VERSION);
+    expect(m.negotiatedProtocolVersion).not.toBe(m.requestedProtocolVersion);
+  });
+
+  it('is absent, not guessed, when the server omits a field it is required to send', async () => {
+    const m = await measureServer('stub-silent', 'node stub.mjs', stubOpts(0, 5_000, 'none'));
+    expect(m.negotiatedProtocolVersion).toBeUndefined();
+    expect(m.requestedProtocolVersion).toBe(PROTOCOL_VERSION);
+    expect('negotiatedProtocolVersion' in JSON.parse(JSON.stringify(m))).toBe(false);
+  });
+
+  it('records what a healthy server answered', async () => {
+    const m = await measureServer('stub-agrees', 'node stub.mjs', stubOpts(0, 5_000));
+    expect(m.status).toBe('measured');
+    expect(m.negotiatedProtocolVersion).toBe(m.requestedProtocolVersion);
+  });
 });

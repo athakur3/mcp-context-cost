@@ -11,6 +11,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { captureTools, clampNotes, type ClientPosture } from './client.js';
+import { PROTOCOL_VERSION } from '../core/protocol.js';
 import {
   DockerHarnessFault,
   defaultImageFor,
@@ -359,6 +360,7 @@ export async function measureServer(
         launchCommand: command,
         envVarNames: [...Object.keys(opts.env ?? {}), ...(opts.dummyEnv ?? [])],
         instructions: first.instructions,
+        negotiatedProtocolVersion: first.protocolVersion,
       });
       if (canonicalString(first.tools) !== canonicalString(second.tools)) {
         r.status = 'dynamic';
@@ -386,6 +388,11 @@ export async function measureServer(
     const arch = await observedArch(iso);
     r.isolation = { ...iso, ...(arch ? { arch } : {}) };
     r.timeoutMs = attemptOpts.timeoutMs ?? 60_000;
+    // Beside `timeoutMs` and `isolation`, and for the same reason: stamped
+    // after the branch so a failed record carries it too. A `protocol-mismatch`
+    // record is the one that most needs it, and its note cannot be relied on —
+    // the server's own `data.requested` is present only when it sent one.
+    r.requestedProtocolVersion = PROTOCOL_VERSION;
     return r;
   }
 

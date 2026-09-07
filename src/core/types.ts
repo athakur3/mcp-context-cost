@@ -87,6 +87,28 @@ export interface Measurement {
    * Absent is never read as zero.
    */
   serverInstructions?: string | null;
+  /**
+   * The revision this harness asked for at `initialize`, and the one the server
+   * answered with. Stored as a pair, and that is the point: a record that kept
+   * only the answer would have to be read against whatever `PROTOCOL_VERSION`
+   * says *today*, so the day that constant moves — the event the spec watch
+   * exists to catch — every record taken before it would start reading as a
+   * disagreement about a run that agreed perfectly at the time.
+   *
+   * `requested` is stamped on every record, measured or failed. `negotiated` is
+   * the server's own word, which the 2025-06-18 schema requires it to send and
+   * says "may not match the version that the client requested"; it is present
+   * only where `initialize` returned. Absent means never captured — every
+   * measurement predating these fields, and any server that omitted a field it
+   * was required to send. Neither is ever read as the other.
+   *
+   * On a `measured` record the two agree, because a disagreement disconnects
+   * rather than measuring (`ProtocolMismatch` in sweep/client.ts). They are
+   * recorded anyway so the record is checkable against the run that produced it
+   * rather than trusted to have been.
+   */
+  requestedProtocolVersion?: string;
+  negotiatedProtocolVersion?: string;
   measuredAt: string;
   serverName: string;
   serverVersion?: string;
