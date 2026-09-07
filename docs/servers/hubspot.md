@@ -2,6 +2,8 @@
 
 **9,158 tokens** across 21 tools — *moderate* (5–15K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 8,433 of those tokens as tool definitions, and Claude counts those at **14,398**.
+
 | | |
 |---|---|
 | server (self-reported) | hubspot-mcp-server v0.4.0 |

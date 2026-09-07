@@ -2,6 +2,8 @@
 
 **17,311 tokens** across 63 tools — *heavy* (15–30K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 12,823 of those tokens as tool definitions, and Claude counts those at **22,234**.
+
 | | |
 |---|---|
 | server (self-reported) | Atlassian MCP v3.4.7 |

@@ -5,7 +5,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Measurement } from '../core/types.js';
-import { isCurrent, parseDivergence, type DivergenceRun } from '../core/divergence.js';
+import { isCurrent, mappedTokens, parseDivergence, type DivergenceRun } from '../core/divergence.js';
 import { divergencePct, isComparable, parseCrossCheck, type CrossCheckRun } from '../core/cross-check.js';
 // Type-only, and from core rather than ./regressions.js: the regression report
 // imports this module for its markdown escaping, so importing it back at
@@ -357,10 +357,15 @@ export function writeLeaderboard(
     );
     md.push('');
   }
+  // `mapped` is unconditional where `claude` is gated on `div`, and the
+  // difference is not an oversight: the Claude column needs a run this
+  // repository may not have, while `mapped` is recomputed from the capture
+  // beside it in this same file — no key, no run, and no way for it to be
+  // stale against the bytes it describes.
   md.push(
-    `| # | server | tokens | session start |${div ? ' claude |' : ''}${xc ? ' mcp-tokens |' : ''} tools | largest tool | status | category |`,
+    `| # | server | tokens | mapped | session start |${div ? ' claude |' : ''}${xc ? ' mcp-tokens |' : ''} tools | largest tool | status | category |`,
   );
-  md.push(`|---:|---|---:|---:|${div ? '---:|' : ''}${xc ? '---:|' : ''}---:|---|---|---|`);
+  md.push(`|---:|---|---:|---:|---:|${div ? '---:|' : ''}${xc ? '---:|' : ''}---:|---|---|---|`);
   measured.forEach((r, i) => {
     const m = r.m!;
     const largest = [...m.tools].sort((a, b) => b.tokens - a.tokens)[0];
@@ -370,6 +375,7 @@ export function writeLeaderboard(
     const xCell = x === null ? '—' : `${x.cliTokens.toLocaleString('en-US')} (${signedPct(divergencePct(x)!)})`;
     md.push(
       `| ${i + 1} | ${link} | ${m.totalTokens!.toLocaleString('en-US')} |` +
+        ` ${mappedTokens(m.rawToolsCapture ?? []).toLocaleString('en-US')} |` +
         ` ${sessionStartCell(session(r))} |` +
         (div ? ` ${c === null ? '—' : c.toLocaleString('en-US')} |` : '') +
         (xc ? ` ${xCell} |` : '') +

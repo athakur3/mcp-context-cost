@@ -2,6 +2,8 @@
 
 **133 tokens** across 1 tools — *lean* (< 1K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 133 of those tokens as tool definitions, and Claude counts those at **503**.
+
 | | |
 |---|---|
 | server (self-reported) | example-servers/perplexity-ask v0.1.0 |

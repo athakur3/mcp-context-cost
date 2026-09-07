@@ -2,6 +2,8 @@
 
 **20,037 tokens** across 50 tools — *heavy* (15–30K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 9,357 of those tokens as tool definitions, and Claude counts those at **16,189**.
+
 | | |
 |---|---|
 | server (self-reported) | anki-mcp-server v0.25.0 |

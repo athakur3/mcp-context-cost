@@ -69,9 +69,17 @@ describe('published pages agree with the data on disk', () => {
     // neighbour. The badge column now comes from the measurement, and the
     // Claude column is null exactly when the leaderboard prints `—`.
     const board = readFileSync(join(repoRoot, 'results', 'leaderboard.md'), 'utf8');
+    // Derived from the header, never a constant. This read was `[5]` while the
+    // claude column happened to sit there; inserting any column to its left
+    // would have moved the cell without moving the number, and the assertion
+    // would have gone on passing for the wrong reason.
+    const lines = board.split('\n');
+    const header = lines.find((l) => l.startsWith('| # | server |'))!;
+    const claudeCol = header.split('|').findIndex((c) => c.trim() === 'claude');
+    expect(claudeCol, 'no claude column in the leaderboard header').toBeGreaterThan(0);
     for (const name of ['github', 'notion'] as const) {
-      const row = board.split('\n').find((l) => l.includes(`| [${name}](`))!;
-      const boardShowsClaude = row.split('|')[5]?.trim() !== '—';
+      const row = lines.find((l) => l.includes(`| [${name}](`))!;
+      const boardShowsClaude = row.split('|')[claudeCol]?.trim() !== '—';
       expect(stats.claude[name].claudeTokens === null, `${name}: README vs leaderboard`).toBe(!boardShowsClaude);
       // And the badge column is the measured number, never the run's copy of it.
       expect(stats.claude[name].badgeTokens).toBe(stats.sample[name]?.tokens ?? stats.claude[name].badgeTokens);

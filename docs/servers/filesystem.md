@@ -2,6 +2,8 @@
 
 **2,823 tokens** across 14 tools — *light* (1–5K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 1,665 of those tokens as tool definitions, and Claude counts those at **3,115**.
+
 | | |
 |---|---|
 | server (self-reported) | secure-filesystem-server v0.2.0 |

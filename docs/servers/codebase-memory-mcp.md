@@ -2,6 +2,8 @@
 
 **5,258 tokens** across 15 tools — *moderate* (5–15K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 4,774 of those tokens as tool definitions, and Claude counts those at **8,585**.
+
 | | |
 |---|---|
 | server (self-reported) | codebase-memory-mcp v0.10.8 |

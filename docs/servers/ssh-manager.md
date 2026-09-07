@@ -2,6 +2,8 @@
 
 **8,446 tokens** across 37 tools — *moderate* (5–15K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 8,149 of those tokens as tool definitions, and Claude counts those at **14,196**.
+
 | | |
 |---|---|
 | server (self-reported) | mcp-ssh-manager v3.8.5 |

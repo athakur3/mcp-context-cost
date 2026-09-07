@@ -2,6 +2,8 @@
 
 **8,204 tokens** across 29 tools — *moderate* (5–15K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 6,550 of those tokens as tool definitions, and Claude counts those at **11,494**.
+
 | | |
 |---|---|
 | server (self-reported) | Serena v1.7.1.dev0 |

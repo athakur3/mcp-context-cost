@@ -2,6 +2,8 @@
 
 **540 tokens** across 7 tools — *lean* (< 1K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 540 of those tokens as tool definitions, and Claude counts those at **1,267**.
+
 | | |
 |---|---|
 | server (self-reported) | example-servers/puppeteer v0.1.0 |

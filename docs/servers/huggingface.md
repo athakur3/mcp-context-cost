@@ -2,6 +2,8 @@
 
 **4,724 tokens** across 4 tools — *light* (1–5K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 1,604 of those tokens as tool definitions, and Claude counts those at **3,043**.
+
 | | |
 |---|---|
 | server (self-reported) | huggingface.co/mcp v0.4.15 |

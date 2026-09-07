@@ -6,7 +6,7 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { parse } from 'yaml';
-import { isCurrent } from '../core/divergence.js';
+import { isCurrent, mappedTokens } from '../core/divergence.js';
 import type { Measurement } from '../core/types.js';
 import { loadRows, type ServerEntry } from './report.js';
 import { bandColor, BAND_META } from '../core/bands.js';
@@ -88,6 +88,21 @@ export function generateDashboard(root = process.cwd()): string {
   const median = totals.length ? totals.slice().sort((a, b) => a - b)[Math.floor(totals.length / 2)] : 0;
   const max = totals.length ? Math.max(...totals) : 1;
   const fmt = (n: number) => n.toLocaleString('en-US');
+
+  /**
+   * The other two numbers under the headline tile. The big number is the wire
+   * total, because that is what the board ranks on and what the badge says —
+   * but on its own it is the largest of three true figures, and the one least
+   * like what a request costs. Only the Claude leg can be absent, and it prints
+   * an em-dash rather than falling back to a neighbour.
+   */
+  const priciestCompanions = (() => {
+    const top = measured[0];
+    if (!top?.m) return '';
+    const dRaw = dSrv[top.entry.name];
+    const cur = isCurrent(dRaw as never, top.m.canonicalSha256 ?? null) ? dRaw : undefined;
+    return `${fmt(mappedTokens(top.m.rawToolsCapture ?? []))} carried · ${cur ? fmt(cur.claudeDelta) : '—'} on Claude`;
+  })();
   /**
    * The stamp is the newest measurement on the page, not the moment the page
    * was written.
@@ -119,7 +134,9 @@ export function generateDashboard(root = process.cwd()): string {
       // same four.
       const dRaw = dSrv[r.entry.name];
       const div = isCurrent(dRaw as never, m.canonicalSha256 ?? null) ? dRaw : undefined;
-      const claudeTip = div ? ` · in a Claude request: ${fmt(div.claudeDelta)} tok` : '';
+      const claudeTip =
+        ` · carried in a request: ${fmt(mappedTokens(m.rawToolsCapture ?? []))} tok` +
+        (div ? ` · Claude counts those: ${fmt(div.claudeDelta)} tok` : '');
       const series = seriesFor(r.entry.name);
       const tokens = series.rows.map((h) => h.tokens);
       const spark = renderSparkline(tokens);
@@ -165,7 +182,7 @@ export function generateDashboard(root = process.cwd()): string {
         tokens.length > 1
           ? `${tokens[tokens.length - 1]! - tokens[0]! >= 0 ? '+' : ''}${fmt(tokens[tokens.length - 1]! - tokens[0]!)} over ${tokens.length} sweeps`
           : '—';
-      return `<tr><td>${i + 1}</td><td>${esc(r.entry.name)}</td><td class="num">${fmt(m.totalTokens as number)}</td><td class="num">${div ? fmt(div.claudeDelta) : '—'}</td><td class="num">${esc(m.toolCount)}</td><td>${esc(BAND_META[bandColor(m.totalTokens as number)].label)}</td><td>${esc(r.entry.category)}</td><td class="num">${trend}</td></tr>`;
+      return `<tr><td>${i + 1}</td><td>${esc(r.entry.name)}</td><td class="num">${fmt(m.totalTokens as number)}</td><td class="num">${fmt(mappedTokens(m.rawToolsCapture ?? []))}</td><td class="num">${div ? fmt(div.claudeDelta) : '—'}</td><td class="num">${esc(m.toolCount)}</td><td>${esc(BAND_META[bandColor(m.totalTokens as number)].label)}</td><td>${esc(r.entry.category)}</td><td class="num">${trend}</td></tr>`;
     })
     .join('\n');
 
@@ -223,6 +240,9 @@ export function generateDashboard(root = process.cwd()): string {
   .stat { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px 10px; }
   .stat .n { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-variant-numeric: tabular-nums; font-size: 1.45rem; font-weight: 600; display: block; }
   .stat .l { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  /* Companion figures under a headline number. The .l label style is muted,
+     tracked and uppercased, which is wrong for digits — so digits get their own. */
+  .stat .t { display: block; margin-top: 3px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-variant-numeric: tabular-nums; font-size: 11px; color: var(--muted); }
 
   .board { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; }
   .row { display: grid; grid-template-columns: 2ch minmax(120px, 190px) 1fr 56px max-content; gap: 10px; align-items: center; padding: 3px 4px; border-radius: 4px; outline: none; color: inherit; text-decoration: none; }
@@ -277,7 +297,7 @@ export function generateDashboard(root = process.cwd()): string {
   <div class="stats">
     <div class="stat"><span class="n">${measured.length}<span style="font-size:0.9rem;color:var(--muted)">/${rows.length}</span></span><span class="l">servers measured</span></div>
     <div class="stat"><span class="n">${fmt(median)}</span><span class="l">median tokens</span></div>
-    <div class="stat"><span class="n">${fmt(max === 1 ? 0 : max)}</span><span class="l">priciest (${esc(measured[0]?.entry.name ?? '—')})</span></div>
+    <div class="stat"><span class="n">${fmt(max === 1 ? 0 : max)}</span><span class="l">priciest on the wire (${esc(measured[0]?.entry.name ?? '—')})</span><span class="t">${priciestCompanions}</span></div>
     <div class="stat"><span class="n">${pending.length}</span><span class="l">pending sweep</span></div>
   </div>
 
@@ -308,7 +328,7 @@ ${barRows || '<p class="h2sub">Sweep in progress — first results land shortly.
 
   <details><summary>Full data table</summary>
   <div class="tablewrap" style="margin-top:10px"><table>
-    <thead><tr><th>#</th><th>server</th><th>tokens (o200k)</th><th>claude req</th><th>tools</th><th>band</th><th>category</th><th>trend</th></tr></thead>
+    <thead><tr><th>#</th><th>server</th><th>wire (o200k)</th><th>mapped</th><th>claude req</th><th>tools</th><th>band</th><th>category</th><th>trend</th></tr></thead>
     <tbody>${tableRows}</tbody>
   </table></div>
   </details>

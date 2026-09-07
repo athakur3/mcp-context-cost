@@ -2,6 +2,8 @@
 
 **585 tokens** across 3 tools — *lean* (< 1K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 542 of those tokens as tool definitions, and Claude counts those at **1,255**.
+
 | | |
 |---|---|
 | server (self-reported) | emailmd v0.11.0 |

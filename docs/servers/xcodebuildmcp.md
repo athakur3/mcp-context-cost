@@ -2,6 +2,8 @@
 
 **26,594 tokens** across 24 tools — *heavy* (15–30K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 2,676 of those tokens as tool definitions, and Claude counts those at **5,335**.
+
 | | |
 |---|---|
 | server (self-reported) | xcodebuildmcp v2.7.0 |

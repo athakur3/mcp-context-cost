@@ -2,6 +2,8 @@
 
 **523 tokens** across 3 tools — *lean* (< 1K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 354 of those tokens as tool definitions, and Claude counts those at **884**.
+
 | | |
 |---|---|
 | server (self-reported) | mcp-neo4j-cypher v2.13.3 |

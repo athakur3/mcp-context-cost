@@ -2,6 +2,8 @@
 
 **16,774 tokens** across 65 tools — *heavy* (15–30K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 15,460 of those tokens as tool definitions, and Claude counts those at **26,641**.
+
 | | |
 |---|---|
 | server (self-reported) | mcp-grafana v(devel) |

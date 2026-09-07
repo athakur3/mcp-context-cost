@@ -2,6 +2,8 @@
 
 **17,500 tokens** across 24 tools — *heavy* (15–30K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 17,163 of those tokens as tool definitions, and Claude counts those at **33,560**.
+
 | | |
 |---|---|
 | server (self-reported) | Notion API v1.0.0 |

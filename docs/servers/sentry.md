@@ -2,6 +2,8 @@
 
 **6,086 tokens** across 9 tools — *moderate* (5–15K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 5,442 of those tokens as tool definitions, and Claude counts those at **9,481**.
+
 | | |
 |---|---|
 | server (self-reported) | Sentry MCP v0.39.0 |

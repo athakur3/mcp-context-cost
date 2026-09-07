@@ -2,6 +2,8 @@
 
 **336 tokens** across 9 tools — *lean* (< 1K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 336 of those tokens as tool definitions. What Claude makes of them is not published for this server: its Claude count is missing, or was taken against a capture this measurement has since replaced.
+
 | | |
 |---|---|
 | server (self-reported) | gitlab-mcp-server v0.5.1 |

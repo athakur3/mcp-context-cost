@@ -2,6 +2,8 @@
 
 **2,920 tokens** across 33 tools — *light* (1–5K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 2,920 of those tokens as tool definitions, and Claude counts those at **5,688**.
+
 | | |
 |---|---|
 | server (self-reported) | playwright-mcp v1.0.11 |

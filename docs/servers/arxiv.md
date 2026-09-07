@@ -2,6 +2,8 @@
 
 **3,960 tokens** across 19 tools — *light* (1–5K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 3,699 of those tokens as tool definitions, and Claude counts those at **6,622**.
+
 | | |
 |---|---|
 | server (self-reported) | arxiv-mcp-server v0.7.2 |

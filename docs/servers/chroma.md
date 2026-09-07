@@ -2,6 +2,8 @@
 
 **2,837 tokens** across 13 tools — *light* (1–5K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 2,837 of those tokens as tool definitions, and Claude counts those at **5,222**.
+
 | | |
 |---|---|
 | server (self-reported) | chroma v1.6.0 |

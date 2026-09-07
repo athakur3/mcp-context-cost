@@ -2,6 +2,8 @@
 
 **359 tokens** across 3 tools — *lean* (< 1K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 233 of those tokens as tool definitions, and Claude counts those at **707**.
+
 | | |
 |---|---|
 | server (self-reported) | DeepWiki v2.14.3 |

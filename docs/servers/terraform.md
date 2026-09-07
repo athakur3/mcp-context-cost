@@ -2,6 +2,8 @@
 
 **2,061 tokens** across 9 tools — *light* (1–5K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 1,718 of those tokens as tool definitions, and Claude counts those at **3,248**.
+
 | | |
 |---|---|
 | server (self-reported) | terraform-mcp-server v1.3.0 |

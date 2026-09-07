@@ -2,6 +2,8 @@
 
 **5,903 tokens** across 9 tools — *moderate* (5–15K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 5,679 of those tokens as tool definitions, and Claude counts those at **9,184**.
+
 | | |
 |---|---|
 | server (self-reported) | pinecone-mcp v0.3.0 |

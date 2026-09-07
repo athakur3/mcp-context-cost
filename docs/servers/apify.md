@@ -2,6 +2,8 @@
 
 **10,452 tokens** across 10 tools — *moderate* (5–15K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 4,793 of those tokens as tool definitions, and Claude counts those at **8,297**.
+
 | | |
 |---|---|
 | server (self-reported) | apify-mcp-server v0.15.4 |

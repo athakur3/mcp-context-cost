@@ -2,6 +2,8 @@
 
 **53,669 tokens** across 57 tools — *very heavy* (≥ 30K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 40,105 of those tokens as tool definitions, and Claude counts those at **75,686**.
+
 | | |
 |---|---|
 | server (self-reported) | agent-device v0.20.10 |

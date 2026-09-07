@@ -2,6 +2,8 @@
 
 **15,239 tokens** across 68 tools — *heavy* (15–30K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 14,303 of those tokens as tool definitions, and Claude counts those at **26,202**.
+
 | | |
 |---|---|
 | server (self-reported) | Azure MCP Server v3.0.0-beta.41 |

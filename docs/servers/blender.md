@@ -2,6 +2,8 @@
 
 **6,928 tokens** across 28 tools — *moderate* (5–15K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 6,160 of those tokens as tool definitions, and Claude counts those at **10,576**.
+
 | | |
 |---|---|
 | server (self-reported) | BlenderMCP v1.29.1 |

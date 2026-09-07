@@ -167,7 +167,10 @@ describe('publishing the column', () => {
   it('omits the claude column entirely when no divergence run exists', () => {
     writeLeaderboard([entry], root);
     const md = readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8');
-    expect(md).toContain('| # | server | tokens | session start | tools |');
+    // `mapped` is present here and `claude` is not, which is the distinction:
+    // the mapped column is recomputed from the capture in this same file, so it
+    // needs no run, while the Claude column needs one that does not exist here.
+    expect(md).toContain('| # | server | tokens | mapped | session start | tools |');
     expect(md).not.toContain('claude');
     const csv = readFileSync(join(root, 'results', 'leaderboard.csv'), 'utf8');
     expect(csv.split('\n')[0]).toContain('claudeTokens,claudeModel');
@@ -178,8 +181,12 @@ describe('publishing the column', () => {
     writeFileSync(join(root, 'results', 'divergence.json'), JSON.stringify(run()));
     writeLeaderboard([entry], root);
     const md = readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8');
-    expect(md).toContain('| # | server | tokens | session start | claude | tools |');
-    expect(md).toContain('| 1 | [demo](../docs/servers/demo.md) | 1,000 | ≥1 | 700 | 2 |');
+    expect(md).toContain('| # | server | tokens | mapped | session start | claude | tools |');
+    // The `1` after 1,000 is the mapped cell: this fixture's `rawToolsCapture`
+    // is empty, so the projection is `[]` and costs one token. The full row is
+    // pinned rather than one cell, because a column inserted anywhere in it
+    // should fail here loudly rather than shift a positional read silently.
+    expect(md).toContain('| 1 | [demo](../docs/servers/demo.md) | 1,000 | 1 | ≥1 | 700 | 2 |');
     expect(md).toContain('claude-opus-5');
     const csv = readFileSync(join(root, 'results', 'leaderboard.csv'), 'utf8');
     expect(csv.split('\n')[1]).toContain(',700,claude-opus-5');
@@ -190,7 +197,7 @@ describe('publishing the column', () => {
     writeFileSync(join(root, 'results', 'divergence.json'), JSON.stringify(stale));
     writeLeaderboard([entry], root);
     const md = readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8');
-    expect(md).toContain('| 1 | [demo](../docs/servers/demo.md) | 1,000 | ≥1 | — | 2 |');
+    expect(md).toContain('| 1 | [demo](../docs/servers/demo.md) | 1,000 | 1 | ≥1 | — | 2 |');
     const csv = readFileSync(join(root, 'results', 'leaderboard.csv'), 'utf8');
     expect(csv.split('\n')[1].split(',').slice(7, 9)).toEqual(['', '']);
   });

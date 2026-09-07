@@ -2,6 +2,8 @@
 
 **10,948 tokens** across 7 tools — *moderate* (5–15K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 6,412 of those tokens as tool definitions, and Claude counts those at **11,232**.
+
 | | |
 |---|---|
 | server (self-reported) | google-surf-mcp v1.0.9 |

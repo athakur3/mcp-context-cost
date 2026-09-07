@@ -2,6 +2,8 @@
 
 **6,156 tokens** across 47 tools — *moderate* (5–15K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 6,156 of those tokens as tool definitions, and Claude counts those at **12,210**.
+
 | | |
 |---|---|
 | server (self-reported) | bitbucket-mcp-server v1.0.0 |

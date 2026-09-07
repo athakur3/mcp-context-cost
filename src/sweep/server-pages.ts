@@ -14,7 +14,14 @@ import type { Measurement } from '../core/types.js';
 import { bandColor, BAND_META } from '../core/bands.js';
 import { deprecationText, loadDivergence, mdCell, type ServerEntry } from './report.js';
 import { parseHistory, plottableSeries, type HistoryRow } from './history.js';
-import { claudeRatio, fieldSelectionShare, isCurrent, type DivergenceRow, type DivergenceRun } from '../core/divergence.js';
+import {
+  claudeRatio,
+  fieldSelectionShare,
+  isCurrent,
+  mappedTokens,
+  type DivergenceRow,
+  type DivergenceRun,
+} from '../core/divergence.js';
 
 /**
  * Pages are served from GitHub Pages (docs/), but results/ and badges/ are not
@@ -107,6 +114,8 @@ export function renderServerPage(
 ): string {
   const total = m.totalTokens as number;
   const band = BAND_META[bandColor(total)];
+  const headlineRow = divergence?.servers[entry.name];
+  const claudeOfThisPage = isCurrent(headlineRow, m.canonicalSha256) ? headlineRow.claudeDelta : null;
   const tools = [...m.tools].sort((a, b) => b.tokens - a.tokens);
   const shown = tools.slice(0, MAX_TOOL_ROWS);
   const pct = (n: number) => (total > 0 ? `${((n / total) * 100).toFixed(1)}%` : '—');
@@ -117,6 +126,26 @@ export function renderServerPage(
   md.push(
     `**${fmt(total)} tokens** across ${m.toolCount} tools — *${band.label}* (${band.range}). ` +
       `Measured ${String(m.measuredAt).slice(0, 10)} under [methodology v${mdCell(m.methodologyVersion)}](../METHODOLOGY.html).`,
+  );
+  md.push('');
+  /**
+   * The other two numbers, in the first thing a reader sees. This page is the
+   * badge's click-through target, and the badge states the wire figure alone —
+   * so a reader arriving here to find out what a server costs them was being
+   * shown the largest of the three and left to scroll for the other two.
+   *
+   * `mapped` is recomputed from the capture on this page rather than read from
+   * the divergence row, so it prints for every measured server including ones
+   * the run has never reached. Only the Claude figure can be absent, and it
+   * says so in words rather than printing a dash into a sentence.
+   */
+  md.push(
+    `An Anthropic request carries ${fmt(mappedTokens(m.rawToolsCapture ?? []))} of those tokens as tool ` +
+      `definitions` +
+      (claudeOfThisPage === null
+        ? `. What Claude makes of them is not published for this server: its Claude count is missing, or was taken ` +
+          `against a capture this measurement has since replaced.`
+        : `, and Claude counts those at **${fmt(claudeOfThisPage)}**.`),
   );
   md.push('');
   md.push('| | |');
@@ -267,8 +296,17 @@ export function renderServerPage(
   return md.join('\n');
 }
 
-/** The index that lists every candidate — measured ones link to their page. */
-export function renderServerIndex(rows: { entry: ServerEntry; m: Measurement | null }[]): string {
+/**
+ * The index that lists every candidate — measured ones link to their page.
+ *
+ * `divergence` is optional because the index is still a truthful list without
+ * it: the wire and mapped columns come from the capture alone, and only the
+ * Claude column needs the run.
+ */
+export function renderServerIndex(
+  rows: { entry: ServerEntry; m: Measurement | null }[],
+  divergence: DivergenceRun | null = null,
+): string {
   const measured = rows.filter((r) => isMeasured(r.m)).sort((a, b) => (b.m!.totalTokens as number) - (a.m!.totalTokens as number));
   const rest = rows.filter((r) => !isMeasured(r.m));
 
@@ -278,15 +316,21 @@ export function renderServerIndex(rows: { entry: ServerEntry; m: Measurement | n
   md.push(
     `One page per measured server: the per-tool breakdown behind the badge, the exact launch ` +
       `command, and the command that re-derives the number. ${measured.length} of ${rows.length} ` +
-      `candidates measured.`,
+      `candidates measured. **Ranked on the wire** — every byte \`tools/list\` returned, which is ` +
+      `what the badge states. *mapped* is the part an Anthropic request carries; *Claude* is that ` +
+      `part counted by Anthropic, and prints \`—\` where it is missing or was taken against a ` +
+      `capture that has since moved.`,
   );
   md.push('');
-  md.push('| # | server | tokens | tools | band |');
-  md.push('|---:|---|---:|---:|---|');
+  md.push('| # | server | wire | mapped | Claude | tools | band |');
+  md.push('|---:|---|---:|---:|---:|---:|---|');
   measured.forEach((r, i) => {
     const t = r.m!.totalTokens as number;
+    const row = divergence?.servers[r.entry.name];
+    const claude = isCurrent(row, r.m!.canonicalSha256) ? row.claudeDelta : null;
     md.push(
       `| ${i + 1} | [${mdCell(r.entry.name)}](${encodeURIComponent(r.entry.name)}.html) | ${fmt(t)} | ` +
+        `${fmt(mappedTokens(r.m!.rawToolsCapture ?? []))} | ${claude === null ? '—' : fmt(claude)} | ` +
         `${r.m!.toolCount} | ${BAND_META[bandColor(t)].label} |`,
     );
   });
@@ -340,7 +384,7 @@ export function writeServerPages(entries: ServerEntry[], root = process.cwd()): 
     writeFileSync(join(outDir, `${entry.name}.md`), renderServerPage(entry, m, series, divergence));
     pages++;
   }
-  writeFileSync(join(outDir, 'index.md'), renderServerIndex(rows));
+  writeFileSync(join(outDir, 'index.md'), renderServerIndex(rows, divergence));
   return { pages };
 }
 

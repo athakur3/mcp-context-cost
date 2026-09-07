@@ -16,6 +16,20 @@ import {
 } from '../src/core/session-start.js';
 import { countTokens, measureTools, sha256Hex } from '../src/core/canonical.js';
 import { writeLeaderboard, sessionStartCell, type ServerEntry } from '../src/sweep/report.js';
+
+/**
+ * Which `split('|')` cell holds the session-start figure, read from the
+ * leaderboard's own header rather than counted by hand. Both reads below were
+ * the constant `4`, which was right until a `mapped` column landed to the left
+ * of it — a positional read that keeps returning a number after the number it
+ * points at has changed is worse than one that breaks.
+ */
+const sessionStartCol = (md: string) => {
+  const header = md.split('\n').find((l) => l.startsWith('| # | server |'))!;
+  const i = header.split('|').findIndex((c) => c.trim() === 'session start');
+  expect(i, 'no session start column in the leaderboard header').toBeGreaterThan(0);
+  return i;
+};
 import type { Measurement } from '../src/core/types.js';
 
 const rawTools = [
@@ -263,14 +277,14 @@ describe('the leaderboard shows both figures for every measured server', () => {
     const md = readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8');
     const rows = md.split('\n').filter((l) => /^\| \d+ \|/.test(l));
     expect(rows).toHaveLength(2);
-    for (const r of rows) expect(r.split('|')[4].trim()).toMatch(/^≥?[\d,]+$/);
+    for (const r of rows) expect(r.split('|')[sessionStartCol(md)].trim()).toMatch(/^≥?[\d,]+$/);
   });
 
   it('marks the floored row and only the floored row', () => {
     writeLeaderboard(entries, root);
     const md = readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8');
     const cell = (name: string) =>
-      md.split('\n').find((l) => l.includes(`[${name}]`))!.split('|')[4].trim();
+      md.split('\n').find((l) => l.includes(`[${name}]`))!.split('|')[sessionStartCol(md)].trim();
     expect(cell('floored').startsWith('≥')).toBe(true);
     expect(cell('known').startsWith('≥')).toBe(false);
     expect(md).toContain('marks a floor, on 1 of 2 rows');

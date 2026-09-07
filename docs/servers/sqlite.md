@@ -2,6 +2,8 @@
 
 **268 tokens** across 6 tools — *lean* (< 1K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 268 of those tokens as tool definitions, and Claude counts those at **806**.
+
 | | |
 |---|---|
 | server (self-reported) | sqlite v0.1.0 |

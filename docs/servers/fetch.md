@@ -2,6 +2,8 @@
 
 **238 tokens** across 1 tools — *lean* (< 1K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 238 of those tokens as tool definitions, and Claude counts those at **700**.
+
 | | |
 |---|---|
 | server (self-reported) | mcp-fetch v1.29.1 |

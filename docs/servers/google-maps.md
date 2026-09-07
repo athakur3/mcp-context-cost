@@ -2,6 +2,8 @@
 
 **549 tokens** across 7 tools — *lean* (< 1K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 549 of those tokens as tool definitions, and Claude counts those at **1,332**.
+
 | | |
 |---|---|
 | server (self-reported) | mcp-server/google-maps v0.1.0 |

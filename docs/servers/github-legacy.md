@@ -2,6 +2,8 @@
 
 **3,548 tokens** across 26 tools — *light* (1–5K). Measured 2026-09-04 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 3,548 of those tokens as tool definitions, and Claude counts those at **6,662**.
+
 | | |
 |---|---|
 | server (self-reported) | github-mcp-server v0.6.2 |

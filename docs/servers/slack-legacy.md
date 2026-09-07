@@ -2,6 +2,8 @@
 
 **681 tokens** across 8 tools — *lean* (< 1K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
 
+An Anthropic request carries 681 of those tokens as tool definitions, and Claude counts those at **1,483**.
+
 | | |
 |---|---|
 | server (self-reported) | Slack MCP Server v1.0.0 |
