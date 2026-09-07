@@ -1,12 +1,13 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { weekIndex, shardIndexForDate, selectShard } from '../src/sweep/shard.js';
 import { MIN_REGRESSIONS } from '../src/sweep/harness-guard.js';
 import type { Measurement } from '../src/core/types.js';
 import { TSX_CLI } from './tsx.js';
+import { removeTempRoot } from './tmp.js';
 
 const day = (iso: string) => new Date(`${iso}T00:00:00Z`);
 
@@ -133,7 +134,7 @@ describe('sweep-all sharding (subprocess)', () => {
   });
 
   afterEach(() => {
-    rmSync(root, { recursive: true, force: true });
+    removeTempRoot(root);
   });
 
   function measurement(name: string, tokens: number): Measurement {

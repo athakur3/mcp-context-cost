@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { execFileSync } from 'node:child_process';
-import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { parse, stringify } from 'yaml';
@@ -16,6 +16,7 @@ import {
 import { isSelfContainerised, TIMEOUT_RETRY_FACTOR } from '../src/sweep/run.js';
 import type { ServerEntry } from '../src/sweep/report.js';
 import { TSX_CLI } from './tsx.js';
+import { removeTempRoot } from './tmp.js';
 
 const repoRoot = join(import.meta.dirname, '..');
 const prCheck = join(repoRoot, 'src', 'sweep', 'pr-check.ts');
@@ -261,7 +262,7 @@ describe('pr-check (subprocess)', () => {
   });
 
   afterEach(() => {
-    rmSync(root, { recursive: true, force: true });
+    removeTempRoot(root);
   });
 
   const launched = () => existsSync(join(root, 'launched'));

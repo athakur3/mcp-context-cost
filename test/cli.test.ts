@@ -1,7 +1,7 @@
 import { describe, it, expect, afterAll } from 'vitest';
 import { execFileSync, execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { readFileSync, writeFileSync, mkdtempSync, rmSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdtempSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
@@ -10,6 +10,7 @@ import { verifyMeasurement, slugFromUrl, unknownFlags, cliVersion } from '../src
 import { measureTools } from '../src/core/canonical.js';
 import type { Measurement } from '../src/core/types.js';
 import { TSX_CLI } from './tsx.js';
+import { removeTempRoot } from './tmp.js';
 
 const execFileAsync = promisify(execFile);
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -47,7 +48,7 @@ describe('verify command (dispute drill)', () => {
 
 describe('verify --json (CLI process)', () => {
   const dir = mkdtempSync(join(tmpdir(), 'mcp-context-cost-cli-'));
-  afterAll(() => rmSync(dir, { recursive: true, force: true }));
+  afterAll(() => removeTempRoot(dir));
 
   it('prints a single JSON object and exits 0 on success', () => {
     const m = measureTools(tools, { serverName: 'x' });
@@ -267,7 +268,7 @@ describe('CLI rejects unknown flags', () => {
 
 describe('audit tells an empty client apart from no client at all', () => {
   const dir = mkdtempSync(join(tmpdir(), 'mcp-context-cost-empty-'));
-  afterAll(() => rmSync(dir, { recursive: true, force: true }));
+  afterAll(() => removeTempRoot(dir));
 
   const run = (args: string[]) => {
     try {

@@ -14,6 +14,7 @@ import {
 } from '../src/sweep/harness-guard.js';
 import type { Measurement, MeasurementStatus } from '../src/core/types.js';
 import { TSX_CLI } from './tsx.js';
+import { removeTempRoot } from './tmp.js';
 
 function measurement(over: Partial<Measurement> = {}): Measurement {
   return {
@@ -175,7 +176,7 @@ describe('snapshot / restore round-trip', () => {
   });
 
   afterEach(() => {
-    rmSync(root, { recursive: true, force: true });
+    removeTempRoot(root);
   });
 
   function publish(name: string, m: Measurement, badge = '{"schemaVersion":1,"label":"x"}') {
@@ -269,7 +270,7 @@ describe('sweep-all wiring (subprocess)', () => {
   });
 
   afterEach(() => {
-    rmSync(root, { recursive: true, force: true });
+    removeTempRoot(root);
   });
 
   /**

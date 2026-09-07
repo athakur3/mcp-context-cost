@@ -1,9 +1,10 @@
 import { describe, it, expect, afterAll } from 'vitest';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync, existsSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { TSX_CLI } from './tsx.js';
+import { removeTempRoot } from './tmp.js';
 import {
   ADOPTION_METHOD,
   BADGE_SOURCE,
@@ -61,7 +62,7 @@ describe('measure-adoption --render-only', () => {
     return d;
   };
   afterAll(() => {
-    for (const d of dirs) rmSync(d, { recursive: true, force: true });
+    for (const d of dirs) removeTempRoot(d);
   });
 
   it('re-renders the page from the reading on disk, without a token and without touching checkedAt', () => {
