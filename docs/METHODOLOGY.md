@@ -137,12 +137,14 @@ Every candidate server appears in published results with exactly one status:
 | `startup-failure` | crashed or missing dependencies (stderr tail recorded) |
 | `timeout` | no response within the configured timeout (recorded per measurement) |
 | `not-applicable` | this harness cannot run it — an OS or architecture the package does not ship for, or a backing service the isolation deliberately does not provide |
+| `protocol-mismatch` | the server refused a request by naming the protocol rather than itself — it launched, the transport worked, and it answered, so this is not a claim that it failed to come up. Either it has no `initialize` handler (the 2026-07-28 revision replaced the handshake with `server/discover`), or it rejected the protocol version the request carried. The status does not claim the server speaks any particular revision; only the server's own `data.supported` establishes that, and the note quotes it verbatim when it sent one |
 | `remote-auth-wall` | OAuth-gated remote server; listed, not measured |
 | `not-yet-run` | candidate not yet swept — a merged entry carries this status on the published leaderboard until its rotation slot comes round (see [Trends over time](#trends-over-time--same-conditions-or-no-line)) |
 
 **A failure is retried before it is published.** Two of these statuses can be produced by
 the machine doing the measuring rather than by the server, so neither is published on a
-single attempt:
+single attempt (`protocol-mismatch` is not among them, and deliberately: a cold package
+cache does not change a protocol revision, and neither does a wider timeout budget):
 
 - a `startup-failure` under Docker isolation is re-attempted with the shared package caches
   bypassed, because a poisoned cache entry and a genuinely broken package exit identically;

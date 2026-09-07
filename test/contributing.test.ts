@@ -415,6 +415,7 @@ describe('what happens on the pull request', () => {
       'startup-failure',
       'timeout',
       'not-applicable',
+      'protocol-mismatch',
     ];
     const line = (label: string) => {
       const m = new RegExp(`^- \\*\\*${label}\\*\\*:(.*(?:\\n(?![-\\n]).*)*)`, 'm').exec(text);
@@ -427,6 +428,34 @@ describe('what happens on the pull request', () => {
       expect(fail.has(s), `${s} listed as failing`).toBe(failsCheck(s));
       expect(pass.has(s), `${s} listed as passing`).toBe(!failsCheck(s));
     }
+  });
+
+  /**
+   * The list above is hand-written, so it can only check the statuses someone
+   * remembered to add to it. This one is derived from the type, and asks the
+   * other question: METHODOLOGY promises every swept server gets exactly one of
+   * these, which is a promise about a table a reader can find the status in.
+   *
+   * Block comments are stripped first. The union's own docblocks name
+   * `startup-failure`, `not-applicable` and `protocol-mismatch` while
+   * explaining them, so without the strip this would be reading the prose
+   * beside the members rather than the members — the failure this whole file
+   * exists to avoid.
+   *
+   * Deliberately one-directional, union to table and not back: the table
+   * carries an eighth row, `not-yet-run`, which is not a member of the union at
+   * all — `report.ts` and `server-pages.ts` synthesise it for an entry with no
+   * record yet. A symmetric version of this test is red on arrival.
+   */
+  it('gives every status the taxonomy can publish a row in METHODOLOGY', () => {
+    const union = /export type MeasurementStatus =([\s\S]*?);/.exec(
+      read('src/core/types.ts').replace(/\/\*[\s\S]*?\*\//g, ''),
+    )![1];
+    const members = [...union.matchAll(/'([a-z-]+)'/g)].map((m) => m[1]);
+    expect(members).toContain('measured');
+    expect(members.length).toBeGreaterThan(5);
+    const methodology = read('docs/METHODOLOGY.md');
+    for (const status of members) expect(methodology, status).toContain(`| \`${status}\` |`);
   });
 
   it('says a first pull request waits for Approve and run, as pr-check.yml records', () => {

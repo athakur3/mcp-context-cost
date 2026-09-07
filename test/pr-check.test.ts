@@ -157,7 +157,8 @@ describe('failsCheck', () => {
   });
 
   it('passes the outcomes the leaderboard publishes as findings', () => {
-    for (const s of ['measured', 'auth-required', 'not-applicable'] as const) expect(failsCheck(s)).toBe(false);
+    for (const s of ['measured', 'auth-required', 'not-applicable', 'protocol-mismatch'] as const)
+      expect(failsCheck(s)).toBe(false);
   });
 });
 

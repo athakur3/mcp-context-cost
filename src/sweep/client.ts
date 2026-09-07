@@ -5,6 +5,7 @@
  * so the objects captured here ARE the wire representation.
  */
 import { spawn } from 'node:child_process';
+import { PROTOCOL_VERSION } from '../core/protocol.js';
 
 export interface WireCapture {
   serverInfo?: { name?: string; version?: string };
@@ -20,14 +21,57 @@ export interface WireCapture {
 }
 
 interface Pending {
+  /**
+   * The method this id was sent for. Responses are correlated by id, so
+   * without carrying it here a JSON-RPC error could not name what it refused
+   * — see `rpcErrorMessage`.
+   */
+  method: string;
   resolve: (v: any) => void;
   reject: (e: Error) => void;
 }
 
-const PROTOCOL_VERSION = '2025-06-18';
-
 /** How an elided middle is marked, in every layout here. */
 const ELISION = ' […] ';
+
+/** Long enough to carry the versions a server names, short enough not to be the note. */
+const ERROR_DATA_CLIP = 300;
+
+/**
+ * A JSON-RPC error rendered as the sentence the classifier reads.
+ *
+ * The method is named because a `-32601` answering `initialize` and one
+ * answering `tools/list` are different facts — the first is about the protocol
+ * revision this harness pins, the second about the server's own tools — and
+ * this string was the only record of either.
+ *
+ * `data` is placed before the server's message rather than after it: `run.ts`
+ * clamps a record's notes to a fixed length by cutting the tail, and for
+ * `UNSUPPORTED_PROTOCOL_VERSION` the `data` is where the server names the
+ * revisions it does speak. That is the one part of the sentence that must
+ * survive a long message.
+ *
+ * Deliberately avoids the phrase `waiting for`, which anchors the timeout
+ * classifier one layer up.
+ */
+export function rpcErrorMessage(
+  method: string,
+  error: { code?: unknown; message?: unknown; data?: unknown },
+): string {
+  let data = '';
+  if (error.data !== undefined) {
+    try {
+      const json = JSON.stringify(error.data);
+      if (typeof json === 'string') {
+        data = ` [data: ${json.length > ERROR_DATA_CLIP ? `${json.slice(0, ERROR_DATA_CLIP)}…` : json}]`;
+      }
+    } catch {
+      // A payload that will not serialise (a cycle, a BigInt) is not worth
+      // losing the rest of the sentence over.
+    }
+  }
+  return `server error ${error.code} answering ${method}${data}: ${error.message}`;
+}
 
 /**
  * The part of a dead server's stderr worth keeping as evidence.
@@ -358,7 +402,7 @@ export class McpStdioClient {
       if (msg && typeof msg.id === 'number' && this.pending.has(msg.id)) {
         const p = this.pending.get(msg.id)!;
         this.pending.delete(msg.id);
-        if (msg.error) p.reject(new Error(`server error ${msg.error.code}: ${msg.error.message}`));
+        if (msg.error) p.reject(new Error(rpcErrorMessage(p.method, msg.error)));
         else p.resolve(msg.result);
       }
     }
@@ -388,6 +432,7 @@ export class McpStdioClient {
         );
       }, timeoutMs);
       this.pending.set(id, {
+        method,
         resolve: (v) => {
           clearTimeout(timer);
           resolve(v);

@@ -58,12 +58,64 @@ import type { Measurement } from '../core/types.js';
 export const AUTH_EVIDENCE =
   /(?<![a-z])(?:o?auth|tokens?|api.?keys?)(?![a-z])|unauthori[sz]|authenticat|authori[sz]|credential|forbidden|\b401\b/i;
 
-export function classifyFailure(msg: string): 'timeout' | 'auth-required' | 'startup-failure' {
+/**
+ * A JSON-RPC refusal that names the protocol rather than the server. Anchored
+ * on this harness's own phrasing from `rpcErrorMessage`, never on a bare code
+ * a server might have printed in its own stderr.
+ *
+ * The two codes are anchored differently because they mean different kinds of
+ * thing, and reading them the same way is how this pattern was wrong first:
+ *
+ * - `METHOD_NOT_FOUND` (-32601) is meaningful only relative to a *method*. It
+ *   says the server has no handler. Answering `initialize`, that is the
+ *   revision — `2026-07-28` removed the handshake in favour of
+ *   `server/discover`. Answering `tools/list`, it is the server: it exposes no
+ *   tools, which is its own property and stays a `startup-failure`. So this
+ *   arm names the method.
+ * - `UNSUPPORTED_PROTOCOL_VERSION` (-32022) is meaningful only relative to a
+ *   *version*. Its schema definition — "the request's protocol version is
+ *   unknown to the server or unsupported" — says nothing about which request
+ *   carried it, and under `2026-07-28` the version travels in a per-request
+ *   `_meta` field, so any request can be the one refused. It cannot mean the
+ *   server has no tools whatever method it answers, so this arm names no
+ *   method. Anchoring it to `initialize` would have published a
+ *   `startup-failure` about a working server, which is the exact harm this
+ *   status exists to prevent.
+ *
+ * Read from the modelcontextprotocol repository on 2026-09-08: -32601 at
+ * `schema/2026-07-28/schema.ts:314`, -32022 at :450, and `tools/list` still
+ * defined at :1768. -32022 appears in no earlier revision (`2025-11-25` has
+ * neither the constant nor `server/discover`), and the revision that
+ * introduces it has no `initialize` — so a -32022 answering `initialize` can
+ * only come from a server keeping a back-compat shim, and the realistic
+ * placement is a later request. One inference is worth naming rather than
+ * hiding: this probe sends no per-request `_meta` version, so a strict server
+ * would answer the missing required field with `INVALID_PARAMS`; -32022
+ * arrives only if such a server carries the handshake-negotiated version
+ * forward.
+ *
+ * Not evidence, and not to be invented: a process exit (a server that logs
+ * `server/discover` and dies has told us nothing about why), a timeout, or
+ * `-32600`/`-32602` from any method — the last of those is indistinguishable
+ * from a malformed request, and widening to cover it would have to be argued
+ * from a real record.
+ */
+export const PROTOCOL_MISMATCH_EVIDENCE =
+  /server error -32601 answering initialize\b|server error -32022 answering \S/;
+
+export function classifyFailure(
+  msg: string,
+): 'timeout' | 'auth-required' | 'protocol-mismatch' | 'startup-failure' {
   // Matched against this harness's own phrasing, not the bare word: these
   // messages carry the server's stderr, and a server that prints "connection
   // timeout" before dying did not time out — it exited, and saying otherwise
   // blames the clock for a breakage.
   if (/timeout after \d+ms waiting for/.test(msg)) return 'timeout';
+  // Ahead of AUTH_EVIDENCE deliberately. This pattern needs our own phrasing
+  // and a specific code; AUTH_EVIDENCE is a word list run against arbitrary
+  // third-party prose, and a server is entitled to mention a token in the same
+  // breath as refusing our revision.
+  if (PROTOCOL_MISMATCH_EVIDENCE.test(msg)) return 'protocol-mismatch';
   return AUTH_EVIDENCE.test(msg) ? 'auth-required' : 'startup-failure';
 }
 

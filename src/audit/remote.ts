@@ -27,6 +27,7 @@
  * bridge, exactly as env values are spawned into a stdio server, and never
  * written to a report — see `ConfiguredServer.headers` in config.ts.
  */
+import { PROTOCOL_VERSION } from '../core/protocol.js';
 
 export interface RemoteProbe {
   /**
@@ -50,7 +51,7 @@ const INITIALIZE = JSON.stringify({
   id: 1,
   method: 'initialize',
   params: {
-    protocolVersion: '2025-06-18',
+    protocolVersion: PROTOCOL_VERSION,
     capabilities: {},
     clientInfo: { name: 'mcp-context-cost', version: '0' },
   },
@@ -98,7 +99,7 @@ export async function probeRemote(
         ...configured,
         'content-type': 'application/json',
         accept: 'application/json, text/event-stream',
-        'mcp-protocol-version': '2025-06-18',
+        'mcp-protocol-version': PROTOCOL_VERSION,
       },
       body: INITIALIZE,
     });

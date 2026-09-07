@@ -193,7 +193,22 @@ export function summarise(name: string, m: Measurement, secs: number): string {
   return head + tail;
 }
 
-/** Whether an outcome fails the check. */
+/**
+ * Whether an outcome fails the check.
+ *
+ * A denylist, so a status added to the taxonomy passes unless it is named
+ * here. `protocol-mismatch` is the first one where that default was a decision
+ * rather than an omission, and the reason is worth writing down: the entry
+ * launched, the transport worked and the server answered. The reason there is
+ * no number is the revision *this repository pins*. `auth-required` is the
+ * governing analogue — the server works and this harness lacks something —
+ * and failing a stranger's pull request over our own pin would be the same
+ * category error, one layer up, as publishing `startup-failure` about their
+ * working software. On the day the ecosystem moves, every third-party pull
+ * request would otherwise go red for a reason no contributor could fix.
+ * `summarise` prints the notes either way, so the contributor still sees the
+ * server's own words.
+ */
 export function failsCheck(status: Measurement['status']): boolean {
   return status === 'startup-failure' || status === 'timeout' || status === 'dynamic';
 }

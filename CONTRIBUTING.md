@@ -289,8 +289,10 @@ launched, as [described above](#the-launch-command-is-not-the-package-id).
 
 The exit policy, by the outcome of each launched entry (`failsCheck` in `pr-check.ts`):
 
-- **pass**: `measured`, `auth-required`, and a declared `not-applicable` — findings the
-  leaderboard publishes today.
+- **pass**: `measured`, `auth-required`, a declared `not-applicable`, and
+  `protocol-mismatch` — findings the leaderboard publishes today. The last of those means
+  the server launched and answered, and refused the protocol revision this repository pins;
+  that is our pin, not your entry, and no change to the entry would clear it.
 - **fail**: `startup-failure` and `timeout`, which mean the entry does not launch as
   written, and `dynamic`, which means two captures disagreed and there is no one number to
   show. The evidence tail is printed so you see what the server said.

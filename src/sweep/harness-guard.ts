@@ -47,7 +47,19 @@ export const MIN_REGRESSIONS = 5;
  */
 export const FAULT_RATIO = 0.5;
 
-/** Statuses that represent a real number on record — the thing worth protecting. */
+/**
+ * Statuses that represent a real number on record — the thing worth protecting.
+ *
+ * An allowlist, so every failure status counts as a regression here, including
+ * `protocol-mismatch`. That is worth naming rather than leaving to be
+ * discovered: the day a spec revision moves the ecosystem, enough servers land
+ * on it at once to clear `MIN_REGRESSIONS` and `FAULT_RATIO` together, and this
+ * guard restores the old bytes and exits non-zero. Publishing nothing is the
+ * right outcome — but it is the same signal a wedged runner gives, so a human
+ * has to read the run to tell them apart. The thresholds are deliberately not
+ * tuned for it: a rule that could tell those two apart automatically would be
+ * guessing.
+ */
 export function isGood(status: MeasurementStatus): boolean {
   return status === 'measured' || status === 'dynamic';
 }

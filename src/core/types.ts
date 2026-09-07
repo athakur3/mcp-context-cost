@@ -14,6 +14,30 @@ export type MeasurementStatus =
    * own text corroborates it (see `notApplicable` in report.ts).
    */
   | 'not-applicable'
+  /**
+   * The server refused a request by naming the protocol rather than itself.
+   * Distinct from `startup-failure` for the same reason `not-applicable` is:
+   * the process started, the transport worked and the server answered, so "did
+   * not come up" would be a claim about someone else's code that the run did
+   * not establish.
+   *
+   * Two JSON-RPC codes reach it, both read from `schema/2026-07-28/schema.ts`
+   * in the modelcontextprotocol repository on 2026-09-08:
+   * `METHOD_NOT_FOUND` (-32601, line 314) *answering `initialize`*, because
+   * that revision removed the handshake in favour of `server/discover` and a
+   * server implementing only it has no handler; and
+   * `UNSUPPORTED_PROTOCOL_VERSION` (-32022, line 450) *answering anything*,
+   * because that code is a statement about the version the request carried and
+   * never about the method — see `PROTOCOL_MISMATCH_EVIDENCE` in
+   * `sweep/run.ts` for why the two are anchored differently. When the server
+   * sends one it carries the revisions it does speak in `data.supported`.
+   *
+   * The status claims only that a request was refused naming the method or the
+   * revision. It does NOT claim the server speaks any particular revision —
+   * only `data.supported` establishes that, and the note quotes it verbatim
+   * when the server sent one.
+   */
+  | 'protocol-mismatch'
   | 'dynamic'
   | 'remote-auth-wall';
 

@@ -7,6 +7,46 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **A server that speaks only MCP `2026-07-28` would have been published as `startup-failure` — a
+  status whose own definition calls itself "a claim about someone else's code".** That revision
+  removed the `initialize` handshake in favour of `server/discover` (`LATEST_PROTOCOL_VERSION` at
+  `schema/2026-07-28/schema.ts:30`, read 2026-09-08), and this probe pins `2025-06-18`. A server
+  implementing only the new revision has no `initialize` handler, so it answers `METHOD_NOT_FOUND`;
+  `classifyFailure` tested for a timeout, then for credential words, then fell through. The
+  re-sweep publishes on a cron holding `contents: write`, and `failsCheck` red-fails a
+  contributor's pull request on that status, so the claim would have gone out under the
+  maintainer's name, on a schedule, about working software.
+
+  **A new status, `protocol-mismatch`.** The entry launched, the transport worked and the server
+  answered; the only reason there is no number is the revision this repository pins. It passes the
+  pull-request check for the same reason `auth-required` does — failing a stranger's entry over our
+  own pin is the same category error, one layer up. It claims only that a request was refused
+  naming the method or the revision, never that the server speaks any particular revision: only the
+  server's own `data.supported` establishes that, and the note now quotes it verbatim.
+
+  Two codes reach it, anchored differently, which the first version of the rule got wrong.
+  `METHOD_NOT_FOUND` (-32601) is meaningful only against a *method*, so it counts only when it
+  answers `initialize` — answering `tools/list` it means the server exposes no tools, which is the
+  server's own property and stays a `startup-failure`. `UNSUPPORTED_PROTOCOL_VERSION` (-32022) is
+  meaningful only against a *version*: it appears in no revision before `2026-07-28` (`2025-11-25`
+  has neither the constant nor `server/discover`), and that revision carries the protocol version
+  in a per-request `_meta` field, so any request can be the one refused. Anchoring it to
+  `initialize` as well would have published `startup-failure` about a working server, which is the
+  failure this entry is about.
+
+  Rendering a JSON-RPC error changed with it. The message now names the method it answers and
+  carries the error's `data`, because a `-32601` answering `initialize` and one answering
+  `tools/list` were byte-identical before and neither said which. `data` is placed *before* the
+  server's own message rather than after: notes are clamped by cutting the tail, and for `-32022`
+  the `data` is where the server names the revisions it does speak. Two published records take
+  their notes through that path, `magic` and `keboola`; both gain about twenty characters, both stay
+  far inside the cap, and both keep `auth-required`.
+
+  **Blast radius: zero.** No record in `results/` carries `-32601`, `-32022`, `method not found`,
+  `protocol version`, `server/discover`, `unsupported protocol` or `2026-07-28` — 0 of 103 the day
+  this landed. This is a forward-looking guard, not the repair of an observed breakage, and the
+  number stays 0 until a server moves.
+
 - **The page declared `badge-sightings/v2` and published a row that v1 had judged.** The
   adoption reading of 2026-09-07 (f86da0a) records `"method": "badge-sightings/v2"`, and the page
   built from it closes with "Method `badge-sightings/v2`". Of the 43 rows in its table, 42 were
