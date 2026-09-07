@@ -7,6 +7,33 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **A published report attributed 78% of github's capture to a field that server does not ship, and
+  nothing could see it.** `docs/state-of-mcp-context-cost.md` said *"81% of the capture is
+  annotations/outputSchema metadata a request never carries"*. github ships **no `outputSchema` at
+  all** and 1.7% annotations; the field actually dropped is `icons`, at 78%, which
+  `test/published-stats.test.ts` has recorded in writing since the equivalent caveat in the README
+  was made derived rather than hand-written. The same table row published github at 54,422 tokens
+  nineteen lines below the article's own headline of 54,622. `history.csv` dates 54,422 to
+  2026-08-16 and 54,622 to 2026-09-03, and the article closes by saying every number in it was read
+  from the data of 2026-09-04 — so that row came from a divergence row computed against bytes that
+  had already been re-swept: the staleness defect repaired in 0.11.2, published and then left
+  standing.
+
+  **Neither error was reachable by any check here.** The file was hand-written, outside `PAGE_FILES`,
+  and linked from both front pages. Regen never wrote it, so `regenIsAFixedPoint` — which walks
+  `git ls-files results docs README.md badges` — copied it unchanged into its scratch tree and
+  compared it against itself, passing unconditionally. Six further numbers in it had drifted the
+  same way unnoticed, among them a candidate count of 106 against today's 107 and a measured count
+  of 81 against 87.
+
+  Withdrawn rather than corrected. Bringing it under the existing guard would have meant sixteen
+  allow-list entries freezing prose nobody maintains, and the article was history with a reading
+  date attached — history that states a thing which was never true is not worth keeping for the
+  date's sake. Its two inbound links go with it, its published URL now 404s, and `ROADMAP.md`
+  phase 5 describes the report it wants instead of numbering it against a withdrawn one. The
+  changelog entries that announced it are left exactly as they were: they record what shipped on
+  their dates, and a record is corrected forward.
+
 - **Eleven published numbers were measured over a protocol revision the server picked, and nothing
   recorded that.** Every session this harness opens says which MCP revision it speaks, and the
   server answers with the one it will actually use — a normal part of the handshake, and the server

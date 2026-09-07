@@ -53,15 +53,24 @@ reading, the re-sweep cadence. They are all on the distribution track.
 
 | phase | goal | waiting on | exit, in one line |
 |---|---|---|---|
-| **5** | The data tells its second story | tool vectors on both sides of most movements | state-of report #2 with per-tool attribution (rotation length decided on evidence, 2026-09-06) |
+| **5** | The data tells its story | tool vectors on both sides of most movements | a state-of report with per-tool attribution (rotation length decided on evidence, 2026-09-06) |
 | **∥** | Distribution *(maintainer)* | its own calendar, and someone else's answer | a badge merged somewhere that is not this repository |
 
 ---
 
-## Phase 5 — The data tells its second story
+## Phase 5 — The data tells its story
 
-**Goal.** The second state-of report says which *tools* grew, and the rotation is as short as
+**Goal.** A state-of report says which *tools* grew, and the rotation is as short as
 the runner allows.
+
+**The September edition was withdrawn on 2026-09-08**, so this is the report rather than a
+second one. It attributed 81% of github's capture to `annotations`/`outputSchema` metadata —
+a server that ships no `outputSchema` at all and 1.7% annotations, the 78% being `icons` — and
+it published a badge figure from a divergence row computed against bytes already re-swept,
+which contradicted its own headline nineteen lines above. Neither error was reachable by any
+guard: the file was hand-written, outside `PAGE_FILES`, and regen never wrote it, so
+`regenIsAFixedPoint` passed on it unconditionally. Whatever replaces it states its numbers
+through claims regen maintains.
 
 **The rotation half is settled**, on 2026-09-06, by dispatching it rather than arguing about
 it: a `shards=3` slice measured 34 servers in 3m46s against the job's 120-minute cap, and the
@@ -71,13 +80,13 @@ three, every row comes round within three Wednesdays, and `resweep.yml` carries 
 beside the number they chose. What remains here is the report, and it waits on data.
 
 **Scope.**
-- [ ] **State-of report #2.** Waiting on data rather than on a date: tool vectors began
+- [ ] **State-of report.** Waiting on data rather than on a date: tool vectors began
       accruing 2026-09-04 and a movement needs one on both sides, so the report can be written
-      once the rotation has come round, which is now three weeks rather than six. The
-      September edition could say which servers moved; this one can say which tools,
-      and which releases. It can also say what held — the movement report separates confirmed
-      unchanged costs from the ones with nothing to compare, and "most servers do not move, and
-      the ones that do move up" is a finding the first edition could not state.
+      once the rotation has come round, which is now three weeks rather than six. It can say
+      which *tools* grew and which releases moved them, not only which servers. It can also
+      say what held — the movement report separates confirmed unchanged costs from the ones
+      with nothing to compare, and "most servers do not move, and the ones that do move up" is
+      a finding the withdrawn edition could not state.
 - [ ] **Stretch: replace the documented deferral model with a measured one.** Nothing here has
       measured a client deferring or not, and it would be the first measurement of its kind
       published anywhere. **The premise hour of 2026-09-06 refuted this item's obvious
