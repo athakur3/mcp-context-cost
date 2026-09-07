@@ -322,20 +322,21 @@ Flags: `--json` (full report on stdout, progress on stderr), `--budget N`,
 
 The number `audit` gives you is the same measurement, run across a curated set of public
 servers — which is how you can tell it is a measurement and not this tool's opinion. It also
-shows what you are choosing between: across the 87 servers measured, cost spans **1,700×**,
-from `postgres` at 32 tokens to `github` at 54,622. The table below is a
-sample of that range; the full range is in
+shows what you are choosing between: across the 87 servers measured, cost spans **1,700×** on
+the wire, from `postgres` at 32 tokens to `github` at 54,622 — of which a request carries
+10,735, and Claude counts those at 18,728. The table below is a sample of that range, ranked
+on the wire like every other list here; the full range is in
 [results/leaderboard.md](results/leaderboard.md).
 
-| server | context cost | tools |
-|---|---:|---:|
-| github (official) | **54,622 tokens** | 44 |
-| xcodebuildmcp | 26,594 | 24 |
-| brave-search | 25,487 | 8 |
-| notion | 17,500 | 24 |
-| playwright *(4.8M installs/week)* | 4,024 | 24 |
-| filesystem (reference) | 2,823 | 14 |
-| markitdown | 64 | 1 |
+| server | context cost (wire) | mapped | on Claude | tools |
+|---|---:|---:|---:|---:|
+| github (official) | **54,622 tokens** | 10,735 | 18,728 | 44 |
+| xcodebuildmcp | 26,594 | 2,676 | 5,335 | 24 |
+| brave-search | 25,487 | 8,278 | 13,762 | 8 |
+| notion | 17,500 | 17,163 | 33,560 | 24 |
+| playwright *(4.8M installs/week)* | 4,024 | 3,402 | 6,172 | 24 |
+| filesystem (reference) | 2,823 | 1,665 | 3,115 | 14 |
+| markitdown | 64 | 64 | 404 | 1 |
 
 *(87 of 107 popular servers measured, each row dated by its own most recent sweep — full table in
 [results/leaderboard.md](results/leaderboard.md); every failure is listed with its reason.
@@ -361,12 +362,14 @@ the cost before they install rather than after:
 
 The badge counts every byte a server returns. An Anthropic request carries only `name`,
 `description`, and `input_schema` — and counts them with a denser tokenizer. Both effects are
-now measured against a pinned model and published beside the badge, and they do not cancel:
+now measured against a pinned model and published beside the badge, and they do not cancel.
+The middle column is what a request actually carries, counted with the badge's own tokenizer,
+so the two effects are separated rather than folded together:
 
-| server | badge (o200k) | Claude (`claude-opus-5`) | |
-|---|---:|---:|---|
-| github | 54,622 | **18,728** | 78% of the capture is `icons` metadata Claude never sees |
-| notion | 17,500 | **33,560** | almost no metadata to drop, so the tokenizer difference dominates |
+| server | badge (o200k) | mapped | Claude (`claude-opus-5`) | |
+|---|---:|---:|---:|---|
+| github | 54,622 | 10,735 | **18,728** | 78% of the capture is `icons` metadata Claude never sees |
+| notion | 17,500 | 17,163 | **33,560** | almost no metadata to drop, so the tokenizer difference dominates |
 
 So the heaviest server on the badge is not the heaviest server on Claude. Per-server
 breakdowns are on each [detail page](https://athakur3.github.io/mcp-context-cost/servers/);
