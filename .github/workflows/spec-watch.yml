@@ -13,6 +13,16 @@
 # the Monday self-badge push and the monthly adoption reading, which are the
 # only other scheduled jobs here.
 #
+# The token is the Actions one and nothing more: the contents API allows 60
+# requests an hour per IP to an unauthenticated caller and runners share
+# addresses, so the job passes `github.token` to lift that, and the tool runs
+# without one if it is ever absent. Demonstrated, not just documented: the first
+# workflow_dispatch (run 34161391756, 2026-09-07 20:58 UTC) read both sources
+# under that token, found the listing and the schema file in agreement, and
+# exited 0 reporting that 2025-11-25 and 2026-07-28 are newer than the pin. If
+# the endpoint ever starts rejecting it, the run says it could not look rather
+# than going quietly green.
+#
 # Read-only, and it publishes nothing: `contents: read`, no write token, and the
 # tool writes no file at all. A drift fails the run rather than opening an
 # issue. An issue would need `issues: write` this job has no other use for,
