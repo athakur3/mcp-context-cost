@@ -82,8 +82,22 @@ is counted.
 | [shuji-bonji/understanding-llm-through-claude-code](https://github.com/shuji-bonji/understanding-llm-through-claude-code) | [README.md](https://github.com/shuji-bonji/understanding-llm-through-claude-code/blob/f8c84e221a4915e31726d9d328cb5e90a9f648f8/README.md) | names the project, no badge | 2026-08-20 | 2026-09-05 |
 | [weaver-engineering/agent-plugins-docs](https://github.com/weaver-engineering/agent-plugins-docs) | [notes/wvr-171-mcp-scoping-and-agent-human-input.md](https://github.com/weaver-engineering/agent-plugins-docs/blob/6317ec2f3b0272ba96a3819a13f23a74b809786d/notes/wvr-171-mcp-scoping-and-agent-human-input.md) | names the project, no badge | 2026-09-03 | 2026-09-05 |
 
+*Names the project* means the file refers to something that is the project: the
+repository (`athakur3/mcp-context-cost`, however the URL around it is spelled), the npm
+package (`npx -y mcp-context-cost`, an install command, a dependency entry or its npmjs.com
+page), or the pages site (`athakur3.github.io/mcp-context-cost`). *Matches the phrase only*
+means the file contains the words `mcp-context-cost` and none of those — a URL slug on
+another site, a directory, a compound word. Such a file is kept in this table rather than
+dropped, so every file the queries turned up is accounted for, and it is not read as
+anyone naming this project.
+
 A row whose *last seen* is older than the date above was found by an earlier reading
 and not by this one.
+
+This reading was taken under method `badge-sightings/v1`; the rule now in force is
+`badge-sightings/v2`. A row's *what it is* is the judgement of the reading that last saw
+it, so the rows above carry the earlier rule's. The next reading re-judges every file
+it finds.
 
 ## What this cannot see
 

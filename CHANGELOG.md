@@ -7,6 +7,45 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **"Names the project" was a substring test on the string the search had just matched, so it
+  could not fail.** The widest adoption query asks GitHub code search for `mcp-context-cost`,
+  and every file it nominated was then judged by `classifyFile`: does this file contain
+  `mcp-context-cost`? It does — that is why the search returned it — so every candidate
+  without a badge was published as **names the project**, and `docs/adoption.md` grew a table
+  of 41 files under that label. Read at the commits the page itself links to, **none of the 41
+  refers to this project**. Eight files in `shuji-bonji/ai-agent-architecture` carry the phrase
+  only inside links to `…/understanding-llm-through-claude-code/06-tool-context/mcp-context-cost`,
+  a chapter on an unrelated site whose URL slug happens to be the name; the eighteen in
+  `shuji-bonji/understanding-llm-through-claude-code` are that site's own source. Eight in
+  `nikbearbrown/humanitarians-youtube` name three video-reel directories called
+  `mcp-context-cost-meter`. The rest are a SQLite filename, an entry in a JSON list of project
+  names, and the words in prose. Not one names the repository, the npm package or the pages
+  site. A reader looking at that table for evidence of reach was reading a list of
+  coincidences, on the one page this project keeps about itself.
+
+  The judgement is now `namesProject`, and it asks for a reference to something that **is** the
+  project: the repository as `athakur3/mcp-context-cost` (which is how a GitHub URL, the raw
+  badge JSON, a clone command and a `uses:` line all spell it), the npm package (`npx -y
+  mcp-context-cost`, an install command, a dependency entry, its npmjs.com page), or
+  `athakur3.github.io/mcp-context-cost`. Each form must end where the name ends, so
+  `mcp-context-cost-meter` and `mcp-context-costs` are somebody else's. The bare name in prose
+  is deliberately outside the rule — it is how someone would write about this project, and
+  equally how they would write about a chapter or a directory called the same, and nothing in
+  the file tells the two apart. Such a file is not dropped: it is a third sighting kind,
+  `phrase`, listed under **matches the phrase only**, so the candidate count still has a list
+  under it. The page now states what each label requires rather than leaving a reader to guess
+  which one it meant.
+
+  **The published number does not move.** It is zero and it was zero: none of the 41 carries a
+  badge, and the rule for what displays one is untouched. What moves is what the rows say about
+  themselves. The method id goes `badge-sightings/v1` → `v2`, because a reading is worth what
+  its rule is worth and these are two rules; while the committed reading is a v1 one, the page
+  says so and says its rows carry the earlier judgement. **Refreshing it is a run, and this
+  laptop is not where readings are taken**: the next scheduled `adoption.yml` is **1 Oct**, and
+  `gh workflow run adoption.yml` takes one sooner. Three fixtures drive the tests — the foreign
+  URL slug, the `-meter` directories, and a README that runs `npx -y mcp-context-cost` — and the
+  first two classify as `mention` under the old rule and `phrase` under this one.
+
 - **The release's own proof step waited on the wrong document, and could not fail.** `0.17.0`
   published cleanly and then went red on the last step with `ETARGET`: the step waited on
   `npm view "mcp-context-cost@$VERSION"`, which passed on its first attempt, and then ran `npx`,

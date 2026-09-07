@@ -175,7 +175,7 @@ for (const c of candidates.values()) {
   }
   const kind = classifyFile(text);
   if (!kind) {
-    console.log(`${c.repo}/${c.path}: no longer names the project — index is ahead of the file`);
+    console.log(`${c.repo}/${c.path}: no longer carries the name — index is ahead of the file`);
     continue;
   }
   fresh.push({ repo: c.repo, path: c.path, url: c.url, kind, foundBy: c.foundBy });

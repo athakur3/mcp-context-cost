@@ -56,10 +56,26 @@
  * name the project without displaying the badge are kept in the reading as
  * rejections, because a zero is worth much more next to the list of things that
  * were examined and turned down.
+ *
+ * ## Naming the project is a reference, not a substring
+ *
+ * The widest query asks for the string `mcp-context-cost`, and for the first
+ * three readings a file it nominated was judged to name the project by one
+ * test: does the file contain that string. It does — that is how the search
+ * found it — so the test could not fail, and every candidate without a badge
+ * was published as "names the project". Read at the commits the page links
+ * to, all 41 files in the reading of 2026-09-05 carried the phrase and not the
+ * project: a URL slug on an unrelated site
+ * (`…/06-tool-context/mcp-context-cost`), three directories called
+ * `mcp-context-cost-meter`, a SQLite filename, a name in a JSON list, the
+ * words in prose. A file names the project only if it refers to something that
+ * *is* the project — `namesProject` below — and a file carrying the phrase
+ * alone is kept in the reading under its own label, so the candidate count
+ * still has a list under it and nobody reads the list as reach.
  */
 
 /** Method identifier, versioned independently of the o200k methodology. */
-export const ADOPTION_METHOD = 'badge-sightings/v1';
+export const ADOPTION_METHOD = 'badge-sightings/v2';
 
 /** Where this project's badge JSON is published — the thing a badge points at. */
 export interface BadgeSource {
@@ -91,8 +107,13 @@ export interface QueryResult extends QueryDef {
   truncated?: boolean;
 }
 
-/** `badge`: displays it. `mention`: names the project without displaying it. */
-export type SightingKind = 'badge' | 'mention';
+/**
+ * `badge`: displays it. `mention`: refers to the project without displaying
+ * it. `phrase`: contains the project's name and nothing that identifies the
+ * project — a URL slug, a directory, a compound word — kept so every candidate
+ * is accounted for, and never read as reach.
+ */
+export type SightingKind = 'badge' | 'mention' | 'phrase';
 
 export interface Sighting {
   /** `owner/repo` of the third-party repository. */
@@ -303,20 +324,70 @@ export function endpointUrls(text: string, src: BadgeSource = BADGE_SOURCE): str
     .filter((u) => hostedHere(u, src));
 }
 
+function escapeRe(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 /**
- * What a candidate file is. `null` when it turns out to be neither — a search
- * index can be older than the file it points at.
+ * The name must end where the project's does: `athakur3/mcp-context-cost-meter`
+ * would be somebody else's repository and `mcp-context-costs` somebody else's
+ * package, while `mcp-context-cost@0.17.0`, `…/mcp-context-cost/servers/x.html`
+ * and `…/mcp-context-cost.git` are all this one.
+ */
+const NAME_END = '(?![\\w-])';
+
+/**
+ * Whether a file refers to this project, as opposed to containing its name.
+ * Three things are the project, and a reference to any of them counts:
+ *
+ * - the repository, as its `owner/repo` path — which is how `github.com/…`,
+ *   the raw URL of the badge JSON, `gh repo clone …` and a `uses:` line all
+ *   spell it;
+ * - the npm package: a run or install command whose argument is the package,
+ *   a dependency entry, or its npmjs.com page;
+ * - the pages site.
+ *
+ * The one shape deliberately outside the rule is the bare name in prose. It is
+ * how somebody would write about this project — and it is also how they would
+ * write about a chapter, a directory or a tool that happens to be called the
+ * same, and nothing in the file tells the two apart. That shape is `phrase`.
+ */
+export function namesProject(text: string, src: BadgeSource = BADGE_SOURCE): boolean {
+  const lower = decodeLoose(text).toLowerCase();
+  const pkg = escapeRe(src.repo.toLowerCase());
+  const forms = [
+    escapeRe(`${src.owner}/${src.repo}`.toLowerCase()) + NAME_END,
+    escapeRe(`${src.owner}.github.io/${src.repo}`.toLowerCase()) + NAME_END,
+    `npmjs\\.com/package/${pkg}${NAME_END}`,
+    // `npx -y mcp-context-cost audit`, `bunx mcp-context-cost`, `pnpm dlx mcp-context-cost@latest`
+    `\\b(?:npx|bunx|pnpx|npm exec|pnpm dlx|yarn dlx)\\s+(?:-{1,2}[\\w-]+(?:=\\S+)?\\s+)*${pkg}${NAME_END}`,
+    // `npm i mcp-context-cost`, `npm install -g mcp-context-cost`, `pnpm add -D mcp-context-cost`
+    `\\b(?:npm|pnpm|yarn|bun)\\s+(?:i|install|add)\\s+(?:-{1,2}[\\w-]+\\s+)*${pkg}${NAME_END}`,
+    // a dependency entry: `"mcp-context-cost": "^0.17.0"`
+    `"${pkg}"\\s*:\\s*"(?:[\\^~<>=]*\\d|latest|\\*)`,
+  ];
+  return forms.some((f) => new RegExp(f).test(lower));
+}
+
+/**
+ * What a candidate file is. `null` when it turns out to be none of them — a
+ * search index can be older than the file it points at.
+ *
+ * The order is the strength of the claim: a file displaying the badge refers
+ * to the project by construction, a file referring to it without a badge is a
+ * mention, and a file that only contains the words is the phrase.
  *
  * Case is ignored here for the same reason it is ignored above, and the first
  * real run is why it is stated rather than assumed: a file discussing
  * "MCP-context-cost" was found by the search and would have been thrown out by
  * an exact-case test, which is a rejection that looks identical to a file that
- * genuinely stopped mentioning the project.
+ * genuinely stopped carrying the name.
  */
 export function classifyFile(text: string, src: BadgeSource = BADGE_SOURCE): SightingKind | null {
   if (displaysBadge(text, src)) return 'badge';
+  if (namesProject(text, src)) return 'mention';
   const decoded = decodeLoose(text).toLowerCase();
-  return decoded.includes(src.repo.toLowerCase()) ? 'mention' : null;
+  return decoded.includes(src.repo.toLowerCase()) ? 'phrase' : null;
 }
 
 /** `owner/repo` → is that owner someone other than this project's? */
@@ -432,6 +503,13 @@ export function parseAdoption(text: string): AdoptionRun | null {
   };
 }
 
+/** The *what it is* column. Only the badge is bold: it is the only row that counts. */
+const SIGHTING_LABEL: Record<SightingKind, string> = {
+  badge: '**displays the badge**',
+  mention: 'names the project, no badge',
+  phrase: 'matches the phrase only',
+};
+
 function mdCell(s: unknown): string {
   return String(s ?? '')
     .replace(/[|`[\]<>]/g, (c) => `\\${c}`)
@@ -540,20 +618,36 @@ export function renderAdoptionPage(run: AdoptionRun | null, src: BadgeSource = B
   out.push('## What was found');
   out.push('');
   if (run.sightings.length === 0) {
-    out.push('No file outside this project named it at all.');
+    out.push('No file outside this project carried its name at all.');
   } else {
     out.push('| repository | file | what it is | first seen | last seen |');
     out.push('|---|---|---|---|---|');
     for (const s of run.sightings) {
-      const what = s.kind === 'badge' ? '**displays the badge**' : 'names the project, no badge';
+      const what = SIGHTING_LABEL[s.kind] ?? mdCell(s.kind);
       out.push(
         `| [${mdCell(s.repo)}](https://github.com/${s.repo}) | [${mdCell(s.path)}](${mdUrl(s.url)}) | ` +
           `${what} | ${s.firstSeenAt} | ${s.lastSeenAt} |`,
       );
     }
     out.push('');
+    out.push('*Names the project* means the file refers to something that is the project: the');
+    out.push(`repository (\`${src.owner}/${src.repo}\`, however the URL around it is spelled), the npm`);
+    out.push(`package (\`npx -y ${src.repo}\`, an install command, a dependency entry or its npmjs.com`);
+    out.push(`page), or the pages site (\`${src.owner}.github.io/${src.repo}\`). *Matches the phrase only*`);
+    out.push(`means the file contains the words \`${src.repo}\` and none of those — a URL slug on`);
+    out.push('another site, a directory, a compound word. Such a file is kept in this table rather than');
+    out.push('dropped, so every file the queries turned up is accounted for, and it is not read as');
+    out.push('anyone naming this project.');
+    out.push('');
     out.push('A row whose *last seen* is older than the date above was found by an earlier reading');
     out.push('and not by this one.');
+    if (run.method !== ADOPTION_METHOD) {
+      out.push('');
+      out.push(`This reading was taken under method \`${run.method}\`; the rule now in force is`);
+      out.push(`\`${ADOPTION_METHOD}\`. A row's *what it is* is the judgement of the reading that last saw`);
+      out.push('it, so the rows above carry the earlier rule\'s. The next reading re-judges every file');
+      out.push('it finds.');
+    }
   }
   out.push('');
 

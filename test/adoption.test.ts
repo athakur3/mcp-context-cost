@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import {
   ADOPTION_METHOD,
   BADGE_SOURCE,
@@ -13,6 +15,7 @@ import {
   isThirdParty,
   linksBackToProject,
   mergeSightings,
+  namesProject,
   parseAdoption,
   renderAdoptionPage,
   resolveCount,
@@ -104,8 +107,16 @@ describe('classifyFile', () => {
   });
 
   it('separates naming the project from displaying its badge', () => {
-    expect(classifyFile('We measured this with mcp-context-cost.')).toBe('mention');
+    expect(classifyFile('Measured with https://github.com/athakur3/mcp-context-cost — no badge yet.')).toBe('mention');
     expect(classifyFile(`See ${PAGE} for the numbers.`)).toBe('mention');
+    expect(classifyFile('Run `npx -y mcp-context-cost audit` before adding a server.')).toBe('mention');
+  });
+
+  it('separates naming the project from merely containing its name', () => {
+    // Nothing in this sentence says which of the things called mcp-context-cost
+    // it means, and the reading of 2026-09-05 listed 41 files like it as naming
+    // this one. Not one did.
+    expect(classifyFile('We measured this with mcp-context-cost.')).toBe('phrase');
   });
 
   it('returns null when the file no longer mentions the project at all', () => {
@@ -113,10 +124,82 @@ describe('classifyFile', () => {
   });
 
   it('ignores case, because the search that found the file ignores it too', () => {
-    // Observed on the first real run: a file discussing "MCP-context-cost".
-    expect(classifyFile('the 55K-token MCP-context-cost concrete number')).toBe('mention');
+    // Observed on the first real run: a file discussing "MCP-context-cost". An
+    // exact-case test would return null here, which reads as a file that stopped
+    // carrying the name; the phrase is the phrase in any case.
+    expect(classifyFile('the 55K-token MCP-context-cost concrete number')).toBe('phrase');
+    expect(classifyFile('see GitHub.com/AThakur3/MCP-Context-Cost for the method')).toBe('mention');
     const md = `[![context cost](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FAThakur3%2FMCP-Context-Cost%2Fmain%2Fbadges%2Fx.json)](${PAGE})`;
     expect(classifyFile(md)).toBe('badge');
+  });
+});
+
+describe('namesProject', () => {
+  it('accepts the repository path, however the URL around it is spelled', () => {
+    expect(namesProject('https://github.com/athakur3/mcp-context-cost')).toBe(true);
+    expect(namesProject('git clone https://github.com/athakur3/mcp-context-cost.git')).toBe(true);
+    expect(namesProject(RAW)).toBe(true);
+    expect(namesProject('uses: athakur3/mcp-context-cost@v1')).toBe(true);
+    expect(namesProject('github.com%2Fathakur3%2Fmcp-context-cost')).toBe(true);
+  });
+
+  it('accepts the pages site', () => {
+    expect(namesProject(PAGE)).toBe(true);
+    expect(namesProject('https://athakur3.github.io/mcp-context-cost/')).toBe(true);
+  });
+
+  it('accepts the npm package in the spellings a README uses', () => {
+    expect(namesProject('npx -y mcp-context-cost audit --budget 20000')).toBe(true);
+    expect(namesProject('npx mcp-context-cost@latest')).toBe(true);
+    expect(namesProject('npm install -g mcp-context-cost')).toBe(true);
+    expect(namesProject('pnpm add -D mcp-context-cost')).toBe(true);
+    expect(namesProject('"devDependencies": { "mcp-context-cost": "^0.17.0" }')).toBe(true);
+    expect(namesProject('https://www.npmjs.com/package/mcp-context-cost')).toBe(true);
+  });
+
+  it('stops where the name stops — a longer name is a different thing', () => {
+    expect(namesProject('https://github.com/athakur3/mcp-context-cost-meter')).toBe(false);
+    expect(namesProject('npx -y mcp-context-cost-meter')).toBe(false);
+    expect(namesProject('https://www.npmjs.com/package/mcp-context-costs')).toBe(false);
+    expect(namesProject('"mcp-context-cost": "a meter for what an MCP server costs"')).toBe(false);
+  });
+
+  it('rejects the bare name in prose, a URL slug, a directory and a name in a list', () => {
+    expect(namesProject('mcp-context-cost is a good idea')).toBe(false);
+    expect(namesProject('https://example.com/book/06-tool-context/mcp-context-cost')).toBe(false);
+    expect(namesProject('see ./mcp-context-cost/README.md')).toBe(false);
+    expect(namesProject('"storepilot-mcp", "mcp-context-cost", "capability-forge"')).toBe(false);
+  });
+});
+
+describe('files found in the wild', () => {
+  // The shapes the reading of 2026-09-05 listed as "names the project", read at
+  // the commits the page links to. None of the 41 referred to this project.
+  const fixtures = join(import.meta.dirname, 'fixtures', 'adoption');
+  const fixture = (name: string) => readFileSync(join(fixtures, name), 'utf8');
+
+  it('a file carrying the phrase only inside a link to somebody else\'s site is not naming the project', () => {
+    // shuji-bonji/ai-agent-architecture, docs/glossary.md and seven more: every
+    // occurrence is the slug of a chapter on an unrelated site.
+    const text = fixture('phrase-in-foreign-url.md');
+    expect(text.toLowerCase()).toContain('mcp-context-cost');
+    expect(namesProject(text)).toBe(false);
+    expect(classifyFile(text)).toBe('phrase');
+  });
+
+  it('a file naming directories called mcp-context-cost-meter is not naming the project', () => {
+    // nikbearbrown/humanitarians-youtube, claude-for-computer-science/README.md
+    // and the seven files under those directories.
+    const text = fixture('phrase-in-directory-name.md');
+    expect(text.toLowerCase()).toContain('mcp-context-cost');
+    expect(namesProject(text)).toBe(false);
+    expect(classifyFile(text)).toBe('phrase');
+  });
+
+  it('a README that runs the npm package is naming the project', () => {
+    const text = fixture('names-npm-package.md');
+    expect(namesProject(text)).toBe(true);
+    expect(classifyFile(text)).toBe('mention');
   });
 });
 
@@ -299,8 +382,12 @@ describe('resolveCount', () => {
     expect(resolveCount([], [], '2026-08-20')).toEqual({ thirdPartyRepos: null, unresolved: 'no-query-was-run' });
   });
 
-  it('counts the badges and not the mentions', () => {
-    const sightings = [sighting(), sighting({ repo: 'talker/blog', path: 'post.md', kind: 'mention' })];
+  it('counts the badges, not the mentions and not the phrase', () => {
+    const sightings = [
+      sighting(),
+      sighting({ repo: 'talker/blog', path: 'post.md', kind: 'mention' }),
+      sighting({ repo: 'someone/book', path: 'glossary.md', kind: 'phrase' }),
+    ];
     expect(resolveCount([query()], sightings, '2026-08-20').thirdPartyRepos).toBe(1);
   });
 });
@@ -356,6 +443,28 @@ describe('renderAdoptionPage', () => {
     expect(page).toContain('2026-08-20');
     expect(page).toContain('That zero was looked for');
     expect(page).toContain('names the project, no badge');
+  });
+
+  it('lists a file that only matches the phrase under its own label, and says what each label requires', () => {
+    const page = renderAdoptionPage(
+      run({
+        candidates: 2,
+        sightings: [sighting({ kind: 'mention' }), sighting({ repo: 'someone/book', path: 'glossary.md', kind: 'phrase' })],
+      }),
+    );
+    expect(page).toContain('| names the project, no badge |');
+    expect(page).toContain('| matches the phrase only |');
+    expect(page).toContain('*Names the project* means the file refers to something that is the project');
+    expect(page).toContain('*Matches the phrase only*');
+    expect(page).toContain('kept in this table rather than');
+  });
+
+  it('says, while the reading predates the rule, that its rows carry the earlier judgement — and only then', () => {
+    const stale = renderAdoptionPage(run({ method: 'badge-sightings/v1', sightings: [sighting({ kind: 'mention' })] }));
+    expect(stale).toContain('taken under method `badge-sightings/v1`; the rule now in force is');
+    expect(stale).toContain(`\`${ADOPTION_METHOD}\`. A row's *what it is* is the judgement of the reading that last saw`);
+    const current = renderAdoptionPage(run({ sightings: [sighting({ kind: 'mention' })] }));
+    expect(current).not.toContain('taken under method');
   });
 
   it('publishes no number when the reading was refused, and says why', () => {
