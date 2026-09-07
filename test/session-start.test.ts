@@ -334,7 +334,9 @@ describe('the leaderboard shows both figures for every measured server', () => {
     );
     writeLeaderboard(entries, root);
     const md = readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8');
-    expect(md.split('\n').find((l) => l.includes('[floored]'))!.split('|')[4].trim().startsWith('≥')).toBe(false);
+    expect(
+      md.split('\n').find((l) => l.includes('[floored]'))!.split('|')[sessionStartCol(md)].trim().startsWith('≥'),
+    ).toBe(false);
     expect(md).not.toContain('marks a floor');
   });
 
