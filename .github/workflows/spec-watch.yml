@@ -1,0 +1,63 @@
+# Has the Model Context Protocol published a revision this repository does not
+# know about?
+#
+# The probe pins one revision, and every published number was taken over a
+# session that sent it. When the specification moves, whether that pin follows
+# is a decision somebody has to make deliberately — and until this job existed,
+# the only thing between the pin and the specification was a person remembering
+# to look. `2026-07-28` removed the `initialize` handshake, which is exactly the
+# kind of change nobody wants to learn about from a red sweep.
+#
+# Tuesday, a clear day before the Wednesday re-sweep, so a revision landing
+# upstream is visible before anything is published against it — and away from
+# the Monday self-badge push and the monthly adoption reading, which are the
+# only other scheduled jobs here.
+#
+# Read-only, and it publishes nothing: `contents: read`, no write token, and the
+# tool writes no file at all. A drift fails the run rather than opening an
+# issue. An issue would need `issues: write` this job has no other use for,
+# against ci.yml's narrowest-permission rule; a red scheduled run already mails
+# the maintainer; and an auto-opened issue would accumulate a duplicate every
+# week until a one-line constant edit landed.
+name: Spec revision watch
+on:
+  schedule:
+    # Tuesday 02:47 UTC — resweep.yml is Wednesday 03:11, self-badge Monday
+    # 06:17, adoption the 1st at 08:37. Nothing shares this slot.
+    - cron: '47 2 * * 2'
+  workflow_dispatch:
+
+# Read-only, said out loud, for the reason ci.yml states: without a block the
+# token takes the repository default, which can be read-and-write. This job
+# reads two public URLs and commits nothing, so it needs no more than this.
+permissions:
+  contents: read
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    # Two HTTP requests. The tool carries its own per-request timeout and a
+    # short retry budget, but the job must not hold a runner for GitHub's
+    # six-hour default if something upstream hangs in a way fetch does not see.
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # Nothing here pushes, and a token left in .git/config is a token this
+          # job could have used.
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Ask the specification what it publishes
+        # The token raises the contents API from 60 requests an hour per IP —
+        # shared across runners — to the per-repository limit. It reaches the
+        # tool through the environment and never through the command line, the
+        # way every other job here passes it. The tool tolerates its absence:
+        # the second source needs no credential, and a missing token must not
+        # turn into a red run that says nothing about the specification.
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: npx tsx tools/watch-spec-revisions.ts

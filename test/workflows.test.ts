@@ -777,3 +777,68 @@ describe('adoption workflow', () => {
     expect(adoption).toMatch(/concurrency:\n\s*group: adoption/);
   });
 });
+
+/**
+ * The spec watch reads two public URLs and publishes nothing.
+ *
+ * Deliberately NOT modelled on the capability-probe block above, which asserts
+ * the blanket absence of any token: this job carries one on purpose, because
+ * the contents API allows 60 requests an hour per IP to an unauthenticated
+ * caller and Actions runners share addresses. So the assertions here are
+ * positive — what the token may do, where it is allowed to appear — rather than
+ * that it is absent.
+ */
+describe('spec revision watch', () => {
+  const specWatch = readFileSync(join(wfDir, 'spec-watch.yml'), 'utf8');
+  interface Step {
+    uses?: string;
+    with?: Record<string, unknown>;
+    run?: string;
+    env?: Record<string, string>;
+  }
+  const doc = parse(specWatch) as {
+    on: Record<string, unknown>;
+    permissions?: Record<string, string>;
+    jobs: Record<string, { 'timeout-minutes'?: number; steps: Step[] }>;
+  };
+  const steps = Object.values(doc.jobs).flatMap((j) => j.steps);
+
+  it('holds a token that can only read, and pushes nothing', () => {
+    expect(doc.permissions).toEqual({ contents: 'read' });
+    expect(specWatch).not.toContain('git push');
+    for (const s of steps.filter((x) => x.uses?.startsWith('actions/checkout'))) {
+      expect(s.with?.['persist-credentials']).toBe(false);
+    }
+  });
+
+  it('passes the token through the environment and never through a command line', () => {
+    const watching = steps.find((s) => s.run?.includes('tools/watch-spec-revisions.ts'));
+    expect(watching?.env?.GITHUB_TOKEN).toBe('${{ github.token }}');
+    for (const s of steps) expect(s.run ?? '').not.toMatch(/github\.token/);
+    expect(JSON.stringify(doc)).not.toContain('secrets.');
+  });
+
+  /**
+   * Derived from both crons rather than restated: the watch is only worth
+   * having if a revision landing upstream is visible before the job that
+   * publishes measurements taken against the old pin.
+   */
+  it('runs before the sweep it protects', () => {
+    const slot = (yaml: string) => {
+      const [min, hour, , , day] = /cron: '([^']*)'/.exec(yaml)![1].trim().split(/\s+/);
+      return Number(day) * 24 * 60 + Number(hour) * 60 + Number(min);
+    };
+    expect(slot(specWatch)).toBeLessThan(slot(resweep));
+  });
+
+  it('cannot hold a runner all day for two HTTP requests', () => {
+    for (const j of Object.values(doc.jobs)) {
+      expect(j['timeout-minutes']).toBeDefined();
+      expect(j['timeout-minutes']!).toBeLessThanOrEqual(15);
+    }
+  });
+
+  it('is scheduled and dispatchable, and does not run on push or pull request', () => {
+    expect(Object.keys(doc.on).sort()).toEqual(['schedule', 'workflow_dispatch']);
+  });
+});
