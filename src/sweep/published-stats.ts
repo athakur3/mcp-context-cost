@@ -95,7 +95,7 @@ export interface PublishedStats {
     };
     notion: { badgeTokens: number; claudeTokens: number | null };
     /** The current row showing the largest field-selection effect, and its two counts. */
-    widest: { server: string; full: number; mapped: number };
+    widest: { server: string; full: number; mapped: number; claude: number };
     /** Field-selection share across the run's *current* rows, as fractions of the payload. */
     shareMin: number;
     shareMax: number;
@@ -104,6 +104,13 @@ export interface PublishedStats {
     ratioMax: number;
     /** How many rows produced the band — see where it is set. */
     ratioServers: number;
+    /**
+     * The run's own upper bound on the fixed framing every `claudeDelta`
+     * carries. Live data: it is remeasured whenever the divergence run reruns,
+     * and `server-pages.ts` already renders the fresh value onto every server
+     * page — so METHODOLOGY stating it by hand meant the two drifted apart.
+     */
+    probeDelta: number;
   };
   /**
    * The published tool-shape baseline, which README quotes twice — once in
@@ -318,7 +325,9 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
         ...heaviestDroppedField(githubRow.m.rawToolsCapture, githubRow.m.totalTokens),
       },
       notion: { badgeTokens: triple.notion.wire, claudeTokens: triple.notion.claude },
-      widest: { server: widest[0], full: widest[1].o200kFull, mapped: widest[1].o200kMapped },
+      // `claude` is not nullable here, unlike a triple's: `widest` is picked
+      // out of `currentRows`, and `isCurrent` already required a numeric delta.
+      widest: { server: widest[0], full: widest[1].o200kFull, mapped: widest[1].o200kMapped, claude: widest[1].claudeDelta },
       shareMin: Math.min(...shares),
       shareMax: Math.max(...shares),
       ratioMin: band.low,
@@ -328,6 +337,7 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
       // zero delta. "Across {runSize} servers" states the band was measured over
       // one more server than measured it.
       ratioServers: band.servers,
+      probeDelta: div.probeDelta,
     },
     deferralCostlierCount: costlier.length,
     movement: { grew: movement.grew, shrank: movement.shrank },
@@ -544,17 +554,18 @@ export const PAGE_CLAIMS: Claim[] = [
   {
     file: 'docs/index.md',
     id: 'index:second-heaviest',
-    // Three numbers rather than one, and stated flat. The second-heaviest
-    // server on the wire is currently the heaviest on Claude, which is the
-    // whole reason a reader needs all three — but saying so in words would be
-    // an unguarded claim that a sweep can falsify, so the numbers say it.
+    // Three numbers rather than one, and stated flat. This server's Claude
+    // figure exceeds its own wire figure and is four times the heaviest wire
+    // server's, which is the reason a reader needs all three — but the ordering
+    // claim belongs to `divergence:heaviest-pair`, which derives both names, and
+    // asserting one here in fixed words would be a claim a sweep can falsify.
     template: 'Second-heaviest is `{w}` at {n} on the wire, {n} carried, {q} on Claude.',
     values: (s) => [s.second.name, fmt(s.second.tokens), fmt(s.triple[s.second.name].mapped), q(s.triple[s.second.name].claude)],
   },
   {
     file: 'docs/METHODOLOGY.md',
     id: 'divergence:share-range',
-    template: 'this removes between {f}% and **{f}%** of the payload ({w}: {n} → {n} tokens).',
+    template: 'this removes between {f}% and **{f}%** of the payload ({w}: {n} → {n} tokens, which Claude counts at {n}).',
     // The exemplar is whichever current row shows the effect most, not a server
     // named in the prose — a hardcoded name goes stale the week it is re-swept.
     values: (s) => [
@@ -563,6 +574,7 @@ export const PAGE_CLAIMS: Claim[] = [
       s.claude.widest.server,
       fmt(s.claude.widest.full),
       fmt(s.claude.widest.mapped),
+      fmt(s.claude.widest.claude),
     ],
   },
   {
@@ -590,6 +602,12 @@ export const PAGE_CLAIMS: Claim[] = [
       s.claude.ratioMax.toFixed(BAND_PRECISION),
       fmt(s.claude.ratioServers),
     ],
+  },
+  {
+    file: 'docs/METHODOLOGY.md',
+    id: 'divergence:probe-delta',
+    template: 'A single minimal tool costs {n} tokens more than no tools at all, which is an upper bound on the fixed part.',
+    values: (s) => [fmt(s.claude.probeDelta)],
   },
   {
     file: 'docs/METHODOLOGY.md',

@@ -108,8 +108,6 @@ const STATIC_COUNTS: { file: PageFile; text: string; why: string }[] = [
   { file: 'docs/METHODOLOGY.md', text: '5 servers', why: 'the harness-guard floor, a constant in `harness-guard.ts`' },
   { file: 'docs/METHODOLOGY.md', text: '25 tokens', why: '`SIGNIFICANT_TOKENS`, a constant in `core/regression.ts`' },
   { file: 'docs/METHODOLOGY.md', text: '57 measured servers', why: 'the frozen band derivation: the size of the 2026-08-16 sweep the bands were cut against, which is history and must not move' },
-  { file: 'docs/METHODOLOGY.md', text: '2,676 tokens', why: 'part of the same frozen 2026-08-16 distribution' },
-  { file: 'docs/METHODOLOGY.md', text: '328 tokens', why: 'part of the same frozen 2026-08-16 distribution' },
 
 ];
 
