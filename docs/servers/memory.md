@@ -1,6 +1,6 @@
 # memory — context cost
 
-**2,378 tokens** across 9 tools — *light* (1–5K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
+**2,378 tokens** across 9 tools — *light* (1–5K). Measured 2026-09-07 under [methodology v1.0](../METHODOLOGY.html).
 
 | | |
 |---|---|
@@ -32,7 +32,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 
 ## What this costs on Claude
 
-Measured 2026-09-05 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
+Measured 2026-09-07 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
 
 | | tokens | |
 |---|---:|---|
@@ -55,6 +55,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-09-03 | 2,378 | 9 | not recorded | docker | no change |
 | 2026-09-04 | 2,378 | 9 | 0.6.3 | docker | no change |
 | 2026-09-05 | 2,378 | 9 | 0.6.3 | docker | no change |
+| 2026-09-07 | 2,378 | 9 | 0.6.3 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

@@ -1,6 +1,6 @@
 # How the cost of the measured set has moved
 
-Every server here is measured again on a rotating schedule, and most launch unpinned (`npx -y <pkg>`) — so a change between two measurements is a real upstream release landing in real context windows. This page reports each server's **most recent movement**: the change that produced the cost it carries today, dated to when it happened rather than to the last time anyone looked (method `cost-regression/v1`, newest data 2026-09-05). A server that moved once and has held that cost since keeps its real window, and the table says how long the new cost has held.
+Every server here is measured again on a rotating schedule, and most launch unpinned (`npx -y <pkg>`) — so a change between two measurements is a real upstream release landing in real context windows. This page reports each server's **most recent movement**: the change that produced the cost it carries today, dated to when it happened rather than to the last time anyone looked (method `cost-regression/v1`, newest data 2026-09-07). A server that moved once and has held that cost since keeps its real window, and the table says how long the new cost has held.
 
 Comparable means the two runs used the same isolation — two numbers taken under different isolation are not comparable, and the trend line already refuses to span that boundary (see [history](history.csv) and the sparklines on each [server page](../docs/servers/)). A failed measurement contributes no row at all, so a server that stopped starting reads as a gap in its series, never as a drop to zero.
 
@@ -80,7 +80,7 @@ The **release** column is what the two servers reported at `initialize`, on the 
 | [filesystem](../docs/servers/filesystem.md) | 2026-08-16 → 2026-09-04 | 2,823 | 14 | 3 |
 | [pulumi](../docs/servers/pulumi.md) | 2026-08-16 → 2026-09-04 | 2,768 | 12 | 5 |
 | [n8n-mcp](../docs/servers/n8n-mcp.md) | 2026-08-16 → 2026-09-04 | 2,636 | 7 | 3 |
-| [memory](../docs/servers/memory.md) | 2026-08-16 → 2026-09-05 | 2,378 | 9 | 9 |
+| [memory](../docs/servers/memory.md) | 2026-08-16 → 2026-09-07 | 2,378 | 9 | 10 |
 | [terraform](../docs/servers/terraform.md) | 2026-08-16 → 2026-09-04 | 2,061 | 9 | 5 |
 | [everything](../docs/servers/everything.md) | 2026-08-16 → 2026-09-05 | 1,708 | 13 | 5 |
 | [tavily](../docs/servers/tavily.md) | 2026-08-16 → 2026-09-04 | 1,653 | 5 | 4 |

@@ -1,7 +1,7 @@
 {
   "method": "tools-delta/v1",
   "model": "claude-opus-5",
-  "measuredAt": "2026-09-05",
+  "measuredAt": "2026-09-07",
   "baselineTokens": 7,
   "probeDelta": 328,
   "servers": {
@@ -312,7 +312,7 @@
       "claudeDelta": 0,
       "toolCount": 9,
       "capturedSha256": "d51fb022687ee403f9710c9fae31ac91dbc796f5c52a3fcdbe0a91c387aa9365",
-      "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"tools.0.custom.input_schema.type: Field required\"},\"request_id\":\"req_011CekdKJ8tZoQV4TCHi6etc\"}"
+      "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"tools.0.custom.input_schema.type: Field required\"},\"request_id\":\"req_011Cep5scj2NqqxycADk5Cer\"}"
     },
     "google-maps": {
       "o200kFull": 549,
