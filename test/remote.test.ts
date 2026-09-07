@@ -36,6 +36,27 @@ function endpoint(req: IncomingMessage, res: ServerResponse): void {
     case '/walled':
       res.writeHead(401, { 'content-type': 'application/json', 'www-authenticate': WALL });
       return void res.end('{"error":"invalid_token"}');
+    // The shape 2026-07-28 requires of a server that does not support the
+    // version a request carries: HTTP 400, and the reason in the body.
+    case '/wrong-version':
+      res.writeHead(400, { 'content-type': 'application/json' });
+      return void res.end(
+        JSON.stringify({
+          jsonrpc: '2.0',
+          id: 1,
+          error: {
+            code: -32022,
+            message: 'Unsupported protocol version',
+            data: { supported: ['2026-07-28'], requested: '2025-06-18' },
+          },
+        }),
+      );
+    // A 400 that is not a protocol refusal — a malformed request earns one too,
+    // and reading that as the server refusing our revision would be a claim
+    // about the server made from a fact about us.
+    case '/bad-request':
+      res.writeHead(400, { 'content-type': 'application/json' });
+      return void res.end('{"jsonrpc":"2.0","id":1,"error":{"code":-32600,"message":"Invalid Request"}}');
     case '/forbidden':
       res.writeHead(403, { 'content-type': 'text/plain' });
       return void res.end('no');
@@ -123,6 +144,24 @@ describe('probeRemote — the endpoint answers for itself', () => {
     expect(p).toEqual({ kind: 'unreachable', status: 404, detail: 'HTTP 404' });
   });
 
+  /**
+   * The endpoint answered. Calling it `unreachable` — this file's word for "no
+   * MCP answer arrived" — would be a claim about someone else's server made
+   * from a fact about this harness's pin.
+   */
+  it('reads a refused protocol version as the refusal it is, not as silence', async () => {
+    const p = await probeRemote(`${base}/wrong-version`);
+    expect(p.kind).toBe('protocol-mismatch');
+    expect(p.status).toBe(400);
+    expect(p.detail).toContain('2026-07-28');
+    expect(p.detail).toContain('2025-06-18');
+  });
+
+  it('leaves a 400 that is not a protocol refusal unreachable', async () => {
+    const p = await probeRemote(`${base}/bad-request`);
+    expect(p).toEqual({ kind: 'unreachable', status: 400, detail: 'HTTP 400' });
+  });
+
   it('reports a refused connection by its code', async () => {
     const closed = createServer(() => {});
     const port = await new Promise<number>((resolve) => {
@@ -199,6 +238,35 @@ describe('bridgeLaunch — what an open endpoint is measured through', () => {
 describe('buildReport — a remote entry is what its endpoint said', () => {
   const cfg = (servers: ConfiguredServer[]): LoadedConfig[] => [{ client: 'cursor', source: '/cfg.json', servers }];
   const measurement = (name: string) => measureTools(tools, { serverName: name });
+
+  /**
+   * The row a reader actually sees. `unreachable` is defined a few lines up in
+   * remote.ts as "no MCP answer arrived"; printing it here about an endpoint
+   * that answered is the same category error the sweep's `startup-failure` used
+   * to make about a server that had started.
+   */
+  it('reports a refused revision as this harness\'s pin, not as the endpoint failing', () => {
+    const v = remote('vercel', 'https://mcp.vercel.com');
+    const remotes = new Map([
+      [
+        serverKey(v),
+        {
+          kind: 'protocol-mismatch' as const,
+          status: 400,
+          detail: 'HTTP 400 refusing protocol version 2025-06-18 — it speaks 2026-07-28',
+        },
+      ],
+    ]);
+    const r = buildReport(cfg([v]), new Map(), { generatedAt: 'T', remotes });
+    const row = r.configs[0].skipped[0];
+    expect(row).toMatchObject({ name: 'vercel', transport: 'remote', status: 'protocol-mismatch', tokens: null });
+    expect(row.notes).toContain('it speaks 2026-07-28');
+    expect(row.notes).toContain('this audit speaks a revision it does not');
+    expect(row.notes).not.toContain('unreachable');
+    // It still counts against the budget: a server whose cost could not be
+    // established is not a server that costs nothing.
+    expect(r.configs[0].totalTokens).toBe(0);
+  });
 
   it('reports a walled endpoint as auth-walled, in the server\'s own words, with the url', () => {
     const linear = remote('linear', 'https://mcp.linear.app/mcp');

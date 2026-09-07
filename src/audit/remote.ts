@@ -33,10 +33,12 @@ export interface RemoteProbe {
   /**
    * `open`: answered the unauthenticated request as an MCP endpoint does.
    * `auth-walled`: answered 401 or 403 — it works, and it wants a credential
-   * this audit does not hold. `unreachable`: no MCP answer arrived — a
-   * connection failure, a timeout, or a status that is neither of the above.
+   * this audit does not hold. `protocol-mismatch`: answered by refusing the
+   * revision this probe sent, naming it — it works, and this audit speaks the
+   * wrong version at it. `unreachable`: no MCP answer arrived — a connection
+   * failure, a timeout, or a status that is neither of the above.
    */
-  kind: 'open' | 'auth-walled' | 'unreachable';
+  kind: 'open' | 'auth-walled' | 'protocol-mismatch' | 'unreachable';
   /** The HTTP status that decided it, when a response arrived at all. */
   status?: number;
   /** The `WWW-Authenticate` header, verbatim (clipped), when the server sent one. */
@@ -64,6 +66,67 @@ const clip = (s: string): string => {
   return one.length > CLIP ? `${one.slice(0, CLIP)}…` : one;
 };
 
+/** A response and, when one was worth reading, the start of its body. */
+interface Answer {
+  res: Response;
+  body: string | null;
+}
+
+/** Long enough for a JSON-RPC error, short enough that a stray HTML page cannot be the report. */
+const BODY_CAP = 8_192;
+
+/**
+ * The start of a response body, and no more of it.
+ *
+ * A cap rather than `res.text()` because this reads bodies from endpoints
+ * nobody here controls: an error page can be any size, and the only part that
+ * decides anything is the first few hundred bytes.
+ */
+async function firstBytes(res: Response): Promise<string | null> {
+  const reader = res.body?.getReader();
+  if (!reader) return null;
+  const decoder = new TextDecoder();
+  let out = '';
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      out += decoder.decode(value, { stream: true });
+      if (out.length >= BODY_CAP) break;
+    }
+  } catch {
+    /* a body that stops arriving is still worth what did */
+  } finally {
+    await reader.cancel().catch(() => {});
+  }
+  return out.slice(0, BODY_CAP);
+}
+
+/**
+ * The revisions a server named while refusing the one we sent, or null when the
+ * body is not that refusal.
+ *
+ * Anchored on the code the schema defines for it, never on the status alone: a
+ * 400 is also what a malformed request earns, and calling that a protocol
+ * refusal would be a claim about the server made from a fact about us.
+ */
+export function refusedProtocol(body: string | null): { supported?: string[]; requested?: string } | null {
+  if (!body) return null;
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(body);
+  } catch {
+    return null;
+  }
+  const err = (parsed as { error?: { code?: unknown; data?: unknown } })?.error;
+  if (!err || err.code !== -32022) return null;
+  const data = (err.data ?? {}) as { supported?: unknown; requested?: unknown };
+  return {
+    ...(Array.isArray(data.supported) ? { supported: data.supported.map(String) } : {}),
+    ...(typeof data.requested === 'string' ? { requested: data.requested } : {}),
+  };
+}
+
 /** What a probe waits for an answer, unless the caller says otherwise. */
 export const DEFAULT_PROBE_TIMEOUT_MS = 15_000;
 
@@ -80,20 +143,30 @@ export async function probeRemote(
   const timeoutMs = opts.timeoutMs ?? DEFAULT_PROBE_TIMEOUT_MS;
   const configured = opts.headers ?? {};
 
-  const attempt = async (init: RequestInit): Promise<Response> => {
+  const attempt = async (init: RequestInit): Promise<Answer> => {
     const res = await fetch(url, { ...init, signal: AbortSignal.timeout(timeoutMs), redirect: 'follow' });
-    // The headers are the answer. The body is not read — an event stream
-    // stays open for the life of a session, and this is not a session.
-    try {
-      await res.body?.cancel();
-    } catch {
-      /* a body that refuses to be cancelled changes nothing the headers said */
+    // The headers are usually the whole answer, and a success body is never
+    // read: an event stream stays open for the life of a session, and this is
+    // not a session. An error that is not a credential wall is the exception.
+    // Under 2026-07-28 a server that does not support the version a request
+    // carries MUST answer 400, and the only place it says so is the body — so
+    // reading the headers alone would report a working endpoint as one that
+    // never answered. That body is finite by construction, and read under the
+    // same timeout and a byte cap besides.
+    const wantsBody = !res.ok && res.status !== 401 && res.status !== 403;
+    const body = wantsBody ? await firstBytes(res) : null;
+    if (!wantsBody) {
+      try {
+        await res.body?.cancel();
+      } catch {
+        /* a body that refuses to be cancelled changes nothing the headers said */
+      }
     }
-    return res;
+    return { res, body };
   };
 
   try {
-    let res = await attempt({
+    let answer = await attempt({
       method: 'POST',
       headers: {
         ...configured,
@@ -105,16 +178,16 @@ export async function probeRemote(
     });
     // The older SSE transport opens its stream on GET and may refuse the POST
     // outright; an endpoint that does is asked the way it expects to be.
-    if (res.status === 404 || res.status === 405) {
-      res = await attempt({ method: 'GET', headers: { ...configured, accept: 'text/event-stream' } });
+    if (answer.res.status === 404 || answer.res.status === 405) {
+      answer = await attempt({ method: 'GET', headers: { ...configured, accept: 'text/event-stream' } });
     }
-    return classify(res);
+    return classify(answer);
   } catch (e) {
     return { kind: 'unreachable', detail: describeFailure(e, timeoutMs) };
   }
 }
 
-function classify(res: Response): RemoteProbe {
+function classify({ res, body }: Answer): RemoteProbe {
   const www = res.headers.get('www-authenticate');
   const type = (res.headers.get('content-type') ?? '').split(';')[0].trim().toLowerCase();
   if (res.status === 401 || res.status === 403) {
@@ -135,6 +208,19 @@ function classify(res: Response): RemoteProbe {
       kind: 'unreachable',
       status: res.status,
       detail: `HTTP ${res.status} with ${type || 'no content-type'}, which is not an MCP response`,
+    };
+  }
+  // Before the fall-through, and only on the server's own words: it answered,
+  // and what it said was that it does not speak the revision this probe sent.
+  // Calling that `unreachable` would say no MCP answer arrived, about a server
+  // that answered.
+  const refused = refusedProtocol(body);
+  if (refused) {
+    const supported = refused.supported?.length ? ` — it speaks ${refused.supported.join(', ')}` : '';
+    return {
+      kind: 'protocol-mismatch',
+      status: res.status,
+      detail: `HTTP ${res.status} refusing protocol version ${refused.requested ?? PROTOCOL_VERSION}${supported}`,
     };
   }
   return { kind: 'unreachable', status: res.status, detail: `HTTP ${res.status}` };

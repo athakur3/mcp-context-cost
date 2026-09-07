@@ -529,6 +529,20 @@ export function buildReport(
           });
           continue;
         }
+        if (probe.kind === 'protocol-mismatch') {
+          // The endpoint works. What it refused is the revision this audit
+          // sends, which is a fact about this harness — so the row says that,
+          // and not that nothing answered. Wired here explicitly because the
+          // block below reads anything it has not tested as open and hands it
+          // to the bridge.
+          skipped.push({
+            ...base,
+            ...none,
+            status: 'protocol-mismatch',
+            notes: `${s.url} answered ${probe.detail} — this audit speaks a revision it does not`,
+          });
+          continue;
+        }
         if (probe.kind === 'unreachable') {
           skipped.push({ ...base, ...none, status: 'unreachable', notes: `${s.url}: ${probe.detail}` });
           continue;

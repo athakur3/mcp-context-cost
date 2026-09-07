@@ -31,6 +31,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { bandSnapshotProblem, wireToClientRatio } from '../src/audit/deferral.js';
 import { parseDivergence } from '../src/core/divergence.js';
+import { KNOWN_SPEC_REVISIONS, newerThanPinned } from '../src/core/protocol.js';
 
 const root = process.cwd();
 const git = (...args: string[]) => execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();
@@ -238,6 +239,88 @@ const BESIDE = 6;
  * and disagreeing with it. A count mentioned anywhere else in a file is almost
  * always narrative, and reporting those trains the reader to skim.
  */
+/**
+ * Which MCP revision does the released package still speak?
+ *
+ * `PROTOCOL_VERSION` decides what every session an installed copy opens sends,
+ * and the specification has moved twice since the one this project pins. Being
+ * behind is not by itself a defect — a revision is a decision, and 2026-07-28
+ * removed the handshake entirely, so following it is a change of methodology
+ * rather than a version bump. That is exactly why this is `look` and never
+ * `stale`: this tool runs on every push and every pull request, and a check
+ * that reddened the build over a judgement is one people learn to route around.
+ *
+ * Read from **two** paths, newest first. The constant moved into
+ * `src/core/protocol.ts` after the last release; before that it lived in
+ * `src/sweep/client.ts`, unexported. A check that knew only the new home would
+ * take its could-not-read branch on every run until the next release, which is
+ * the cry-wolf failure one step removed.
+ */
+function theProtocolRevisionTheLastReleaseSpeaksIsStillCurrent(): Finding[] {
+  const since = git('log', '--format=%H', '--grep=^Version .* -> .*', '-1');
+  if (!since) return [];
+
+  // Anchored at the start of a line for bandLiteral's reason: a docblock beside
+  // a constant may quote the value, and a comment must not answer for the
+  // field. One pattern for both spellings — the old home did not export it.
+  const literal = /^(?:export )?const PROTOCOL_VERSION = '([\d-]+)';/m;
+  const homes = ['src/core/protocol.ts', 'src/sweep/client.ts'];
+  let readAny = false;
+  let released: string | undefined;
+  for (const path of homes) {
+    let source: string;
+    try {
+      source = execFileSync('git', ['show', `${since}:${path}`], { cwd: root, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
+    } catch {
+      continue; // absent at that ref, or a shallow clone — the next line tells them apart
+    }
+    readAny = true;
+    const found = literal.exec(source)?.[1];
+    if (found) {
+      released = found;
+      break;
+    }
+  }
+
+  // Three outcomes, and each says only what it established. The first version
+  // of the band's equivalent narrated "a shallow clone cannot answer this" for
+  // every failure, including a file that simply had not been written yet.
+  if (!readAny) {
+    return [
+      {
+        kind: 'look',
+        what: 'the revision the last release speaks could not be read',
+        detail: `Neither ${homes.join(' nor ')} could be read at ${since.slice(0, 7)} — a shallow clone cannot answer this.`,
+      },
+    ];
+  }
+  if (!released) {
+    return [
+      {
+        kind: 'look',
+        what: 'the revision the last release speaks could not be read',
+        detail:
+          `PROTOCOL_VERSION was not in the expected shape at ${since.slice(0, 7)}. ` +
+          'If the constant was renamed or restructured, this check has to move with it.',
+      },
+    ];
+  }
+
+  const newer = newerThanPinned(KNOWN_SPEC_REVISIONS, released);
+  if (newer.length === 0) return [];
+  return [
+    {
+      kind: 'look',
+      what: `the released package speaks ${released}, and the specification has published ${newer.length} revision(s) since`,
+      detail:
+        `Newer, as read on ${KNOWN_SPEC_REVISIONS.readOn}: ${newer.join(', ')}. This is a judgement, not a defect — ` +
+        'moving the pin re-opens whether numbers either side of it are comparable, and 2026-07-28 removed the ' +
+        '`initialize` handshake outright. Read the new schema before deciding. `tools/watch-spec-revisions.ts` ' +
+        'is what notices a revision appearing; this is what notices the released bytes falling behind one.',
+    },
+  ];
+}
+
 function numbersWrittenIntoSource(): Finding[] {
   const files = git('ls-files', 'src').split('\n').filter((f) => f.endsWith('.ts'));
   const hits: string[] = [];
@@ -286,6 +369,7 @@ function main(): number {
     ...regenIsAFixedPoint(),
     ...changelogCoversTheCommits(),
     ...theReleasedBandStillDescribesTheData(),
+    ...theProtocolRevisionTheLastReleaseSpeaksIsStillCurrent(),
     ...numbersWrittenIntoSource(),
   ];
 

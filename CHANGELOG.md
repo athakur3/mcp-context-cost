@@ -7,6 +7,29 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **`audit` told a user their working remote server was `unreachable` — its own word for "no MCP
+  answer arrived" — about an endpoint that had answered.** Under revision 2026-07-28 a server that
+  does not support the protocol version a request carries MUST answer `400 Bad Request`
+  (`schema/2026-07-28/schema.ts:476`, read 2026-09-08), and it names the versions it does speak in
+  the error's `data.supported`. `classify` in `audit/remote.ts` had no 400 branch, so such a reply
+  fell through to `unreachable`, printed in the *not measured* block and counted against the budget
+  gate as a cost that could not be established.
+
+  The probe now reads the body — but only on an error status that is not 401 or 403, and only the
+  first 8 KB of it. The reason bodies were never read is stated in that file and is about success:
+  an event stream stays open for the life of a session, and a probe is not a session. That reason
+  does not reach a finite error response. A `-32022` in the body is reported as
+  `protocol-mismatch`, the same word the sweep uses one layer down, naming the revisions the server
+  offered; a 400 that is not that refusal — a malformed request earns one too — stays
+  `unreachable`, because reading it as a protocol refusal would be a claim about someone else's
+  server made from a fact about this harness.
+
+  Three entries are `remote: true` (`linear`, `zapier`, `vercel`). All three answer 401 today, so no
+  published or printed row moves. `release-readiness` also gained a non-blocking note for when the
+  *released* package's pinned revision falls behind the specification — read from both homes the
+  constant has had, since it moved into `src/core/protocol.ts` after the last release and a check
+  that knew only the new path would have reported "could not read" on every push until the next one.
+
 - **A server that speaks only MCP `2026-07-28` would have been published as `startup-failure` — a
   status whose own definition calls itself "a claim about someone else's code".** That revision
   removed the `initialize` handshake in favour of `server/discover` (`LATEST_PROTOCOL_VERSION` at
