@@ -40,7 +40,6 @@ is counted.
 
 | repository | file | what it is | first seen | last seen |
 |---|---|---|---|---|
-| [bbingz/engram](https://github.com/bbingz/engram) | [macos/EngramMCPTests/EngramMCPExecutableTests.swift](https://github.com/bbingz/engram/blob/d97d02575e1b6362b628c649a7e3337193942323/macos/EngramMCPTests/EngramMCPExecutableTests.swift) | names the project, no badge | 2026-08-20 | 2026-09-03 |
 | [BrennonTWilliams/little-loops](https://github.com/BrennonTWilliams/little-loops) | [.issues/features/P3-FEAT-3137-ll-mcp-prompts-from-skills-surface.md](https://github.com/BrennonTWilliams/little-loops/blob/39a551644d598cd790bb4b6628d687f8521e32b2/.issues/features/P3-FEAT-3137-ll-mcp-prompts-from-skills-surface.md) | matches the phrase only | 2026-08-20 | 2026-09-07 |
 | [jasonmichaelbell78-creator/sonash-v0](https://github.com/jasonmichaelbell78-creator/sonash-v0) | [.claude/state/rewrite-synthesis-v2.js](https://github.com/jasonmichaelbell78-creator/sonash-v0/blob/984f1118c092554fe1796632f6cdf414e2e00a9b/.claude/state/rewrite-synthesis-v2.js) | matches the phrase only | 2026-08-20 | 2026-09-07 |
 | [jasonmichaelbell78-creator/sonash-v0](https://github.com/jasonmichaelbell78-creator/sonash-v0) | [.research/analysis/synthesis/synthesis.json](https://github.com/jasonmichaelbell78-creator/sonash-v0/blob/984f1118c092554fe1796632f6cdf414e2e00a9b/.research/analysis/synthesis/synthesis.json) | matches the phrase only | 2026-08-20 | 2026-09-07 |
@@ -94,7 +93,27 @@ dropped, so every file the queries turned up is accounted for, and it is not rea
 anyone naming this project.
 
 A row whose *last seen* is older than the date above was found by an earlier reading
-and not by this one.
+and not by this one. Every row here was judged under `badge-sightings/v2`, which is what the
+method named at the foot of this page means: a record carried forward from an earlier
+reading is re-read at its own URL and judged again, and one that cannot be re-judged is
+not printed in this table at all.
+
+### Judged under an earlier rule
+
+These records are on file and were not judged by `badge-sightings/v2`. Each was found by an
+earlier reading and has not been re-judged since — either the file at the URL beside it
+could not be re-read, or the record was written before anything re-read it. So its
+*what it is* is still the older rule's verdict, and it is shown under that rule's name
+rather than under this reading's. These rows are kept rather than dropped so that a
+badge which disappears stays visible as one that disappeared, and kept out of the table
+above so that the method this page names describes every row in it.
+
+| repository | file | what it is | judged under | first seen | last seen |
+|---|---|---|---|---|---|
+| [bbingz/engram](https://github.com/bbingz/engram) | [macos/EngramMCPTests/EngramMCPExecutableTests.swift](https://github.com/bbingz/engram/blob/d97d02575e1b6362b628c649a7e3337193942323/macos/EngramMCPTests/EngramMCPExecutableTests.swift) | names the project, no badge | not recorded | 2026-08-20 | 2026-09-03 |
+
+None of these can be part of the count above: that is made only of files this
+reading's own queries returned on its own date.
 
 ## What this cannot see
 
@@ -107,5 +126,12 @@ and not by this one.
   reached.
 - Whether anybody looked at a badge. This counts files that display one, which is a
   different question from reach.
+- Whether a mention is somebody else's. A file counts as naming the project whoever
+  wrote the words in it, and this project's own author's writing ends up in other
+  people's repositories: a forum or Reddit comment scraped into a third-party feed or
+  dashboard is a *names the project* row by this rule, and it is the maintainer talking
+  about the project, not somebody else referring to it. Nothing in such a file tells the
+  two apart, so the rows above are an upper bound on who has referred to this project
+  and never a count of reach — open one before reading it as one.
 
 Method `badge-sightings/v2`, against `athakur3/mcp-context-cost` on branch `main`. The raw reading, including every query and every file examined, is in [`results/badge-adoption.json`](https://github.com/athakur3/mcp-context-cost/blob/main/results/badge-adoption.json).

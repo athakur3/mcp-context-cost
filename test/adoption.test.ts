@@ -19,6 +19,9 @@ import {
   parseAdoption,
   renderAdoptionPage,
   resolveCount,
+  applyRejudgements,
+  judgingMethod,
+  sightingsByMethod,
   type AdoptionRun,
   type QueryResult,
   type Sighting,
@@ -196,6 +199,15 @@ describe('files found in the wild', () => {
     expect(classifyFile(text)).toBe('phrase');
   });
 
+  it('a file whose only occurrence of the name is a temp file\'s name is not naming the project', () => {
+    // bbingz/engram, macos/EngramMCPTests/EngramMCPExecutableTests.swift at
+    // d97d0257 — the record the reading of 2026-09-07 carried forward.
+    const text = fixture('phrase-in-sqlite-filename.swift');
+    expect(text.toLowerCase()).toContain('mcp-context-cost');
+    expect(namesProject(text)).toBe(false);
+    expect(classifyFile(text)).toBe('phrase');
+  });
+
   it('a README that runs the npm package is naming the project', () => {
     const text = fixture('names-npm-package.md');
     expect(namesProject(text)).toBe(true);
@@ -355,6 +367,112 @@ describe('mergeSightings', () => {
   });
 });
 
+/**
+ * The reading of 2026-09-07 (f86da0a) declared `badge-sightings/v2` and
+ * published 43 rows, one of which had been judged under v1: bbingz/engram's
+ * Swift test file, called "names the project, no badge" because v1's test for
+ * naming the project was whether the file contained the string the search had
+ * matched. GitHub code search did not return it that day, so it was carried
+ * forward with the verdict it already had and nothing re-derived it — the page
+ * named one method and described 42 of its 43 rows.
+ *
+ * The predicates were never the bug: `classifyFile` on that file's own bytes
+ * returns `phrase` today (see "files found in the wild" above). What follows
+ * pins the rule that replaced the carrying: a record is published under a
+ * method's name only if that method judged it.
+ */
+describe('a verdict belongs to the method that made it', () => {
+  const fixtures = join(import.meta.dirname, 'fixtures', 'adoption');
+
+  /** The 2026-09-07 record, as it stood: a v1 verdict on a file v2 calls a phrase. */
+  const carried = () =>
+    sighting({
+      repo: 'bbingz/engram',
+      path: 'macos/EngramMCPTests/EngramMCPExecutableTests.swift',
+      url: 'https://github.com/bbingz/engram/blob/d97d02575e1b6362b628c649a7e3337193942323/macos/EngramMCPTests/EngramMCPExecutableTests.swift',
+      kind: 'mention',
+      judgedBy: 'badge-sightings/v1',
+      foundBy: 'project-name',
+      firstSeenAt: '2026-08-20',
+      lastSeenAt: '2026-09-03',
+    });
+
+  it('is a record the current method would judge differently — which is what makes it a fixture', () => {
+    const evidence = readFileSync(join(fixtures, 'phrase-in-sqlite-filename.swift'), 'utf8');
+    expect(carried().kind).toBe('mention');
+    expect(classifyFile(evidence)).toBe('phrase');
+  });
+
+  it('does not present it under the v2 heading', () => {
+    const reading = run({ method: ADOPTION_METHOD, checkedAt: '2026-09-07', sightings: [carried()] });
+    const page = renderAdoptionPage(reading);
+
+    const found = page.slice(page.indexOf('## What was found'), page.indexOf('### Judged under an earlier rule'));
+    expect(found).not.toContain('bbingz/engram');
+    expect(found).not.toContain('names the project, no badge');
+    expect(found).toContain(`No file was judged under \`${ADOPTION_METHOD}\``);
+  });
+
+  it('prints it below, under the version that did judge it', () => {
+    const page = renderAdoptionPage(run({ checkedAt: '2026-09-07', sightings: [carried()] }));
+    const earlier = page.slice(page.indexOf('### Judged under an earlier rule'));
+    expect(earlier).toContain('bbingz/engram');
+    expect(earlier).toContain('| names the project, no badge | `badge-sightings/v1` |');
+    expect(earlier).toContain('| judged under |');
+  });
+
+  it('holds a row this reading did judge in the table, so the split is the method and not the date', () => {
+    const mine = sighting({ kind: 'mention', judgedBy: ADOPTION_METHOD, lastSeenAt: '2026-09-07' });
+    const page = renderAdoptionPage(run({ checkedAt: '2026-09-07', sightings: [mine, carried()] }));
+    const found = page.slice(page.indexOf('## What was found'), page.indexOf('### Judged under an earlier rule'));
+    expect(found).toContain('someone/their-server');
+    expect(found).not.toContain('bbingz/engram');
+    expect(page).not.toContain('No file was judged under');
+  });
+
+  it('takes an unstamped row as this reading\'s only when this reading saw it', () => {
+    const reading = { method: ADOPTION_METHOD, checkedAt: '2026-09-07' };
+    expect(judgingMethod(sighting({ lastSeenAt: '2026-09-07' }), reading)).toBe(ADOPTION_METHOD);
+    expect(judgingMethod(sighting({ lastSeenAt: '2026-09-03' }), reading)).toBe(null);
+    expect(judgingMethod(sighting({ lastSeenAt: '2026-09-03', judgedBy: 'badge-sightings/v1' }), reading)).toBe(
+      'badge-sightings/v1',
+    );
+  });
+
+  it('holds out a carried-forward row that records no method at all, and says so', () => {
+    // The committed reading's own shape: written before `judgedBy` existed.
+    const { judgedBy: _drop, ...unstamped } = carried();
+    const page = renderAdoptionPage(run({ checkedAt: '2026-09-07', sightings: [unstamped] }));
+    const earlier = page.slice(page.indexOf('### Judged under an earlier rule'));
+    expect(earlier).toContain('| names the project, no badge | not recorded |');
+    expect(sightingsByMethod(run({ checkedAt: '2026-09-07', sightings: [unstamped] })).current).toEqual([]);
+  });
+
+  it('re-judging a carried-forward record replaces the verdict and the version, and not the dates', () => {
+    const [after] = applyRejudgements([carried()], [{ repo: 'bbingz/engram', path: carried().path, kind: 'phrase' }]);
+    expect(after.kind).toBe('phrase');
+    expect(after.judgedBy).toBe(ADOPTION_METHOD);
+    // The search did not return it: it was re-read, not seen.
+    expect(after.lastSeenAt).toBe('2026-09-03');
+    expect(after.firstSeenAt).toBe('2026-08-20');
+    expect(renderAdoptionPage(run({ checkedAt: '2026-09-07', sightings: [after] }))).not.toContain(
+      '### Judged under an earlier rule',
+    );
+  });
+
+  it('leaves a record alone when the re-read produced nothing, rather than deleting the evidence', () => {
+    const gone = sighting({ kind: 'badge', judgedBy: 'badge-sightings/v1', lastSeenAt: '2026-09-03' });
+    const [after] = applyRejudgements([gone], [{ repo: gone.repo, path: gone.path, kind: null }]);
+    expect(after).toEqual(gone);
+  });
+
+  it('stamps every sighting this run judged, so the next one need not infer it', () => {
+    const merged = mergeSightings([carried()], [sighting()], '2026-09-07');
+    expect(merged.find((x) => x.repo === 'someone/their-server')?.judgedBy).toBe(ADOPTION_METHOD);
+    expect(merged.find((x) => x.repo === 'bbingz/engram')?.judgedBy).toBe('badge-sightings/v1');
+  });
+});
+
 describe('resolveCount', () => {
   it('publishes a zero only when every query answered', () => {
     expect(resolveCount([query()], [], '2026-08-20')).toEqual({ thirdPartyRepos: 0, unresolved: null });
@@ -459,10 +577,12 @@ describe('renderAdoptionPage', () => {
     expect(page).toContain('kept in this table rather than');
   });
 
-  it('says, while the reading predates the rule, that its rows carry the earlier judgement — and only then', () => {
-    const stale = renderAdoptionPage(run({ method: 'badge-sightings/v1', sightings: [sighting({ kind: 'mention' })] }));
+  it('says, while the reading predates the rule, that a later one re-judges it — and only then', () => {
+    const stale = renderAdoptionPage(
+      run({ method: 'badge-sightings/v1', sightings: [sighting({ kind: 'mention', judgedBy: 'badge-sightings/v1' })] }),
+    );
     expect(stale).toContain('taken under method `badge-sightings/v1`; the rule now in force is');
-    expect(stale).toContain(`\`${ADOPTION_METHOD}\`. A row's *what it is* is the judgement of the reading that last saw`);
+    expect(stale).toContain('the next reading re-judges every file it finds and every record it carries');
     const current = renderAdoptionPage(run({ sightings: [sighting({ kind: 'mention' })] }));
     expect(current).not.toContain('taken under method');
   });

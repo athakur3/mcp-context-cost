@@ -7,6 +7,53 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **The page declared `badge-sightings/v2` and published a row that v1 had judged.** The
+  adoption reading of 2026-09-07 (f86da0a) records `"method": "badge-sightings/v2"`, and the page
+  built from it closes with "Method `badge-sightings/v2`". Of the 43 rows in its table, 42 were
+  found and judged that day. The forty-third — `bbingz/engram`, `macos/EngramMCPTests/EngramMCPExecutableTests.swift`
+  — was last seen on **2026-09-03**: GitHub code search did not return it in the 2026-09-07
+  run, so it was carried forward with the verdict it already had, **names the project, no
+  badge**, decided under v1, when the test for naming the project was whether the file
+  contained the string the search had matched. Read at the commit the page links to
+  (`d97d0257`), that file's only occurrence of the name is
+  `temp.appendingPathComponent("mcp-context-cost-list-visible.sqlite")` — a temporary file's
+  name — and it carries no reference to the repository, the npm package or the pages site.
+  **The predicates were never wrong**: `classifyFile` on those bytes returns `phrase` today and
+  `namesProject` returns false. What was wrong is that nothing re-derived a carried-forward
+  verdict, so the method named on the page described 42 of its 43 rows.
+
+  **A record is now published under a method's name only if that method judged it**, in three
+  parts, because no one of them holds on its own. Every sighting records the method that judged
+  it (`judgedBy`); a record that does not say — every reading written before this — is taken as
+  this reading's exactly when its *last seen* is this reading's own date, and as unknown
+  otherwise. Every carried-forward record is re-judged on each run, re-read at the
+  commit-pinned URL the record itself carries, so the same evidence the old verdict came from
+  is judged again under today's rule; *last seen* does not move, because the search did not see
+  the file. And a record this reading's method has not judged is not printed in its table: it
+  goes below it, under **Judged under an earlier rule**, with the version that did judge it
+  named beside it. Re-judging alone would fail on the day a re-read fails and republish the
+  stale verdict exactly as before. Expiring every unseen record would hold, and would throw away
+  what `mergeSightings` exists to keep — a badge that vanishes must stay visible as one that
+  vanished, not as one that never was. Recording the version alone repairs nothing. The
+  re-judgement is the repair; the recorded version is what stays true when the repair cannot
+  run. **The published count does not move and could not have**: it is made only of rows whose
+  *last seen* is the reading's own date, and those were judged on it. It is zero, and it was
+  zero.
+
+  **The honest count of genuine third-party mentions on 2026-09-07 is 1, not 2.** The engram row
+  is a phrase, and it now sits under the earlier rule's name until a reading re-reads it —
+  `adoption.yml` on **1 Oct**, or `gh workflow run adoption.yml` sooner. This laptop is not where
+  readings are taken, so `results/badge-adoption.json` is untouched and only the page rendered
+  from it moves. The one mention that remains is `lethanhson9901/repo-dashboard`,
+  `src/data/reddit/community_news/mcp.json` — **the maintainer's own Reddit comment, scraped into
+  somebody else's dashboard**. It names the project because the person who wrote the words named
+  it, and that is not somebody else referring to this project. Nothing in such a file tells the
+  two apart, so the page now says so among the things it cannot see: the mention rows are an
+  upper bound on who has referred to this project and never a count of reach. The limit is
+  published rather than that row discounted in code, because provenance is not derivable from
+  the file — a hand-written sentence about one row would rot beside a table that regenerates,
+  and the limit is true of every such row.
+
 - **Three clients were printed as having no deferral on record, and all three vendors had
   said the opposite — one of them eight months earlier.** For a Cursor, Codex CLI or VS Code
   config, `audit` printed "No default deferral is on record for <client>, so every request

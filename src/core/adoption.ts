@@ -72,6 +72,53 @@
  * *is* the project — `namesProject` below — and a file carrying the phrase
  * alone is kept in the reading under its own label, so the candidate count
  * still has a list under it and nobody reads the list as reach.
+ *
+ * ## A verdict belongs to the method that made it
+ *
+ * That rule change moved what `mcp-context-cost` in a file means, and the
+ * readings taken before it are still on the page. On 2026-09-07 the reading
+ * declared `badge-sightings/v2` and published 43 rows, one of which had been
+ * judged under v1: a Swift test file whose only occurrence of the name is the
+ * SQLite filename `mcp-context-cost-list-visible.sqlite`, printed as "names the
+ * project, no badge" because v1's test for naming the project was whether the
+ * file contained the string the search had matched. The predicates here judge
+ * it correctly today — `classifyFile` returns `phrase` for that file and
+ * `namesProject` returns false — so nothing was wrong with them. What was wrong
+ * is that a record the search did not return that day was carried forward with
+ * its old verdict under the new method's name, and nothing re-derived it. The
+ * page's method line said v2 and described 42 of its 43 rows.
+ *
+ * So: **a record is published under a method's name only if that method judged
+ * it.** Three parts, each covering a hole the others leave open.
+ *
+ * - Every sighting records the method that judged it (`judgedBy`). A record
+ *   that does not say — every reading written before this rule — is taken to
+ *   have been judged by the reading that last saw it, which is knowable exactly
+ *   when its `lastSeenAt` is that reading's own date, and unknown otherwise.
+ *   See `judgingMethod`.
+ * - Every carried-forward record is re-judged on every run, from the content at
+ *   the URL the record itself carries. That URL is pinned to a commit, so what
+ *   is re-read is the same evidence the old verdict was taken from, judged
+ *   again under today's rules. `lastSeenAt` does not move: the search did not
+ *   see the file, only the judgement was refreshed. See `applyRejudgements`.
+ * - A record the reading's own method has not judged is not printed in that
+ *   reading's table. It is listed below it, under the version that did judge
+ *   it, named. See `sightingsByMethod` and `renderAdoptionPage`.
+ *
+ * Re-judging alone would not hold the guarantee: the re-read can fail — the
+ * commit garbage-collected, the repository gone private, the request refused —
+ * and then the stale verdict is published exactly as before, on the day the
+ * network has a bad minute. Expiring every unseen record instead would hold it,
+ * and would throw away the one thing `mergeSightings` exists to keep: a badge
+ * that disappears has to stay visible as a badge that disappeared rather than
+ * as one that never was. Recording the version alone holds the guarantee and
+ * repairs nothing, so the second table only grows. The re-judgement is the
+ * repair; the recorded version is what stays true when the repair cannot run.
+ *
+ * None of this can move the published count. `badgeRepos` counts only rows
+ * whose `lastSeenAt` is the reading's own date, and a row seen on that date was
+ * judged on it — so this guarantee is about the table, and the number was never
+ * at risk from it.
  */
 
 /** Method identifier, versioned independently of the o200k methodology. */
@@ -121,6 +168,11 @@ export interface Sighting {
   path: string;
   url: string;
   kind: SightingKind;
+  /**
+   * The method version whose rules produced `kind`. Absent on records written
+   * before this field existed; `judgingMethod` says what may be inferred then.
+   */
+  judgedBy?: string;
   /** Which query nominated it — so a reader can re-run the one that found it. */
   foundBy: string;
   firstSeenAt: string;
@@ -409,7 +461,12 @@ function sightingKey(s: { repo: string; path: string }): string {
  * rather than deleted, so a badge that disappears is visible as a badge that
  * disappeared instead of as one that never existed.
  */
-export function mergeSightings(previous: Sighting[], fresh: FreshSighting[], checkedAt: string): Sighting[] {
+export function mergeSightings(
+  previous: Sighting[],
+  fresh: FreshSighting[],
+  checkedAt: string,
+  method: string = ADOPTION_METHOD,
+): Sighting[] {
   const byKey = new Map<string, Sighting>();
   for (const s of previous) byKey.set(sightingKey(s), s);
   for (const f of fresh) {
@@ -417,6 +474,9 @@ export function mergeSightings(previous: Sighting[], fresh: FreshSighting[], che
     const before = byKey.get(key);
     byKey.set(key, {
       ...f,
+      // Judged by the code running now, so the record says so rather than
+      // leaving a later reader to infer it from the dates.
+      judgedBy: method,
       firstSeenAt: before?.firstSeenAt ?? checkedAt,
       lastSeenAt: checkedAt,
     });
@@ -424,7 +484,90 @@ export function mergeSightings(previous: Sighting[], fresh: FreshSighting[], che
   return [...byKey.values()].sort((a, b) => sightingKey(a).localeCompare(sightingKey(b)));
 }
 
-/** Repositories displaying the badge as of `checkedAt` — sorted, deduplicated. */
+/** A carried-forward record re-read at its recorded URL and judged again. */
+export interface Rejudgement {
+  repo: string;
+  path: string;
+  /**
+   * The verdict under the current method, or null when the content that URL
+   * serves classifies as nothing at all.
+   */
+  kind: SightingKind | null;
+}
+
+/**
+ * Bring carried-forward records up to the current method, from their own
+ * recorded evidence. A record whose re-read produced a verdict takes it and is
+ * stamped with the method that produced it; every other record is left exactly
+ * as it was, un-stamped, so it stays out of the current method's table (see the
+ * header, and `sightingsByMethod`).
+ *
+ * `lastSeenAt` is never touched here. The search did not return these files
+ * this run — only their judgement was refreshed — and a date that means "the
+ * queries found it" must not start meaning "we could still read it".
+ *
+ * A `kind` of null keeps the record and refreshes nothing. The URL is pinned to
+ * a commit, so content that no longer classifies means the record cannot be
+ * reproduced rather than that the file changed, and deleting it would be the
+ * one deletion `mergeSightings` exists to prevent: a repository that removed
+ * both the badge and every mention of the project would vanish from the page as
+ * though it had never displayed one.
+ */
+export function applyRejudgements(
+  sightings: Sighting[],
+  rejudged: Rejudgement[],
+  method: string = ADOPTION_METHOD,
+): Sighting[] {
+  const byKey = new Map(rejudged.map((r) => [sightingKey(r), r]));
+  return sightings.map((s) => {
+    const r = byKey.get(sightingKey(s));
+    if (!r || r.kind === null) return s;
+    return { ...s, kind: r.kind, judgedBy: method };
+  });
+}
+
+/**
+ * The method whose rules produced a record's verdict, or null when the record
+ * does not establish one.
+ *
+ * A record that says is taken at its word. A record that does not — everything
+ * written before `judgedBy` existed — is knowable in exactly one case: it was
+ * last seen on the reading's own date, so this reading is what found and judged
+ * it. Carried forward from some earlier reading, it was judged by whatever ran
+ * then, which nothing here records, and an unrecorded method is not this one.
+ */
+export function judgingMethod(s: Sighting, run: Pick<AdoptionRun, 'method' | 'checkedAt'>): string | null {
+  if (typeof s.judgedBy === 'string' && s.judgedBy.length > 0) return s.judgedBy;
+  return s.lastSeenAt === run.checkedAt ? run.method : null;
+}
+
+/**
+ * Split a reading's sightings into the ones its own method judged and the ones
+ * it did not. Only the first group may be published under that method's name;
+ * the second is published under the versions that did judge it. `null` in
+ * `foreign` is a record whose method is not established at all.
+ */
+export function sightingsByMethod(
+  run: Pick<AdoptionRun, 'method' | 'checkedAt' | 'sightings'>,
+): { current: Sighting[]; foreign: { sighting: Sighting; method: string | null }[] } {
+  const current: Sighting[] = [];
+  const foreign: { sighting: Sighting; method: string | null }[] = [];
+  for (const s of run.sightings) {
+    const method = judgingMethod(s, run);
+    if (method === run.method) current.push(s);
+    else foreign.push({ sighting: s, method });
+  }
+  return { current, foreign };
+}
+
+/**
+ * Repositories displaying the badge as of `checkedAt` — sorted, deduplicated.
+ *
+ * No method check here, and none needed: a row whose `lastSeenAt` is the
+ * reading's own date was found and judged by that reading, so the count is made
+ * only of verdicts the reading's own method produced. The carried-forward rows
+ * the header is about are excluded by the date alone.
+ */
 export function badgeRepos(sightings: Sighting[], checkedAt: string): string[] {
   const repos = new Set<string>();
   for (const s of sightings) {
@@ -617,12 +760,18 @@ export function renderAdoptionPage(run: AdoptionRun | null, src: BadgeSource = B
 
   out.push('## What was found');
   out.push('');
-  if (run.sightings.length === 0) {
-    out.push('No file outside this project carried its name at all.');
+  const { current: judgedHere, foreign } = sightingsByMethod(run);
+  if (judgedHere.length === 0) {
+    out.push(
+      run.sightings.length === 0
+        ? 'No file outside this project carried its name at all.'
+        : `No file was judged under \`${run.method}\`. Everything on record was judged by an earlier ` +
+            'rule and is listed below, under the version that judged it.',
+    );
   } else {
     out.push('| repository | file | what it is | first seen | last seen |');
     out.push('|---|---|---|---|---|');
-    for (const s of run.sightings) {
+    for (const s of judgedHere) {
       const what = SIGHTING_LABEL[s.kind] ?? mdCell(s.kind);
       out.push(
         `| [${mdCell(s.repo)}](https://github.com/${s.repo}) | [${mdCell(s.path)}](${mdUrl(s.url)}) | ` +
@@ -640,16 +789,44 @@ export function renderAdoptionPage(run: AdoptionRun | null, src: BadgeSource = B
     out.push('anyone naming this project.');
     out.push('');
     out.push('A row whose *last seen* is older than the date above was found by an earlier reading');
-    out.push('and not by this one.');
+    out.push(`and not by this one. Every row here was judged under \`${run.method}\`, which is what the`);
+    out.push('method named at the foot of this page means: a record carried forward from an earlier');
+    out.push('reading is re-read at its own URL and judged again, and one that cannot be re-judged is');
+    out.push('not printed in this table at all.');
     if (run.method !== ADOPTION_METHOD) {
       out.push('');
       out.push(`This reading was taken under method \`${run.method}\`; the rule now in force is`);
-      out.push(`\`${ADOPTION_METHOD}\`. A row's *what it is* is the judgement of the reading that last saw`);
-      out.push('it, so the rows above carry the earlier rule\'s. The next reading re-judges every file');
-      out.push('it finds.');
+      out.push(`\`${ADOPTION_METHOD}\`. The table above is that reading's own judgement throughout, and`);
+      out.push('the next reading re-judges every file it finds and every record it carries.');
     }
   }
   out.push('');
+
+  if (foreign.length > 0) {
+    out.push('### Judged under an earlier rule');
+    out.push('');
+    out.push(`These records are on file and were not judged by \`${run.method}\`. Each was found by an`);
+    out.push('earlier reading and has not been re-judged since — either the file at the URL beside it');
+    out.push('could not be re-read, or the record was written before anything re-read it. So its');
+    out.push('*what it is* is still the older rule\'s verdict, and it is shown under that rule\'s name');
+    out.push('rather than under this reading\'s. These rows are kept rather than dropped so that a');
+    out.push('badge which disappears stays visible as one that disappeared, and kept out of the table');
+    out.push('above so that the method this page names describes every row in it.');
+    out.push('');
+    out.push('| repository | file | what it is | judged under | first seen | last seen |');
+    out.push('|---|---|---|---|---|---|');
+    for (const { sighting: s, method } of foreign) {
+      const what = SIGHTING_LABEL[s.kind] ?? mdCell(s.kind);
+      out.push(
+        `| [${mdCell(s.repo)}](https://github.com/${s.repo}) | [${mdCell(s.path)}](${mdUrl(s.url)}) | ` +
+          `${what} | ${method ? `\`${mdCell(method)}\`` : 'not recorded'} | ${s.firstSeenAt} | ${s.lastSeenAt} |`,
+      );
+    }
+    out.push('');
+    out.push('None of these can be part of the count above: that is made only of files this');
+    out.push('reading\'s own queries returned on its own date.');
+    out.push('');
+  }
 
   out.push('## What this cannot see');
   out.push('');
@@ -662,6 +839,13 @@ export function renderAdoptionPage(run: AdoptionRun | null, src: BadgeSource = B
   out.push('  reached.');
   out.push('- Whether anybody looked at a badge. This counts files that display one, which is a');
   out.push('  different question from reach.');
+  out.push('- Whether a mention is somebody else\'s. A file counts as naming the project whoever');
+  out.push('  wrote the words in it, and this project\'s own author\'s writing ends up in other');
+  out.push('  people\'s repositories: a forum or Reddit comment scraped into a third-party feed or');
+  out.push('  dashboard is a *names the project* row by this rule, and it is the maintainer talking');
+  out.push('  about the project, not somebody else referring to it. Nothing in such a file tells the');
+  out.push('  two apart, so the rows above are an upper bound on who has referred to this project');
+  out.push('  and never a count of reach — open one before reading it as one.');
   out.push('');
   out.push(
     `Method \`${run.method}\`, against \`${src.owner}/${src.repo}\` on branch \`${src.branch}\`. ` +

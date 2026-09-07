@@ -40,6 +40,7 @@ import {
   ADOPTION_METHOD,
   BADGE_SOURCE,
   adoptionQueries,
+  applyRejudgements,
   classifyFile,
   isThirdParty,
   carryResolved,
@@ -50,6 +51,7 @@ import {
   type AdoptionRun,
   type FreshSighting,
   type QueryResult,
+  type Rejudgement,
   type Sighting,
 } from '../src/core/adoption.js';
 
@@ -121,9 +123,15 @@ async function searchPage(q: string, page: number): Promise<{ total: number; ite
   return { total: body.total_count, items: body.items ?? [] };
 }
 
-/** File contents via the API, so the same token and the same view of the repo apply. */
-async function fetchFile(repo: string, path: string): Promise<string> {
-  const url = `${API}/repos/${repo}/contents/${path.split('/').map(encodeURIComponent).join('/')}`;
+/**
+ * File contents via the API, so the same token and the same view of the repo
+ * apply. `ref` pins the read to a commit, which is what re-judging a record
+ * needs: the same bytes the old verdict was taken from, not whatever the
+ * default branch says today.
+ */
+async function fetchFile(repo: string, path: string, ref?: string): Promise<string> {
+  const q = ref ? `?ref=${encodeURIComponent(ref)}` : '';
+  const url = `${API}/repos/${repo}/contents/${path.split('/').map(encodeURIComponent).join('/')}${q}`;
   const res = await fetch(url, { headers });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const body = (await res.json()) as { content?: string; encoding?: string };
@@ -183,7 +191,41 @@ for (const c of candidates.values()) {
 }
 
 const previous = existsSync(outPath) ? parseAdoption(readFileSync(outPath, 'utf8')) : null;
-const sightings: Sighting[] = mergeSightings(previous?.sightings ?? [], fresh, checkedAt);
+
+/**
+ * Every record the search did not return this run is re-read at the URL the
+ * reading itself recorded — a blob URL pinned to a commit — and judged again
+ * under today's rules, so no row reaches the page carrying a verdict the
+ * current method did not make. `mergeSightings` stamps this run's own finds; a
+ * record whose re-read fails keeps the verdict and the version it had, and is
+ * printed under that version rather than this one (src/core/adoption.ts,
+ * "A verdict belongs to the method that made it").
+ *
+ * A failure here does not refuse the reading. The count is made only of files
+ * these queries returned today, so a record nobody could re-read cannot move
+ * it — refusing would publish no number for a reason that never touched it.
+ */
+const freshKeys = new Set(fresh.map((f) => `${f.repo}/${f.path}`));
+const rejudged: Rejudgement[] = [];
+for (const s of previous?.sightings ?? []) {
+  if (freshKeys.has(`${s.repo}/${s.path}`)) continue;
+  const ref = s.url.match(/\/blob\/([^/]+)\//)?.[1];
+  try {
+    const kind = classifyFile(await fetchFile(s.repo, s.path, ref));
+    rejudged.push({ repo: s.repo, path: s.path, kind });
+    console.log(`${s.repo}/${s.path}: carried forward, re-judged ${kind ?? 'as nothing — verdict left as it was'}`);
+  } catch (e) {
+    console.log(
+      `${s.repo}/${s.path}: carried forward, could not re-read — ${(e as Error).message.slice(0, 120)}; ` +
+        'stays under the method that judged it',
+    );
+  }
+}
+
+const sightings: Sighting[] = applyRejudgements(
+  mergeSightings(previous?.sightings ?? [], fresh, checkedAt),
+  rejudged,
+);
 
 const counted = resolveCount(queries, sightings, checkedAt, unreadable);
 const run: AdoptionRun = {
