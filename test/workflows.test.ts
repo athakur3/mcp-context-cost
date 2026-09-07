@@ -842,3 +842,32 @@ describe('spec revision watch', () => {
     expect(Object.keys(doc.on).sort()).toEqual(['schedule', 'workflow_dispatch']);
   });
 });
+
+describe('the negotiated-version probe answers a question without publishing one', () => {
+  const probe = readFileSync(join(wfDir, 'negotiated-versions.yml'), 'utf8');
+  const scriptRaw = readFileSync(join(import.meta.dirname, '..', 'tools', 'negotiated-versions.ts'), 'utf8');
+  // Comments stripped, for the reason the capability-probe block above gives:
+  // a test that reads the prose is checking that someone wrote a sentence.
+  const script = scriptRaw.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/[^\n]*/g, '$1');
+
+  it('captures with persist: false, which is the only reason it is safe to run', () => {
+    expect(script).toContain('persist: false');
+    expect(script.match(/measureServer\(/g) ?? []).toHaveLength(1);
+  });
+
+  it('writes no file at all, not even a summary', () => {
+    expect(script).not.toContain('writeFileSync');
+  });
+
+  it('runs read-only and holds no token, in a job that launches strangers commands', () => {
+    expect(probe).toMatch(/permissions:\n\s*contents: read/);
+    expect(probe).not.toMatch(/github\.token|GITHUB_TOKEN|secrets\./);
+    expect(probe).toContain('persist-credentials: false');
+    expect(probe).not.toContain('git push');
+  });
+
+  it('is dispatch-only, so nothing here runs on a schedule', () => {
+    const doc = parse(probe) as { on: Record<string, unknown> };
+    expect(Object.keys(doc.on)).toEqual(['workflow_dispatch']);
+  });
+});

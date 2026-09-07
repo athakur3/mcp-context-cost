@@ -1,0 +1,74 @@
+# Which revision does each server actually say it will speak?
+#
+# Every session this harness opens sends `protocolVersion` at `initialize`, and
+# the server answers with the revision it will use. The 2025-06-18 schema
+# requires that answer and says of it: "This may not match the version that the
+# client requested. If the client cannot support this version, it MUST
+# disconnect." This probe has never compared the two, so a server answering with
+# something else was measured anyway and published as an ordinary number.
+#
+# Disconnecting instead is what the specification asks for, and it would change
+# what gets published — for a number of servers nobody knows, because until
+# 96d79bd nothing recorded the answer. This job is that number. It is the
+# evidence a behaviour change wants first, the same role capability-probe.yml
+# plays for the client posture, and it is expected to be run once and then
+# rarely.
+#
+# Dispatch-only, and it publishes nothing. `contents: read`, no token anywhere
+# in the job, every capture runs with `persist: false`, and the tool writes no
+# file at all — not even a summary. The answer is the log.
+name: Negotiated protocol versions
+on:
+  workflow_dispatch:
+    inputs:
+      servers:
+        description: 'Ask these named servers instead of the whole set (comma-separated)'
+        required: false
+        type: string
+
+# Read-only, said out loud, for the reason ci.yml states: without a block the
+# token takes the repository default, which can be read-and-write, and this job
+# executes the launch command of every entry it asks. A stranger's command must
+# never run in a process that can push.
+permissions:
+  contents: read
+
+jobs:
+  ask:
+    runs-on: ubuntu-latest
+    # One capture per server rather than the capability probe's two, so half its
+    # budget. The cap exists for the same reason: a wedged runner should stop
+    # rather than run all day.
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # No token is wanted here at all, and leaving the default one in
+          # .git/config would put it in reach of every launch command below.
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Reject a server list that is not a list of server names
+        if: inputs.servers != ''
+        env:
+          SERVERS: ${{ inputs.servers }}
+        run: |
+          printf '%s' "$SERVERS" | grep -Eq '^[a-z0-9][a-z0-9._-]*(,[a-z0-9][a-z0-9._-]*)*$' \
+            || { echo "expected comma-separated server names, got: $SERVERS"; exit 2; }
+      - name: Ask each server what revision it speaks
+        # `--docker` because the answer has to come from the conditions every
+        # published row was measured under. Concurrency 2 and the wider default
+        # timeout for the reasons resweep.yml states: fewer cores than the sweep
+        # default assumes, and no package cache surviving between jobs.
+        #
+        # continue-on-error because a non-zero exit here means the run found
+        # something, not that it broke: the tool exits 1 when any server named a
+        # revision other than the one asked for, which is the answer this job
+        # exists to get.
+        continue-on-error: true
+        env:
+          SELECT: ${{ inputs.servers && format('--only {0}', inputs.servers) || '' }}
+        run: npx tsx tools/negotiated-versions.ts --docker ${SELECT} --concurrency 2 --default-timeout 240
