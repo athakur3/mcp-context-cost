@@ -183,6 +183,9 @@ function theReleasedBandStillDescribesTheData(): Finding[] {
       cwd: root,
       encoding: 'utf8',
       maxBuffer: 32 * 1024 * 1024,
+      // Same reason as the protocol check below: the catch turns this into a
+      // stated finding, so the child's own stderr would only ever double it.
+      stdio: 'pipe',
     });
   } catch {
     // A shallow clone, or a release from before the file existed. Nothing to
@@ -270,7 +273,18 @@ function theProtocolRevisionTheLastReleaseSpeaksIsStillCurrent(): Finding[] {
   for (const path of homes) {
     let source: string;
     try {
-      source = execFileSync('git', ['show', `${since}:${path}`], { cwd: root, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
+      // `stdio: 'pipe'` is load-bearing, not tidiness: without it `execFileSync`
+      // sends the child's stderr straight to ours, so the *expected* miss on the
+      // first home printed a raw `fatal: path ... exists on disk, but not in ...`
+      // above every run of this tool. The constant moved into src/core after the
+      // last release, so that miss happens every time, and a healthy `ready` run
+      // opened with a git fatal. The failure is handled here; it is not news.
+      source = execFileSync('git', ['show', `${since}:${path}`], {
+        cwd: root,
+        encoding: 'utf8',
+        maxBuffer: 32 * 1024 * 1024,
+        stdio: 'pipe',
+      });
     } catch {
       continue; // absent at that ref, or a shallow clone — the next line tells them apart
     }
