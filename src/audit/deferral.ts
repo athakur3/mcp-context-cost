@@ -58,13 +58,29 @@
  *     a deferring session loads at start — noted beside the session-start
  *     metric in METHODOLOGY, not applied to any number here.
  *
- * No default deferral is on record here for the other clients this tool
- * discovers — Claude Desktop, Cursor, VS Code, Windsurf, and from 2026-09-06
- * Codex CLI, Gemini CLI, Zed, Kiro and Goose, whose configuration pages were
- * read that day and say nothing about deferring tool definitions. That is an
- * absence of a record, not a measurement of those clients, and it is printed
- * as such — the same rule the rest of this project follows for a value it has
- * not observed.
+ * The other clients this tool discovers split in two, and what separates them
+ * is what counts as a record. Until 2026-09-07 the rule read one surface — each
+ * client's own MCP configuration page — and reported an absence of a record for
+ * every client whose page did not mention deferring. Three of those clients say
+ * the opposite elsewhere, on surfaces their own vendors control, the earliest of
+ * them dated eight months before that page was read. So the rule now takes four
+ * kinds of first-party statement, in METHODOLOGY §who-pays: the configuration
+ * page, the vendor's dated blog or changelog, a named staff account on the
+ * vendor's own forum, and the client's public source — a merged pull request or
+ * a settings default in the shipping tree. None of the four is a measurement.
+ *
+ *   - `DEFERRAL_ON_RECORD` — Cursor, Codex CLI, VS Code. The vendor states, or
+ *     the vendor's source shows, that definitions are deferred. What is printed
+ *     is close to Claude Code's honest shape and stops in the same place: the
+ *     vendor says so, this audit has not measured it, the conditions it depends
+ *     on are listed rather than resolved, and for none of the three does a file
+ *     this audit reads state the posture.
+ *   - `NO_DEFERRAL_ON_RECORD` — Claude Desktop, Windsurf, Gemini CLI, Zed, Kiro,
+ *     Goose. Still an absence of a record and printed as such, and now an
+ *     absence that was looked for: the three of them that are open source were
+ *     searched for a tool-search or deferral mechanism on 2026-09-07 and none
+ *     was found, while Claude Desktop, Windsurf and Kiro are closed and only
+ *     their pages have been read.
  */
 import type { DivergenceRun } from '../core/divergence.js';
 
@@ -187,6 +203,11 @@ export type DeferralMode =
   | 'setting-unresolved'
   /** A client we know about, with no default deferral on record. */
   | 'no-deferral-on-record'
+  /**
+   * A client whose vendor states, or whose source shows, that it defers tool
+   * definitions — unmeasured here, and not readable from the config either.
+   */
+  | 'deferral-on-record'
   /** `--config <path>`: the file was read, but which client reads it is unknown. */
   | 'client-unknown';
 
@@ -705,6 +726,12 @@ export interface DeferralVerdict {
   /** Conditions this cannot read, under which a deferring client pays in full. */
   exceptions: string[];
   /**
+   * What the client's vendor is on record as doing, where that is not Claude
+   * Code and a record exists. Null in every other mode, including the absence
+   * of a record, which is a different fact and is printed as one.
+   */
+  record: DeferralRecord | null;
+  /**
    * Servers in this scope pinned `alwaysLoad: true` in their entry, and their
    * wire tokens. Read from the config, so it is stated rather than listed as a
    * condition: whatever the mode, these load at session start.
@@ -713,17 +740,145 @@ export interface DeferralVerdict {
 }
 
 /**
- * Clients this tool discovers that have no default deferral on record. Each
- * client's own MCP configuration page was read on the date config.ts gives
+ * What a vendor is on record as doing, for a client this audit cannot measure.
+ *
+ * Every line here is printed, so every line is written to be checked: the claim
+ * is the vendor's, the conditions are the ones the vendor's own record leaves
+ * open, and the sources carry the address and the date they were read at. What
+ * this type deliberately cannot express is a verdict. A record establishes what
+ * a vendor says or ships; nothing in it says what a session paid.
+ */
+export interface DeferralRecord {
+  /** The vendor's own name for the mechanism, so a reader can look it up. */
+  mechanism: string;
+  /** What the record establishes. Lines, wrapped for the report. */
+  states: string[];
+  /** Why the posture still cannot be read off the audited machine. */
+  notReadable: string[];
+  /** What the record leaves open — printed as conditions, never resolved. */
+  conditions: string[];
+  /** First-party sources, each with the date it was read. */
+  sources: string[];
+}
+
+/**
+ * Clients whose vendor is on record as deferring tool definitions.
+ *
+ * These three were printed as "no default deferral on record" until 2026-09-07,
+ * because the rule read each client's MCP configuration page and nothing else,
+ * and all three pages are silent. Silence on one page is not a denial: the
+ * vendors say it in a blog post, in staff replies on their own forum, and in
+ * merged pull requests and settings defaults in their own source. The rule that
+ * admits those is in METHODOLOGY §who-pays.
+ *
+ * None of this is a measurement, and the report says so in as many words. It
+ * also refuses the other tempting shortcut — reporting these stacks as deferred
+ * and therefore free — because what a session actually pays depends on
+ * conditions no config file on the audited machine states.
+ */
+const DEFERRAL_ON_RECORD = new Map<string, DeferralRecord>([
+  [
+    'cursor',
+    {
+      mechanism: 'dynamic context discovery',
+      states: [
+        'cursor is on record as deferring MCP tool definitions (dynamic context',
+        'discovery): the agent gets tool names, and a tool\'s description and input',
+        'schema load when it reaches for one. Cursor states it does not put every',
+        'attached tool\'s schema in every request.',
+      ],
+      notReadable: [
+        'No Cursor setting on record turns this on or off, and the MCP configuration',
+        'page does not mention the mechanism at all — so no Cursor config file states',
+        'a posture, and this audit has not measured one.',
+      ],
+      conditions: [
+        'definitions and tool results pulled in during a session stay in that session\'s history, so a deferring session is not a free one (Cursor staff, same post)',
+        "the vendor's own figure — 46.9% fewer total agent tokens — is an A/B result over runs that called an MCP tool, not a saving for this stack",
+        "Cursor's context tray is not a check on the number above either: staff describe its count as a calibrated estimate rather than a tokenizer count (forum.cursor.com/t/168744 post 5, 2026-08-20)",
+      ],
+      sources: [
+        'cursor.com/blog/dynamic-context-discovery, dated 2026-01-06, read 2026-09-07 — Cursor syncs MCP tool descriptions to a folder and sends the agent the names',
+        'forum.cursor.com/t/166405 post 5, a staff account, 2026-07-22, read 2026-09-07 — current Cursor uses dynamic context discovery for MCP',
+        'cursor.com/docs/context/mcp, read 2026-09-07 — silent on the mechanism, and offers no setting for it',
+      ],
+    },
+  ],
+  [
+    'codex',
+    {
+      mechanism: 'tool search',
+      states: [
+        'codex is on record as deferring MCP tool definitions (tool search): its',
+        'source defers every effective MCP tool behind a tool-search tool when the',
+        'model supports that tool and the provider supports namespaced tools, and',
+        'exposes them directly when either does not — which is the full total.',
+      ],
+      notReadable: [
+        'config.toml carries no switch for it. The two feature keys that once forced',
+        'the behaviour are marked removed and skipped when the features table is',
+        'applied, though both still appear in the published config schema.',
+      ],
+      conditions: [
+        'the model must support the search tool and the provider must support namespaced tools — both are read from the running session, not from config.toml, and this audit reads neither',
+        'an older or unsupported model/provider combination is served the definitions directly, and pays the total above in full',
+        'the deferral reached a stable release at rust-v0.142.2; a machine pinned below that tag is on the older rule, where tool search applied only above 100 tools or behind a feature flag',
+      ],
+      sources: [
+        'github.com/openai/codex/pull/29486, merged 2026-06-22, read 2026-09-07 — defer all effective MCP tools when tool search and namespaced tools are supported, and treat the old feature keys as removed',
+        'openai/codex tag rust-v0.142.2, published 2026-06-25, read 2026-09-07 — the first stable release carrying it',
+        'codex-rs/core/src/tools/spec_plan.rs at main, read 2026-09-07 — the condition is the model\'s support for the search tool AND the provider\'s for namespaced tools',
+        'codex-rs/features/src/lib.rs at main, read 2026-09-07 — tool_search and tool_search_always_defer_mcp_tools are Stage::Removed, and the config table skips them',
+      ],
+    },
+  ],
+  [
+    'vscode',
+    {
+      mechanism: 'virtual tools, and the agent host\'s tool search',
+      states: [
+        'vscode ships two mechanisms that can defer tool definitions, and this is a',
+        'record of them rather than a verdict about your session. It documents a hard',
+        'cap of 128 tools per chat request, and virtual tools — grouped sets the model',
+        'activates on demand — above a threshold that defaults to 128. Separately its',
+        'agent host defers MCP and non-core tools behind a tool-search tool, on by',
+        'default in source.',
+      ],
+      notReadable: [
+        'Both switches live in VS Code\'s own settings, not in the .vscode/mcp.json',
+        'this audit reads, and neither is in the published settings documentation.',
+        'So no file read here states a posture, and none of it has been measured.',
+      ],
+      conditions: [
+        'virtual tools group only above the threshold: at or below 128 tools nothing documented defers, and the cap itself is an error rather than a saving',
+        "the agent host's tool search is gated on the model — the GPT-5.4, 5.5 and 5.6 families, and Claude 4.5 or later",
+        'which VS Code release runs Copilot sessions on that agent host by default is not established here, so whether the source default reaches a given install is unknown',
+      ],
+      sources: [
+        'code.visualstudio.com agent tools documentation, read 2026-09-07 — 128 tools per request, and github.copilot.chat.virtualTools.threshold, an experimental setting defaulting to 128',
+        'microsoft/vscode src/vs/platform/agentHost/common/copilotCliConfig.ts at main, read 2026-09-07 — chat.agentHost.copilot.toolSearch.enabled defaults true, its deferThreshold to 1',
+        'microsoft/vscode src/vs/platform/agentHost/node/copilot/toolSearchDeferral.ts at main, read 2026-09-07 — the model allowlist',
+        'github.com/microsoft/vscode/pull/326213, merged 2026-07-23, read 2026-09-07 — the change that added it',
+      ],
+    },
+  ],
+]);
+
+/**
+ * Clients this tool discovers with no default deferral on record.
+ *
+ * Each client's own MCP configuration page was read on the date config.ts gives
  * and says nothing about deferring tool definitions — Windsurf's states a cap
- * of 100 tools, which is a different thing and not a deferral.
+ * of 100 tools, which is a different thing and not a deferral. Since 2026-09-07
+ * the record is wider than that page (see `DEFERRAL_ON_RECORD`), so this is an
+ * absence that was searched for and not only an absence on one page: Gemini
+ * CLI, Zed and Goose are open source and were searched that day for a
+ * tool-search or deferral mechanism, with nothing found. Claude Desktop,
+ * Windsurf and Kiro are closed, and only their pages have been read.
  */
 const NO_DEFERRAL_ON_RECORD = new Set([
   'claude-desktop',
-  'cursor',
-  'vscode',
   'windsurf',
-  'codex',
   'gemini',
   'zed',
   'kiro',
@@ -829,10 +984,17 @@ export function evaluateDeferral(
     distanceTokens: null,
     crosses: null,
     exceptions: [],
+    record: null,
     alwaysLoad,
   };
 
   if (scope.client !== 'claude-code') {
+    const record = DEFERRAL_ON_RECORD.get(scope.client);
+    // Three answers, not two. A vendor's record is not a measurement, so it
+    // does not become a posture — it becomes a printed record with the
+    // conditions it leaves open, and `crosses` stays null as it does for the
+    // clients nothing is on record about.
+    if (record) return { ...base, mode: 'deferral-on-record', mechanism: record.mechanism, record };
     return {
       ...base,
       mode: NO_DEFERRAL_ON_RECORD.has(scope.client) ? 'no-deferral-on-record' : 'client-unknown',

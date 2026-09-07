@@ -7,6 +7,72 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **Three clients were printed as having no deferral on record, and all three vendors had
+  said the opposite — one of them eight months earlier.** For a Cursor, Codex CLI or VS Code
+  config, `audit` printed "No default deferral is on record for <client>, so every request
+  carries these tokens before you type anything — an absence of a record about the client, not
+  a measurement of it". The sentence was careful about the right thing and wrong anyway,
+  because the rule behind it read exactly one surface: METHODOLOGY §who-pays said each client's
+  own MCP configuration page had been read, and those pages say nothing about deferring. They
+  still say nothing. **Cursor's engineering blog described its MCP deferral on 2026-01-06** —
+  the agent gets tool names and pulls a tool's description and schema on demand — and Cursor
+  staff repeated it on Cursor's own forum on 2026-07-22, adding that Cursor does not put every
+  attached tool's complete schema in every request. **Codex CLI defers by default since
+  openai/codex#29486, merged 2026-06-22** and first stable in `rust-v0.142.2` on 2026-06-25: it
+  defers every effective MCP tool behind its tool-search tool when the model supports that tool
+  and the provider supports namespaced tools. **VS Code documents a 128-tool cap per chat
+  request** and virtual tools above a threshold defaulting to 128, and its agent host defers MCP
+  and non-core tools behind a tool-search tool with the setting on by default in source
+  (microsoft/vscode#326213, merged 2026-07-23), gated to the GPT-5.4/5.5/5.6 and Claude 4.5+
+  families. A rule that consults one page cannot tell a vendor that does not defer from a vendor
+  that documents deferring elsewhere, and for eight months it reported the first while the second
+  was true.
+
+  **What counts as a record is now written down, because that is the part that was wrong.**
+  METHODOLOGY §who-pays takes four kinds of first-party statement: the client's own
+  documentation, the vendor's dated blog or changelog, a named staff account on the vendor's own
+  forum, and the client's public source — a merged pull request or a settings default in the
+  shipping tree. **None of the four is a measurement**, and the report is written so it cannot
+  be mistaken for one. `cursor`, `codex` and `vscode` resolve to a new posture,
+  `deferral-on-record`, which prints what the vendor states, what that record leaves open, and
+  every source with the date it was read. It does not print a verdict, and deliberately does not
+  discount the total either: that would be the same error in the other direction. VS Code's entry
+  says so in its first line — its record is a cap and a pair of conditions, not a default.
+
+  **The posture cannot be read off the machine for any of the three, and each refuses for its own
+  reason.** Codex's `config.toml` has no switch: the two keys that once forced the behaviour,
+  `tool_search` and `tool_search_always_defer_mcp_tools`, are marked removed and skipped when the
+  features table is applied, though both still appear in the published config schema. The
+  condition that decides it — the model's support for the search tool and the provider's for
+  namespaced tools — is read from the running session. Cursor documents no setting for the
+  mechanism at all. VS Code's two switches live in its own settings rather than in the
+  `.vscode/mcp.json` this audit reads, and **which VS Code release runs Copilot sessions on that
+  agent host by default is not established here**, which the report says rather than assumes.
+  Cursor's context tray is not a check on our number either: staff describe its count as a
+  calibrated estimate rather than a tokenizer count. **Nothing published here has measured any
+  client** — Claude Code's entry included, which is a reading of Anthropic's documentation and
+  says so.
+
+  **The six that stay are now an absence that was searched for.** Claude Desktop, Windsurf,
+  Gemini CLI, Zed, Kiro and Goose keep the old sentence, and the three of them that are open
+  source — Gemini CLI, Zed, Goose — were searched on 2026-09-07 for a tool-search or deferral
+  mechanism, with nothing found; the other three are closed and only their pages have been read.
+  Two published sentences went with the fix. The front page opened by telling every reader that
+  a server's schemas ride along on every single request, which is false for Claude Code's
+  default and for these three, and now states both cases. `docs/state-of-mcp-context-cost.md`
+  makes the same claim and is a **dated reading, so it is annotated rather than edited**: a
+  correction dated 2026-09-07 sits above the text, which stands as it was published. Tests:
+  `audit-clients.test.ts` gains a block that requires every discovered client to have been
+  decided, refuses a record without dated sources or without conditions, and pins each of the
+  three against the words the report prints; `published-deferral.test.ts` reads the new
+  paragraphs on both pages against the resolver. Mutation-checked six ways — putting `cursor`
+  back among the clients with no record fails nine tests across three files, and stripping a
+  date, turning VS Code's record into a verdict, or reverting either page's paragraph each fail
+  their own. The sixth is the branch itself: everything it prints is quotation, so a record that
+  does not arrive is refused rather than fallen through, because the next branch is Claude Code's
+  threshold arithmetic and it renders as "deferral activates once the definitions reach 0 tokens"
+  over a client that has no threshold.
+
 - **"Names the project" was a substring test on the string the search had just matched, so it
   could not fail.** The widest adoption query asks GitHub code search for `mcp-context-cost`,
   and every file it nominated was then judged by `classifyFile`: does this file contain

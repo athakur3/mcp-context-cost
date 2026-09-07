@@ -319,13 +319,10 @@ const CASES: Case[] = [
     },
   },
   {
-    what: 'the nine discovered clients with no default on record are said to pay in full',
+    what: 'the six discovered clients with no default on record are said to pay in full',
     machines: [
       { client: 'claude-desktop' },
-      { client: 'cursor' },
-      { client: 'vscode' },
       { client: 'windsurf' },
-      { client: 'codex' },
       { client: 'gemini' },
       { client: 'zed' },
       { client: 'kiro' },
@@ -334,9 +331,20 @@ const CASES: Case[] = [
     mode: 'no-deferral-on-record',
     prose: {
       README:
-        '**Clients with no default deferral on record** — Claude Desktop, Cursor, VS Code, Windsurf, Codex CLI, Gemini CLI, Zed, Kiro, Goose.',
+        '**Clients with no default deferral on record** — Claude Desktop, Windsurf, Gemini CLI, Zed, Kiro, Goose.',
       METHODOLOGY:
-        'No default deferral is on record for Claude Desktop, Cursor, VS Code, Windsurf, Codex CLI, Gemini CLI, Zed, Kiro or Goose',
+        'No default deferral is on record for Claude Desktop, Windsurf, Gemini CLI, Zed, Kiro or Goose',
+    },
+  },
+  {
+    what: 'the three clients whose vendor is on record as deferring are not said to pay in full',
+    machines: [{ client: 'cursor' }, { client: 'codex' }, { client: 'vscode' }],
+    mode: 'deferral-on-record',
+    prose: {
+      README:
+        '**Clients whose vendor is on record as deferring** — Cursor (*dynamic context discovery*), Codex CLI (*tool search*), and VS Code, whose record is a pair of conditions rather than a default.',
+      METHODOLOGY:
+        'For **Cursor**, **Codex CLI** and **VS Code**, `audit` prints the record, its conditions and its sources',
     },
   },
   {

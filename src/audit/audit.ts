@@ -803,6 +803,30 @@ function thresholdAssumptionLines(d: DeferralVerdict): string[] {
   ];
 }
 
+/**
+ * One indented item, wrapped to a terminal width with a hanging indent.
+ *
+ * The records these print are prose, not labels, and the alternative was
+ * hand-wrapping sentences in the data — which puts the line breaks of a report
+ * inside the thing the report is quoting, and moves them every time a word
+ * changes.
+ */
+function bullet(text: string, width = 92): string[] {
+  const out: string[] = [];
+  let line = '';
+  for (const word of text.split(' ')) {
+    const next = line ? `${line} ${word}` : word;
+    if (line && next.length + 4 > width) {
+      out.push(line);
+      line = word;
+    } else {
+      line = next;
+    }
+  }
+  if (line) out.push(line);
+  return out.map((l, i) => (i === 0 ? `    ${l}` : `      ${l}`));
+}
+
 /** Where a threshold is in play, the unknown size is the whole verdict. */
 const SIDE_UNKNOWN = [
   '  either direction — which side of the threshold this stack falls on cannot be',
@@ -861,6 +885,34 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
     lines.push(`  No default deferral is on record for ${d.client}, so every request`);
     lines.push('  carries these tokens before you type anything — an absence of a record');
     lines.push('  about the client, not a measurement of it.');
+    if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
+    return lines;
+  }
+
+  // A vendor's record, printed with everything it does not settle attached to
+  // it. The shape is Claude Code's, minus the half this cannot have: what is on
+  // record, that nothing here measured it, and — because no config file on the
+  // audited machine states the posture — no verdict about which way this stack
+  // goes. Reporting the total as deferred away would be the same error the
+  // absence-of-a-record rule was written against, in the opposite direction.
+  if (d.mode === 'deferral-on-record') {
+    const r = d.record;
+    // The mode without its record is not a milder version of this answer, it is
+    // no answer: everything below is quotation. Falling through from here would
+    // reach the threshold branch and print Claude Code's arithmetic over a
+    // client that has none.
+    if (!r) {
+      lines.push(`  ${d.client} is on record as deferring tool definitions, and the record`);
+      lines.push('  itself did not reach this report — so nothing is claimed about who pays.');
+      return lines;
+    }
+    for (const l of r.states) lines.push(`  ${l}`);
+    for (const l of r.notReadable) lines.push(`  ${l}`);
+    lines.push('  So read this total as what the definitions weigh, not as a bill every');
+    lines.push('  request is known to carry — and not as a saving either:');
+    for (const c of r.conditions) lines.push(...bullet(c));
+    lines.push('  What the vendor is on record with, and when it was read:');
+    for (const src of r.sources) lines.push(...bullet(src));
     if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
     return lines;
   }

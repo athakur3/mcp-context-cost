@@ -3,6 +3,8 @@ import { mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { configCandidates, extractDeclaration, extractServers, loadConfigs, parseConfigText } from '../src/audit/config.js';
+import { evaluateDeferral } from '../src/audit/deferral.js';
+import { DEFAULT_CONTEXT_WINDOW, buildReport, formatReport } from '../src/audit/audit.js';
 
 /**
  * Each fixture below is the shape the client's own documentation shows, read
@@ -231,5 +233,148 @@ describe('loadConfigs — the format follows the candidate', () => {
     expect(loaded[0].servers.map((s) => s.argv)).toEqual([['node', 'a.js']]);
     expect(loaded[1].servers.map((s) => s.argv)).toEqual([['node', 'b.js']]);
     expect(loaded[2].error).toMatch(/TOML/i);
+  });
+});
+
+/**
+ * What this project holds about each discovered client's deferral, and where it
+ * got it.
+ *
+ * Until 2026-09-07 the rule that decided this read one surface per client — the
+ * client's own MCP configuration page — and printed "no default deferral is on
+ * record" for every client whose page did not mention deferring. Cursor's page
+ * did not, and does not; Cursor's engineering blog had described the mechanism
+ * eight months earlier, and its staff repeated it on Cursor's own forum. So the
+ * absence being printed was an absence in one place, reported as an absence
+ * everywhere, for three of the nine clients here.
+ *
+ * These check the property that failure had: that every client this tool
+ * discovers has been decided, that the three with a record are not printed as
+ * having none, and that a record cannot quietly become a verdict — it has to
+ * carry dated sources and name what it leaves open.
+ */
+describe('each discovered client has a deferral answer, and it is the right kind', () => {
+  const CFG = '/machine/cfg.json';
+  const verdict = (client: string) =>
+    evaluateDeferral(
+      { client, sources: [CFG], servers: [{ name: 'a', tokens: 5_000 }], skippedCount: 0, sharedMeasurements: 0 },
+      { contextWindow: DEFAULT_CONTEXT_WINDOW },
+    );
+  const rendered = (client: string) =>
+    formatReport(
+      buildReport(
+        [{ client, source: CFG, servers: [{ name: 'a', client, source: CFG, transport: 'stdio', command: 'node a.js', argv: ['node', 'a.js'] }] }],
+        new Map(),
+        { generatedAt: 'T' },
+      ),
+    ).replace(/\s+/g, ' ');
+
+  /** Every client id `configCandidates` can hand the report, on any platform. */
+  const discovered = [
+    ...new Set(
+      (['darwin', 'linux', 'win32'] as const).flatMap((platform) =>
+        configCandidates({ home: '/home/me', cwd: '/proj', platform, appData: 'C:\\AppData' }).map((c) => c.client),
+      ),
+    ),
+  ];
+
+  it('decides every client it discovers — a new one cannot arrive undecided', () => {
+    expect(discovered.length).toBeGreaterThan(8);
+    for (const client of discovered) {
+      expect(verdict(client).mode, `${client} is discovered but no deferral rule covers it`).not.toBe('client-unknown');
+    }
+  });
+
+  it('does not print an absence of a record for the three clients that have one', () => {
+    for (const client of ['cursor', 'codex', 'vscode']) {
+      const v = verdict(client);
+      expect(v.mode, `${client}'s vendor is on record as deferring`).toBe('deferral-on-record');
+      const out = rendered(client);
+      expect(out, `${client} is still printed as an absence of a record`).not.toContain('No default deferral is on record');
+      expect(out).not.toContain('an absence of a record about the client');
+      expect(out).toContain('What the vendor is on record with, and when it was read:');
+    }
+  });
+
+  it('says a default is on record only for the two clients whose vendors state one', () => {
+    // VS Code is the third client with a record and the one without a stated
+    // default: what its vendor publishes is a cap and a threshold, and what its
+    // source shows is a setting whose reach is not established. Printing it in
+    // the same words as Cursor and Codex would make a verdict out of it.
+    for (const client of ['cursor', 'codex']) {
+      expect(rendered(client)).toContain(`${client} is on record as deferring MCP tool definitions`);
+    }
+    const vscode = rendered('vscode');
+    expect(vscode).not.toContain('vscode is on record as deferring MCP tool definitions');
+    expect(vscode).toContain('a record of them rather than a verdict about your session');
+  });
+
+  it('still prints an absence of a record where there is one', () => {
+    for (const client of ['claude-desktop', 'windsurf', 'gemini', 'zed', 'kiro', 'goose']) {
+      expect(verdict(client).mode).toBe('no-deferral-on-record');
+      expect(rendered(client)).toContain(`No default deferral is on record for ${client}`);
+    }
+  });
+
+  it('carries dated first-party sources for each record, and prints all of them', () => {
+    for (const client of ['cursor', 'codex', 'vscode']) {
+      const r = verdict(client).record!;
+      expect(r, `${client} has no record`).toBeTruthy();
+      expect(r.sources.length, `${client}'s record cites fewer than two sources`).toBeGreaterThan(1);
+      for (const source of r.sources) {
+        // A source without a date is a claim that cannot be re-checked later,
+        // which is the shape of claim this whole section exists to refuse.
+        expect(source, `a source for ${client} carries no date: ${source}`).toMatch(/20\d\d-\d\d-\d\d/);
+      }
+      const out = rendered(client);
+      for (const source of r.sources) expect(out, `${client} does not print ${source}`).toContain(source.slice(0, 40));
+    }
+  });
+
+  it('never lets a record stand as a verdict: each names what it leaves open, and claims no side', () => {
+    for (const client of ['cursor', 'codex', 'vscode']) {
+      const v = verdict(client);
+      expect(v.record!.conditions.length, `${client}'s record resolves into a verdict`).toBeGreaterThan(0);
+      expect(v.crosses, `${client} is put on a side of a threshold it has none of`).toBeNull();
+      expect(v.thresholdTokens).toBeNull();
+      expect(v.setting, `${client}'s posture cannot be read from a machine this audit reads`).toBeNull();
+      const out = rendered(client);
+      expect(out).toContain('not as a bill every request is known to carry');
+    }
+  });
+
+  it("names VS Code's record as conditions rather than a default", () => {
+    const r = verdict('vscode').record!;
+    expect(r.states.join(' ')).toContain('record of them rather than a verdict');
+    expect(r.conditions.join(' ')).toContain('128 tools');
+    expect(r.conditions.join(' ')).toContain('is not established here');
+  });
+
+  it("says where Codex's and Cursor's posture cannot be read from, since neither config states it", () => {
+    expect(verdict('codex').record!.notReadable.join(' ')).toContain('config.toml carries no switch');
+    expect(verdict('cursor').record!.notReadable.join(' ')).toContain('No Cursor setting on record turns this on or off');
+    expect(verdict('vscode').record!.notReadable.join(' ')).toContain(".vscode/mcp.json");
+  });
+
+  it('refuses rather than falls through when the mode arrives without its record', () => {
+    // Everything this branch prints is quotation, so a record that did not
+    // arrive is not a milder answer — it is none. The alternative is worse than
+    // silence: the next branch is Claude Code's threshold arithmetic, which
+    // would be printed over a client that has no threshold at all.
+    const report = buildReport(
+      [{ client: 'cursor', source: CFG, servers: [{ name: 'a', client: 'cursor', source: CFG, transport: 'stdio', command: 'node a.js', argv: ['node', 'a.js'] }] }],
+      new Map(),
+      { generatedAt: 'T' },
+    );
+    report.configs[0].deferral = { ...report.configs[0].deferral, record: null };
+    const out = formatReport(report).replace(/\s+/g, ' ');
+    expect(out).toContain('the record itself did not reach this report');
+    expect(out).not.toContain('defers tool definitions above a threshold');
+  });
+
+  it('keeps the measurement itself unconditional — a record changes who pays, never the count', () => {
+    for (const client of ['cursor', 'claude-desktop']) {
+      expect(rendered(client)).toContain('tokens of tool schemas');
+    }
   });
 });

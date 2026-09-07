@@ -1445,7 +1445,7 @@ describe('deferral — reading the mode that is actually in force', () => {
 
   describe('the other clients this tool discovers', () => {
     it('records the absence of a deferral rule, with no threshold and no setting', () => {
-      for (const client of ['claude-desktop', 'cursor', 'vscode', 'windsurf', 'codex', 'gemini', 'zed', 'kiro', 'goose']) {
+      for (const client of ['claude-desktop', 'windsurf', 'gemini', 'zed', 'kiro', 'goose']) {
         expect(verdict(client, [84_455], { env: auto })).toMatchObject({
           mode: 'no-deferral-on-record',
           mechanism: null,
@@ -1491,8 +1491,14 @@ describe('deferral — reading the mode that is actually in force', () => {
     });
 
     it('is carried but decides nothing for a client with no deferral on record', () => {
-      const v = pinned('cursor', [{ name: 'core', tokens: 5, alwaysLoad: true }]);
+      const v = pinned('windsurf', [{ name: 'core', tokens: 5, alwaysLoad: true }]);
       expect(v.mode).toBe('no-deferral-on-record');
+      expect(v.alwaysLoad).toEqual({ servers: ['core'], tokens: 5 });
+    });
+
+    it('is carried but decides nothing for a client whose vendor is on record as deferring', () => {
+      const v = pinned('cursor', [{ name: 'core', tokens: 5, alwaysLoad: true }]);
+      expect(v.mode).toBe('deferral-on-record');
       expect(v.alwaysLoad).toEqual({ servers: ['core'], tokens: 5 });
     });
 
@@ -1510,13 +1516,19 @@ describe('deferral — reading the mode that is actually in force', () => {
     ]);
     const roundTripped = JSON.parse(JSON.stringify(report)) as AuditReport;
     expect(roundTripped.configs.map((c) => c.deferral.mode).sort()).toEqual([
+      'deferral-on-record',
       'defers-all',
-      'no-deferral-on-record',
     ]);
     expect(roundTripped.configs.find((c) => c.client === 'claude-code')!.deferral).toMatchObject({
       thresholdTokens: null,
       crosses: null,
     });
+    // A `--json` consumer gets the vendor's record with its sources, not just
+    // the mode name: the mode alone would read as a posture this never claimed.
+    const cursor = roundTripped.configs.find((c) => c.client === 'cursor')!.deferral;
+    expect(cursor.record!.sources.length).toBeGreaterThan(1);
+    expect(cursor.record!.mechanism).toBe('dynamic context discovery');
+    expect(cursor.crosses).toBeNull();
   });
 });
 
@@ -1822,11 +1834,22 @@ describe('formatReport states where the cost is paid', () => {
   });
 
   it('tells a reader of a client with no deferral record that this is an absence, not a measurement', () => {
-    const out = render('cursor', 84_455);
-    expect(out).toContain('No default deferral is on record for cursor');
+    const out = render('windsurf', 84_455);
+    expect(out).toContain('No default deferral is on record for windsurf');
     expect(out).toContain('every request carries these tokens');
     expect(out).toContain('an absence of a record about the client, not a measurement of it');
     expect(out).not.toContain('threshold');
+  });
+
+  it("tells a reader of a client whose vendor defers that the record is not a measurement either", () => {
+    const out = render('cursor', 84_455);
+    expect(out).toContain('cursor is on record as deferring MCP tool definitions (dynamic context discovery)');
+    expect(out).toContain('this audit has not measured one');
+    expect(out).toContain('cursor.com/blog/dynamic-context-discovery, dated 2026-01-06, read 2026-09-07');
+    // The two errors this sits between: charging the full total to a client
+    // that defers, and discounting it for one this has not measured.
+    expect(out).not.toContain('No default deferral is on record');
+    expect(out).not.toContain('NOT loaded up front at any size');
   });
 
   it('keeps the measurement itself unconditional, and the claim about who pays it separate', () => {

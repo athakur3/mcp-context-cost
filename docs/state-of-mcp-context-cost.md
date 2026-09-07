@@ -2,6 +2,17 @@
 
 *mcp-context-cost · September 2026 · methodology v1.0*
 
+> **Correction, 2026-09-07.** The sentence below — that a server's schemas ride along on every
+> request — is not true of every client, and was not true of some of them when this was
+> written. Claude Code defers MCP tool definitions by default, and Cursor, Codex CLI and VS
+> Code are on record as deferring or grouping them too; Cursor's own account of it is dated
+> 2026-01-06. The measurements in this report are of servers and are unaffected: they say what
+> a server puts on the wire. Who pays it, and where it is deferred away, is
+> [METHODOLOGY §who pays the number](METHODOLOGY#who-pays). One more sentence below needs the
+> same qualifier: `audit` reads deferral settings off the machine for Claude Code alone — for
+> every other client it reports what is on record, which is not the same thing. The text below
+> is left as it was read on its date.
+
 Every MCP server in an agent's config injects its tool schemas into the model's context on
 every request — before the agent does anything. We measured 106 popular servers. Here is
 what the numbers say.

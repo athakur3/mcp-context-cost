@@ -337,14 +337,92 @@ not part of the definition, moves no published number, and no badge or `totalTok
 because of anything in this section. It is what `audit` answers for a config it discovers,
 and it is stated here because a number nobody can attribute to a payer is not a cost.
 
+**What counts as a record.** A record is a first-party statement about the client's own
+behaviour, on a surface that client's vendor controls, readable at a fixed address and
+carrying a date. Four kinds qualify, and the rule admits all four as of **2026-09-07**:
+
+| kind | what it settles |
+|---|---|
+| the client's own documentation, including its MCP configuration page | what the vendor commits to |
+| the vendor's dated engineering blog or changelog | what the vendor says it built, and when |
+| a named staff account posting on the vendor's own forum | what the vendor says its product does today |
+| the client's public source — a merged pull request, or a settings default in the shipping tree | what the code does, at a commit |
+
+**None of the four is a measurement**, and admitting them changes nothing about that. A
+record establishes what a vendor says or ships; only a measurement establishes what a session
+paid, and nothing published here has measured any client. So a record is published as a
+record: what the vendor states, what it leaves open, and the addresses and dates behind it.
+
+**Why the rule widened, which is the part worth checking.** Until 2026-09-07 it read one
+surface — each client's own configuration page — and reported an absence of a record for
+every client whose page did not mention deferring. Three clients say the opposite elsewhere.
+Cursor's engineering blog described its MCP deferral on **2026-01-06**, eight months before
+this project read Cursor's configuration page and recorded silence; that page is still silent
+today. A rule that consults one surface cannot distinguish a vendor that does not defer from
+a vendor that documents deferral somewhere else, and it reported the first when the second was
+true. What is not admitted is unchanged: a third-party summary, a forum post by an account
+that is not staff, or a recollection is not a record, and neither is a page that has stopped
+being reachable at a fixed address.
+
+**Where the vendor is on record as deferring.** For **Cursor**, **Codex CLI** and **VS Code**,
+`audit` prints the record, its conditions and its sources, and stops where Claude Code's own
+entry stops: the vendor says so, this audit has not measured it, and no config file it reads
+states a posture. It does not report these stacks as deferred and therefore free — that would
+be the same error as the one above, in the other direction.
+
+- **Cursor**, mechanism *dynamic context discovery*. Cursor states the agent receives tool
+  names and loads a tool's description and input schema on demand, and does not put every
+  attached tool's complete schema in every request. Sources: the engineering blog post
+  [Dynamic context discovery](https://cursor.com/blog/dynamic-context-discovery), dated
+  2026-01-06; a staff reply on [forum.cursor.com/t/166405](https://forum.cursor.com/t/166405)
+  post 5, 2026-07-22; and [cursor.com/docs/context/mcp](https://cursor.com/docs/context/mcp),
+  which is silent on the mechanism and offers no setting for it. All read **2026-09-07**. Left
+  open: definitions and results pulled in during a session stay in that session's history, so
+  a deferring session is not a free one; and the vendor's 46.9% figure is an A/B result across
+  runs that called an MCP tool, not a saving for any particular stack. Cursor's own context
+  tray is not a check on our number either — staff describe its count as a calibrated estimate
+  rather than a tokenizer count ([t/168744](https://forum.cursor.com/t/168744) post 5,
+  2026-08-20).
+- **Codex CLI**, mechanism *tool search*. Its source defers every effective MCP tool behind a
+  tool-search tool when the model supports that tool and the provider supports namespaced
+  tools, and exposes the definitions directly when either does not. Sources:
+  [openai/codex#29486](https://github.com/openai/codex/pull/29486), merged 2026-06-22, first
+  stable tag `rust-v0.142.2`, published 2026-06-25; `codex-rs/core/src/tools/spec_plan.rs` and
+  `codex-rs/features/src/lib.rs` at `main`, read **2026-09-07**. Left open: the two conditions
+  are properties of the running model and provider, which no config file states; a machine
+  pinned below that tag is on the older rule, where tool search applied only above 100 tools or
+  behind a feature flag. **`config.toml` exposes no switch** — the two keys that once forced
+  the behaviour, `tool_search` and `tool_search_always_defer_mcp_tools`, are marked removed and
+  skipped when the features table is applied, though both still appear in the published config
+  schema.
+- **VS Code** — conditions, not a verdict, and the only one of the three whose record does not
+  amount to a default. VS Code documents a hard cap of **128 tools per chat request** and
+  virtual tools, grouped sets the model activates on demand, above
+  `github.copilot.chat.virtualTools.threshold`, an experimental setting that defaults to 128.
+  Separately, `chat.agentHost.copilot.toolSearch.enabled` defaults to **true** in
+  `src/vs/platform/agentHost/common/copilotCliConfig.ts` and defers MCP and non-core tools
+  behind a tool-search tool, gated by an allowlist in
+  `src/vs/platform/agentHost/node/copilot/toolSearchDeferral.ts` to the GPT-5.4, 5.5 and 5.6
+  families and Claude 4.5 or later
+  ([microsoft/vscode#326213](https://github.com/microsoft/vscode/pull/326213), merged
+  2026-07-23; source read **2026-09-07**). Left open, and stated as such: at or below 128 tools
+  nothing documented defers, and the cap is an error rather than a saving; **which VS Code
+  release runs Copilot sessions on that agent host by default is not established here**; and
+  none of those settings appears in VS Code's published settings documentation. Both switches
+  live in VS Code's own settings rather than in the `.vscode/mcp.json` this audit reads.
+
 **Where the cost is paid in full.** No default deferral is on record for Claude Desktop,
-Cursor, VS Code, Windsurf, Codex CLI, Gemini CLI, Zed, Kiro or Goose: for a config read by one
-of those, every request carries the whole total. Each client's own configuration page was
-read on 2026-09-06 and says nothing about deferring tool definitions — Windsurf's states a
-cap of 100 tools, which is a different thing. That is an absence of a record about the
-client, not a measurement of it, and `audit` prints it in those words — the same rule this
-project follows for every value it has not observed. A config passed as `--config <path>` is read the same way, because which client
-reads that file is not knowable from the file.
+Windsurf, Gemini CLI, Zed, Kiro or Goose: for a config read by one of those, every request
+carries the whole total. Each client's own configuration page was read on 2026-09-06 and says
+nothing about deferring tool definitions — Windsurf's states a cap of 100 tools, which is a
+different thing. Under the wider rule this is now an absence that was searched for rather than
+an absence on one page: the three that are open source — Gemini CLI, Zed and Goose — were
+searched for a tool-search or deferral mechanism on 2026-09-07, and none was found, while
+Claude Desktop, Windsurf and Kiro are closed and only their pages have been read. That is an
+absence of a record about the client, not a measurement of it, and `audit` prints it in those
+words — the same rule this project follows for every value it has not observed. A config passed
+as `--config <path>` is read the same way, because which client reads that file is not knowable
+from the file.
 
 **Where it is deferred away.** Claude Code defers MCP tool definitions by default, through
 its **tool search**: the definitions are not in context at session start and load when the

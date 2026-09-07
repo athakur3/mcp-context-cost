@@ -27,9 +27,13 @@ gate passed or not, so a later step can comment the number on the PR or publish 
 **What do the MCP servers in your config cost you before you type anything — and what did
 that last config change add to every session you will ever run?**
 
-Every MCP server you wire into an agent injects its tool schemas into the model's context on
-every single request. You pay that whether or not the agent ends up using the tools, and no
-client shows you the number. Point `audit` at your own MCP config:
+Every MCP server you wire into an agent has to put its tool schemas somewhere. For a client
+with no deferral on record that is the model's context, on every single request, whether or
+not the agent ends up using the tools; for a client that defers them — Claude Code by default,
+and Cursor, Codex CLI and VS Code by their vendors' own records — it is a smaller session-start
+cost plus whatever the agent reaches for. Which of the two you are paying is a property of your
+client, not of the server, and no client shows you either number. Point `audit` at your own MCP
+config:
 
 ```bash
 npx -y mcp-context-cost audit
@@ -83,13 +87,25 @@ nobody runs.
 ### Where this cost is paid in full, and where it is deferred away
 
 Not every client puts every tool definition in context on every request, so the total above
-is not automatically your bill. Which client reads the config, and how that client is
-configured **on this machine**, decides it — and `audit` reads that rather than assuming it.
+is not automatically your bill. Which client reads the config decides it, and for Claude Code
+so does how that client is configured **on this machine** — which `audit` reads rather than
+assumes. No other client's posture is readable from a file this opens, so for those the report
+gives what their vendor is on record with, or says there is nothing on record, and claims
+neither as a measurement.
 
-**Clients with no default deferral on record** — Claude Desktop, Cursor, VS Code, Windsurf,
-Codex CLI, Gemini CLI, Zed, Kiro, Goose. The total is what every request carries, as in the
-example above. That sentence is an
-absence of a record about those clients, not a measurement of them, and the report says so
+**Clients whose vendor is on record as deferring** — Cursor (*dynamic context discovery*),
+Codex CLI (*tool search*), and VS Code, whose record is a pair of conditions rather than a
+default. For these the report prints what the vendor states, what that record leaves open, and
+the address and date of every source behind it. It stops where Claude Code's entry stops:
+nothing here measured any of them, and no config file this reads states their posture — so the
+total is what the definitions weigh, not a bill every request is known to carry, and not a
+saving either. Cursor's record is the reason this changed: its engineering blog described the
+mechanism on 2026-01-06 while its MCP configuration page, then and now, says nothing, and a
+rule that read only that page reported an absence of a record for eight months.
+
+**Clients with no default deferral on record** — Claude Desktop, Windsurf, Gemini CLI, Zed,
+Kiro, Goose. The total is what every request carries, as in the example above. That sentence is
+an absence of a record about those clients, not a measurement of them, and the report says so
 in those words.
 
 **Claude Code defers MCP tool definitions by default** (its **tool search**): they are not
@@ -162,7 +178,8 @@ actually run.
 None of this is free, and it is one trivial request. These are Claude Code's own debug lines
 rather than a documented interface, so they can change; the table above is what this project
 holds to a dated re-read. No other client discovered by `audit` writes anything comparable,
-which is why their rows say an absence of a record rather than a measurement.
+which is why no other row here is a measurement: three of them get their vendor's own record,
+dated and addressed, and the rest an absence of one.
 
 Set `ENABLE_TOOL_SEARCH=false` in that shell and the same config reports the opposite —
 `loads every tool definition up front here`, naming the variable and the place it was read
@@ -178,11 +195,13 @@ servers); it will not claim a posture the machine did not state readably, which 
 refusals and not one — when two places set the same variable to different values, when a
 settings file exists and cannot be read, when the place that would decide sets the variable
 to something that is not a string, and when `ENABLE_TOOL_SEARCH` holds a value Claude Code
-does not document; and it will not pass an absence of a record off as a measurement. The
-first two print as unanswered questions. The third prints as an answer that names
-itself: for the nine discovered clients with no default on record — `claude-desktop`, `cursor`, `vscode`, `windsurf`, `codex`, `gemini`, `zed`, `kiro`, `goose` — the tokens are counted as
-loaded up front, and the report says so in those words, "an absence of a record about the
-client, not a measurement of it".
+does not document; and it will not pass an absence of a record off as a measurement, or a
+vendor's record off as one either. The first two print as unanswered questions. The third
+prints as an answer that names itself: for the six discovered clients with no default on
+record — `claude-desktop`, `windsurf`, `gemini`, `zed`, `kiro`, `goose` — the tokens are
+counted as loaded up front, and the report says so in those words, "an absence of a record
+about the client, not a measurement of it". For `cursor`, `codex` and `vscode` it prints the
+vendor's record with its dates and everything it leaves open, and claims no side.
 Full model, sources and dates: [METHODOLOGY §who pays the number](docs/METHODOLOGY.md#who-pays).
 
 **In CI**, make it a gate — the bundlesize move for agents:
