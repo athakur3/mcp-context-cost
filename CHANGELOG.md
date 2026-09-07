@@ -7,6 +7,37 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **Eleven published numbers were measured over a protocol revision the server picked, and nothing
+  recorded that.** Every session this harness opens says which MCP revision it speaks, and the
+  server answers with the one it will actually use — a normal part of the handshake, and the server
+  is entitled to name a different one. That answer was read into memory and dropped; no record
+  carried it, so how often it differed was not a small number, it was an unknown.
+
+  Measured, not assumed: run 34161745581 (2026-09-07) asked all 104 launchable entries under the
+  published isolation and wrote nothing. **88 answered. 77 named `2025-06-18`, the revision asked
+  for. 11 named an older one** — `bitbucket-mcp`, `brave-search-legacy`, `chroma`, `github-legacy`,
+  `gitlab`, `google-maps`, `markitdown`, `postgres`, `puppeteer` and `slack-legacy` answer
+  `2024-11-05`, and `n8n-mcp` answers `2025-03-26`. None named anything newer.
+
+  **Those measurements stand, and the probe deliberately does not hang up on them.** The
+  specification says a client "MUST disconnect" if it *cannot support* the version the server
+  returns, and that condition is the whole rule: this probe sends `initialize`,
+  `notifications/initialized` and a paginated `tools/list`, and all three are unchanged across
+  `2024-11-05`, `2025-03-26` and `2025-06-18`. Disconnecting on a difference rather than on an
+  inability would have withdrawn eleven working numbers — about a tenth of the leaderboard — and
+  published a protocol complaint where there is no protocol problem, which is the same kind of
+  claim-beyond-the-evidence this changelog's entry above is about. The case that genuinely cannot be
+  driven is a server speaking only `2026-07-28`, which has no `initialize` at all; that one fails
+  the handshake and is already `protocol-mismatch`.
+
+  Every record now carries both halves — the revision asked for and the revision answered — and
+  `release-readiness` prints a non-blocking note listing any record where they differ. Both halves
+  on purpose: a record holding only the answer would have to be read against whatever the pinned
+  constant said at the time somebody read it, so the day that pin moves, every record taken before
+  it would start reading as a disagreement about a run that agreed perfectly. The fields fill one
+  server at a time as the three-week rotation comes round; no existing record is backfilled, because
+  the handshake was never persisted anywhere.
+
 - **`audit` told a user their working remote server was `unreachable` — its own word for "no MCP
   answer arrived" — about an endpoint that had answered.** Under revision 2026-07-28 a server that
   does not support the protocol version a request carries MUST answer `400 Bad Request`

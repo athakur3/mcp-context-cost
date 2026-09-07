@@ -52,7 +52,9 @@ completion.
 
 Every published badge has a companion `measurement.json` containing the raw `tools/list`
 capture (`rawToolsCapture`), the SHA-256 of the canonical bytes, the exact launch command,
-and env var *names* (values redacted). Re-derive the number in five lines:
+env var *names* (values redacted), and both halves of the protocol handshake — the
+revision this harness asked for and the revision the server answered with, which are not
+always the same. Re-derive the number in five lines:
 
 ```js
 import { getEncoding } from "js-tiktoken";           // or tiktoken (py), tiktoken-rs

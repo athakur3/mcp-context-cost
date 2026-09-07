@@ -26,7 +26,7 @@
  */
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { cpSync, existsSync, mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { bandSnapshotProblem, wireToClientRatio } from '../src/audit/deferral.js';
@@ -321,6 +321,58 @@ function theProtocolRevisionTheLastReleaseSpeaksIsStillCurrent(): Finding[] {
   ];
 }
 
+/**
+ * Which published numbers were taken over a revision the server chose rather
+ * than the one this harness asked for?
+ *
+ * The handshake lets a server answer with a different version, and 11 of the 88
+ * that answered do — all of them older, `2024-11-05` mostly (run 34161745581,
+ * 2026-09-07). Those measurements are sound: this probe sends `initialize`,
+ * `notifications/initialized` and a paginated `tools/list`, and all three are
+ * the same in those revisions as in the one it asks for. Nothing needs fixing,
+ * which is exactly why this is `look` and could never be `stale` — a build that
+ * went red over it would be red for a fact rather than a fault.
+ *
+ * It is worth surfacing anyway. A server that starts answering with a revision
+ * this probe genuinely cannot drive would show up here first, as a change in
+ * this list rather than as a number quietly meaning something different from
+ * its neighbours.
+ */
+function measuredOverARevisionTheServerChose(): Finding[] {
+  const dir = join(root, 'results');
+  if (!existsSync(dir)) return [];
+  const differing: string[] = [];
+  for (const name of readdirSync(dir)) {
+    const file = join(dir, name, 'measurement.json');
+    if (!existsSync(file)) continue;
+    let m: { requestedProtocolVersion?: unknown; negotiatedProtocolVersion?: unknown };
+    try {
+      m = JSON.parse(readFileSync(file, 'utf8'));
+    } catch {
+      continue; // a record that does not parse is the suite's complaint, not this one's
+    }
+    const asked = m.requestedProtocolVersion;
+    const answered = m.negotiatedProtocolVersion;
+    // Both halves, or the comparison is against something absent. A record
+    // predating these fields says nothing about its handshake either way.
+    if (typeof asked === 'string' && typeof answered === 'string' && asked !== answered) {
+      differing.push(`${name}: asked ${asked}, the server chose ${answered}`);
+    }
+  }
+  if (differing.length === 0) return [];
+  return [
+    {
+      kind: 'look',
+      what: `${differing.length} published record(s) were measured over a revision the server chose`,
+      detail:
+        `${differing.sort().join('\n  ')}\n` +
+        'Sound as they stand: every method this probe uses is unchanged across these revisions. ' +
+        'Worth a look only if the list changes shape — a revision this probe cannot drive would ' +
+        'appear here before it appeared as a number meaning something its neighbours do not.',
+    },
+  ];
+}
+
 function numbersWrittenIntoSource(): Finding[] {
   const files = git('ls-files', 'src').split('\n').filter((f) => f.endsWith('.ts'));
   const hits: string[] = [];
@@ -370,6 +422,7 @@ function main(): number {
     ...changelogCoversTheCommits(),
     ...theReleasedBandStillDescribesTheData(),
     ...theProtocolRevisionTheLastReleaseSpeaksIsStillCurrent(),
+    ...measuredOverARevisionTheServerChose(),
     ...numbersWrittenIntoSource(),
   ];
 
