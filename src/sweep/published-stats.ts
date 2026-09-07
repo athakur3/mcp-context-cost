@@ -27,7 +27,6 @@
  */
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { DEFAULT_CONTEXT_WINDOW } from '../audit/audit.js';
 import { BAND_PRECISION, wireToClientRatio } from '../audit/deferral.js';
 import { countTokens } from '../core/canonical.js';
 import { fieldSelectionShare, isCurrent, mappedTokens } from '../core/divergence.js';
@@ -69,8 +68,6 @@ export interface PublishedStats {
   min: { name: string; tokens: number };
   /** max/min, floored to two significant digits — a span claim must not overstate. */
   spanTimes: number;
-  /** The heaviest server's share of the default context window, rounded %. */
-  maxContextSharePct: number;
   /** The servers README's sample table names, with their current numbers. */
   sample: Record<string, { tokens: number; tools: number }>;
   /** Every server any page states a number for, as all three of its numbers. */
@@ -309,7 +306,6 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
     second: asPair(measured[1]),
     min,
     spanTimes: floorToTwoSignificant(max.tokens / min.tokens),
-    maxContextSharePct: Math.round((max.tokens / DEFAULT_CONTEXT_WINDOW) * 100),
     sample,
     triple,
     claude: {
@@ -518,15 +514,31 @@ export const PAGE_CLAIMS: Claim[] = [
   {
     file: 'docs/index.md',
     id: 'index:span',
+    // The share of a context window this used to end on is gone rather than
+    // rebased. It divided the wire total by 200K, and 78% of the heaviest
+    // server's wire total is base64 `icons` no request carries — so it billed a
+    // context window for bytes nobody pays for. The only leg that could state
+    // that share honestly is the one that can be null, and a `values()` that
+    // throws turns regen red on a schedule.
     template:
-      'The spread is {n}×: from `{w}` at {n} tokens to `{w}` at **{n} tokens** — {d}% of a 200K context window, before the agent takes a single action.',
-    values: (s) => [fmt(s.spanTimes), s.min.name, fmt(s.min.tokens), s.max.name, fmt(s.max.tokens), String(s.maxContextSharePct)],
+      'Ranked on the wire, the spread is {n}×: from `{w}` at {n} tokens to `{w}` at **{n} tokens**, before the agent takes a single action.',
+    values: (s) => [fmt(s.spanTimes), s.min.name, fmt(s.min.tokens), s.max.name, fmt(s.max.tokens)],
+  },
+  {
+    file: 'docs/index.md',
+    id: 'index:triple',
+    template: 'Of that, an Anthropic request carries {n} tokens as tool definitions, and Claude counts those at {q}.',
+    values: (s) => [fmt(s.triple[s.max.name].mapped), q(s.triple[s.max.name].claude)],
   },
   {
     file: 'docs/index.md',
     id: 'index:second-heaviest',
-    template: 'Second-heaviest is `{w}` at {n}.',
-    values: (s) => [s.second.name, fmt(s.second.tokens)],
+    // Three numbers rather than one, and stated flat. The second-heaviest
+    // server on the wire is currently the heaviest on Claude, which is the
+    // whole reason a reader needs all three — but saying so in words would be
+    // an unguarded claim that a sweep can falsify, so the numbers say it.
+    template: 'Second-heaviest is `{w}` at {n} on the wire, {n} carried, {q} on Claude.',
+    values: (s) => [s.second.name, fmt(s.second.tokens), fmt(s.triple[s.second.name].mapped), q(s.triple[s.second.name].claude)],
   },
   {
     file: 'docs/METHODOLOGY.md',
