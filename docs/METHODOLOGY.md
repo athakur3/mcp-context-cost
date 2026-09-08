@@ -52,9 +52,10 @@ completion.
 
 Every published badge has a companion `measurement.json` containing the raw `tools/list`
 capture (`rawToolsCapture`), the SHA-256 of the canonical bytes, the exact launch command,
-env var *names* (values redacted), and both halves of the protocol handshake — the
-revision this harness asked for and the revision the server answered with, which are not
-always the same. Re-derive the number in five lines:
+env var *names* (values redacted), and both halves of the protocol handshake
+(`requestedProtocolVersion`, `negotiatedProtocolVersion`) — the revision this harness asked
+for and the revision the server answered with, which are not always the same; how to read
+the pair is below. Re-derive the number in five lines:
 
 ```js
 import { getEncoding } from "js-tiktoken";           // or tiktoken (py), tiktoken-rs
@@ -70,6 +71,31 @@ argument we want to have.
 Each measured server also has a [detail page](servers/) carrying that server's per-tool
 breakdown, launch command, isolation, canonical hash, and the one-line `verify` command —
 the same facts, without reading the capture by hand.
+
+### Which revision a record was taken under
+
+The two handshake fields read differently, and the difference is deliberate.
+`requestedProtocolVersion` is the revision this harness asked for at `initialize`, stamped
+on every record, measured or failed. `negotiatedProtocolVersion` is the server's own
+answer — a field the protocol requires it to send and allows to differ from the request —
+so it is present only where `initialize` returned one. Absent means **not captured**: a
+record that predates these fields, a run `initialize` never answered, or a server that
+omitted the field it was required to send. An absence is never read as the requested value,
+and never as agreement or disagreement.
+
+They are stored as a pair because a record keeping only the server's answer would have to
+be read against whatever revision this harness asks for *today* — and the day the harness
+moves to a newer revision, every record taken before the move would start reading as a
+disagreement about a run that agreed perfectly at the time.
+
+On a measured record the two need not match, and a mismatch ends nothing. The specification
+requires disconnecting only when the client *cannot support* the version the server names,
+and the requests this probe sends are unchanged across every revision a server has answered
+with — so a difference is recorded and measured through, never hung up on; a 2026-09-07
+census found eleven of eighty-eight answering servers naming an older revision than the
+request carried, and their numbers stand. What ends a run is a refusal: a server that
+rejects a request by naming the protocol files as
+[`protocol-mismatch`](#failure-taxonomy), with no number at all.
 
 ## What the number is not
 
@@ -127,7 +153,7 @@ A row that could not be measured says which kind of blocker it hit, in its own w
 the package refuses to install on, or a backing service the isolation deliberately does not
 provide. The first would measure on a different machine; the second would not measure on any.
 
-## Failure taxonomy — no silent drops
+## Failure taxonomy — no silent drops <a id="failure-taxonomy"></a>
 
 Every candidate server appears in published results with exactly one status:
 

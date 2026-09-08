@@ -83,6 +83,20 @@ while reading it.
   measured records negotiate an older revision and stand, and what ends a run is a refusal,
   not a difference. The docblock now states the decision instead of its negation.
 
+- **The records stamp a handshake pair no published page explained.** Every record the
+  harness writes carries `requestedProtocolVersion`, and `negotiatedProtocolVersion` where
+  `initialize` answered one — but neither field was named on any published page: the
+  methodology's Reproduce-it section said "both halves of the protocol handshake" and left
+  a reader of a record to guess what an absence means. It now names the fields and carries
+  the reading rules in a subsection: absent means not captured — never the requested value,
+  never agreement or disagreement; the pair is stored because a record keeping only the
+  answer would be re-read against whatever the harness asks for *today*, turning every old
+  record into a false disagreement the day the pin moves; and on a measured record the two
+  need not match — a difference is measured through and the numbers stand, while only a
+  refusal ends a run, filing as `protocol-mismatch` with no number at all. Landed before
+  the first scheduled sweep that writes the pair into published records, so the fields are
+  documented before any reader meets one. No number moves; the change is prose on one page.
+
 ## 0.19.0 — 2026-09-08
 
 - **The repository had no formatter, no linter, and `strict: true` as its only compiler flag.**

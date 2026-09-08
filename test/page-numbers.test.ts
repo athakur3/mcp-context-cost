@@ -134,6 +134,16 @@ const STATIC_COUNTS: { file: PageFile; text: string; why: string }[] = [
     why: 'the same dated reading, matched a second time by the longer span',
   },
   {
+    file: 'docs/METHODOLOGY.md',
+    text: 'eleven of eighty-eight answering servers',
+    why:
+      'a dated reading, stated with its date: what the 2026-09-07 protocol-version census found, ' +
+      'quoted from the docblock in core/types.ts that records the measure-through decision it ' +
+      'evidences. History regen cannot maintain — no published record holds the census, and a ' +
+      'future sweep changes the current corpus, not what that census saw. Retake and re-date ' +
+      'both surfaces together if the census is ever rerun.',
+  },
+  {
     file: 'README.md',
     text: '1,200 tokens',
     why: 'an illustrative release-size figure in the badge pitch, not a measurement',
