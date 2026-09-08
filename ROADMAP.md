@@ -34,9 +34,9 @@ The measurement and its gates are further along than their audience. The adoptio
 **2026-09-07** found zero projects displaying the badge, three weeks into published history.
 So the work here is two kinds — keeping the published data honest, which is the discipline the
 project exists for, and getting it in front of the people it is for. Every
-technical item below is worth less than one adopter, which is why the distribution track was
-ordered ahead of the technical ones; it ran on **2026-09-05**. The next reading is due
-**2026-09-19**, and it decides the code levers.
+technical item below is worth less than one adopter. The second kind is the maintainer's
+operational work — posts, listings, outreach — and it is tracked outside this repository,
+which carries the technical side only.
 
 ## The phases at a glance
 
@@ -45,13 +45,12 @@ development work is wrong in both directions: it rushes what is not ready and, m
 delays what is. This file said phase 3 opened on 2026-09-21 for no better reason than that
 phase 2 had been drawn as running to the 25th — and phase 2 finished on the 5th, five days
 before it was scheduled to begin. The column below says what a phase is waiting for, which is
-the only thing that was ever true. Dates live where a date is the point: a post, a dated
-reading, the re-sweep cadence. They are all on the distribution track.
+the only thing that was ever true. Dates live where a date is the point: a dated reading, the
+re-sweep cadence.
 
 | phase | goal | waiting on | exit, in one line |
 |---|---|---|---|
 | **5** | The data tells its story | tool vectors on both sides of most movements | a state-of report with per-tool attribution (rotation length decided on evidence, 2026-09-06) |
-| **∥** | Distribution *(maintainer)* | its own calendar, and someone else's answer | a badge merged somewhere that is not this repository |
 
 ---
 
@@ -136,26 +135,6 @@ it — was met on 2026-09-06.
 a date: the attribution does not exist until the rotation has measured both sides of a movement,
 whatever anyone does. Shortening the rotation was the one lever on it, and it has been pulled —
 three weeks now, so the wait is half what it was.
-
----
-
-## Distribution *(maintainer)* — continuing
-
-The track ran on 2026-09-05: the Action is listed on the GitHub Marketplace, three posts are
-published (r/mcp with the required showcase flair, the Cursor forum, and the MCP community
-Discord's `#showcase`), an entry is in `awesome-mcp-devtools`, and badge pull requests and
-dated movement issues are open. The remaining exit is not ours to close — a badge merged in
-somebody else's README.
-
-**Still open:** a Show HN on **2026-09-09** after that morning's re-sweep, and the dated
-adoption reading from **2026-09-19** that decides the code levers (a Claude Code plugin, an
-MCP-server mode, a native shields service). Neither blocks a technical phase.
-
-**Before any outreach, list what this account already sent that repository** — `gh pr list
---repo <r> --state all --author athakur3`, and the same for issues. Four of the 2026-09-05
-badge targets had already been approached on 2026-08-16 and nothing recorded it: one declined
-in words, one closed without comment, two are still open and unanswered. A second unsolicited
-pull request to a maintainer who declined is the one move here that costs more than it wins.
 
 ---
 
