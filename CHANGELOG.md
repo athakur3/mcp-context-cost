@@ -7,6 +7,29 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **The library export was designed, shipped, and never declared. It is declared now.**
+  `src/core/index.ts` was written as the export a library would ship — `core/protocol.ts` says
+  so in words, and says why that module is kept out of it — but `package.json` had no `main`, no
+  `types` and no `exports`. So `import … from "mcp-context-cost"` did not work, while
+  `mcp-context-cost/dist/core/index.js` did, because nothing was there to stop it. It was a
+  public API in every sense except the one that would have made a change to it reviewable: the
+  barrel is `export *`, so its contents moved whenever any of its seven modules moved, and
+  removing five names from `core/session-start.ts` in this same section took them off the
+  published surface with nothing noticing.
+
+  `package.json` now declares `main`, `types` and an `exports` map pointing at that barrel, and
+  the thirty runtime exports are pinned by a test in `test/core.test.ts`. Adding an export fails
+  it and so does removing one, so either arrives as a deliberate edit with an entry here rather
+  than as a side effect of tidying a module. The test says what it does not cover: a type
+  dropped from `dist/core/index.d.ts` breaks a TypeScript consumer and a runtime-key check
+  cannot see it.
+
+  **This closes deep imports.** An `exports` map means `mcp-context-cost/dist/<anything>.js` now
+  fails with `ERR_PACKAGE_PATH_NOT_EXPORTED` where it used to resolve. That is the point of
+  declaring a surface, and it is a break for anyone who had reached past it — verified against a
+  packed tarball installed into a clean project, where the documented import works, a deep one
+  is refused, the CLI `bin` is unaffected, and a TypeScript consumer resolves the types.
+
 - **A fall was typeset two ways, depending on which copy of the formatter rendered it.**
   Thirteen inline sign-formatters across `src/` ran three mutually inconsistent rules, and the
   inconsistency reached the published pages: the leaderboard and the movement report wrote a

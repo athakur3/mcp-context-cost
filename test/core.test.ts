@@ -13,8 +13,10 @@ import {
   readmeSnippet,
   BADGE_CACHE_SECONDS,
 } from '../src/core/index.js';
+import * as publicApi from '../src/core/index.js';
 
-const fixtures = join(dirname(fileURLToPath(import.meta.url)), '../spec/fixtures');
+const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
+const fixtures = join(repoRoot, 'spec/fixtures');
 const tools = JSON.parse(readFileSync(join(fixtures, 'tools-basic.json'), 'utf8'));
 const expected = JSON.parse(readFileSync(join(fixtures, 'expected-basic.json'), 'utf8'));
 
@@ -114,5 +116,88 @@ describe('snippet', () => {
     expect(s).toBe(
       '[![context cost](https://img.shields.io/endpoint?url=https%3A%2F%2Fexample.com%2Fa.json)](https://example.com/m)',
     );
+  });
+});
+
+/**
+ * The library surface, pinned.
+ *
+ * `src/core/index.ts` was written as the export a library would ship — the note
+ * in `core/protocol.ts` says so, and says why that module is kept out of it —
+ * but `package.json` never declared it, so for eight months it was a public API
+ * in every sense except the one that would have made a change to it reviewable.
+ * It shipped in the tarball, it was reachable at
+ * `mcp-context-cost/dist/core/index.js`, and because the barrel is `export *`
+ * its contents moved whenever any of the seven modules moved. Removing five
+ * names from `core/session-start.ts` on 2026-09-08 took them off the published
+ * surface, and nothing anywhere noticed or had reason to.
+ *
+ * `package.json` declares it now, which makes it a compatibility obligation.
+ * This is the list that obligation is measured against: adding an export fails
+ * here, and so does removing one, so both arrive as a deliberate edit with a
+ * changelog entry rather than as a side effect of tidying a module.
+ *
+ * What it does not cover, stated so nobody reads more into a green run: these
+ * are the *runtime* exports. A type removed from `dist/core/index.d.ts` is just
+ * as breaking for a TypeScript consumer and is invisible here.
+ */
+describe('the published library surface', () => {
+  const SURFACE = [
+    'ANTHROPIC_TOOL_FIELDS',
+    'BADGE_CACHE_SECONDS',
+    'BADGE_LABEL',
+    'BAND_META',
+    'DIVERGENCE_METHOD',
+    'METHODOLOGY_VERSION',
+    'SESSION_START_METHOD',
+    'UNKNOWN_COLOR',
+    'bandColor',
+    'canonicalString',
+    'claudeRatio',
+    'countTokens',
+    'dropStaleRows',
+    'failedMeasurement',
+    'fieldSelectionShare',
+    'formatTokens',
+    'isCurrent',
+    'mappedTokens',
+    'measureTool',
+    'measureTools',
+    'measuredInstructions',
+    'parseDivergence',
+    'readmeSnippet',
+    'sessionStartLoad',
+    'sessionStartTokens',
+    'sha256Hex',
+    'toAnthropicTools',
+    'toBadge',
+    'toolNameTokens',
+    'toolNames',
+  ];
+
+  it('exports exactly what package.json promises a consumer', () => {
+    const actual = Object.keys(publicApi)
+      .filter((n) => n !== 'default')
+      .sort();
+    expect(
+      actual,
+      'the library surface moved. If that was intended, update this list and say so in the ' +
+        'changelog — a consumer is pinned to a version, and this is the promise that version made',
+    ).toEqual([...SURFACE].sort());
+  });
+
+  it('is what package.json points at, so the promise and the file cannot come apart', () => {
+    const pkg = JSON.parse(readFileSync(join(repoRoot, 'package.json'), 'utf8')) as {
+      main: string;
+      types: string;
+      exports: Record<string, { types: string; default: string }>;
+    };
+    // Built paths, so they are checked as strings against the compiler's own
+    // output layout (`outDir: dist`, `rootDir: src`) rather than read off disk —
+    // `dist/` is a build artifact and is not in the repository.
+    expect(pkg.main).toBe('./dist/core/index.js');
+    expect(pkg.types).toBe('./dist/core/index.d.ts');
+    expect(pkg.exports['.'].default).toBe(pkg.main);
+    expect(pkg.exports['.'].types).toBe(pkg.types);
   });
 });

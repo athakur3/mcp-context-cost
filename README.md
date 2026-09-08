@@ -4,9 +4,9 @@
 [![CI](https://github.com/athakur3/mcp-context-cost/actions/workflows/ci.yml/badge.svg)](https://github.com/athakur3/mcp-context-cost/actions/workflows/ci.yml)
 [![GitHub Marketplace](https://img.shields.io/badge/GitHub%20Marketplace-MCP%20context%20cost-blue?logo=github)](https://github.com/marketplace/actions/mcp-context-cost)
 
-Two entry points: `audit`, for the config you run (below), and a GitHub Action, for the
-server you publish — five lines in a workflow that fail a pull request adding more context
-cost than you meant to ship:
+Three entry points: `audit`, for the config you run (below); a GitHub Action, for the server
+you publish; and the measurement itself, as a library, for anything else. The Action is five
+lines in a workflow that fail a pull request adding more context cost than you meant to ship:
 
 ```yaml
 - uses: athakur3/mcp-context-cost@v1
@@ -23,6 +23,18 @@ gate passed or not, so a later step can comment the number on the PR or publish 
 [Full workflow](examples/server-author-ci.yml) ·
 [how the gate decides](#defend-the-number-dont-just-display-it) ·
 [what the number is](docs/METHODOLOGY.md).
+
+As a library, if you want the measurement without either wrapper — the same canonical form,
+the same tokenizer, the same badge:
+
+```js
+import { measureTools, canonicalString, toBadge, METHODOLOGY_VERSION } from "mcp-context-cost";
+```
+
+It is the definition rather than the harness: measurement and canonical bytes, the color
+bands, the badge JSON, the Claude field-selection mapping, and the session-start load. It
+does not launch servers or read your config — that is what `audit` is for. The surface is
+pinned by a test, so a name is added or removed on purpose and says so in the changelog.
 
 **What do the MCP servers in your config cost you before you type anything — and what did
 that last config change add to every session you will ever run?**

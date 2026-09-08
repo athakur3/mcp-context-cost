@@ -4,6 +4,15 @@
   "description": "Measure what your MCP servers cost in context tokens — audit your own config, or badge the server you publish",
   "type": "module",
   "license": "MIT",
+  "main": "./dist/core/index.js",
+  "types": "./dist/core/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/core/index.d.ts",
+      "default": "./dist/core/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/athakur3/mcp-context-cost.git"
