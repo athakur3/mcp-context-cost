@@ -14,24 +14,7 @@ import {
   type HistoryRow,
 } from '../src/sweep/history.js';
 import type { Measurement } from '../src/core/types.js';
-
-function measurement(over: Partial<Measurement> = {}): Measurement {
-  return {
-    methodologyVersion: '1.0',
-    provider: 'tiktoken',
-    encoding: 'o200k_base',
-    status: 'measured',
-    totalTokens: 2378,
-    toolCount: 9,
-    tools: [],
-    canonicalSha256: 'deadbeef',
-    rawToolsCapture: [],
-    measuredAt: '2026-08-16T12:03:51.569Z',
-    serverName: 'memory',
-    isolation: { docker: true, image: 'node:22-slim' },
-    ...over,
-  };
-}
+import { measurement } from './factories.js';
 
 let root: string;
 
@@ -53,7 +36,12 @@ const history = () => readFileSync(join(root, 'results', 'history.csv'), 'utf8')
 
 describe('history rows', () => {
   it('derives a row from a measured measurement', () => {
-    expect(rowFor('memory', measurement())).toEqual({
+    const m = measurement({
+      totalTokens: 2378,
+      toolCount: 9,
+      isolation: { docker: true, image: 'node:22-slim' },
+    });
+    expect(rowFor('memory', m)).toEqual({
       date: '2026-08-16',
       server: 'memory',
       tokens: 2378,
@@ -175,8 +163,9 @@ describe('upsert', () => {
 
 describe('appendHistory', () => {
   it('folds every measurement in results/ into history.csv', () => {
-    writeResult('memory', measurement());
-    writeResult('github', measurement({ totalTokens: 54422, toolCount: 44 }));
+    const docker = { docker: true, image: 'node:22-slim' };
+    writeResult('memory', measurement({ totalTokens: 2378, toolCount: 9, isolation: docker }));
+    writeResult('github', measurement({ totalTokens: 54422, toolCount: 44, isolation: docker }));
     const r = appendHistory(root);
     expect(r).toEqual({ rows: 2, added: 2 });
     expect(history()).toBe(
@@ -193,10 +182,11 @@ describe('appendHistory', () => {
   });
 
   it('corrects the same day in place and appends a later sweep', () => {
-    writeResult('memory', measurement());
+    const swept = { toolCount: 9, isolation: { docker: true, image: 'node:22-slim' } };
+    writeResult('memory', measurement({ ...swept, totalTokens: 2378 }));
     appendHistory(root);
 
-    writeResult('memory', measurement({ totalTokens: 2400 })); // re-swept same day
+    writeResult('memory', measurement({ ...swept, totalTokens: 2400 })); // re-swept same day
     appendHistory(root);
     expect(parseHistory(history())).toEqual([
       {
@@ -238,7 +228,9 @@ describe('appendHistory', () => {
 
 describe('isolation is recorded, not guessed', () => {
   it('reads docker vs host off the measurement', () => {
-    expect(isolationOf(measurement())).toBe('docker');
+    expect(isolationOf(measurement({ isolation: { docker: true, image: 'node:22-slim' } }))).toBe(
+      'docker',
+    );
     expect(isolationOf(measurement({ isolation: { docker: false } }))).toBe('host');
   });
 
@@ -262,7 +254,10 @@ describe('isolation is recorded, not guessed', () => {
   });
 
   it('records the isolation a sweep actually ran under', () => {
-    writeResult('memory', measurement({ isolation: { docker: false } }));
+    writeResult(
+      'memory',
+      measurement({ totalTokens: 2378, toolCount: 9, isolation: { docker: false } }),
+    );
     appendHistory(root);
     expect(history().trim().split('\n')[1]).toBe('2026-08-16,memory,2378,9,measured,host,');
   });

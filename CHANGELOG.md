@@ -49,6 +49,18 @@ while reading it.
   following it is a change of methodology), and what reopens the question — the notice
   prints the decision, and a revision the record does not name reopens it by itself.
 
+- **Six test files carried six drifted copies of the `measurement()` factory; one home now.**
+  `test/factories.ts` exports the one factory with neutral defaults — the majority value
+  where the six agreed, zero where they did not — and a test that depends on a value states
+  it at the call site. The suite was the oracle for the consolidation, which is sound
+  because every assertion in the adopting files compares against a literal rather than
+  against another factory-derived value: of 74 call sites, ten needed a value stated and
+  the rest are bare. `session-start`'s factory stays where it is — it derives from
+  `measureTools` on real fixture tools rather than literals, so it cannot join a
+  literal-defaults home. What this buys became true only in 0.19.0, when tests joined
+  typechecking: a new required field on `Measurement` is now one edit, not six compile
+  errors in six files.
+
 ## 0.19.0 — 2026-09-08
 
 - **The repository had no formatter, no linter, and `strict: true` as its only compiler flag.**

@@ -9,44 +9,34 @@ import {
   serverPageUrl,
 } from '../src/sweep/server-pages.js';
 import type { Measurement } from '../src/core/types.js';
+import { measurement } from './factories.js';
 import type { ServerEntry } from '../src/sweep/report.js';
 
-function measurement(over: Partial<Measurement> = {}): Measurement {
-  return {
-    methodologyVersion: '1.0',
-    provider: 'tiktoken',
-    encoding: 'o200k_base',
-    status: 'measured',
+const entry: ServerEntry = { name: 'demo', command: 'npx -y demo-mcp', category: 'search' };
+
+describe('renderServerPage', () => {
+  // Every value these three assertions read back off the page, stated where
+  // the page is rendered.
+  const demo = measurement({
     totalTokens: 1000,
     toolCount: 2,
     tools: [
       { name: 'search', tokens: 700, descriptionTokens: 100, inputSchemaTokens: 560 },
       { name: 'fetch', tokens: 280, descriptionTokens: 40, inputSchemaTokens: 200 },
     ],
-    canonicalSha256: 'a'.repeat(64),
-    rawToolsCapture: [],
-    measuredAt: '2026-08-16T12:08:31.393Z',
-    serverName: 'demo-server',
-    serverVersion: '1.2.0',
     launchCommand: 'npx -y demo-mcp',
-    envVarNames: [],
     isolation: { docker: true, image: 'node:22-slim', network: 'bridge' },
-    ...over,
-  };
-}
+  });
 
-const entry: ServerEntry = { name: 'demo', command: 'npx -y demo-mcp', category: 'search' };
-
-describe('renderServerPage', () => {
   it('leads with the number, band and tool count', () => {
-    const md = renderServerPage(entry, measurement());
+    const md = renderServerPage(entry, demo);
     expect(md).toContain('# demo — context cost');
     expect(md).toContain('**1,000 tokens** across 2 tools');
     expect(md).toContain('*light*');
   });
 
   it('records what makes the number checkable', () => {
-    const md = renderServerPage(entry, measurement());
+    const md = renderServerPage(entry, demo);
     expect(md).toContain('npx -y demo-mcp');
     expect(md).toContain('a'.repeat(64));
     expect(md).toContain('o200k_base');
@@ -56,7 +46,7 @@ describe('renderServerPage', () => {
   });
 
   it('breaks tokens down per tool, largest first, with shares', () => {
-    const md = renderServerPage(entry, measurement());
+    const md = renderServerPage(entry, demo);
     const rows = md
       .split('\n')
       .filter((l) => l.startsWith('| search |') || l.startsWith('| fetch |'));
@@ -337,6 +327,8 @@ describe('the per-tool table names the output schema when there is one', () => {
     const md = renderServerPage(
       entry,
       measurement({
+        totalTokens: 1000,
+        toolCount: 2,
         tools: [
           {
             name: 'search',

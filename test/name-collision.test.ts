@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { parse } from 'yaml';
 import { shortRepo, writeLeaderboard, type ServerEntry } from '../src/sweep/report.js';
 import { renderServerPage } from '../src/sweep/server-pages.js';
-import type { Measurement } from '../src/core/types.js';
+import { measurement } from './factories.js';
 
 /**
  * The leaderboard prints one thing about an entry: its name. `octocode` here is
@@ -26,21 +26,6 @@ const collision = {
   source: 'https://github.com/Other/demo',
   readOn: '2026-09-07',
 };
-
-const measurement = (over: Partial<Measurement> = {}): Measurement => ({
-  methodologyVersion: '1.0',
-  provider: 'tiktoken',
-  encoding: 'o200k_base',
-  status: 'measured',
-  totalTokens: 374,
-  toolCount: 1,
-  tools: [{ name: 'search', tokens: 159, descriptionTokens: 30, inputSchemaTokens: 120 }],
-  canonicalSha256: 'a'.repeat(64),
-  rawToolsCapture: [],
-  measuredAt: '2026-09-04T06:00:00.000Z',
-  serverName: 'demo-server',
-  ...over,
-});
 
 describe('shortRepo', () => {
   it('reduces a github URL to owner/repo, which is how people say it', () => {

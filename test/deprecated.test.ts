@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { parse } from 'yaml';
 import { deprecationText, writeLeaderboard, type ServerEntry } from '../src/sweep/report.js';
 import type { Measurement } from '../src/core/types.js';
+import { measurement } from './factories.js';
 
 /**
  * A deprecation is a fact about the package, and the set holds both kinds of
@@ -15,21 +16,6 @@ import type { Measurement } from '../src/core/types.js';
  * registry says about the package.
  */
 const repoRoot = join(import.meta.dirname, '..');
-
-const measurement = (over: Partial<Measurement> = {}): Measurement => ({
-  methodologyVersion: '1.0',
-  provider: 'tiktoken',
-  encoding: 'o200k_base',
-  status: 'measured',
-  totalTokens: 374,
-  toolCount: 4,
-  tools: [{ name: 'search', tokens: 159, descriptionTokens: 30, inputSchemaTokens: 120 }],
-  canonicalSha256: 'a'.repeat(64),
-  rawToolsCapture: [],
-  measuredAt: '2026-09-04T06:00:00.000Z',
-  serverName: 'demo-server',
-  ...over,
-});
 
 describe('deprecationText', () => {
   it('says where upstream points, in upstream’s words', () => {

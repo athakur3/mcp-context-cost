@@ -3,7 +3,7 @@ import { mkdtempSync, mkdirSync, writeFileSync, rmSync, readFileSync, existsSync
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { generateDashboard, renderSparkline, writeDashboard } from '../src/sweep/dashboard.js';
-import type { Measurement } from '../src/core/types.js';
+import { measurement } from './factories.js';
 
 describe('renderSparkline', () => {
   it('renders nothing for zero or one point — there is no trend to draw', () => {
@@ -30,26 +30,6 @@ describe('renderSparkline', () => {
     expect(svg).toContain('circle');
   });
 });
-
-function measurement(over: Partial<Measurement> = {}): Measurement {
-  return {
-    methodologyVersion: '1.0',
-    provider: 'tiktoken',
-    encoding: 'o200k_base',
-    status: 'measured',
-    totalTokens: 1200,
-    toolCount: 2,
-    tools: [
-      { name: 'search', tokens: 900, descriptionTokens: 100, inputSchemaTokens: 800 },
-      { name: 'fetch', tokens: 300, descriptionTokens: 40, inputSchemaTokens: 260 },
-    ],
-    canonicalSha256: 'a'.repeat(64),
-    rawToolsCapture: [],
-    measuredAt: '2026-08-18T12:00:00.000Z',
-    serverName: 'demo-server',
-    ...over,
-  };
-}
 
 describe('generateDashboard sparklines', () => {
   let root: string;
@@ -133,7 +113,11 @@ describe('writeDashboard', () => {
       join(root, 'servers.yaml'),
       'servers:\n  - name: demo\n    command: npx -y demo-mcp\n    category: search\n',
     );
-    writeFileSync(join(root, 'results', 'demo', 'measurement.json'), JSON.stringify(measurement()));
+    // The stamp test below reads this date back out of the rendered page.
+    writeFileSync(
+      join(root, 'results', 'demo', 'measurement.json'),
+      JSON.stringify(measurement({ measuredAt: '2026-08-18T12:00:00.000Z' })),
+    );
     writeFileSync(
       join(root, 'results', 'history.csv'),
       'date,server,tokens,toolCount,status\n2026-08-16,demo,900,2,measured\n2026-08-18,demo,1200,2,measured\n',

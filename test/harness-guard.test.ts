@@ -15,23 +15,7 @@ import {
 import type { Measurement, MeasurementStatus } from '../src/core/types.js';
 import { TSX_CLI } from './tsx.js';
 import { removeTempRoot } from './tmp.js';
-
-function measurement(over: Partial<Measurement> = {}): Measurement {
-  return {
-    methodologyVersion: '1.0',
-    provider: 'tiktoken',
-    encoding: 'o200k_base',
-    status: 'measured',
-    totalTokens: 2378,
-    toolCount: 9,
-    tools: [],
-    canonicalSha256: 'deadbeef',
-    rawToolsCapture: [],
-    measuredAt: '2026-08-19T12:03:51.569Z',
-    serverName: 'memory',
-    ...over,
-  };
-}
+import { measurement } from './factories.js';
 
 /** N servers that were all measuring fine before the sweep. */
 function goodPrior(n: number): Snapshot[] {
