@@ -279,6 +279,42 @@ function baseUrlHost(raw: string): string | null {
 }
 
 /**
+ * How Claude Code reads `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`: as a boolean
+ * flag, not as a marker whose presence alone is the signal.
+ *
+ * Sources, because this is a claim about someone else's product and it will rot:
+ *
+ *   - `code.claude.com/docs/en/env-vars.md`, read 2026-09-08. "For variables
+ *     that turn a behavior on or off, set `1` or `true` to turn it on and `0`
+ *     or `false` to turn it off, in any casing." The same page names the six
+ *     variables that instead read any non-empty value —
+ *     `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, `DISABLE_TELEMETRY`,
+ *     `DISABLE_ERROR_REPORTING`, `CLAUDE_CODE_TMUX_TRUECOLOR`,
+ *     `FALLBACK_FOR_ALL_PRIMARY_MODELS` and `IS_DEMO` — and this variable is
+ *     not one of them.
+ *   - The Claude Code v2.1.233 bundle, read 2026-09-08. The variable is
+ *     declared boolean and coerced by the helper every boolean flag uses,
+ *     whose true set is `1`, `true`, `yes`, `on` and whose false set is `0`,
+ *     `false`, `no`, `off`, lower-cased and trimmed. `yes` and `on` are read
+ *     here on that evidence alone: no vendor page states them. If the client
+ *     ever narrows to the documented pair, this over-reports cost for those
+ *     two values — the direction this file is allowed to be wrong in.
+ *
+ * A value in neither set is read as nothing. The documentation does not cover
+ * it, and the bundle leaves tool search ON there — a claim worth more than one
+ * build of one product, so it is refused rather than made.
+ */
+const BETAS_TRUE = new Set(['1', 'true', 'yes', 'on']);
+const BETAS_FALSE = new Set(['0', 'false', 'no', 'off']);
+
+function betasReads(raw: string): 'on' | 'off' | 'unrecognized' {
+  const value = raw.trim().toLowerCase();
+  if (BETAS_TRUE.has(value)) return 'on';
+  if (BETAS_FALSE.has(value)) return 'off';
+  return 'unrecognized';
+}
+
+/**
  * Read the tool-search setting out of ONE environment. Values are matched
  * exactly as documented: an unrecognized value produces `setting-unrecognized`
  * rather than a guess, because guessing here would print a definite verdict
@@ -290,16 +326,23 @@ function baseUrlHost(raw: string): string | null {
  */
 export function resolveToolSearch(env: ToolSearchEnv): ResolvedToolSearch {
   const betas = env.CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS?.trim();
-  // Read first: documented as not overridable by ENABLE_TOOL_SEARCH.
+  // Read first: documented as not overridable by ENABLE_TOOL_SEARCH — but only
+  // where it reads as true. A value that reads as false turned nothing off, so
+  // it decides nothing and the read moves on. That is what the flag being a
+  // boolean means, and reading its presence instead told every machine that set
+  // it to `0` that it pays these tokens on every request.
   if (betas) {
-    return {
-      mode: 'loads-upfront',
-      thresholdShare: null,
-      variable: 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS',
-      value: betas,
-      source: null,
-      readFromMachine: true,
-    };
+    const reads = betasReads(betas);
+    if (reads !== 'off') {
+      return {
+        mode: reads === 'on' ? 'loads-upfront' : 'setting-unrecognized',
+        thresholdShare: null,
+        variable: 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS',
+        value: betas,
+        source: null,
+        readFromMachine: true,
+      };
+    }
   }
 
   const raw = env.ENABLE_TOOL_SEARCH?.trim();
@@ -437,7 +480,13 @@ export function resolveToolSearchSources(sources: ToolSearchSource[]): ResolvedT
   if (betas === 'conflict') return unresolved('sources-disagree', 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS');
   if (betas === 'unreadable')
     return unresolved('value-unreadable', 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS');
-  if (betas) {
+  // A value that reads as false must not be delegated. `resolveToolSearch` is
+  // called here with this variable ALONE, so delegating a value that decided
+  // nothing would answer out of an environment where ENABLE_TOOL_SEARCH is
+  // unset — turning a machine that had switched deferral off in a settings file
+  // into `defers-all`, a false claim in the costlier direction than the one
+  // being fixed. It falls through to the ENABLE_TOOL_SEARCH read instead.
+  if (betas && betasReads(betas.value) !== 'off') {
     return {
       ...resolveToolSearch({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: betas.value }),
       source: betas.source,

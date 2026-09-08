@@ -1167,6 +1167,54 @@ describe('deferral — reading the mode that is actually in force', () => {
       expect(modeOf({ ENABLE_TOOL_SEARCH: 'false' })).toBe('loads-upfront');
     });
 
+    // CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS is a boolean flag in the client,
+    // not a marker whose presence is the signal. Reading its presence told
+    // every machine below that set it to a false value that it pays the whole
+    // total on every request, when each one defers exactly as the default does.
+    it('reads the betas flag as a boolean, on both sides and in any casing', () => {
+      for (const on of ['1', 'true', 'yes', 'on', 'TRUE', ' On ', 'YES']) {
+        expect(modeOf({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: on }), on).toBe('loads-upfront');
+      }
+      for (const off of ['0', 'false', 'no', 'off', 'FALSE', ' Off ', 'No']) {
+        expect(modeOf({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: off }), off).toBe('defers-all');
+      }
+    });
+
+    it('claims nothing from a betas value in neither set', () => {
+      for (const value of ['2', 'maybe', 'tool-search-2026-01-01', '-1']) {
+        expect(
+          verdict('claude-code', [12_000], { env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: value } }),
+        ).toMatchObject({
+          mode: 'setting-unrecognized',
+          crosses: null,
+          setting: { variable: 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS', value, readFromMachine: true },
+        });
+      }
+      // The reading this refuses to invent: the client leaves tool search on
+      // for these, but that is one build of someone else's product, and a
+      // definite "these tokens are NOT loaded up front" is the costlier way to
+      // be wrong.
+      expect(modeOf({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '2' })).not.toBe('defers-all');
+    });
+
+    it('lets the next variable decide once the betas flag reads as false', () => {
+      expect(modeOf({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '0', ENABLE_TOOL_SEARCH: 'false' })).toBe(
+        'loads-upfront',
+      );
+      expect(modeOf({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '0', ENABLE_TOOL_SEARCH: 'auto' })).toBe(
+        'threshold',
+      );
+      // All the way to the third read, which only runs while ENABLE_TOOL_SEARCH is unset.
+      expect(
+        verdict('claude-code', [12_000], {
+          env: {
+            CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: 'no',
+            ANTHROPIC_BASE_URL: 'https://proxy.internal/v1',
+          },
+        }),
+      ).toMatchObject({ mode: 'loads-upfront', setting: { variable: 'ANTHROPIC_BASE_URL' } });
+    });
+
     it('treats auto as the opt-in threshold mode at 10%', () => {
       expect(verdict('claude-code', [12_000], { env: auto })).toMatchObject({
         mode: 'threshold',
@@ -1913,6 +1961,39 @@ describe('the deferral posture is read from every place the machine sets it', ()
     formatReport(report(opts)).replace(/\s+/g, ' ');
 
   describe('resolveToolSearchSources', () => {
+    // The half of the boolean fix that is easy to miss. This function delegates
+    // to `resolveToolSearch` with the betas variable ALONE, so delegating a
+    // value that decided nothing answers out of an environment where
+    // ENABLE_TOOL_SEARCH is unset — and turns a machine that had switched
+    // deferral off in a settings file into `defers-all`, which is a false claim
+    // in a costlier direction than the one being fixed.
+    it('does not delegate a betas value that turned nothing off', () => {
+      expect(
+        resolveToolSearchSources([
+          file('user-settings', USER, {
+            CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '0',
+            ENABLE_TOOL_SEARCH: 'false',
+          }),
+        ]),
+      ).toMatchObject({ mode: 'loads-upfront', variable: 'ENABLE_TOOL_SEARCH', source: USER });
+
+      expect(
+        resolveToolSearchSources([
+          shell({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: 'off' }),
+          file('user-settings', USER, { ENABLE_TOOL_SEARCH: 'auto' }),
+        ]),
+      ).toMatchObject({ mode: 'threshold', variable: 'ENABLE_TOOL_SEARCH', source: USER });
+    });
+
+    it('still lets a betas value that reads as true decide, and names where it was read', () => {
+      expect(
+        resolveToolSearchSources([
+          shell({ ENABLE_TOOL_SEARCH: 'true' }),
+          file('user-settings', USER, { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: 'yes' }),
+        ]),
+      ).toMatchObject({ mode: 'loads-upfront', value: 'yes', source: USER, readFromMachine: true });
+    });
+
     it('lets a settings file decide it while the shell says nothing', () => {
       expect(
         resolveToolSearchSources([shell({}), file('user-settings', USER, { ENABLE_TOOL_SEARCH: 'false' })]),

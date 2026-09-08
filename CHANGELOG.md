@@ -7,6 +7,36 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **`CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` is a boolean flag, and reading its presence instead
+  told every machine that had set it to `0` that it pays the whole total on every request.**
+  `resolveToolSearch` tested bare truthiness after `.trim()`, so `0`, `false`, `off` and any other
+  non-empty value produced the report's most definite sentence — *"claude-code loads every tool
+  definition up front here … Every request carries these tokens before you type anything"* — at
+  machines that defer exactly as the documented default does.
+
+  `code.claude.com/docs/en/env-vars.md`, read 2026-09-08, states the convention: a variable that
+  turns a behaviour on or off reads `1` or `true` as on and `0` or `false` as off, in any casing.
+  The same page names the variables that instead read any non-empty value, and this is not one of
+  them. The Claude Code v2.1.233 bundle installed on the machine this was written on adds `yes`,
+  `on`, `no` and `off` to those sets, and running that client under each value — reading whether
+  its startup event lists the tool-search tool — confirmed the boolean reading: `1` off, and `0`,
+  `false`, `off` and `2` all leaving tool search on.
+
+  A value in neither set is now `setting-unrecognized` rather than a posture. The bundle leaves
+  tool search on there too, but that is one build of someone else's product, and *"these tokens are
+  NOT loaded up front"* is the costlier way to be wrong. `yes` and `on` are published on the
+  bundle's evidence alone and METHODOLOGY marks them as the one rule in that section resting on
+  something other than a published page.
+
+  **The half that is easy to miss** is in `resolveToolSearchSources`, which delegates to
+  `resolveToolSearch` with the betas variable alone: guarding only the flat function would have
+  read `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=0` beside `ENABLE_TOOL_SEARCH=false` as
+  `defers-all` — a new false claim in a costlier direction than the one being fixed. A value that
+  reads as false now falls through to the next variable, and a test pins it.
+
+  No mode was added and no refusal was added: every case lands in a posture both pages already
+  describe, so the refusal count on the front page is unchanged.
+
 - **A published report attributed 78% of github's capture to a field that server does not ship, and
   nothing could see it.** `docs/state-of-mcp-context-cost.md` said *"81% of the capture is
   annotations/outputSchema metadata a request never carries"*. github ships **no `outputSchema` at

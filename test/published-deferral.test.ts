@@ -208,9 +208,14 @@ const CASES: Case[] = [
     },
   },
   {
-    what: 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS is read first and ENABLE_TOOL_SEARCH does not override it',
+    what: 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS read as true is read first, and ENABLE_TOOL_SEARCH does not override it',
     machines: [
       { env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '1' } },
+      { env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: 'true' } },
+      // Casing and surrounding space are the client's, not ours: it lower-cases
+      // and trims before comparing, and the row says "in any casing".
+      { env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: ' ON ' } },
+      { env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: 'Yes' } },
       { env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '1', ENABLE_TOOL_SEARCH: 'true' } },
       {
         settings: [settingsFile('user-settings', USER, { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '1' })],
@@ -220,9 +225,45 @@ const CASES: Case[] = [
     mode: 'loads-upfront',
     row: {
       README:
-        '| `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` set | tool search off — read first, because `ENABLE_TOOL_SEARCH` cannot override it |',
+        '| `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` set to `1`, `true`, `yes` or `on` | tool search off — read first, because `ENABLE_TOOL_SEARCH` cannot override it |',
       METHODOLOGY:
-        '| 1. `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` | any non-empty value | tool search off — loads up front. Read first because it cannot be overridden by `ENABLE_TOOL_SEARCH` |',
+        '| 1. `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` | `1`, `true`, `yes` or `on`, in any casing | tool search off — loads up front. Read first because it cannot be overridden by `ENABLE_TOOL_SEARCH` |',
+    },
+  },
+  {
+    // The defect this case exists for: reading the variable's presence rather
+    // than its value told every one of these machines that it pays the whole
+    // total on every request, and each of them defers exactly as the default does.
+    what: 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS read as false turned nothing off, so the read moves on',
+    machines: [
+      { env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '0' } },
+      { env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: 'false' } },
+      { env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: 'off' } },
+      { env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: 'No' } },
+      { settings: [settingsFile('user-settings', USER, { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '0' })] },
+    ],
+    mode: 'defers-all',
+    row: {
+      README:
+        '| `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` set to `0`, `false`, `no` or `off` | it turned nothing off, so the read moves on and the rows above decide. It is a boolean flag in the client, not a marker whose presence is the signal |',
+      METHODOLOGY:
+        '| | `0`, `false`, `no` or `off`, in any casing | it turned nothing off, so it decides nothing and the read moves on to `ENABLE_TOOL_SEARCH` |',
+    },
+    prose: {
+      METHODOLOGY: 'is a boolean flag in the client, not a marker whose presence alone is the signal',
+    },
+  },
+  {
+    what: 'a CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS value in neither set claims nothing',
+    machines: [
+      { env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '2' } },
+      { env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: 'tool-search-2026-01-01' } },
+      { settings: [settingsFile('user-settings', USER, { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: 'maybe' })] },
+    ],
+    mode: 'setting-unrecognized',
+    row: {
+      METHODOLOGY:
+        '| | any other value | **unrecognized** — no posture is claimed from it, the same as for an undocumented `ENABLE_TOOL_SEARCH` value below |',
     },
   },
   {

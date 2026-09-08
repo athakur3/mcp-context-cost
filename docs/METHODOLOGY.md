@@ -437,7 +437,9 @@ in it, does not spoil an answer that variable would not have decided:
 
 | read | value | posture |
 |---|---|---|
-| 1. `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` | any non-empty value | tool search off — loads up front. Read first because it cannot be overridden by `ENABLE_TOOL_SEARCH` |
+| 1. `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` | `1`, `true`, `yes` or `on`, in any casing | tool search off — loads up front. Read first because it cannot be overridden by `ENABLE_TOOL_SEARCH` |
+| | `0`, `false`, `no` or `off`, in any casing | it turned nothing off, so it decides nothing and the read moves on to `ENABLE_TOOL_SEARCH` |
+| | any other value | **unrecognized** — no posture is claimed from it, the same as for an undocumented `ENABLE_TOOL_SEARCH` value below |
 | 2. `ENABLE_TOOL_SEARCH` | `true` | every definition deferred, at any size |
 | | `false` | loads up front |
 | | `auto` / `auto:N` (N = 0–100) | deferred once the definitions reach 10% / N% of the context window |
@@ -446,6 +448,11 @@ in it, does not spoil an answer that variable would not have decided:
 | at 1, 2 or 3 | set by the place that would decide, to something that is not a readable string — an `env` block holding a JSON boolean, a number or `null` | **unreadable** — the variable is set there and what it is set to is unknown, so no posture is claimed and the report says whether these tokens are deferred cannot be said from it. A settings file holding `false` rather than `"false"` is this row, not the `false` row above |
 | | otherwise / nothing set anywhere | the documented default: every definition deferred, no threshold |
 | the entry itself | `alwaysLoad: true` | loads at session start whatever the setting says — read from the entry, named with its tokens, and left out of any threshold comparison |
+
+`CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` is a boolean flag in the client, not a marker whose
+presence alone is the signal, so a value it does not read as true leaves tool search on and the
+read continues. Taking its presence for its meaning is how a machine that had set it to `0` was
+told that every request carries these tokens.
 
 **Two places set them, and both are read.** Claude Code takes those variables from the shell
 it starts in *and* from the `env` block of its own settings files, so `audit` opens all of
@@ -516,7 +523,7 @@ answer `401` with a `WWW-Authenticate: Bearer …` header; DeepWiki, Microsoft L
 Docs and Hugging Face answer `200`. Header values an entry carries are sent
 and never reported; only their names are.
 
-**Source, and its date.** All of the above is a model of another product's documented
+**Source, and its date.** Most of the above is a model of another product's documented
 behaviour, not an observation of it: Claude Code MCP documentation, §"Scale with MCP tool
 search", read **2026-08-20** and re-read **2026-09-06**. On the re-read the value table
 stands as quoted, and four things moved around it, each recorded in
@@ -528,6 +535,19 @@ here; `alwaysLoad` is an entry field on every server type, now read as above; an
 descriptions and server instructions are truncated at 2 KB each. Nothing here measured
 Claude Code deferring or not deferring anything. If that documentation changes, this section
 and `src/audit/deferral.ts` are what have to change with it.
+
+**One rule above is not a quotation, and it is marked.** How
+`CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` is read comes from two sources rather than one.
+`code.claude.com/docs/en/env-vars.md`, read **2026-09-08**, states the convention: for a
+variable that turns a behaviour on or off, `1` or `true` turns it on and `0` or `false` turns
+it off, in any casing. That page also names the variables which instead read any non-empty
+value, and this is not one of them. The remaining values it accepts — `yes`, `on`, `no`, `off`
+— were read out of the Claude Code v2.1.233 bundle installed on the machine this was written
+on, dated **2026-09-08**, and the boolean reading was confirmed by running that client under
+each value and reading whether its startup event listed the tool-search tool. That is one
+build on one machine, and it is the only claim in this section resting on something other than
+a published page. If it is wrong, it is wrong in the direction that over-states what a request
+carries.
 
 ## CLI cross-check <a id="cli-cross-check"></a>
 
