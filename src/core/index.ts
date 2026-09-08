@@ -72,15 +72,20 @@ export { readmeSnippet } from './snippet.js';
  * The type half of the surface, pinned where it can actually fail.
  *
  * The runtime half is a list in `test/core.test.ts` read off `Object.keys`.
- * Types are erased before that runs, so they need a compile-time check — and it
- * cannot live in the test, because `tsconfig.json` includes only `src` and
- * `tsconfig.tools.json` only `src` and `tools`: no test file is typechecked by
- * `npm run typecheck`, so a type assertion written there would report nothing
- * and read as though it did.
+ * Types are erased before that runs, so they need a compile-time check, and a
+ * type-only self-import is it: dropping a name from the list above stops this
+ * file compiling (TS2724), and shortening the tuple without changing the count
+ * below fails too, so neither half can be edited alone.
  *
- * A type-only self-import instead. Dropping a name from the list above stops
- * this file compiling (TS2724), and shortening the tuple without changing the
- * count below fails too, so neither half can be edited alone.
+ * **What it does not catch.** A type *added* to the list above without being
+ * added to the tuple compiles cleanly — TypeScript cannot enumerate a module's
+ * exported types at type level, so a widened surface is visible only in the
+ * diff. The runtime list has no such gap: it fails on an addition as readily as
+ * on a removal.
+ *
+ * This was written when no test file was typechecked, which would have made the
+ * same assertion inert over in the test. `tsconfig.test.json` closed that on
+ * 2026-09-08; the pin stays here because here is where the export list is.
  */
 import type * as Public from './index.js';
 

@@ -386,7 +386,7 @@ number is *not*, config policy, failure taxonomy, frozen color bands, known dive
 | `src/cli.ts` | `audit` (measure your own stack), `verify` (re-derive any published number), `measure` |
 | `spec/fixtures/` | golden vectors shared by the TypeScript and bash implementations |
 | `tools/` | the scripts that call a network API — the Claude divergence run, the adoption reading, the registry scan — kept out of the package so the library stays offline |
-| `upstream/` | `badge.sh` + composite-action patch + bash tests — the self-serve badge recipe, carried here |
+| `upstream/` | `badge.sh` + bash tests — the self-serve badge recipe, carried here |
 | `servers.yaml` | 107 curated candidates with live install metrics and provenance |
 | `results/` · `badges/` | measurements, leaderboard, history series, shields endpoint JSONs |
 | `docs/` | methodology, dashboard, and a generated page per measured server |

@@ -24,16 +24,17 @@ while reading it.
   deciding. Named, a name that leaves its module is a compile error in `core/index.ts`, and a
   name added to a module does not reach the API until it is added there.
 
-  Four ways the surface can move, and what stops each, all four verified by making the change
-  and watching it fail: a type deleted from its module, and a type or a name dropped from the
-  barrel, are compile errors; the thirty runtime exports are a list in `test/core.test.ts`; and
-  the nine types are pinned by a type-only self-import in `core/index.ts`, with a tuple length
-  so the list cannot be shortened quietly.
+  Four ways the surface can move, each verified by making the change and watching it fail. A
+  type deleted from its module, and a type dropped from the barrel, are compile errors
+  (`TS2724`). The thirty runtime exports are a list in `test/core.test.ts`, which is what
+  catches a *value* dropped from the barrel — that one is not a compile error, because nothing
+  downstream references it. The nine types are pinned by a type-only self-import in
+  `core/index.ts`, with a tuple length so the list cannot be shortened quietly.
 
-  That pin is in `src/` rather than beside the runtime list for a reason worth recording: **no
-  test file is typechecked.** `tsconfig.json` includes only `src` and `tsconfig.tools.json` only
-  `src` and `tools`, so a compile-time assertion written in a test would report nothing while
-  reading as a guarantee.
+  **One move is caught by neither**, and the docblock says so rather than implying otherwise: a
+  type *added* to the barrel without being added to the tuple compiles cleanly, because
+  TypeScript cannot enumerate a module's exported types at type level. A widened type surface is
+  reviewable in the diff and nowhere else. The runtime list has no equivalent gap.
 
   **This closes deep imports.** An `exports` map means `mcp-context-cost/dist/<anything>.js` now
   fails with `ERR_PACKAGE_PATH_NOT_EXPORTED` where it used to resolve. That is the point of

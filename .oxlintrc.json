@@ -22,8 +22,9 @@
     "eslint/no-await-in-loop": "off",
 
     // Fires only on `_meta`, which is the Model Context Protocol's own field
-    // name — `tools/list` results carry it, and `_meta["anthropic/alwaysLoad"]`
-    // is a condition the deferral model reads. It is not ours to rename.
+    // name: `registry-scan.ts` reads a record's
+    // `_meta['io.modelcontextprotocol.registry/official'].status` to tell an
+    // active entry from a delisted one. It is not ours to rename.
     "eslint/no-underscore-dangle": "off",
 
     // A performance rule about rebuilding objects inside a `map` over a large

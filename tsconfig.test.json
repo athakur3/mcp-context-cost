@@ -17,5 +17,7 @@
   // `src` arrives through the imports these files make, and is checked here
   // under the two relaxed flags as a side effect. That is not a loosening: the
   // base config checks `src` strictly in the same `npm run typecheck` run.
-  "include": ["test", "spec"]
+  // `vitest.config.ts` sits at the root and belongs to no other config; it is
+  // the suite's own configuration, so it is checked with the suite.
+  "include": ["test", "spec", "vitest.config.ts"]
 }

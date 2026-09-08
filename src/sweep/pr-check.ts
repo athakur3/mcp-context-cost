@@ -13,7 +13,7 @@
  * "added" never sees it. What is launched is what is measured.
  *
  * Nothing is written anywhere. `measureServer` runs with `persist: false`, the
- * form session-start.ts and cross-check.ts already use, and this file imports
+ * form cross-check.ts already uses, and this file imports
  * none of history.js, report.js, regressions.js or regen.js — the number is
  * printed in the check log and the rotation publishes its own later, under its
  * own rules. The measured line here is not the published number and must not

@@ -26,9 +26,11 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      # `npm run typecheck` rather than a bare `tsc --noEmit`: the second config
-      # carries `tools/`, which the first does not, and both run the eight
-      # strictness flags. A bare tsc here would check two thirds of the code.
+      # `npm run typecheck` rather than a bare `tsc --noEmit`: three configs,
+      # not one. The first checks `src` and emits nothing; the second adds
+      # `tools/`; the third adds `test/` and `spec/` with two of the eight
+      # strictness flags off, for the reason `tsconfig.test.json` states. A bare
+      # tsc here would check `src` alone.
       - run: npm run typecheck
       - name: Formatting
         # Check, never write. CI that reformats is CI that pushes.
