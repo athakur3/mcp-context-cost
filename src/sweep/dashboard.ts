@@ -350,7 +350,8 @@ ${barRows || '<p class="h2sub">Sweep in progress — first results land shortly.
 
   <footer>
     Reproduce any number: <code>mcp-context-cost verify results/&lt;server&gt;/measurement.json</code> — re-derives tokens + SHA-256 from the raw capture.
-    Bands are provisional until frozen against the full-sweep distribution.
+    Band thresholds are frozen; the values, and the day they froze, are in the
+    <a href="METHODOLOGY.html#color-bands">methodology</a>.
   </footer>
 </div>
 <div id="tip" role="status"></div>

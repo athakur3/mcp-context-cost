@@ -220,7 +220,7 @@ week's slice doesn't include keep their most recent measurement, unchanged, on t
 leaderboard. One extra server, the reference server behind this project's own badge, is also
 re-measured weekly.
 
-## Color bands
+## Color bands <a id="color-bands"></a>
 
 | tokens | color |
 |---|---|

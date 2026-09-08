@@ -61,6 +61,16 @@ while reading it.
   typechecking: a new required field on `Measurement` is now one edit, not six compile
   errors in six files.
 
+- **The dashboard called the bands provisional, three weeks after they froze.** Every render
+  of `docs/dashboard.html` closed with "Bands are provisional until frozen against the
+  full-sweep distribution", while the methodology page has said **frozen on 2026-08-16** the
+  whole time — and `0.19.0` deleted the same stale sentence from `core/bands.ts` and the
+  METHODOLOGY heading without reaching this copy, because it lives in the generator's
+  template rather than in any file that sweep of finished foundations touched. The footer now
+  refers to the methodology's Color-bands section instead of restating anything, which is the
+  rule that fixed the others: the freeze has one home, and a second copy is one edit away
+  from disagreeing again. Regenerating moves one line of the dashboard; no number changes.
+
 ## 0.19.0 — 2026-09-08
 
 - **The repository had no formatter, no linter, and `strict: true` as its only compiler flag.**
