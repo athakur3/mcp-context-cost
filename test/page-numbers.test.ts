@@ -232,6 +232,6 @@ describe('the withdrawn state-of report states nothing that can drift', () => {
   });
 
   it('states those two dates and no others', () => {
-    expect([...new Set(prose.match(ISO_DATE) ?? [])].sort()).toEqual(DATES_IT_MAY_STATE);
+    expect([...new Set(prose.match(ISO_DATE) ?? [])].toSorted()).toEqual(DATES_IT_MAY_STATE);
   });
 });

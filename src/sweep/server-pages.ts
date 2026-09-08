@@ -122,7 +122,7 @@ export function renderServerPage(
   const claudeOfThisPage = isCurrent(headlineRow, m.canonicalSha256)
     ? headlineRow.claudeDelta
     : null;
-  const tools = [...m.tools].sort((a, b) => b.tokens - a.tokens);
+  const tools = m.tools.toSorted((a, b) => b.tokens - a.tokens);
   const shown = tools.slice(0, MAX_TOOL_ROWS);
   const pct = (n: number) => (total > 0 ? `${((n / total) * 100).toFixed(1)}%` : '—');
 
@@ -322,7 +322,7 @@ export function renderServerIndex(
 ): string {
   const measured = rows
     .filter((r) => isMeasured(r.m))
-    .sort((a, b) => (b.m!.totalTokens as number) - (a.m!.totalTokens as number));
+    .toSorted((a, b) => (b.m!.totalTokens as number) - (a.m!.totalTokens as number));
   const rest = rows.filter((r) => !isMeasured(r.m));
 
   const md: string[] = [];
@@ -397,7 +397,7 @@ export function writeServerPages(entries: ServerEntry[], root = process.cwd()): 
     if (!isMeasured(m)) continue;
     const series = history
       .filter((h) => h.server === entry.name)
-      .sort((a, b) => a.date.localeCompare(b.date));
+      .toSorted((a, b) => a.date.localeCompare(b.date));
     writeFileSync(join(outDir, `${entry.name}.md`), renderServerPage(entry, m, series, divergence));
     pages++;
   }

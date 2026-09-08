@@ -238,7 +238,8 @@ describe('the leaderboard shows both figures for every measured server', () => {
         .split('\n')
         .find((l) => l.includes(`[${name}]`))!
         .split('|')
-        [sessionStartCol(md)].trim();
+        .at(sessionStartCol(md))!
+        .trim();
     expect(cell('floored').startsWith('≥')).toBe(true);
     expect(cell('known').startsWith('≥')).toBe(false);
     expect(md).toContain('marks a floor, on 1 of 2 rows');

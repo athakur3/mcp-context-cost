@@ -7,9 +7,7 @@ import {
   buildToolShapeBaseline,
   parseToolShapeBaseline,
   percentileOf,
-  quantileTable,
   suggestFor,
-  type ToolShapeBaseline,
 } from '../src/core/tool-shape.js';
 import { measureTools, METHODOLOGY_VERSION } from '../src/core/canonical.js';
 import { buildReport, formatReport, serverKey } from '../src/audit/audit.js';

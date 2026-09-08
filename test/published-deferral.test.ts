@@ -490,7 +490,7 @@ describe('the published deferral tables describe the resolver', () => {
       expect(new Set(claimed).size, `${PAGE_FILES[page]}: two cases claim the same row`).toBe(
         claimed.length,
       );
-      expect([...tableRows(page)].sort()).toEqual([...claimed].sort());
+      expect(tableRows(page).toSorted()).toEqual(claimed.toSorted());
     }
   });
 

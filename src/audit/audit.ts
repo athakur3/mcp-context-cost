@@ -203,7 +203,7 @@ export interface BudgetFit {
 export function planBudgetFit(config: AuditConfigResult, limit: number): BudgetFit {
   const measured = config.servers
     .filter((srv) => typeof srv.tokens === 'number' && (srv.tokens as number) > 0)
-    .sort((a, b) => (b.tokens as number) - (a.tokens as number));
+    .toSorted((a, b) => (b.tokens as number) - (a.tokens as number));
 
   const overBy = config.totalTokens - limit;
   const drop: BudgetFitStep[] = [];
@@ -288,12 +288,12 @@ function envSignature(s: ConfiguredServer): string {
   const headers = s.headers ?? {};
   return JSON.stringify([
     Object.keys(env)
-      .sort()
+      .toSorted()
       .map((k) => [k, env[k]]),
     // A remote's headers decide what it serves the way env decides for a
     // process: a bearer token selects an account, and an account its tools.
     Object.keys(headers)
-      .sort()
+      .toSorted()
       .map((k) => [k, headers[k]]),
   ]);
 }
@@ -920,9 +920,9 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
   // Read from the entries, so it is stated up front rather than listed among
   // the conditions a reader has to check: whatever the setting says, these load.
   if (d.mechanism === 'tool search' && d.alwaysLoad.servers.length) {
-    const n = d.alwaysLoad.servers.length;
+    const pinned = d.alwaysLoad.servers.length;
     lines.push(
-      `  ${n} server${n === 1 ? ' is' : 's are'} pinned "alwaysLoad": true and load${n === 1 ? 's' : ''} at session start whatever`,
+      `  ${pinned} server${pinned === 1 ? ' is' : 's are'} pinned "alwaysLoad": true and load${pinned === 1 ? 's' : ''} at session start whatever`,
     );
     lines.push(
       `  the setting says: ${d.alwaysLoad.servers.join(', ')} — ${d.alwaysLoad.tokens.toLocaleString()} wire tokens,`,
@@ -1157,7 +1157,8 @@ export function formatReport(report: AuditReport): string {
       const skippedInScope = report.configs
         .filter((c) => c.deferral === cfg.deferral)
         .reduce((a, c) => a + c.skipped.length, 0);
-      for (const line of deferralLines(cfg.deferral, skippedInScope)) lines.push(line);
+      for (const deferralLine of deferralLines(cfg.deferral, skippedInScope))
+        lines.push(deferralLine);
     }
 
     if (cfg.heaviestTools.length) {

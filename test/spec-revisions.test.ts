@@ -41,7 +41,7 @@ describe('the reading itself', () => {
   it('is dated revisions, sorted, without duplicates', () => {
     const { revisions } = KNOWN_SPEC_REVISIONS;
     for (const r of revisions) expect(r, r).toMatch(SPEC_REVISION_NAME);
-    expect(revisions).toEqual([...revisions].sort());
+    expect(revisions).toEqual(revisions.toSorted());
     expect(new Set(revisions).size).toBe(revisions.length);
   });
 });

@@ -60,7 +60,7 @@ export interface ToolShapeBaseline {
 
 /** Nearest-rank quantile table over `values` — same rank rule as the badge-band percentiles. */
 export function quantileTable(values: number[]): number[] {
-  const sorted = [...values].sort((a, b) => a - b);
+  const sorted = values.toSorted((a, b) => a - b);
   const n = sorted.length;
   const q: number[] = [];
   for (let p = 0; p <= 100; p++) {

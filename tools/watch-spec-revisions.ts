@@ -103,11 +103,11 @@ function partition(listing: unknown): SpecListingReading {
     .filter((e) => e.type === 'dir')
     .map((e) => String(e.name));
   return {
-    dated: names.filter((n) => SPEC_REVISION_NAME.test(n)).sort(),
+    dated: names.filter((n) => SPEC_REVISION_NAME.test(n)).toSorted(),
     ignored: names.filter((n) => IGNORED_SPEC_DIRS.includes(n)),
     unrecognised: names
       .filter((n) => !SPEC_REVISION_NAME.test(n) && !IGNORED_SPEC_DIRS.includes(n))
-      .sort(),
+      .toSorted(),
     latestSaid: null,
   };
 }

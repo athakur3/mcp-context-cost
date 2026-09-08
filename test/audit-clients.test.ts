@@ -77,7 +77,7 @@ enabled = false
 
   it("treats enabled = false as switched off, in the file's own words", () => {
     const d = extractDeclaration(parseConfigText(toml, 'toml'), meta('codex'));
-    expect(d.servers.map((s) => s.name).sort()).toEqual(['context7', 'figma']);
+    expect(d.servers.map((s) => s.name).toSorted()).toEqual(['context7', 'figma']);
     expect(d.disabled).toEqual(['off']);
   });
 });

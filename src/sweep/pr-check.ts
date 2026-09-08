@@ -137,7 +137,7 @@ function stable(value: unknown): string {
   if (typeof value === 'object' && value !== null) {
     const o = value as Record<string, unknown>;
     return `{${Object.keys(o)
-      .sort()
+      .toSorted()
       .map((k) => `${JSON.stringify(k)}:${stable(o[k])}`)
       .join(',')}}`;
   }

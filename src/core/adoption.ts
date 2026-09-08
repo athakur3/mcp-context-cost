@@ -484,7 +484,7 @@ export function mergeSightings(
       lastSeenAt: checkedAt,
     });
   }
-  return [...byKey.values()].sort((a, b) => sightingKey(a).localeCompare(sightingKey(b)));
+  return [...byKey.values()].toSorted((a, b) => sightingKey(a).localeCompare(sightingKey(b)));
 }
 
 /** A carried-forward record re-read at its recorded URL and judged again. */
@@ -580,7 +580,7 @@ export function badgeRepos(sightings: Sighting[], checkedAt: string): string[] {
   for (const s of sightings) {
     if (s.kind === 'badge' && s.lastSeenAt === checkedAt) repos.add(s.repo);
   }
-  return [...repos].sort();
+  return [...repos].toSorted();
 }
 
 /**

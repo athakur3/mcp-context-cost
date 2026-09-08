@@ -367,7 +367,7 @@ describe('mergeSightings', () => {
       sighting({ repo: 'gone/away', firstSeenAt: '2026-08-01', lastSeenAt: '2026-08-01' }),
     ];
     const merged = mergeSightings(previous, [sighting()], '2026-09-01');
-    expect(merged.map((s) => s.repo).sort()).toEqual(['gone/away', 'someone/their-server']);
+    expect(merged.map((s) => s.repo).toSorted()).toEqual(['gone/away', 'someone/their-server']);
     expect(merged.find((s) => s.repo === 'gone/away')?.lastSeenAt).toBe('2026-08-01');
   });
 

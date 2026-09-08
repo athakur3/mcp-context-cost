@@ -127,7 +127,7 @@ describe('the deprecations committed in servers.yaml', () => {
   const deprecated = doc.servers.filter((s) => s.deprecated);
 
   it('each carries the version, source and reading date its claim rests on', () => {
-    expect(deprecated.map((s) => s.name).sort()).toEqual(['elasticsearch', 'gdrive', 'neon']);
+    expect(deprecated.map((s) => s.name).toSorted()).toEqual(['elasticsearch', 'gdrive', 'neon']);
     for (const s of deprecated) {
       const d = s.deprecated!;
       expect(d.version.trim(), `${s.name} version`).not.toBe('');

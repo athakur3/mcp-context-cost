@@ -100,7 +100,7 @@ describe('badge rendering', () => {
 
   it('emits strict shields endpoint schema with no extra keys', () => {
     const badge = toBadge(measureTools(tools, { serverName: 'x' }));
-    expect(Object.keys(badge).sort()).toEqual([
+    expect(Object.keys(badge).toSorted()).toEqual([
       'cacheSeconds',
       'color',
       'label',
@@ -178,12 +178,12 @@ describe('the published library surface', () => {
   it('exports exactly what package.json promises a consumer', () => {
     const actual = Object.keys(publicApi)
       .filter((n) => n !== 'default')
-      .sort();
+      .toSorted();
     expect(
       actual,
       'the library surface moved. If that was intended, update this list and say so in the ' +
         'changelog — a consumer is pinned to a version, and this is the promise that version made',
-    ).toEqual([...SURFACE].sort());
+    ).toEqual(SURFACE.toSorted());
   });
 
   // The type half of this surface is pinned in `src/core/index.ts` itself, not

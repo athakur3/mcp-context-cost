@@ -95,6 +95,6 @@ describe('audit — an open http entry is a number', () => {
     expect(cfg.servers[0].toolCount).toBeGreaterThan(3);
     expect(cfg.totalTokens).toBe(cfg.servers[0].tokens);
     expect(JSON.stringify(report)).not.toContain('remote-not-measurable');
-    expect(readdirSync(dir).sort()).toEqual(['mcp.json']);
+    expect(readdirSync(dir).toSorted()).toEqual(['mcp.json']);
   }, 260_000);
 });

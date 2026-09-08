@@ -154,7 +154,8 @@ function bothEndsPlain(text: string, limit: number): string {
       const line = lines[i]!; // the loop runs between indices taken from `lines`
       const cost = line.length + 1;
       if (used + cost > cap) break;
-      fromEnd ? out.unshift(line) : out.push(line);
+      if (fromEnd) out.unshift(line);
+      else out.push(line);
       used += cost;
     }
     return { out, used };

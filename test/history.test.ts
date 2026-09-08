@@ -113,7 +113,7 @@ describe('csv round trip', () => {
 
   it('round-trips through parseHistory', () => {
     expect(parseHistory(formatHistory(rows))).toEqual(
-      [...rows].sort((a, b) => a.date.localeCompare(b.date)),
+      rows.toSorted((a, b) => a.date.localeCompare(b.date)),
     );
   });
 

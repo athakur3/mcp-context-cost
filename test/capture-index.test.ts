@@ -88,7 +88,7 @@ describe('parseCaptureIndex', () => {
     const dirty = parseCaptureIndex(
       JSON.stringify({ ...index, captures: { ...index.captures, bad: { server: 'x' } } }),
     );
-    expect(Object.keys(dirty!.captures).sort()).toEqual([SHA_OLD, SHA_NEW].sort());
+    expect(Object.keys(dirty!.captures).toSorted()).toEqual([SHA_OLD, SHA_NEW].toSorted());
   });
 });
 
@@ -210,17 +210,17 @@ describe('a hash two servers share identifies neither', () => {
           JSON.stringify({ method: 'cost-regression/v1', server: name, entries }),
         );
       }
-      const index = writeCaptureIndex(
+      const written = writeCaptureIndex(
         [
           { name: 'alpha', command: 'npx -y alpha' },
           { name: 'beta', command: 'npx -y beta' },
         ],
         root,
       );
-      expect(index.captures[shared]).toBeUndefined();
-      expect(identify(shared, index).kind).toBe('unknown');
+      expect(written.captures[shared]).toBeUndefined();
+      expect(identify(shared, written).kind).toBe('unknown');
       // The unambiguous capture is unaffected.
-      expect(index.captures[own]?.server).toBe('beta');
+      expect(written.captures[own]?.server).toBe('beta');
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

@@ -331,7 +331,7 @@ describe('buildReport', () => {
     const c = r.configs[0];
     expect(c.servers.map((s) => s.name)).toEqual(['beta', 'alpha']); // heaviest first
     expect(c.totalTokens).toBe((c.servers[0].tokens ?? 0) + (c.servers[1].tokens ?? 0));
-    expect(c.servers.reduce((a, s) => a + (s.share ?? 0), 0)).toBeCloseTo(1, 10);
+    expect(c.servers.reduce((sum, s) => sum + (s.share ?? 0), 0)).toBeCloseTo(1, 10);
     expect(c.contextShare).toBeCloseTo(c.totalTokens / DEFAULT_CONTEXT_WINDOW, 10);
   });
 
@@ -358,7 +358,7 @@ describe('buildReport', () => {
     const c = r.configs[0];
     expect(c.servers.map((s) => s.name)).toEqual(['ok']);
     // A remote nobody probed is not called anything about the endpoint — only unprobed.
-    expect(c.skipped.map((s) => s.status).sort()).toEqual(['startup-failure', 'unreachable']);
+    expect(c.skipped.map((s) => s.status).toSorted()).toEqual(['startup-failure', 'unreachable']);
     expect(c.skipped.find((s) => s.name === 'linear')?.notes).toBe('https://x/sse — not probed');
     expect(c.totalTokens).toBe(c.servers[0].tokens);
   });
@@ -507,7 +507,7 @@ describe('buildReport', () => {
       expect(c.trimAdvice!.tools).toHaveLength(3);
       expect(c.trimAdvice!.tools).toEqual(c.heaviestTools.slice(0, 3));
       expect(c.trimAdvice!.recoverableTokens).toBe(
-        c.trimAdvice!.tools.reduce((a, t) => a + t.tokens, 0),
+        c.trimAdvice!.tools.reduce((sum, t) => sum + t.tokens, 0),
       );
       expect(c.trimAdvice!.recoverableShare).toBeCloseTo(
         c.trimAdvice!.recoverableTokens / c.totalTokens,
@@ -709,7 +709,7 @@ describe('audit CLI', () => {
     expect(report.configs[0].skipped[0]).toMatchObject({ name: 'linear', status: 'unreachable' });
     expect(report.configs[0].skipped[0].notes).toMatch(/^https:\/\/mcp\.example\/sse: /);
     // audit runs in someone's own project — it must not write results/ or badges/
-    expect(readdirSync(dir).sort()).toEqual(['mcp.json']);
+    expect(readdirSync(dir).toSorted()).toEqual(['mcp.json']);
   }, 200_000);
 
   it('exits 1 when no config is found', () => {
@@ -1948,7 +1948,7 @@ describe('deferral — reading the mode that is actually in force', () => {
       { source: '/two.json', client: 'cursor', servers: [{ name: 'b', tokens: 84_455 }] },
     ]);
     const roundTripped = JSON.parse(JSON.stringify(report)) as AuditReport;
-    expect(roundTripped.configs.map((c) => c.deferral.mode).sort()).toEqual([
+    expect(roundTripped.configs.map((c) => c.deferral.mode).toSorted()).toEqual([
       'deferral-on-record',
       'defers-all',
     ]);
@@ -2000,15 +2000,15 @@ describe('deferral — the configs one session reads together', () => {
     expect(cc).toHaveLength(2);
     // One verdict object, shared: the session that loads both is one session.
     expect(cc[0].deferral).toBe(cc[1].deferral);
-    expect(cc[0].deferral.sources.sort()).toEqual(['/home/.claude.json', '/proj/.mcp.json']);
+    expect(cc[0].deferral.sources.toSorted()).toEqual(['/home/.claude.json', '/proj/.mcp.json']);
     expect(cc[0].deferral.wireTokens).toBe(cc[0].totalTokens + cc[1].totalTokens);
   });
 
   it('still totals each config file separately', () => {
     const r = claudeCodeReport({ ENABLE_TOOL_SEARCH: 'auto' });
-    const cc = r.configs.filter((c) => c.client === 'claude-code');
-    expect(cc[0].totalTokens).toBeLessThan(cc[0].deferral.wireTokens);
-    expect(cc[0].totalTokens).toBeGreaterThan(0);
+    const cc = r.configs.find((c) => c.client === 'claude-code')!;
+    expect(cc.totalTokens).toBeLessThan(cc.deferral.wireTokens);
+    expect(cc.totalTokens).toBeGreaterThan(0);
   });
 
   it('does not merge a different client into that session', () => {

@@ -221,7 +221,7 @@ describe('probeRemotes — once per endpoint, keyed like the measurements', () =
       { client: 'claude-code', source: '/other.json', servers: [twin] },
     ];
     const probes = await probeRemotes(configs);
-    expect([...probes.keys()].sort()).toEqual([serverKey(a), serverKey(b)].sort());
+    expect([...probes.keys()].toSorted()).toEqual([serverKey(a), serverKey(b)].toSorted());
     expect(probes.get(serverKey(a))?.kind).toBe('auth-walled');
     expect(probes.get(serverKey(b))?.kind).toBe('open');
   });
@@ -456,6 +456,6 @@ describe('audit CLI — a config with an http entry', () => {
     const text = await run();
     expect(text).toContain('auth-walled');
     expect(text).not.toContain('remote-not-measurable');
-    expect(readdirSync(dir).sort()).toEqual(['mcp.json']);
+    expect(readdirSync(dir).toSorted()).toEqual(['mcp.json']);
   }, 90_000);
 });

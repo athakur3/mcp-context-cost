@@ -217,7 +217,7 @@ function rejectUnknownFlags(
   const bad = unknownFlags(argv, spec);
   if (bad.length) {
     const all = [...spec.value, ...spec.boolean]
-      .sort()
+      .toSorted()
       .map((f) => `--${f}`)
       .join(' ');
     console.error(`unknown flag for \`${cmd}\`: ${bad.join(', ')}`);

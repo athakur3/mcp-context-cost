@@ -409,7 +409,7 @@ describe('the published composite action', () => {
   });
 
   it('declares the outputs a caller needs after the gate has run', () => {
-    expect(Object.keys(action.outputs).sort()).toEqual([
+    expect(Object.keys(action.outputs).toSorted()).toEqual([
       'badge',
       'measurement',
       'status',
@@ -521,7 +521,7 @@ describe('release workflow', () => {
         after
           .split('\n')
           .map((l) => l.trim())
-          .filter((l) => l !== '' && !l.startsWith('#'))[0] ?? '';
+          .find((l) => l !== '' && !l.startsWith('#')) ?? '';
       expect(
         nextCommand,
         'a wait that can exhaust must fail loudly, before anything else runs',
@@ -801,7 +801,7 @@ describe('adoption workflow', () => {
       .filter((l) => l.startsWith('git add '));
     expect(adds.length).toBeGreaterThan(0);
     for (const l of adds) {
-      expect(l.slice('git add '.length).split(/\s+/).sort()).toEqual([
+      expect(l.slice('git add '.length).split(/\s+/).toSorted()).toEqual([
         'docs/adoption.md',
         'results/badge-adoption.json',
       ]);
@@ -907,7 +907,7 @@ describe('spec revision watch', () => {
   });
 
   it('is scheduled and dispatchable, and does not run on push or pull request', () => {
-    expect(Object.keys(doc.on).sort()).toEqual(['schedule', 'workflow_dispatch']);
+    expect(Object.keys(doc.on).toSorted()).toEqual(['schedule', 'workflow_dispatch']);
   });
 });
 

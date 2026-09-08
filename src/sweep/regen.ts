@@ -31,7 +31,7 @@ const ts = writeToolShapeBaseline(doc.servers);
 // no longer maintain — refuse loudly rather than leave one number stale.
 const stats = applyPublishedStats(doc.servers);
 if (stats.problems.length > 0) {
-  for (const p of stats.problems) console.error(`published stats: ${p}`);
+  for (const problem of stats.problems) console.error(`published stats: ${problem}`);
   process.exit(1);
 }
 console.log(`history: ${h.rows} rows (${signed(h.added)})`);

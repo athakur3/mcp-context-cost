@@ -820,7 +820,7 @@ export function toolSearchDocProblems(pages: Map<string, string | null>): string
   const problems: string[] = [];
   const flat = (s: string) => s.replace(/\s+/g, ' ').trim();
 
-  for (const url of [...new Set(TOOL_SEARCH_DOC_CLAIMS.map((c) => c.url))]) {
+  for (const url of new Set(TOOL_SEARCH_DOC_CLAIMS.map((c) => c.url))) {
     const page = pages.get(url);
     if (page === undefined || page === null) {
       problems.push(`${url} could not be read, so nothing here was checked against it`);

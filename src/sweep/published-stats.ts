@@ -167,7 +167,7 @@ export function heaviestDroppedField(
       tally.set(k, (tally.get(k) ?? 0) + countTokens(JSON.stringify(v)));
     }
   }
-  const top = [...tally].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0];
+  const top = [...tally].toSorted((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0];
   if (!top || totalTokens <= 0) return { dropField: 'none', dropSharePct: 0 };
   return { dropField: top[0], dropSharePct: Math.round((100 * top[1]) / totalTokens) };
 }
@@ -189,7 +189,7 @@ export function computePublishedStats(
   const measured = rows
     .filter((r): r is Row & { m: NonNullable<Row['m']> } => r.m !== null && isGood(r.m.status))
     .filter((r) => typeof r.m.totalTokens === 'number')
-    .sort((a, b) => b.m.totalTokens! - a.m.totalTokens!);
+    .toSorted((a, b) => b.m.totalTokens! - a.m.totalTokens!);
   if (measured.length < 2)
     throw new Error('fewer than two measured servers on disk — published stats cannot be computed');
 
@@ -294,7 +294,7 @@ export function computePublishedStats(
   // current row shows it most, rather than a server hardcoded into the prose.
   const widest = currentRows
     .filter(([, r]) => (fieldSelectionShare(r) ?? -1) >= 0)
-    .sort((a, b) => (fieldSelectionShare(b[1]) ?? 0) - (fieldSelectionShare(a[1]) ?? 0))[0]!;
+    .toSorted((a, b) => (fieldSelectionShare(b[1]) ?? 0) - (fieldSelectionShare(a[1]) ?? 0))[0]!;
   const withClaude = measured.filter((r) =>
     isCurrent(div.servers[r.entry.name], r.m.canonicalSha256),
   );
@@ -302,7 +302,7 @@ export function computePublishedStats(
   // is named rather than asserted so a set that changed under us says which server.
   const claudeDeltaOf = (r: (typeof withClaude)[number]) =>
     entryOf(div.servers, r.entry.name, 'divergence run').claudeDelta;
-  const heaviest = [...withClaude].sort((a, b) => claudeDeltaOf(b) - claudeDeltaOf(a))[0];
+  const heaviest = withClaude.toSorted((a, b) => claudeDeltaOf(b) - claudeDeltaOf(a))[0];
 
   const costlier = measured.filter((r) => {
     const load = sessionStartLoad(r.m);
@@ -347,7 +347,10 @@ export function computePublishedStats(
         claudeTokens: entryOf(triple, 'github', 'triple').claude,
         ...heaviestDroppedField(githubRow.m.rawToolsCapture, githubRow.m.totalTokens),
       },
-      notion: { badgeTokens: entryOf(triple, 'notion', 'triple').wire, claudeTokens: entryOf(triple, 'notion', 'triple').claude },
+      notion: {
+        badgeTokens: entryOf(triple, 'notion', 'triple').wire,
+        claudeTokens: entryOf(triple, 'notion', 'triple').claude,
+      },
       // `claude` is not nullable here, unlike a triple's: `widest` is picked
       // out of `currentRows`, and `isCurrent` already required a numeric delta.
       widest: {
@@ -395,7 +398,9 @@ function nth<T>(rows: readonly T[], i: number, what: string): T {
 function entryOf<T>(map: Record<string, T>, name: string, what: string): T {
   const entry = map[name];
   if (entry === undefined)
-    throw new Error(`${what}: nothing measured for '${name}' — a claim cannot state a server that is not there`);
+    throw new Error(
+      `${what}: nothing measured for '${name}' — a claim cannot state a server that is not there`,
+    );
   return entry;
 }
 
@@ -630,7 +635,10 @@ export const PAGE_CLAIMS: Claim[] = [
     id: 'index:triple',
     template:
       'Of that, an Anthropic request carries {n} tokens as tool definitions, and Claude counts those at {q}.',
-    values: (s) => [fmt(entryOf(s.triple, s.max.name, 'triple').mapped), q(entryOf(s.triple, s.max.name, 'triple').claude)],
+    values: (s) => [
+      fmt(entryOf(s.triple, s.max.name, 'triple').mapped),
+      q(entryOf(s.triple, s.max.name, 'triple').claude),
+    ],
   },
   {
     file: 'docs/index.md',

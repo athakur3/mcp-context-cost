@@ -1,0 +1,36 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+
+  // typescript-eslint cannot be used here: no release, canary included, accepts
+  // TypeScript 7 (its peer range stops at <6.1.0), and its parser calls TS 5
+  // compiler APIs. oxlint has its own parser and no TypeScript peer dependency.
+  // What that costs is the type-aware rules; the compiler flags in tsconfig.json
+  // are doing that half of the job instead.
+  "categories": { "correctness": "error", "perf": "error", "suspicious": "error" },
+
+  "rules": {
+    // Fires 63 times, 46 of them in tests, on helpers defined inside a `describe`
+    // that could technically live at module scope. That nesting is the point: the
+    // helper belongs to the block it reads with, and hoisting it puts a stranger
+    // at the top of the file. A style preference, not a defect.
+    "unicorn/consistent-function-scoping": "off",
+
+    // Fires 39 times, 25 of them in `tools/`, where the sequence is deliberate:
+    // sweeping servers one at a time, and not issuing parallel requests at a
+    // registry or a vendor's API. `Promise.all` is what the rule suggests and it
+    // is the wrong answer here — it would turn a polite crawl into a burst.
+    "eslint/no-await-in-loop": "off",
+
+    // Fires only on `_meta`, which is the Model Context Protocol's own field
+    // name — `tools/list` results carry it, and `_meta["anthropic/alwaysLoad"]`
+    // is a condition the deferral model reads. It is not ours to rename.
+    "eslint/no-underscore-dangle": "off",
+
+    // A performance rule about rebuilding objects inside a `map` over a large
+    // collection. Both sites are test fixtures of ten elements, where
+    // `{ ...s, status }` is the clearest way to say "this one, but dynamic".
+    "oxc/no-map-spread": "off"
+  },
+
+  "ignorePatterns": ["dist/**", "node_modules/**", "results/**", "docs/**", "badges/**"]
+}

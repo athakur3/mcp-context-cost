@@ -126,7 +126,7 @@ await Promise.all(
   }),
 );
 
-const sorted = [...rows].sort((a, b) => a.name.localeCompare(b.name));
+const sorted = rows.toSorted((a, b) => a.name.localeCompare(b.name));
 const differing = sorted.filter(disagrees);
 // A server that answered `initialize` and named no revision omitted a field the
 // schema requires. Not a disagreement, and not nothing either.

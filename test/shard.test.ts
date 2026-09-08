@@ -73,7 +73,7 @@ describe('selectShard', () => {
   it('partitions the set — every server in exactly one shard', () => {
     const all: string[] = [];
     for (let i = 0; i < 6; i++) all.push(...selectShard(items, 6, i));
-    expect(all.sort()).toEqual([...items].sort());
+    expect(all.toSorted()).toEqual(items.toSorted());
     expect(new Set(all).size).toBe(items.length);
   });
 
@@ -189,7 +189,7 @@ describe('sweep-all sharding (subprocess)', () => {
       .split('\n')
       .map((l) => /^ {2}(stub\d+):/.exec(l)?.[1])
       .filter((n): n is string => Boolean(n))
-      .sort(); // workers finish out of order; membership is the claim, not sequence
+      .toSorted(); // workers finish out of order; membership is the claim, not sequence
   }
 
   it('measures only its own slice, and the slices tile the whole set', () => {
@@ -202,7 +202,7 @@ describe('sweep-all sharding (subprocess)', () => {
       expect(week.length).toBe(PER_SHARD);
       seen.push(...week);
     }
-    expect(seen.sort()).toEqual([...names].sort());
+    expect(seen.toSorted()).toEqual(names.toSorted());
   }, 180_000);
 
   it('names the slice in its log before measuring it', () => {
@@ -229,7 +229,7 @@ describe('sweep-all sharding (subprocess)', () => {
 
     const { code, out } = runSweep(['--shards', String(SHARDS), '--shard-index', '0']);
     expect(code).toBe(0);
-    expect(swept(out)).toEqual([...slice].sort());
+    expect(swept(out)).toEqual(slice.toSorted());
     for (const name of outside) {
       expect(readFileSync(join(root, 'results', name, 'measurement.json'), 'utf8')).toBe(
         before[name],
@@ -248,7 +248,7 @@ describe('sweep-all sharding (subprocess)', () => {
     expect(code).toBe(0);
     const expected = shardIndexForDate(new Date(), SHARDS);
     expect(out).toContain(`shard ${expected + 1}/${SHARDS} of ${TOTAL} sweepable:`);
-    expect(swept(out)).toEqual([...selectShard(names, SHARDS, expected)].sort());
+    expect(swept(out)).toEqual(selectShard(names, SHARDS, expected).toSorted());
   }, 120_000);
 
   it('refuses --shards together with --only rather than intersecting them', () => {

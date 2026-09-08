@@ -101,7 +101,7 @@ describe('published pages agree with the data on disk', () => {
   });
 
   it('derives the numbers the pages state from the same rules the leaderboard uses', () => {
-    expect(Object.keys(stats.sample).sort()).toEqual([...SAMPLE_SERVERS].sort());
+    expect(Object.keys(stats.sample).toSorted()).toEqual(SAMPLE_SERVERS.toSorted());
     expect(stats.spanTimes).toBe(floorToTwoSignificant(stats.max.tokens / stats.min.tokens));
     expect(stats.max.tokens).toBeGreaterThan(stats.second.tokens);
     expect(stats.second.tokens).toBeGreaterThan(stats.min.tokens);

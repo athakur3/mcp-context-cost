@@ -53,7 +53,7 @@ describe('the field table', () => {
     for (const e of (doc as { servers: Record<string, unknown>[] }).servers) {
       for (const k of Object.keys(e)) used.add(k);
     }
-    expect([...used].filter((k) => !knownFields.includes(k as never)).sort()).toEqual([]);
+    expect([...used].filter((k) => !knownFields.includes(k as never)).toSorted()).toEqual([]);
   });
 });
 
@@ -78,7 +78,7 @@ describe('an entry is rejected when', () => {
   const fields = (patch: Record<string, unknown>) =>
     check(patch)
       .map((p) => p.field ?? '')
-      .sort();
+      .toSorted();
 
   it('accepts the entry the rest of these mutate', () => {
     expect(check({})).toEqual([]);

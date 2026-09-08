@@ -56,7 +56,7 @@ export function appendToolVectors(root = process.cwd()): { servers: number; appe
   for (const server of readdirSync(resultsDir, { withFileTypes: true })
     .filter((d) => d.isDirectory())
     .map((d) => d.name)
-    .sort()) {
+    .toSorted()) {
     const file = join(resultsDir, server, 'measurement.json');
     if (!existsSync(file)) continue;
     let m: Measurement;
@@ -130,14 +130,16 @@ export function writeCaptureIndex(entries: ServerEntry[], root = process.cwd()):
   // release gate ask "is anything derived here stale?" and get a real answer.
   const newest = Object.values(captures)
     .map((c) => c.date)
-    .sort()
+    .toSorted()
     .pop();
   const index: CaptureIndex = {
     method: CAPTURE_INDEX_METHOD,
     generatedAt: newest ?? '',
     // Key order sorted so a re-run over unchanged vectors produces no diff noise.
-    captures: Object.fromEntries(Object.entries(captures).sort(([a], [b]) => a.localeCompare(b))),
-    current: Object.fromEntries(Object.entries(current).sort(([a], [b]) => a.localeCompare(b))),
+    captures: Object.fromEntries(
+      Object.entries(captures).toSorted(([a], [b]) => a.localeCompare(b)),
+    ),
+    current: Object.fromEntries(Object.entries(current).toSorted(([a], [b]) => a.localeCompare(b))),
   };
   writeFileSync(join(root, 'results', 'capture-index.json'), JSON.stringify(index, null, 2) + '\n');
   return index;
@@ -181,7 +183,7 @@ export function collectChanges(
     else if (reading.kind === 'unchanged') unchanged.push(reading.held);
     else withoutComparison++;
   }
-  const newest = rows.map((r) => r.date).sort();
+  const newest = rows.map((r) => r.date).toSorted();
   return {
     summary: summarize(changes, withoutComparison, unchanged),
     measuredAt: newest[newest.length - 1] ?? '',

@@ -170,8 +170,8 @@ export function parseCliReport(text: string): { report?: CliReport; problem?: st
 /** Order-insensitive equality of the two tool-name lists, repeats included. */
 export function sameToolSet(ours: string[], theirs: string[]): boolean {
   if (ours.length !== theirs.length) return false;
-  const a = [...ours].sort();
-  const b = [...theirs].sort();
+  const a = ours.toSorted();
+  const b = theirs.toSorted();
   return a.every((name, i) => name === b[i]);
 }
 

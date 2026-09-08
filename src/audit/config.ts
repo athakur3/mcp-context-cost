@@ -191,7 +191,7 @@ function collectHeaders(
     const token = processEnv[raw.bearer_token_env_var];
     if (token !== undefined) values.Authorization = `Bearer ${token}`;
   }
-  return { names: [...names].sort(), values };
+  return { names: [...names].toSorted(), values };
 }
 
 function toServer(
@@ -206,7 +206,7 @@ function toServer(
   for (const [k, v] of Object.entries(raw.env ?? raw.envs ?? {})) {
     if (typeof v === 'string') env[k] = v;
   }
-  const envVarNames = Object.keys(env).sort();
+  const envVarNames = Object.keys(env).toSorted();
   const pinned = raw.alwaysLoad === true ? { alwaysLoad: true as const } : {};
 
   const command = firstString(raw.command, raw.cmd);
@@ -331,7 +331,7 @@ export function extractDeclaration(
   const servers = out.filter((s) => (seen.has(s.name) ? false : (seen.add(s.name), true)));
   // A name that is off in one block and live in another is a live server, not a
   // switched-off one, so it is not reported as both.
-  const disabled = [...new Set(off.filter((n) => !seen.has(n)))].sort();
+  const disabled = [...new Set(off.filter((n) => !seen.has(n)))].toSorted();
   return { servers, disabled };
 }
 
@@ -555,7 +555,7 @@ export function managedDropInCandidates(
   }
   return names
     .filter((n) => n.endsWith('.json') && !n.startsWith('.'))
-    .sort()
+    .toSorted()
     .map((n) => ({ scope: 'managed-drop-in' as const, path: join(dir, n) }));
 }
 

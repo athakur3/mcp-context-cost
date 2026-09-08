@@ -26,7 +26,17 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npx tsc --noEmit
+      # `npm run typecheck` rather than a bare `tsc --noEmit`: the second config
+      # carries `tools/`, which the first does not, and both run the eight
+      # strictness flags. A bare tsc here would check two thirds of the code.
+      - run: npm run typecheck
+      - name: Formatting
+        # Check, never write. CI that reformats is CI that pushes.
+        run: npm run format:check
+      - name: Lint
+        # oxlint, because no typescript-eslint release accepts TypeScript 7.
+        # Every rule turned off in .oxlintrc.json says why in the file.
+        run: npm run lint
       - run: npm test
       - name: Nothing published is stale
         # Runs on every push, not just at release time, because a release should

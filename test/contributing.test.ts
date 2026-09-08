@@ -119,7 +119,7 @@ describe('what an entry is', () => {
     // committed entry happens to use — so removing the last entry carrying
     // `dockerImage` cannot fail this for a reason unrelated to the page.
     const named = new Set(backticked(text).filter((id) => (knownFields as string[]).includes(id)));
-    expect([...named].sort()).toEqual([...knownFields].sort());
+    expect([...named].toSorted()).toEqual(knownFields.toSorted());
   });
 
   it('marks required and optional the way the validator does', () => {

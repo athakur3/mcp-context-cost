@@ -241,7 +241,7 @@ export function writeLeaderboard(
   };
   const measured = rows
     .filter((r) => r.m && (r.m.status === 'measured' || r.m.status === 'dynamic'))
-    .sort((a, b) => (b.m!.totalTokens ?? 0) - (a.m!.totalTokens ?? 0));
+    .toSorted((a, b) => (b.m!.totalTokens ?? 0) - (a.m!.totalTokens ?? 0));
   const unmeasured = rows.filter((r) => !measured.includes(r));
 
   const md: string[] = [];
@@ -367,7 +367,7 @@ export function writeLeaderboard(
   md.push(`|---:|---|---:|---:|---:|${div ? '---:|' : ''}${xc ? '---:|' : ''}---:|---|---|---|`);
   measured.forEach((r, i) => {
     const m = r.m!;
-    const largest = [...m.tools].sort((a, b) => b.tokens - a.tokens)[0];
+    const largest = m.tools.toSorted((a, b) => b.tokens - a.tokens)[0];
     const link = `[${mdCell(r.entry.name)}](../docs/servers/${encodeURIComponent(r.entry.name)}.md)`;
     const c = claude(r);
     const x = crossCheck(r);

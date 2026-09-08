@@ -256,7 +256,7 @@ describe('download lookups', () => {
         `${n} unscoped names`,
       ).toBe(false);
       // Nothing is lost by the move: every name is looked up exactly once.
-      expect([...bulk.flat(), ...single].sort()).toEqual(['@scoped/one', ...names].sort());
+      expect([...bulk.flat(), ...single].toSorted()).toEqual(['@scoped/one', ...names].toSorted());
     }
   });
 
@@ -314,7 +314,7 @@ describe('metricSourceFor', () => {
     let compared = 0;
     for (const s of serversYaml.servers) {
       if (typeof s.package !== 'string' || typeof s.metricSource !== 'string') continue;
-      const isPypi = / \(PyPI\)$/.test(s.package);
+      const isPypi = s.package.endsWith(' (PyPI)');
       const id = s.package.replace(/ \(PyPI\)$/, '');
       if (!PACKAGE_ID.test(id)) continue;
       if (!/ \((npm|PyPI) weekly\)$/.test(s.metricSource)) continue;
@@ -603,13 +603,13 @@ describe('rankCandidates and the summary line', () => {
     expect(summaryLine(withCount)).toContain('1 of them unmetered');
     expect(summaryLine(withCount)).toContain('rate-limited');
 
-    const none = assembleScan(walk, rankCandidates(all, metrics), {
+    const noneFound = assembleScan(walk, rankCandidates(all, metrics), {
       scannedAt: '2026-09-06T00:00:00.000Z',
       elapsedSeconds: 3,
       unmetered: { count: 0, why },
     });
-    expect(none.unmetered).toBeUndefined();
-    expect(summaryLine(none)).not.toContain('unmetered');
+    expect(noneFound.unmetered).toBeUndefined();
+    expect(summaryLine(noneFound)).not.toContain('unmetered');
   });
 });
 

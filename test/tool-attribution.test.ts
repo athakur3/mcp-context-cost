@@ -66,7 +66,7 @@ describe('per-tool attribution', () => {
     const dirs = readdirSync(resultsDir, { withFileTypes: true })
       .filter((d) => d.isDirectory())
       .map((d) => d.name)
-      .sort();
+      .toSorted();
     const checked: string[] = [];
     const problems: string[] = [];
     for (const name of dirs) {

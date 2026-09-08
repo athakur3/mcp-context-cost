@@ -176,7 +176,7 @@ console.log(
 const outPath = join(root, 'results', 'divergence.json');
 const previous = existsSync(outPath) ? parseDivergence(readFileSync(outPath, 'utf8')) : null;
 // A touch-up edits the previous run in place; a bare run replaces it whole.
-const servers: Record<string, DivergenceRow> = touchUp ? { ...(previous?.servers ?? {}) } : {};
+const servers: Record<string, DivergenceRow> = touchUp ? { ...previous?.servers } : {};
 
 /**
  * A merge may not carry forward a row that has stopped describing its capture.
@@ -235,7 +235,7 @@ const run: DivergenceRun = {
   measuredAt: new Date().toISOString().slice(0, 10),
   baselineTokens,
   probeDelta,
-  servers: Object.fromEntries(Object.entries(servers).sort(([a], [b]) => a.localeCompare(b))),
+  servers: Object.fromEntries(Object.entries(servers).toSorted(([a], [b]) => a.localeCompare(b))),
 };
 writeFileSync(outPath, JSON.stringify(run, null, 2) + '\n');
 

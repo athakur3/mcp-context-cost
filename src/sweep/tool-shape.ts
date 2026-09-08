@@ -30,7 +30,7 @@ export function writeToolShapeBaseline(
   // the file says how far its data reaches and a re-derivation over unchanged
   // measurements produces no diff. `buildToolShapeBaseline` still defaults to
   // today when nobody supplies one, for callers with no measurement dates.
-  const generatedAt = dates.sort().pop();
+  const generatedAt = dates.toSorted().pop();
   const baseline = buildToolShapeBaseline(tools, {
     serverCount,
     methodologyVersion: METHODOLOGY_VERSION,

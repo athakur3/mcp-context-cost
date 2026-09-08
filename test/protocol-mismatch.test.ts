@@ -157,7 +157,7 @@ describe('the supported revisions survive the notes cap', () => {
   it('would lose them if data came last — the ordering is load-bearing', () => {
     const dataLast = VERBOSE_REVISION.replace(
       / \[data: (.*?)\]: /,
-      (_m, data: string) => `: `,
+      (_m, _data: string) => `: `,
     ).concat(`; data: {"supported":["2026-07-28"],"requested":"${PROTOCOL_VERSION}"}`);
     expect(dataLast.length).toBeGreaterThan(700);
     expect(clampNotes(dataLast, 700)).not.toContain('2026-07-28');

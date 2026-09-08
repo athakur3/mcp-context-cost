@@ -91,13 +91,13 @@ export function generateDashboard(root = process.cwd()): string {
       (r) =>
         r.m && (r.m.status === 'measured' || r.m.status === 'dynamic') && r.m.totalTokens !== null,
     )
-    .sort((a, b) => (b.m!.totalTokens ?? 0) - (a.m!.totalTokens ?? 0));
+    .toSorted((a, b) => (b.m!.totalTokens ?? 0) - (a.m!.totalTokens ?? 0));
   const pending = rows.filter((r) => !r.m && !r.entry.remote);
   const failed = rows.filter((r) => (r.m && !measured.includes(r)) || r.entry.remote);
 
   const totals = measured.map((r) => r.m!.totalTokens as number);
   const median = totals.length
-    ? totals.slice().sort((a, b) => a - b)[Math.floor(totals.length / 2)]
+    ? totals.slice().toSorted((a, b) => a - b)[Math.floor(totals.length / 2)]
     : 0;
   const max = totals.length ? Math.max(...totals) : 1;
   const fmt = (n: number) => n.toLocaleString('en-US');
@@ -130,7 +130,7 @@ export function generateDashboard(root = process.cwd()): string {
   const dates = rows
     .map((r) => String(r.m?.measuredAt ?? '').slice(0, 10))
     .filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d))
-    .sort();
+    .toSorted();
   const newestMeasurement = dates[dates.length - 1] ?? null;
 
   const barRows = measured
@@ -139,7 +139,7 @@ export function generateDashboard(root = process.cwd()): string {
       const t = m.totalTokens as number;
       const band = bandColor(t);
       const meta = BAND_META[band];
-      const largest = [...m.tools].sort((a, b) => b.tokens - a.tokens)[0];
+      const largest = m.tools.toSorted((a, b) => b.tokens - a.tokens)[0];
       const pct = Math.max(1.2, (t / max) * 100);
       // Gated on the capture it was computed from, exactly as the leaderboard
       // gates it: four rows here were publishing a Claude cost derived from

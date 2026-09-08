@@ -56,7 +56,7 @@ function run(over: Partial<DivergenceRun> = {}): DivergenceRun {
 describe('toAnthropicTools', () => {
   it('keeps exactly the three fields an Anthropic tool definition carries', () => {
     const [t] = toAnthropicTools([rawTool]);
-    expect(Object.keys(t).sort()).toEqual(['description', 'input_schema', 'name']);
+    expect(Object.keys(t).toSorted()).toEqual(['description', 'input_schema', 'name']);
     expect(t.name).toBe('search');
     expect(t.description).toBe('Search the knowledge base');
     expect(t.input_schema).toEqual(rawTool.inputSchema);
@@ -237,7 +237,7 @@ describe('publishing the column', () => {
  * published sentence against the cell it depends on.
  */
 describe('dropStaleRows', () => {
-  const row = (sha: string): DivergenceRow => ({
+  const rowFor = (sha: string): DivergenceRow => ({
     o200kFull: 100,
     o200kMapped: 60,
     claudeDelta: 40,
@@ -245,14 +245,14 @@ describe('dropStaleRows', () => {
     capturedSha256: sha,
   });
 
-  it('keeps a row that still describes the capture on disk', () => {
-    const { kept, dropped } = dropStaleRows({ github: row('abc') }, () => 'abc');
+  it('keeps a rowFor that still describes the capture on disk', () => {
+    const { kept, dropped } = dropStaleRows({ github: rowFor('abc') }, () => 'abc');
     expect(Object.keys(kept)).toEqual(['github']);
     expect(dropped).toEqual([]);
   });
 
-  it('drops a row whose capture has moved — the eight of twenty-four case', () => {
-    const { kept, dropped } = dropStaleRows({ github: row('abc') }, () => 'def');
+  it('drops a rowFor whose capture has moved — the eight of twenty-four case', () => {
+    const { kept, dropped } = dropStaleRows({ github: rowFor('abc') }, () => 'def');
     expect(kept).toEqual({});
     expect(dropped).toEqual(['github']);
   });

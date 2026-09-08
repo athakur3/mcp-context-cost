@@ -16,7 +16,6 @@ import {
   readSeries,
   summarize,
   vectorEntryOf,
-  type DatedMeasurement,
   type ToolVectorEntry,
   type ToolVectorFile,
   type UnchangedSeries,

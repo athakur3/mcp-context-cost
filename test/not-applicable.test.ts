@@ -213,7 +213,7 @@ describe('every sweep path that measures a servers.yaml entry forwards its decla
     const sites: { file: string; forwards: boolean }[] = [];
     for (const file of readdirSync(sweepDir)
       .filter((f) => f.endsWith('.ts'))
-      .sort()) {
+      .toSorted()) {
       const src = readFileSync(join(sweepDir, file), 'utf8');
       // The shape that measures a servers.yaml entry: the entry's own name and
       // command, then an options object. The other three call sites in the

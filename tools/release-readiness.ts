@@ -389,7 +389,7 @@ function measuredOverARevisionTheServerChose(): Finding[] {
       kind: 'look',
       what: `${differing.length} published record(s) were measured over a revision the server chose`,
       detail:
-        `${differing.sort().join('\n  ')}\n` +
+        `${differing.toSorted().join('\n  ')}\n` +
         'Sound as they stand: every method this probe uses is unchanged across these revisions. ' +
         'Worth a look only if the list changes shape — a revision this probe cannot drive would ' +
         'appear here before it appeared as a number meaning something its neighbours do not.',

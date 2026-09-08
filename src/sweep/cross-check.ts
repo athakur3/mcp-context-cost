@@ -58,7 +58,7 @@ import {
 export function writeCrossCheck(run: CrossCheckRun, root = process.cwd()): void {
   // Key order sorted so a re-run of the same servers produces no diff noise.
   const servers: Record<string, CrossCheckRow> = {};
-  for (const name of Object.keys(run.servers).sort()) servers[name] = run.servers[name]!; // the key came from this record
+  for (const name of Object.keys(run.servers).toSorted()) servers[name] = run.servers[name]!; // the key came from this record
   writeFileSync(
     join(root, 'results', 'cross-check.json'),
     JSON.stringify({ ...run, servers }, null, 2) + '\n',
@@ -332,7 +332,7 @@ if (isMain) {
   // Merged, not replaced: a run over `--only` or one shard must not delete the
   // rows it did not visit. A row it did visit is overwritten, errors included.
   const prior = loadCrossCheckRun();
-  const servers: Record<string, CrossCheckRow> = { ...(prior?.servers ?? {}) };
+  const servers: Record<string, CrossCheckRow> = { ...prior?.servers };
 
   const queue = [...entries];
   async function worker() {

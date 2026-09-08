@@ -129,8 +129,8 @@ async function probe(entry: ServerEntry): Promise<Row> {
     declaringTools: b?.toolCount ?? null,
     minimalTokens: a?.totalTokens ?? null,
     declaringTokens: b?.totalTokens ?? null,
-    gained: [...bn].filter((n) => !an.has(n)).sort(),
-    lost: [...an].filter((n) => !bn.has(n)).sort(),
+    gained: [...bn].filter((n) => !an.has(n)).toSorted(),
+    lost: [...an].filter((n) => !bn.has(n)).toSorted(),
   };
 }
 
@@ -148,7 +148,7 @@ const queue = [...entries];
  * as long as it says how far it got, which `selected` against `probed` does.
  */
 function writeSummary(): void {
-  const sorted = [...rows].sort((a, b) => a.name.localeCompare(b.name));
+  const sorted = rows.toSorted((a, b) => a.name.localeCompare(b.name));
   const cmp = sorted.filter(
     (r) =>
       ['measured', 'dynamic'].includes(r.minimalStatus) &&

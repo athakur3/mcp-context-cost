@@ -103,7 +103,7 @@ export function parseHistory(text: string): HistoryRow[] {
 }
 
 export function formatHistory(rows: HistoryRow[]): string {
-  const sorted = [...rows].sort(
+  const sorted = rows.toSorted(
     (a, b) => a.date.localeCompare(b.date) || a.server.localeCompare(b.server),
   );
   const lines = sorted.map((r) =>
@@ -171,7 +171,7 @@ export function appendHistory(root = process.cwd()): { rows: number; added: numb
   for (const server of readdirSync(resultsDir, { withFileTypes: true })
     .filter((d) => d.isDirectory())
     .map((d) => d.name)
-    .sort()) {
+    .toSorted()) {
     const file = join(resultsDir, server, 'measurement.json');
     if (!existsSync(file)) continue;
     let m: Measurement;
@@ -210,7 +210,7 @@ export interface PlottableSeries {
  * series recorded before this column existed.
  */
 export function plottableSeries(rows: HistoryRow[]): PlottableSeries {
-  const sorted = [...rows].sort((a, b) => a.date.localeCompare(b.date));
+  const sorted = rows.toSorted((a, b) => a.date.localeCompare(b.date));
   if (!sorted.length) return { rows: [], dropped: 0, conditionsUnknown: false };
   const current = sorted[sorted.length - 1]!.isolation;
   let start = 0;

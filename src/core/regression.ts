@@ -483,7 +483,7 @@ export function summarize(
   withoutComparison: number,
   unchanged: UnchangedSeries[],
 ): RegressionSummary {
-  const sorted = [...changes].sort((a, b) => Math.abs(b.deltaPct) - Math.abs(a.deltaPct));
+  const sorted = changes.toSorted((a, b) => Math.abs(b.deltaPct) - Math.abs(a.deltaPct));
   return {
     changes: sorted,
     grew: sorted.filter((c) => c.deltaTokens > 0).length,
@@ -492,7 +492,7 @@ export function summarize(
     netTokens: sorted.reduce((a, c) => a + c.deltaTokens, 0),
     // Longest-held first: the sentence this section exists to publish is "this
     // number has been the same since <date>", so the oldest `since` leads.
-    unchanged: [...unchanged].sort((a, b) => a.since.localeCompare(b.since) || b.tokens - a.tokens),
+    unchanged: unchanged.toSorted((a, b) => a.since.localeCompare(b.since) || b.tokens - a.tokens),
     withoutComparison,
   };
 }
