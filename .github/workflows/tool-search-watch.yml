@@ -1,0 +1,67 @@
+# Do the vendor's pages still say what the deferral model is built on?
+#
+# `src/audit/deferral.ts` decides whether a machine's Claude Code defers MCP
+# tool definitions, and the report's most definite sentence — "Every request
+# carries these tokens before you type anything" — comes out of it. Every rule
+# in it is a reading of someone else's documentation, and four sentences carry
+# the whole thing.
+#
+# The reason this job exists rather than a calendar reminder: on 2026-09-08 one
+# of those readings turned out to be wrong, and had been wrong on two published
+# pages for as long as the rule existed. Nothing could have caught it, because
+# nothing was watching the source. These pages have also already moved host once
+# under this project, from docs.claude.com to code.claude.com.
+#
+# It checks sentences, not a page hash. A hash of a documentation page is red
+# every week for a typo, and a watch people learn to ignore is worse than no
+# watch. The rule lives in `src/audit/deferral.ts`, offline and under test; the
+# tool is only the part that fetches.
+#
+# Thursday, away from every other scheduled job here: resweep is Wednesday
+# 03:11, the spec watch Tuesday 02:47, self-badge Monday 06:17, adoption the 1st
+# at 08:37.
+#
+# Read-only, and it publishes nothing: `contents: read`, no write token, and the
+# tool writes no file at all. A drift fails the run rather than opening an issue
+# — the same reasoning spec-watch.yml sets out: an issue would need
+# `issues: write` this job has no other use for, a red scheduled run already
+# mails the maintainer, and an auto-opened issue would accumulate a duplicate
+# every week until somebody edited a constant.
+#
+# A page that cannot be fetched fails the run too, and says which page and that
+# nothing was checked against it. A watch that is green when it is blind is
+# worse than no watch.
+name: Tool search doc watch
+on:
+  schedule:
+    # Thursday 02:53 UTC. Nothing else here shares this slot.
+    - cron: '53 2 * * 4'
+  workflow_dispatch:
+
+# Read-only, said out loud, for the reason ci.yml states: without a block the
+# token takes the repository default, which can be read-and-write. This job
+# reads three public URLs and commits nothing.
+permissions:
+  contents: read
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    # Three HTTP requests. The tool carries its own per-request timeout and a
+    # short retry budget, but the job must not hold a runner for GitHub's
+    # six-hour default if something upstream hangs in a way fetch does not see.
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # Nothing here pushes, and a token left in .git/config is a token this
+          # job could have used.
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # No credential: these are public documentation pages, served as markdown.
+      - name: Ask the documentation whether it still says it
+        run: npx tsx tools/watch-tool-search-docs.ts

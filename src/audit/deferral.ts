@@ -689,6 +689,159 @@ export function bandSnapshotProblem(
   return null;
 }
 
+/**
+ * The passages on the vendor's own pages that this file's model of tool search
+ * rests on, and the rule for deciding whether they still say it.
+ *
+ * What rots here is not the client. It is these pages: the model is a reading
+ * of them, they have already moved host once under this project, and the whole
+ * of `resolveToolSearch` is downstream of four sentences. So the watch checks
+ * the sentences rather than a page hash — a hash of a documentation page is red
+ * every week for a typo and teaches everyone to ignore it.
+ *
+ * `tools/watch-tool-search-docs.ts` is the half that fetches. This half is the
+ * rule, offline and under test, the same split as `src/core/protocol.ts` and
+ * its spec watch.
+ */
+export interface ToolSearchDocClaim {
+  /** The page it was read from. */
+  url: string;
+  /** What this file does because of it, so a drift report says what broke. */
+  because: string;
+  /** Text that must still be on that page. Compared with whitespace collapsed. */
+  quote: string;
+}
+
+/** When every claim below was last read against the live page. */
+export const TOOL_SEARCH_DOC_READ_ON = '2026-09-08';
+
+export const ENV_VARS_DOC = 'https://code.claude.com/docs/en/env-vars.md';
+export const GATEWAY_DOC = 'https://code.claude.com/docs/en/llm-gateway-protocol.md';
+export const MANAGED_SETTINGS_DOC = 'https://code.claude.com/docs/en/managed-settings.md';
+
+export const TOOL_SEARCH_DOC_CLAIMS: ToolSearchDocClaim[] = [
+  {
+    url: ENV_VARS_DOC,
+    because:
+      'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS is read as a boolean rather than as a marker whose presence is the signal',
+    quote: 'set `1` or `true` to turn it on and `0` or `false` to turn it off, in any casing',
+  },
+  {
+    url: ENV_VARS_DOC,
+    because:
+      'the variables that instead read any non-empty value are an enumerated exception, and this one is not among them',
+    quote: 'Some variables read only whether you set them at all',
+  },
+  {
+    url: GATEWAY_DOC,
+    because:
+      'an administrator tier holding an undocumented ENABLE_TOOL_SEARCH value stops the disabling variable deciding',
+    quote:
+      'your organization can keep [MCP tool search](/docs/en/mcp#scale-with-mcp-tool-search) on under this variable through [managed settings](/docs/en/managed-settings)',
+  },
+  {
+    url: GATEWAY_DOC,
+    because:
+      'the override is refused rather than answered, because two of its own conditions are not readable from a file',
+    quote: 'On a cloud provider, or signed in through a [Claude apps gateway]',
+  },
+  {
+    url: MANAGED_SETTINGS_DOC,
+    because:
+      'the managed file and its managed-settings.d drop-ins are read as one tier, and the Windows path is not the ProgramData one',
+    quote:
+      "Claude Code doesn't read the legacy Windows path `C:\\ProgramData\\ClaudeCode\\managed-settings.json`",
+  },
+];
+
+/**
+ * The variables that page names as reading any non-empty value, read on the date
+ * above. The one that matters is the one that is NOT here.
+ */
+export const ANY_NON_EMPTY_VARS = [
+  'CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC',
+  'DISABLE_TELEMETRY',
+  'DISABLE_ERROR_REPORTING',
+  'CLAUDE_CODE_TMUX_TRUECOLOR',
+  'FALLBACK_FOR_ALL_PRIMARY_MODELS',
+  'IS_DEMO',
+];
+
+/** The intro the exception list hangs off, on the env-vars page. */
+const ANY_NON_EMPTY_INTRO = 'Some variables read only whether you set them at all';
+
+/**
+ * The variable names in that exception list, or null when the list could not be
+ * found in the shape this knows how to read — which is a reason to look, not a
+ * reason to report the list unchanged.
+ */
+export function anyNonEmptyVars(page: string): string[] | null {
+  const at = page.indexOf(ANY_NON_EMPTY_INTRO);
+  if (at < 0) return null;
+  const names: string[] = [];
+  for (const line of page.slice(at).split('\n').slice(1)) {
+    const bullet = /^\s*[*-]\s+`([A-Z0-9_]+)`\s*$/.exec(line);
+    if (bullet) {
+      names.push(bullet[1]);
+      continue;
+    }
+    // Blank lines sit between the intro and its list; anything else ends it.
+    if (line.trim() !== '') break;
+  }
+  return names.length > 0 ? names : null;
+}
+
+/** A page too short to be the page asked for — an error body, or a redirect stub. */
+const SHORTEST_PLAUSIBLE_PAGE = 1_000;
+
+/**
+ * What is wrong with the live pages, in words. Empty means the model still has
+ * its sources.
+ *
+ * A page that could not be fetched is reported, never skipped: a watch that is
+ * green when it is blind is worse than no watch, which is the rule the spec
+ * watch is built on and the same one here.
+ */
+export function toolSearchDocProblems(pages: Map<string, string | null>): string[] {
+  const problems: string[] = [];
+  const flat = (s: string) => s.replace(/\s+/g, ' ').trim();
+
+  for (const url of [...new Set(TOOL_SEARCH_DOC_CLAIMS.map((c) => c.url))]) {
+    const page = pages.get(url);
+    if (page === undefined || page === null) {
+      problems.push(`${url} could not be read, so nothing here was checked against it`);
+      continue;
+    }
+    if (page.length < SHORTEST_PLAUSIBLE_PAGE) {
+      problems.push(
+        `${url} came back as ${page.length} characters, too short to be that page — read as could not look, not as changed`,
+      );
+      continue;
+    }
+    const body = flat(page);
+    for (const claim of TOOL_SEARCH_DOC_CLAIMS.filter((c) => c.url === url)) {
+      if (!body.includes(flat(claim.quote))) {
+        problems.push(
+          `${url} no longer says "${claim.quote}" — the page this rests on moved: ${claim.because}`,
+        );
+      }
+    }
+    if (url === ENV_VARS_DOC) {
+      const listed = anyNonEmptyVars(page);
+      if (listed === null) {
+        problems.push(
+          `${url} still names an any-non-empty exception list, and it is no longer in a shape this can read — check by hand whether CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS has joined it`,
+        );
+      } else if (listed.includes('CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS')) {
+        problems.push(
+          `${url} now lists CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS among the variables that read any non-empty value — the boolean reading here is wrong and every value outside 1/true/yes/on is being read as leaving tool search on when it does not`,
+        );
+      }
+    }
+  }
+  return problems;
+}
+
 /** Derive the band from a supplied divergence run, falling back to the published one. */
 export function wireToClientRatio(run?: DivergenceRun | null): WireToClientRatio {
   if (!run) return PUBLISHED_WIRE_TO_CLIENT_RATIO;

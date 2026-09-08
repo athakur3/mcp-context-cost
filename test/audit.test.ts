@@ -19,11 +19,17 @@ import {
 import { buildReport, formatReport, planBudgetFit, serverKey, DEFAULT_CONTEXT_WINDOW, type AuditReport } from '../src/audit/audit.js';
 import { buildDiff, evaluateIncreaseGate, formatDiff, formatGate, parseBaselineReport } from '../src/audit/diff.js';
 import {
+  anyNonEmptyVars,
   evaluateDeferral,
   resolveToolSearch,
   resolveToolSearchSources,
+  toolSearchDocProblems,
   toolSearchEnv,
   wireToClientRatio,
+  ANY_NON_EMPTY_VARS,
+  ENV_VARS_DOC,
+  GATEWAY_DOC,
+  MANAGED_SETTINGS_DOC,
   PUBLISHED_WIRE_TO_CLIENT_RATIO,
   SHELL_SOURCE,
   TOOL_SEARCH_AUTO_SHARE,
@@ -2460,6 +2466,84 @@ describe('the deferral posture is read from every place the machine sets it', ()
           ...managedDropInCandidates(managed),
         ]);
         expect(resolveToolSearchSources(read).mode).toBe('loads-upfront');
+      });
+    });
+
+    // The model of tool search is a reading of someone else's pages, and on
+    // 2026-09-08 one of those readings turned out to have been wrong on two
+    // published pages for as long as the rule existed. Nothing could have
+    // caught it, because nothing was watching the source. This is the rule half
+    // of that watch; tools/watch-tool-search-docs.ts is the half that fetches.
+    describe('the documentation watch', () => {
+      const PAD = ' filler.'.repeat(200);
+      const envVars =
+        'Environment variables.' +
+        PAD +
+        '\nFor variables that turn a behavior on or off, set `1` or `true` to turn it on and `0` or `false` to turn it off, in any casing.\n' +
+        '\nSome variables read only whether you set them at all, so any non-empty value including `0` turns the behavior on.\n\n' +
+        ANY_NON_EMPTY_VARS.map((v) => `* \`${v}\``).join('\n') +
+        '\n\nSomething else entirely.\n';
+      const gateway =
+        'Gateway guide.' +
+        PAD +
+        '\nOn Claude Code v2.1.227 or later, your organization can keep [MCP tool search](/docs/en/mcp#scale-with-mcp-tool-search) on under this variable through [managed settings](/docs/en/managed-settings).\n' +
+        '* On a cloud provider, or signed in through a [Claude apps gateway](/docs/en/claude-apps-gateway), the override has no effect\n';
+      const managed =
+        'Managed settings.' +
+        PAD +
+        "\nClaude Code doesn't read the legacy Windows path `C:\\ProgramData\\ClaudeCode\\managed-settings.json`.\n";
+      const live = () =>
+        new Map<string, string | null>([
+          [ENV_VARS_DOC, envVars],
+          [GATEWAY_DOC, gateway],
+          [MANAGED_SETTINGS_DOC, managed],
+        ]);
+
+      it('says nothing while every passage is still there', () => {
+        expect(toolSearchDocProblems(live())).toEqual([]);
+      });
+
+      it('reports a page it could not read rather than passing over it', () => {
+        const pages = live();
+        pages.set(GATEWAY_DOC, null);
+        const problems = toolSearchDocProblems(pages);
+        expect(problems).toHaveLength(1);
+        expect(problems[0]).toContain('could not be read');
+        // A page nobody asked about is not an absence of problems.
+        expect(toolSearchDocProblems(new Map())).toHaveLength(3);
+      });
+
+      it('reads a page too short to be that page as could not look, not as changed', () => {
+        const pages = live();
+        pages.set(ENV_VARS_DOC, 'Not Found');
+        expect(toolSearchDocProblems(pages)[0]).toContain('too short to be that page');
+      });
+
+      it('names what broke when a passage goes, not just that something did', () => {
+        const pages = live();
+        pages.set(ENV_VARS_DOC, envVars.replace('in any casing', 'in lower case only'));
+        const problems = toolSearchDocProblems(pages);
+        expect(problems).toHaveLength(1);
+        expect(problems[0]).toContain('is read as a boolean');
+      });
+
+      // The failure this exists for: our variable joining the list of variables
+      // that read any non-empty value would make the whole boolean rule wrong.
+      it('catches the disabling variable joining the any-non-empty exception list', () => {
+        const pages = live();
+        pages.set(ENV_VARS_DOC, envVars.replace('* `IS_DEMO`', '* `IS_DEMO`\n* `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`'));
+        expect(toolSearchDocProblems(pages)[0]).toContain('now lists CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS');
+      });
+
+      it('asks for a hand check when that list is no longer in a shape it can read', () => {
+        const pages = live();
+        pages.set(ENV_VARS_DOC, envVars.replace(/^\* `.*`$/gm, '| a table row now |'));
+        expect(toolSearchDocProblems(pages)[0]).toContain('check by hand');
+      });
+
+      it('reads the exception list off the page', () => {
+        expect(anyNonEmptyVars(envVars)).toEqual(ANY_NON_EMPTY_VARS);
+        expect(anyNonEmptyVars('a page that never mentions it')).toBeNull();
       });
     });
 

@@ -7,6 +7,27 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **A watch on the four sentences the deferral model is a reading of.** Every rule in
+  `src/audit/deferral.ts` is a reading of someone else's documentation, and the report's most
+  definite sentence comes out of it. Three of the four defects above had been wrong on published
+  pages for as long as the rules existed, and nothing could have caught any of them, because
+  nothing was watching the source — which has already moved host once under this project, from
+  `docs.claude.com` to `code.claude.com`.
+
+  `toolSearchDocProblems` in `src/audit/deferral.ts` is the rule, offline and under test;
+  `tools/watch-tool-search-docs.ts` is the half that fetches; `.github/workflows/tool-search-watch.yml`
+  runs it Thursdays 02:53 UTC, `contents: read`, writing no file. It checks **passages, not a page
+  hash** — a hash of a documentation page is red every week for a typo, and a watch people learn to
+  ignore is worse than no watch — plus one extraction: the list of variables the vendor says read
+  any non-empty value, so the disabling variable joining that list fails the run rather than
+  quietly invalidating the boolean rule.
+
+  A page that cannot be fetched fails the run and names itself, and a page that comes back too
+  short to be that page is read as could-not-look rather than as changed. Demonstrated, not just
+  documented: run live against all three pages it exits 0; pointed at a page that does not exist it
+  exits 1 saying nothing was checked against it; with one quote altered it exits 1 naming the rule
+  that rests on it.
+
 - **The organisation override was already in the audit's hands, and the report threw it away and
   said the opposite.** From Claude Code v2.1.227 an organisation can keep tool search on under the
   very variable that turns it off, through managed settings
