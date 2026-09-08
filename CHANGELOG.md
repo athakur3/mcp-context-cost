@@ -7,6 +7,8 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+## 0.19.0 — 2026-09-08
+
 - **The repository had no formatter, no linter, and `strict: true` as its only compiler flag.**
   For a public project that is a standard held by hand, which works until it doesn't. Prettier
   now formats `{src,tools,test,spec}/**/*.ts` and `vitest.config.ts` at `printWidth: 100` —
