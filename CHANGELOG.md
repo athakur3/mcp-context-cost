@@ -97,17 +97,6 @@ while reading it.
   the first scheduled sweep that writes the pair into published records, so the fields are
   documented before any reader meets one. No number moves; the change is prose on one page.
 
-- **The repository now carries the product and nothing about running it.** The roadmap, the
-  README's development section, and the badge-adoption instrument — the page that counted who
-  displays the badge, its reading, the tool, the core module, its tests and its monthly
-  workflow — have moved to the maintainer's private operations repository, deleted here rather
-  than copied, because none of it served a person measuring what an MCP server costs. What stays
-  is what such a person uses: the CLI and library, the published measurements and badges, the
-  methodology, and CONTRIBUTING for adding a server. The adoption module was never in the
-  package's export barrel, so nothing installable changes; the links to `docs/adoption.md` and
-  `ROADMAP.md` are gone with their targets, and the workflows that shared a calendar with the
-  adoption reading no longer mention it.
-
 ## 0.19.0 — 2026-09-08
 
 - **The repository had no formatter, no linter, and `strict: true` as its only compiler flag.**

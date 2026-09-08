@@ -18,7 +18,7 @@ import type { Measurement } from '../src/core/types.js';
  * (`test/page-numbers.test.ts`) does not scan this file at all.
  *
  * There is a second rule, learned the harder way: this page must not restate
- * another *page*. Where it did — the roadmap's laptop rule, the taxonomy's
+ * another *page*. Where it did — the laptop rule, the taxonomy's
  * wording, an entry's own timeout comment, the pull-request template's copy of
  * the whole procedure — a test held the two copies to each other, which is not
  * a fix for a duplicated claim but maintenance of one. Those now link instead,

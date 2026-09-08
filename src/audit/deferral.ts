@@ -37,7 +37,7 @@
  *     generation; `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` "keeps tool search
  *     off. You can't override it by setting `ENABLE_TOOL_SEARCH` yourself."
  *     A server with `alwaysLoad: true` loads at session start regardless.
- *   - The same page, re-read 2026-09-06 (the roadmap's dated re-read). The
+ *   - The same page, re-read 2026-09-06. The
  *     value table stands as quoted, and four things moved around it:
  *     (1) on Google Cloud's Agent Platform, tool search is on by default for
  *     the Claude 4.5 generation and later "the same as on the Anthropic API"

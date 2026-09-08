@@ -6,9 +6,9 @@
  *
  * Diffs the two documents BY NAME and measures only what changed: entries the
  * pull request added, and entries whose launch-affecting fields it changed
- * (`LAUNCH_FIELDS`). The second set is not optional. The roadmap first wrote
- * "measures only the entries the PR added", and that misses the point of the
- * check: a PR that rewrites an existing entry's `command` changes what the
+ * (`LAUNCH_FIELDS`). The second set is not optional. An earlier description of
+ * this check said it "measures only the entries the PR added", and that misses
+ * the point: a PR that rewrites an existing entry's `command` changes what the
  * Wednesday rotation (resweep.yml, `contents: write`) will spawn next, and
  * "added" never sees it. What is launched is what is measured.
  *

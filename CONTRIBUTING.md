@@ -352,7 +352,6 @@ workflow offers, not a promise this file makes.
 ## Not planned <a id="not-planned"></a>
 
 Decisions the project has taken and will not revisit in a pull request, each with its reason.
-They were the roadmap's list until 2026-09-08; a contributor is who needs them, so they live here.
 
 - Merging per-client totals into one number: a context window belongs to one session.
 - Measuring OAuth-walled remotes (`linear`, `zapier`, `vercel`) with real credentials: the
