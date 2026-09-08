@@ -41,17 +41,25 @@ import { DECLARING_POSTURE, MINIMAL_POSTURE, type ClientPosture } from '../src/s
 import type { ServerEntry } from '../src/sweep/report.js';
 import type { Measurement } from '../src/core/types.js';
 import { loadServersDoc } from '../src/sweep/servers-schema.js';
+import { flagValue, knownFlagNames, unknownFlags, valuelessFlags } from '../src/flags.js';
 
-function arg(name: string): string | undefined {
-  const i = process.argv.indexOf(`--${name}`);
-  return i >= 0 ? process.argv[i + 1] : undefined;
+const SPEC = {
+  value: ['only', 'concurrency', 'default-timeout', 'out'],
+  boolean: ['docker'],
+};
+const argv = process.argv.slice(2);
+const bad = [...unknownFlags(argv, SPEC), ...valuelessFlags(argv, SPEC)];
+if (bad.length) {
+  console.error(`unrecognised or valueless: ${bad.join(', ')}`);
+  process.exit(2);
 }
+const known = knownFlagNames(SPEC);
 
-const docker = process.argv.includes('--docker');
-const only = arg('only')?.split(',');
-const concurrency = Number(arg('concurrency') ?? 2);
-const defaultTimeout = Number(arg('default-timeout') ?? 240);
-const outPath = arg('out') ?? 'capability-probe.json';
+const docker = argv.includes('--docker');
+const only = flagValue(argv, 'only', known)?.split(',');
+const concurrency = Number(flagValue(argv, 'concurrency', known) ?? 2);
+const defaultTimeout = Number(flagValue(argv, 'default-timeout', known) ?? 240);
+const outPath = flagValue(argv, 'out', known) ?? 'capability-probe.json';
 
 const doc = loadServersDoc() as { servers: ServerEntry[] };
 const entries = doc.servers.filter((e) => {

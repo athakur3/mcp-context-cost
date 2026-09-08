@@ -624,7 +624,7 @@ describe('tools/scan-registry.ts', () => {
   const source = readFileSync(script, 'utf8');
 
   it('writes exactly one file, at the path --out names', () => {
-    expect(source).toMatch(/const outArg = arg\('out'\)/);
+    expect(source).toMatch(/const outArg = flagValue\(argv, 'out', known\)/);
     expect(source).toMatch(/const out = resolve\(root, outArg\)/);
     const writes = source.match(/writeFileSync\(/g) ?? [];
     expect(writes.length).toBe(1);

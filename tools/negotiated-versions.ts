@@ -29,17 +29,25 @@ import { measureServer } from '../src/sweep/run.js';
 import { PROTOCOL_VERSION } from '../src/core/protocol.js';
 import type { ServerEntry } from '../src/sweep/report.js';
 import { loadServersDoc } from '../src/sweep/servers-schema.js';
+import { flagValue, knownFlagNames, unknownFlags, valuelessFlags } from '../src/flags.js';
 
-function arg(name: string): string | undefined {
-  const i = process.argv.indexOf(`--${name}`);
-  return i >= 0 ? process.argv[i + 1] : undefined;
+const SPEC = {
+  value: ['only', 'concurrency', 'default-timeout'],
+  boolean: ['docker', 'json'],
+};
+const argv = process.argv.slice(2);
+const bad = [...unknownFlags(argv, SPEC), ...valuelessFlags(argv, SPEC)];
+if (bad.length) {
+  console.error(`unrecognised or valueless: ${bad.join(', ')}`);
+  process.exit(2);
 }
+const known = knownFlagNames(SPEC);
 
-const docker = process.argv.includes('--docker');
-const asJson = process.argv.includes('--json');
-const only = arg('only')?.split(',');
-const concurrency = Number(arg('concurrency') ?? 2);
-const defaultTimeout = Number(arg('default-timeout') ?? 240);
+const docker = argv.includes('--docker');
+const asJson = argv.includes('--json');
+const only = flagValue(argv, 'only', known)?.split(',');
+const concurrency = Number(flagValue(argv, 'concurrency', known) ?? 2);
+const defaultTimeout = Number(flagValue(argv, 'default-timeout', known) ?? 240);
 
 const doc = loadServersDoc() as { servers: ServerEntry[] };
 const entries = doc.servers.filter((e) => {

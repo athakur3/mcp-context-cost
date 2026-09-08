@@ -61,6 +61,7 @@ import { DockerHarnessFault } from './docker.js';
 import { formatProblems, validateServers, type SchemaProblem } from './servers-schema.js';
 import type { ServerEntry } from './report.js';
 import type { Measurement } from '../core/types.js';
+import { flagValue, knownFlagNames, unknownFlags, valuelessFlags } from '../flags.js';
 
 /**
  * The fields that change what a sweep launches — the option object
@@ -214,17 +215,24 @@ export function failsCheck(status: Measurement['status']): boolean {
   return status === 'startup-failure' || status === 'timeout' || status === 'dynamic';
 }
 
-function arg(name: string): string | undefined {
-  const i = process.argv.indexOf(`--${name}`);
-  return i >= 0 ? process.argv[i + 1] : undefined;
-}
-
 // Exact path match, for the reason src/sweep/run.ts states: any other file whose
 // name merely ends the same way would otherwise run this block.
 const isMain =
   process.argv[1] !== undefined && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
-  const basePath = arg('base');
+  const SPEC = {
+    value: ['base', 'head', 'default-timeout', 'max-entries'],
+    boolean: ['docker'],
+  };
+  const argv = process.argv.slice(2);
+  const bad = [...unknownFlags(argv, SPEC), ...valuelessFlags(argv, SPEC)];
+  if (bad.length) {
+    console.error(`unrecognised or valueless: ${bad.join(', ')}`);
+    process.exit(2);
+  }
+  const known = knownFlagNames(SPEC);
+
+  const basePath = flagValue(argv, 'base', known);
   if (!basePath) {
     console.error(
       'usage: npx tsx src/sweep/pr-check.ts --base <base servers.yaml> [--head servers.yaml] [--docker] ' +
@@ -232,10 +240,10 @@ if (isMain) {
     );
     process.exit(2);
   }
-  const headPath = arg('head') ?? 'servers.yaml';
-  const docker = process.argv.includes('--docker');
-  const defaultTimeout = Number(arg('default-timeout') ?? 60);
-  const maxEntries = Number(arg('max-entries') ?? DEFAULT_MAX_ENTRIES);
+  const headPath = flagValue(argv, 'head', known) ?? 'servers.yaml';
+  const docker = argv.includes('--docker');
+  const defaultTimeout = Number(flagValue(argv, 'default-timeout', known) ?? 60);
+  const maxEntries = Number(flagValue(argv, 'max-entries', known) ?? DEFAULT_MAX_ENTRIES);
 
   // A parse error is a refusal, not a failed launch: exit 2 with the parser's
   // message, never its stack trace. Base is the committed branch and always

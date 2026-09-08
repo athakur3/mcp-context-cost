@@ -29,6 +29,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { selectShard, shardIndexForDate } from '../src/sweep/shard.js';
 import type { Measurement } from '../src/core/types.js';
 import { loadServersDoc } from '../src/sweep/servers-schema.js';
+import { flagValue, knownFlagNames, unknownFlags, valuelessFlags } from '../src/flags.js';
 import {
   DIVERGENCE_METHOD,
   mappedTokens,
@@ -53,10 +54,14 @@ const PROBE_TOOL = {
 
 const root = process.cwd();
 
-function arg(name: string): string | undefined {
-  const i = process.argv.indexOf(`--${name}`);
-  return i >= 0 ? process.argv[i + 1] : undefined;
+const SPEC = { value: ['only', 'shards', 'shard-index'], boolean: [] };
+const argv = process.argv.slice(2);
+const bad = [...unknownFlags(argv, SPEC), ...valuelessFlags(argv, SPEC)];
+if (bad.length) {
+  console.error(`unrecognised or valueless: ${bad.join(', ')}`);
+  process.exit(2);
 }
+const known = knownFlagNames(SPEC);
 
 /**
  * Bare, this writes the whole run: every measured server, exactly — never a
@@ -76,9 +81,11 @@ function arg(name: string): string | undefined {
  * its 2026-08-26 capture while the 15 rows above it refreshed twice. A bare
  * run replacing the whole file is what prevents that; a *selection* merges.
  */
-const only = arg('only')?.split(',');
-const shards = arg('shards') === undefined ? undefined : Number(arg('shards'));
-const shardIndexArg = arg('shard-index') === undefined ? undefined : Number(arg('shard-index'));
+const only = flagValue(argv, 'only', known)?.split(',');
+const shardsRaw = flagValue(argv, 'shards', known);
+const shards = shardsRaw === undefined ? undefined : Number(shardsRaw);
+const shardIndexRaw = flagValue(argv, 'shard-index', known);
+const shardIndexArg = shardIndexRaw === undefined ? undefined : Number(shardIndexRaw);
 /** Legacy positional: measure this many from the top, preserving the rest. */
 const topNArg =
   process.argv[2] !== undefined && !process.argv[2].startsWith('--')

@@ -22,6 +22,7 @@ import {
 } from './docker.js';
 import { measureTools, failedMeasurement, canonicalString } from '../core/canonical.js';
 import { toBadge } from '../core/badge.js';
+import { flagValue, knownFlagNames, unknownFlags, valuelessFlags } from '../flags.js';
 import type { Measurement } from '../core/types.js';
 
 /**
@@ -173,11 +174,6 @@ export function notApplicableReason(
 ): string | null {
   if (!declared?.evidence) return null;
   return msg.toLowerCase().includes(declared.evidence.toLowerCase()) ? declared.reason : null;
-}
-
-function arg(name: string): string | undefined {
-  const i = process.argv.indexOf(`--${name}`);
-  return i >= 0 ? process.argv[i + 1] : undefined;
 }
 
 export interface MeasureOptions {
@@ -461,8 +457,20 @@ export async function measureServer(
 const isMain =
   process.argv[1] !== undefined && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
-  const name = arg('name');
-  const command = arg('command');
+  const SPEC = {
+    value: ['name', 'command', 'timeout', 'docker-image'],
+    boolean: ['docker', 'no-persist'],
+  };
+  const argv = process.argv.slice(2);
+  const bad = [...unknownFlags(argv, SPEC), ...valuelessFlags(argv, SPEC)];
+  if (bad.length) {
+    console.error(`unrecognised or valueless: ${bad.join(', ')}`);
+    process.exit(2);
+  }
+  const known = knownFlagNames(SPEC);
+
+  const name = flagValue(argv, 'name', known);
+  const command = flagValue(argv, 'command', known);
   if (!name || !command) {
     console.error(
       'usage: npm run sweep -- --name <slug> --command "<launch command>" [--docker] [--timeout <ms>] [--no-persist]',
@@ -478,13 +486,13 @@ if (isMain) {
   // (`local-mcp` sat published as a startup failure whose real finding was that
   // the laptop was arm64), so the instruction has to be one that cannot commit
   // a laptop's reading by accident.
-  const persist = !process.argv.includes('--no-persist');
+  const persist = !argv.includes('--no-persist');
   let m: Measurement;
   try {
     m = await measureServer(name, command, {
-      timeoutMs: Number(arg('timeout') ?? 60_000),
-      docker: process.argv.includes('--docker'),
-      dockerImage: arg('docker-image'),
+      timeoutMs: Number(flagValue(argv, 'timeout', known) ?? 60_000),
+      docker: argv.includes('--docker'),
+      dockerImage: flagValue(argv, 'docker-image', known),
       persist,
     });
   } catch (err) {

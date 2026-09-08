@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { flagValue, flagValues, knownFlagNames, unknownFlags, valuelessFlags } from '../src/cli.js';
+import {
+  flagValue,
+  flagValues,
+  knownFlagNames,
+  unknownFlags,
+  valuelessFlags,
+} from '../src/flags.js';
 
 /**
  * A flag the CLI cannot read is a flag the CLI silently ignores, and an ignored

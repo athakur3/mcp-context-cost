@@ -43,6 +43,7 @@ import { selectShard, shardIndexForDate } from './shard.js';
 import { loadCrossCheckRun, type ServerEntry } from './report.js';
 import { loadServersDoc } from './servers-schema.js';
 import { signedPctToPrecision } from '../core/format.js';
+import { flagValue, knownFlagNames, unknownFlags, valuelessFlags } from '../flags.js';
 import {
   CROSS_CHECK_CLI,
   CROSS_CHECK_CLI_ARGS,
@@ -250,23 +251,32 @@ export function runCli(
   });
 }
 
-function arg(name: string): string | undefined {
-  const i = process.argv.indexOf(`--${name}`);
-  return i >= 0 ? process.argv[i + 1] : undefined;
-}
-
 // Exact path match, for the reason src/sweep/run.ts states: any other file whose
 // name merely ends the same way would otherwise run this block.
 const isMain =
   process.argv[1] !== undefined && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
+  const SPEC = {
+    value: ['only', 'concurrency', 'default-timeout', 'shards', 'shard-index'],
+    boolean: ['docker'],
+  };
+  const argv = process.argv.slice(2);
+  const bad = [...unknownFlags(argv, SPEC), ...valuelessFlags(argv, SPEC)];
+  if (bad.length) {
+    console.error(`unrecognised or valueless: ${bad.join(', ')}`);
+    process.exit(2);
+  }
+  const known = knownFlagNames(SPEC);
+
   const doc = loadServersDoc() as { servers: ServerEntry[] };
-  const only = arg('only')?.split(',');
-  const docker = process.argv.includes('--docker');
-  const concurrency = Number(arg('concurrency') ?? 3);
-  const defaultTimeout = Number(arg('default-timeout') ?? 60);
-  const shards = arg('shards') === undefined ? undefined : Number(arg('shards'));
-  const shardIndexArg = arg('shard-index') === undefined ? undefined : Number(arg('shard-index'));
+  const only = flagValue(argv, 'only', known)?.split(',');
+  const docker = argv.includes('--docker');
+  const concurrency = Number(flagValue(argv, 'concurrency', known) ?? 3);
+  const defaultTimeout = Number(flagValue(argv, 'default-timeout', known) ?? 60);
+  const shardsRaw = flagValue(argv, 'shards', known);
+  const shards = shardsRaw === undefined ? undefined : Number(shardsRaw);
+  const shardIndexRaw = flagValue(argv, 'shard-index', known);
+  const shardIndexArg = shardIndexRaw === undefined ? undefined : Number(shardIndexRaw);
 
   if (shards !== undefined && only) {
     // Same refusal as sweep-all, same reason: a slice that belongs to no cycle

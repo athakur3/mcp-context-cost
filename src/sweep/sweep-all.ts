@@ -20,20 +20,30 @@ import { MIN_REGRESSIONS, snapshot, verdict, restore } from './harness-guard.js'
 import { selectShard, shardIndexForDate } from './shard.js';
 import type { MeasurementStatus } from '../core/types.js';
 import { loadServersDoc } from './servers-schema.js';
+import { flagValue, knownFlagNames, unknownFlags, valuelessFlags } from '../flags.js';
 
-function arg(name: string): string | undefined {
-  const i = process.argv.indexOf(`--${name}`);
-  return i >= 0 ? process.argv[i + 1] : undefined;
+const SPEC = {
+  value: ['only', 'concurrency', 'default-timeout', 'shards', 'shard-index'],
+  boolean: ['docker'],
+};
+const argv = process.argv.slice(2);
+const bad = [...unknownFlags(argv, SPEC), ...valuelessFlags(argv, SPEC)];
+if (bad.length) {
+  console.error(`unrecognised or valueless: ${bad.join(', ')}`);
+  process.exit(2);
 }
+const known = knownFlagNames(SPEC);
 
 const doc = loadServersDoc() as { servers: ServerEntry[] };
-const only = arg('only')?.split(',');
-const docker = process.argv.includes('--docker');
-const concurrency = Number(arg('concurrency') ?? 3);
-const defaultTimeout = Number(arg('default-timeout') ?? 60);
+const only = flagValue(argv, 'only', known)?.split(',');
+const docker = argv.includes('--docker');
+const concurrency = Number(flagValue(argv, 'concurrency', known) ?? 3);
+const defaultTimeout = Number(flagValue(argv, 'default-timeout', known) ?? 60);
 
-const shards = arg('shards') === undefined ? undefined : Number(arg('shards'));
-const shardIndexArg = arg('shard-index') === undefined ? undefined : Number(arg('shard-index'));
+const shardsRaw = flagValue(argv, 'shards', known);
+const shards = shardsRaw === undefined ? undefined : Number(shardsRaw);
+const shardIndexRaw = flagValue(argv, 'shard-index', known);
+const shardIndexArg = shardIndexRaw === undefined ? undefined : Number(shardIndexRaw);
 
 if (shards !== undefined && only) {
   // Both narrow the set, but the sharded one is meant to be a *complete*

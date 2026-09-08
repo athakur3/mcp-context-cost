@@ -39,6 +39,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
 import { formatProblems, loadServersDoc, validateServers } from '../src/sweep/servers-schema.js';
+import { flagValue, knownFlagNames, unknownFlags, valuelessFlags } from '../src/flags.js';
 import {
   REGISTRY_PAGE_LIMIT,
   REGISTRY_URL,
@@ -75,12 +76,16 @@ const headers = { accept: 'application/json', 'user-agent': 'mcp-context-cost-sc
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const log = (line: string) => console.error(line);
 
-function arg(name: string): string | undefined {
-  const i = process.argv.indexOf(`--${name}`);
-  return i >= 0 ? process.argv[i + 1] : undefined;
+const SPEC = { value: ['cursor', 'limit', 'max-pages', 'out'], boolean: [] };
+const argv = process.argv.slice(2);
+const badFlags = [...unknownFlags(argv, SPEC), ...valuelessFlags(argv, SPEC)];
+if (badFlags.length) {
+  console.error(`unrecognised or valueless: ${badFlags.join(', ')}`);
+  process.exit(2);
 }
+const known = knownFlagNames(SPEC);
 
-const outArg = arg('out');
+const outArg = flagValue(argv, 'out', known);
 if (!outArg || outArg.startsWith('--')) {
   console.error(
     '--out <path> is required — the scan writes one JSON file, and the operator names where.',
@@ -99,13 +104,13 @@ for (const dir of PUBLISHED_DIRS) {
   }
 }
 
-const maxPagesArg = arg('max-pages');
+const maxPagesArg = flagValue(argv, 'max-pages', known);
 const maxPages = maxPagesArg === undefined ? undefined : Number(maxPagesArg);
 if (maxPages !== undefined && (!Number.isInteger(maxPages) || maxPages <= 0)) {
   console.error(`--max-pages expects a positive whole number, got '${maxPagesArg}'`);
   process.exit(2);
 }
-const limitArg = arg('limit');
+const limitArg = flagValue(argv, 'limit', known);
 const limit = limitArg === undefined ? REGISTRY_PAGE_LIMIT : Number(limitArg);
 if (!Number.isInteger(limit) || limit <= 0 || limit > REGISTRY_PAGE_LIMIT) {
   console.error(
@@ -113,7 +118,7 @@ if (!Number.isInteger(limit) || limit <= 0 || limit > REGISTRY_PAGE_LIMIT) {
   );
   process.exit(2);
 }
-const startCursor = arg('cursor');
+const startCursor = flagValue(argv, 'cursor', known);
 
 const doc = loadServersDoc(root);
 const problems = validateServers(doc);
