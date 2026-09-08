@@ -270,16 +270,31 @@ const FIRST_PARTY_API_HOST = 'api.anthropic.com';
 const UNREADABLE_BASE_URL = '(unreadable URL)';
 
 /**
- * The hostname of a base URL, or null if it does not parse.
+ * The host of a base URL, or null if it does not parse.
  *
- * The hostname is the whole of what the mode decision needs, and it is also the
+ * The **host**, which carries the port, and not the hostname, which does not.
+ * Claude Code compares the host — `new URL(e).host` against a one-entry list
+ * holding `api.anthropic.com`, read from the v2.1.233 bundle on 2026-09-08 —
+ * so `https://api.anthropic.com:8443/v1` is not first-party to the client and
+ * tool search is off there. Comparing the hostname made it first-party here,
+ * and the report then said these tokens are NOT loaded up front at a machine
+ * loading every one of them: an error in the understating direction, which is
+ * the one this file does not get to make.
+ *
+ * Both published tables already say host, so the pages were right and this was
+ * wrong. `URL` drops a scheme's default port, so `https://api.anthropic.com:443`
+ * still reads first-party — the same normalisation the client's own comparison
+ * gets, because it is the same parser.
+ *
+ * The host is the whole of what the mode decision needs, and it is also the
  * whole of what may leave this function: the rest of the value can carry a
- * credential. A value that does not parse is not first-party, which is the
- * reading that says tokens are paid — never the one that says they are free.
+ * credential, and a host is a name and a port, never userinfo. A value that
+ * does not parse is not first-party, which is the reading that says tokens are
+ * paid — never the one that says they are free.
  */
 function baseUrlHost(raw: string): string | null {
   try {
-    return new URL(raw).hostname.toLowerCase();
+    return new URL(raw).host.toLowerCase();
   } catch {
     return null;
   }

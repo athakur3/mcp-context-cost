@@ -273,6 +273,10 @@ const CASES: Case[] = [
       { env: { ANTHROPIC_BASE_URL: 'https://proxy.internal/v1' } },
       { env: { ANTHROPIC_BASE_URL: 'not a url?key=redacted' } },
       { settings: [settingsFile('user-settings', USER, { ANTHROPIC_BASE_URL: 'https://proxy.internal/v1' })] },
+      // The row says host, and a host carries its port. Claude Code compares
+      // the host too, so this machine has tool search off — reading the
+      // hostname made it first-party here and printed the opposite.
+      { env: { ANTHROPIC_BASE_URL: 'https://api.anthropic.com:8443/v1' } },
     ],
     mode: 'loads-upfront',
     row: {
@@ -516,6 +520,19 @@ describe('the published deferral tables describe the resolver', () => {
       verdictFor({ env: { ENABLE_TOOL_SEARCH: 'true', ANTHROPIC_BASE_URL: 'https://proxy.internal/v1' } }).mode,
     ).toBe('defers-all');
     expect(verdictFor({ env: { ANTHROPIC_BASE_URL: 'https://api.anthropic.com' } }).mode).toBe('defers-all');
+  });
+
+  it('reads the base URL host the way the client does, port and all', () => {
+    // The row says host, and a host carries its port. The narrowing that
+    // matters is that the first-party reading — the one saying these tokens are
+    // free — does not widen to a port the client would treat as a proxy.
+    const mode = (url: string) => verdictFor({ env: { ANTHROPIC_BASE_URL: url } }).mode;
+    expect(mode('https://api.anthropic.com:8443/v1')).toBe('loads-upfront');
+    expect(mode('https://api.anthropic.com')).toBe('defers-all');
+    // `URL` drops a scheme's default port, and the client parses with the same
+    // thing, so this stays first-party in both.
+    expect(mode('https://api.anthropic.com:443/v1')).toBe('defers-all');
+    expect(mode('HTTPS://API.ANTHROPIC.COM/v1')).toBe('defers-all');
   });
 
   /**

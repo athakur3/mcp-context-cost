@@ -7,6 +7,20 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **A base URL carrying a port was read as first-party, and the report called its tokens free.**
+  `baseUrlHost` compared `new URL(raw).hostname`; Claude Code compares `new URL(e).host` against a
+  one-entry list holding `api.anthropic.com` — read from the v2.1.233 bundle installed on the
+  machine this was written on, 2026-09-08. A host carries its port and a hostname does not, so
+  `ANTHROPIC_BASE_URL=https://api.anthropic.com:8443/v1` is a proxy to the client, which loads every
+  definition up front, and was first-party here, where the read fell through to the documented
+  default and printed *"These tokens are NOT loaded up front at any size"*.
+
+  That is the **understating** direction — telling a reader tokens are free where they are paid —
+  and `audit.ts` treats overstating as the safer of the two for exactly this reason. Both published
+  tables already said **host**, so the pages were right and the code was wrong: one line, no page
+  changes. `URL` drops a scheme's default port, so `https://api.anthropic.com:443` stays
+  first-party, and it stays first-party in the client too, because it is the same parser.
+
 - **A watch on the four sentences the deferral model is a reading of.** Every rule in
   `src/audit/deferral.ts` is a reading of someone else's documentation, and the report's most
   definite sentence comes out of it. Three of the four defects above had been wrong on published
