@@ -6,7 +6,7 @@ so the plan stays short and stays forward-looking. Phases 0, 1 and 2 shipped on 
 phase 3 followed as `0.14.0` and phase 4 as `0.15.0`; all five have left it, and what they
 built, and what they corrected, is in the changelog sections from `0.12.0` to `0.15.0`.
 
-Dated **2026-09-07**. Every item names the evidence it rests on, so you can check whether it is
+Dated **2026-09-08**. Every item names the evidence it rests on, so you can check whether it is
 still true before starting it. Items marked *(maintainer)* need an account or a decision only
 the maintainer has. Contributions welcome on any item, especially new `servers.yaml` entries.
 
@@ -120,6 +120,18 @@ beside the number they chose. What remains here is the report, and it waits on d
       refuted the mechanism above, and it found that `audit` printed its `auto` threshold as a
       token figure without ever saying which context window that figure assumed — a window it
       cannot read, and one whose size decides the verdict. Corrected and released as `0.16.0`.
+      **Update, 2026-09-08: this item is still open, and the model it would replace has since
+      been corrected in five places.** The documented model was wrong about how
+      `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` is read, about the Windows managed path, about
+      `managed-settings.d`, about the organisation override, and about comparing a base URL's
+      host — each against a first-party page, none of it needing a measurement. So the gap this
+      item names is narrower than it was: what a measurement would still add is the **unset
+      default**, which no page states and no file can be read for. A **third** first-party path
+      turned up while checking the above and is cheaper than the debug log for a yes/no
+      question — `claude --output-format stream-json --verbose -p`, whose `init` event lists the
+      session's tools, so the presence of `ToolSearch` in that array answers "is tool search on
+      here" in one request. It spends a real request on a real account, so the same
+      maintainer's line applies and nothing measured that way is published.
 - [ ] **Routine:** vitest 5 (major), `@anthropic-ai/sdk` 0.124; neither blocks anything.
 
 **Exit.** Report #2 published and dated. The other half — the shard count in `resweep.yml`

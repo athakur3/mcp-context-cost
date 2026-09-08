@@ -31,6 +31,13 @@
 # A page that cannot be fetched fails the run too, and says which page and that
 # nothing was checked against it. A watch that is green when it is blind is
 # worse than no watch.
+#
+# Demonstrated, not just documented: the first workflow_dispatch (run
+# 34178711794, 2026-09-08 02:03 UTC) read all three pages and exited 0 reporting
+# that the five passages still read as they did when they were recorded. Locally
+# the same tool exits 1 when pointed at a page that does not exist, saying
+# nothing was checked against it, and exits 1 with one quote altered, naming the
+# rule that rests on it.
 name: Tool search doc watch
 on:
   schedule:
