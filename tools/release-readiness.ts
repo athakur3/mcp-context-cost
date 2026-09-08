@@ -106,6 +106,17 @@ function regenIsAFixedPoint(): Finding[] {
  * section records what its author was thinking about rather than what a reader
  * will install — which is how one release nearly went out describing a single
  * phase while carrying two.
+ *
+ * **It checks presence, not coverage, and the difference matters.** Asking only
+ * "is there an entry" passes a section that describes half the release: ten
+ * shipping commits sat under six entries on 2026-09-08, with Prettier, eight
+ * compiler flags, oxlint, a third tsconfig and a review pass all unmentioned,
+ * and this returned clean. Nothing here can tell which commit an entry is
+ * about — entries do not cite commits, and matching on the files they name
+ * passes as soon as any other entry happens to mention the same file. So the
+ * empty section stays a hard failure, and a section with fewer entries than
+ * shipping commits prints the commits instead, for the one reader who can
+ * actually check: whoever is cutting.
  */
 function changelogCoversTheCommits(): Finding[] {
   const since = git('log', '--format=%H', '--grep=^Version .* -> .*', '-1');
@@ -125,17 +136,32 @@ function changelogCoversTheCommits(): Finding[] {
   const start = text.indexOf('## Unreleased');
   const next = text.indexOf('\n## ', start + 1);
   const section = start < 0 ? '' : text.slice(start, next > 0 ? next : undefined);
-  if (section.includes('\n- ')) return [];
-  return [
-    {
-      kind: 'stale',
-      what: 'the changelog says nothing about work that ships',
-      detail:
-        `${shipping.length} commit(s) since the last release touched src/, tools/ or servers.yaml ` +
-        `and the Unreleased section has no entries:\n` +
-        shipping.map(([h, s]) => `  ${h}  ${s}`).join('\n'),
-    },
-  ];
+  const entries = (section.match(/\n- /g) ?? []).length;
+  const listed = shipping.map(([h, s]) => `  ${h}  ${s}`).join('\n');
+
+  if (entries === 0) {
+    return [
+      {
+        kind: 'stale',
+        what: 'the changelog says nothing about work that ships',
+        detail:
+          `${shipping.length} commit(s) since the last release touched src/, tools/ or servers.yaml ` +
+          `and the Unreleased section has no entries:\n${listed}`,
+      },
+    ];
+  }
+  if (entries < shipping.length) {
+    return [
+      {
+        kind: 'look',
+        what: `${shipping.length} shipping commit(s) under ${entries} changelog entr(y/ies)`,
+        detail:
+          `One entry can cover several commits, so this is not a failure. It is the list to read ` +
+          `before cutting, because nothing here can tell which of them an entry is about:\n${listed}`,
+      },
+    ];
+  }
+  return [];
 }
 
 /**

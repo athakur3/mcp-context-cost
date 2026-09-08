@@ -273,7 +273,7 @@ are not:
 ```
   changed — published versions of your servers that have moved since
   (index 2026-09-05, 99 published captures; matched by canonical hash, never by name):
-    notes (published as obsidian) — you have the capture published 2026-08-19 at 1,132 tokens;
+    notes (published as my-server) — you have the capture published 2026-08-19 at 1,132 tokens;
       the current one is 2,062 (+930, 2026-08-26)
     updating all 1 would add 930 tokens to every request in this client.
 ```

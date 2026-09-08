@@ -86,9 +86,12 @@ order that goes green:
 3. **Add one bullet under `## Unreleased` in `CHANGELOG.md` naming the entry.** The gate's
    second check, "the changelog says nothing about work that ships", fails any non-`chore:`
    commit since the last release that touches `servers.yaml` while that section has no
-   bullet. It tests only that a bullet exists (`section.includes('\n- ')` in
-   `tools/release-readiness.ts`) and never reads what the bullet says, so a section that
-   already carries someone else's bullet lets an unmentioned entry through. Naming the entry
+   bullet. It fails only on a section with no bullet at all
+   (`section.match(/\n- /g)` in `tools/release-readiness.ts`) and never reads what a bullet
+   says — it cannot, because bullets do not cite commits. A section already carrying someone
+   else's bullet therefore still passes; what the gate does about that is print the shipping
+   commits whenever there are more of them than bullets, so an incomplete section is visible
+   to whoever is cutting rather than silent. Naming the entry
    is the convention, not the gate; the line `src/sweep/pr-check.ts` prints at the end of
    every run says the same — add a bullet, or start the commit subject with `chore:`. That
    prefix belongs to the bots' commits; write the bullet.

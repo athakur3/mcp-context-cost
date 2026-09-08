@@ -190,11 +190,13 @@ describe('add an entry', () => {
     expect(gate).toContain('the changelog says nothing about work that ships');
     expect(gate).toMatch(/git\('diff', '--name-only'.*'servers\.yaml'/);
     expect(text).toContain('the changelog says nothing about work that ships');
-    // The gate's whole test of the section is an emptiness test; the document
-    // says so, and quotes the expression, so the two move together.
-    expect(gate).toContain("section.includes('\\n- ')");
-    expect(text).toContain("section.includes('\\n- ')");
-    expect(flat(text)).toContain('never reads what the bullet says');
+    // The gate fails only on an empty section and counts bullets otherwise; the
+    // document says so, and quotes the expression, so the two move together.
+    expect(gate).toContain('section.match(/\\n- /g)');
+    expect(text).toContain('section.match(/\\n- /g)');
+    // And the half it cannot do: it never claims a bullet covers a given commit.
+    expect(gate).toContain('It checks presence, not coverage');
+    expect(flat(text)).toContain('never reads what a bullet says');
   });
 
   it('says to append rather than insert, for the reason shard.ts states', () => {

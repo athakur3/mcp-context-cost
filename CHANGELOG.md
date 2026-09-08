@@ -7,6 +7,105 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **The repository had no formatter, no linter, and `strict: true` as its only compiler flag.**
+  For a public project that is a standard held by hand, which works until it doesn't. Prettier
+  now formats `{src,tools,test,spec}/**/*.ts` and `vitest.config.ts` at `printWidth: 100` —
+  chosen because the 95th-percentile line already sat at 99 characters, so the config describes
+  the house style rather than replacing it. 84 of 95 files moved, almost all of it line
+  breaking inside expressions.
+
+  What `.prettierignore` keeps out is the load-bearing half, and each entry has a reason rather
+  than a habit: `results/`, `badges/` and `spec/fixtures/` because those bytes *are* the product
+  and a measurement's JSON is hashed and re-derived by whoever disputes it; `docs/` and `dist/`
+  because regen rewrites them whole and `regenIsAFixedPoint` compares them byte for byte;
+  `*.md` because the line breaks in this project's prose carry meaning a formatter cannot see;
+  and `servers.yaml` because its entry order is the rotation's slot order, dealt by position in
+  `sweep/shard.ts`. Verified cosmetic rather than assumed: the suite, the bash badge tests and
+  the readiness gate all pass, and `git status` over `results/`, `docs/` and `badges/` is empty.
+
+- **Eight compiler flags, and 145 places that were assuming a hit.** `noUnusedLocals`,
+  `noUnusedParameters`, `noImplicitOverride`, `noFallthroughCasesInSwitch`, `noImplicitReturns`
+  and `verbatimModuleSyntax` cost three errors between them — and would have caught a dead
+  import left behind two commits earlier, which the linter found first. `noUncheckedIndexedAccess`
+  and `exactOptionalPropertyTypes` cost 142, which is the half worth having: every array index
+  and every record lookup in the codebase was assuming a hit.
+
+  The fixes are not `!` until it compiles. A lookup a published claim rests on now **refuses**:
+  `published-stats.ts` reads servers by name to fill sentences regen splices into the README, so
+  a missing one throws and names the server instead of formatting `undefined` into a page — that
+  is 40 of the 48 errors that file had. Where a guard on the line above already establishes the
+  value, `!` carries the reason beside it, because a throw there would be unreachable. And
+  `exactOptionalPropertyTypes` separated the record types from the parameter types: a CLI flag
+  that was not passed is `undefined`, so those interfaces read `?: T | undefined` now.
+  `Measurement` was widened for the same reason, and it is worth stating why that loses nothing —
+  `canonical.ts` assigns `undefined` deliberately so the key stays out of the JSON, and absent
+  and undefined read identically there.
+
+- **`typescript-eslint` cannot be used here, so the linter is oxlint.** No release, canary
+  included, accepts TypeScript 7 — the peer range stops at `<6.1.0`, and the parser calls TS 5
+  compiler APIs. oxlint has its own parser and no TypeScript peer dependency; what that costs is
+  the type-aware rules, which the eight compiler flags above are doing instead.
+
+  `correctness`, `perf` and `suspicious` are on: 215 findings. **89 were `no-array-sort`, and
+  they were the reason to bother** — `Array#sort` sorts in place, so each was mutating the array
+  it was handed, and one test was reordering the object under test. 39 sites had already noticed
+  and were paying for a defensive `[...x]` copy. They are `toSorted()` now, the copies are gone,
+  and `target` moves to ES2023 to say so (`engines` already required node >= 20). 24 more were
+  real and are fixed. The remaining 102 are three rules arguing with the codebase, turned off in
+  `.oxlintrc.json` with the reason written beside each — `no-await-in-loop` fires 25 times in
+  `tools/` where the sequence is deliberate and `Promise.all` would turn a polite crawl into a
+  burst at someone's API; `consistent-function-scoping` wants test helpers hoisted out of the
+  `describe` they read with; `no-underscore-dangle` fires only on `_meta`, which is the Model
+  Context Protocol's own field name and not ours to rename.
+
+  CI runs `npm run typecheck`, `npm run format:check` and `npm run lint` before the suite. The
+  typecheck line is the configs rather than a bare `tsc --noEmit`, which had been checking `src`
+  and not `tools`.
+
+- **44 test files had never been typechecked.** `tsconfig.json` included only `src` and
+  `tsconfig.tools.json` only `src` and `tools`, and vitest transpiles without checking — so a
+  type assertion written in a test reported nothing while reading as a guarantee, which is why
+  the library-surface type pin had to move into `src/`. `tsconfig.test.json` covers `test/`,
+  `spec/` and `vitest.config.ts`, chained into `npm run typecheck`.
+
+  `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes` are off in that config and nowhere
+  else, with the reason in the file: in `src` they stop an `undefined` reaching a published page,
+  and a test has no published output — a bad index there fails the assertion on the spot. The
+  shape that would pass silently is `expect(x[0]?.field).toBeUndefined()`, and the suite contains
+  none. Leaving them on would have cost 200 errors and 267 index reads acquiring a `!`.
+
+  38 errors, against a derivation of 66–84, and **one of them was not a fixture**:
+  `divergence.test.ts` was calling `row('abc')` where `row` spreads a `Partial<DivergenceRow>`,
+  so a *string* was being spread and `capturedSha256` silently stayed `'aaa…'` for every case.
+  The test named "is exactly what isCurrent would have hidden" had stopped exercising its `kept`
+  branch and passed anyway. The rest were fixtures short of a required field, each given the
+  value its own assertions imply rather than a placeholder that would make one vacuous.
+
+- **A pre-merge review found this work making the mistake it exists to remove.** Four dimensions,
+  27 claims, 11 refuted, 16 confirmed. Three places said "no test file is typechecked" — the
+  changelog, `core/index.ts`'s docblock and the comment in `test/core.test.ts` pointing at it —
+  and the commit that added `tsconfig.test.json` had falsified all three. They were the stated
+  *reason* the type pin lives in `src/`, so the pin now records the real one: it sits beside the
+  export list it pins.
+
+  It also caught this changelog overstating a guard. Re-probing all four moves: a type deleted
+  from its module and a type dropped from the barrel are `TS2724`; a **value** dropped from the
+  barrel is not a compile error, and the runtime list is what catches it. A fifth move is caught
+  by neither — a type *added* to the barrel without being added to the tuple compiles cleanly,
+  because TypeScript cannot enumerate a module's exported types at type level.
+
+  And five smaller ones: the README still advertised the `upstream/` composite-action patch this
+  release deletes, in a file that ships in the tarball; `.oxlintrc.json` justified a disabled
+  rule by citing a `_meta` key `deferral.ts` explicitly does *not* read; `ci.yml`'s comment
+  described a two-config world; `pr-check.ts` cited a deleted module; and the pull-request
+  template linked `../CONTRIBUTING.md`, which does not resolve from a rendered PR body. Two
+  claims were refuted rather than fixed, and the refutations are recorded in the commit.
+
+  `changelogCoversTheCommits` did not catch the half-written section this release nearly shipped,
+  because it asked only whether *some* entry exists. It checks presence, not coverage, and cannot
+  do better — entries do not cite commits. So it says so now, and prints the shipping commits
+  whenever there are more of them than entries.
+
 - **The library export was designed, shipped, and never declared. It is declared now.**
   `src/core/index.ts` was written as the export a library would ship — `core/protocol.ts` says
   so in words, and says why that module is kept out of it — but `package.json` had no `main`, no
