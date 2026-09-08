@@ -172,7 +172,7 @@ describe('the published records say which machine made them', () => {
     );
     expect(since.length).toBeGreaterThan(0);
     for (const { name, m } of since) {
-      const iso = m.isolation ?? {};
+      const iso = m.isolation ?? { docker: false };
       if (iso.docker === true && iso.image === undefined) {
         // The host-spawned case. Absent is the honest answer, and the note is
         // what makes it readable as an answer rather than an omission.

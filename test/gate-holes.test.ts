@@ -4,6 +4,7 @@ import { buildReport, formatReport, serverKey } from '../src/audit/audit.js';
 import { measureTools, failedMeasurement } from '../src/core/canonical.js';
 import { appendVector, latestChange, type ToolVectorFile } from '../src/core/regression.js';
 import type { AuditReport } from '../src/audit/audit.js';
+import type { ConfiguredServer } from '../src/audit/config.js';
 
 /**
  * Four ways a gate reported a verdict it had not established, found by a
@@ -109,11 +110,14 @@ describe('--max-increase: a baseline that cannot be read is never "no change"', 
 });
 
 describe('--budget: a total missing a server is not a total', () => {
-  const stdio = (name: string) => ({
+  const stdio = (name: string): ConfiguredServer => ({
     name,
+    client: 'claude-code',
+    source: '/proj/.mcp.json',
     transport: 'stdio' as const,
     command: 'node',
     argv: ['node', `${name}.js`],
+    envVarNames: [],
   });
   const ok = stdio('ok');
   const broken = stdio('heavy-but-broken');

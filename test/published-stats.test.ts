@@ -261,6 +261,7 @@ describe('the triple', () => {
         o200kFull: number;
         o200kMapped: number;
         claudeDelta: number;
+        toolCount: number;
         capturedSha256: string;
         error?: string;
       }

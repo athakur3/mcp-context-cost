@@ -33,7 +33,7 @@ describe('per-tool attribution', () => {
     // Diagnostic, not a decomposition: the whole-object count includes framing
     // the parts do not, so the parts only have to fit inside it.
     expect(
-      t.descriptionTokens + t.inputSchemaTokens + t.outputSchemaTokens + t.annotationsTokens,
+      t.descriptionTokens + t.inputSchemaTokens + t.outputSchemaTokens! + t.annotationsTokens!,
     ).toBeLessThan(t.tokens);
   });
 

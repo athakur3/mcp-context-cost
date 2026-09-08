@@ -158,6 +158,7 @@ describe('upsert', () => {
     toolCount: 1,
     status: 'measured',
     isolation: 'docker',
+    version: '',
   };
 
   it('replaces the row for the same (date, server)', () => {
@@ -312,6 +313,7 @@ describe('plottableSeries', () => {
     tokens,
     toolCount: 1,
     status: 'measured',
+    version: '',
     isolation,
   });
 

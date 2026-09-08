@@ -148,7 +148,7 @@ describe('what an entry is', () => {
     const sources = servers.map((s) => s.metricSource);
     for (const form of ['(npm weekly)', '(PyPI weekly)']) {
       expect(
-        sources.some((s) => s.includes(form)),
+        sources.some((s) => s?.includes(form)),
         `servers.yaml uses ${form}`,
       ).toBe(true);
       expect(text).toContain(form);
@@ -157,7 +157,7 @@ describe('what an entry is', () => {
       'https://api.npmjs.org/downloads/point/last-week/',
       'https://pypistats.org/packages/',
     ]) {
-      expect(sources.some((s) => s.startsWith(host))).toBe(true);
+      expect(sources.some((s) => s?.startsWith(host))).toBe(true);
       expect(text).toContain(host);
     }
     expect(text).toContain('unverified');

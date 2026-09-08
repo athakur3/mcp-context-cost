@@ -260,17 +260,17 @@ describe('dropStaleRows', () => {
   it('drops a row for a server with no capture at all', () => {
     // Nothing can confirm it, so carrying it forward is carrying a claim with
     // its evidence deleted — the same rule the evidence tail follows.
-    const { dropped } = dropStaleRows({ gone: row('abc') }, () => undefined);
+    const { dropped } = dropStaleRows({ gone: rowFor('abc') }, () => undefined);
     expect(dropped).toEqual(['gone']);
   });
 
   it('drops a row that never recorded which capture it came from', () => {
-    const { dropped } = dropStaleRows({ legacy: row('') }, () => '');
+    const { dropped } = dropStaleRows({ legacy: rowFor('') }, () => '');
     expect(dropped).toEqual(['legacy']);
   });
 
   it('is exactly what isCurrent would have hidden, decided one layer earlier', () => {
-    const servers = { a: row('same'), b: row('moved') };
+    const servers = { a: rowFor('same'), b: rowFor('moved') };
     const sha = (n: string) => (n === 'a' ? 'same' : 'elsewhere');
     const { kept } = dropStaleRows(servers, sha);
     for (const [name, r] of Object.entries(servers)) {

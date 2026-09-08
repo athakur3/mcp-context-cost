@@ -13,6 +13,7 @@ import { measureTools } from '../src/core/canonical.js';
 import { buildReport, formatReport, serverKey } from '../src/audit/audit.js';
 import { loadToolVectors, writeCaptureIndex } from '../src/sweep/regressions.js';
 import type { ServerEntry } from '../src/sweep/report.js';
+import type { ConfiguredServer } from '../src/audit/config.js';
 
 /**
  * `--changed` tells a user their server got heavier, which is a claim about
@@ -93,11 +94,14 @@ describe('parseCaptureIndex', () => {
 });
 
 describe('the audit report', () => {
-  const stdio = (name: string) => ({
+  const stdio = (name: string): ConfiguredServer => ({
     name,
+    client: 'claude-code',
+    source: '/proj/.mcp.json',
     transport: 'stdio' as const,
     command: 'node',
     argv: ['node', `${name}.js`],
+    envVarNames: [],
   });
   const cfg = (servers: ReturnType<typeof stdio>[]) =>
     [{ client: 'claude-desktop', source: '/cfg.json', servers }] as Parameters<

@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    // The base config emits `src` to `dist` and roots there; this one only
+    // checks, so it roots at the repository.
+    "rootDir": ".",
+
+    // Off here and nowhere else — `src` and `tools` keep both. In `src` these
+    // stop an `undefined` reaching a published page. A test has no published
+    // output: a bad index makes the assertion throw and the test go red on the
+    // spot. The one shape that would pass silently is
+    // `expect(x[0]?.field).toBeUndefined()`, and the suite contains none.
+    "noUncheckedIndexedAccess": false,
+    "exactOptionalPropertyTypes": false
+  },
+  // `src` arrives through the imports these files make, and is checked here
+  // under the two relaxed flags as a side effect. That is not a loosening: the
+  // base config checks `src` strictly in the same `npm run typecheck` run.
+  "include": ["test", "spec"]
+}

@@ -13,6 +13,7 @@ import { measureTools, METHODOLOGY_VERSION } from '../src/core/canonical.js';
 import { buildReport, formatReport, serverKey } from '../src/audit/audit.js';
 import { loadRows, type ServerEntry } from '../src/sweep/report.js';
 import type { ToolMeasurement } from '../src/core/types.js';
+import type { ConfiguredServer } from '../src/audit/config.js';
 
 /**
  * `--suggest` gives advice with a number attached, so the failure modes worth
@@ -142,11 +143,14 @@ describe('suggestFor — advice only where the data can point', () => {
 });
 
 describe('the audit report carries suggestions under the same honesty rules', () => {
-  const stdio = (name: string) => ({
+  const stdio = (name: string): ConfiguredServer => ({
     name,
+    client: 'claude-code',
+    source: '/proj/.mcp.json',
     transport: 'stdio' as const,
     command: 'node',
     argv: ['node', `${name}.js`],
+    envVarNames: [],
   });
   const cfg = (servers: ReturnType<typeof stdio>[]) =>
     [{ client: 'claude-desktop', source: '/cfg.json', servers }] as Parameters<

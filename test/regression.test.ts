@@ -211,7 +211,7 @@ describe('attribute — where the tokens went', () => {
   };
 
   it('separates added, removed, grown and shrunk tools', () => {
-    const a = attribute(from, to, 180);
+    const a = attribute(from, to, 180)!;
     expect(a.added).toEqual([{ name: 'brand-new', tokens: 200 }]);
     expect(a.removed).toEqual([{ name: 'goes', tokens: 130 }]);
     expect(a.grew).toEqual([{ name: 'grows', from: 50, to: 90, delta: 40 }]);
@@ -220,8 +220,8 @@ describe('attribute — where the tokens went', () => {
 
   it('publishes the remainder rather than implying the parts sum to the whole', () => {
     // accounted = +200 (added) − 130 (removed) + 40 (grew) = 110; headline delta 180.
-    expect(attribute(from, to, 180).unexplainedTokens).toBe(70);
-    expect(attribute(from, to, 110).unexplainedTokens).toBe(0);
+    expect(attribute(from, to, 180)!.unexplainedTokens).toBe(70);
+    expect(attribute(from, to, 110)!.unexplainedTokens).toBe(0);
   });
 
   it('is claimed only when both captures are on record', () => {

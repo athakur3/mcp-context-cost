@@ -568,7 +568,10 @@ describe('buildReport', () => {
       baselineTokens: 7,
       probeDelta: 328,
       servers: Object.fromEntries(
-        Object.entries(servers).map(([name, row]) => [name, { ...row, toolCount: 1 }]),
+        Object.entries(servers).map(([name, row]) => [
+          name,
+          { ...row, toolCount: 1, o200kFull: 1000, o200kMapped: 400 },
+        ]),
       ),
     });
 
@@ -672,7 +675,13 @@ describe('formatReport', () => {
           baselineTokens: 7,
           probeDelta: 328,
           servers: {
-            alpha: { capturedSha256: m.canonicalSha256!, claudeDelta: 999, toolCount: 1 },
+            alpha: {
+              capturedSha256: m.canonicalSha256!,
+              claudeDelta: 999,
+              toolCount: 1,
+              o200kFull: 1000,
+              o200kMapped: 400,
+            },
           },
         },
       },
@@ -818,7 +827,7 @@ describe('audit CLI --claude', () => {
     const memory = base.configs[0].servers[0];
     expect(memory.name).toBe('memory');
 
-    const server = createServer((req, res) => {
+    const server = createServer((_req, res) => {
       res.end(
         JSON.stringify({
           method: 'tools-delta/v1',
@@ -905,6 +914,7 @@ function reportOf(
     generatedAt: '2026-08-01T00:00:00.000Z',
     contextWindow: DEFAULT_CONTEXT_WINDOW,
     problems: [],
+    emptyConfigs: [],
     configs: configs.map((c) => {
       const ok = c.servers.filter((s) => s.tokens !== null);
       const bad = c.servers.filter((s) => s.tokens === null);
