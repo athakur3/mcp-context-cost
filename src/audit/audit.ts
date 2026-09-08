@@ -34,6 +34,7 @@ import {
   type ToolSearchSource,
 } from './deferral.js';
 import { formatDiff, formatGate, type AuditDiff, type IncreaseGate } from './diff.js';
+import { signed } from '../core/format.js';
 
 export const DEFAULT_CONTEXT_WINDOW = 200_000;
 
@@ -1144,7 +1145,7 @@ export function formatReport(report: AuditReport): string {
           const alias = name === v.server ? name : `${name} (published as ${v.server})`;
           lines.push(
             `    ${alias} — you have the capture published ${v.yourDate} at ${n(v.yourTokens)} tokens; ` +
-              `the current one is ${n(v.currentTokens)} (${v.deltaTokens >= 0 ? '+' : '−'}${n(Math.abs(v.deltaTokens))}, ${v.currentDate})`,
+              `the current one is ${n(v.currentTokens)} (${signed(v.deltaTokens)}, ${v.currentDate})`,
           );
         }
         lines.push(

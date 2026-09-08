@@ -15,6 +15,7 @@
  * the resulting error is stated ("understates by at least 9,246").
  */
 import type { AuditConfigResult, AuditReport } from './audit.js';
+import { count, signed } from '../core/format.js';
 
 export type ServerDeltaKind =
   | 'added'
@@ -342,8 +343,7 @@ export function buildDiff(baseline: AuditReport, current: AuditReport): AuditDif
   };
 }
 
-const n = (x: number) => x.toLocaleString('en-US');
-const signed = (x: number) => `${x >= 0 ? '+' : '−'}${n(Math.abs(x))}`;
+const n = count;
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
 /** `--config <path>` records the client as 'explicit', which is a parser detail, not a name. */
 const clientLabel = (client: string) => (client === 'explicit' || !client ? 'this client' : client);

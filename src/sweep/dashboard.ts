@@ -12,6 +12,7 @@ import { loadRows, type ServerEntry } from './report.js';
 import { bandColor, BAND_META } from '../core/bands.js';
 import { parseHistory, plottableSeries, type PlottableSeries } from './history.js';
 import { loadServersDoc } from './servers-schema.js';
+import { signed } from '../core/format.js';
 
 /** Longest series a sparkline plots — a stat-tile trend, not a full chart. */
 const SPARK_MAX_POINTS = 12;
@@ -181,7 +182,7 @@ export function generateDashboard(root = process.cwd()): string {
       const tokens = seriesFor(r.entry.name).rows.map((h) => h.tokens);
       const trend =
         tokens.length > 1
-          ? `${tokens[tokens.length - 1]! - tokens[0]! >= 0 ? '+' : ''}${fmt(tokens[tokens.length - 1]! - tokens[0]!)} over ${tokens.length} sweeps`
+          ? `${signed(tokens[tokens.length - 1]! - tokens[0]!)} over ${tokens.length} sweeps`
           : '—';
       return `<tr><td>${i + 1}</td><td>${esc(r.entry.name)}</td><td class="num">${fmt(m.totalTokens as number)}</td><td class="num">${fmt(mappedTokens(m.rawToolsCapture ?? []))}</td><td class="num">${div ? fmt(div.claudeDelta) : '—'}</td><td class="num">${esc(m.toolCount)}</td><td>${esc(BAND_META[bandColor(m.totalTokens as number)].label)}</td><td>${esc(r.entry.category)}</td><td class="num">${trend}</td></tr>`;
     })

@@ -7,6 +7,65 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **A fall was typeset two ways, depending on which copy of the formatter rendered it.**
+  Thirteen inline sign-formatters across `src/` ran three mutually inconsistent rules, and the
+  inconsistency reached the published pages: the leaderboard and the movement report wrote a
+  fall as `−369` while the dashboard and every server page's history column wrote the same fall
+  as `-369`, because those let `toLocaleString` supply the sign and its sign is a hyphen. The
+  dashboard also printed a server whose cost had not moved as `+0 over 4 sweeps`.
+
+  They now come from `src/core/format.ts`, which keeps the two intents apart rather than
+  collapsing them: `signed` is a magnitude with a direction and prints zero bare, while
+  `signedPctToPrecision` always carries a sign, because the cross-check column's `+0.0%` and
+  `−0.0%` are a small rise and a small fall and printing both as `0.0%` would delete the
+  difference. Regenerating moves 74 lines across the dashboard and six server pages; every one
+  of them is identical once the sign representation is normalised, and no measured number
+  changes.
+
+- **The instructions backfill had finished shrinking, so it is gone.**
+  `results/session-start.json` carried instructions for measurements taken before
+  `serverInstructions` existed, and `src/sweep/session-start.ts` said in its own docblock that it
+  was meant to shrink. It had: 87 of 103 measurements carry the field, the other 16 have no
+  capture and return before the backfill is consulted, and the leaderboard published zero floors.
+  The runner, the artifact, the npm script, the loader and the row types go with it — about 300
+  lines. The floor branch and its `≥` marker stay, because they remain the honest answer for a
+  measurement whose field is absent. Every published figure is byte-identical afterwards.
+
+- **A claim stated twice is a claim that can disagree with itself, including when a test holds
+  the copies together.** The deferral model was written out in full on both the front page and
+  the methodology page — five corrections in two days, each made twice — and
+  `test/published-deferral.test.ts` pinned both. It is now on the methodology page alone, with
+  the front page pointing at it and keeping only what it alone carries: the sample transcript and
+  the `claude --debug-file` self-check. The guard moved rather than shrank; the refusal count it
+  asserted moved to the page that now carries the model.
+
+  The same rule then applied to every other pair — the laptop rule, the failure taxonomy's
+  wording, an entry's own timeout comment, the OAuth-walled reason, the remote-entry probe, the
+  five-line re-derivation, the `--suggest` threshold, and the pull-request template's copy of the
+  whole procedure. Each had two copies and a test holding them to each other, which is not a fix
+  for a duplicated claim but maintenance of one. They link now, and the tests went with them. The
+  template's guard is inverted instead of deleted: it asserts the commands are absent there and
+  present in the guide, so a copy coming back fails. Cross-document overlap falls from 56
+  eight-word runs to 17, and every one that remains is a link's own description or a sentence
+  regen derives from `results/`.
+
+- **Foundations that had finished their job, and the comments that outlived them.**
+  `tools/backfill-tool-attribution.ts` has no remaining input — 1430 of 1430 tool rows carry both
+  attribution fields. `history.csv` has no short rows left, so the comment describing five- and
+  six-field writes described a shape that is gone. `core/bands.ts` still said the bands were "to
+  be frozen before launch" while the methodology page has said frozen since 2026-08-16 — and that
+  page's own heading still read "(provisional)" two lines above the sentence saying frozen.
+  `allHeaviestTools` said it was used by nothing and was; `percentiles` existed to freeze the
+  bands, a job finished on 2026-08-16. `upstream/action-patch.md` proposed badge output for
+  another project's action and told server maintainers to use it, contradicting what the README
+  tells them.
+
+- **`dashboard.ts` decided it was the entry point by filename suffix**, the form `src/sweep/run.ts`
+  warns against in a comment three of the other four entry points quote. It matches the resolved
+  path now. `cross-check.ts` also carried a second loader for `results/cross-check.json`,
+  byte-identical to `report.ts`'s, and seven places parsed `servers.yaml` inline while
+  `servers-schema.ts` already exported `loadServersDoc` to one caller.
+
 ## 0.18.0 — 2026-09-08
 
 - **A base URL carrying a port was read as first-party, and the report called its tokens free.**

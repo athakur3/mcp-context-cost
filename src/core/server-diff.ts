@@ -23,6 +23,7 @@
  */
 import { attribute, vectorEntryOf, type ToolAttribution } from './regression.js';
 import type { Measurement } from './types.js';
+import { count, signed } from './format.js';
 
 export interface MeasuredSide {
   tokens: number;
@@ -208,8 +209,7 @@ export function evaluateServerGate(diff: ServerDiff, limits: GateLimits): Server
 
 /** The human-readable diff, printed whether or not a gate was asked for. */
 export function formatServerDiff(diff: ServerDiff): string {
-  const n = (v: number) => v.toLocaleString('en-US');
-  const signed = (v: number) => `${v > 0 ? '+' : v < 0 ? '−' : ''}${n(Math.abs(v))}`;
+  const n = count;
   const lines: string[] = [];
 
   if (!diff.exact) {

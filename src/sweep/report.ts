@@ -11,6 +11,7 @@ import { divergencePct, isComparable, parseCrossCheck, type CrossCheckRun } from
 // imports this module for its markdown escaping, so importing it back at
 // runtime would close a cycle. The summary is handed in by the caller instead.
 import type { RegressionSummary } from '../core/regression.js';
+import { signed, signedPctToPrecision } from '../core/format.js';
 import {
   SESSION_START_METHOD,
   sessionStartLoad,
@@ -228,7 +229,6 @@ export function writeLeaderboard(
     const row = xc.servers[r.entry.name];
     return isComparable(row, r.m.canonicalSha256) ? row : null;
   };
-  const signedPct = (p: number) => `${p >= 0 ? '+' : '−'}${Math.abs(p).toFixed(1)}%`;
   const measured = rows
     .filter((r) => r.m && (r.m.status === 'measured' || r.m.status === 'dynamic'))
     .sort((a, b) => (b.m!.totalTokens ?? 0) - (a.m!.totalTokens ?? 0));
@@ -271,7 +271,7 @@ export function writeLeaderboard(
         `percentage is the disagreement of counters: the CLI's count against ours of the same three-field ` +
         `projection` +
         (pcts.length > 0
-          ? `, ${signedPct(Math.min(...pcts))} to ${signedPct(Math.max(...pcts))} across the ` +
+          ? `, ${signedPctToPrecision(Math.min(...pcts))} to ${signedPctToPrecision(Math.max(...pcts))} across the ` +
             `${pcts.length} row${pcts.length === 1 ? '' : 's'} where both tools saw the same tool set.`
           : `. No row currently compares like with like.`) +
         ` A row prints only while the comparison is between like and like: the same tool names on both ` +
@@ -285,10 +285,9 @@ export function writeLeaderboard(
   // deferral-costs-more note follows, rather than asserting a stale count.
   if (regressions && regressions.changes.length > 0) {
     const net = regressions.netTokens;
-    const sign = (v: number) => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toLocaleString('en-US')}`;
     md.push(
       `**Of the servers whose cost has moved at all, ${regressions.grew} moved upward and ` +
-        `${regressions.shrank} moved down** — a net ${sign(net)} tokens across the set. Most entries here ` +
+        `${regressions.shrank} moved down** — a net ${signed(net)} tokens across the set. Most entries here ` +
         `launch unpinned, so a movement is a real upstream release landing in real context windows, and ` +
         `only measurements taken under the same isolation are compared. Every movement, which half of the ` +
         `server moved, and where the tokens went: [regressions.md](regressions.md).`,
@@ -362,7 +361,7 @@ export function writeLeaderboard(
     const link = `[${mdCell(r.entry.name)}](../docs/servers/${encodeURIComponent(r.entry.name)}.md)`;
     const c = claude(r);
     const x = crossCheck(r);
-    const xCell = x === null ? '—' : `${x.cliTokens.toLocaleString('en-US')} (${signedPct(divergencePct(x)!)})`;
+    const xCell = x === null ? '—' : `${x.cliTokens.toLocaleString('en-US')} (${signedPctToPrecision(divergencePct(x)!)})`;
     md.push(
       `| ${i + 1} | ${link} | ${m.totalTokens!.toLocaleString('en-US')} |` +
         ` ${mappedTokens(m.rawToolsCapture ?? []).toLocaleString('en-US')} |` +

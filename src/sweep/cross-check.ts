@@ -33,6 +33,7 @@ import { splitCommand } from './client.js';
 import { selectShard, shardIndexForDate } from './shard.js';
 import { loadCrossCheckRun, type ServerEntry } from './report.js';
 import { loadServersDoc } from './servers-schema.js';
+import { signedPctToPrecision } from '../core/format.js';
 import {
   CROSS_CHECK_CLI,
   CROSS_CHECK_CLI_ARGS,
@@ -348,8 +349,8 @@ if (isMain) {
             : !row.toolSetMatches
               ? ` — tool sets differ (${row.ourToolCount} vs ${row.cliToolCount} tools), not comparable`
               : row.dynamic
-                ? ` (${pct !== null && pct >= 0 ? '+' : ''}${pct?.toFixed(1)}% vs mapped) — dynamic listing, recorded but never printed`
-                : ` (${pct !== null && pct >= 0 ? '+' : ''}${pct?.toFixed(1)}% vs mapped)`),
+                ? ` (${pct === null ? '—' : signedPctToPrecision(pct)} vs mapped) — dynamic listing, recorded but never printed`
+                : ` (${pct === null ? '—' : signedPctToPrecision(pct)} vs mapped)`),
       );
     }
   }

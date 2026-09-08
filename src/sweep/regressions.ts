@@ -44,6 +44,7 @@ import {
 import { parseHistory, plottableSeries, type HistoryRow } from './history.js';
 import { mdCell, type ServerEntry } from './report.js';
 import type { Measurement } from '../core/types.js';
+import { count, signed, signedPct } from '../core/format.js';
 
 /** Fold every results/<server>/measurement.json into its tool-vectors.json. Idempotent. */
 export function appendToolVectors(root = process.cwd()): { servers: number; appended: number } {
@@ -149,9 +150,7 @@ const MECHANISM_WORDS: Record<Mechanism, string> = {
   mixed: 'added and rewrote',
 };
 
-const n = (v: number) => v.toLocaleString('en-US');
-const signed = (v: number) => `${v > 0 ? '+' : v < 0 ? '−' : ''}${n(Math.abs(v))}`;
-const signedPct = (v: number) => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(1)}%`;
+const n = count;
 
 /** Compute every comparable movement on disk, newest-pair per server. */
 export function collectChanges(

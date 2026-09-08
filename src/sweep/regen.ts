@@ -7,6 +7,7 @@ import { applyPublishedStats } from './published-stats.js';
 import { writeToolShapeBaseline } from './tool-shape.js';
 import { appendToolVectors, writeCaptureIndex, writeRegressions } from './regressions.js';
 import { loadServersDoc } from './servers-schema.js';
+import { signed } from '../core/format.js';
 
 const doc = loadServersDoc() as { servers: ServerEntry[] };
 // History and tool vectors first: the server pages read history.csv for their
@@ -33,14 +34,13 @@ if (stats.problems.length > 0) {
   for (const p of stats.problems) console.error(`published stats: ${p}`);
   process.exit(1);
 }
-console.log(`history: ${h.rows} rows (${h.added >= 0 ? '+' : ''}${h.added})`);
+console.log(`history: ${h.rows} rows (${signed(h.added)})`);
 console.log(`server pages: ${p.pages}`);
 console.log(`dashboard: ${d.out} (${(d.bytes / 1024).toFixed(0)}KB)`);
 console.log(`tool shape: ${ts.toolCount} tools across ${ts.serverCount} servers (median description ${ts.quantiles.descriptionTokens[50]})`);
 console.log(
   `regressions: ${regressions.summary.changes.length} movement(s), ${regressions.summary.grew} heavier / ` +
-    `${regressions.summary.shrank} cheaper, net ${regressions.summary.netTokens >= 0 ? '+' : ''}` +
-    `${regressions.summary.netTokens} tokens; tool vectors ${tv.appended} appended across ${tv.servers} servers; ` +
+    `${regressions.summary.shrank} cheaper, net ${signed(regressions.summary.netTokens)} tokens; tool vectors ${tv.appended} appended across ${tv.servers} servers; ` +
     `capture index ${Object.keys(ci.captures).length} captures`,
 );
 console.log(

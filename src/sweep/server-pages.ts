@@ -14,6 +14,7 @@ import type { Measurement } from '../core/types.js';
 import { bandColor, BAND_META } from '../core/bands.js';
 import { deprecationText, loadDivergence, mdCell, type ServerEntry } from './report.js';
 import { parseHistory, plottableSeries, type HistoryRow } from './history.js';
+import { signed } from '../core/format.js';
 import {
   claudeRatio,
   fieldSelectionShare,
@@ -243,7 +244,7 @@ export function renderServerPage(
           ? 'not comparable'
           : delta === 0
             ? 'no change'
-            : `${delta! > 0 ? '+' : ''}${fmt(delta!)}`;
+            : signed(delta!);
       md.push(
         `| ${mdCell(h.date)} | ${fmt(h.tokens)} | ${h.toolCount} | ` +
           // Same rule as the isolation cell beside it: what the row does not

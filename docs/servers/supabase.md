@@ -70,7 +70,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 |---|---:|---:|---|---|---:|
 | 2026-08-16 | 5,013 | 29 | not recorded | not recorded | — |
 | 2026-08-18 | 5,013 | 29 | not recorded | docker | no change |
-| 2026-09-04 | 5,007 | 29 | 0.11.0 | docker | -6 |
+| 2026-09-04 | 5,007 | 29 | 0.11.0 | docker | −6 |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 
