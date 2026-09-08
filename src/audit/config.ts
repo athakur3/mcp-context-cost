@@ -50,25 +50,25 @@ export interface ConfiguredServer {
   source: string;
   transport: 'stdio' | 'remote';
   /** Display form of the launch command (argv joined) — stdio only. */
-  command?: string;
+  command?: string | undefined;
   /** Exact argv, so paths containing spaces survive round-tripping. */
-  argv?: string[];
+  argv?: string[] | undefined;
   envVarNames: string[];
   /** Values, needed to spawn the server. NEVER serialize this. */
-  env?: Record<string, string>;
+  env?: Record<string, string> | undefined;
   /** Remote endpoint — probed, then measured through the bridge or reported as walled. */
-  url?: string;
+  url?: string | undefined;
   /** Names only — a remote entry's header values never enter a report. Absent means none. */
-  headerNames?: string[];
+  headerNames?: string[] | undefined;
   /** Values, sent with the probe and the bridge. NEVER serialize this. */
-  headers?: Record<string, string>;
+  headers?: Record<string, string> | undefined;
   /**
    * Claude Code's `alwaysLoad: true`: this server's tools load at session
    * start whatever the tool-search setting says (its MCP documentation, §"Exempt
    * a server from deferral", read 2026-09-06). Read from the entry, so the
    * deferral verdict can count it rather than list it as a condition.
    */
-  alwaysLoad?: true;
+  alwaysLoad?: true | undefined;
 }
 
 /**
@@ -90,7 +90,7 @@ export function parseJsonc(text: string): unknown {
   };
 
   for (let i = 0; i < text.length; i++) {
-    const c = text[i];
+    const c = text[i]!; // the loop condition establishes it
     const n = text[i + 1];
 
     if (inString) {
@@ -347,7 +347,7 @@ export function configCandidates(env: {
   home: string;
   cwd: string;
   platform: NodeJS.Platform;
-  appData?: string;
+  appData?: string | undefined;
 }): ConfigCandidate[] {
   const { home, cwd, platform } = env;
   const desktop =

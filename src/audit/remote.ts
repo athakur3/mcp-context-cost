@@ -140,7 +140,7 @@ export const DEFAULT_PROBE_TIMEOUT_MS = 15_000;
  */
 export async function probeRemote(
   url: string,
-  opts: { headers?: Record<string, string>; timeoutMs?: number } = {},
+  opts: { headers?: Record<string, string> | undefined; timeoutMs?: number | undefined } = {},
 ): Promise<RemoteProbe> {
   const timeoutMs = opts.timeoutMs ?? DEFAULT_PROBE_TIMEOUT_MS;
   const configured = opts.headers ?? {};
@@ -198,7 +198,7 @@ export async function probeRemote(
 
 function classify({ res, body }: Answer): RemoteProbe {
   const www = res.headers.get('www-authenticate');
-  const type = (res.headers.get('content-type') ?? '').split(';')[0].trim().toLowerCase();
+  const type = (res.headers.get('content-type') ?? '').split(';')[0]!.trim().toLowerCase();
   if (res.status === 401 || res.status === 403) {
     return {
       kind: 'auth-walled',

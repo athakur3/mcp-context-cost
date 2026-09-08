@@ -161,7 +161,7 @@ const mdLink = (url: unknown) => encodeURI(String(url ?? '')).replace(/\)/g, '%2
 /** `https://github.com/owner/repo` → `owner/repo`; anything else is left alone. */
 export function shortRepo(url: string): string {
   const m = /^https?:\/\/(?:www\.)?github\.com\/([^/]+\/[^/#?]+)/.exec(url);
-  return m ? m[1].replace(/\.git$/, '') : url;
+  return m?.[1] ? m[1].replace(/\.git$/, '') : url;
 }
 
 export function deprecationText(entry: ServerEntry): string {

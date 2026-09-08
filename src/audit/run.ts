@@ -37,45 +37,45 @@ export const DEFAULT_CAPTURE_INDEX_URL =
 
 export interface AuditOptions {
   /** Explicit config path(s); when empty, every known client location is tried. */
-  configPaths?: string[];
-  cwd?: string;
-  home?: string;
-  timeoutMs?: number;
-  concurrency?: number;
-  docker?: boolean;
-  contextWindow?: number;
-  budget?: number;
+  configPaths?: string[] | undefined;
+  cwd?: string | undefined;
+  home?: string | undefined;
+  timeoutMs?: number | undefined;
+  concurrency?: number | undefined;
+  docker?: boolean | undefined;
+  contextWindow?: number | undefined;
+  budget?: number | undefined;
   /** Join each measured server against the published Claude divergence run. */
-  claude?: boolean;
+  claude?: boolean | undefined;
   /** Override the divergence.json source — mainly for tests and self-hosted mirrors. */
-  divergenceUrl?: string;
+  divergenceUrl?: string | undefined;
   /** Place this config's tools in the published tool-shape distribution and advise where the data can. */
-  suggest?: boolean;
+  suggest?: boolean | undefined;
   /** Override the tool-shape.json source — mainly for tests and self-hosted mirrors. */
-  toolShapeUrl?: string;
+  toolShapeUrl?: string | undefined;
   /** Identify each server against the published capture history, by hash, and report what has moved. */
-  changed?: boolean;
+  changed?: boolean | undefined;
   /** Override the capture-index.json source — mainly for tests and self-hosted mirrors. */
-  captureIndexUrl?: string;
+  captureIndexUrl?: string | undefined;
   /**
    * The tool-search variables as this process's SHELL has them. Defaults to
    * this process's environment. Overridable so a test can state a machine
    * rather than inherit the one it runs on.
    */
-  env?: ToolSearchEnv;
+  env?: ToolSearchEnv | undefined;
   /**
    * The same variables as Claude Code's own settings files set them — the other
    * half of the answer, and the half a shell cannot show. Defaults to reading
    * those files off the machine being audited (`discoverSettings`).
    */
-  settings?: ToolSearchSource[];
+  settings?: ToolSearchSource[] | undefined;
   /**
    * What each remote endpoint said to an unauthenticated `initialize`, keyed
    * like `measureAll`'s map. `runAudit` probes them (`probeRemotes`); a test can
    * state the answers instead of reaching a network.
    */
-  remotes?: Map<string, RemoteProbe>;
-  onProgress?: (name: string, done: number, total: number) => void;
+  remotes?: Map<string, RemoteProbe> | undefined;
+  onProgress?: ((name: string, done: number, total: number) => void) | undefined;
 }
 
 /** Fetch and parse the published capture index. Never throws: a failure is a report problem, not a crash. */
@@ -165,7 +165,7 @@ export function discoverSettings(opts: AuditOptions = {}): ToolSearchSource[] {
       ? candidates
       : [
           ...candidates.slice(0, at + 1),
-          ...managedDropInCandidates(candidates[at].path),
+          ...managedDropInCandidates(candidates[at]!.path),
           ...candidates.slice(at + 1),
         ];
   return loadSettingsSources(all);

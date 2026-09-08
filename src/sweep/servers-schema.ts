@@ -31,7 +31,7 @@ import type { ServerEntry } from './report.js';
 export interface SchemaProblem {
   /** The entry's `name`, or `entry #N` when the entry has no usable one. */
   entry: string;
-  field?: string;
+  field?: string | undefined;
   message: string;
 }
 

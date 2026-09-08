@@ -16,7 +16,7 @@ import { DockerHarnessFault } from './docker.js';
 import { writeLeaderboard, type ServerEntry } from './report.js';
 import { appendHistory } from './history.js';
 import { appendToolVectors, writeRegressions } from './regressions.js';
-import { FAULT_RATIO, MIN_REGRESSIONS, snapshot, verdict, restore } from './harness-guard.js';
+import { MIN_REGRESSIONS, snapshot, verdict, restore } from './harness-guard.js';
 import { selectShard, shardIndexForDate } from './shard.js';
 import type { MeasurementStatus } from '../core/types.js';
 import { loadServersDoc } from './servers-schema.js';

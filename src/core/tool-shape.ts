@@ -65,7 +65,7 @@ export function quantileTable(values: number[]): number[] {
   const q: number[] = [];
   for (let p = 0; p <= 100; p++) {
     q.push(
-      p === 0 ? sorted[0] : sorted[Math.min(n - 1, Math.max(0, Math.ceil((p / 100) * n) - 1))],
+      p === 0 ? sorted[0]! : sorted[Math.min(n - 1, Math.max(0, Math.ceil((p / 100) * n) - 1))]!,
     );
   }
   return q;
@@ -85,8 +85,10 @@ export function percentileOf(quantiles: number[], value: number): number {
   // than P% of tools" means.
   let p = 0;
   for (let i = 0; i <= 100; i++) {
-    if (quantiles[i] <= value) {
-      if (quantiles[i] < value || i === 0 || quantiles[i - 1] < quantiles[i]) p = i;
+    const q = quantiles[i];
+    if (q === undefined) break; // a table short of 101 points is not a distribution
+    if (q <= value) {
+      if (q < value || i === 0 || (quantiles[i - 1] ?? Number.NEGATIVE_INFINITY) < q) p = i;
     } else break;
   }
   return p;
@@ -183,6 +185,8 @@ export function suggestFor(
   const pct = percentileOf(baseline.quantiles.descriptionTokens, t.descriptionTokens);
   if (pct < SUGGEST_DESCRIPTION_PERCENTILE) return null;
   const median = baseline.quantiles.descriptionTokens[50];
+  // A baseline with no median is not a distribution; there is nothing to advise against.
+  if (median === undefined) return null;
   const approx = t.descriptionTokens - median;
   if (approx <= 0) return null;
   return {

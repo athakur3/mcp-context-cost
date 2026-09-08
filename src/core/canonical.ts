@@ -69,23 +69,23 @@ export function measureTools(
   tools: unknown[],
   meta: {
     serverName: string;
-    serverVersion?: string;
-    launchCommand?: string;
-    envVarNames?: string[];
-    measuredAt?: string;
+    serverVersion?: string | undefined;
+    launchCommand?: string | undefined;
+    envVarNames?: string[] | undefined;
+    measuredAt?: string | undefined;
     /**
      * The initialize `instructions` string, or null when the server returned
      * none. Omit it only when nothing was captured: an omitted field records
      * "never asked", which session-start.ts refuses to read as zero.
      */
-    instructions?: string | null;
+    instructions?: string | null | undefined;
     /**
      * The revision the server named at `initialize`. Omit it when nothing was
      * captured; absent is not the same claim as "the server sent none". The
      * half this pairs with, `requestedProtocolVersion`, is stamped on the
      * record by the caller so it reaches failed measurements too.
      */
-    negotiatedProtocolVersion?: string;
+    negotiatedProtocolVersion?: string | undefined;
   },
 ): Measurement {
   const canonical = canonicalString(tools);

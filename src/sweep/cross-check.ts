@@ -50,7 +50,6 @@ import {
   CROSS_CHECK_METHOD,
   divergencePct,
   parseCliReport,
-  parseCrossCheck,
   toCrossCheckRow,
   type CrossCheckRow,
   type CrossCheckRun,
@@ -59,7 +58,7 @@ import {
 export function writeCrossCheck(run: CrossCheckRun, root = process.cwd()): void {
   // Key order sorted so a re-run of the same servers produces no diff noise.
   const servers: Record<string, CrossCheckRow> = {};
-  for (const name of Object.keys(run.servers).sort()) servers[name] = run.servers[name];
+  for (const name of Object.keys(run.servers).sort()) servers[name] = run.servers[name]!; // the key came from this record
   writeFileSync(
     join(root, 'results', 'cross-check.json'),
     JSON.stringify({ ...run, servers }, null, 2) + '\n',

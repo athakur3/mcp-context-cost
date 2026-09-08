@@ -181,32 +181,32 @@ function arg(name: string): string | undefined {
 }
 
 export interface MeasureOptions {
-  timeoutMs?: number;
-  env?: Record<string, string>;
-  root?: string;
-  docker?: boolean;
-  dockerImage?: string;
+  timeoutMs?: number | undefined;
+  env?: Record<string, string> | undefined;
+  root?: string | undefined;
+  docker?: boolean | undefined;
+  dockerImage?: string | undefined;
   /** env var NAMES to provide as dummy values (docker mode). */
-  dummyEnv?: string[];
+  dummyEnv?: string[] | undefined;
   /** Override the literal `dummy` value for specific `dummyEnv` names — see docker.ts. */
-  dummyEnvValues?: Record<string, string>;
+  dummyEnvValues?: Record<string, string> | undefined;
   /** Install `git` in the container before launch (docker mode) — see docker.ts. */
-  needsGit?: boolean;
+  needsGit?: boolean | undefined;
   /** Debian packages to install in the container before launch. */
-  aptPackages?: string[];
+  aptPackages?: string[] | undefined;
   /** Declared harness limitation for this entry — see `notApplicable` in report.ts. */
-  notApplicable?: { reason: string; evidence: string };
+  notApplicable?: { reason: string; evidence: string } | undefined;
   /**
    * Exact argv, when the caller already has it (client configs store command and
    * args separately). Avoids re-splitting a joined string on spaces, which would
    * break any path containing one. Host path only — docker still wraps `command`.
    */
-  argv?: string[];
+  argv?: string[] | undefined;
   /**
    * Write results/<name>/measurement.json + badges/<name>.json (default true).
    * `audit` runs in the user's own directory and must not litter it.
    */
-  persist?: boolean;
+  persist?: boolean | undefined;
   /**
    * What the client declares at `initialize`, and how it answers what that
    * invites. Every published measurement was taken declaring nothing, which is
@@ -214,7 +214,7 @@ export interface MeasureOptions {
    * server gates tools on it. Changing the default would change published
    * numbers, so it is a measurement decision and not a flag to flip lightly.
    */
-  posture?: ClientPosture;
+  posture?: ClientPosture | undefined;
 }
 
 /**
@@ -305,7 +305,7 @@ export async function measureServer(
   // is already its own `docker run` owns its exit codes and its image.
   const dockerWrapped = opts.docker === true && !isSelfContainerised(command);
   const hostSpec: string | { command: string; argv: string[] } =
-    opts.argv && opts.argv.length ? { command: opts.argv[0], argv: opts.argv.slice(1) } : command;
+    opts.argv && opts.argv.length ? { command: opts.argv[0]!, argv: opts.argv.slice(1) } : command;
   let isolation: Measurement['isolation'] = { docker: false };
   const containerNames: string[] = [];
   // A fresh container name per capture: some servers don't exit on stdin close

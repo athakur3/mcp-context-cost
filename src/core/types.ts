@@ -60,8 +60,8 @@ export interface ToolMeasurement {
    * capture ran once and was removed on 2026-09-08 — so absent survives here
    * for a record read from somewhere other than this repository.
    */
-  outputSchemaTokens?: number;
-  annotationsTokens?: number;
+  outputSchemaTokens?: number | undefined;
+  annotationsTokens?: number | undefined;
 }
 
 /**
@@ -87,7 +87,7 @@ export interface Measurement {
    * none), absent (never captured — every measurement predating this field).
    * Absent is never read as zero.
    */
-  serverInstructions?: string | null;
+  serverInstructions?: string | null | undefined;
   /**
    * The revision this harness asked for at `initialize`, and the one the server
    * answered with. Stored as a pair, and that is the point: a record that kept
@@ -108,20 +108,20 @@ export interface Measurement {
    * recorded anyway so the record is checkable against the run that produced it
    * rather than trusted to have been.
    */
-  requestedProtocolVersion?: string;
-  negotiatedProtocolVersion?: string;
+  requestedProtocolVersion?: string | undefined;
+  negotiatedProtocolVersion?: string | undefined;
   measuredAt: string;
   serverName: string;
-  serverVersion?: string;
+  serverVersion?: string | undefined;
   /** Exact launch command; env var NAMES only, never values. */
-  launchCommand?: string;
-  envVarNames?: string[];
+  launchCommand?: string | undefined;
+  envVarNames?: string[] | undefined;
   /** How the server was isolated during measurement (docker image, network). */
   isolation?: {
     docker: boolean;
-    image?: string;
-    network?: string;
-    note?: string;
+    image?: string | undefined;
+    network?: string | undefined;
+    note?: string | undefined;
     /**
      * The architecture the measurement ran on, as `<platform>/<arch>` (e.g.
      * `linux/amd64`). Part of the isolation because some packages ship builds
@@ -133,11 +133,11 @@ export interface Measurement {
      * Absent on records written before this was captured, which is why it is
      * optional; absence means unknown, never "the same as yours".
      */
-    arch?: string;
+    arch?: string | undefined;
   };
   /** Request timeout in force during this measurement. */
-  timeoutMs?: number;
-  notes?: string;
+  timeoutMs?: number | undefined;
+  notes?: string | undefined;
 }
 
 /** Strict shields.io endpoint-badge schema — nothing extra. */

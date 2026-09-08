@@ -103,9 +103,9 @@ export type ToolSearchVar = (typeof TOOL_SEARCH_VARS)[number];
 
 /** The env vars that decide whether this machine's Claude Code defers. */
 export interface ToolSearchEnv {
-  ENABLE_TOOL_SEARCH?: string;
-  CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS?: string;
-  ANTHROPIC_BASE_URL?: string;
+  ENABLE_TOOL_SEARCH?: string | undefined;
+  CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS?: string | undefined;
+  ANTHROPIC_BASE_URL?: string | undefined;
 }
 
 /** Pick the three variables that matter out of a process environment. */
@@ -796,7 +796,7 @@ export function anyNonEmptyVars(page: string): string[] | null {
   for (const line of page.slice(at).split('\n').slice(1)) {
     const bullet = /^\s*[*-]\s+`([A-Z0-9_]+)`\s*$/.exec(line);
     if (bullet) {
-      names.push(bullet[1]);
+      if (bullet[1]) names.push(bullet[1]);
       continue;
     }
     // Blank lines sit between the intro and its list; anything else ends it.
@@ -891,7 +891,7 @@ export function wireToClientRatio(run?: DivergenceRun | null): WireToClientRatio
 /** One measured server, as the deferral arithmetic needs it. */
 export interface DeferralServer {
   /** For naming the servers a verdict singles out; the arithmetic never reads it. */
-  name?: string;
+  name?: string | undefined;
   /** o200k tokens over the wire capture — the audit's own unit. */
   tokens: number;
   /**
@@ -900,13 +900,13 @@ export interface DeferralServer {
    * threshold — the documented `auto` mode counts "the tools it would
    * otherwise defer".
    */
-  alwaysLoad?: boolean;
+  alwaysLoad?: boolean | undefined;
   /**
    * Anthropic's own count for this server from a current divergence row, when
    * `--claude` supplied one. `null` means no current match, `undefined` means
    * the join was not requested — either way it is converted through the band.
    */
-  claudeTokens?: number | null;
+  claudeTokens?: number | null | undefined;
 }
 
 /**
@@ -1214,16 +1214,16 @@ export function evaluateDeferral(
   opts: {
     contextWindow: number;
     /** The audited machine's SHELL variables. Omitted means the shell set nothing. */
-    env?: ToolSearchEnv;
+    env?: ToolSearchEnv | undefined;
     /**
      * The Claude Code settings files read on that machine, highest precedence
      * first — the other place these variables come from. Omitted means they
      * were not read here, which is published as such rather than as an absence
      * of settings: see `ToolSearchSetting.sources`.
      */
-    settings?: ToolSearchSource[];
+    settings?: ToolSearchSource[] | undefined;
     /** Supplied by `--claude`; sharpens the unit conversion where rows match. */
-    divergence?: DivergenceRun | null;
+    divergence?: DivergenceRun | null | undefined;
   },
 ): DeferralVerdict {
   const wireTokens = scope.servers.reduce((a, s) => a + s.tokens, 0);

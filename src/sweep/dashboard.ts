@@ -168,7 +168,7 @@ export function generateDashboard(root = process.cwd()): string {
   <span class="name">${esc(r.entry.name)}</span>
   <span class="track"><span class="bar" style="width:${pct.toFixed(1)}%"></span></span>
   <span class="spark-cell">${spark}</span>
-  <span class="val"><span class="dot dot-${band}" aria-hidden="true"></span>${fmt(t)}<span class="bandname">${meta.label}</span></span>
+  <span class="val"><span class="dot dot-${band}" aria-hidden="true"></span>${fmt(t)}<span class="bandname">${meta?.label ?? ''}</span></span>
 </a>`;
     })
     .join('\n');
@@ -197,7 +197,7 @@ export function generateDashboard(root = process.cwd()): string {
         tokens.length > 1
           ? `${signed(tokens[tokens.length - 1]! - tokens[0]!)} over ${tokens.length} sweeps`
           : '—';
-      return `<tr><td>${i + 1}</td><td>${esc(r.entry.name)}</td><td class="num">${fmt(m.totalTokens as number)}</td><td class="num">${fmt(mappedTokens(m.rawToolsCapture ?? []))}</td><td class="num">${div ? fmt(div.claudeDelta) : '—'}</td><td class="num">${esc(m.toolCount)}</td><td>${esc(BAND_META[bandColor(m.totalTokens as number)].label)}</td><td>${esc(r.entry.category)}</td><td class="num">${trend}</td></tr>`;
+      return `<tr><td>${i + 1}</td><td>${esc(r.entry.name)}</td><td class="num">${fmt(m.totalTokens as number)}</td><td class="num">${fmt(mappedTokens(m.rawToolsCapture ?? []))}</td><td class="num">${div ? fmt(div.claudeDelta) : '—'}</td><td class="num">${esc(m.toolCount)}</td><td>${esc(BAND_META[bandColor(m.totalTokens as number)]?.label ?? '')}</td><td>${esc(r.entry.category)}</td><td class="num">${trend}</td></tr>`;
     })
     .join('\n');
 
@@ -311,7 +311,7 @@ export function generateDashboard(root = process.cwd()): string {
 
   <div class="stats">
     <div class="stat"><span class="n">${measured.length}<span style="font-size:0.9rem;color:var(--muted)">/${rows.length}</span></span><span class="l">servers measured</span></div>
-    <div class="stat"><span class="n">${fmt(median)}</span><span class="l">median tokens</span></div>
+    <div class="stat"><span class="n">${median === undefined ? '—' : fmt(median)}</span><span class="l">median tokens</span></div>
     <div class="stat"><span class="n">${fmt(max === 1 ? 0 : max)}</span><span class="l">priciest on the wire (${esc(measured[0]?.entry.name ?? '—')})</span><span class="t">${priciestCompanions}</span></div>
     <div class="stat"><span class="n">${pending.length}</span><span class="l">pending sweep</span></div>
   </div>

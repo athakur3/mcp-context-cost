@@ -57,23 +57,23 @@ export interface AuditServerResult {
   toolCount: number | null;
   /** Share of this config's measured total, 0–1. */
   share: number | null;
-  command?: string;
-  url?: string;
+  command?: string | undefined;
+  url?: string | undefined;
   /** Names only — a server's env values never enter a report. */
   envVarNames: string[];
   /** Names only, and only for a remote entry that carries any — values never enter a report. */
-  headerNames?: string[];
+  headerNames?: string[] | undefined;
   /** Claude Code's `alwaysLoad: true`, read from the entry: loads at session start whatever the setting. */
-  alwaysLoad?: true;
-  canonicalSha256?: string | null;
+  alwaysLoad?: true | undefined;
+  canonicalSha256?: string | null | undefined;
   /**
    * Anthropic-request cost from the published Claude divergence run, only when
    * its captured hash matches this install (`--claude`). `null` means the
    * install doesn't match what was published — silence, not a stale guess.
    * `undefined` means `--claude` wasn't requested at all.
    */
-  claudeTokens?: number | null;
-  notes?: string;
+  claudeTokens?: number | null | undefined;
+  notes?: string | undefined;
 }
 
 export interface HeaviestTool {
@@ -133,9 +133,9 @@ export interface AuditConfigResult {
   heaviestTools: HeaviestTool[];
   trimAdvice: TrimAdvice | null;
   /** Present only when `--suggest` ran with a usable baseline. */
-  suggestions?: ConfigSuggestions;
+  suggestions?: ConfigSuggestions | undefined;
   /** Present only when `--changed` ran with a usable capture index. */
-  captureVerdicts?: ServerCaptureVerdict[];
+  captureVerdicts?: ServerCaptureVerdict[] | undefined;
   /**
    * Whether this client loads the total up front or defers it, and — when the
    * client decides that by a threshold — which side of it this stack is on.
@@ -254,20 +254,20 @@ export interface AuditReport {
      * against the whole stack and the verdict fails rather than passing on a
      * total that understates by an unknown amount.
      */
-    unestablished?: string[];
+    unestablished?: string[] | undefined;
     /** Present only when over budget: the arithmetic of getting back under it. */
-    fit?: BudgetFit;
+    fit?: BudgetFit | undefined;
   };
   /** Present only when a divergence run was supplied (`--claude`). */
-  claudeDivergence?: { model: string; measuredAt: string };
+  claudeDivergence?: { model: string; measuredAt: string } | undefined;
   /** Which published tool-shape baseline `--suggest` read its percentiles from. */
-  toolShape?: { generatedAt: string; toolCount: number; serverCount: number };
+  toolShape?: { generatedAt: string; toolCount: number; serverCount: number } | undefined;
   /** Which published capture index `--changed` joined against. */
-  captureIndex?: { generatedAt: string; captureCount: number };
+  captureIndex?: { generatedAt: string; captureCount: number } | undefined;
   /** Present only when a baseline report was supplied (`--baseline`). */
-  diff?: AuditDiff;
+  diff?: AuditDiff | undefined;
   /** Present only when `--max-increase` was supplied alongside a baseline. */
-  increaseGate?: IncreaseGate;
+  increaseGate?: IncreaseGate | undefined;
   problems: string[];
 }
 
@@ -375,9 +375,9 @@ function attachDeferral(
   configs: Omit<AuditConfigResult, 'deferral'>[],
   contextWindow: number,
   opts: {
-    env?: ToolSearchEnv;
-    settings?: ToolSearchSource[];
-    divergence?: DivergenceRun | null;
+    env?: ToolSearchEnv | undefined;
+    settings?: ToolSearchSource[] | undefined;
+    divergence?: DivergenceRun | null | undefined;
     /**
      * Per config, how many of its counted servers were measured as another
      * entry's twin. Keyed by the built config itself rather than by source,
@@ -402,7 +402,7 @@ function attachDeferral(
       // threshold moves with `--context` instead of being pinned to 200,000.
       evaluateDeferral(
         {
-          client: group[0].client,
+          client: group[0]!.client,
           sources: group.map((c) => c.source),
           servers: group.flatMap((c) =>
             c.servers.map((s) => ({
@@ -435,35 +435,35 @@ export function buildReport(
   configs: LoadedConfig[],
   measured: Map<string, Measurement>,
   opts: {
-    contextWindow?: number;
-    budget?: number;
-    generatedAt?: string;
+    contextWindow?: number | undefined;
+    budget?: number | undefined;
+    generatedAt?: string | undefined;
     /** Published `tools-delta/v1` run to join against (`--claude`); omit to skip the join. */
-    divergence?: DivergenceRun | null;
+    divergence?: DivergenceRun | null | undefined;
     /** Published `tool-shape/v1` baseline (`--suggest`); omit to skip suggestions. */
-    toolShape?: ToolShapeBaseline | null;
+    toolShape?: ToolShapeBaseline | null | undefined;
     /** Published `capture-index/v1` (`--changed`); omit to skip the version join. */
-    captureIndex?: CaptureIndex | null;
+    captureIndex?: CaptureIndex | null | undefined;
     /**
      * The audited machine's SHELL tool-search variables. Passed in rather than
      * read here so this stays pure and a report is reproducible from its
      * inputs; `runAudit` supplies the real environment. Omitted means the shell
      * set nothing.
      */
-    env?: ToolSearchEnv;
+    env?: ToolSearchEnv | undefined;
     /**
      * The other place those variables come from: Claude Code's own settings
      * files, highest precedence first, as `loadSettingsSources` read them.
      * `runAudit` supplies these. Omitted means they were not read here — which
      * the report says, rather than reporting a default it did not establish.
      */
-    settings?: ToolSearchSource[];
+    settings?: ToolSearchSource[] | undefined;
     /**
      * What each remote endpoint said to an unauthenticated `initialize`, keyed
      * by `serverKey`. `runAudit` supplies it from `probeRemotes`; omitted, a
      * remote entry is reported as not probed rather than as anything else.
      */
-    remotes?: Map<string, RemoteProbe>;
+    remotes?: Map<string, RemoteProbe> | undefined;
   } = {},
 ): AuditReport {
   const contextWindow = opts.contextWindow ?? DEFAULT_CONTEXT_WINDOW;

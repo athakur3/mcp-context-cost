@@ -7,9 +7,9 @@
  */
 export interface DockerOptions {
   /** Base image; default node:22-slim (use a uv image for python servers). */
-  image?: string;
+  image?: string | undefined;
   /** Extra env var NAMES to pass through with dummy values. */
-  dummyEnv?: string[];
+  dummyEnv?: string[] | undefined;
   /**
    * Override the literal `dummy` value for specific `dummyEnv` names. Some
    * servers parse an env var's shape before ever reaching tools/list (a URI
@@ -19,9 +19,9 @@ export interface DockerOptions {
    * connect. A locally-scoped placeholder (`bolt://localhost:7687`) clears
    * that parse step without providing a working credential.
    */
-  dummyEnvValues?: Record<string, string>;
+  dummyEnvValues?: Record<string, string> | undefined;
   /** Container name, so a timed-out container can be force-removed. */
-  containerName?: string;
+  containerName?: string | undefined;
   /**
    * Install `git` inside the container before launch. The slim base images
    * carry no VCS, so `uvx --from git+...` installs fail with "Git executable
@@ -29,7 +29,7 @@ export interface DockerOptions {
    * recorded `launchCommand`, so the published command stays what a user with
    * git already on PATH would actually run.
    */
-  needsGit?: boolean;
+  needsGit?: boolean | undefined;
   /**
    * Debian packages to install before launch, for a server whose runtime needs
    * a native library the slim base image does not carry.
@@ -46,14 +46,14 @@ export interface DockerOptions {
    * The isolation record names what was installed either way, so a reader can
    * see that the container was not the plain one.
    */
-  aptPackages?: string[];
+  aptPackages?: string[] | undefined;
   /**
    * Extra `-v` bind mounts, verbatim (`host:container:ro`). Used to hand a
    * host-verified binary into the container (the cross-check CLI); mounts here
    * should be read-only so the isolation claim — clean FS, no host credentials
    * — survives them.
    */
-  binds?: string[];
+  binds?: string[] | undefined;
   /**
    * Skip the shared npm/uv cache volumes, paying a cold install for a clean one.
    *
@@ -66,7 +66,7 @@ export interface DockerOptions {
    * that apart from a genuinely broken server, so the sweep retries here rather
    * than publishing the downgrade.
    */
-  noSharedCache?: boolean;
+  noSharedCache?: boolean | undefined;
 }
 
 // ECR Public / ghcr mirrors — Docker Hub pulls hang on some networks (observed
@@ -154,7 +154,7 @@ async function ensureImageOnce(image: string, opts: EnsureImageOptions): Promise
     lastStderr = pull.stderr;
     // A missing docker binary cannot appear on a later attempt.
     if (pull.code === null && /ENOENT/i.test(pull.stderr)) throw noDocker(pull.stderr);
-    if (attempt <= delays.length) await sleep(delays[attempt - 1]);
+    if (attempt <= delays.length) await sleep(delays[attempt - 1]!);
   }
   throw new DockerHarnessFault(
     `could not pull ${image} after ${delays.length + 1} attempts — ` +

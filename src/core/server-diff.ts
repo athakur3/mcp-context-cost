@@ -153,9 +153,9 @@ export interface ServerGate {
 
 export interface GateLimits {
   /** Ceiling on this measurement's absolute cost. */
-  budget?: number;
+  budget?: number | undefined;
   /** Ceiling on the increase over the baseline. Fails when the change cannot be established. */
-  maxIncrease?: number;
+  maxIncrease?: number | undefined;
 }
 
 /**

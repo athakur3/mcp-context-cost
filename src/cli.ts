@@ -110,11 +110,11 @@ export function unknownFlags(
   const known = new Set([...spec.value, ...spec.boolean]);
   const unknown: string[] = [];
   for (let i = 0; i < argv.length; i++) {
-    const tok = argv[i];
+    const tok = argv[i]!; // the loop condition establishes it
     if (!tok.startsWith('--')) continue;
-    const name = tok.slice(2).split('=')[0];
+    const [name = ''] = tok.slice(2).split('=');
     if (!known.has(name)) {
-      unknown.push(tok.split('=')[0]);
+      unknown.push(tok.split('=')[0] ?? tok);
       continue;
     }
     // Skip a value-taking flag's value, so `--command "--weird"` is not read as a flag.
@@ -134,7 +134,7 @@ export function unknownFlags(
  * the list is already declared at every call site.
  */
 function isKnownFlagToken(tok: string, known: Set<string>): boolean {
-  return tok.startsWith('--') && known.has(tok.slice(2).split('=')[0]);
+  return tok.startsWith('--') && known.has(tok.slice(2).split('=')[0] ?? '');
 }
 
 /** Every flag name a command accepts — what tells a value apart from the next flag. */
@@ -154,7 +154,7 @@ export const knownFlagNames = (spec: { value: string[]; boolean: string[] }) =>
 export function flagValues(argv: string[], name: string, known: Set<string> = new Set()): string[] {
   const out: string[] = [];
   for (let i = 0; i < argv.length; i++) {
-    const tok = argv[i];
+    const tok = argv[i]!; // the loop condition establishes it
     if (tok === `--${name}`) {
       const next = argv[i + 1];
       // Another flag of this command is not this flag's value; that case is a
@@ -194,9 +194,9 @@ export function valuelessFlags(
   const known = knownFlagNames(spec);
   const bad: string[] = [];
   for (let i = 0; i < argv.length; i++) {
-    const tok = argv[i];
+    const tok = argv[i]!; // the loop condition establishes it
     if (!tok.startsWith('--')) continue;
-    const name = tok.slice(2).split('=')[0];
+    const [name = ''] = tok.slice(2).split('=');
     if (!spec.value.includes(name)) continue;
     if (tok.includes('=')) {
       if (tok.slice(name.length + 3) === '') bad.push(`--${name}`);

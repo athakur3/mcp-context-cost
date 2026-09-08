@@ -9,7 +9,6 @@
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { parse } from 'yaml';
 import type { Measurement } from '../core/types.js';
 import { bandColor, BAND_META } from '../core/bands.js';
 import { deprecationText, loadDivergence, mdCell, type ServerEntry } from './report.js';
@@ -131,7 +130,7 @@ export function renderServerPage(
   md.push(`# ${mdCell(entry.name)} — context cost`);
   md.push('');
   md.push(
-    `**${fmt(total)} tokens** across ${m.toolCount} tools — *${band.label}* (${band.range}). ` +
+    `**${fmt(total)} tokens** across ${m.toolCount} tools — *${band?.label}* (${band?.range}). ` +
       `Measured ${String(m.measuredAt).slice(0, 10)} under [methodology v${mdCell(m.methodologyVersion)}](../METHODOLOGY.html).`,
   );
   md.push('');
@@ -347,7 +346,7 @@ export function renderServerIndex(
     md.push(
       `| ${i + 1} | [${mdCell(r.entry.name)}](${encodeURIComponent(r.entry.name)}.html) | ${fmt(t)} | ` +
         `${fmt(mappedTokens(r.m!.rawToolsCapture ?? []))} | ${claude === null ? '—' : fmt(claude)} | ` +
-        `${r.m!.toolCount} | ${BAND_META[bandColor(t)].label} |`,
+        `${r.m!.toolCount} | ${BAND_META[bandColor(t)]!.label} |`,
     );
   });
   md.push('');

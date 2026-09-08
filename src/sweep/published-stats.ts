@@ -197,8 +197,8 @@ export function computePublishedStats(
     name: r.entry.name,
     tokens: r.m.totalTokens!,
   });
-  const max = asPair(measured[0]);
-  const min = asPair(measured[measured.length - 1]);
+  const max = asPair(nth(measured, 0, 'measured'));
+  const min = asPair(nth(measured, measured.length - 1, 'measured'));
   if (min.tokens <= 0)
     throw new Error(`cheapest measured server (${min.name}) has no positive token count`);
 
@@ -263,7 +263,7 @@ export function computePublishedStats(
   const triple: PublishedStats['triple'] = {};
   for (const name of new Set<string>([
     max.name,
-    measured[1].entry.name,
+    nth(measured, 1, 'measured').entry.name,
     min.name,
     ...SAMPLE_SERVERS,
   ])) {
@@ -298,9 +298,11 @@ export function computePublishedStats(
   const withClaude = measured.filter((r) =>
     isCurrent(div.servers[r.entry.name], r.m.canonicalSha256),
   );
-  const heaviest = [...withClaude].sort(
-    (a, b) => div.servers[b.entry.name].claudeDelta - div.servers[a.entry.name].claudeDelta,
-  )[0];
+  // Every row here passed `isCurrent`, so its divergence row exists; the lookup
+  // is named rather than asserted so a set that changed under us says which server.
+  const claudeDeltaOf = (r: (typeof withClaude)[number]) =>
+    entryOf(div.servers, r.entry.name, 'divergence run').claudeDelta;
+  const heaviest = [...withClaude].sort((a, b) => claudeDeltaOf(b) - claudeDeltaOf(a))[0];
 
   const costlier = measured.filter((r) => {
     const load = sessionStartLoad(r.m);
@@ -331,7 +333,7 @@ export function computePublishedStats(
     candidateTotal: rows.length,
     measuredCount: measured.length,
     max,
-    second: asPair(measured[1]),
+    second: asPair(nth(measured, 1, 'measured')),
     min,
     spanTimes: floorToTwoSignificant(max.tokens / min.tokens),
     sample,
@@ -341,11 +343,11 @@ export function computePublishedStats(
       currentCount: withClaude.length,
       heaviestClaudeName: heaviest?.entry.name ?? null,
       github: {
-        badgeTokens: triple.github.wire,
-        claudeTokens: triple.github.claude,
+        badgeTokens: entryOf(triple, 'github', 'triple').wire,
+        claudeTokens: entryOf(triple, 'github', 'triple').claude,
         ...heaviestDroppedField(githubRow.m.rawToolsCapture, githubRow.m.totalTokens),
       },
-      notion: { badgeTokens: triple.notion.wire, claudeTokens: triple.notion.claude },
+      notion: { badgeTokens: entryOf(triple, 'notion', 'triple').wire, claudeTokens: entryOf(triple, 'notion', 'triple').claude },
       // `claude` is not nullable here, unlike a triple's: `widest` is picked
       // out of `currentRows`, and `isCurrent` already required a numeric delta.
       widest: {
@@ -375,6 +377,28 @@ export function computePublishedStats(
 }
 
 export type PageFile = 'README.md' | 'docs/index.md' | 'docs/METHODOLOGY.md';
+/**
+ * A row at a position the guards above have already established.
+ *
+ * `noUncheckedIndexedAccess` cannot see a length check, and the honest answer to
+ * "the measured set shrank between the check and the read" is to say so rather
+ * than to assert past it: every caller here is computing a number that is about
+ * to be spliced into a published page.
+ */
+function nth<T>(rows: readonly T[], i: number, what: string): T {
+  const row = rows[i];
+  if (row === undefined) throw new Error(`${what}: no row at position ${i} of ${rows.length}`);
+  return row;
+}
+
+/** A named entry a claim rests on, or a refusal that names the server it wanted. */
+function entryOf<T>(map: Record<string, T>, name: string, what: string): T {
+  const entry = map[name];
+  if (entry === undefined)
+    throw new Error(`${what}: nothing measured for '${name}' — a claim cannot state a server that is not there`);
+  return entry;
+}
+
 export const PAGE_FILES: PageFile[] = ['README.md', 'docs/index.md', 'docs/METHODOLOGY.md'];
 
 /**
@@ -407,8 +431,8 @@ export const PAGE_CLAIMS: Claim[] = [
       fmt(s.min.tokens),
       s.max.name,
       fmt(s.max.tokens),
-      fmt(s.triple[s.max.name].mapped),
-      q(s.triple[s.max.name].claude),
+      fmt(entryOf(s.triple, s.max.name, 'triple').mapped),
+      q(entryOf(s.triple, s.max.name, 'triple').claude),
     ],
   },
   {
@@ -416,10 +440,10 @@ export const PAGE_CLAIMS: Claim[] = [
     id: 'sample:github',
     template: '| github (official) | **{n} tokens** | {n} | {q} | {n} |',
     values: (s) => [
-      fmt(s.triple.github.wire),
-      fmt(s.triple.github.mapped),
-      q(s.triple.github.claude),
-      fmt(s.sample.github.tools),
+      fmt(entryOf(s.triple, 'github', 'triple').wire),
+      fmt(entryOf(s.triple, 'github', 'triple').mapped),
+      q(entryOf(s.triple, 'github', 'triple').claude),
+      fmt(entryOf(s.sample, 'github', 'sample').tools),
     ],
   },
   {
@@ -427,10 +451,10 @@ export const PAGE_CLAIMS: Claim[] = [
     id: 'sample:xcodebuildmcp',
     template: '| xcodebuildmcp | {n} | {n} | {q} | {n} |',
     values: (s) => [
-      fmt(s.triple.xcodebuildmcp.wire),
-      fmt(s.triple.xcodebuildmcp.mapped),
-      q(s.triple.xcodebuildmcp.claude),
-      fmt(s.sample.xcodebuildmcp.tools),
+      fmt(entryOf(s.triple, 'xcodebuildmcp', 'triple').wire),
+      fmt(entryOf(s.triple, 'xcodebuildmcp', 'triple').mapped),
+      q(entryOf(s.triple, 'xcodebuildmcp', 'triple').claude),
+      fmt(entryOf(s.sample, 'xcodebuildmcp', 'sample').tools),
     ],
   },
   {
@@ -438,10 +462,10 @@ export const PAGE_CLAIMS: Claim[] = [
     id: 'sample:brave-search',
     template: '| brave-search | {n} | {n} | {q} | {n} |',
     values: (s) => [
-      fmt(s.triple['brave-search'].wire),
-      fmt(s.triple['brave-search'].mapped),
-      q(s.triple['brave-search'].claude),
-      fmt(s.sample['brave-search'].tools),
+      fmt(entryOf(s.triple, 'brave-search', 'triple').wire),
+      fmt(entryOf(s.triple, 'brave-search', 'triple').mapped),
+      q(entryOf(s.triple, 'brave-search', 'triple').claude),
+      fmt(entryOf(s.sample, 'brave-search', 'sample').tools),
     ],
   },
   {
@@ -449,10 +473,10 @@ export const PAGE_CLAIMS: Claim[] = [
     id: 'sample:notion',
     template: '| notion | {n} | {n} | {q} | {n} |',
     values: (s) => [
-      fmt(s.triple.notion.wire),
-      fmt(s.triple.notion.mapped),
-      q(s.triple.notion.claude),
-      fmt(s.sample.notion.tools),
+      fmt(entryOf(s.triple, 'notion', 'triple').wire),
+      fmt(entryOf(s.triple, 'notion', 'triple').mapped),
+      q(entryOf(s.triple, 'notion', 'triple').claude),
+      fmt(entryOf(s.sample, 'notion', 'sample').tools),
     ],
   },
   {
@@ -460,10 +484,10 @@ export const PAGE_CLAIMS: Claim[] = [
     id: 'sample:playwright',
     template: '| playwright *(4.8M installs/week)* | {n} | {n} | {q} | {n} |',
     values: (s) => [
-      fmt(s.triple.playwright.wire),
-      fmt(s.triple.playwright.mapped),
-      q(s.triple.playwright.claude),
-      fmt(s.sample.playwright.tools),
+      fmt(entryOf(s.triple, 'playwright', 'triple').wire),
+      fmt(entryOf(s.triple, 'playwright', 'triple').mapped),
+      q(entryOf(s.triple, 'playwright', 'triple').claude),
+      fmt(entryOf(s.sample, 'playwright', 'sample').tools),
     ],
   },
   {
@@ -471,10 +495,10 @@ export const PAGE_CLAIMS: Claim[] = [
     id: 'sample:filesystem',
     template: '| filesystem (reference) | {n} | {n} | {q} | {n} |',
     values: (s) => [
-      fmt(s.triple.filesystem.wire),
-      fmt(s.triple.filesystem.mapped),
-      q(s.triple.filesystem.claude),
-      fmt(s.sample.filesystem.tools),
+      fmt(entryOf(s.triple, 'filesystem', 'triple').wire),
+      fmt(entryOf(s.triple, 'filesystem', 'triple').mapped),
+      q(entryOf(s.triple, 'filesystem', 'triple').claude),
+      fmt(entryOf(s.sample, 'filesystem', 'sample').tools),
     ],
   },
   {
@@ -482,10 +506,10 @@ export const PAGE_CLAIMS: Claim[] = [
     id: 'sample:markitdown',
     template: '| markitdown | {n} | {n} | {q} | {n} |',
     values: (s) => [
-      fmt(s.triple.markitdown.wire),
-      fmt(s.triple.markitdown.mapped),
-      q(s.triple.markitdown.claude),
-      fmt(s.sample.markitdown.tools),
+      fmt(entryOf(s.triple, 'markitdown', 'triple').wire),
+      fmt(entryOf(s.triple, 'markitdown', 'triple').mapped),
+      q(entryOf(s.triple, 'markitdown', 'triple').claude),
+      fmt(entryOf(s.sample, 'markitdown', 'sample').tools),
     ],
   },
   {
@@ -541,7 +565,7 @@ export const PAGE_CLAIMS: Claim[] = [
       '| github | {n} | {n} | **{q}** | {d}% of the capture is `{w}` metadata Claude never sees |',
     values: (s) => [
       fmt(s.claude.github.badgeTokens),
-      fmt(s.triple.github.mapped),
+      fmt(entryOf(s.triple, 'github', 'triple').mapped),
       q(s.claude.github.claudeTokens),
       String(s.claude.github.dropSharePct),
       s.claude.github.dropField,
@@ -554,7 +578,7 @@ export const PAGE_CLAIMS: Claim[] = [
       '| notion | {n} | {n} | **{q}** | almost no metadata to drop, so the tokenizer difference dominates |',
     values: (s) => [
       fmt(s.claude.notion.badgeTokens),
-      fmt(s.triple.notion.mapped),
+      fmt(entryOf(s.triple, 'notion', 'triple').mapped),
       q(s.claude.notion.claudeTokens),
     ],
   },
@@ -606,7 +630,7 @@ export const PAGE_CLAIMS: Claim[] = [
     id: 'index:triple',
     template:
       'Of that, an Anthropic request carries {n} tokens as tool definitions, and Claude counts those at {q}.',
-    values: (s) => [fmt(s.triple[s.max.name].mapped), q(s.triple[s.max.name].claude)],
+    values: (s) => [fmt(entryOf(s.triple, s.max.name, 'triple').mapped), q(entryOf(s.triple, s.max.name, 'triple').claude)],
   },
   {
     file: 'docs/index.md',
@@ -620,8 +644,8 @@ export const PAGE_CLAIMS: Claim[] = [
     values: (s) => [
       s.second.name,
       fmt(s.second.tokens),
-      fmt(s.triple[s.second.name].mapped),
-      q(s.triple[s.second.name].claude),
+      fmt(entryOf(s.triple, s.second.name, 'triple').mapped),
+      q(entryOf(s.triple, s.second.name, 'triple').claude),
     ],
   },
   {
@@ -791,7 +815,7 @@ export function applyClaim(
           : `${claim.file}: claim '${claim.id}' matches ${matches.length} places — the anchor is ambiguous`,
     };
   }
-  const match = matches[0];
+  const match = matches[0]!;
   const got = match.slice(1);
   if (got.length !== want.length) {
     return {

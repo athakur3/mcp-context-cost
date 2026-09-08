@@ -290,18 +290,18 @@ export function endpointBadges(text: string): EndpointBadge[] {
     // it is nested in. Anchored, so a stray `)](` later in the file is not read
     // as this badge's link.
     const md = after.match(/^\s*(?:"[^"]*"|'[^']*')?\s*\)\s*\]\s*\(\s*([^\s)]+)/);
-    let linkTarget: string | null = md ? md[1] : null;
+    let linkTarget: string | null = md?.[1] ?? null;
     if (linkTarget === null) {
       const before = decoded.slice(Math.max(0, start - LINK_WINDOW), start);
       const anchors = [...before.matchAll(/<a\b[^>]*?href\s*=\s*["']([^"']+)["']/gi)];
       const last = anchors[anchors.length - 1];
-      if (last && !before.slice(last.index ?? 0).includes('</a>')) linkTarget = last[1];
+      if (last && !before.slice(last.index ?? 0).includes('</a>')) linkTarget = last[1] ?? null;
     }
     // Markdown puts the alt before the image; HTML puts it in the same tag.
     const beforeAlt = decoded.slice(Math.max(0, start - LINK_WINDOW), start);
     const mdAlt = beforeAlt.match(/!\[([^\]]*)\]\(\s*[^\s)]*$/);
     const tagAlt = after.match(/^[^<>]*?\balt\s*=\s*["']([^"']*)["']/i);
-    out.push({ url: m[1], linkTarget, alt: mdAlt ? mdAlt[1] : tagAlt ? tagAlt[1] : null });
+    out.push({ url: m[1]!, linkTarget, alt: mdAlt?.[1] ?? tagAlt?.[1] ?? null });
   }
   return out;
 }

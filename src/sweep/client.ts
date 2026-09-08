@@ -151,9 +151,10 @@ function bothEndsPlain(text: string, limit: number): string {
     const out: string[] = [];
     let used = 0;
     for (let i = fromEnd ? to : from; fromEnd ? i >= from : i <= to; i += fromEnd ? -1 : 1) {
-      const cost = lines[i].length + 1;
+      const line = lines[i]!; // the loop runs between indices taken from `lines`
+      const cost = line.length + 1;
       if (used + cost > cap) break;
-      fromEnd ? out.unshift(lines[i]) : out.push(lines[i]);
+      fromEnd ? out.unshift(line) : out.push(line);
       used += cost;
     }
     return { out, used };
@@ -168,7 +169,7 @@ function bothEndsPlain(text: string, limit: number): string {
   // never fit — slack-mcp-server's `{"level":"fatal","message":"Authentication
   // required: ..."}` was dropped in full, and the record it left behind said a
   // child process exited. Truncated evidence beats none.
-  const headText = head.out.length > 0 ? head.out.join('\n') : lines[0].slice(0, headCap);
+  const headText = head.out.length > 0 ? head.out.join('\n') : (lines[0] ?? '').slice(0, headCap);
   const headUsed = head.out.length > 0 ? head.used : headText.length;
   const tailFrom = head.out.length > 0 ? head.out.length : 1;
 
@@ -192,21 +193,23 @@ function aroundRequired(text: string, limit: number, needle: string): string {
   // the anchor is sized: the budget is a published-record limit, and a layout
   // that keeps the evidence by overrunning it has only moved the problem.
   const reserve = 2 * ELISION.length + 4;
-  const anchor = windowAround(lines[k], needle, Math.max(needle.length, limit - reserve));
+  const anchor = windowAround(lines[k]!, needle, Math.max(needle.length, limit - reserve));
 
   let budget = limit - anchor.length - reserve;
   const head: string[] = [];
   for (let i = 0; i < k; i++) {
-    const cost = lines[i].length + 1;
+    const line = lines[i]!; // the loop runs inside lines
+    const cost = line.length + 1;
     if (cost > budget) break;
-    head.push(lines[i]);
+    head.push(line);
     budget -= cost;
   }
   const tail: string[] = [];
   for (let i = lines.length - 1; i > k; i--) {
-    const cost = lines[i].length + 1;
+    const line = lines[i]!; // the loop runs inside lines
+    const cost = line.length + 1;
     if (cost > budget) break;
-    tail.unshift(lines[i]);
+    tail.unshift(line);
     budget -= cost;
   }
 
@@ -480,20 +483,20 @@ export class McpStdioClient {
 export async function captureTools(
   spec: string | { command: string; argv: string[] },
   opts: {
-    timeoutMs?: number;
-    env?: Record<string, string>;
-    keepEvidence?: string;
+    timeoutMs?: number | undefined;
+    env?: Record<string, string> | undefined;
+    keepEvidence?: string | undefined;
     /**
      * What to declare at `initialize`, and how to answer what that invites.
      * Defaults to declaring nothing, which is what every published measurement
      * was taken with.
      */
-    posture?: ClientPosture;
+    posture?: ClientPosture | undefined;
   } = {},
 ): Promise<WireCapture> {
   const timeoutMs = opts.timeoutMs ?? 60_000;
   const posture = opts.posture ?? MINIMAL_POSTURE;
-  const [cmd, ...args] =
+  const [cmd = '', ...args] =
     typeof spec === 'string' ? splitCommand(spec) : [spec.command, ...spec.argv];
   const client = new McpStdioClient(
     cmd,

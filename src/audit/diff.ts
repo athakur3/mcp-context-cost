@@ -323,11 +323,11 @@ export function pairConfigs(
   if (
     before.length === 1 &&
     after.length === 1 &&
-    pairs[0].before === null &&
-    before[0].client === after[0].client
+    pairs[0]!.before === null &&
+    before[0]!.client === after[0]!.client
   ) {
-    pairs[0] = { before: before[0], after: after[0], matchedBy: 'sole-config' };
-    unusedBefore.delete(before[0].source);
+    pairs[0] = { before: before[0]!, after: after[0]!, matchedBy: 'sole-config' };
+    unusedBefore.delete(before[0]!.source);
   }
 
   return { pairs, dropped: [...unusedBefore.values()] };
@@ -392,7 +392,7 @@ export function buildDiff(baseline: AuditReport, current: AuditReport): AuditDif
     warnings,
     configs,
     worstIncrease: increases.length
-      ? { source: increases[0].source, delta: increases[0].delta as number }
+      ? { source: increases[0]!.source, delta: increases[0]!.delta as number }
       : null,
   };
 }

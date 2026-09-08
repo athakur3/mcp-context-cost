@@ -90,7 +90,7 @@ export function parseHistory(text: string): HistoryRow[] {
     // and reads the same way; none is left in `history.csv`, and the destructure
     // costs nothing to keep honest about one arriving from an older checkout.
     rows.push({
-      date,
+      date: date!, // established by the ISO-date test above
       server,
       tokens: Number(tokens),
       toolCount: Number(toolCount),
