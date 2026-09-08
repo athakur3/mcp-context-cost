@@ -4,13 +4,14 @@
  * Regenerate after every sweep; the file doubles as the published artifact.
  */
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { parse } from 'yaml';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { isCurrent, mappedTokens } from '../core/divergence.js';
 import type { Measurement } from '../core/types.js';
 import { loadRows, type ServerEntry } from './report.js';
 import { bandColor, BAND_META } from '../core/bands.js';
 import { parseHistory, plottableSeries, type PlottableSeries } from './history.js';
+import { loadServersDoc } from './servers-schema.js';
 
 /** Longest series a sparkline plots — a stat-tile trend, not a full chart. */
 const SPARK_MAX_POINTS = 12;
@@ -62,7 +63,7 @@ interface DivergenceEntry {
 }
 
 export function generateDashboard(root = process.cwd()): string {
-  const doc = parse(readFileSync(join(root, 'servers.yaml'), 'utf8')) as { servers: ServerEntry[] };
+  const doc = loadServersDoc(root) as { servers: ServerEntry[] };
   const divergencePath = join(root, 'results', 'divergence.json');
   const divergence: { model?: string; servers?: Record<string, DivergenceEntry> } = existsSync(divergencePath)
     ? JSON.parse(readFileSync(divergencePath, 'utf8'))
@@ -378,7 +379,9 @@ export function writeDashboard(root = process.cwd(), out = 'docs/dashboard.html'
   return { out, bytes: html.length };
 }
 
-const isMain = process.argv[1]?.endsWith('dashboard.ts') || process.argv[1]?.endsWith('dashboard.js');
+// Exact path match, not endsWith('dashboard.ts'), for the reason src/sweep/run.ts
+// states: any other file whose name happens to end that way would run this block.
+const isMain = process.argv[1] !== undefined && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
   const i = process.argv.indexOf('--out');
   const w = writeDashboard(process.cwd(), i >= 0 ? process.argv[i + 1] : 'docs/dashboard.html');

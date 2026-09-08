@@ -27,12 +27,12 @@ import { spawn } from 'node:child_process';
 import { homedir, tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parse } from 'yaml';
 import { isSelfContainerised, measureServer } from './run.js';
 import { DockerHarnessFault, defaultImageFor, dockerize } from './docker.js';
 import { splitCommand } from './client.js';
 import { selectShard, shardIndexForDate } from './shard.js';
-import type { ServerEntry } from './report.js';
+import { loadCrossCheckRun, type ServerEntry } from './report.js';
+import { loadServersDoc } from './servers-schema.js';
 import {
   CROSS_CHECK_CLI,
   CROSS_CHECK_CLI_ARGS,
@@ -45,11 +45,6 @@ import {
   type CrossCheckRow,
   type CrossCheckRun,
 } from '../core/cross-check.js';
-
-export function loadCrossCheck(root = process.cwd()): CrossCheckRun | null {
-  const p = join(root, 'results', 'cross-check.json');
-  return existsSync(p) ? parseCrossCheck(readFileSync(p, 'utf8')) : null;
-}
 
 export function writeCrossCheck(run: CrossCheckRun, root = process.cwd()): void {
   // Key order sorted so a re-run of the same servers produces no diff noise.
@@ -233,7 +228,7 @@ function arg(name: string): string | undefined {
 // name merely ends the same way would otherwise run this block.
 const isMain = process.argv[1] !== undefined && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
-  const doc = parse(readFileSync('servers.yaml', 'utf8')) as { servers: ServerEntry[] };
+  const doc = loadServersDoc() as { servers: ServerEntry[] };
   const only = arg('only')?.split(',');
   const docker = process.argv.includes('--docker');
   const concurrency = Number(arg('concurrency') ?? 3);
@@ -302,7 +297,7 @@ if (isMain) {
 
   // Merged, not replaced: a run over `--only` or one shard must not delete the
   // rows it did not visit. A row it did visit is overwritten, errors included.
-  const prior = loadCrossCheck();
+  const prior = loadCrossCheckRun();
   const servers: Record<string, CrossCheckRow> = { ...(prior?.servers ?? {}) };
 
   const queue = [...entries];

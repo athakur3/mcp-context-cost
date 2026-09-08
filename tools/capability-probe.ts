@@ -36,11 +36,11 @@
  * project exists to refuse.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
-import { parse } from 'yaml';
 import { measureServer } from '../src/sweep/run.js';
 import { DECLARING_POSTURE, MINIMAL_POSTURE, type ClientPosture } from '../src/sweep/client.js';
 import type { ServerEntry } from '../src/sweep/report.js';
 import type { Measurement } from '../src/core/types.js';
+import { loadServersDoc } from '../src/sweep/servers-schema.js';
 
 function arg(name: string): string | undefined {
   const i = process.argv.indexOf(`--${name}`);
@@ -53,7 +53,7 @@ const concurrency = Number(arg('concurrency') ?? 2);
 const defaultTimeout = Number(arg('default-timeout') ?? 240);
 const outPath = arg('out') ?? 'capability-probe.json';
 
-const doc = parse(readFileSync('servers.yaml', 'utf8')) as { servers: ServerEntry[] };
+const doc = loadServersDoc() as { servers: ServerEntry[] };
 const entries = doc.servers.filter((e) => {
   if ((e as { remote?: boolean }).remote) return false; // a remote is not launched here
   if (only) return only.includes(e.name);

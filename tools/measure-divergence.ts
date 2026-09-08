@@ -26,9 +26,9 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import Anthropic from '@anthropic-ai/sdk';
-import { parse } from 'yaml';
 import { selectShard, shardIndexForDate } from '../src/sweep/shard.js';
 import type { Measurement } from '../src/core/types.js';
+import { loadServersDoc } from '../src/sweep/servers-schema.js';
 import {
   DIVERGENCE_METHOD,
   mappedTokens,
@@ -111,7 +111,7 @@ interface Candidate {
   m: Measurement;
 }
 
-const doc = parse(readFileSync(join(root, 'servers.yaml'), 'utf8')) as { servers: { name: string }[] };
+const doc = loadServersDoc(root) as { servers: { name: string }[] };
 const candidates: Candidate[] = [];
 for (const entry of doc.servers) {
   const p = join(root, 'results', entry.name, 'measurement.json');

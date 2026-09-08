@@ -25,11 +25,10 @@
  * the run having something to report, not an error. Exit 2 for a caller
  * mistake, 0 when every server agreed.
  */
-import { readFileSync } from 'node:fs';
-import { parse } from 'yaml';
 import { measureServer } from '../src/sweep/run.js';
 import { PROTOCOL_VERSION } from '../src/core/protocol.js';
 import type { ServerEntry } from '../src/sweep/report.js';
+import { loadServersDoc } from '../src/sweep/servers-schema.js';
 
 function arg(name: string): string | undefined {
   const i = process.argv.indexOf(`--${name}`);
@@ -42,7 +41,7 @@ const only = arg('only')?.split(',');
 const concurrency = Number(arg('concurrency') ?? 2);
 const defaultTimeout = Number(arg('default-timeout') ?? 240);
 
-const doc = parse(readFileSync('servers.yaml', 'utf8')) as { servers: ServerEntry[] };
+const doc = loadServersDoc() as { servers: ServerEntry[] };
 const entries = doc.servers.filter((e) => {
   if ((e as { remote?: boolean }).remote) return false; // a remote is not launched here
   if (only) return only.includes(e.name);
