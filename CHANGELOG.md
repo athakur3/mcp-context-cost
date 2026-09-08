@@ -7,6 +7,8 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+## 0.18.0 — 2026-09-08
+
 - **A base URL carrying a port was read as first-party, and the report called its tokens free.**
   `baseUrlHost` compared `new URL(raw).hostname`; Claude Code compares `new URL(e).host` against a
   one-entry list holding `api.anthropic.com` — read from the v2.1.233 bundle installed on the
