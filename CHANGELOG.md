@@ -11,7 +11,7 @@ while reading it.
   For a public project that is a standard held by hand, which works until it doesn't. Prettier
   now formats `{src,tools,test,spec}/**/*.ts` and `vitest.config.ts` at `printWidth: 100` —
   chosen because the 95th-percentile line already sat at 99 characters, so the config describes
-  the house style rather than replacing it. 84 of 95 files moved, almost all of it line
+  the house style rather than replacing it. 82 TypeScript files moved, almost all of it line
   breaking inside expressions.
 
   What `.prettierignore` keeps out is the load-bearing half, and each entry has a reason rather
@@ -50,19 +50,21 @@ while reading it.
   they were the reason to bother** — `Array#sort` sorts in place, so each was mutating the array
   it was handed, and one test was reordering the object under test. 39 sites had already noticed
   and were paying for a defensive `[...x]` copy. They are `toSorted()` now, the copies are gone,
-  and `target` moves to ES2023 to say so (`engines` already required node >= 20). 24 more were
-  real and are fixed. The remaining 102 are three rules arguing with the codebase, turned off in
-  `.oxlintrc.json` with the reason written beside each — `no-await-in-loop` fires 25 times in
-  `tools/` where the sequence is deliberate and `Promise.all` would turn a polite crawl into a
-  burst at someone's API; `consistent-function-scoping` wants test helpers hoisted out of the
-  `describe` they read with; `no-underscore-dangle` fires only on `_meta`, which is the Model
-  Context Protocol's own field name and not ours to rename.
+  and `target` moves to ES2023 to say so (`engines` already required node >= 20). 19 more were
+  real and are fixed. The remaining 107 are four rules arguing with the codebase, turned off in
+  `.oxlintrc.json` with the reason written beside each: `consistent-function-scoping` (63) wants
+  test helpers hoisted out of the `describe` they read with; `no-await-in-loop` (39) fires 25
+  times in `tools/`, where the sequence is deliberate and `Promise.all` would turn a polite
+  crawl into a burst at someone's API; `no-underscore-dangle` (3) fires only on `_meta`, which
+  is the Model Context Protocol's own field name and not ours to rename; and `no-map-spread` (2)
+  is a rule about rebuilding objects in a `map` over a large collection, where both sites are
+  fixtures of ten.
 
   CI runs `npm run typecheck`, `npm run format:check` and `npm run lint` before the suite. The
   typecheck line is the configs rather than a bare `tsc --noEmit`, which had been checking `src`
   and not `tools`.
 
-- **44 test files had never been typechecked.** `tsconfig.json` included only `src` and
+- **The 44 files under `test/` had never been typechecked.** `tsconfig.json` included only `src` and
   `tsconfig.tools.json` only `src` and `tools`, and vitest transpiles without checking — so a
   type assertion written in a test reported nothing while reading as a guarantee, which is why
   the library-surface type pin had to move into `src/`. `tsconfig.test.json` covers `test/`,
