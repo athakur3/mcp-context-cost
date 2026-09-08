@@ -23,19 +23,10 @@ Second-heaviest is `agent-device` at 53,669 on the wire, 40,105 carried, 75,686 
 
 ## The badge
 
-```
-[context cost | 2,061 tokens]
-```
+A shields.io endpoint badge whose number links to a versioned methodology and to the raw
+`tools/list` capture it was counted from. Anyone can re-derive it from that capture in five
+lines, and disagree with it in one — [METHODOLOGY §reproduce it](METHODOLOGY.md#reproduce-it)
+has them.
 
-A shields.io endpoint badge whose number links to a versioned methodology and a raw
-`tools/list` capture. Anyone can re-derive it:
-
-```js
-import { getEncoding } from "js-tiktoken";
-const m = JSON.parse(fs.readFileSync("measurement.json", "utf8"));
-const n = getEncoding("o200k_base").encode(JSON.stringify(m.rawToolsCapture)).length;
-// n === m.totalTokens, or the badge is wrong and you just proved it
-```
-
-That last clause is the point. Numbers you can't audit are marketing; numbers you can
-refute are measurements.
+That is the point. Numbers you can't audit are marketing; numbers you can refute are
+measurements.

@@ -32,7 +32,7 @@ import { countTokens } from '../core/canonical.js';
 import { fieldSelectionShare, isCurrent, mappedTokens } from '../core/divergence.js';
 import { sessionStartLoad } from '../core/session-start.js';
 import { isGood } from './harness-guard.js';
-import { loadDivergence, loadRows, loadSessionStartRun, type Row, type ServerEntry } from './report.js';
+import { loadDivergence, loadRows, type Row, type ServerEntry } from './report.js';
 import { collectChanges } from './regressions.js';
 
 /**
@@ -84,11 +84,8 @@ export interface PublishedStats {
       /**
        * The single heaviest field in github's capture that an Anthropic tools
        * array has nowhere to put, and its share of the capture. Derived rather
-       * than described, because the sentence it feeds was wrong for as long as
-       * it was hand-written: it named `annotations`/`outputSchema` as "most of
-       * the capture" while github ships no `outputSchema` at all and 1.7% of
-       * annotations. The dropped weight was `icons`, at 78%. A claim about
-       * which bytes are dropped has to come from the bytes.
+       * than described — see `heaviestDroppedField` below for the hand-written
+       * sentence that made deriving it necessary.
        */
       dropField: string;
       dropSharePct: number;
@@ -113,11 +110,12 @@ export interface PublishedStats {
     probeDelta: number;
   };
   /**
-   * The published tool-shape baseline, which README quotes twice — once in
-   * prose and once inside the `--suggest` sample output. Both were hand-written
-   * and `STATIC_COUNTS` excused them as regen-maintained, which was not true of
-   * either: the file said 1,430 tools across 87 servers while the page said
-   * 1,150 across 81, and every test passed.
+   * The published tool-shape baseline, quoted in README's `--suggest` sample
+   * output. It was hand-written once, and `STATIC_COUNTS` excused it as
+   * regen-maintained when it was not: the file said 1,430 tools across 87
+   * servers while the page said 1,150 across 81, and every test passed. The
+   * prose copy beside it is gone — the page links the method instead of
+   * restating its threshold — so this is the one place the baseline is quoted.
    */
   toolShape: { toolCount: number; serverCount: number; generatedAt: string };
   deferralCostlierCount: number;
@@ -184,7 +182,6 @@ export function floorToTwoSignificant(n: number): number {
 export function computePublishedStats(entries: ServerEntry[], root = process.cwd()): PublishedStats {
   const rows = loadRows(entries, root);
   const div = loadDivergence(root);
-  const ss = loadSessionStartRun(root);
 
   const measured = rows
     .filter((r): r is Row & { m: NonNullable<Row['m']> } => r.m !== null && isGood(r.m.status))
@@ -287,7 +284,7 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
   )[0];
 
   const costlier = measured.filter((r) => {
-    const load = sessionStartLoad(r.m, ss?.servers[r.entry.name]);
+    const load = sessionStartLoad(r.m);
     return load !== null && load.totalTokens >= r.m.totalTokens!;
   });
 
@@ -432,25 +429,6 @@ export const PAGE_CLAIMS: Claim[] = [
     id: 'measured-of-candidates',
     template: '*({n} of {n} popular servers measured, each row dated by its own most recent sweep — full table in',
     values: (s) => [fmt(s.measuredCount), fmt(s.candidateTotal)],
-  },
-  {
-    file: 'README.md',
-    id: 'divergence-ratio-range',
-    // README's own copy of the range METHODOLOGY maintains. Found by the
-    // page-number guard: three numbers written by hand beside the two
-    // sentences regen already kept true.
-    template: 'measured at {f}×–{f}× across {n} servers)',
-    values: (s) => [
-      s.claude.ratioMin.toFixed(BAND_PRECISION),
-      s.claude.ratioMax.toFixed(BAND_PRECISION),
-      fmt(s.claude.ratioServers),
-    ],
-  },
-  {
-    file: 'README.md',
-    id: 'tool-shape:prose',
-    template: 'only descriptions at or above the 90th percentile of the {n} measured tools:',
-    values: (s) => [fmt(s.toolShape.toolCount)],
   },
   {
     file: 'README.md',

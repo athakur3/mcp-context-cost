@@ -220,7 +220,7 @@ week's slice doesn't include keep their most recent measurement, unchanged, on t
 leaderboard. One extra server, the reference server behind this project's own badge, is also
 re-measured weekly.
 
-## Color bands (provisional)
+## Color bands
 
 | tokens | color |
 |---|---|
@@ -321,12 +321,11 @@ page by hand would be a claim that quietly stops being true.
 no measurement taken before this method existed carries it. Those rows publish the names half
 alone, marked `≥`: a floor, not a figure. The distinction is the point — a floor printed as a
 figure would understate exactly the servers that ship the longest instructions. A row leaves
-the floor either by being re-measured (every sweep now records `serverInstructions` inside the
-measurement) or by a backfill capture in
-[`results/session-start.json`](https://github.com/athakur3/mcp-context-cost/blob/main/results/session-start.json),
-which is used only while its `capturedSha256` still matches the measurement on disk. When a
-re-sweep moves that hash the row drops back to its floor rather than keeping instructions
-captured against a tool set the server no longer serves.
+the floor by being re-measured, and only that way: every sweep records `serverInstructions`
+inside the measurement, off the same server process that produced the tools, so the two halves
+cannot be stale relative to each other. A side capture filed beside the measurements did the
+same job for rows measured before the field existed; every measured row now carries its own,
+so it was removed once nothing was reading it (2026-09-08).
 
 **What it is not.** Not any client's exact session-start bill either. Clients prefix tool names
 with a server identifier, wrap the list in their own framing, and choose independently whether
@@ -506,7 +505,10 @@ is unknown rather than nothing; when the place that would decide sets the variab
 this cannot read, since it is set there and dropping it would argue from a silence that is
 not silent; when `ENABLE_TOOL_SEARCH` holds an undocumented value; when the threshold range
 straddles the line; and when the stack's total could not be established because two
-configured entries collapsed onto one measurement.
+configured entries collapsed onto one measurement. The first four are the ways a machine can
+fail to state a posture readably, which is four refusals and not one: collapsing them into a
+single "unknown" would hide that three of the four are answerable by the reader, who can look
+at the file this audit could not.
 
 **Deferral is not a blanket discount.** Even where the posture defers, the full number is
 paid on a Microsoft Foundry deployment hosted on Azure (which rejects tool search

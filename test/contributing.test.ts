@@ -17,6 +17,13 @@ import type { Measurement } from '../src/core/types.js';
  * field is added; the workflows drift when a job is renamed; the count guard
  * (`test/page-numbers.test.ts`) does not scan this file at all.
  *
+ * There is a second rule, learned the harder way: this page must not restate
+ * another *page*. Where it did — the roadmap's laptop rule, the taxonomy's
+ * wording, an entry's own timeout comment, the pull-request template's copy of
+ * the whole procedure — a test held the two copies to each other, which is not
+ * a fix for a duplicated claim but maintenance of one. Those now link instead,
+ * and what is checked is that the copy has not come back.
+ *
  * So every expectation here is derived from the thing the sentence describes —
  * `FIELDS` through `knownFields` and the validator's own messages, the
  * workflow ymls' `run:` lines, `pr-check.ts`'s source and exit policy,
@@ -246,17 +253,6 @@ describe('check it locally', () => {
     expect(text).toContain('never from');
   });
 
-  it('carries the laptop rule in the words ROADMAP.md states under Not planned', () => {
-    const roadmap = read('ROADMAP.md');
-    const notPlanned = roadmap.slice(roadmap.indexOf('\n## Not planned'));
-    const bullet = notPlanned
-      .split('\n')
-      .map((l) => l.trim())
-      .find((l) => l.startsWith('- ') && l.includes('developer machine'));
-    expect(bullet).toBeDefined();
-    expect(flat(text)).toContain(flat(bullet!.slice(2)));
-  });
-
   it('hands out no raw docker probe recipe', () => {
     // The harness caps every launch and force-removes every container it
     // created (run.ts `finally`); a hand-written `docker run` has neither.
@@ -295,12 +291,12 @@ describe('timeoutSeconds', () => {
     expect(text).toContain(`--default-timeout ${[...budgets][0]}`);
   });
 
-  it('points at the measured basis agent-device carries, and says the other values are not a precedent', () => {
-    const yaml = read('servers.yaml');
-    const basis = /# (Cold install measured at \d+s uncontended)/.exec(yaml);
-    expect(basis).not.toBeNull();
-    expect(text).toContain(basis![1]);
-    expect(text).toContain(`timeoutSeconds: ${entry('agent-device').timeoutSeconds}`);
+  it('sends the reader to the entry that carries a measured basis, and says the rest are not a precedent', () => {
+    // The basis lives in the entry's own comment; this page names the entry
+    // rather than copying the comment, so only the pointer is checked here.
+    expect(/# Cold install measured at \d+s uncontended/.test(read('servers.yaml'))).toBe(true);
+    expect(entry('agent-device').timeoutSeconds).toBeGreaterThan(0);
+    expect(text).toContain('`agent-device`');
     expect(text).toMatch(/not a precedent/);
   });
 
@@ -341,10 +337,10 @@ describe('env', () => {
     expect(validateEntry({ ...base(), envValues: { NOT_LISTED: 'x' } }, 0).some((p) => p.field === 'envValues')).toBe(true);
   });
 
-  it('calls auth-required a finding, as the taxonomy does', () => {
-    expect(read('docs/METHODOLOGY.md')).toContain('`auth-required` | won\'t start or list tools without real credentials');
+  it('calls auth-required a finding and sends the reader to the taxonomy that defines it', () => {
     expect(text).toContain('`auth-required`');
     expect(text).toMatch(/finding/);
+    expect(text).toContain('#failure-taxonomy--no-silent-drops');
   });
 });
 
@@ -513,7 +509,6 @@ describe('what gets in', () => {
 
   it('calls an expected failure a finding, keeps deprecated entries, and states no metric floor', () => {
     expect(read('servers.yaml')).toContain('findings, not\n  # omissions');
-    expect(text).toMatch(/findings, not\s+omissions/);
     expect(servers.some((s) => s.deprecated)).toBe(true);
     expect(text).toContain('`deprecated`');
     expect(text).toMatch(/No metric floor/);
@@ -542,24 +537,30 @@ describe('the page states no live count', () => {
 });
 
 /**
- * The pull-request template is CONTRIBUTING.md's "Add an entry" order as a
- * checklist a contributor sees at the moment they open the PR. Two documents
- * stating one procedure is the drift this repository keeps finding, so the
- * template is held to the same records the guide is: the regen command, the
- * changelog bullet, the local check that writes nothing, and names-only env.
+ * The pull-request template is a checklist a contributor sees at the moment
+ * they open the PR. It used to restate CONTRIBUTING.md's "Add an entry" order
+ * step for step, with a test holding the two lists to the same commands — which
+ * is not a fix for two documents stating one procedure, only maintenance of it:
+ * the copy still had to be edited whenever a step changed, and the test only
+ * decided whether that had been remembered. The steps now live once, in the
+ * guide, and the template points at it. What is checked here is that the
+ * pointer is there and that the template states no procedure of its own.
  */
 describe('the pull-request template', () => {
   const template = readFileSync(join(repoRoot, '.github', 'pull_request_template.md'), 'utf8');
   const guide = readFileSync(join(repoRoot, 'CONTRIBUTING.md'), 'utf8');
 
-  it('exists, and points at the guide it summarises', () => {
+  it('points at the guide that holds the steps', () => {
     expect(template).toContain('CONTRIBUTING.md');
   });
 
-  it('names the same steps the guide does, and no step the guide does not', () => {
-    for (const step of ['npx tsx src/sweep/regen.ts', '## Unreleased', 'npm test', 'tools/release-readiness.ts', '--no-persist']) {
-      expect(template, step).toContain(step);
-      expect(guide, `${step} is in the guide the template summarises`).toContain(step);
+  it('restates no step of its own — the commands live in the guide', () => {
+    // Any of these in the template would be a second copy of a procedure, which
+    // is what moving the steps into the guide was for. The guide still has to
+    // carry them; that is checked against the code above, not against this file.
+    for (const command of ['npx tsx src/sweep/regen.ts', 'tools/release-readiness.ts', '--no-persist', 'npm test']) {
+      expect(template, command).not.toContain(command);
+      expect(guide, `${command} is in the guide the template points at`).toContain(command);
     }
   });
 

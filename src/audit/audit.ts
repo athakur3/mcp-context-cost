@@ -1301,12 +1301,4 @@ export function formatReport(report: AuditReport): string {
   return lines.map((l) => l.replace(/\s+$/, '')).join('\n');
 }
 
-/** Top-level tool list across every config — used by nothing yet, handy for --json consumers. */
-export function allHeaviestTools(report: AuditReport, limit = 10): HeaviestTool[] {
-  return report.configs
-    .flatMap((c) => c.heaviestTools)
-    .sort((a, b) => b.tokens - a.tokens)
-    .slice(0, limit);
-}
-
 export type { ToolMeasurement };

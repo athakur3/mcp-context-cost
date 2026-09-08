@@ -16,27 +16,21 @@ to look for a stale number. The current figures are on the [README](README.md) a
 [dashboard](https://athakur3.github.io/mcp-context-cost/dashboard.html), stated once, where
 regen keeps them honest.
 
-**Check an item's premise before starting it.** Four of phase 1's eight items were wrong about
-*why* — not about the symptom, which was real every time, but about the mechanism behind it —
-phase 2 then ran the same way, two of its seven, one of which dissolved on contact with the
-record; phase 3 the same again, three of its four, and its goal sentence was false in the one
-place no item looked, the job that runs after merge; and phase 4 the same, two of its three,
-one of them a mechanism that would have opened a browser on the user's machine. Then phase 5's
-stretch item, before a line of it was built: its instrument turned out to be a documented
-condition that switches off the behaviour it would have measured, and the hour spent finding
-that out also found a live defect in `audit` and shipped the fix as `0.16.0`. The pattern has
-been exact five times: every item that quoted the record held up, and every item that inferred
-a cause from a category did not. So the first hour of a phase re-reads the records
-its items name and either confirms the sentence or rewrites it. That hour would have saved
-most of phase 1's rework, and it is the same discipline this project applies to its own
-published numbers — a claim is worth what its evidence is worth, including a claim in here.
+**Check an item's premise before starting it.** Across phases 1 to 5 the pattern was exact
+every time: an item that quoted the record held up, and an item that inferred a cause from a
+category did not — the symptom was real in every case, the mechanism behind it often was not.
+So the first hour of a phase re-reads the records its items name and either confirms the
+sentence or rewrites it. It is the same discipline this project applies to its own published
+numbers: a claim is worth what its evidence is worth, including a claim in here. Which items
+were wrong, and about what, is in the changelog and the git history — this file states the
+rule, not the tally.
 
 ## Where it stands
 
 The measurement and its gates are further along than their audience. The adoption reading of
-**2026-09-03** found zero projects displaying the badge, against one star and three weeks of
-published history. So the work here is two kinds — keeping the published data honest, which is
-the discipline the project exists for, and getting it in front of the people it is for. Every
+**2026-09-07** found zero projects displaying the badge, three weeks into published history.
+So the work here is two kinds — keeping the published data honest, which is the discipline the
+project exists for, and getting it in front of the people it is for. Every
 technical item below is worth less than one adopter, which is why the distribution track was
 ordered ahead of the technical ones; it ran on **2026-09-05**. The next reading is due
 **2026-09-19**, and it decides the code levers.
@@ -116,10 +110,7 @@ beside the number they chose. What remains here is the report, and it waits on d
       to fix, and the item stays open on exactly that. What the same session found in passing is
       already shipped: `audit`'s unstated context-window assumption as `0.16.0`, and the
       harness's own capability posture, measured across the whole set in CI and settled at one
-      server in eighty-seven, in `0.17.0`. **The premise hour of 2026-09-06 already paid for itself twice over**: it
-      refuted the mechanism above, and it found that `audit` printed its `auto` threshold as a
-      token figure without ever saying which context window that figure assumed — a window it
-      cannot read, and one whose size decides the verdict. Corrected and released as `0.16.0`.
+      server in eighty-seven, in `0.17.0`.
       **Update, 2026-09-08: this item is still open, and the model it would replace has since
       been corrected in five places.** The documented model was wrong about how
       `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` is read, about the Windows managed path, about
@@ -134,8 +125,9 @@ beside the number they chose. What remains here is the report, and it waits on d
       maintainer's line applies and nothing measured that way is published.
 - [ ] **Routine:** vitest 5 (major), `@anthropic-ai/sdk` 0.124; neither blocks anything.
 
-**Exit.** Report #2 published and dated. The other half — the shard count in `resweep.yml`
-carrying the timing that chose it — was met on 2026-09-06.
+**Exit.** A state-of report published and dated, stating its numbers through claims regen
+maintains. The other half — the shard count in `resweep.yml` carrying the timing that chose
+it — was met on 2026-09-06.
 
 **Why here.** The only phase with a real wait in it, and it is a wait for data rather than for
 a date: the attribution does not exist until the rotation has measured both sides of a movement,

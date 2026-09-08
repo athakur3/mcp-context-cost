@@ -179,16 +179,10 @@ know about it:
 - **Without `--no-persist` the same command writes** `results/<name>/measurement.json`,
   `badges/<name>.json` and a `results/history.csv` row into your checkout, and nothing in
   `.gitignore` refuses them. Those files must not be in the pull request.
-- **The number it prints is never the published one.** The roadmap's not-planned list states
-  the rule: "Publishing any measurement taken on a developer machine. CI measures; the
-  laptop probes." The record behind it is `local-mcp`: its failing record was made on an
-  arm64 laptop and its stderr named an architecture the record itself did not, which is why
-  every measurement now records `isolation.arch`. The entry then turned out to be unavailable
-  on both architectures, and a record that says where it was made is what let that be told
-  from a broken server ("A record says which machine made it",
-  [CHANGELOG 0.12.0](CHANGELOG.md)), and `resweep.yml`'s header says why re-measuring a
-  handful of entries never needs a laptop: a developer machine is a different architecture
-  under different load, and a measurement taken there describes it rather than the server.
+- **The number it prints is never the published one.** The rule is in the roadmap's
+  [not-planned list](ROADMAP.md#not-planned), and the record that produced it is in
+  [METHODOLOGY §which machine a number applies to](docs/METHODOLOGY.md#which-machine-a-number-applies-to).
+  `resweep.yml`'s header carries the same reasoning for the rotation.
 
 Use the command above rather than a hand-written `docker run` probe. The harness caps every
 launch, and `measureServer` force-removes every container it created in its `finally` block
@@ -209,9 +203,9 @@ neighbour. The check's line for a launched entry ends with the seconds it took �
 `<name> (added): N tokens / M tools (measured, Ss)` — and that is the whole launch as the check
 saw it, on a runner with no package cache (`summarise` in `src/sweep/pr-check.ts`). The local
 line prints no duration, and a measurement's `timeoutMs` is the budget it ran under, not the
-time it took. Write the measured figure in a comment beside the field, the way `agent-device`
-does — "Cold install measured at 142s uncontended" beside `timeoutSeconds: 420`, the budget
-the changelog says came from a measured install rather than a guess.
+time it took. Write the measured figure in a comment beside the field, the way `agent-device` does in
+`servers.yaml` — its comment records the measured cold install the budget came from, rather
+than a guess.
 
 The other `timeoutSeconds` values in the file are not a precedent to copy: `agent-device`'s is
 the one that carries a recorded basis, and the rest have no comment saying how they were
@@ -247,10 +241,9 @@ seconds with a message that names the cause. `hevy`'s honest placeholder was the
 `dummy` got past a presence check and died with a message that named nothing.
 
 A server that needs a real credential to list its tools is published as `auth-required`.
-That is a finding, not a defect in the entry: the taxonomy in
-[METHODOLOGY](docs/METHODOLOGY.md#failure-taxonomy--no-silent-drops) reads it as "won't start
-or list tools without real credentials", and the second slice of the long-tail block in
-`servers.yaml` was added expecting exactly that status — findings, not omissions.
+That is a finding, not a defect in the entry — the
+[failure taxonomy](docs/METHODOLOGY.md#failure-taxonomy--no-silent-drops) defines the status,
+and the second slice of the long-tail block in `servers.yaml` was added expecting it.
 
 A `command` that is itself a `docker run` carries its placeholders inline, because the
 harness does not wrap a command that is already a container. `github` puts
@@ -337,19 +330,17 @@ workflow offers, not a promise this file makes.
 
 ## What gets in
 
-- **An entry expected to fail is still a finding.** Every candidate appears in published
-  results with exactly one status ([METHODOLOGY](docs/METHODOLOGY.md#failure-taxonomy--no-silent-drops)),
-  and the second slice of the long-tail block in `servers.yaml` was added knowing its rows
-  would record as `auth-required` or platform failures under Docker — findings, not
-  omissions.
+- **An entry expected to fail is still a finding.** The
+  [failure taxonomy](docs/METHODOLOGY.md#failure-taxonomy--no-silent-drops) says how every
+  candidate is accounted for. The long-tail block in `servers.yaml` carries a comment saying
+  which of its rows were added expecting to fail, and why that was the point.
 - **Deprecated packages stay.** The row is annotated from the `deprecated` field (version,
   source URL, the date it was read) rather than removed, so the leaderboard says what the
   registry says about the package (`gdrive`, `neon`, `elasticsearch`).
 - **Remote entries have limits.** A no-auth endpoint is measured through the `mcp-remote`
   bridge; an OAuth-walled one is listed with `remote: true` and not measured, and measuring it
-  with real credentials is on the roadmap's [not-planned list](ROADMAP.md#not-planned): the
-  isolation is credential-free by definition, and a number taken with a key would describe
-  that key's account.
+  with real credentials is on the roadmap's [not-planned list](ROADMAP.md#not-planned),
+  which gives the reason.
 - **No metric floor is on record.** Nothing in the repository states a minimum download count,
   so this file does not invent one. What the record does state is how the long-tail block was
   chosen — ranked by live weekly downloads and provenance-checked by org and repo — which is

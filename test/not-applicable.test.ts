@@ -184,15 +184,17 @@ describe('the declarations in servers.yaml', () => {
 /**
  * `notApplicable` is a per-entry declaration, and every path that measures a
  * `servers.yaml` entry has to carry it. It reached one of three: `sweep-all`
- * passed it while `cross-check` and `session-start` iterate the same entries
+ * passed it while `cross-check` and `session-start` iterated the same entries
  * and omitted it — so either would have published a declared entry as
  * `startup-failure`, the assertion about someone else's software the bucket
  * exists to prevent. Latent only because the declared servers happen to be
- * absent from those two outputs.
+ * absent from those two outputs. `session-start` was the instructions backfill,
+ * removed on 2026-09-08 once every measured row carried its own; the rule it was
+ * fixed under still binds the paths that remain.
  *
  * Structural rather than behavioural, because the defect is a missing line at
- * a call site: a fourth sweep path added later would reintroduce it silently,
- * and no test of the three that exist today would notice.
+ * a call site: a further sweep path added later would reintroduce it silently,
+ * and no test of the ones that exist today would notice.
  */
 describe('every sweep path that measures a servers.yaml entry forwards its declaration', () => {
   const sweepDir = join(repoRoot, 'src', 'sweep');
@@ -214,7 +216,7 @@ describe('every sweep path that measures a servers.yaml entry forwards its decla
     }
     // A rename that made the pattern stop matching would otherwise pass this
     // test by finding nothing at all.
-    expect(sites.map((s) => s.file)).toEqual(['cross-check.ts', 'pr-check.ts', 'session-start.ts', 'sweep-all.ts']);
+    expect(sites.map((s) => s.file)).toEqual(['cross-check.ts', 'pr-check.ts', 'sweep-all.ts']);
     expect(sites.filter((s) => !s.forwards).map((s) => s.file)).toEqual([]);
   });
 });

@@ -1,7 +1,8 @@
 /**
- * Provisional color bands (v0) — to be frozen against observed sweep
- * percentiles before launch (see METHODOLOGY.md). Any change bumps the
- * methodology version.
+ * Badge color bands, frozen on 2026-08-16 against the observed percentiles of
+ * the first full sweep (see METHODOLOGY.md §"Color bands"). Frozen is the point:
+ * a boundary that moved with the data would recolour badges nobody re-measured.
+ * Any change to these numbers bumps the methodology version.
  */
 export function bandColor(totalTokens: number): string {
   if (totalTokens < 1_000) return 'brightgreen';

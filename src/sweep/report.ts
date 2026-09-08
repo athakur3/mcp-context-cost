@@ -13,10 +13,8 @@ import { divergencePct, isComparable, parseCrossCheck, type CrossCheckRun } from
 import type { RegressionSummary } from '../core/regression.js';
 import {
   SESSION_START_METHOD,
-  parseSessionStart,
   sessionStartLoad,
   type SessionStartLoad,
-  type SessionStartRun,
 } from '../core/session-start.js';
 
 export interface ServerEntry {
@@ -191,12 +189,6 @@ export function loadDivergence(root = process.cwd()): DivergenceRun | null {
   return existsSync(p) ? parseDivergence(readFileSync(p, 'utf8')) : null;
 }
 
-/** results/session-start.json — the instructions backfill, if one exists. */
-export function loadSessionStartRun(root = process.cwd()): SessionStartRun | null {
-  const p = join(root, 'results', 'session-start.json');
-  return existsSync(p) ? parseSessionStart(readFileSync(p, 'utf8')) : null;
-}
-
 /** results/cross-check.json if a CLI cross-check run has been recorded, else null. */
 export function loadCrossCheckRun(root = process.cwd()): CrossCheckRun | null {
   const p = join(root, 'results', 'cross-check.json');
@@ -221,11 +213,9 @@ export function writeLeaderboard(
 ): void {
   const rows = loadRows(entries, root);
   const div = loadDivergence(root);
-  const ss = loadSessionStartRun(root);
   const xc = loadCrossCheckRun(root);
   /** Session-start load for a row, or null when there is no capture to read. */
-  const session = (r: Row): SessionStartLoad | null =>
-    r.m ? sessionStartLoad(r.m, ss?.servers[r.entry.name]) : null;
+  const session = (r: Row): SessionStartLoad | null => (r.m ? sessionStartLoad(r.m) : null);
   /** Claude tokens for a row, or null when not measured / stale / errored. */
   const claude = (r: Row): number | null => {
     if (!div || !r.m) return null;
@@ -494,14 +484,3 @@ export function writeLeaderboard(
   writeFileSync(join(root, 'results', 'leaderboard.csv'), csv.join('\n') + '\n');
 }
 
-/** Percentile helper for freezing color bands against the observed distribution. */
-export function percentiles(entries: ServerEntry[], root = process.cwd()): Record<string, number> {
-  const totals = loadRows(entries, root)
-    .map((r) => r.m?.totalTokens)
-    .filter((t): t is number => typeof t === 'number')
-    .sort((a, b) => a - b);
-  // Nearest-rank percentile: ceil(p/100 * n) as 1-based rank (unbiased at exact multiples).
-  const at = (p: number) =>
-    totals[Math.min(totals.length - 1, Math.max(0, Math.ceil((p / 100) * totals.length) - 1))] ?? 0;
-  return { p25: at(25), p50: at(50), p75: at(75), p90: at(90), n: totals.length };
-}

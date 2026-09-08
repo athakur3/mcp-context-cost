@@ -55,9 +55,10 @@ export interface ToolMeasurement {
    *
    * Optional because absent and zero are different claims, the same distinction
    * `serverInstructions` draws below: `0` means the tool ships no such field,
-   * absent means the record predates the attribution. Every record written
-   * since carries both, and `tools/backfill-tool-attribution.ts` re-derives
-   * them for older ones out of the capture stored in the same file.
+   * absent means the record predates the attribution. Every published record
+   * now carries both — the backfill that re-derived them from the stored
+   * capture ran once and was removed on 2026-09-08 — so absent survives here
+   * for a record read from somewhere other than this repository.
    */
   outputSchemaTokens?: number;
   annotationsTokens?: number;

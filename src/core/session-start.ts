@@ -37,7 +37,7 @@
  * `tools-delta/v1`: this adds a second published number and does not touch the
  * definition of the first. No `totalTokens` and no canonical hash moves.
  */
-import { countTokens, sha256Hex } from './canonical.js';
+import { countTokens } from './canonical.js';
 import type { Measurement } from './types.js';
 
 /** Method identifier, versioned independently of METHODOLOGY_VERSION. */
@@ -80,36 +80,8 @@ export function sessionStartTokens(raw: unknown[], instructions: string | null):
   return toolNameTokens(raw) + (instructions ? countTokens(instructions) : 0);
 }
 
-/** One server's instructions, captured beside — not inside — a measurement. */
-export interface SessionStartRow {
-  /** Exactly what `initialize` returned; '' when the server returned none. */
-  instructions: string;
-  instructionsTokens: number;
-  /** SHA-256 of the instructions bytes — the dispute artifact, as ever. */
-  instructionsSha256: string;
-  /**
-   * `canonicalSha256` of the measurement this capture stood beside. A re-sweep
-   * moves that hash, which marks the row stale: instructions are a property of
-   * the same server build that produced the tools, so a changed tool set is
-   * reason enough to stop trusting the instructions captured with the old one.
-   */
-  capturedSha256: string | null;
-  serverVersion?: string;
-  /** Set when the server could not be reached; no numbers are published. */
-  error?: string;
-}
-
-export interface SessionStartRun {
-  method: string;
-  /** UTC day the instructions were captured (YYYY-MM-DD). */
-  measuredAt: string;
-  /** How the servers were isolated during the capture. */
-  isolation?: string;
-  servers: Record<string, SessionStartRow>;
-}
-
 /** Where the instructions half of a figure came from — or that it is missing. */
-export type InstructionsSource = 'measurement' | 'capture' | 'not-captured';
+export type InstructionsSource = 'measurement' | 'not-captured';
 
 export interface SessionStartLoad {
   toolCount: number;
@@ -141,19 +113,17 @@ export function measuredInstructions(m: Measurement): string | undefined {
 }
 
 /**
- * Resolve one server's session-start load from its measurement and, if it has
- * one, the instructions captured beside it.
+ * Resolve one server's session-start load from its measurement.
  *
- * Precedence is measurement over capture and never the other way round: the
- * measurement's instructions came off the same server process as its tools, in
- * the same run, so it cannot be stale relative to itself. The side capture is
- * the backfill for measurements taken before the field existed, and it is used
- * only while it still points at the measurement on disk.
+ * The instructions come off the same server process as the tools, in the same
+ * run, so they cannot be stale relative to the measurement carrying them. A
+ * measurement recorded before the field existed has no instructions to read and
+ * publishes its names half alone, marked as a floor.
  *
  * Returns null for a measurement with no capture to read names from — a
  * `startup-failure` has no session-start load because it has no session.
  */
-export function sessionStartLoad(m: Measurement, row?: SessionStartRow): SessionStartLoad | null {
+export function sessionStartLoad(m: Measurement): SessionStartLoad | null {
   if (!Array.isArray(m.rawToolsCapture)) return null;
   const names = toolNameTokens(m.rawToolsCapture);
   const toolCount = toolNames(m.rawToolsCapture).length;
@@ -171,17 +141,6 @@ export function sessionStartLoad(m: Measurement, row?: SessionStartRow): Session
     };
   }
 
-  if (isCurrentInstructions(row, m.canonicalSha256)) {
-    return {
-      toolCount,
-      toolNameTokens: names,
-      instructionsTokens: row.instructionsTokens,
-      totalTokens: names + row.instructionsTokens,
-      isFloor: false,
-      instructionsSource: 'capture',
-    };
-  }
-
   return {
     toolCount,
     toolNameTokens: names,
@@ -189,55 +148,5 @@ export function sessionStartLoad(m: Measurement, row?: SessionStartRow): Session
     totalTokens: names,
     isFloor: true,
     instructionsSource: 'not-captured',
-  };
-}
-
-/**
- * A side capture is usable only if it carries a number and still points at the
- * measurement on disk. Unlike a stale divergence row — which is hidden, because
- * there is nothing else to print — a stale row here degrades the figure to its
- * names-only floor. The column never blanks; it only ever stops claiming to
- * know the half it no longer knows.
- */
-export function isCurrentInstructions(
-  row: SessionStartRow | undefined,
-  canonicalSha256: string | null,
-): row is SessionStartRow {
-  if (!row || row.error) return false;
-  if (typeof row.instructionsTokens !== 'number') return false;
-  return !!canonicalSha256 && row.capturedSha256 === canonicalSha256;
-}
-
-/** Build a row from a freshly captured instructions string. */
-export function toSessionStartRow(
-  instructions: string | null,
-  meta: { capturedSha256: string | null; serverVersion?: string },
-): SessionStartRow {
-  const text = instructions ?? '';
-  return {
-    instructions: text,
-    instructionsTokens: text ? countTokens(text) : 0,
-    instructionsSha256: sha256Hex(text),
-    capturedSha256: meta.capturedSha256,
-    serverVersion: meta.serverVersion,
-  };
-}
-
-/** Parse results/session-start.json; anything malformed yields null, never throws. */
-export function parseSessionStart(text: string): SessionStartRun | null {
-  let run: unknown;
-  try {
-    run = JSON.parse(text);
-  } catch {
-    return null;
-  }
-  const r = run as Partial<SessionStartRun>;
-  if (!r || typeof r.measuredAt !== 'string') return null;
-  if (!r.servers || typeof r.servers !== 'object') return null;
-  return {
-    method: typeof r.method === 'string' ? r.method : SESSION_START_METHOD,
-    measuredAt: r.measuredAt,
-    isolation: typeof r.isolation === 'string' ? r.isolation : undefined,
-    servers: r.servers as Record<string, SessionStartRow>,
   };
 }

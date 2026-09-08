@@ -595,10 +595,10 @@ export function resolveToolSearchSources(sources: ToolSearchSource[]): ResolvedT
  * 2026-09-05 the run widened to every measured server and reached `postgres` at
  * 32 tokens on the wire, where 328 of its 348 Claude tokens *are* the overhead:
  * a per-server ratio of 10.88× that says nothing about converting bytes. Folded
- * into the band it took the published upper bound from 1.92× to 10.88× and made
+ * into the band it took the published upper bound to that same 10.88× and made
  * the audit refuse threshold questions it had been answering correctly. Held
- * apart, the band across the same 86 rows is 0.19×–1.93× — which is where it
- * already was, from a sample a quarter the size.
+ * apart, the widened run put the band back where a sample a quarter the size
+ * had already had it. The fields below are the record of what it is now.
  */
 export interface WireToClientRatio {
   low: number;
@@ -638,16 +638,12 @@ export const PUBLISHED_WIRE_TO_CLIENT_RATIO: WireToClientRatio = {
   // above/below verdict, and the count must never *exceed* the run, because
   // that would be a claim about servers nobody measured.
   //
-  // It read 20 from the day the run covered the top 20 until the run widened to
-  // every measured server on 2026-09-05, with nothing comparing the two. The
-  // band had not moved — the servers added sat inside it — which is exactly how
-  // a number like this goes wrong quietly.
-  //
-  // The widening then moved it by a hair rather than by the fivefold the first
-  // reading suggested: 0.20×–1.92× over 23 servers, 0.19×–1.93× over 86. That a
-  // quarter of the set predicted the whole of it is the interesting part, and it
-  // is only true of the marginal band — see the interface above for what folding
-  // the fixed overhead in did to the same numbers.
+  // The count is the half that goes wrong quietly: it read 20 from the day the
+  // run covered the top 20 until the run widened to every measured server on
+  // 2026-09-05, with nothing comparing the two. The band itself had not moved,
+  // because the servers added sat inside it — which is why the guard checks the
+  // two properties separately. The widening is described on the interface above;
+  // it is not restated here, for the reason the docblock gives.
   servers: 86,
   source: 'the published claude-opus-5 divergence run',
 };

@@ -51,7 +51,6 @@ const STATIC_COUNTS: { file: PageFile; text: string; why: string }[] = [
 
   // --- frozen or externally fixed ---
   { file: 'README.md', text: '10 clients', why: 'the number of client config formats `audit` discovers — moves when code moves, and the deferral table test already reads the page against the resolver' },
-  { file: 'README.md', text: 'six discovered clients', why: 'the discovery set less Claude Code and the three clients whose vendors are on record as deferring, in the audit walkthrough — a property of the code, not of the sweep' },
   { file: 'docs/METHODOLOGY.md', text: 'Three clients', why: 'the clients whose vendors are on record as deferring — `DEFERRAL_ON_RECORD` in `audit/deferral.ts`, whose membership `audit-clients.test.ts` pins; it moves when code moves, not when the sweep runs' },
   { file: 'docs/METHODOLOGY.md', text: 'four is a measurement', why: 'the four kinds of first-party record the rule admits, listed in the table above it — a property of the rule, not of the data' },
   { file: 'docs/METHODOLOGY.md', text: '128 tools', why: "VS Code's documented per-request tool cap, a fact about that client read 2026-09-07, not about this data" },

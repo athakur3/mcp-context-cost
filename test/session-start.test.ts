@@ -3,18 +3,13 @@ import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync } from 'nod
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
-  SESSION_START_METHOD,
-  isCurrentInstructions,
   measuredInstructions,
-  parseSessionStart,
   sessionStartLoad,
   sessionStartTokens,
-  toSessionStartRow,
   toolNameTokens,
   toolNames,
-  type SessionStartRow,
 } from '../src/core/session-start.js';
-import { countTokens, measureTools, sha256Hex } from '../src/core/canonical.js';
+import { countTokens, measureTools } from '../src/core/canonical.js';
 import { writeLeaderboard, sessionStartCell, type ServerEntry } from '../src/sweep/report.js';
 
 /**
@@ -136,44 +131,12 @@ describe('measureTools records the instructions it was given', () => {
 });
 
 describe('sessionStartLoad', () => {
-  it('prefers the measurement over a side capture, even a current one', () => {
-    const m = measurement({ serverInstructions: 'from the same run' });
-    const row = toSessionStartRow('from a later capture', { capturedSha256: m.canonicalSha256 });
-    const load = sessionStartLoad(m, row)!;
+  it('reads the instructions off the measurement that carries them', () => {
+    const load = sessionStartLoad(measurement({ serverInstructions: 'from the same run' }))!;
     expect(load.instructionsSource).toBe('measurement');
     expect(load.instructionsTokens).toBe(countTokens('from the same run'));
+    expect(load.totalTokens).toBe(toolNameTokens(rawTools) + countTokens('from the same run'));
     expect(load.isFloor).toBe(false);
-  });
-
-  it('falls back to a side capture that still points at the measurement on disk', () => {
-    const m = legacyMeasurement();
-    const row = toSessionStartRow('backfilled instructions', { capturedSha256: m.canonicalSha256 });
-    const load = sessionStartLoad(m, row)!;
-    expect(load.instructionsSource).toBe('capture');
-    expect(load.totalTokens).toBe(toolNameTokens(rawTools) + countTokens('backfilled instructions'));
-    expect(load.isFloor).toBe(false);
-  });
-
-  it('degrades a STALE capture to the names-only floor instead of blanking the row', () => {
-    const m = legacyMeasurement();
-    const row = toSessionStartRow('captured against different tools', { capturedSha256: 'b'.repeat(64) });
-    const load = sessionStartLoad(m, row)!;
-    expect(load.instructionsSource).toBe('not-captured');
-    expect(load.isFloor).toBe(true);
-    expect(load.totalTokens).toBe(toolNameTokens(rawTools));
-    expect(load.instructionsTokens).toBeNull();
-  });
-
-  it('marks an errored capture row as a floor rather than counting it as zero', () => {
-    const m = legacyMeasurement();
-    const row: SessionStartRow = {
-      instructions: '',
-      instructionsTokens: 0,
-      instructionsSha256: '',
-      capturedSha256: m.canonicalSha256,
-      error: 'startup-failure: exited 1',
-    };
-    expect(sessionStartLoad(m, row)!.isFloor).toBe(true);
   });
 
   it('reports a floor when nothing has ever been captured', () => {
@@ -210,40 +173,6 @@ describe('sessionStartLoad', () => {
     expect(load.isFloor).toBe(false);
     expect(load.totalTokens).toBeGreaterThan(m.totalTokens!);
     expect(load.totalTokens).toBe(load.toolNameTokens + load.instructionsTokens!);
-  });
-});
-
-describe('isCurrentInstructions', () => {
-  const row = toSessionStartRow('x', { capturedSha256: 'a'.repeat(64) });
-  it('needs a matching hash on both sides', () => {
-    expect(isCurrentInstructions(row, 'a'.repeat(64))).toBe(true);
-    expect(isCurrentInstructions(row, 'b'.repeat(64))).toBe(false);
-    expect(isCurrentInstructions(row, null)).toBe(false);
-    expect(isCurrentInstructions(undefined, 'a'.repeat(64))).toBe(false);
-  });
-  it('rejects a row whose capture never happened', () => {
-    expect(isCurrentInstructions({ ...row, capturedSha256: null }, null)).toBe(false);
-  });
-});
-
-describe('toSessionStartRow', () => {
-  it('hashes the instructions bytes so the row is disputable like every other number', () => {
-    const r = toSessionStartRow('be careful', { capturedSha256: null });
-    expect(r.instructionsSha256).toBe(sha256Hex('be careful'));
-    expect(r.instructionsTokens).toBe(countTokens('be careful'));
-  });
-});
-
-describe('parseSessionStart', () => {
-  it('returns null rather than throwing on anything malformed', () => {
-    expect(parseSessionStart('not json')).toBeNull();
-    expect(parseSessionStart('{}')).toBeNull();
-    expect(parseSessionStart('{"measuredAt":"2026-08-20"}')).toBeNull();
-  });
-  it('defaults the method but never invents a date', () => {
-    const run = parseSessionStart('{"measuredAt":"2026-08-20","servers":{}}')!;
-    expect(run.method).toBe(SESSION_START_METHOD);
-    expect(run.measuredAt).toBe('2026-08-20');
   });
 });
 
@@ -320,24 +249,6 @@ describe('the leaderboard shows both figures for every measured server', () => {
   it('says nothing about deferring costing more when it never does', () => {
     writeLeaderboard(entries, root);
     expect(readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8')).not.toContain('Deferring costs more');
-  });
-
-  it('uses a current side capture to lift a legacy row off its floor', () => {
-    const m = JSON.parse(readFileSync(join(root, 'results', 'floored', 'measurement.json'), 'utf8')) as Measurement;
-    writeFileSync(
-      join(root, 'results', 'session-start.json'),
-      JSON.stringify({
-        method: SESSION_START_METHOD,
-        measuredAt: '2026-08-20',
-        servers: { floored: toSessionStartRow('backfilled', { capturedSha256: m.canonicalSha256 }) },
-      }),
-    );
-    writeLeaderboard(entries, root);
-    const md = readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8');
-    expect(
-      md.split('\n').find((l) => l.includes('[floored]'))!.split('|')[sessionStartCol(md)].trim().startsWith('≥'),
-    ).toBe(false);
-    expect(md).not.toContain('marks a floor');
   });
 
   it('carries the parts and the floor flag into the CSV, appended after the existing columns', () => {

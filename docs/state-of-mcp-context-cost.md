@@ -29,8 +29,8 @@ sake.
 
 Everything that report quoted is published live, derived rather than typed, and checkable:
 
-- **[The leaderboard](index.md)** — every measured server, ranked by what it costs before it
-  does anything.
+- **[The leaderboard](https://github.com/athakur3/mcp-context-cost/blob/main/results/leaderboard.md)**
+  — every measured server, ranked by what it costs before it does anything.
 - **[Server detail pages](servers/)** — the per-tool breakdown behind any single row, and the
   capture it was computed from.
 - **[Methodology](METHODOLOGY.md)** — what the number is, and how to reproduce it yourself.

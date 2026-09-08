@@ -83,9 +83,12 @@ export function parseHistory(text: string): HistoryRow[] {
     const [date, server, tokens, toolCount, status, isolation, version] = splitCsvLine(line);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date ?? '') || !server) continue;
     if (!/^\d+$/.test(tokens ?? '') || !/^\d+$/.test(toolCount ?? '')) continue;
-    // A short row is an earlier write — 5 fields predate `isolation`, 6 predate
-    // `version`. Both are recorded as unknown rather than back-filled with a
-    // guess, which is the same rule the columns themselves exist to keep.
+    // A missing `isolation` or `version` is an earlier write, not a value: both
+    // columns were added after rows already existed. They are read as unknown
+    // rather than back-filled with a guess, which is the same rule the columns
+    // themselves exist to keep. A row short of seven fields predates them both
+    // and reads the same way; none is left in `history.csv`, and the destructure
+    // costs nothing to keep honest about one arriving from an older checkout.
     rows.push({
       date,
       server,
