@@ -31,7 +31,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { bandSnapshotProblem, wireToClientRatio } from '../src/audit/deferral.js';
 import { parseDivergence } from '../src/core/divergence.js';
-import { KNOWN_SPEC_REVISIONS, newerThanPinned } from '../src/core/protocol.js';
+import { KNOWN_SPEC_REVISIONS, PIN_DECISION, newerThanPinned } from '../src/core/protocol.js';
 
 const root = process.cwd();
 const git = (...args: string[]) =>
@@ -264,20 +264,33 @@ function theReleasedBandStillDescribesTheData(): Finding[] {
 const DECLARES =
   /^\s*(?:export\s+const\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*[:=]\s*(\d[\d_.]*)\s*[,;]?\s*$/;
 const DATA_SHAPED = /servers?|count|total|tokens|runSize|min|max|low|high|median|share|ratio/i;
-/** A count of the current data. Deliberately not dates: a comment saying what was
- *  observed on 2026-08-19 is a dated reading, which is this repository's whole
- *  practice, and flagging those buries the one line that matters. */
-const PROSE_COUNT = /\b\d[\d,]*\s+(servers?|tools?|tokens)\b/i;
-/** How far above a number a comment still counts as being "beside" it. */
-const BESIDE = 6;
+/** The first line of a const declaration — what a data-shaped literal inside an
+ *  object is attributed to, so the three fields of one snapshot are one key. */
+const CONST_LINE = /^\s*(?:export\s+)?const\s+([A-Za-z_$][A-Za-z0-9_$]*)/;
 
-/**
- * Numeric literals bound to data-shaped names — and prose *beside* one, which
- * is narrower than "any comment with a number in it" for a reason. Every drift
- * this has caught was a sentence sitting directly above the value it described
- * and disagreeing with it. A count mentioned anywhere else in a file is almost
- * always narrative, and reporting those trains the reader to skim.
- */
+/** A threshold somebody chose. Nothing re-derives it; changing it is a decision. */
+const POLICY: Record<string, string> = {
+  'src/audit/deferral.ts:TOOL_SEARCH_AUTO_SHARE':
+    "the vendor's documented auto threshold; watch-tool-search-docs.ts holds the sentence",
+  'src/core/regression.ts:SIGNIFICANT_PCT': 'emphasis, not inclusion — the docblock gives the pair',
+  'src/core/regression.ts:SIGNIFICANT_TOKENS': 'same pair',
+  'src/core/regression.ts:MAX_VECTOR_ENTRIES':
+    'retention depth; dropping the oldest is reported, never implied',
+  'src/sweep/harness-guard.ts:MIN_REGRESSIONS':
+    'population floor below which the signal does not exist',
+  'src/sweep/harness-guard.ts:FAULT_RATIO':
+    'measured against the largest genuine simultaneous breakage on record',
+  'src/sweep/pr-check.ts:DEFAULT_MAX_ENTRIES':
+    'sized to the runner budget, held by worstCaseSeconds',
+};
+
+/** A copy of data that lives elsewhere, and the guard that holds it honest. */
+const GUARDED: Record<string, string> = {
+  'src/audit/deferral.ts:PUBLISHED_WIRE_TO_CLIENT_RATIO':
+    'bandSnapshotProblem, against results/divergence.json',
+  'src/core/protocol.ts:KNOWN_SPEC_REVISIONS': 'specSnapshotProblem, against the schema listing',
+};
+
 /**
  * Which MCP revision does the released package still speak?
  *
@@ -358,14 +371,32 @@ function theProtocolRevisionTheLastReleaseSpeaksIsStillCurrent(): Finding[] {
 
   const newer = newerThanPinned(KNOWN_SPEC_REVISIONS, released);
   if (newer.length === 0) return [];
+
+  // The decision on record answers only the revisions it names. Everything
+  // newer that it covers reads as decided; anything it does not name is a new
+  // question, and saying so here is what reopens it.
+  const undecided = newer.filter((r) => !PIN_DECISION.considered.includes(r));
+  if (undecided.length === 0) {
+    return [
+      {
+        kind: 'look',
+        what: `the released package speaks ${released}, behind ${newer.length} revision(s) — decided ${PIN_DECISION.on}: the pin stays`,
+        detail:
+          `Considered ${PIN_DECISION.considered.join(', ')} and declined, because ${PIN_DECISION.because}\n` +
+          `Reopens when ${PIN_DECISION.reopenWhen} PIN_DECISION in src/core/protocol.ts is the record.`,
+      },
+    ];
+  }
   return [
     {
       kind: 'look',
-      what: `the released package speaks ${released}, and the specification has published ${newer.length} revision(s) since`,
+      what: `the released package speaks ${released}, and the specification has published ${undecided.length} revision(s) the pin decision does not cover`,
       detail:
-        `Newer, as read on ${KNOWN_SPEC_REVISIONS.readOn}: ${newer.join(', ')}. This is a judgement, not a defect — ` +
-        'moving the pin re-opens whether numbers either side of it are comparable, and 2026-07-28 removed the ' +
-        '`initialize` handshake outright. Read the new schema before deciding. `tools/watch-spec-revisions.ts` ' +
+        `Newer, as read on ${KNOWN_SPEC_REVISIONS.readOn}: ${newer.join(', ')} — of which ` +
+        `${undecided.join(', ')} postdate the decision PIN_DECISION records (${PIN_DECISION.on}). ` +
+        'This is a judgement, not a defect — moving the pin re-opens whether numbers either side ' +
+        'of it are comparable. Read the new schema, then extend or revise PIN_DECISION in ' +
+        'src/core/protocol.ts so the question is answered once. `tools/watch-spec-revisions.ts` ' +
         'is what notices a revision appearing; this is what notices the released bytes falling behind one.',
     },
   ];
@@ -423,45 +454,93 @@ function measuredOverARevisionTheServerChose(): Finding[] {
   ];
 }
 
+/**
+ * Every data-shaped numeric literal in `src` declares its own kind — `POLICY`
+ * or `GUARDED`, in the maps above — and this fails on one that declares
+ * neither. The scanner cannot tell a chosen threshold from a copied datum
+ * (they are the same characters), so the declaration is the datum: classifying
+ * a new number is one line here, and the alternative is another entry in a
+ * notice nobody reads. The maps are held to the same rule
+ * `KNOWN_SPEC_REVISIONS` is held to — a key that names nothing real fails too.
+ *
+ * The prose-adjacency branch this once had (a comment mentioning a count,
+ * sitting within a few lines of a data-shaped value) is gone on purpose. Its
+ * two last hits were docblocks *explaining why the number beside them is
+ * safe* — one of them literally the correction for the drift the branch
+ * existed to catch. A text heuristic cannot separate an explanation from a
+ * stale copy; `GUARDED` naming its guard is what carries that weight now.
+ */
 function numbersWrittenIntoSource(): Finding[] {
   const files = git('ls-files', 'src')
     .split('\n')
     .filter((f) => f.endsWith('.ts'));
-  const hits: string[] = [];
+  const classified = new Set([...Object.keys(POLICY), ...Object.keys(GUARDED)]);
+  const sources = new Map<string, string[]>();
+  const isComment = (l: string) => {
+    const t = l.trimStart();
+    return t.startsWith('//') || t.startsWith('*') || t.startsWith('/*');
+  };
+
+  const unclassified: string[] = [];
   for (const f of files) {
     const lines = readFileSync(join(root, f), 'utf8').split('\n');
-    const isComment = (l: string) => {
-      const t = l.trimStart();
-      return t.startsWith('//') || t.startsWith('*') || t.startsWith('/*');
-    };
+    sources.set(f, lines);
     lines.forEach((line, i) => {
-      if (isComment(line)) {
-        if (!PROSE_COUNT.test(line)) return;
-        // Only when a data-shaped number follows within a few lines.
-        const near = lines.slice(i + 1, i + 1 + BESIDE);
-        const beside = near.some((l) => {
-          const m = DECLARES.exec(l);
-          return m && DATA_SHAPED.test(m[1]!);
-        });
-        if (beside) hits.push(`${f}:${i + 1}  ${line.trim().slice(0, 96)}`);
-        return;
-      }
+      if (isComment(line)) return;
       const m = DECLARES.exec(line);
-      if (m && DATA_SHAPED.test(m[1]!)) hits.push(`${f}:${i + 1}  ${line.trim().slice(0, 96)}`);
+      if (!m || !DATA_SHAPED.test(m[1]!)) return;
+      // A field inside an object literal answers to the const that owns it, so
+      // the nearest declaration at or above the line is the key.
+      let owner = m[1]!;
+      for (let j = i; j >= 0; j--) {
+        const c = CONST_LINE.exec(lines[j]!);
+        if (c) {
+          owner = c[1]!;
+          break;
+        }
+      }
+      const key = `${f}:${owner}`;
+      if (!classified.has(key)) {
+        unclassified.push(`${f}:${i + 1}  ${line.trim().slice(0, 96)}  → key ${key}`);
+      }
     });
   }
-  if (hits.length === 0) return [];
-  return [
-    {
-      kind: 'look',
-      what: `${hits.length} number(s) written into source`,
+
+  const missing: string[] = [];
+  for (const key of classified) {
+    const sep = key.lastIndexOf(':');
+    const file = key.slice(0, sep);
+    const name = key.slice(sep + 1);
+    const lines =
+      sources.get(file) ??
+      (existsSync(join(root, file)) ? readFileSync(join(root, file), 'utf8').split('\n') : []);
+    const declares = new RegExp(`^\\s*(?:export\\s+)?const\\s+${name}\\b`);
+    if (!lines.some((l) => declares.test(l))) missing.push(key);
+  }
+
+  const findings: Finding[] = [];
+  if (unclassified.length) {
+    findings.push({
+      kind: 'stale',
+      what: `${unclassified.length} data-shaped number(s) in src with no declared kind`,
       detail:
-        'For each: what re-derives it, and what would notice if it stopped being true? A policy ' +
-        'constant is fine. A count or a date copied from the data is the shape that has drifted ' +
-        'three times — twice in a constant, once in a doc comment beside one.\n' +
-        hits.map((h) => `  ${h}`).join('\n'),
-    },
-  ];
+        'Every data-shaped constant is POLICY (a threshold somebody chose; nothing re-derives it) ' +
+        'or GUARDED (a copy of data, named beside the guard that holds it honest), declared in ' +
+        'the two maps in this file. These declare neither — classify each, or restructure it:\n' +
+        unclassified.map((h) => `  ${h}`).join('\n'),
+    });
+  }
+  if (missing.length) {
+    findings.push({
+      kind: 'stale',
+      what: `the classification maps name ${missing.length} declaration(s) that do not exist`,
+      detail:
+        'POLICY and GUARDED must name real things — the same rule KNOWN_SPEC_REVISIONS is held ' +
+        'to. Remove or rename:\n' +
+        missing.map((k) => `  ${k}`).join('\n'),
+    });
+  }
+  return findings;
 }
 
 function main(): number {

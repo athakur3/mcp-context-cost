@@ -7,6 +7,48 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **`sweep:all --only=github` was not a narrow sweep.** Eight scripts carried the same
+  byte-identical private flag reader, and it read only the space form — so `--only=github`
+  read as no selection at all and ran a full host sweep that overwrites published records,
+  `--only --docker` swallowed the next flag as a value, and `--shards=3 --only=x` walked
+  straight past the guard that exists to refuse the pair, because both operands read as
+  absent. The CLI already carries the correct reader, with fourteen tests; the sweep
+  scripts and tools now use it, declare their flag specs, and refuse unrecognised or
+  valueless flags at exit 2 — which also closes the documented `--dry-run` hazard, where a
+  mistyped flag was silently ignored while a real sweep ran. The reader moved to
+  `src/flags.ts` rather than being imported from `cli.ts`, for a reason worth recording:
+  `cli.ts` dispatches on `process.argv` at module top level, so importing it *runs the CLI*
+  against the importing script's own argv and exits 2 on the first flag it does not
+  recognise as a command. Every workflow already passes the space form, verified line by
+  line; the exposure was an operator's hand-run and a malformed `workflow_dispatch` input.
+  No published byte moved.
+
+- **One spelling for optional, and three temp roots that outlived their tests.**
+  `Measurement.isolation` was the single optional property in `core/types.ts` not written
+  `| undefined` like its fourteen neighbours; it is now. Three tests created a temp
+  directory and never removed it — two of them spawn the audit CLI with `cwd` inside that
+  root, which is the late-writer race `test/tmp.ts` documents and measured — and each now
+  tears its roots down through `removeTempRoot`. The bare `rmSync` teardowns that remain
+  are correct as they stand: they remove roots only the test process itself wrote into,
+  where the retry buys nothing.
+
+- **A data-shaped number in `src` now declares its own kind, and the release gate fails on
+  one that does not.** The readiness notice used to list every numeric literal with a
+  data-shaped name — eleven, at 0% precision — and ask the reader to classify them afresh
+  each release, because a scanner cannot tell a chosen threshold from a copied datum: they
+  are the same characters. The declaration is now the datum. Two maps in
+  `tools/release-readiness.ts` name every such constant as either **policy** (a threshold
+  somebody chose, with the reason) or **guarded** (a copy of data, named beside the guard
+  that holds it honest); a constant in neither map is a hard failure, and so is a map key
+  that names nothing real — the rule `KNOWN_SPEC_REVISIONS` is already held to. The
+  prose-adjacency branch is gone on purpose: its last two hits were docblocks explaining
+  why the number beside them is safe, one of them literally the correction for the drift
+  the branch existed to catch. And the pin question is now answered once rather than every
+  release: `PIN_DECISION` in `src/core/protocol.ts` records the revisions considered on
+  2026-09-08, why `2025-06-18` stays (2026-07-28 removes the `initialize` handshake, so
+  following it is a change of methodology), and what reopens the question — the notice
+  prints the decision, and a revision the record does not name reopens it by itself.
+
 ## 0.19.0 — 2026-09-08
 
 - **The repository had no formatter, no linter, and `strict: true` as its only compiler flag.**

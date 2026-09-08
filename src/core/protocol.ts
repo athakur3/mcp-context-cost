@@ -23,6 +23,42 @@
 export const PROTOCOL_VERSION = '2025-06-18';
 
 /**
+ * A decision about the pin above, so it is made once and read thereafter: the
+ * newer revisions considered, the day, the reason the pin stays, and what
+ * would reopen the question. The same discipline as `SpecRevisionReading`
+ * below — a dated claim rather than an undated opinion.
+ *
+ * `tools/release-readiness.ts` prints this beside its released-pin notice, so
+ * a release does not re-ask a question that has an answer on record. The
+ * record covers only the revisions it names: one appearing that is not in
+ * `considered` is a new question, and the notice says so by itself.
+ */
+export interface PinDecision {
+  /** The revisions newer than the pin that were considered and declined. */
+  considered: string[];
+  /** The day the decision was taken. */
+  on: string;
+  /** Why the pin stays. */
+  because: string;
+  /** The condition under which this stops being an answer. */
+  reopenWhen: string;
+}
+
+export const PIN_DECISION: PinDecision = {
+  considered: ['2025-11-25', '2026-07-28'],
+  on: '2026-09-08',
+  because:
+    '2026-07-28 removes the `initialize` handshake in favour of `server/discover` and moves the ' +
+    'version into a per-request `_meta` field — following it is a change of methodology, not a ' +
+    'version bump, and every published number was taken over the handshake the pin names. ' +
+    '2025-11-25 changes none of the three methods this probe sends. The schema reading behind ' +
+    "this is `PROTOCOL_MISMATCH_EVIDENCE`'s docblock in sweep/run.ts.",
+  reopenWhen:
+    'a measured server refuses the pinned handshake (it would surface as `protocol-mismatch` ' +
+    'rows), or the specification publishes a revision this record does not name.',
+};
+
+/**
  * A reading of which MCP revisions the specification publishes, taken on a day
  * from a place — the same shape a name collision or a deprecation takes in
  * `sweep/report.ts`, and for the same reason: it is a claim about something
