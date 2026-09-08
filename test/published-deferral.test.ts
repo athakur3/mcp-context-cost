@@ -100,6 +100,7 @@ const AUTO_PCT = String(Number((TOOL_SEARCH_AUTO_SHARE * 100).toFixed(6)));
 
 const USER = '/home/u/.claude/settings.json';
 const LOCAL = '/proj/.claude/settings.local.json';
+const MANAGED = '/Library/Application Support/ClaudeCode/managed-settings.json';
 
 const settingsFile = (
   scope: ToolSearchSource['scope'],
@@ -287,6 +288,14 @@ const CASES: Case[] = [
       { env: { ENABLE_TOOL_SEARCH: 'maybe' } },
       { env: { ENABLE_TOOL_SEARCH: 'auto:101' } },
       { settings: [settingsFile('user-settings', USER, { ENABLE_TOOL_SEARCH: 'yes' })] },
+      // The administrator-tier override. An undocumented value there means the
+      // disabling variable is not what decides, and this is the machine that
+      // was told it carries the whole total on every request while its
+      // organisation was keeping tool search on.
+      {
+        settings: [settingsFile('managed-settings', MANAGED, { ENABLE_TOOL_SEARCH: 'force' })],
+        env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '1' },
+      },
     ],
     mode: 'setting-unrecognized',
     row: {

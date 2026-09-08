@@ -536,11 +536,24 @@ stands as quoted, and four things moved around it, each recorded in
 `src/audit/deferral.ts`: tool search is on by default on Google Cloud's Agent Platform for
 the Claude 4.5 generation and later (before v2.1.221 it was off there for every model);
 managed settings can keep tool search on under `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` from
-v2.1.227, an override this audit does not read, so that variable still resolves as "off"
-here; `alwaysLoad` is an entry field on every server type, now read as above; and tool
+v2.1.227, which **is** read here as of 2026-09-08 and is described below; `alwaysLoad` is an
+entry field on every server type, now read as above; and tool
 descriptions and server instructions are truncated at 2 KB each. Nothing here measured
 Claude Code deferring or not deferring anything. If that documentation changes, this section
 and `src/audit/deferral.ts` are what have to change with it.
+
+**The organisation override, and why it is refused rather than answered.** From Claude Code
+v2.1.227 an organisation can keep tool search on under the very variable that turns it off, through
+managed settings — `code.claude.com/docs/en/llm-gateway-protocol.md`, read **2026-09-08**. The
+value that arms it appears in no vendor document, so this names none and claims nothing about what
+it does. What it does say: the administrator tier is read, and where that tier sets
+`ENABLE_TOOL_SEARCH` to a value the vendor does not document, the disabling variable is no longer
+what decides, so the posture is refused and the value is printed for the reader to check. Two of
+the override's own conditions are not readable from a file either — the same page says it has no
+effect on a cloud provider, or when signed in through a Claude apps gateway. The audit reads one of
+the four administrator sources the vendor documents; remote settings, MDM policy and a policy
+helper are not opened, and a helper's output replaces the file tier entirely. Every one of those
+misses can only make this report **over**-state what a request carries, never understate it.
 
 **One rule above is not a quotation, and it is marked.** How
 `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` is read comes from two sources rather than one.

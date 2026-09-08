@@ -1995,6 +1995,78 @@ describe('the deferral posture is read from every place the machine sets it', ()
       ).toMatchObject({ mode: 'loads-upfront', value: 'yes', source: USER, readFromMachine: true });
     });
 
+    // An organisation can keep tool search ON under the variable that turns it
+    // off, through managed settings, from v2.1.227. The value that arms it is in
+    // no vendor document, so nothing here names one or says what it does — but a
+    // tier holding a value the vendor does not document means the disabling
+    // variable is not what decides, and printing "every request carries these
+    // tokens" there stated the opposite of what the machine does.
+    describe('an undocumented value in the administrator tier', () => {
+      const MANAGED = '/Library/Application Support/ClaudeCode/managed-settings.json';
+      const DROP_IN = '/Library/Application Support/ClaudeCode/managed-settings.d/10-policy.json';
+
+      it('stops the betas variable deciding, and refuses on the value instead', () => {
+        expect(
+          resolveToolSearchSources([
+            shell({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '1' }),
+            file('managed-settings', MANAGED, { ENABLE_TOOL_SEARCH: 'force' }),
+          ]),
+        ).toMatchObject({
+          mode: 'setting-unrecognized',
+          variable: 'ENABLE_TOOL_SEARCH',
+          value: 'force',
+          source: MANAGED,
+          readFromMachine: true,
+        });
+      });
+
+      it('is read from a drop-in as well as the managed file', () => {
+        expect(
+          resolveToolSearchSources([
+            shell({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: 'true' }),
+            file('managed-drop-in', DROP_IN, { ENABLE_TOOL_SEARCH: 'force' }),
+          ]),
+        ).toMatchObject({ mode: 'setting-unrecognized', value: 'force', source: DROP_IN });
+      });
+
+      // The client reads the override out of the administrator tier and never
+      // out of a shell or a user's own file, so neither may arm it here.
+      it('is not armed from a shell or a user settings file', () => {
+        for (const source of [
+          shell({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '1', ENABLE_TOOL_SEARCH: 'force' }),
+          file('user-settings', USER, { ENABLE_TOOL_SEARCH: 'force' }),
+        ]) {
+          expect(
+            resolveToolSearchSources([shell({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '1' }), source]),
+          ).toMatchObject({ mode: 'loads-upfront', variable: 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS' });
+        }
+      });
+
+      // A documented value is not the override. An administrator who writes
+      // "true" following the published table has not armed anything, and this
+      // must not read them as though they had.
+      it('is not armed by a value the vendor does document', () => {
+        expect(
+          resolveToolSearchSources([
+            shell({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '1' }),
+            file('managed-settings', MANAGED, { ENABLE_TOOL_SEARCH: 'true' }),
+          ]),
+        ).toMatchObject({ mode: 'loads-upfront', variable: 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS' });
+      });
+
+      it('never prints the bill sentence for a machine whose tier holds one', () => {
+        const out = text({
+          env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '1' },
+          settings: [file('managed-settings', MANAGED, { ENABLE_TOOL_SEARCH: 'force' })],
+        });
+        expect(out).not.toContain('Every request carries these tokens');
+        expect(out).not.toContain('loads every tool definition up front here');
+        expect(out).toContain('Whether these tokens are deferred cannot be said from it');
+        // The reading is refused, not withheld: the reader can still check it.
+        expect(out).toContain('is set to "force" on this machine');
+      });
+    });
+
     it('lets a settings file decide it while the shell says nothing', () => {
       expect(
         resolveToolSearchSources([shell({}), file('user-settings', USER, { ENABLE_TOOL_SEARCH: 'false' })]),

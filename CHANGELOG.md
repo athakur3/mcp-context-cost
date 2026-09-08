@@ -7,6 +7,30 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **The organisation override was already in the audit's hands, and the report threw it away and
+  said the opposite.** From Claude Code v2.1.227 an organisation can keep tool search on under the
+  very variable that turns it off, through managed settings
+  (`code.claude.com/docs/en/llm-gateway-protocol.md`, read 2026-09-08).
+  `resolveToolSearchSources` read the disabling variable first and returned before
+  `ENABLE_TOOL_SEARCH` was ever consulted — so on a machine whose administrator tier carried the
+  override, the deciding value was sitting in the source records, printed by name three lines below
+  the verdict, and the verdict said *"Every request carries these tokens before you type anything"*.
+
+  The value that arms the override is in no vendor document, so this names none and claims nothing
+  about what it does. What it now says is narrower and checkable: where the administrator tier sets
+  `ENABLE_TOOL_SEARCH` to a value the vendor does not document, the disabling variable is not what
+  decides, so the posture is refused and the value is printed for the reader to check against their
+  own policy. A documented value there is not the override, and does not arm it — an administrator
+  who writes `"true"` following the published table has not turned anything on, and is not read as
+  though they had.
+
+  Scope-restricted to the administrator tier, because that is where the client reads it: the same
+  value in a shell or a user's own settings file arms nothing, and both directions are pinned.
+  Refused rather than answered because two of the override's own conditions are unreadable here —
+  the same page says it has no effect on a cloud provider or a Claude apps gateway sign-in — and
+  because the audit opens one of the four administrator sources the vendor documents. Every one of
+  those misses can only make the report over-state what a request carries.
+
 - **The `managed-settings.d` drop-ins are read, and a tier that disagrees with itself is refused.**
   `code.claude.com/docs/en/managed-settings.md`, read 2026-09-08, gives the file source as
   "`managed-settings.d/*.json` and `managed-settings.json` merged together" — one tier in the same

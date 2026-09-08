@@ -46,10 +46,15 @@
  *     the exception below already names only the earlier models. (2) Under
  *     `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`, "your organization can keep
  *     tool search on through managed settings, on Claude Code v2.1.227 or
- *     later" — on a direct connection or a gateway, not on a cloud provider.
- *     This audit reads the managed settings file for the three variables and
- *     nothing else, so that override is not read here and the variable is
- *     still resolved as "off". (3) `alwaysLoad: true` is an entry field on
+ *     later" — on a direct connection or a gateway set with `ANTHROPIC_BASE_URL`,
+ *     and with no effect on a cloud provider or a Claude apps gateway sign-in
+ *     (`code.claude.com/docs/en/llm-gateway-protocol.md`, read 2026-09-08).
+ *     This IS read as of 2026-09-08: `resolveToolSearchSources` looks at the
+ *     administrator tier, and where that tier sets `ENABLE_TOOL_SEARCH` to a
+ *     value the vendor does not document, the disabling variable stops
+ *     deciding and the posture is refused. The value that arms the override is
+ *     in no vendor document, so none is named here and nothing is claimed about
+ *     what it does. (3) `alwaysLoad: true` is an entry field on
  *     every server type, and a tool can carry `"anthropic/alwaysLoad": true`
  *     in its `_meta`. The entry form is read from the config now
  *     (`DeferralServer.alwaysLoad`) and counted rather than listed; the
@@ -496,7 +501,33 @@ export function resolveToolSearchSources(sources: ToolSearchSource[]): ResolvedT
   // disagreement over a variable that would not have decided anything —
   // ANTHROPIC_BASE_URL behind an explicit ENABLE_TOOL_SEARCH — does not refuse
   // an answer the machine actually gives.
-  const betas = read('CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS');
+  /**
+   * An organisation can keep tool search ON under the very variable that turns
+   * it off: "On Claude Code v2.1.227 or later, your organization can keep MCP
+   * tool search on under this variable through managed settings"
+   * (`code.claude.com/docs/en/llm-gateway-protocol.md`, read 2026-09-08). The
+   * client reads that override out of the administrator tier and never out of a
+   * shell, which is why this looks only there.
+   *
+   * The value that arms it is in no vendor document, so this does not name one
+   * and does not say what it does. What it can say is that the tier holds a
+   * value the vendor does not document — and while that is true, the disabling
+   * variable is not the thing deciding, so it is not read. The undocumented
+   * value is then refused by the ordinary rule below, which prints the variable,
+   * the value the reader wrote, and no claim.
+   *
+   * Reading the tier and discarding it is what this replaces: the value was
+   * already in hand, and the report printed the opposite of what such a machine
+   * does. Two of the override's conditions — a cloud provider, or a sign-in
+   * through a Claude apps gateway, either of which makes it inert — are not
+   * readable here, which is the other reason this refuses rather than claims.
+   */
+  const overriddenByAdminTier = adminTier.some((s) => {
+    const raw = (s.vars.ENABLE_TOOL_SEARCH ?? '').trim();
+    return raw !== '' && resolveToolSearch({ ENABLE_TOOL_SEARCH: raw }).mode === 'setting-unrecognized';
+  });
+
+  const betas = overriddenByAdminTier ? null : read('CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS');
   if (betas === 'conflict') return unresolved('sources-disagree', 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS');
   if (betas === 'unreadable')
     return unresolved('value-unreadable', 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS');
