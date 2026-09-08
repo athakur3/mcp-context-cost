@@ -103,10 +103,14 @@ export interface Measurement {
    * measurement predating these fields, and any server that omitted a field it
    * was required to send. Neither is ever read as the other.
    *
-   * On a `measured` record the two agree, because a disagreement disconnects
-   * rather than measuring (`ProtocolMismatch` in sweep/client.ts). They are
-   * recorded anyway so the record is checkable against the run that produced it
-   * rather than trusted to have been.
+   * On a `measured` record the two need not agree. The specification requires
+   * disconnecting only when the client *cannot support* the version the server
+   * names, and the three methods this probe sends are unchanged across every
+   * revision a server has answered with — so a difference is recorded and
+   * measured through, never hung up on (the 2026-09-07 census found eleven of
+   * eighty-eight answering an older revision, and their numbers stand). What
+   * ends a run is a refusal, not a difference: `PROTOCOL_MISMATCH_EVIDENCE` in
+   * sweep/run.ts.
    */
   requestedProtocolVersion?: string | undefined;
   negotiatedProtocolVersion?: string | undefined;

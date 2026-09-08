@@ -523,7 +523,10 @@ deferring client *more* than an eager one.
 before anything is launched, and the answer is the row: an endpoint that answers is measured
 through the `mcp-remote` bridge and joins the total as any server does; one that answers
 `401` or `403` is `auth-walled`, quoting the status and the `WWW-Authenticate` header it sent,
-with the URL, and makes the total a floor; one that gives no MCP answer is `unreachable`, with
+with the URL, and makes the total a floor; one that answers by refusing the revision the
+request carries is `protocol-mismatch`, quoting the revisions it says it does speak when it
+names them — the endpoint works, the refusal is about what this harness sends, and the total
+is a floor for the same reason; one that gives no MCP answer is `unreachable`, with
 the reason. The probe exists because the bridge alone would open a browser against an
 OAuth-walled endpoint on a developer machine, and would read `timeout` in a headless run — a
 word that blames the clock for a credential. Probed 2026-09-06: Linear, Zapier and Vercel

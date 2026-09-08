@@ -71,6 +71,18 @@ while reading it.
   rule that fixed the others: the freeze has one home, and a second copy is one edit away
   from disagreeing again. Regenerating moves one line of the dashboard; no number changes.
 
+- **Two pages never heard about the fourth verdict, and a docblock described the hang-up the
+  code declined.** The remote probe gained `protocol-mismatch` in `0.18.0`; the README and
+  the methodology's remote-entries paragraph went on enumerating three verdicts — measured,
+  auth-walled, unreachable — so the page the README names as the home of "what each verdict
+  quotes" was itself missing one. Both now list four, and say that a protocol-mismatch row
+  leaves the total a floor for the same reason an auth-walled one does: a server exists there
+  that the sum does not count. And `core/types.ts` explained the revision pair with "a
+  disagreement disconnects rather than measuring", citing a `ProtocolMismatch` in
+  `sweep/client.ts` that has never existed — the decision on record is the opposite: eleven
+  measured records negotiate an older revision and stand, and what ends a run is a refusal,
+  not a difference. The docblock now states the decision instead of its negation.
+
 ## 0.19.0 — 2026-09-08
 
 - **The repository had no formatter, no linter, and `strict: true` as its only compiler flag.**

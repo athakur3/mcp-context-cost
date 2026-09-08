@@ -85,8 +85,9 @@ project, and no **value** an entry carries — an env var, a header — is ever 
 output. Only their names are.
 
 A remote entry — `url`, or the client's own spelling of it — is probed before anything is
-launched, and reported as measured, **auth-walled** or **unreachable** depending on what it
-answers; an auth-walled row makes the total above it a floor rather than a number. The probe,
+launched, and reported as measured, **auth-walled**, **protocol-mismatch** or
+**unreachable** depending on what it answers; an auth-walled or protocol-mismatch row makes
+the total above it a floor rather than a number. The probe,
 what each verdict quotes, and why it exists at all are in
 [METHODOLOGY §who pays the number](docs/METHODOLOGY.md#who-pays). Nothing here opens a
 browser.
