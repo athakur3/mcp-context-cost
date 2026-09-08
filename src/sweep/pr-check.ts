@@ -158,7 +158,8 @@ function entriesOf(doc: unknown): ServerEntry[] {
   const servers = (doc as { servers?: unknown }).servers;
   if (!Array.isArray(servers)) return [];
   return servers.filter(
-    (e): e is ServerEntry => typeof e === 'object' && e !== null && typeof (e as ServerEntry).name === 'string',
+    (e): e is ServerEntry =>
+      typeof e === 'object' && e !== null && typeof (e as ServerEntry).name === 'string',
   );
 }
 
@@ -220,7 +221,8 @@ function arg(name: string): string | undefined {
 
 // Exact path match, for the reason src/sweep/run.ts states: any other file whose
 // name merely ends the same way would otherwise run this block.
-const isMain = process.argv[1] !== undefined && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+const isMain =
+  process.argv[1] !== undefined && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
   const basePath = arg('base');
   if (!basePath) {
@@ -243,7 +245,9 @@ if (isMain) {
     try {
       return parse(readFileSync(path, 'utf8')) as unknown;
     } catch (err) {
-      console.error(`${path} does not parse as YAML: ${(err as Error).message.trim()}\nnothing was launched`);
+      console.error(
+        `${path} does not parse as YAML: ${(err as Error).message.trim()}\nnothing was launched`,
+      );
       process.exit(2);
     }
   };
@@ -275,7 +279,9 @@ if (isMain) {
   const worst = worstCaseSeconds(selected, defaultTimeout);
   if (worst > budget) {
     const named = launchedEntries(selected)
-      .map((e) => `${e.name} (timeoutSeconds ${e.timeoutSeconds ?? `${defaultTimeout}, the default`})`)
+      .map(
+        (e) => `${e.name} (timeoutSeconds ${e.timeoutSeconds ?? `${defaultTimeout}, the default`})`,
+      )
       .join(', ');
     console.error(
       `the entries this pull request launches could hold the runner for ${worst}s — ${named}, each ` +
@@ -298,7 +304,9 @@ if (isMain) {
   for (const e of selected) {
     const kind = diff.added.includes(e) ? 'added' : 'relaunched';
     if (e.remote) {
-      console.log(`  ${e.name} (${kind}): remote — listed, not measured; an endpoint never reaches initialize without credentials`);
+      console.log(
+        `  ${e.name} (${kind}): remote — listed, not measured; an endpoint never reaches initialize without credentials`,
+      );
       continue;
     }
     if (isSelfContainerised(e.command)) {
@@ -342,7 +350,9 @@ if (isMain) {
       'commit subject with `chore:` — tools/release-readiness.ts fails a servers.yaml commit that does neither.',
   );
   if (failed) {
-    console.error(`${failed} entr${failed === 1 ? 'y does' : 'ies do'} not launch as written; see the lines above`);
+    console.error(
+      `${failed} entr${failed === 1 ? 'y does' : 'ies do'} not launch as written; see the lines above`,
+    );
   }
   process.exit(failed ? 1 : 0);
 }

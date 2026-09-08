@@ -132,7 +132,10 @@ export function claudeRatio(row: DivergenceRow): number | null {
  * capture currently on disk. Stale rows are hidden rather than shown with a
  * caveat: a wrong number next to a fresh badge is worse than no number.
  */
-export function isCurrent(row: DivergenceRow | undefined, canonicalSha256: string | null): row is DivergenceRow {
+export function isCurrent(
+  row: DivergenceRow | undefined,
+  canonicalSha256: string | null,
+): row is DivergenceRow {
   if (!row || row.error) return false;
   if (typeof row.claudeDelta !== 'number') return false;
   return !!canonicalSha256 && row.capturedSha256 === canonicalSha256;

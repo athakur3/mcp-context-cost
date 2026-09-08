@@ -16,8 +16,21 @@ import {
   managedDropInCandidates,
   settingsCandidates,
 } from '../src/audit/config.js';
-import { buildReport, formatReport, planBudgetFit, serverKey, DEFAULT_CONTEXT_WINDOW, type AuditReport } from '../src/audit/audit.js';
-import { buildDiff, evaluateIncreaseGate, formatDiff, formatGate, parseBaselineReport } from '../src/audit/diff.js';
+import {
+  buildReport,
+  formatReport,
+  planBudgetFit,
+  serverKey,
+  DEFAULT_CONTEXT_WINDOW,
+  type AuditReport,
+} from '../src/audit/audit.js';
+import {
+  buildDiff,
+  evaluateIncreaseGate,
+  formatDiff,
+  formatGate,
+  parseBaselineReport,
+} from '../src/audit/diff.js';
 import {
   anyNonEmptyVars,
   evaluateDeferral,
@@ -71,7 +84,10 @@ describe('parseJsonc', () => {
   });
 
   it('leaves comment-like and comma-like text inside strings alone', () => {
-    const doc = parseJsonc('{"url":"https://x.dev//p","desc":"ends with a comma, }"}') as Record<string, string>;
+    const doc = parseJsonc('{"url":"https://x.dev//p","desc":"ends with a comma, }"}') as Record<
+      string,
+      string
+    >;
     expect(doc.url).toBe('https://x.dev//p');
     expect(doc.desc).toBe('ends with a comma, }');
   });
@@ -86,7 +102,15 @@ describe('extractServers', () => {
 
   it('reads the mcpServers block with args and env', () => {
     const s = extractServers(
-      { mcpServers: { memory: { command: 'npx', args: ['-y', '@modelcontextprotocol/server-memory'], env: { API_KEY: 'secret-value' } } } },
+      {
+        mcpServers: {
+          memory: {
+            command: 'npx',
+            args: ['-y', '@modelcontextprotocol/server-memory'],
+            env: { API_KEY: 'secret-value' },
+          },
+        },
+      },
       meta,
     );
     expect(s).toHaveLength(1);
@@ -105,14 +129,22 @@ describe('extractServers', () => {
   });
 
   it('reads Claude Code per-project servers keyed by directory', () => {
-    const doc = { projects: { '/home/me/proj': { mcpServers: { local: { command: 'node', args: ['x.js'] } } } } };
-    expect(extractServers(doc, { ...meta, cwd: '/home/me/proj' }).map((s) => s.name)).toEqual(['local']);
+    const doc = {
+      projects: { '/home/me/proj': { mcpServers: { local: { command: 'node', args: ['x.js'] } } } },
+    };
+    expect(extractServers(doc, { ...meta, cwd: '/home/me/proj' }).map((s) => s.name)).toEqual([
+      'local',
+    ]);
     expect(extractServers(doc, { ...meta, cwd: '/home/me/other' })).toEqual([]);
   });
 
   it('quotes args containing spaces so the printed command is copy-pasteable', () => {
     const s = extractServers(
-      { mcpServers: { fs: { command: 'npx', args: ['-y', 'server-filesystem', '/Users/me/My Docs'] } } },
+      {
+        mcpServers: {
+          fs: { command: 'npx', args: ['-y', 'server-filesystem', '/Users/me/My Docs'] },
+        },
+      },
       meta,
     );
     expect(s[0].command).toBe('npx -y server-filesystem "/Users/me/My Docs"');
@@ -130,7 +162,11 @@ describe('extractServers', () => {
       meta,
     );
     expect(s).toHaveLength(1);
-    expect(s[0]).toMatchObject({ name: 'linear', transport: 'remote', url: 'https://mcp.linear.app/sse' });
+    expect(s[0]).toMatchObject({
+      name: 'linear',
+      transport: 'remote',
+      url: 'https://mcp.linear.app/sse',
+    });
   });
 
   it('ignores malformed entries instead of throwing', () => {
@@ -159,7 +195,10 @@ describe('extractDeclaration', () => {
 
   it('does not call a name disabled when another block declares it live', () => {
     const d = extractDeclaration(
-      { mcpServers: { fs: { command: 'node', args: ['a.js'] } }, servers: { fs: { command: 'x', disabled: true } } },
+      {
+        mcpServers: { fs: { command: 'node', args: ['a.js'] } },
+        servers: { fs: { command: 'x', disabled: true } },
+      },
       meta,
     );
     expect(d.servers.map((s) => s.name)).toEqual(['fs']);
@@ -167,7 +206,9 @@ describe('extractDeclaration', () => {
   });
 
   it('does not call a malformed or absent entry disabled', () => {
-    expect(extractDeclaration({ mcpServers: { a: null, b: 'nope', c: {} } }, meta).disabled).toEqual([]);
+    expect(
+      extractDeclaration({ mcpServers: { a: null, b: 'nope', c: {} } }, meta).disabled,
+    ).toEqual([]);
     expect(extractDeclaration({ otherKey: 1 }, meta).disabled).toEqual([]);
     expect(extractDeclaration(null, meta).disabled).toEqual([]);
   });
@@ -176,13 +217,17 @@ describe('extractDeclaration', () => {
 describe('configCandidates', () => {
   it('points at the per-platform Claude Desktop location', () => {
     const mac = configCandidates({ home: '/Users/me', cwd: '/proj', platform: 'darwin' });
-    expect(mac[0].path).toBe('/Users/me/Library/Application Support/Claude/claude_desktop_config.json');
+    expect(mac[0].path).toBe(
+      '/Users/me/Library/Application Support/Claude/claude_desktop_config.json',
+    );
     const linux = configCandidates({ home: '/home/me', cwd: '/proj', platform: 'linux' });
     expect(linux[0].path).toBe('/home/me/.config/Claude/claude_desktop_config.json');
   });
 
   it('covers the project-local config files', () => {
-    const paths = configCandidates({ home: '/h', cwd: '/proj', platform: 'darwin' }).map((c) => c.path);
+    const paths = configCandidates({ home: '/h', cwd: '/proj', platform: 'darwin' }).map(
+      (c) => c.path,
+    );
     expect(paths).toContain('/proj/.mcp.json');
     expect(paths).toContain('/proj/.cursor/mcp.json');
     expect(paths).toContain('/proj/.vscode/mcp.json');
@@ -192,7 +237,10 @@ describe('configCandidates', () => {
 describe('loadConfigs', () => {
   it('skips missing files, reports unparseable ones, keeps a parsed config that declares nothing', () => {
     const dir = tempDir('mcp-audit-cfg-');
-    writeFileSync(join(dir, 'good.json'), '{"mcpServers":{"a":{"command":"node","args":["a.js"]}}}');
+    writeFileSync(
+      join(dir, 'good.json'),
+      '{"mcpServers":{"a":{"command":"node","args":["a.js"]}}}',
+    );
     writeFileSync(join(dir, 'bad.json'), '{not json');
     writeFileSync(join(dir, 'empty.json'), '{"otherKey":1}');
     const loaded = loadConfigs(
@@ -223,7 +271,10 @@ describe('loadConfigs', () => {
       join(dir, 'alloff.json'),
       '{"mcpServers":{"redis":{"command":"node","args":["r.js"],"disabled":true},"linear":{"url":"https://x/sse","disabled":true}}}',
     );
-    writeFileSync(join(dir, 'someoff.json'), '{"mcpServers":{"a":{"command":"node"},"b":{"command":"node","disabled":true}}}');
+    writeFileSync(
+      join(dir, 'someoff.json'),
+      '{"mcpServers":{"a":{"command":"node"},"b":{"command":"node","disabled":true}}}',
+    );
     const loaded = loadConfigs(
       [
         { client: 'x', path: join(dir, 'alloff.json') },
@@ -242,13 +293,21 @@ describe('loadConfigs', () => {
 });
 
 function measurement(name: string, extraTools = 0): Measurement {
-  const t = [...tools, ...Array.from({ length: extraTools }, (_, i) => ({ name: `extra_${i}`, description: 'x'.repeat(40) }))];
+  const t = [
+    ...tools,
+    ...Array.from({ length: extraTools }, (_, i) => ({
+      name: `extra_${i}`,
+      description: 'x'.repeat(40),
+    })),
+  ];
   return measureTools(t, { serverName: name });
 }
 
 describe('buildReport', () => {
   const cfg = (servers: unknown[]) =>
-    [{ client: 'claude-desktop', source: '/cfg.json', servers }] as Parameters<typeof buildReport>[0];
+    [{ client: 'claude-desktop', source: '/cfg.json', servers }] as Parameters<
+      typeof buildReport
+    >[0];
 
   const stdio = (name: string, argv: string[]) => ({
     name,
@@ -279,10 +338,21 @@ describe('buildReport', () => {
   it('puts failures and remote servers under skipped, not in the total', () => {
     const ok = stdio('ok', ['node', 'ok.js']);
     const broken = stdio('broken', ['node', 'broken.js']);
-    const remote = { ...stdio('linear', []), transport: 'remote' as const, url: 'https://x/sse', argv: undefined };
+    const remote = {
+      ...stdio('linear', []),
+      transport: 'remote' as const,
+      url: 'https://x/sse',
+      argv: undefined,
+    };
     const measured = new Map([
       [serverKey(ok), measurement('ok')],
-      [serverKey(broken), failedMeasurement('startup-failure', { serverName: 'broken', notes: 'server exited (code 1)' })],
+      [
+        serverKey(broken),
+        failedMeasurement('startup-failure', {
+          serverName: 'broken',
+          notes: 'server exited (code 1)',
+        }),
+      ],
     ]);
     const r = buildReport(cfg([ok, broken, remote]), measured, { generatedAt: 'T' });
     const c = r.configs[0];
@@ -314,8 +384,12 @@ describe('buildReport', () => {
     const a = stdio('alpha', ['node', 'a.js']);
     const measured = new Map([[serverKey(a), measurement('alpha')]]);
     const total = measured.get(serverKey(a))!.totalTokens!;
-    expect(buildReport(cfg([a]), measured, { budget: total - 1 }).budget).toMatchObject({ over: true });
-    expect(buildReport(cfg([a]), measured, { budget: total }).budget).toMatchObject({ over: false });
+    expect(buildReport(cfg([a]), measured, { budget: total - 1 }).budget).toMatchObject({
+      over: true,
+    });
+    expect(buildReport(cfg([a]), measured, { budget: total }).budget).toMatchObject({
+      over: false,
+    });
   });
 
   it('says what to drop, not just that you are over', () => {
@@ -360,7 +434,7 @@ describe('buildReport', () => {
     const aTokens = full.configs[0].servers.find((x) => x.name === 'a')!.tokens!;
 
     const fit = planBudgetFit(full.configs[0], total - aTokens);
-    expect(fit.drop).toHaveLength(1);          // dropping the heaviest alone suffices
+    expect(fit.drop).toHaveLength(1); // dropping the heaviest alone suffices
     expect(fit.drop[0].name).toBe('a');
     expect(fit.keptCount).toBe(2);
   });
@@ -432,14 +506,21 @@ describe('buildReport', () => {
       expect(c.trimAdvice).not.toBeNull();
       expect(c.trimAdvice!.tools).toHaveLength(3);
       expect(c.trimAdvice!.tools).toEqual(c.heaviestTools.slice(0, 3));
-      expect(c.trimAdvice!.recoverableTokens).toBe(c.trimAdvice!.tools.reduce((a, t) => a + t.tokens, 0));
-      expect(c.trimAdvice!.recoverableShare).toBeCloseTo(c.trimAdvice!.recoverableTokens / c.totalTokens, 10);
+      expect(c.trimAdvice!.recoverableTokens).toBe(
+        c.trimAdvice!.tools.reduce((a, t) => a + t.tokens, 0),
+      );
+      expect(c.trimAdvice!.recoverableShare).toBeCloseTo(
+        c.trimAdvice!.recoverableTokens / c.totalTokens,
+        10,
+      );
       expect(c.trimAdvice!.recoverableShare).toBeLessThan(1); // tools remain beyond the trimmed set
     });
 
     it('is null when there is only one tool total — nothing to trim relative to', () => {
       const a = stdio('alpha', ['node', 'a.js']);
-      const oneTool = measureTools([{ name: 'only_tool', description: 'x'.repeat(40) }], { serverName: 'alpha' });
+      const oneTool = measureTools([{ name: 'only_tool', description: 'x'.repeat(40) }], {
+        serverName: 'alpha',
+      });
       const measured = new Map([[serverKey(a), oneTool]]);
       const c = buildReport(cfg([a]), measured, {}).configs[0];
       expect(c.trimAdvice).toBeNull();
@@ -447,7 +528,9 @@ describe('buildReport', () => {
 
     it('is null when the config has no measured tokens', () => {
       const broken = stdio('broken', ['node', 'broken.js']);
-      const measured = new Map([[serverKey(broken), failedMeasurement('startup-failure', { serverName: 'broken' })]]);
+      const measured = new Map([
+        [serverKey(broken), failedMeasurement('startup-failure', { serverName: 'broken' })],
+      ]);
       const c = buildReport(cfg([broken]), measured, {}).configs[0];
       expect(c.trimAdvice).toBeNull();
     });
@@ -464,7 +547,11 @@ describe('buildReport', () => {
   });
 
   it('never serializes env values', () => {
-    const a = { ...stdio('alpha', ['node', 'a.js']), envVarNames: ['API_KEY'], env: { API_KEY: 'super-secret-value' } };
+    const a = {
+      ...stdio('alpha', ['node', 'a.js']),
+      envVarNames: ['API_KEY'],
+      env: { API_KEY: 'super-secret-value' },
+    };
     const measured = new Map([[serverKey(a), measurement('alpha')]]);
     const json = JSON.stringify(buildReport(cfg([a]), measured, {}));
     expect(json).toContain('API_KEY');
@@ -472,7 +559,9 @@ describe('buildReport', () => {
   });
 
   describe('claude divergence join (--claude)', () => {
-    const divergenceRun = (servers: Record<string, { capturedSha256: string; claudeDelta: number }>) => ({
+    const divergenceRun = (
+      servers: Record<string, { capturedSha256: string; claudeDelta: number }>,
+    ) => ({
       method: 'tools-delta/v1',
       model: 'claude-opus-5',
       measuredAt: '2026-08-16',
@@ -487,7 +576,9 @@ describe('buildReport', () => {
       const a = stdio('alpha', ['node', 'a.js']);
       const m = measurement('alpha');
       const measured = new Map([[serverKey(a), m]]);
-      const divergence = divergenceRun({ alpha: { capturedSha256: m.canonicalSha256!, claudeDelta: 1234 } });
+      const divergence = divergenceRun({
+        alpha: { capturedSha256: m.canonicalSha256!, claudeDelta: 1234 },
+      });
       const r = buildReport(cfg([a]), measured, { divergence });
       expect(r.configs[0].servers[0].claudeTokens).toBe(1234);
       expect(r.claudeDivergence).toEqual({ model: 'claude-opus-5', measuredAt: '2026-08-16' });
@@ -496,7 +587,9 @@ describe('buildReport', () => {
     it('stays silent (null, not a stale number) when the hash no longer matches', () => {
       const a = stdio('alpha', ['node', 'a.js']);
       const measured = new Map([[serverKey(a), measurement('alpha')]]);
-      const divergence = divergenceRun({ alpha: { capturedSha256: 'stale-hash-from-a-prior-sweep', claudeDelta: 1234 } });
+      const divergence = divergenceRun({
+        alpha: { capturedSha256: 'stale-hash-from-a-prior-sweep', claudeDelta: 1234 },
+      });
       const r = buildReport(cfg([a]), measured, { divergence });
       expect(r.configs[0].servers[0].claudeTokens).toBeNull();
     });
@@ -523,7 +616,9 @@ describe('formatReport', () => {
     envVarNames: [],
   };
   const report = buildReport(
-    [{ client: 'claude-desktop', source: '/cfg.json', servers: [a] }] as Parameters<typeof buildReport>[0],
+    [{ client: 'claude-desktop', source: '/cfg.json', servers: [a] }] as Parameters<
+      typeof buildReport
+    >[0],
     new Map([[serverKey(a), measurement('alpha')]]),
     { budget: 1, generatedAt: 'T' },
   );
@@ -547,7 +642,9 @@ describe('formatReport', () => {
   it('prints trim advice naming the recoverable tools and share', () => {
     const b = { ...a, name: 'beta', command: 'node b.js', argv: ['node', 'b.js'] };
     const withTrim = buildReport(
-      [{ client: 'claude-desktop', source: '/cfg.json', servers: [a, b] }] as Parameters<typeof buildReport>[0],
+      [{ client: 'claude-desktop', source: '/cfg.json', servers: [a, b] }] as Parameters<
+        typeof buildReport
+      >[0],
       new Map([
         [serverKey(a), measurement('alpha', 3)],
         [serverKey(b), measurement('beta')],
@@ -562,7 +659,9 @@ describe('formatReport', () => {
   it('adds a claude column with a match and a "—" for a stale one', () => {
     const m = measurement('alpha');
     const withClaude = buildReport(
-      [{ client: 'claude-desktop', source: '/cfg.json', servers: [a] }] as Parameters<typeof buildReport>[0],
+      [{ client: 'claude-desktop', source: '/cfg.json', servers: [a] }] as Parameters<
+        typeof buildReport
+      >[0],
       new Map([[serverKey(a), m]]),
       {
         generatedAt: 'T',
@@ -572,7 +671,9 @@ describe('formatReport', () => {
           measuredAt: '2026-08-16',
           baselineTokens: 7,
           probeDelta: 328,
-          servers: { alpha: { capturedSha256: m.canonicalSha256!, claudeDelta: 999, toolCount: 1 } },
+          servers: {
+            alpha: { capturedSha256: m.canonicalSha256!, claudeDelta: 999, toolCount: 1 },
+          },
         },
       },
     );
@@ -615,11 +716,15 @@ describe('audit CLI', () => {
     const dir = tempDir('mcp-audit-none-');
     let code = 0;
     try {
-      execFileSync(process.execPath, [TSX_CLI, join(repoRoot, 'src/cli.ts'), 'audit', '--config', join(dir, 'missing.json')], {
-        cwd: dir,
-        encoding: 'utf8',
-        stdio: 'pipe',
-      });
+      execFileSync(
+        process.execPath,
+        [TSX_CLI, join(repoRoot, 'src/cli.ts'), 'audit', '--config', join(dir, 'missing.json')],
+        {
+          cwd: dir,
+          encoding: 'utf8',
+          stdio: 'pipe',
+        },
+      );
     } catch (e) {
       code = (e as { status: number }).status;
     }
@@ -629,11 +734,15 @@ describe('audit CLI', () => {
   it('exits 2 on a malformed --budget', () => {
     let code = 0;
     try {
-      execFileSync(process.execPath, [TSX_CLI, join(repoRoot, 'src/cli.ts'), 'audit', '--budget', 'lots'], {
-        cwd: repoRoot,
-        encoding: 'utf8',
-        stdio: 'pipe',
-      });
+      execFileSync(
+        process.execPath,
+        [TSX_CLI, join(repoRoot, 'src/cli.ts'), 'audit', '--budget', 'lots'],
+        {
+          cwd: repoRoot,
+          encoding: 'utf8',
+          stdio: 'pipe',
+        },
+      );
     } catch (e) {
       code = (e as { status: number }).status;
     }
@@ -644,7 +753,13 @@ describe('audit CLI', () => {
 describe('fetchDivergence', () => {
   const server = createServer((req, res) => {
     if (req.url === '/ok.json') {
-      res.end(JSON.stringify({ model: 'claude-opus-5', measuredAt: '2026-08-16', servers: { x: { capturedSha256: 'abc', claudeDelta: 1 } } }));
+      res.end(
+        JSON.stringify({
+          model: 'claude-opus-5',
+          measuredAt: '2026-08-16',
+          servers: { x: { capturedSha256: 'abc', claudeDelta: 1 } },
+        }),
+      );
     } else if (req.url === '/garbage.json') {
       res.end('not json');
     } else {
@@ -690,7 +805,11 @@ describe('audit CLI --claude', () => {
     const configPath = join(dir, 'mcp.json');
     writeFileSync(
       configPath,
-      JSON.stringify({ mcpServers: { memory: { command: 'npx', args: ['-y', '@modelcontextprotocol/server-memory'] } } }),
+      JSON.stringify({
+        mcpServers: {
+          memory: { command: 'npx', args: ['-y', '@modelcontextprotocol/server-memory'] },
+        },
+      }),
     );
 
     // Learn the real capture hash first — the divergence fixture must match it to prove
@@ -707,20 +826,37 @@ describe('audit CLI --claude', () => {
           measuredAt: '2026-08-16',
           baselineTokens: 7,
           probeDelta: 328,
-          servers: { memory: { capturedSha256: memory.canonicalSha256, claudeDelta: 4242, toolCount: memory.toolCount } },
+          servers: {
+            memory: {
+              capturedSha256: memory.canonicalSha256,
+              claudeDelta: 4242,
+              toolCount: memory.toolCount,
+            },
+          },
         }),
       );
     });
     await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', () => resolve()));
     const addr = server.address();
-    const divergenceUrl = typeof addr === 'object' && addr ? `http://127.0.0.1:${addr.port}/divergence.json` : '';
+    const divergenceUrl =
+      typeof addr === 'object' && addr ? `http://127.0.0.1:${addr.port}/divergence.json` : '';
 
     try {
       // execFileSync would block this process's event loop while the child's fetch tries
       // to reach the server that lives in this same process — deadlock. Use the async form.
       const { stdout } = await execFileAsync(
         process.execPath,
-        [TSX_CLI, join(repoRoot, 'src/cli.ts'), 'audit', '--config', configPath, '--claude', '--divergence-url', divergenceUrl, '--json'],
+        [
+          TSX_CLI,
+          join(repoRoot, 'src/cli.ts'),
+          'audit',
+          '--config',
+          configPath,
+          '--claude',
+          '--divergence-url',
+          divergenceUrl,
+          '--json',
+        ],
         { cwd: dir, encoding: 'utf8', timeout: 180_000 },
       );
       const report = JSON.parse(stdout);
@@ -736,9 +872,17 @@ describe('audit CLI --claude', () => {
     const configPath = join(dir, 'mcp.json');
     writeFileSync(
       configPath,
-      JSON.stringify({ mcpServers: { memory: { command: 'npx', args: ['-y', '@modelcontextprotocol/server-memory'] } } }),
+      JSON.stringify({
+        mcpServers: {
+          memory: { command: 'npx', args: ['-y', '@modelcontextprotocol/server-memory'] },
+        },
+      }),
     );
-    const r = await runAudit({ configPaths: [configPath], claude: true, divergenceUrl: 'http://127.0.0.1:1/unreachable' });
+    const r = await runAudit({
+      configPaths: [configPath],
+      claude: true,
+      divergenceUrl: 'http://127.0.0.1:1/unreachable',
+    });
     expect(r.configs[0].servers[0].claudeTokens).toBeUndefined();
     expect(r.problems.some((p) => p.includes('claude divergence'))).toBe(true);
   }, 200_000);
@@ -815,20 +959,51 @@ const byName = (d: ReturnType<typeof buildDiff>, name: string) =>
 describe('buildDiff', () => {
   it('reports an added server as tokens added to every request', () => {
     const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }] }]);
-    const after = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }, { name: 'b', tokens: 17_000 }] }]);
+    const after = reportOf([
+      {
+        source: CFG,
+        servers: [
+          { name: 'a', tokens: 5_000 },
+          { name: 'b', tokens: 17_000 },
+        ],
+      },
+    ]);
     const d = buildDiff(before, after);
-    expect(d.configs[0]).toMatchObject({ beforeTotal: 5_000, afterTotal: 22_000, delta: 17_000, exact: true });
-    expect(byName(d, 'b')).toMatchObject({ kind: 'added', before: null, after: 17_000, delta: 17_000 });
+    expect(d.configs[0]).toMatchObject({
+      beforeTotal: 5_000,
+      afterTotal: 22_000,
+      delta: 17_000,
+      exact: true,
+    });
+    expect(byName(d, 'b')).toMatchObject({
+      kind: 'added',
+      before: null,
+      after: 17_000,
+      delta: 17_000,
+    });
     expect(byName(d, 'a').kind).toBe('unchanged');
     expect(d.worstIncrease).toEqual({ source: CFG, delta: 17_000 });
     expect(formatDiff(d, DEFAULT_CONTEXT_WINDOW)).toContain('adds 17,000 tokens to every request');
   });
 
   it('reports a removed server and a grown schema with signed deltas', () => {
-    const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }, { name: 'b', tokens: 9_000 }] }]);
+    const before = reportOf([
+      {
+        source: CFG,
+        servers: [
+          { name: 'a', tokens: 5_000 },
+          { name: 'b', tokens: 9_000 },
+        ],
+      },
+    ]);
     const after = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 6_200 }] }]);
     const d = buildDiff(before, after);
-    expect(byName(d, 'b')).toMatchObject({ kind: 'removed', before: 9_000, after: null, delta: -9_000 });
+    expect(byName(d, 'b')).toMatchObject({
+      kind: 'removed',
+      before: 9_000,
+      after: null,
+      delta: -9_000,
+    });
     expect(byName(d, 'a')).toMatchObject({ kind: 'changed', delta: 1_200 });
     expect(d.configs[0].delta).toBe(-7_800);
     expect(d.worstIncrease).toBeNull();
@@ -847,11 +1022,32 @@ describe('buildDiff', () => {
   // The flattering reading and the true one have the same shape here: a server that
   // died takes its tokens out of the total exactly like a server you uninstalled.
   it('never reports a server that stopped measuring as a saving', () => {
-    const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }, { name: 'heavy', tokens: 9_246 }] }]);
-    const after = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }, { name: 'heavy', tokens: null }] }]);
+    const before = reportOf([
+      {
+        source: CFG,
+        servers: [
+          { name: 'a', tokens: 5_000 },
+          { name: 'heavy', tokens: 9_246 },
+        ],
+      },
+    ]);
+    const after = reportOf([
+      {
+        source: CFG,
+        servers: [
+          { name: 'a', tokens: 5_000 },
+          { name: 'heavy', tokens: null },
+        ],
+      },
+    ]);
     const d = buildDiff(before, after);
     const heavy = byName(d, 'heavy');
-    expect(heavy).toMatchObject({ kind: 'unmeasured-now', before: 9_246, after: null, delta: null });
+    expect(heavy).toMatchObject({
+      kind: 'unmeasured-now',
+      before: 9_246,
+      after: null,
+      delta: null,
+    });
     expect(d.configs[0].exact).toBe(false);
     expect(d.configs[0].understatedBy).toBe(9_246);
     const out = formatDiff(d, DEFAULT_CONTEXT_WINDOW);
@@ -864,10 +1060,31 @@ describe('buildDiff', () => {
   });
 
   it('marks newly measurable cost as newly visible, not new', () => {
-    const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }, { name: 'fixed', tokens: null }] }]);
-    const after = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }, { name: 'fixed', tokens: 4_000 }] }]);
+    const before = reportOf([
+      {
+        source: CFG,
+        servers: [
+          { name: 'a', tokens: 5_000 },
+          { name: 'fixed', tokens: null },
+        ],
+      },
+    ]);
+    const after = reportOf([
+      {
+        source: CFG,
+        servers: [
+          { name: 'a', tokens: 5_000 },
+          { name: 'fixed', tokens: 4_000 },
+        ],
+      },
+    ]);
     const d = buildDiff(before, after);
-    expect(byName(d, 'fixed')).toMatchObject({ kind: 'unmeasured-before', before: null, after: 4_000, delta: null });
+    expect(byName(d, 'fixed')).toMatchObject({
+      kind: 'unmeasured-before',
+      before: null,
+      after: 4_000,
+      delta: null,
+    });
     expect(d.configs[0]).toMatchObject({ exact: false, overstatedBy: 4_000, delta: 4_000 });
     const out = formatDiff(d, DEFAULT_CONTEXT_WINDOW);
     expect(out).toContain('up to 4,000 of that movement was already being paid');
@@ -875,8 +1092,24 @@ describe('buildDiff', () => {
   });
 
   it('keeps a server unmeasurable in both runs visible as a blind spot, not as zero', () => {
-    const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }, { name: 'dead', tokens: null }] }]);
-    const after = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }, { name: 'dead', tokens: null }] }]);
+    const before = reportOf([
+      {
+        source: CFG,
+        servers: [
+          { name: 'a', tokens: 5_000 },
+          { name: 'dead', tokens: null },
+        ],
+      },
+    ]);
+    const after = reportOf([
+      {
+        source: CFG,
+        servers: [
+          { name: 'a', tokens: 5_000 },
+          { name: 'dead', tokens: null },
+        ],
+      },
+    ]);
     const d = buildDiff(before, after);
     expect(byName(d, 'dead').kind).toBe('unmeasured-both');
     expect(d.configs[0]).toMatchObject({ exact: true, delta: 0 }); // it moved neither total
@@ -884,8 +1117,24 @@ describe('buildDiff', () => {
   });
 
   it('gives no delta for adding or removing a server that was never measured', () => {
-    const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }, { name: 'gone', tokens: null }] }]);
-    const after = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }, { name: 'new', tokens: null }] }]);
+    const before = reportOf([
+      {
+        source: CFG,
+        servers: [
+          { name: 'a', tokens: 5_000 },
+          { name: 'gone', tokens: null },
+        ],
+      },
+    ]);
+    const after = reportOf([
+      {
+        source: CFG,
+        servers: [
+          { name: 'a', tokens: 5_000 },
+          { name: 'new', tokens: null },
+        ],
+      },
+    ]);
     const d = buildDiff(before, after);
     expect(byName(d, 'gone')).toMatchObject({ kind: 'removed', delta: null });
     expect(byName(d, 'new')).toMatchObject({ kind: 'added', delta: null });
@@ -901,7 +1150,9 @@ describe('buildDiff', () => {
     const d = buildDiff(before, after);
     expect(d.configs).toHaveLength(1);
     expect(d.configs[0].delta).toBe(0);
-    expect(d.droppedConfigs).toEqual([{ client: 'cursor', source: '/other.json', totalTokens: 8_000 }]);
+    expect(d.droppedConfigs).toEqual([
+      { client: 'cursor', source: '/other.json', totalTokens: 8_000 },
+    ]);
     expect(d.warnings.join('\n')).toContain('not a config that got cheaper');
   });
 
@@ -918,8 +1169,15 @@ describe('buildDiff', () => {
   });
 
   it('pairs one config against one config across machines, and refuses to guess beyond that', () => {
-    const before = reportOf([{ source: '/Users/dev/.cursor/mcp.json', servers: [{ name: 'a', tokens: 5_000 }] }]);
-    const after = reportOf([{ source: '/home/runner/work/repo/.vscode/mcp.json', servers: [{ name: 'a', tokens: 5_500 }] }]);
+    const before = reportOf([
+      { source: '/Users/dev/.cursor/mcp.json', servers: [{ name: 'a', tokens: 5_000 }] },
+    ]);
+    const after = reportOf([
+      {
+        source: '/home/runner/work/repo/.vscode/mcp.json',
+        servers: [{ name: 'a', tokens: 5_500 }],
+      },
+    ]);
     const one = buildDiff(before, after);
     expect(one.configs[0]).toMatchObject({ matchedBy: 'sole-config', delta: 500 });
 
@@ -937,19 +1195,26 @@ describe('buildDiff', () => {
   });
 
   it('refuses to compare across a methodology or encoding change', () => {
-    const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }] }], { methodologyVersion: '0.9' });
+    const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }] }], {
+      methodologyVersion: '0.9',
+    });
     const after = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }] }]);
     const d = buildDiff(before, after);
     expect(d.comparable).toBe(false);
     expect(d.warnings.join('\n')).toContain('not the same measurement');
     expect(formatDiff(d, DEFAULT_CONTEXT_WINDOW)).toContain('Re-record the baseline');
 
-    const enc = buildDiff(reportOf([{ source: CFG, servers: [] }], { encoding: 'cl100k_base' as 'o200k_base' }), after);
+    const enc = buildDiff(
+      reportOf([{ source: CFG, servers: [] }], { encoding: 'cl100k_base' as 'o200k_base' }),
+      after,
+    );
     expect(enc.comparable).toBe(false);
   });
 
   it('treats a context-window change as a share caveat, not a broken comparison', () => {
-    const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }] }], { contextWindow: 100_000 });
+    const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }] }], {
+      contextWindow: 100_000,
+    });
     const after = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 6_000 }] }]);
     const d = buildDiff(before, after);
     expect(d.comparable).toBe(true);
@@ -961,7 +1226,16 @@ describe('buildDiff', () => {
 describe('formatReport with a diff attached', () => {
   it('renders the diff and gate above the methodology footnote, and never says "explicit"', () => {
     const before = reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 5_000 }] }]);
-    const after = reportOf([{ source: CFG, client: 'explicit', servers: [{ name: 'a', tokens: 5_000 }, { name: 'b', tokens: 900 }] }]);
+    const after = reportOf([
+      {
+        source: CFG,
+        client: 'explicit',
+        servers: [
+          { name: 'a', tokens: 5_000 },
+          { name: 'b', tokens: 900 },
+        ],
+      },
+    ]);
     after.diff = buildDiff(before, after);
     after.increaseGate = evaluateIncreaseGate(after.diff, 100);
     const out = formatReport(after);
@@ -989,7 +1263,10 @@ describe('parseBaselineReport', () => {
     ['a bare array', '[]'],
     ['an object with no configs', '{"methodologyVersion":"1.0","encoding":"o200k_base"}'],
     ['a report missing methodology', '{"configs":[]}'],
-    ['a config with no source', '{"methodologyVersion":"1.0","encoding":"o200k_base","configs":[{"totalTokens":1}]}'],
+    [
+      'a config with no source',
+      '{"methodologyVersion":"1.0","encoding":"o200k_base","configs":[{"totalTokens":1}]}',
+    ],
   ])('rejects %s with a problem, never a silent empty diff', (_label, raw) => {
     const r = parseBaselineReport(raw);
     expect(r.report).toBeNull();
@@ -1002,7 +1279,13 @@ describe('evaluateIncreaseGate', () => {
     buildDiff(reportOf([{ source: CFG, servers: b }]), reportOf([{ source: CFG, servers: a }]));
 
   it('passes an increase inside the limit and fails one over it', () => {
-    const d = diffOf([{ name: 'a', tokens: 5_000 }], [{ name: 'a', tokens: 5_000 }, { name: 'b', tokens: 900 }]);
+    const d = diffOf(
+      [{ name: 'a', tokens: 5_000 }],
+      [
+        { name: 'a', tokens: 5_000 },
+        { name: 'b', tokens: 900 },
+      ],
+    );
     expect(evaluateIncreaseGate(d, 1_000)).toMatchObject({ pass: true, increase: 900 });
     const over = evaluateIncreaseGate(d, 899);
     expect(over.pass).toBe(false);
@@ -1010,8 +1293,16 @@ describe('evaluateIncreaseGate', () => {
   });
 
   it('passes a decrease and an exact no-change', () => {
-    expect(evaluateIncreaseGate(diffOf([{ name: 'a', tokens: 5_000 }], [{ name: 'a', tokens: 10 }]), 0).pass).toBe(true);
-    expect(evaluateIncreaseGate(diffOf([{ name: 'a', tokens: 5_000 }], [{ name: 'a', tokens: 5_000 }]), 0)).toMatchObject({
+    expect(
+      evaluateIncreaseGate(diffOf([{ name: 'a', tokens: 5_000 }], [{ name: 'a', tokens: 10 }]), 0)
+        .pass,
+    ).toBe(true);
+    expect(
+      evaluateIncreaseGate(
+        diffOf([{ name: 'a', tokens: 5_000 }], [{ name: 'a', tokens: 5_000 }]),
+        0,
+      ),
+    ).toMatchObject({
       pass: true,
       increase: 0,
     });
@@ -1020,8 +1311,14 @@ describe('evaluateIncreaseGate', () => {
   // The gate's whole reason to exist: green must mean checked, not merely not-red.
   it('fails when a server stopped measuring, even though the total went down', () => {
     const d = diffOf(
-      [{ name: 'a', tokens: 5_000 }, { name: 'heavy', tokens: 9_000 }],
-      [{ name: 'a', tokens: 5_000 }, { name: 'heavy', tokens: null }],
+      [
+        { name: 'a', tokens: 5_000 },
+        { name: 'heavy', tokens: 9_000 },
+      ],
+      [
+        { name: 'a', tokens: 5_000 },
+        { name: 'heavy', tokens: null },
+      ],
     );
     expect(d.configs[0].delta).toBeLessThan(0);
     const gate = evaluateIncreaseGate(d, 0);
@@ -1032,18 +1329,26 @@ describe('evaluateIncreaseGate', () => {
   it('fails on an unmatched config, a dropped config, and an incomparable baseline', () => {
     const unmatched = buildDiff(
       reportOf([{ source: CFG, servers: [] }]),
-      reportOf([{ source: CFG, servers: [] }, { source: '/new.json', servers: [{ name: 'b', tokens: 8_000 }] }]),
+      reportOf([
+        { source: CFG, servers: [] },
+        { source: '/new.json', servers: [{ name: 'b', tokens: 8_000 }] },
+      ]),
     );
     expect(evaluateIncreaseGate(unmatched, 100_000).pass).toBe(false);
 
     const droppedCfg = buildDiff(
-      reportOf([{ source: CFG, servers: [] }, { source: '/gone.json', servers: [{ name: 'b', tokens: 8_000 }] }]),
+      reportOf([
+        { source: CFG, servers: [] },
+        { source: '/gone.json', servers: [{ name: 'b', tokens: 8_000 }] },
+      ]),
       reportOf([{ source: CFG, servers: [] }]),
     );
     expect(evaluateIncreaseGate(droppedCfg, 100_000).pass).toBe(false);
 
     const stale = buildDiff(
-      reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 1 }] }], { methodologyVersion: '0.9' }),
+      reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 1 }] }], {
+        methodologyVersion: '0.9',
+      }),
       reportOf([{ source: CFG, servers: [{ name: 'a', tokens: 1 }] }]),
     );
     expect(evaluateIncreaseGate(stale, 100_000).pass).toBe(false);
@@ -1060,11 +1365,15 @@ describe('evaluateIncreaseGate', () => {
 describe('audit --baseline CLI', () => {
   const cli = (args: string[], cwd: string) => {
     try {
-      const stdout = execFileSync(process.execPath, [TSX_CLI, join(repoRoot, 'src/cli.ts'), ...args], {
-        cwd,
-        encoding: 'utf8',
-        stdio: ['ignore', 'pipe', 'pipe'],
-      });
+      const stdout = execFileSync(
+        process.execPath,
+        [TSX_CLI, join(repoRoot, 'src/cli.ts'), ...args],
+        {
+          cwd,
+          encoding: 'utf8',
+          stdio: ['ignore', 'pipe', 'pipe'],
+        },
+      );
       return { code: 0, stdout, stderr: '' };
     } catch (e) {
       const err = e as { status: number; stdout: string; stderr: string };
@@ -1074,14 +1383,23 @@ describe('audit --baseline CLI', () => {
 
   it('rejects an unreadable or malformed baseline before measuring anything', () => {
     const dir = tempDir('mcp-audit-baseline-');
-    writeFileSync(join(dir, 'mcp.json'), '{"mcpServers":{"memory":{"command":"npx","args":["-y","@modelcontextprotocol/server-memory"]}}}');
+    writeFileSync(
+      join(dir, 'mcp.json'),
+      '{"mcpServers":{"memory":{"command":"npx","args":["-y","@modelcontextprotocol/server-memory"]}}}',
+    );
     writeFileSync(join(dir, 'junk.json'), '{"hello":1}');
 
-    const missing = cli(['audit', '--config', join(dir, 'mcp.json'), '--baseline', join(dir, 'nope.json')], dir);
+    const missing = cli(
+      ['audit', '--config', join(dir, 'mcp.json'), '--baseline', join(dir, 'nope.json')],
+      dir,
+    );
     expect(missing.code).toBe(2);
     expect(missing.stderr).toContain('cannot read baseline');
 
-    const junk = cli(['audit', '--config', join(dir, 'mcp.json'), '--baseline', join(dir, 'junk.json')], dir);
+    const junk = cli(
+      ['audit', '--config', join(dir, 'mcp.json'), '--baseline', join(dir, 'junk.json')],
+      dir,
+    );
     expect(junk.code).toBe(2);
     expect(junk.stderr).toContain('audit --json');
   }, 60_000);
@@ -1098,12 +1416,28 @@ describe('audit --baseline CLI', () => {
     const configPath = join(dir, 'mcp.json');
     writeFileSync(
       configPath,
-      JSON.stringify({ mcpServers: { memory: { command: 'npx', args: ['-y', '@modelcontextprotocol/server-memory'] } } }),
+      JSON.stringify({
+        mcpServers: {
+          memory: { command: 'npx', args: ['-y', '@modelcontextprotocol/server-memory'] },
+        },
+      }),
     );
     const baselinePath = join(dir, 'baseline.json');
     writeFileSync(baselinePath, JSON.stringify(await runAudit({ configPaths: [configPath] })));
 
-    const r = cli(['audit', '--config', configPath, '--baseline', baselinePath, '--max-increase', '0', '--json'], dir);
+    const r = cli(
+      [
+        'audit',
+        '--config',
+        configPath,
+        '--baseline',
+        baselinePath,
+        '--max-increase',
+        '0',
+        '--json',
+      ],
+      dir,
+    );
     expect(r.code).toBe(0);
     const report = JSON.parse(r.stdout);
     expect(report.diff.configs[0]).toMatchObject({ delta: 0, exact: true, matchedBy: 'source' });
@@ -1190,11 +1524,17 @@ describe('deferral — reading the mode that is actually in force', () => {
     it('claims nothing from a betas value in neither set', () => {
       for (const value of ['2', 'maybe', 'tool-search-2026-01-01', '-1']) {
         expect(
-          verdict('claude-code', [12_000], { env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: value } }),
+          verdict('claude-code', [12_000], {
+            env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: value },
+          }),
         ).toMatchObject({
           mode: 'setting-unrecognized',
           crosses: null,
-          setting: { variable: 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS', value, readFromMachine: true },
+          setting: {
+            variable: 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS',
+            value,
+            readFromMachine: true,
+          },
         });
       }
       // The reading this refuses to invent: the client leaves tool search on
@@ -1205,12 +1545,12 @@ describe('deferral — reading the mode that is actually in force', () => {
     });
 
     it('lets the next variable decide once the betas flag reads as false', () => {
-      expect(modeOf({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '0', ENABLE_TOOL_SEARCH: 'false' })).toBe(
-        'loads-upfront',
-      );
-      expect(modeOf({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '0', ENABLE_TOOL_SEARCH: 'auto' })).toBe(
-        'threshold',
-      );
+      expect(
+        modeOf({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '0', ENABLE_TOOL_SEARCH: 'false' }),
+      ).toBe('loads-upfront');
+      expect(
+        modeOf({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '0', ENABLE_TOOL_SEARCH: 'auto' }),
+      ).toBe('threshold');
       // All the way to the third read, which only runs while ENABLE_TOOL_SEARCH is unset.
       expect(
         verdict('claude-code', [12_000], {
@@ -1232,12 +1572,15 @@ describe('deferral — reading the mode that is actually in force', () => {
     });
 
     it('lets auto:N set the percentage anywhere from 0 to 100', () => {
-      const share = (v: string) => verdict('claude-code', [12_000], { env: { ENABLE_TOOL_SEARCH: v } });
+      const share = (v: string) =>
+        verdict('claude-code', [12_000], { env: { ENABLE_TOOL_SEARCH: v } });
       expect(share('auto:5')).toMatchObject({ thresholdShare: 0.05, thresholdTokens: 10_000 });
       expect(share('auto:100')).toMatchObject({ thresholdShare: 1, thresholdTokens: cw });
       // auto:0 is a threshold every stack reaches — including an empty one.
       expect(share('auto:0').crosses).toBe(true);
-      expect(verdict('claude-code', [], { env: { ENABLE_TOOL_SEARCH: 'auto:0' } }).crosses).toBe(true);
+      expect(verdict('claude-code', [], { env: { ENABLE_TOOL_SEARCH: 'auto:0' } }).crosses).toBe(
+        true,
+      );
     });
 
     /**
@@ -1271,7 +1614,9 @@ describe('deferral — reading the mode that is actually in force', () => {
           typeof buildReport
         >[0];
         const measured = new Map([[serverKey(server), measurement('a')]]);
-        return formatReport(buildReport(configs, measured, { env, generatedAt: 'T', contextWindow }));
+        return formatReport(
+          buildReport(configs, measured, { env, generatedAt: 'T', contextWindow }),
+        );
       };
 
       it('names the assumed window, and the threshold is that share of it', () => {
@@ -1301,7 +1646,9 @@ describe('deferral — reading the mode that is actually in force', () => {
 
     it('refuses to guess at a value Claude Code does not document', () => {
       for (const value of ['yes', 'TRUE', 'auto:101', 'auto:', '1']) {
-        expect(verdict('claude-code', [12_000], { env: { ENABLE_TOOL_SEARCH: value } })).toMatchObject({
+        expect(
+          verdict('claude-code', [12_000], { env: { ENABLE_TOOL_SEARCH: value } }),
+        ).toMatchObject({
           mode: 'setting-unrecognized',
           crosses: null,
           setting: { value, readFromMachine: true },
@@ -1328,7 +1675,9 @@ describe('deferral — reading the mode that is actually in force', () => {
       expect(base('https://api.anthropic.com').mode).toBe('defers-all');
       expect(base('HTTPS://API.ANTHROPIC.COM/v1').mode).toBe('defers-all');
       // "Set ENABLE_TOOL_SEARCH explicitly to override that fallback."
-      expect(base('https://proxy.internal/v1', { ENABLE_TOOL_SEARCH: 'true' }).mode).toBe('defers-all');
+      expect(base('https://proxy.internal/v1', { ENABLE_TOOL_SEARCH: 'true' }).mode).toBe(
+        'defers-all',
+      );
     });
 
     it('reports a base URL by hostname only, so a credential in it cannot reach a report', () => {
@@ -1455,9 +1804,28 @@ describe('deferral — reading the mode that is actually in force', () => {
         baselineTokens: 7,
         probeDelta: 328,
         servers: {
-          a: { o200kFull: 1_000, o200kMapped: 500, claudeDelta: 1_000, toolCount: 1, capturedSha256: 'x' },
-          b: { o200kFull: 1_000, o200kMapped: 500, claudeDelta: 1_500, toolCount: 1, capturedSha256: 'y' },
-          bad: { o200kFull: 0, o200kMapped: 0, claudeDelta: 0, toolCount: 0, capturedSha256: 'z', error: 'nope' },
+          a: {
+            o200kFull: 1_000,
+            o200kMapped: 500,
+            claudeDelta: 1_000,
+            toolCount: 1,
+            capturedSha256: 'x',
+          },
+          b: {
+            o200kFull: 1_000,
+            o200kMapped: 500,
+            claudeDelta: 1_500,
+            toolCount: 1,
+            capturedSha256: 'y',
+          },
+          bad: {
+            o200kFull: 0,
+            o200kMapped: 0,
+            claudeDelta: 0,
+            toolCount: 0,
+            capturedSha256: 'z',
+            error: 'nope',
+          },
         },
       };
       // 1,000 and 1,500 Claude tokens over 1,000 wire, less the run's own 328 of
@@ -1470,7 +1838,11 @@ describe('deferral — reading the mode that is actually in force', () => {
       });
       // A run that never recorded the overhead converts as it always did rather
       // than guessing at a correction.
-      expect(wireToClientRatio({ ...run, probeDelta: 0 })).toMatchObject({ low: 1, high: 1.5, fixedOverhead: 0 });
+      expect(wireToClientRatio({ ...run, probeDelta: 0 })).toMatchObject({
+        low: 1,
+        high: 1.5,
+        fixedOverhead: 0,
+      });
       expect(wireToClientRatio(null)).toEqual(PUBLISHED_WIRE_TO_CLIENT_RATIO);
       // A run with nothing usable falls back rather than inventing a band.
       expect(wireToClientRatio({ ...run, servers: {} })).toEqual(PUBLISHED_WIRE_TO_CLIENT_RATIO);
@@ -1514,12 +1886,18 @@ describe('deferral — reading the mode that is actually in force', () => {
 
     it('says the client is unknown for a config named with --config', () => {
       expect(verdict('explicit', [84_455]).mode).toBe('client-unknown');
-      expect(verdict('some-client-shipped-after-this-was-written', [1]).mode).toBe('client-unknown');
+      expect(verdict('some-client-shipped-after-this-was-written', [1]).mode).toBe(
+        'client-unknown',
+      );
     });
   });
 
   describe('a server pinned alwaysLoad: true, read from its entry', () => {
-    const pinned = (client: string, servers: { name: string; tokens: number; alwaysLoad?: boolean }[], env?: ToolSearchEnv) =>
+    const pinned = (
+      client: string,
+      servers: { name: string; tokens: number; alwaysLoad?: boolean }[],
+      env?: ToolSearchEnv,
+    ) =>
       evaluateDeferral(
         { client, sources: [CFG], servers, skippedCount: 0, sharedMeasurements: 0 },
         { contextWindow: cw, env },
@@ -1742,7 +2120,9 @@ describe('deferral — a stack measured as fewer servers than it has', () => {
         const r = buildReport(configs, new Map([[serverKey(all), m]]), { generatedAt: 'T', env });
         const out = formatReport(r).replace(/\s+/g, ' ');
         expect(r.configs[0].deferral.sharedMeasurements, label).toBe(2);
-        expect(out, label).toContain('How big this stack is cannot be said here: 2 of the servers above');
+        expect(out, label).toContain(
+          'How big this stack is cannot be said here: 2 of the servers above',
+        );
         expect(out, label).toContain('nothing is wrong with the config');
       }
     }
@@ -1752,12 +2132,21 @@ describe('deferral — a stack measured as fewer servers than it has', () => {
     // Both say the tokens are paid, from a total collapsed the same way.
     for (const client of ['cursor', 'mystery-client']) {
       const cfgs = [
-        { client, source: '/cfg.json', servers: [{ ...all, client }, { ...few, client }] },
+        {
+          client,
+          source: '/cfg.json',
+          servers: [
+            { ...all, client },
+            { ...few, client },
+          ],
+        },
       ] as Parameters<typeof buildReport>[0];
       const r = buildReport(cfgs, new Map([[serverKey(all), heavy]]), { generatedAt: 'T' });
       const out = formatReport(r).replace(/\s+/g, ' ');
       expect(r.configs[0].deferral.sharedMeasurements, client).toBe(2);
-      expect(out, client).toContain('How big this stack is cannot be said here: 2 of the servers above');
+      expect(out, client).toContain(
+        'How big this stack is cannot be said here: 2 of the servers above',
+      );
     }
   });
 
@@ -1822,17 +2211,28 @@ describe('formatReport states where the cost is paid', () => {
 
   // Prose is asserted against the text with its line breaks flattened, so a
   // re-wrap for terminal width is not a test failure — the sentence is.
-  const render = (client: string, tokens: number, opts: { servers?: DiffSrv[]; env?: ToolSearchEnv } = {}) =>
+  const render = (
+    client: string,
+    tokens: number,
+    opts: { servers?: DiffSrv[]; env?: ToolSearchEnv } = {},
+  ) =>
     formatReport(
       reportOf([
-        { source: CFG, client, env: opts.env, servers: [{ name: 'a', tokens }, ...(opts.servers ?? [])] },
+        {
+          source: CFG,
+          client,
+          env: opts.env,
+          servers: [{ name: 'a', tokens }, ...(opts.servers ?? [])],
+        },
       ]),
     ).replace(/\s+/g, ' ');
 
   it('tells a default Claude Code reader that size decides nothing and the tokens are deferred', () => {
     for (const tokens of [2_378, 84_455]) {
       const out = render('claude-code', tokens);
-      expect(out).toContain('claude-code defers every MCP tool definition (tool search), with no threshold');
+      expect(out).toContain(
+        'claude-code defers every MCP tool definition (tool search), with no threshold',
+      );
       expect(out).toContain('ENABLE_TOOL_SEARCH is unset here, which is the documented default');
       expect(out).toContain('NOT loaded up front at any size');
       // The sentence the old version printed at this size, which was false.
@@ -1861,7 +2261,9 @@ describe('formatReport states where the cost is paid', () => {
   it('shows a threshold-mode reader the unit gap instead of a false certainty', () => {
     const out = render('claude-code', 12_000, { env: { ENABLE_TOOL_SEARCH: 'auto' } });
     expect(out).toContain('defers tool definitions above a threshold here (tool search)');
-    expect(out).toContain('deferral activates once the definitions reach 20,000 tokens — 10.0% of the context window');
+    expect(out).toContain(
+      'deferral activates once the definitions reach 20,000 tokens — 10.0% of the context window',
+    );
     expect(out).toContain('12,000 tokens on the wire');
     expect(out).toContain(bandText);
     expect(out).toContain(`between ${n(side(12_000).low)} and ${n(side(12_000).high)} tokens`);
@@ -1874,7 +2276,9 @@ describe('formatReport states where the cost is paid', () => {
     expect(over).toContain('at or above the threshold');
     expect(over).toContain('NOT loaded up front');
     const under = render('claude-code', 10_000, { env: { ENABLE_TOOL_SEARCH: 'auto' } });
-    expect(under).toContain(`below the threshold — under by ${n(20_000 - side(10_000).high)} at the high end`);
+    expect(under).toContain(
+      `below the threshold — under by ${n(20_000 - side(10_000).high)} at the high end`,
+    );
     expect(under).toContain('deferral does not activate and every request carries these tokens');
   });
 
@@ -1896,11 +2300,15 @@ describe('formatReport states where the cost is paid', () => {
     expect(out).not.toContain('threshold');
   });
 
-  it("tells a reader of a client whose vendor defers that the record is not a measurement either", () => {
+  it('tells a reader of a client whose vendor defers that the record is not a measurement either', () => {
     const out = render('cursor', 84_455);
-    expect(out).toContain('cursor is on record as deferring MCP tool definitions (dynamic context discovery)');
+    expect(out).toContain(
+      'cursor is on record as deferring MCP tool definitions (dynamic context discovery)',
+    );
     expect(out).toContain('this audit has not measured one');
-    expect(out).toContain('cursor.com/blog/dynamic-context-discovery, dated 2026-01-06, read 2026-09-07');
+    expect(out).toContain(
+      'cursor.com/blog/dynamic-context-discovery, dated 2026-01-06, read 2026-09-07',
+    );
     // The two errors this sits between: charging the full total to a client
     // that defers, and discounting it for one this has not measured.
     expect(out).not.toContain('No default deferral is on record');
@@ -1917,7 +2325,9 @@ describe('formatReport states where the cost is paid', () => {
 
   it('quotes one divergence band, in the verdict and in the footer alike', () => {
     const out = render('claude-code', 12_000, { env: { ENABLE_TOOL_SEARCH: 'auto' } });
-    expect(out.split(bandText).length - 1, 'the verdict and the footer must quote one band').toBe(2);
+    expect(out.split(bandText).length - 1, 'the verdict and the footer must quote one band').toBe(
+      2,
+    );
   });
 });
 
@@ -1937,8 +2347,12 @@ describe('the deferral posture is read from every place the machine sets it', ()
     state: ToolSearchSource['state'] = 'read',
   ): ToolSearchSource => ({ scope, source, state, vars });
 
-  const shell = (vars: ToolSearchEnv): ToolSearchSource =>
-    ({ scope: 'shell', source: SHELL_SOURCE, state: 'read', vars });
+  const shell = (vars: ToolSearchEnv): ToolSearchSource => ({
+    scope: 'shell',
+    source: SHELL_SOURCE,
+    state: 'read',
+    vars,
+  });
 
   /** A settings file that parsed, and sets these to something unreadable. */
   const held = (
@@ -2043,8 +2457,14 @@ describe('the deferral posture is read from every place the machine sets it', ()
           file('user-settings', USER, { ENABLE_TOOL_SEARCH: 'force' }),
         ]) {
           expect(
-            resolveToolSearchSources([shell({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '1' }), source]),
-          ).toMatchObject({ mode: 'loads-upfront', variable: 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS' });
+            resolveToolSearchSources([
+              shell({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '1' }),
+              source,
+            ]),
+          ).toMatchObject({
+            mode: 'loads-upfront',
+            variable: 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS',
+          });
         }
       });
 
@@ -2057,7 +2477,10 @@ describe('the deferral posture is read from every place the machine sets it', ()
             shell({ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '1' }),
             file('managed-settings', MANAGED, { ENABLE_TOOL_SEARCH: 'true' }),
           ]),
-        ).toMatchObject({ mode: 'loads-upfront', variable: 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS' });
+        ).toMatchObject({
+          mode: 'loads-upfront',
+          variable: 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS',
+        });
       });
 
       it('never prints the bill sentence for a machine whose tier holds one', () => {
@@ -2075,8 +2498,16 @@ describe('the deferral posture is read from every place the machine sets it', ()
 
     it('lets a settings file decide it while the shell says nothing', () => {
       expect(
-        resolveToolSearchSources([shell({}), file('user-settings', USER, { ENABLE_TOOL_SEARCH: 'false' })]),
-      ).toMatchObject({ mode: 'loads-upfront', value: 'false', source: USER, readFromMachine: true });
+        resolveToolSearchSources([
+          shell({}),
+          file('user-settings', USER, { ENABLE_TOOL_SEARCH: 'false' }),
+        ]),
+      ).toMatchObject({
+        mode: 'loads-upfront',
+        value: 'false',
+        source: USER,
+        readFromMachine: true,
+      });
     });
 
     it('takes the settings files in Claude Code documented precedence', () => {
@@ -2198,14 +2629,24 @@ describe('the deferral posture is read from every place the machine sets it', ()
           shell({ ENABLE_TOOL_SEARCH: 'true' }),
           held('user-settings', USER, ['ANTHROPIC_BASE_URL']),
         ]),
-      ).toMatchObject({ mode: 'defers-all', variable: 'ENABLE_TOOL_SEARCH', readFromMachine: true });
+      ).toMatchObject({
+        mode: 'defers-all',
+        variable: 'ENABLE_TOOL_SEARCH',
+        readFromMachine: true,
+      });
     });
   });
 
   describe('the report', () => {
     it('tells a machine that switched tool search off in its settings that it pays', () => {
-      const r = report({ env: {}, settings: [file('user-settings', USER, { ENABLE_TOOL_SEARCH: 'false' })] });
-      expect(r.configs[0].deferral).toMatchObject({ mode: 'loads-upfront', setting: { source: USER } });
+      const r = report({
+        env: {},
+        settings: [file('user-settings', USER, { ENABLE_TOOL_SEARCH: 'false' })],
+      });
+      expect(r.configs[0].deferral).toMatchObject({
+        mode: 'loads-upfront',
+        setting: { source: USER },
+      });
       const out = formatReport(r).replace(/\s+/g, ' ');
       expect(out).toContain('loads every tool definition up front here');
       expect(out).toContain('Every request carries these tokens before you type anything');
@@ -2231,7 +2672,10 @@ describe('the deferral posture is read from every place the machine sets it', ()
     it('counts the settings files that are simply not there', () => {
       const out = text({
         env: {},
-        settings: [file('user-settings', USER, {}, 'absent'), file('local-settings', LOCAL, {}, 'absent')],
+        settings: [
+          file('user-settings', USER, {}, 'absent'),
+          file('local-settings', LOCAL, {}, 'absent'),
+        ],
       });
       expect(out).toContain('2 other settings file(s) it reads are not on this machine');
       expect(out).not.toContain('were NOT read here');
@@ -2258,7 +2702,10 @@ describe('the deferral posture is read from every place the machine sets it', ()
     });
 
     it('states no verdict where the deciding variable is set to an unreadable value', () => {
-      const out = text({ env: {}, settings: [held('user-settings', USER, ['ENABLE_TOOL_SEARCH'])] });
+      const out = text({
+        env: {},
+        settings: [held('user-settings', USER, ['ENABLE_TOOL_SEARCH'])],
+      });
       expect(out).toContain('ENABLE_TOOL_SEARCH is set by a settings file Claude Code reads');
       expect(out).toContain('what it is set to is unknown');
       // The place is named as holding it, not as a file that sets none of them.
@@ -2280,7 +2727,10 @@ describe('the deferral posture is read from every place the machine sets it', ()
       const never = JSON.parse(JSON.stringify(report({ env: {} }))) as AuditReport;
       for (const r of [readIt, never]) {
         // The field that cannot tell them apart, identical in both.
-        expect(r.configs[0].deferral.setting).toMatchObject({ readFromMachine: false, value: null });
+        expect(r.configs[0].deferral.setting).toMatchObject({
+          readFromMachine: false,
+          value: null,
+        });
       }
       expect(readIt.configs[0].deferral.setting!.sources).toEqual([
         { scope: 'shell', source: SHELL_SOURCE, state: 'read', sets: [] },
@@ -2297,7 +2747,9 @@ describe('the deferral posture is read from every place the machine sets it', ()
       const secret = 'https://svc:sk-secret-abc123@proxy.internal/v1?key=sk-live-9';
       const r = report({
         env: {},
-        settings: [file('user-settings', USER, { ENABLE_TOOL_SEARCH: 'false', ANTHROPIC_BASE_URL: secret })],
+        settings: [
+          file('user-settings', USER, { ENABLE_TOOL_SEARCH: 'false', ANTHROPIC_BASE_URL: secret }),
+        ],
       });
       expect(r.configs[0].deferral.setting!.sources[1].sets).toEqual([
         'ENABLE_TOOL_SEARCH',
@@ -2327,7 +2779,10 @@ describe('the deferral posture is read from every place the machine sets it', ()
       const user = read.find((r) => r.scope === 'user-settings')!;
       expect(user).toMatchObject({ state: 'read', vars: { ENABLE_TOOL_SEARCH: 'auto:5' } });
       expect(JSON.stringify(user.vars)).not.toContain('sk-ant-DONOTREAD');
-      expect(read.find((r) => r.scope === 'project-settings')).toMatchObject({ state: 'absent', vars: {} });
+      expect(read.find((r) => r.scope === 'project-settings')).toMatchObject({
+        state: 'absent',
+        vars: {},
+      });
     });
 
     it('carries a variable set to something that is not a string as unknown, not as unset', () => {
@@ -2359,7 +2814,10 @@ describe('the deferral posture is read from every place the machine sets it', ()
     it('leaves a file whose env block sets none of them setting none of them', () => {
       const cwd = tempDir('mcc-proj-');
       mkdirSync(join(cwd, '.claude'));
-      writeFileSync(join(cwd, '.claude', 'settings.json'), JSON.stringify({ env: { OTHER: false } }));
+      writeFileSync(
+        join(cwd, '.claude', 'settings.json'),
+        JSON.stringify({ env: { OTHER: false } }),
+      );
       const read = loadSettingsSources(
         settingsCandidates({ home: tempDir('mcc-home-'), cwd, platform: 'linux' }),
       );
@@ -2376,7 +2834,9 @@ describe('the deferral posture is read from every place the machine sets it', ()
       const read = loadSettingsSources(
         settingsCandidates({ home: tempDir('mcc-home-'), cwd, platform: 'linux' }),
       );
-      expect(read.find((r) => r.scope === 'project-settings')).toMatchObject({ state: 'unreadable' });
+      expect(read.find((r) => r.scope === 'project-settings')).toMatchObject({
+        state: 'unreadable',
+      });
     });
 
     // `managed-settings.d/*.json` and `managed-settings.json` are documented as
@@ -2403,7 +2863,9 @@ describe('the deferral posture is read from every place the machine sets it', ()
         });
         const paths = managedDropInCandidates(managed).map((c) => c.path);
         expect(paths.map((p) => p.split('/').pop())).toEqual(['10-a.json', '20-b.json']);
-        expect(managedDropInCandidates(managed).every((c) => c.scope === 'managed-drop-in')).toBe(true);
+        expect(managedDropInCandidates(managed).every((c) => c.scope === 'managed-drop-in')).toBe(
+          true,
+        );
       });
 
       it('has nothing to say where the directory does not exist', () => {
@@ -2531,8 +2993,13 @@ describe('the deferral posture is read from every place the machine sets it', ()
       // that read any non-empty value would make the whole boolean rule wrong.
       it('catches the disabling variable joining the any-non-empty exception list', () => {
         const pages = live();
-        pages.set(ENV_VARS_DOC, envVars.replace('* `IS_DEMO`', '* `IS_DEMO`\n* `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`'));
-        expect(toolSearchDocProblems(pages)[0]).toContain('now lists CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS');
+        pages.set(
+          ENV_VARS_DOC,
+          envVars.replace('* `IS_DEMO`', '* `IS_DEMO`\n* `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`'),
+        );
+        expect(toolSearchDocProblems(pages)[0]).toContain(
+          'now lists CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS',
+        );
       });
 
       it('asks for a hand check when that list is no longer in a shape it can read', () => {
@@ -2548,14 +3015,17 @@ describe('the deferral posture is read from every place the machine sets it', ()
     });
 
     it('lists the files in precedence order, and knows where the managed one lives', () => {
-      const at = (platform: NodeJS.Platform) => settingsCandidates({ home: '/h', cwd: '/c', platform });
+      const at = (platform: NodeJS.Platform) =>
+        settingsCandidates({ home: '/h', cwd: '/c', platform });
       expect(at('darwin').map((c) => c.scope)).toEqual([
         'managed-settings',
         'local-settings',
         'project-settings',
         'user-settings',
       ]);
-      expect(at('darwin')[0].path).toBe('/Library/Application Support/ClaudeCode/managed-settings.json');
+      expect(at('darwin')[0].path).toBe(
+        '/Library/Application Support/ClaudeCode/managed-settings.json',
+      );
       expect(at('linux')[0].path).toBe('/etc/claude-code/managed-settings.json');
       // Not %ProgramData%: the vendor names that path as one Claude Code does
       // NOT read, so opening it read a file that decides nothing and missed the
@@ -2590,7 +3060,14 @@ describe('a client that declares nothing vs no client at all', () => {
 
   it('records a config whose every declared server is switched off as that, not as declaring nothing', () => {
     const r = buildReport(
-      [{ client: 'claude-code', source: '/h/.claude.json', servers: [], allDisabled: ['linear', 'redis'] }],
+      [
+        {
+          client: 'claude-code',
+          source: '/h/.claude.json',
+          servers: [],
+          allDisabled: ['linear', 'redis'],
+        },
+      ],
       new Map(),
       { generatedAt: 'T' },
     );

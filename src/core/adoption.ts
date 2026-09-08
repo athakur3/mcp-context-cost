@@ -354,7 +354,10 @@ export function linksBackToProject(target: string, src: BadgeSource = BADGE_SOUR
  */
 export function namesThisBadge(alt: string | null): boolean {
   if (!alt) return false;
-  return alt.toLowerCase().replace(/[^a-z]/g, '').includes('contextcost');
+  return alt
+    .toLowerCase()
+    .replace(/[^a-z]/g, '')
+    .includes('contextcost');
 }
 
 export function displaysBadge(text: string, src: BadgeSource = BADGE_SOURCE): boolean {
@@ -536,7 +539,10 @@ export function applyRejudgements(
  * it. Carried forward from some earlier reading, it was judged by whatever ran
  * then, which nothing here records, and an unrecorded method is not this one.
  */
-export function judgingMethod(s: Sighting, run: Pick<AdoptionRun, 'method' | 'checkedAt'>): string | null {
+export function judgingMethod(
+  s: Sighting,
+  run: Pick<AdoptionRun, 'method' | 'checkedAt'>,
+): string | null {
   if (typeof s.judgedBy === 'string' && s.judgedBy.length > 0) return s.judgedBy;
   return s.lastSeenAt === run.checkedAt ? run.method : null;
 }
@@ -547,9 +553,10 @@ export function judgingMethod(s: Sighting, run: Pick<AdoptionRun, 'method' | 'ch
  * the second is published under the versions that did judge it. `null` in
  * `foreign` is a record whose method is not established at all.
  */
-export function sightingsByMethod(
-  run: Pick<AdoptionRun, 'method' | 'checkedAt' | 'sightings'>,
-): { current: Sighting[]; foreign: { sighting: Sighting; method: string | null }[] } {
+export function sightingsByMethod(run: Pick<AdoptionRun, 'method' | 'checkedAt' | 'sightings'>): {
+  current: Sighting[];
+  foreign: { sighting: Sighting; method: string | null }[];
+} {
   const current: Sighting[] = [];
   const foreign: { sighting: Sighting; method: string | null }[] = [];
   for (const s of run.sightings) {
@@ -592,14 +599,23 @@ export function resolveCount(
   if (queries.length === 0) return { thirdPartyRepos: null, unresolved: 'no-query-was-run' };
   const failed = queries.filter((q) => q.state !== 'ok');
   if (failed.length > 0) {
-    return { thirdPartyRepos: null, unresolved: `query-did-not-answer: ${failed.map((q) => q.name).join(', ')}` };
+    return {
+      thirdPartyRepos: null,
+      unresolved: `query-did-not-answer: ${failed.map((q) => q.name).join(', ')}`,
+    };
   }
   const truncated = queries.filter((q) => q.truncated);
   if (truncated.length > 0) {
-    return { thirdPartyRepos: null, unresolved: `more-results-than-collected: ${truncated.map((q) => q.name).join(', ')}` };
+    return {
+      thirdPartyRepos: null,
+      unresolved: `more-results-than-collected: ${truncated.map((q) => q.name).join(', ')}`,
+    };
   }
   if (unreadableCandidates > 0) {
-    return { thirdPartyRepos: null, unresolved: `candidate-could-not-be-read: ${unreadableCandidates}` };
+    return {
+      thirdPartyRepos: null,
+      unresolved: `candidate-could-not-be-read: ${unreadableCandidates}`,
+    };
   }
   return { thirdPartyRepos: badgeRepos(sightings, checkedAt).length, unresolved: null };
 }
@@ -679,7 +695,10 @@ function mdUrl(s: unknown): string {
  * record renders as "nobody has looked", in those words, with no number — which
  * is the whole distinction this instrument exists to make readable.
  */
-export function renderAdoptionPage(run: AdoptionRun | null, src: BadgeSource = BADGE_SOURCE): string {
+export function renderAdoptionPage(
+  run: AdoptionRun | null,
+  src: BadgeSource = BADGE_SOURCE,
+): string {
   const out: string[] = [];
   out.push('# Who displays the badge');
   out.push('');
@@ -700,9 +719,13 @@ export function renderAdoptionPage(run: AdoptionRun | null, src: BadgeSource = B
 
   const current = badgeRepos(run.sightings, run.checkedAt);
   if (run.unresolved) {
-    out.push(`**The count could not be established on ${run.checkedAt}.** Reason: \`${run.unresolved}\`.`);
+    out.push(
+      `**The count could not be established on ${run.checkedAt}.** Reason: \`${run.unresolved}\`.`,
+    );
     out.push('');
-    out.push('No number is published rather than a zero that might only mean the search stopped early.');
+    out.push(
+      'No number is published rather than a zero that might only mean the search stopped early.',
+    );
     out.push('');
     out.push(
       run.lastResolved
@@ -711,7 +734,9 @@ export function renderAdoptionPage(run: AdoptionRun | null, src: BadgeSource = B
         : 'No reading has ever completed, so nothing is known yet either way.',
     );
   } else if (run.thirdPartyRepos === 0) {
-    out.push(`**Zero projects outside this repository display the badge**, as of ${run.checkedAt}.`);
+    out.push(
+      `**Zero projects outside this repository display the badge**, as of ${run.checkedAt}.`,
+    );
     out.push('');
     out.push(
       `That zero was looked for: ${run.queries.length} queries ran and turned up ` +
@@ -731,16 +756,22 @@ export function renderAdoptionPage(run: AdoptionRun | null, src: BadgeSource = B
 
   out.push('## What counts as displaying it');
   out.push('');
-  out.push('A file in somebody else\'s repository carrying a shields.io endpoint badge that can be');
+  out.push("A file in somebody else's repository carrying a shields.io endpoint badge that can be");
   out.push('audited, in either of the two forms this project publishes instructions for:');
   out.push('');
-  out.push('- the badge\'s JSON is served from this repository\'s `badges/` directory; or');
+  out.push("- the badge's JSON is served from this repository's `badges/` directory; or");
   out.push('- the author hosts their own `badges/<name>.json` — what `npm run sweep` writes, and');
-  out.push('  what every badge snippet here tells you to point shields at — **and links the badge**');
+  out.push(
+    '  what every badge snippet here tells you to point shields at — **and links the badge**',
+  );
   out.push('  **back at the measurement**, which the same snippet requires.');
   out.push('');
-  out.push('The link is read from the badge itself, not from anywhere in the file: a README with an');
-  out.push('unrelated shields badge that elsewhere names this project is counted as naming it, not');
+  out.push(
+    'The link is read from the badge itself, not from anywhere in the file: a README with an',
+  );
+  out.push(
+    'unrelated shields badge that elsewhere names this project is counted as naming it, not',
+  );
   out.push('as displaying the badge.');
   out.push('');
 
@@ -749,12 +780,15 @@ export function renderAdoptionPage(run: AdoptionRun | null, src: BadgeSource = B
   out.push('| query | what it is for | files found |');
   out.push('|---|---|---|');
   for (const q of run.queries) {
-    const hits = q.state === 'ok' ? String(q.hits ?? 0) + (q.truncated ? ' (truncated)' : '') : `not answered — ${mdCell(q.error)}`;
+    const hits =
+      q.state === 'ok'
+        ? String(q.hits ?? 0) + (q.truncated ? ' (truncated)' : '')
+        : `not answered — ${mdCell(q.error)}`;
     out.push(`| \`${mdCell(q.q)}\` | ${mdCell(q.why)} | ${hits} |`);
   }
   out.push('');
   out.push('Run against GitHub code search, which indexes default branches of public');
-  out.push('repositories. Files in this project\'s own repositories are excluded before anything');
+  out.push("repositories. Files in this project's own repositories are excluded before anything");
   out.push('is counted.');
   out.push('');
 
@@ -780,23 +814,43 @@ export function renderAdoptionPage(run: AdoptionRun | null, src: BadgeSource = B
     }
     out.push('');
     out.push('*Names the project* means the file refers to something that is the project: the');
-    out.push(`repository (\`${src.owner}/${src.repo}\`, however the URL around it is spelled), the npm`);
-    out.push(`package (\`npx -y ${src.repo}\`, an install command, a dependency entry or its npmjs.com`);
-    out.push(`page), or the pages site (\`${src.owner}.github.io/${src.repo}\`). *Matches the phrase only*`);
+    out.push(
+      `repository (\`${src.owner}/${src.repo}\`, however the URL around it is spelled), the npm`,
+    );
+    out.push(
+      `package (\`npx -y ${src.repo}\`, an install command, a dependency entry or its npmjs.com`,
+    );
+    out.push(
+      `page), or the pages site (\`${src.owner}.github.io/${src.repo}\`). *Matches the phrase only*`,
+    );
     out.push(`means the file contains the words \`${src.repo}\` and none of those — a URL slug on`);
-    out.push('another site, a directory, a compound word. Such a file is kept in this table rather than');
-    out.push('dropped, so every file the queries turned up is accounted for, and it is not read as');
+    out.push(
+      'another site, a directory, a compound word. Such a file is kept in this table rather than',
+    );
+    out.push(
+      'dropped, so every file the queries turned up is accounted for, and it is not read as',
+    );
     out.push('anyone naming this project.');
     out.push('');
-    out.push('A row whose *last seen* is older than the date above was found by an earlier reading');
-    out.push(`and not by this one. Every row here was judged under \`${run.method}\`, which is what the`);
-    out.push('method named at the foot of this page means: a record carried forward from an earlier');
-    out.push('reading is re-read at its own URL and judged again, and one that cannot be re-judged is');
+    out.push(
+      'A row whose *last seen* is older than the date above was found by an earlier reading',
+    );
+    out.push(
+      `and not by this one. Every row here was judged under \`${run.method}\`, which is what the`,
+    );
+    out.push(
+      'method named at the foot of this page means: a record carried forward from an earlier',
+    );
+    out.push(
+      'reading is re-read at its own URL and judged again, and one that cannot be re-judged is',
+    );
     out.push('not printed in this table at all.');
     if (run.method !== ADOPTION_METHOD) {
       out.push('');
       out.push(`This reading was taken under method \`${run.method}\`; the rule now in force is`);
-      out.push(`\`${ADOPTION_METHOD}\`. The table above is that reading's own judgement throughout, and`);
+      out.push(
+        `\`${ADOPTION_METHOD}\`. The table above is that reading's own judgement throughout, and`,
+      );
       out.push('the next reading re-judges every file it finds and every record it carries.');
     }
   }
@@ -805,12 +859,20 @@ export function renderAdoptionPage(run: AdoptionRun | null, src: BadgeSource = B
   if (foreign.length > 0) {
     out.push('### Judged under an earlier rule');
     out.push('');
-    out.push(`These records are on file and were not judged by \`${run.method}\`. Each was found by an`);
-    out.push('earlier reading and has not been re-judged since — either the file at the URL beside it');
+    out.push(
+      `These records are on file and were not judged by \`${run.method}\`. Each was found by an`,
+    );
+    out.push(
+      'earlier reading and has not been re-judged since — either the file at the URL beside it',
+    );
     out.push('could not be re-read, or the record was written before anything re-read it. So its');
-    out.push('*what it is* is still the older rule\'s verdict, and it is shown under that rule\'s name');
-    out.push('rather than under this reading\'s. These rows are kept rather than dropped so that a');
-    out.push('badge which disappears stays visible as one that disappeared, and kept out of the table');
+    out.push(
+      "*what it is* is still the older rule's verdict, and it is shown under that rule's name",
+    );
+    out.push("rather than under this reading's. These rows are kept rather than dropped so that a");
+    out.push(
+      'badge which disappears stays visible as one that disappeared, and kept out of the table',
+    );
     out.push('above so that the method this page names describes every row in it.');
     out.push('');
     out.push('| repository | file | what it is | judged under | first seen | last seen |');
@@ -824,7 +886,7 @@ export function renderAdoptionPage(run: AdoptionRun | null, src: BadgeSource = B
     }
     out.push('');
     out.push('None of these can be part of the count above: that is made only of files this');
-    out.push('reading\'s own queries returned on its own date.');
+    out.push("reading's own queries returned on its own date.");
     out.push('');
   }
 
@@ -839,11 +901,15 @@ export function renderAdoptionPage(run: AdoptionRun | null, src: BadgeSource = B
   out.push('  reached.');
   out.push('- Whether anybody looked at a badge. This counts files that display one, which is a');
   out.push('  different question from reach.');
-  out.push('- Whether a mention is somebody else\'s. A file counts as naming the project whoever');
-  out.push('  wrote the words in it, and this project\'s own author\'s writing ends up in other');
-  out.push('  people\'s repositories: a forum or Reddit comment scraped into a third-party feed or');
-  out.push('  dashboard is a *names the project* row by this rule, and it is the maintainer talking');
-  out.push('  about the project, not somebody else referring to it. Nothing in such a file tells the');
+  out.push("- Whether a mention is somebody else's. A file counts as naming the project whoever");
+  out.push("  wrote the words in it, and this project's own author's writing ends up in other");
+  out.push("  people's repositories: a forum or Reddit comment scraped into a third-party feed or");
+  out.push(
+    '  dashboard is a *names the project* row by this rule, and it is the maintainer talking',
+  );
+  out.push(
+    '  about the project, not somebody else referring to it. Nothing in such a file tells the',
+  );
   out.push('  two apart, so the rows above are an upper bound on who has referred to this project');
   out.push('  and never a count of reach — open one before reading it as one.');
   out.push('');

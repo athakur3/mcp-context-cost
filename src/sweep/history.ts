@@ -103,7 +103,9 @@ export function parseHistory(text: string): HistoryRow[] {
 }
 
 export function formatHistory(rows: HistoryRow[]): string {
-  const sorted = [...rows].sort((a, b) => a.date.localeCompare(b.date) || a.server.localeCompare(b.server));
+  const sorted = [...rows].sort(
+    (a, b) => a.date.localeCompare(b.date) || a.server.localeCompare(b.server),
+  );
   const lines = sorted.map((r) =>
     [
       csvCell(r.date),

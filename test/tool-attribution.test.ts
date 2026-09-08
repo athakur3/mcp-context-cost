@@ -22,14 +22,19 @@ describe('per-tool attribution', () => {
       name: 'search',
       description: 'Search the index.',
       inputSchema: { type: 'object', properties: { q: { type: 'string' } } },
-      outputSchema: { type: 'object', properties: { hits: { type: 'array', items: { type: 'string' } } } },
+      outputSchema: {
+        type: 'object',
+        properties: { hits: { type: 'array', items: { type: 'string' } } },
+      },
       annotations: { readOnlyHint: true },
     });
     expect(t.outputSchemaTokens).toBeGreaterThan(0);
     expect(t.annotationsTokens).toBeGreaterThan(0);
     // Diagnostic, not a decomposition: the whole-object count includes framing
     // the parts do not, so the parts only have to fit inside it.
-    expect(t.descriptionTokens + t.inputSchemaTokens + t.outputSchemaTokens + t.annotationsTokens).toBeLessThan(t.tokens);
+    expect(
+      t.descriptionTokens + t.inputSchemaTokens + t.outputSchemaTokens + t.annotationsTokens,
+    ).toBeLessThan(t.tokens);
   });
 
   it('records zero — not absent — for a tool that ships neither', () => {
@@ -40,7 +45,12 @@ describe('per-tool attribution', () => {
 
   it('leaves the published total and hash untouched', () => {
     const tools = [
-      { name: 'a', description: 'A.', inputSchema: { type: 'object' }, outputSchema: { type: 'string' } },
+      {
+        name: 'a',
+        description: 'A.',
+        inputSchema: { type: 'object' },
+        outputSchema: { type: 'string' },
+      },
       { name: 'b', description: 'B.', inputSchema: { type: 'object' } },
     ];
     const m = measureTools(tools, { serverName: 'demo' });
@@ -62,14 +72,18 @@ describe('per-tool attribution', () => {
     for (const name of dirs) {
       let m: Measurement;
       try {
-        m = JSON.parse(readFileSync(join(resultsDir, name, 'measurement.json'), 'utf8')) as Measurement;
+        m = JSON.parse(
+          readFileSync(join(resultsDir, name, 'measurement.json'), 'utf8'),
+        ) as Measurement;
       } catch {
         continue;
       }
       if (!m.rawToolsCapture || m.tools.length === 0) continue;
       checked.push(name);
       if (m.rawToolsCapture.length !== m.tools.length) {
-        problems.push(`${name}: ${m.tools.length} rows against a ${m.rawToolsCapture.length}-tool capture`);
+        problems.push(
+          `${name}: ${m.tools.length} rows against a ${m.rawToolsCapture.length}-tool capture`,
+        );
         continue;
       }
       m.rawToolsCapture.forEach((raw, i) => {
@@ -83,7 +97,9 @@ describe('per-tool attribution', () => {
           t.outputSchemaTokens !== d.outputSchemaTokens ||
           t.annotationsTokens !== d.annotationsTokens
         ) {
-          problems.push(`${name}/${t.name}: stored ${JSON.stringify(t)} against derived ${JSON.stringify(d)}`);
+          problems.push(
+            `${name}/${t.name}: stored ${JSON.stringify(t)} against derived ${JSON.stringify(d)}`,
+          );
         }
       });
     }

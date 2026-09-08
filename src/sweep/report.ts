@@ -5,8 +5,18 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Measurement } from '../core/types.js';
-import { isCurrent, mappedTokens, parseDivergence, type DivergenceRun } from '../core/divergence.js';
-import { divergencePct, isComparable, parseCrossCheck, type CrossCheckRun } from '../core/cross-check.js';
+import {
+  isCurrent,
+  mappedTokens,
+  parseDivergence,
+  type DivergenceRun,
+} from '../core/divergence.js';
+import {
+  divergencePct,
+  isComparable,
+  parseCrossCheck,
+  type CrossCheckRun,
+} from '../core/cross-check.js';
 // Type-only, and from core rather than ./regressions.js: the regression report
 // imports this module for its markdown escaping, so importing it back at
 // runtime would close a cycle. The summary is handed in by the caller instead.
@@ -361,7 +371,10 @@ export function writeLeaderboard(
     const link = `[${mdCell(r.entry.name)}](../docs/servers/${encodeURIComponent(r.entry.name)}.md)`;
     const c = claude(r);
     const x = crossCheck(r);
-    const xCell = x === null ? '—' : `${x.cliTokens.toLocaleString('en-US')} (${signedPctToPrecision(divergencePct(x)!)})`;
+    const xCell =
+      x === null
+        ? '—'
+        : `${x.cliTokens.toLocaleString('en-US')} (${signedPctToPrecision(divergencePct(x)!)})`;
     md.push(
       `| ${i + 1} | ${link} | ${m.totalTokens!.toLocaleString('en-US')} |` +
         ` ${mappedTokens(m.rawToolsCapture ?? []).toLocaleString('en-US')} |` +
@@ -482,4 +495,3 @@ export function writeLeaderboard(
   }
   writeFileSync(join(root, 'results', 'leaderboard.csv'), csv.join('\n') + '\n');
 }
-

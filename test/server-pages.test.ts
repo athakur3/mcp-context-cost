@@ -57,7 +57,9 @@ describe('renderServerPage', () => {
 
   it('breaks tokens down per tool, largest first, with shares', () => {
     const md = renderServerPage(entry, measurement());
-    const rows = md.split('\n').filter((l) => l.startsWith('| search |') || l.startsWith('| fetch |'));
+    const rows = md
+      .split('\n')
+      .filter((l) => l.startsWith('| search |') || l.startsWith('| fetch |'));
     expect(rows[0]).toContain('| search | 700 | 70.0% | 100 | 560 |');
     expect(rows[1]).toContain('| fetch | 280 | 28.0% | 40 | 200 |');
   });
@@ -79,7 +81,9 @@ describe('renderServerPage', () => {
   it('escapes markdown table syntax in third-party tool names', () => {
     const md = renderServerPage(
       entry,
-      measurement({ tools: [{ name: 'a|b`c[d]', tokens: 10, descriptionTokens: 1, inputSchemaTokens: 2 }] }),
+      measurement({
+        tools: [{ name: 'a|b`c[d]', tokens: 10, descriptionTokens: 1, inputSchemaTokens: 2 }],
+      }),
     );
     expect(md).toContain('a\\|b\\`c\\[d\\]');
     expect(md).not.toContain('| a|b');
@@ -92,7 +96,15 @@ describe('renderServerPage', () => {
 
   it('shows the series only once there is more than one date', () => {
     const one = [
-      { date: '2026-08-16', server: 'demo', tokens: 1000, toolCount: 2, status: 'measured', isolation: 'docker', version: '' },
+      {
+        date: '2026-08-16',
+        server: 'demo',
+        tokens: 1000,
+        toolCount: 2,
+        status: 'measured',
+        isolation: 'docker',
+        version: '',
+      },
     ];
     expect(renderServerPage(entry, measurement(), one)).not.toContain('## Over time');
 
@@ -100,7 +112,15 @@ describe('renderServerPage', () => {
       ...one,
       // The newer row names its release and the older one does not, which is
       // the shape of the committed file while the rotation fills the column in.
-      { date: '2026-08-23', server: 'demo', tokens: 1200, toolCount: 3, status: 'measured', isolation: 'docker', version: '1.29.1' },
+      {
+        date: '2026-08-23',
+        server: 'demo',
+        tokens: 1200,
+        toolCount: 3,
+        status: 'measured',
+        isolation: 'docker',
+        version: '1.29.1',
+      },
     ];
     const md = renderServerPage(entry, measurement(), two);
     expect(md).toContain('## Over time');
@@ -113,7 +133,10 @@ describe('renderServerIndex', () => {
   it('ranks measured servers and links their pages', () => {
     const md = renderServerIndex([
       { entry: { name: 'small', command: 'x' }, m: measurement({ totalTokens: 10, toolCount: 1 }) },
-      { entry: { name: 'big', command: 'x' }, m: measurement({ totalTokens: 90_000, toolCount: 3 }) },
+      {
+        entry: { name: 'big', command: 'x' },
+        m: measurement({ totalTokens: 90_000, toolCount: 3 }),
+      },
     ]);
     const ranked = md.split('\n').filter((l) => /^\| \d+ \|/.test(l));
     expect(ranked[0]).toContain('[big](big.html)');
@@ -125,7 +148,10 @@ describe('renderServerIndex', () => {
   it('lists unmeasured candidates with their status and no link', () => {
     const md = renderServerIndex([
       { entry: { name: 'ok', command: 'x' }, m: measurement() },
-      { entry: { name: 'broken', command: 'x' }, m: measurement({ status: 'startup-failure', totalTokens: null }) },
+      {
+        entry: { name: 'broken', command: 'x' },
+        m: measurement({ status: 'startup-failure', totalTokens: null }),
+      },
       { entry: { name: 'walled', command: 'x', remote: true }, m: null },
       { entry: { name: 'fresh', command: 'x' }, m: null },
     ]);
@@ -162,7 +188,9 @@ describe('writeServerPages', () => {
     expect(out.pages).toBe(1);
     expect(existsSync(join(root, 'docs', 'servers', 'demo.md'))).toBe(true);
     expect(existsSync(join(root, 'docs', 'servers', 'nope.md'))).toBe(false);
-    expect(readFileSync(join(root, 'docs', 'servers', 'index.md'), 'utf8')).toContain('[demo](demo.html)');
+    expect(readFileSync(join(root, 'docs', 'servers', 'index.md'), 'utf8')).toContain(
+      '[demo](demo.html)',
+    );
   });
 
   it('folds that server’s history rows into its page', () => {
@@ -231,13 +259,17 @@ describe('writeServerPages', () => {
     seed('half', 'corrupt');
     const out = writeServerPages([entry, { name: 'half', command: 'x' }], root);
     expect(out.pages).toBe(1);
-    expect(readFileSync(join(root, 'docs', 'servers', 'index.md'), 'utf8')).toContain('| half | not-yet-run |');
+    expect(readFileSync(join(root, 'docs', 'servers', 'index.md'), 'utf8')).toContain(
+      '| half | not-yet-run |',
+    );
   });
 });
 
 describe('serverPageUrl', () => {
   it('is the published Pages URL for the server', () => {
-    expect(serverPageUrl('demo')).toBe('https://athakur3.github.io/mcp-context-cost/servers/demo.html');
+    expect(serverPageUrl('demo')).toBe(
+      'https://athakur3.github.io/mcp-context-cost/servers/demo.html',
+    );
   });
 });
 
@@ -264,19 +296,30 @@ describe('serverPageUrl', () => {
  */
 describe('the page says which machine made the number', () => {
   it('prints the architecture beside the image', () => {
-    const md = renderServerPage(entry, measurement({ isolation: { docker: true, image: 'node:22-slim', network: 'bridge', arch: 'linux/amd64' } }));
+    const md = renderServerPage(
+      entry,
+      measurement({
+        isolation: { docker: true, image: 'node:22-slim', network: 'bridge', arch: 'linux/amd64' },
+      }),
+    );
     expect(md).toContain('docker · node:22-slim · network bridge · linux/amd64');
   });
 
   it('says an absent architecture is not on record, rather than leaving it out', () => {
     // Absent means unknown. Omitting it reads as "the same as yours", which is
     // the claim this field exists to stop anyone making.
-    const md = renderServerPage(entry, measurement({ isolation: { docker: true, image: 'node:22-slim', network: 'bridge' } }));
+    const md = renderServerPage(
+      entry,
+      measurement({ isolation: { docker: true, image: 'node:22-slim', network: 'bridge' } }),
+    );
     expect(md).toContain('architecture not on record');
   });
 
   it('names the machine for an uncontained run too', () => {
-    const md = renderServerPage(entry, measurement({ isolation: { docker: false, arch: 'darwin/arm64' } }));
+    const md = renderServerPage(
+      entry,
+      measurement({ isolation: { docker: false, arch: 'darwin/arm64' } }),
+    );
     expect(md).toContain('host process (no container) · darwin/arm64');
   });
 });
@@ -295,8 +338,22 @@ describe('the per-tool table names the output schema when there is one', () => {
       entry,
       measurement({
         tools: [
-          { name: 'search', tokens: 700, descriptionTokens: 100, inputSchemaTokens: 60, outputSchemaTokens: 500, annotationsTokens: 20 },
-          { name: 'fetch', tokens: 280, descriptionTokens: 40, inputSchemaTokens: 200, outputSchemaTokens: 0, annotationsTokens: 0 },
+          {
+            name: 'search',
+            tokens: 700,
+            descriptionTokens: 100,
+            inputSchemaTokens: 60,
+            outputSchemaTokens: 500,
+            annotationsTokens: 20,
+          },
+          {
+            name: 'fetch',
+            tokens: 280,
+            descriptionTokens: 40,
+            inputSchemaTokens: 200,
+            outputSchemaTokens: 0,
+            annotationsTokens: 0,
+          },
         ],
       }),
     );
@@ -309,7 +366,16 @@ describe('the per-tool table names the output schema when there is one', () => {
     const md = renderServerPage(
       entry,
       measurement({
-        tools: [{ name: 'search', tokens: 700, descriptionTokens: 100, inputSchemaTokens: 560, outputSchemaTokens: 0, annotationsTokens: 0 }],
+        tools: [
+          {
+            name: 'search',
+            tokens: 700,
+            descriptionTokens: 100,
+            inputSchemaTokens: 560,
+            outputSchemaTokens: 0,
+            annotationsTokens: 0,
+          },
+        ],
       }),
     );
     expect(md).toContain('| tool | tokens | share | description | input schema |');
@@ -328,7 +394,16 @@ describe('the per-tool table names the output schema when there is one', () => {
     const md = renderServerPage(
       entry,
       measurement({
-        tools: [{ name: 'search', tokens: 700, descriptionTokens: 100, inputSchemaTokens: 560, outputSchemaTokens: 0, annotationsTokens: 90 }],
+        tools: [
+          {
+            name: 'search',
+            tokens: 700,
+            descriptionTokens: 100,
+            inputSchemaTokens: 560,
+            outputSchemaTokens: 0,
+            annotationsTokens: 90,
+          },
+        ],
       }),
     );
     expect(md).not.toContain('annotations |');

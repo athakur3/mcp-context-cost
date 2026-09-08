@@ -28,7 +28,11 @@ import { writeLeaderboard, type ServerEntry } from '../src/sweep/report.js';
  */
 
 const TOOLS = [
-  { name: 'alpha', description: 'First tool, with a description long enough to cost tokens.', inputSchema: { type: 'object', properties: { q: { type: 'string' } } } },
+  {
+    name: 'alpha',
+    description: 'First tool, with a description long enough to cost tokens.',
+    inputSchema: { type: 'object', properties: { q: { type: 'string' } } },
+  },
   { name: 'beta', description: 'Second tool.', inputSchema: { type: 'object', properties: {} } },
 ];
 
@@ -36,10 +40,18 @@ const CLI_REPORT = JSON.stringify({
   counter: { provider: 'tiktoken', model: 'gpt-4o' },
   server_info: { name: 'stub', version: '1.0.0' },
   total_tokens: 130,
-  tools: { total: 120, count: 2, items: [{ name: 'alpha', tokens: 70 }, { name: 'beta', tokens: 50 }] },
+  tools: {
+    total: 120,
+    count: 2,
+    items: [
+      { name: 'alpha', tokens: 70 },
+      { name: 'beta', tokens: 50 },
+    ],
+  },
 });
 
-const measurement = () => measureTools(TOOLS, { serverName: 'stub', launchCommand: 'npx -y stub', envVarNames: [] });
+const measurement = () =>
+  measureTools(TOOLS, { serverName: 'stub', launchCommand: 'npx -y stub', envVarNames: [] });
 
 describe('parseCliReport', () => {
   it('reads total, count and names from the report shape the CLI publishes', () => {
@@ -143,7 +155,10 @@ describe('divergencePct', () => {
   });
 
   it('is null when there is nothing to divide by', () => {
-    const row = { ...toCrossCheckRow(measurement(), parseCliReport(CLI_REPORT)), ourMappedTokens: 0 };
+    const row = {
+      ...toCrossCheckRow(measurement(), parseCliReport(CLI_REPORT)),
+      ourMappedTokens: 0,
+    };
     expect(divergencePct(row)).toBeNull();
   });
 });
@@ -151,7 +166,11 @@ describe('divergencePct', () => {
 describe('parseCrossCheck', () => {
   it('round-trips a run and fills defaults without inventing rows', () => {
     const run = parseCrossCheck(
-      JSON.stringify({ cliVersion: 'v0.0.1', measuredAt: '2026-09-03', servers: { a: { ourTokens: 1 } } }),
+      JSON.stringify({
+        cliVersion: 'v0.0.1',
+        measuredAt: '2026-09-03',
+        servers: { a: { ourTokens: 1 } },
+      }),
     );
     expect(run).not.toBeNull();
     expect(run!.method).toBe(CROSS_CHECK_METHOD);
@@ -184,7 +203,10 @@ describe('the runner pieces, against a shim CLI', () => {
   beforeAll(() => {
     dir = mkdtempSync(join(tmpdir(), 'xchk-shim-'));
     const shim = join(dir, 'mcp-tokens');
-    writeFileSync(shim, `#!/usr/bin/env node\nprocess.stdout.write(${JSON.stringify(CLI_REPORT)});\n`);
+    writeFileSync(
+      shim,
+      `#!/usr/bin/env node\nprocess.stdout.write(${JSON.stringify(CLI_REPORT)});\n`,
+    );
     chmodSync(shim, 0o755);
     const slow = join(dir, 'mcp-tokens-slow');
     writeFileSync(slow, `#!/usr/bin/env node\nsetInterval(() => {}, 1000);\n`);
@@ -203,7 +225,11 @@ describe('the runner pieces, against a shim CLI', () => {
   });
 
   it('captures the report from a host-mode run', async () => {
-    const out = await runCli(join(dir, 'mcp-tokens'), { name: 'stub', command: 'node -e ""' }, { docker: false, timeoutMs: 5_000 });
+    const out = await runCli(
+      join(dir, 'mcp-tokens'),
+      { name: 'stub', command: 'node -e ""' },
+      { docker: false, timeoutMs: 5_000 },
+    );
     expect(out.code).toBe(0);
     expect(out.timedOut).toBe(false);
     expect(parseCliReport(out.stdout).report?.total).toBe(120);
@@ -226,14 +252,37 @@ describe('the leaderboard prints the column under the same silence rules', () =>
     root = mkdtempSync(join(tmpdir(), 'xchk-board-'));
     mkdirSync(join(root, 'results', 'fresh'), { recursive: true });
     mkdirSync(join(root, 'results', 'stale'), { recursive: true });
-    const fresh = measureTools(TOOLS, { serverName: 'fresh', launchCommand: 'npx -y fresh', envVarNames: [] });
-    const stale = measureTools(TOOLS.slice(0, 1), { serverName: 'stale', launchCommand: 'npx -y stale', envVarNames: [] });
-    writeFileSync(join(root, 'results', 'fresh', 'measurement.json'), JSON.stringify(fresh, null, 2));
-    writeFileSync(join(root, 'results', 'stale', 'measurement.json'), JSON.stringify(stale, null, 2));
+    const fresh = measureTools(TOOLS, {
+      serverName: 'fresh',
+      launchCommand: 'npx -y fresh',
+      envVarNames: [],
+    });
+    const stale = measureTools(TOOLS.slice(0, 1), {
+      serverName: 'stale',
+      launchCommand: 'npx -y stale',
+      envVarNames: [],
+    });
+    writeFileSync(
+      join(root, 'results', 'fresh', 'measurement.json'),
+      JSON.stringify(fresh, null, 2),
+    );
+    writeFileSync(
+      join(root, 'results', 'stale', 'measurement.json'),
+      JSON.stringify(stale, null, 2),
+    );
     const rows: Record<string, CrossCheckRow> = {
       fresh: toCrossCheckRow(fresh, parseCliReport(CLI_REPORT)),
       // Filed under a capture that is no longer the one on disk.
-      stale: { ourTokens: 50, ourMappedTokens: 50, cliTokens: 51, ourToolCount: 1, cliToolCount: 1, toolSetMatches: true, dynamic: false, capturedSha256: 'f'.repeat(64) },
+      stale: {
+        ourTokens: 50,
+        ourMappedTokens: 50,
+        cliTokens: 51,
+        ourToolCount: 1,
+        cliToolCount: 1,
+        toolSetMatches: true,
+        dynamic: false,
+        capturedSha256: 'f'.repeat(64),
+      },
     };
     writeFileSync(
       join(root, 'results', 'cross-check.json'),

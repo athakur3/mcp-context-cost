@@ -79,7 +79,7 @@ describe('a published figure travels with its two companions', () => {
       // verify transcript is an illustration, not a claim).
       const proseLines = stripNonProse(raw).split('\n');
       const blank = (l: string) => /^\s*$/.test(l);
-      for (let i = 0; i < rawLines.length; ) {
+      for (let i = 0; i < rawLines.length;) {
         if (blank(rawLines[i])) {
           i++;
           continue;
@@ -103,7 +103,12 @@ describe('a published figure travels with its two companions', () => {
             .filter(([, v]) => !proseBlock.includes(v))
             .map(([k]) => k);
           if (absent.length === 0 || absent.length === 3) continue;
-          if (WIRE_ALONE.some((e) => e.file === file && e.server === name && rawBlock.includes(e.anchor))) continue;
+          if (
+            WIRE_ALONE.some(
+              (e) => e.file === file && e.server === name && rawBlock.includes(e.anchor),
+            )
+          )
+            continue;
           unaccompanied.push(`${file}: ${name} is missing its ${absent.join(' and ')} figure`);
         }
         i = j;
@@ -111,13 +116,15 @@ describe('a published figure travels with its two companions', () => {
     }
     expect(
       unaccompanied,
-      'a page states one of a server\'s three numbers without the others: state all three, or add it ' +
+      "a page states one of a server's three numbers without the others: state all three, or add it " +
         'to WIRE_ALONE with the reason the companions would say nothing',
     ).toEqual([]);
   });
 
   it('lists no exemption whose sentence has since been rewritten', () => {
-    const stale = WIRE_ALONE.filter((e) => !readFileSync(join(repoRoot, e.file), 'utf8').includes(e.anchor));
+    const stale = WIRE_ALONE.filter(
+      (e) => !readFileSync(join(repoRoot, e.file), 'utf8').includes(e.anchor),
+    );
     expect(stale.map((e) => `${e.file}: "${e.anchor}"`)).toEqual([]);
   });
 });
@@ -169,7 +176,9 @@ describe('the generated surfaces carry the triple and rank on the wire', () => {
       const name = /\| \[([^\]]+)\]/.exec(row)![1];
       const t = triples.get(name);
       if (!t) continue;
-      expect(row.split('|')[claudeCol].trim() === '—', `${name}: leaderboard vs triple`).toBe(t.claude === null);
+      expect(row.split('|')[claudeCol].trim() === '—', `${name}: leaderboard vs triple`).toBe(
+        t.claude === null,
+      );
     }
   });
 
@@ -195,14 +204,19 @@ describe('the generated surfaces carry the triple and rank on the wire', () => {
       ['results/leaderboard.md', seriesOf(rowsOf(board), colOf(board, '| # | server |', 'tokens'))],
       [
         'docs/dashboard.html',
-        [...dash.matchAll(/<tr><td>\d+<\/td><td>[^<]*<\/td><td class="num">([\d,]+)<\/td>/g)].map((m) =>
-          num(m[1]),
+        [...dash.matchAll(/<tr><td>\d+<\/td><td>[^<]*<\/td><td class="num">([\d,]+)<\/td>/g)].map(
+          (m) => num(m[1]),
         ),
       ],
     ];
     for (const [name, series] of surfaces) {
-      expect(series.length, `${name}: no ranked rows found — the parser has gone stale`).toBeGreaterThan(10);
-      const outOfOrder = series.map((n, i) => (i > 0 && n > series[i - 1] ? `${series[i - 1]} then ${n}` : '')).filter(Boolean);
+      expect(
+        series.length,
+        `${name}: no ranked rows found — the parser has gone stale`,
+      ).toBeGreaterThan(10);
+      const outOfOrder = series
+        .map((n, i) => (i > 0 && n > series[i - 1] ? `${series[i - 1]} then ${n}` : ''))
+        .filter(Boolean);
       expect(outOfOrder, `${name} is not ranked on the wire`).toEqual([]);
     }
   });

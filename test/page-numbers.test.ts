@@ -37,24 +37,88 @@ const COUNT_CLAIM =
  */
 const STATIC_COUNTS: { file: PageFile; text: string; why: string }[] = [
   // --- grammar, not arithmetic: a small number used as a determiner ---
-  { file: 'README.md', text: 'one client', why: 'a determiner in prose about how discovery works, not a count of clients' },
-  { file: 'README.md', text: 'one server', why: 'a determiner: "what one server costs", not a count' },
-  { file: 'README.md', text: 'one mistake this tool', why: 'prose, not a count of anything measured' },
-  { file: 'docs/METHODOLOGY.md', text: 'one row', why: 'a determiner in the description of a single history row' },
-  { file: 'docs/METHODOLOGY.md', text: 'One extra server', why: 'a determiner in the harness-guard rule' },
-  { file: 'docs/METHODOLOGY.md', text: 'one server', why: 'a determiner: the rule is stated per server' },
-  { file: 'docs/METHODOLOGY.md', text: 'one measurement', why: 'a determiner: the rule is stated per measurement' },
-  { file: 'docs/METHODOLOGY.md', text: 'two configured entries', why: 'the worked example in the deferral model, whose numbers are invented for the example' },
-  { file: 'docs/METHODOLOGY.md', text: 'two tools', why: 'the worked example, not the measured set' },
-  { file: 'docs/METHODOLOGY.md', text: 'two measurements', why: 'a determiner: comparability is defined between two measurements' },
-  { file: 'docs/METHODOLOGY.md', text: 'three fields an Anthropic tool', why: 'the Anthropic tool schema has three request fields — a fact about the API, not about this data' },
+  {
+    file: 'README.md',
+    text: 'one client',
+    why: 'a determiner in prose about how discovery works, not a count of clients',
+  },
+  {
+    file: 'README.md',
+    text: 'one server',
+    why: 'a determiner: "what one server costs", not a count',
+  },
+  {
+    file: 'README.md',
+    text: 'one mistake this tool',
+    why: 'prose, not a count of anything measured',
+  },
+  {
+    file: 'docs/METHODOLOGY.md',
+    text: 'one row',
+    why: 'a determiner in the description of a single history row',
+  },
+  {
+    file: 'docs/METHODOLOGY.md',
+    text: 'One extra server',
+    why: 'a determiner in the harness-guard rule',
+  },
+  {
+    file: 'docs/METHODOLOGY.md',
+    text: 'one server',
+    why: 'a determiner: the rule is stated per server',
+  },
+  {
+    file: 'docs/METHODOLOGY.md',
+    text: 'one measurement',
+    why: 'a determiner: the rule is stated per measurement',
+  },
+  {
+    file: 'docs/METHODOLOGY.md',
+    text: 'two configured entries',
+    why: 'the worked example in the deferral model, whose numbers are invented for the example',
+  },
+  {
+    file: 'docs/METHODOLOGY.md',
+    text: 'two tools',
+    why: 'the worked example, not the measured set',
+  },
+  {
+    file: 'docs/METHODOLOGY.md',
+    text: 'two measurements',
+    why: 'a determiner: comparability is defined between two measurements',
+  },
+  {
+    file: 'docs/METHODOLOGY.md',
+    text: 'three fields an Anthropic tool',
+    why: 'the Anthropic tool schema has three request fields — a fact about the API, not about this data',
+  },
 
   // --- frozen or externally fixed ---
-  { file: 'README.md', text: '10 clients', why: 'the number of client config formats `audit` discovers — moves when code moves, and the deferral table test already reads the page against the resolver' },
-  { file: 'docs/METHODOLOGY.md', text: 'Three clients', why: 'the clients whose vendors are on record as deferring — `DEFERRAL_ON_RECORD` in `audit/deferral.ts`, whose membership `audit-clients.test.ts` pins; it moves when code moves, not when the sweep runs' },
-  { file: 'docs/METHODOLOGY.md', text: 'four is a measurement', why: 'the four kinds of first-party record the rule admits, listed in the table above it — a property of the rule, not of the data' },
-  { file: 'docs/METHODOLOGY.md', text: '128 tools', why: "VS Code's documented per-request tool cap, a fact about that client read 2026-09-07, not about this data" },
-  { file: 'docs/METHODOLOGY.md', text: '100 tools', why: "Windsurf's documented tool cap, a fact about that client read 2026-09-06, not about this data" },
+  {
+    file: 'README.md',
+    text: '10 clients',
+    why: 'the number of client config formats `audit` discovers — moves when code moves, and the deferral table test already reads the page against the resolver',
+  },
+  {
+    file: 'docs/METHODOLOGY.md',
+    text: 'Three clients',
+    why: 'the clients whose vendors are on record as deferring — `DEFERRAL_ON_RECORD` in `audit/deferral.ts`, whose membership `audit-clients.test.ts` pins; it moves when code moves, not when the sweep runs',
+  },
+  {
+    file: 'docs/METHODOLOGY.md',
+    text: 'four is a measurement',
+    why: 'the four kinds of first-party record the rule admits, listed in the table above it — a property of the rule, not of the data',
+  },
+  {
+    file: 'docs/METHODOLOGY.md',
+    text: '128 tools',
+    why: "VS Code's documented per-request tool cap, a fact about that client read 2026-09-07, not about this data",
+  },
+  {
+    file: 'docs/METHODOLOGY.md',
+    text: '100 tools',
+    why: "Windsurf's documented tool cap, a fact about that client read 2026-09-06, not about this data",
+  },
   {
     file: 'docs/METHODOLOGY.md',
     text: '197 tokens',
@@ -69,11 +133,26 @@ const STATIC_COUNTS: { file: PageFile; text: string; why: string }[] = [
     text: '197 tokens on one server',
     why: 'the same dated reading, matched a second time by the longer span',
   },
-  { file: 'README.md', text: '1,200 tokens', why: 'an illustrative release-size figure in the badge pitch, not a measurement' },
-  { file: 'docs/METHODOLOGY.md', text: '5 servers', why: 'the harness-guard floor, a constant in `harness-guard.ts`' },
-  { file: 'docs/METHODOLOGY.md', text: '25 tokens', why: '`SIGNIFICANT_TOKENS`, a constant in `core/regression.ts`' },
-  { file: 'docs/METHODOLOGY.md', text: '57 measured servers', why: 'the frozen band derivation: the size of the 2026-08-16 sweep the bands were cut against, which is history and must not move' },
-
+  {
+    file: 'README.md',
+    text: '1,200 tokens',
+    why: 'an illustrative release-size figure in the badge pitch, not a measurement',
+  },
+  {
+    file: 'docs/METHODOLOGY.md',
+    text: '5 servers',
+    why: 'the harness-guard floor, a constant in `harness-guard.ts`',
+  },
+  {
+    file: 'docs/METHODOLOGY.md',
+    text: '25 tokens',
+    why: '`SIGNIFICANT_TOKENS`, a constant in `core/regression.ts`',
+  },
+  {
+    file: 'docs/METHODOLOGY.md',
+    text: '57 measured servers',
+    why: 'the frozen band derivation: the size of the 2026-08-16 sweep the bands were cut against, which is history and must not move',
+  },
 ];
 
 describe('every count on the front pages is maintained or deliberately static', () => {

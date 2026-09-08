@@ -34,7 +34,8 @@ import { parseDivergence } from '../src/core/divergence.js';
 import { KNOWN_SPEC_REVISIONS, newerThanPinned } from '../src/core/protocol.js';
 
 const root = process.cwd();
-const git = (...args: string[]) => execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();
+const git = (...args: string[]) =>
+  execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();
 
 interface Finding {
   kind: 'stale' | 'look';
@@ -59,14 +60,19 @@ function regenIsAFixedPoint(): Finding[] {
   //
   // A check that reports on your work should not be able to damage it. This one
   // cannot touch the working tree at all.
-  const owned = git('ls-files', 'results', 'docs', 'README.md', 'badges').split('\n').filter(Boolean);
+  const owned = git('ls-files', 'results', 'docs', 'README.md', 'badges')
+    .split('\n')
+    .filter(Boolean);
   const tmp = mkdtempSync(join(tmpdir(), 'mcc-readiness-'));
   try {
     for (const rel of ['servers.yaml', 'package.json', 'results', 'docs', 'badges', 'README.md']) {
       const from = join(root, rel);
       if (existsSync(from)) cpSync(from, join(tmp, rel), { recursive: true });
     }
-    execFileSync('npx', ['tsx', join(root, 'src', 'sweep', 'regen.ts')], { cwd: tmp, stdio: 'pipe' });
+    execFileSync('npx', ['tsx', join(root, 'src', 'sweep', 'regen.ts')], {
+      cwd: tmp,
+      stdio: 'pipe',
+    });
 
     const hash = (base: string, f: string) => {
       const p = join(base, f);
@@ -80,7 +86,10 @@ function regenIsAFixedPoint(): Finding[] {
         what: 'a published artifact does not match the data it is derived from',
         detail:
           `regen would rewrite ${changed.length} file(s):\n` +
-          changed.slice(0, 12).map((f) => `  ${f}`).join('\n') +
+          changed
+            .slice(0, 12)
+            .map((f) => `  ${f}`)
+            .join('\n') +
           (changed.length > 12 ? `\n  … and ${changed.length - 12} more` : '') +
           '\nRun `npx tsx src/sweep/regen.ts` and commit the result. If it rewrote something you ' +
           'did not expect, that is the finding — read it before committing it.',
@@ -226,7 +235,8 @@ function theReleasedBandStillDescribesTheData(): Finding[] {
   ];
 }
 
-const DECLARES = /^\s*(?:export\s+const\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*[:=]\s*(\d[\d_.]*)\s*[,;]?\s*$/;
+const DECLARES =
+  /^\s*(?:export\s+const\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*[:=]\s*(\d[\d_.]*)\s*[,;]?\s*$/;
 const DATA_SHAPED = /servers?|count|total|tokens|runSize|min|max|low|high|median|share|ratio/i;
 /** A count of the current data. Deliberately not dates: a comment saying what was
  *  observed on 2026-08-19 is a dated reading, which is this repository's whole
@@ -388,7 +398,9 @@ function measuredOverARevisionTheServerChose(): Finding[] {
 }
 
 function numbersWrittenIntoSource(): Finding[] {
-  const files = git('ls-files', 'src').split('\n').filter((f) => f.endsWith('.ts'));
+  const files = git('ls-files', 'src')
+    .split('\n')
+    .filter((f) => f.endsWith('.ts'));
   const hits: string[] = [];
   for (const f of files) {
     const lines = readFileSync(join(root, f), 'utf8').split('\n');

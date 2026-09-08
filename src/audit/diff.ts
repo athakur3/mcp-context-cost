@@ -83,7 +83,10 @@ export interface AuditDiff {
 }
 
 /** Parse and shape-check a stored report. A baseline that cannot be read is never "no change". */
-export function parseBaselineReport(text: string): { report: AuditReport | null; problem?: string } {
+export function parseBaselineReport(text: string): {
+  report: AuditReport | null;
+  problem?: string;
+} {
   let doc: unknown;
   try {
     doc = JSON.parse(text);
@@ -95,10 +98,17 @@ export function parseBaselineReport(text: string): { report: AuditReport | null;
   }
   const r = doc as Partial<AuditReport>;
   if (!Array.isArray(r.configs)) {
-    return { report: null, problem: "baseline has no 'configs' array — is it the output of `audit --json`?" };
+    return {
+      report: null,
+      problem: "baseline has no 'configs' array — is it the output of `audit --json`?",
+    };
   }
   if (typeof r.methodologyVersion !== 'string' || typeof r.encoding !== 'string') {
-    return { report: null, problem: 'baseline is missing methodologyVersion/encoding — is it the output of `audit --json`?' };
+    return {
+      report: null,
+      problem:
+        'baseline is missing methodologyVersion/encoding — is it the output of `audit --json`?',
+    };
   }
   for (const c of r.configs) {
     if (!c || typeof c !== 'object' || typeof (c as AuditConfigResult).source !== 'string') {
@@ -123,14 +133,20 @@ type ServerState = { present: boolean; tokens: number | null };
 
 function statesOf(cfg: AuditConfigResult): Map<string, ServerState> {
   const out = new Map<string, ServerState>();
-  for (const s of cfg.servers ?? []) out.set(s.name, { present: true, tokens: typeof s.tokens === 'number' ? s.tokens : null });
+  for (const s of cfg.servers ?? [])
+    out.set(s.name, { present: true, tokens: typeof s.tokens === 'number' ? s.tokens : null });
   // A skipped server IS in the config; it just has no number. Keeping it distinct
   // from absent is the whole reason `removed` and `unmeasured-now` are separate kinds.
-  for (const s of cfg.skipped ?? []) if (!out.has(s.name)) out.set(s.name, { present: true, tokens: null });
+  for (const s of cfg.skipped ?? [])
+    if (!out.has(s.name)) out.set(s.name, { present: true, tokens: null });
   return out;
 }
 
-export function diffConfig(before: AuditConfigResult | null, after: AuditConfigResult, matchedBy: ConfigDiff['matchedBy']): ConfigDiff {
+export function diffConfig(
+  before: AuditConfigResult | null,
+  after: AuditConfigResult,
+  matchedBy: ConfigDiff['matchedBy'],
+): ConfigDiff {
   const afterShare = after.contextShare;
   if (!before) {
     return {
@@ -163,7 +179,14 @@ export function diffConfig(before: AuditConfigResult | null, after: AuditConfigR
     if (bs && !as) {
       servers.push(
         bs.tokens === null
-          ? { name, kind: 'removed', before: null, after: null, delta: null, note: 'was in the config but never measured — removing it changed no measured cost' }
+          ? {
+              name,
+              kind: 'removed',
+              before: null,
+              after: null,
+              delta: null,
+              note: 'was in the config but never measured — removing it changed no measured cost',
+            }
           : { name, kind: 'removed', before: bs.tokens, after: null, delta: -bs.tokens },
       );
       continue;
@@ -193,7 +216,13 @@ export function diffConfig(before: AuditConfigResult | null, after: AuditConfigR
 
     if (bs.tokens !== null && as.tokens !== null) {
       const delta = as.tokens - bs.tokens;
-      servers.push({ name, kind: delta === 0 ? 'unchanged' : 'changed', before: bs.tokens, after: as.tokens, delta });
+      servers.push({
+        name,
+        kind: delta === 0 ? 'unchanged' : 'changed',
+        before: bs.tokens,
+        after: as.tokens,
+        delta,
+      });
     } else if (bs.tokens !== null && as.tokens === null) {
       exact = false;
       understatedBy += bs.tokens;
@@ -229,7 +258,9 @@ export function diffConfig(before: AuditConfigResult | null, after: AuditConfigR
   }
 
   // Biggest movers first; ties and non-deltas fall to the bottom in name order.
-  servers.sort((x, y) => Math.abs(y.delta ?? 0) - Math.abs(x.delta ?? 0) || x.name.localeCompare(y.name));
+  servers.sort(
+    (x, y) => Math.abs(y.delta ?? 0) - Math.abs(x.delta ?? 0) || x.name.localeCompare(y.name),
+  );
 
   return {
     client: after.client,
@@ -259,9 +290,20 @@ export function diffConfig(before: AuditConfigResult | null, after: AuditConfigR
 export function pairConfigs(
   before: AuditConfigResult[],
   after: AuditConfigResult[],
-): { pairs: { before: AuditConfigResult | null; after: AuditConfigResult; matchedBy: ConfigDiff['matchedBy'] }[]; dropped: AuditConfigResult[] } {
+): {
+  pairs: {
+    before: AuditConfigResult | null;
+    after: AuditConfigResult;
+    matchedBy: ConfigDiff['matchedBy'];
+  }[];
+  dropped: AuditConfigResult[];
+} {
   const unusedBefore = new Map(before.map((c) => [c.source, c]));
-  const pairs: { before: AuditConfigResult | null; after: AuditConfigResult; matchedBy: ConfigDiff['matchedBy'] }[] = [];
+  const pairs: {
+    before: AuditConfigResult | null;
+    after: AuditConfigResult;
+    matchedBy: ConfigDiff['matchedBy'];
+  }[] = [];
 
   for (const cur of after) {
     const hit = unusedBefore.get(cur.source);
@@ -303,7 +345,9 @@ export function buildDiff(baseline: AuditReport, current: AuditReport): AuditDif
   }
   if (baseline.encoding !== current.encoding) {
     comparable = false;
-    warnings.push(`encoding changed (${baseline.encoding} → ${current.encoding}) — the counts are in different units`);
+    warnings.push(
+      `encoding changed (${baseline.encoding} → ${current.encoding}) — the counts are in different units`,
+    );
   }
   if (baseline.contextWindow !== current.contextWindow) {
     // Shares move, token counts do not. Worth saying, not worth invalidating.
@@ -317,10 +361,14 @@ export function buildDiff(baseline: AuditReport, current: AuditReport): AuditDif
 
   for (const c of configs) {
     if (c.matchedBy === 'unmatched') {
-      warnings.push(`${c.source}: no matching config in the baseline — its ${c.afterTotal.toLocaleString('en-US')} tokens are shown as a total, not a change`);
+      warnings.push(
+        `${c.source}: no matching config in the baseline — its ${c.afterTotal.toLocaleString('en-US')} tokens are shown as a total, not a change`,
+      );
     }
     if (c.matchedBy === 'sole-config' && c.source !== baseline.configs[0]?.source) {
-      warnings.push(`paired ${c.source} with the baseline's ${baseline.configs[0]?.source} — one config on each side, different paths`);
+      warnings.push(
+        `paired ${c.source} with the baseline's ${baseline.configs[0]?.source} — one config on each side, different paths`,
+      );
     }
   }
   for (const d of dropped) {
@@ -336,10 +384,16 @@ export function buildDiff(baseline: AuditReport, current: AuditReport): AuditDif
     baselineGeneratedAt: baseline.generatedAt,
     baselineMethodologyVersion: baseline.methodologyVersion,
     comparable,
-    droppedConfigs: dropped.map((d) => ({ client: d.client, source: d.source, totalTokens: d.totalTokens })),
+    droppedConfigs: dropped.map((d) => ({
+      client: d.client,
+      source: d.source,
+      totalTokens: d.totalTokens,
+    })),
     warnings,
     configs,
-    worstIncrease: increases.length ? { source: increases[0].source, delta: increases[0].delta as number } : null,
+    worstIncrease: increases.length
+      ? { source: increases[0].source, delta: increases[0].delta as number }
+      : null,
   };
 }
 
@@ -351,12 +405,16 @@ const clientLabel = (client: string) => (client === 'explicit' || !client ? 'thi
 export function formatDiff(diff: AuditDiff, contextWindow: number): string {
   const lines: string[] = [];
   lines.push('');
-  lines.push(`diff vs baseline measured ${diff.baselineGeneratedAt} (methodology ${diff.baselineMethodologyVersion})`);
+  lines.push(
+    `diff vs baseline measured ${diff.baselineGeneratedAt} (methodology ${diff.baselineMethodologyVersion})`,
+  );
 
   for (const c of diff.configs) {
     lines.push('');
     if (c.matchedBy === 'unmatched' || c.delta === null || c.beforeTotal === null) {
-      lines.push(`  ${c.source}  ${n(c.afterTotal)} tokens — no baseline for this config, so nothing to compare`);
+      lines.push(
+        `  ${c.source}  ${n(c.afterTotal)} tokens — no baseline for this config, so nothing to compare`,
+      );
       continue;
     }
 
@@ -371,7 +429,9 @@ export function formatDiff(diff: AuditDiff, contextWindow: number): string {
         const from = r.before === null ? '—' : n(r.before);
         const to = r.after === null ? '—' : n(r.after);
         const d = r.delta === null ? '' : `  ${signed(r.delta)}`;
-        lines.push(`    ${r.kind.padEnd(17)} ${r.name.padEnd(w)}  ${from.padStart(9)} → ${to.padStart(9)}${d}`);
+        lines.push(
+          `    ${r.kind.padEnd(17)} ${r.name.padEnd(w)}  ${from.padStart(9)} → ${to.padStart(9)}${d}`,
+        );
       }
     }
 
@@ -384,16 +444,29 @@ export function formatDiff(diff: AuditDiff, contextWindow: number): string {
       // this run could not establish. A server that died takes its tokens out of the
       // total exactly like a server you uninstalled — printing "removes 2,378 tokens"
       // and correcting it two lines down is the flattering reading getting read.
-      lines.push(`    Not a clean comparison: a server changed measured-ness between the two runs.`);
-      lines.push(`    The measured total moved ${signed(c.delta)}, but that is not what your config did.`);
+      lines.push(
+        `    Not a clean comparison: a server changed measured-ness between the two runs.`,
+      );
+      lines.push(
+        `    The measured total moved ${signed(c.delta)}, but that is not what your config did.`,
+      );
       lines.push('');
       for (const r of c.servers) {
-        if (r.kind === 'unmeasured-now' || r.kind === 'unmeasured-before') lines.push(`      ${r.name}: ${r.note}`);
+        if (r.kind === 'unmeasured-now' || r.kind === 'unmeasured-before')
+          lines.push(`      ${r.name}: ${r.note}`);
       }
-      if (c.understatedBy) lines.push(`      → true cost is at least ${n(c.understatedBy)} higher than the ${n(c.afterTotal)} measured now.`);
-      if (c.overstatedBy) lines.push(`      → up to ${n(c.overstatedBy)} of that movement was already being paid, just unmeasured.`);
+      if (c.understatedBy)
+        lines.push(
+          `      → true cost is at least ${n(c.understatedBy)} higher than the ${n(c.afterTotal)} measured now.`,
+        );
+      if (c.overstatedBy)
+        lines.push(
+          `      → up to ${n(c.overstatedBy)} of that movement was already being paid, just unmeasured.`,
+        );
     } else if (c.delta === 0) {
-      lines.push(`    No change: this config costs the same ${n(c.afterTotal)} tokens per request as the baseline.`);
+      lines.push(
+        `    No change: this config costs the same ${n(c.afterTotal)} tokens per request as the baseline.`,
+      );
     } else if (c.delta > 0) {
       lines.push(
         `    This change adds ${n(c.delta)} tokens to every request in ${clientLabel(c.client)} — ` +
@@ -406,7 +479,11 @@ export function formatDiff(diff: AuditDiff, contextWindow: number): string {
       );
     }
 
-    const blind = c.servers.filter((r) => r.kind === 'unmeasured-both' || ((r.kind === 'added' || r.kind === 'removed') && r.delta === null));
+    const blind = c.servers.filter(
+      (r) =>
+        r.kind === 'unmeasured-both' ||
+        ((r.kind === 'added' || r.kind === 'removed') && r.delta === null),
+    );
     if (blind.length) {
       lines.push('');
       for (const r of blind) lines.push(`    ${r.name}: ${r.note}`);
@@ -421,8 +498,12 @@ export function formatDiff(diff: AuditDiff, contextWindow: number): string {
 
   if (!diff.comparable) {
     lines.push('');
-    lines.push('  The two runs are not the same measurement, so the numbers above are not a change.');
-    lines.push('  Re-record the baseline with this version: mcp-context-cost audit --json > baseline.json');
+    lines.push(
+      '  The two runs are not the same measurement, so the numbers above are not a change.',
+    );
+    lines.push(
+      '  Re-record the baseline with this version: mcp-context-cost audit --json > baseline.json',
+    );
   }
 
   return lines.join('\n');
@@ -448,7 +529,8 @@ export interface IncreaseGate {
 export function evaluateIncreaseGate(diff: AuditDiff, limit: number): IncreaseGate {
   const reasons: string[] = [];
 
-  if (!diff.comparable) reasons.push('the baseline is not the same measurement as this run — nothing was compared');
+  if (!diff.comparable)
+    reasons.push('the baseline is not the same measurement as this run — nothing was compared');
   for (const c of diff.configs) {
     if (c.matchedBy === 'unmatched') {
       reasons.push(`${c.source}: no baseline to check its ${n(c.afterTotal)} tokens against`);
@@ -468,7 +550,9 @@ export function evaluateIncreaseGate(diff: AuditDiff, limit: number): IncreaseGa
   const worst = diff.worstIncrease?.delta;
   const increase = Number.isFinite(worst) ? (worst as number) : anyDelta ? 0 : null;
   if (reasons.length === 0 && increase !== null && increase > limit) {
-    reasons.push(`${diff.worstIncrease!.source}: +${n(increase)} tokens per request, over the ${n(limit)} allowed`);
+    reasons.push(
+      `${diff.worstIncrease!.source}: +${n(increase)} tokens per request, over the ${n(limit)} allowed`,
+    );
   }
 
   return { limit, pass: reasons.length === 0, increase, reasons };

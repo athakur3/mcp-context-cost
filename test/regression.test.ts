@@ -119,17 +119,18 @@ describe('latestChange — which pair a movement is measured across', () => {
     // A series that moved is a movement, not a hold — the walk found the change.
     expect(held.kind).toBe('changed');
 
-    const flat = readSeries('s', [
-      row('2026-08-19', 900, 4),
-      row('2026-08-26', 900, 4),
-    ]);
+    const flat = readSeries('s', [row('2026-08-19', 900, 4), row('2026-08-26', 900, 4)]);
     expect(flat.kind === 'unchanged' && flat.held.since).toBe('2026-08-19');
     expect(flat.kind === 'unchanged' && flat.held.sweeps).toBe(2);
   });
 
   it('never compares across an isolation change', () => {
     // plottableSeries owns the rule; this asserts the diff honours the run it keeps.
-    const series = [row('2026-08-16', 900, 4, ''), row('2026-08-17', 400, 4, 'host'), row('2026-08-19', 500, 4, 'docker')];
+    const series = [
+      row('2026-08-16', 900, 4, ''),
+      row('2026-08-17', 400, 4, 'host'),
+      row('2026-08-19', 500, 4, 'docker'),
+    ];
     const { rows: comparable } = plottableSeries(series);
     expect(comparable.map((r) => r.date)).toEqual(['2026-08-19']);
     expect(latestChange('s', comparable)).toBeNull();
@@ -229,7 +230,9 @@ describe('attribute — where the tokens went', () => {
     const c = latestChange('s', [row('2026-08-19', 300, 3), row('2026-08-26', 480, 3)], vectors);
     expect(c!.attribution).toBeNull(); // only the newer side was ever stored
     const both: ToolVectorFile = { method: REGRESSION_METHOD, server: 's', entries: [from, to] };
-    expect(latestChange('s', [row('2026-08-19', 300, 3), row('2026-08-26', 480, 3)], both)!.attribution).not.toBeNull();
+    expect(
+      latestChange('s', [row('2026-08-19', 300, 3), row('2026-08-26', 480, 3)], both)!.attribution,
+    ).not.toBeNull();
   });
 });
 
@@ -242,26 +245,41 @@ describe('tool vectors accrue without bloating', () => {
   });
 
   it('appends nothing when the capture has not changed', () => {
-    const f: ToolVectorFile = { method: REGRESSION_METHOD, server: 's', entries: [entry('a'.repeat(64), '2026-08-19')] };
+    const f: ToolVectorFile = {
+      method: REGRESSION_METHOD,
+      server: 's',
+      entries: [entry('a'.repeat(64), '2026-08-19')],
+    };
     const after = appendVector(f, entry('a'.repeat(64), '2026-09-03'));
     expect(after).toBe(f); // same object: nothing written
     expect(after.entries[0].date).toBe('2026-08-19'); // keeps when the capture arrived
   });
 
   it('appends when the capture changed', () => {
-    const f: ToolVectorFile = { method: REGRESSION_METHOD, server: 's', entries: [entry('a'.repeat(64), '2026-08-19')] };
+    const f: ToolVectorFile = {
+      method: REGRESSION_METHOD,
+      server: 's',
+      entries: [entry('a'.repeat(64), '2026-08-19')],
+    };
     expect(appendVector(f, entry('b'.repeat(64), '2026-08-26')).entries).toHaveLength(2);
   });
 
   it('caps the file, keeping the newest captures', () => {
     let f: ToolVectorFile = { method: REGRESSION_METHOD, server: 's', entries: [] };
-    for (let i = 0; i < MAX_VECTOR_ENTRIES + 5; i++) f = appendVector(f, entry(String(i).padStart(64, '0'), `2026-08-${i}`));
+    for (let i = 0; i < MAX_VECTOR_ENTRIES + 5; i++)
+      f = appendVector(f, entry(String(i).padStart(64, '0'), `2026-08-${i}`));
     expect(f.entries).toHaveLength(MAX_VECTOR_ENTRIES);
-    expect(f.entries[f.entries.length - 1].canonicalSha256).toBe(String(MAX_VECTOR_ENTRIES + 4).padStart(64, '0'));
+    expect(f.entries[f.entries.length - 1].canonicalSha256).toBe(
+      String(MAX_VECTOR_ENTRIES + 4).padStart(64, '0'),
+    );
   });
 
   it('round-trips its published form and rejects text that is not one', () => {
-    const f: ToolVectorFile = { method: REGRESSION_METHOD, server: 's', entries: [entry('a'.repeat(64), '2026-08-19')] };
+    const f: ToolVectorFile = {
+      method: REGRESSION_METHOD,
+      server: 's',
+      entries: [entry('a'.repeat(64), '2026-08-19')],
+    };
     expect(parseToolVectorFile(JSON.stringify(f))).toEqual(f);
     expect(parseToolVectorFile('nope')).toBeNull();
     expect(parseToolVectorFile('{"server":"s"}')).toBeNull();
@@ -337,14 +355,19 @@ describe('the rendered report', () => {
    */
   it('publishes held costs as their own section and states a total that sums', () => {
     const text = renderRegressions(
-      summarize([change()], 3, [held(), held({ server: 'quiet', tokens: 32, sweeps: 2, since: '2026-08-26' })]),
+      summarize([change()], 3, [
+        held(),
+        held({ server: 'quiet', tokens: 32, sweeps: 2, since: '2026-08-26' }),
+      ]),
       '2026-09-03',
     );
     expect(text).toContain('**1 moved**');
     expect(text).toContain('**2 held the same cost across every comparable measurement**');
     expect(text).toContain('1 + 2 + 3 = 6');
     expect(text).toContain('## Unchanged');
-    expect(text).toContain('| [steady](../docs/servers/steady.md) | 2026-08-18 → 2026-09-03 | 1,003 | 1 | 4 |');
+    expect(text).toContain(
+      '| [steady](../docs/servers/steady.md) | 2026-08-18 → 2026-09-03 | 1,003 | 1 | 4 |',
+    );
     // Longest-held first, so the most established number leads.
     expect(text.indexOf('steady')).toBeLessThan(text.indexOf('quiet'));
     // A hold is stated as a measurement, never as an absence of one.
@@ -353,7 +376,9 @@ describe('the rendered report', () => {
 
   it('says so plainly when no server has held a cost', () => {
     const text = renderRegressions(summarize([change()], 3, []), '2026-09-03');
-    expect(text).toContain('No server on record has two or more comparable measurements that agree');
+    expect(text).toContain(
+      'No server on record has two or more comparable measurements that agree',
+    );
   });
 });
 
@@ -361,7 +386,9 @@ describe('the committed report is the one the data derives', () => {
   it('re-renders byte-equal from results/', () => {
     const repoRoot = join(import.meta.dirname, '..');
     const committed = readFileSync(join(repoRoot, 'results', 'regressions.md'), 'utf8');
-    const doc = parse(readFileSync(join(repoRoot, 'servers.yaml'), 'utf8')) as { servers: ServerEntry[] };
+    const doc = parse(readFileSync(join(repoRoot, 'servers.yaml'), 'utf8')) as {
+      servers: ServerEntry[];
+    };
     const { summary, measuredAt } = collectChanges(doc.servers, repoRoot);
     expect(renderRegressions(summary, measuredAt)).toBe(committed);
   });
@@ -450,7 +477,9 @@ describe('a movement names the release it came from', () => {
     } as unknown as Parameters<typeof vectorEntryOf>[0];
     expect(vectorEntryOf(m)?.version).toBe('1.29.1');
     // Absent stays absent rather than becoming an empty string in the JSON.
-    expect(vectorEntryOf({ ...m, serverVersion: undefined } as typeof m)).not.toHaveProperty('version');
+    expect(vectorEntryOf({ ...m, serverVersion: undefined } as typeof m)).not.toHaveProperty(
+      'version',
+    );
   });
 
   it('reads a stored vector back, and ignores a version that is not a string', () => {
@@ -458,7 +487,15 @@ describe('a movement names the release it came from', () => {
       JSON.stringify({
         method: 'cost-regression/v1',
         server: 's',
-        entries: [{ date: '2026-08-26', canonicalSha256: 'b'.repeat(64), totalTokens: 100, tools: [], version }],
+        entries: [
+          {
+            date: '2026-08-26',
+            canonicalSha256: 'b'.repeat(64),
+            totalTokens: 100,
+            tools: [],
+            version,
+          },
+        ],
       });
     expect(parseToolVectorFile(file('1.29.1'))?.entries[0]?.version).toBe('1.29.1');
     expect(parseToolVectorFile(file(129))?.entries[0]).not.toHaveProperty('version');

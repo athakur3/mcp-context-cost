@@ -79,38 +79,58 @@ export interface AuditOptions {
 }
 
 /** Fetch and parse the published capture index. Never throws: a failure is a report problem, not a crash. */
-export async function fetchCaptureIndex(url: string): Promise<{ index: CaptureIndex | null; problem?: string }> {
+export async function fetchCaptureIndex(
+  url: string,
+): Promise<{ index: CaptureIndex | null; problem?: string }> {
   try {
     const res = await fetch(url, { signal: AbortSignal.timeout(15_000) });
-    if (!res.ok) return { index: null, problem: `capture index: HTTP ${res.status} fetching ${url}` };
+    if (!res.ok)
+      return { index: null, problem: `capture index: HTTP ${res.status} fetching ${url}` };
     const index = parseCaptureIndex(await res.text());
     return index ? { index } : { index: null, problem: `capture index: malformed data at ${url}` };
   } catch (e) {
-    return { index: null, problem: `capture index: failed to fetch ${url}: ${(e as Error).message}` };
+    return {
+      index: null,
+      problem: `capture index: failed to fetch ${url}: ${(e as Error).message}`,
+    };
   }
 }
 
 /** Fetch and parse the published tool-shape baseline. Never throws: a failure is a report problem, not a crash. */
-export async function fetchToolShape(url: string): Promise<{ baseline: ToolShapeBaseline | null; problem?: string }> {
+export async function fetchToolShape(
+  url: string,
+): Promise<{ baseline: ToolShapeBaseline | null; problem?: string }> {
   try {
     const res = await fetch(url, { signal: AbortSignal.timeout(15_000) });
-    if (!res.ok) return { baseline: null, problem: `tool shape: HTTP ${res.status} fetching ${url}` };
+    if (!res.ok)
+      return { baseline: null, problem: `tool shape: HTTP ${res.status} fetching ${url}` };
     const baseline = parseToolShapeBaseline(await res.text());
-    return baseline ? { baseline } : { baseline: null, problem: `tool shape: malformed data at ${url}` };
+    return baseline
+      ? { baseline }
+      : { baseline: null, problem: `tool shape: malformed data at ${url}` };
   } catch (e) {
-    return { baseline: null, problem: `tool shape: failed to fetch ${url}: ${(e as Error).message}` };
+    return {
+      baseline: null,
+      problem: `tool shape: failed to fetch ${url}: ${(e as Error).message}`,
+    };
   }
 }
 
 /** Fetch and parse the published divergence run. Never throws: a failure is a report problem, not a crash. */
-export async function fetchDivergence(url: string): Promise<{ run: DivergenceRun | null; problem?: string }> {
+export async function fetchDivergence(
+  url: string,
+): Promise<{ run: DivergenceRun | null; problem?: string }> {
   try {
     const res = await fetch(url, { signal: AbortSignal.timeout(15_000) });
-    if (!res.ok) return { run: null, problem: `claude divergence: HTTP ${res.status} fetching ${url}` };
+    if (!res.ok)
+      return { run: null, problem: `claude divergence: HTTP ${res.status} fetching ${url}` };
     const run = parseDivergence(await res.text());
     return run ? { run } : { run: null, problem: `claude divergence: malformed data at ${url}` };
   } catch (e) {
-    return { run: null, problem: `claude divergence: failed to fetch ${url}: ${(e as Error).message}` };
+    return {
+      run: null,
+      problem: `claude divergence: failed to fetch ${url}: ${(e as Error).message}`,
+    };
   }
 }
 
@@ -156,7 +176,10 @@ export function discoverSettings(opts: AuditOptions = {}): ToolSearchSource[] {
  * `initialize`, once each. This comes before any launch — remote.ts says why an
  * endpoint is asked before the bridge is pointed at it.
  */
-export async function probeRemotes(configs: LoadedConfig[], opts: AuditOptions = {}): Promise<Map<string, RemoteProbe>> {
+export async function probeRemotes(
+  configs: LoadedConfig[],
+  opts: AuditOptions = {},
+): Promise<Map<string, RemoteProbe>> {
   const unique = new Map<string, ConfiguredServer>();
   for (const cfg of configs) {
     for (const s of cfg.servers) {
@@ -183,7 +206,11 @@ export async function probeRemotes(configs: LoadedConfig[], opts: AuditOptions =
  * Both carry the entry's header values, as a stdio launch carries env values.
  * `display` carries the names only, and is the form a report may print.
  */
-export function bridgeLaunch(s: ConfiguredServer): { argv: string[]; command: string; display: string } {
+export function bridgeLaunch(s: ConfiguredServer): {
+  argv: string[];
+  command: string;
+  display: string;
+} {
   const url = s.url ?? '';
   const argv = ['npx', '-y', 'mcp-remote', url];
   const display = [...argv];
@@ -196,7 +223,8 @@ export function bridgeLaunch(s: ConfiguredServer): { argv: string[]; command: st
     argv.push('--header', `${k}: ${v}`);
     display.push('--header', k);
   }
-  const shellQuote = (a: string) => (/^[A-Za-z0-9_@%+=:,./-]+$/.test(a) ? a : `'${a.replace(/'/g, `'\\''`)}'`);
+  const shellQuote = (a: string) =>
+    /^[A-Za-z0-9_@%+=:,./-]+$/.test(a) ? a : `'${a.replace(/'/g, `'\\''`)}'`;
   return { argv, command: argv.map(shellQuote).join(' '), display: display.join(' ') };
 }
 
@@ -239,7 +267,9 @@ export async function measureAll(
     }
   };
 
-  await Promise.all(Array.from({ length: Math.max(1, Math.min(opts.concurrency ?? 3, total || 1)) }, worker));
+  await Promise.all(
+    Array.from({ length: Math.max(1, Math.min(opts.concurrency ?? 3, total || 1)) }, worker),
+  );
   return measured;
 }
 

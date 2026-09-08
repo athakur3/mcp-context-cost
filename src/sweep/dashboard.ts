@@ -47,7 +47,11 @@ export function renderSparkline(tokens: number[]): string {
 }
 
 const esc = (s: unknown): string =>
-  String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  String(s ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 
 interface Row {
   entry: ServerEntry;
@@ -66,7 +70,9 @@ interface DivergenceEntry {
 export function generateDashboard(root = process.cwd()): string {
   const doc = loadServersDoc(root) as { servers: ServerEntry[] };
   const divergencePath = join(root, 'results', 'divergence.json');
-  const divergence: { model?: string; servers?: Record<string, DivergenceEntry> } = existsSync(divergencePath)
+  const divergence: { model?: string; servers?: Record<string, DivergenceEntry> } = existsSync(
+    divergencePath,
+  )
     ? JSON.parse(readFileSync(divergencePath, 'utf8'))
     : {};
   const dSrv = divergence.servers ?? {};
@@ -81,13 +87,18 @@ export function generateDashboard(root = process.cwd()): string {
   const rows: Row[] = loadRows(doc.servers, root);
 
   const measured = rows
-    .filter((r) => r.m && (r.m.status === 'measured' || r.m.status === 'dynamic') && r.m.totalTokens !== null)
+    .filter(
+      (r) =>
+        r.m && (r.m.status === 'measured' || r.m.status === 'dynamic') && r.m.totalTokens !== null,
+    )
     .sort((a, b) => (b.m!.totalTokens ?? 0) - (a.m!.totalTokens ?? 0));
   const pending = rows.filter((r) => !r.m && !r.entry.remote);
   const failed = rows.filter((r) => (r.m && !measured.includes(r)) || r.entry.remote);
 
   const totals = measured.map((r) => r.m!.totalTokens as number);
-  const median = totals.length ? totals.slice().sort((a, b) => a - b)[Math.floor(totals.length / 2)] : 0;
+  const median = totals.length
+    ? totals.slice().sort((a, b) => a - b)[Math.floor(totals.length / 2)]
+    : 0;
   const max = totals.length ? Math.max(...totals) : 1;
   const fmt = (n: number) => n.toLocaleString('en-US');
 
@@ -165,7 +176,9 @@ export function generateDashboard(root = process.cwd()): string {
   const failRows = failed
     .map((r) => {
       const status = r.entry.remote ? 'remote-auth-wall' : (r.m?.status ?? 'not-run');
-      const note = r.entry.remote ? 'OAuth-gated remote server; listed, not measured' : (r.m?.notes ?? '');
+      const note = r.entry.remote
+        ? 'OAuth-gated remote server; listed, not measured'
+        : (r.m?.notes ?? '');
       return `<tr><td>${esc(r.entry.name)}</td><td><span class="chip">${esc(status)}</span></td><td class="note">${esc(note).slice(0, 160)}</td></tr>`;
     })
     .join('\n');
@@ -373,7 +386,10 @@ ${barRows || '<p class="h2sub">Sweep in progress — first results land shortly.
  * when only the CLI wrote it every sweep updated `results/` and `docs/servers/`
  * while the page people actually open kept the previous run's numbers.
  */
-export function writeDashboard(root = process.cwd(), out = 'docs/dashboard.html'): { out: string; bytes: number } {
+export function writeDashboard(
+  root = process.cwd(),
+  out = 'docs/dashboard.html',
+): { out: string; bytes: number } {
   const html = generateDashboard(root);
   mkdirSync(dirname(out), { recursive: true });
   writeFileSync(out, html);
@@ -382,7 +398,8 @@ export function writeDashboard(root = process.cwd(), out = 'docs/dashboard.html'
 
 // Exact path match, not endsWith('dashboard.ts'), for the reason src/sweep/run.ts
 // states: any other file whose name happens to end that way would run this block.
-const isMain = process.argv[1] !== undefined && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+const isMain =
+  process.argv[1] !== undefined && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
   const i = process.argv.indexOf('--out');
   const w = writeDashboard(process.cwd(), i >= 0 ? process.argv[i + 1] : 'docs/dashboard.html');

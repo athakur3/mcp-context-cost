@@ -102,7 +102,9 @@ export class DockerHarnessFault extends Error {}
  * its exit codes.
  */
 export function isDockerRunFailure(message: string): boolean {
-  return /server exited \(code 125\)/.test(message) && /Unable to find image|docker: /.test(message);
+  return (
+    /server exited \(code 125\)/.test(message) && /Unable to find image|docker: /.test(message)
+  );
 }
 
 export interface EnsureImageOptions {
@@ -113,7 +115,9 @@ export interface EnsureImageOptions {
   sleep?: (ms: number) => Promise<void>;
 }
 
-function runDocker(args: string[]): Promise<{ code: number | null; stdout: string; stderr: string }> {
+function runDocker(
+  args: string[],
+): Promise<{ code: number | null; stdout: string; stderr: string }> {
   return import('node:child_process').then(
     ({ spawn }) =>
       new Promise((resolve) => {
@@ -135,7 +139,9 @@ async function ensureImageOnce(image: string, opts: EnsureImageOptions): Promise
   const sleep = opts.sleep ?? ((ms: number) => new Promise<void>((r) => setTimeout(r, ms)));
   const delays = opts.delaysMs ?? [2_000, 8_000];
   const noDocker = (stderr: string) =>
-    new DockerHarnessFault(`docker is not runnable on this machine: ${stderr.trim() || 'spawn docker failed'}`);
+    new DockerHarnessFault(
+      `docker is not runnable on this machine: ${stderr.trim() || 'spawn docker failed'}`,
+    );
 
   const inspect = await run(['image', 'inspect', image]);
   if (inspect.code === 0) return;
@@ -235,7 +241,10 @@ export function platformFromUname(output: string): string | null {
  * Returns null when docker cannot say, leaving `arch` absent — which the
  * record already documents as "unknown, never the same as yours".
  */
-export async function containerPlatform(image: string, opts: EnsureImageOptions = {}): Promise<string | null> {
+export async function containerPlatform(
+  image: string,
+  opts: EnsureImageOptions = {},
+): Promise<string | null> {
   const run = opts.run ?? runDocker;
   if (!opts.run) {
     const cached = platforms.get(image);

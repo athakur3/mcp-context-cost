@@ -179,7 +179,10 @@ export function floorToTwoSignificant(n: number): number {
   return Math.floor(whole / magnitude) * magnitude;
 }
 
-export function computePublishedStats(entries: ServerEntry[], root = process.cwd()): PublishedStats {
+export function computePublishedStats(
+  entries: ServerEntry[],
+  root = process.cwd(),
+): PublishedStats {
   const rows = loadRows(entries, root);
   const div = loadDivergence(root);
 
@@ -187,12 +190,17 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
     .filter((r): r is Row & { m: NonNullable<Row['m']> } => r.m !== null && isGood(r.m.status))
     .filter((r) => typeof r.m.totalTokens === 'number')
     .sort((a, b) => b.m.totalTokens! - a.m.totalTokens!);
-  if (measured.length < 2) throw new Error('fewer than two measured servers on disk — published stats cannot be computed');
+  if (measured.length < 2)
+    throw new Error('fewer than two measured servers on disk — published stats cannot be computed');
 
-  const asPair = (r: (typeof measured)[number]) => ({ name: r.entry.name, tokens: r.m.totalTokens! });
+  const asPair = (r: (typeof measured)[number]) => ({
+    name: r.entry.name,
+    tokens: r.m.totalTokens!,
+  });
   const max = asPair(measured[0]);
   const min = asPair(measured[measured.length - 1]);
-  if (min.tokens <= 0) throw new Error(`cheapest measured server (${min.name}) has no positive token count`);
+  if (min.tokens <= 0)
+    throw new Error(`cheapest measured server (${min.name}) has no positive token count`);
 
   const sample: PublishedStats['sample'] = {};
   for (const name of SAMPLE_SERVERS) {
@@ -228,7 +236,9 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
     const r = measured.find((x) => x.entry.name === name);
     if (!r) throw new Error(`a page states numbers for ${name}, which has no current measurement`);
     if (!r.m.rawToolsCapture) {
-      throw new Error(`${name} is measured but holds no capture, so its mapped count cannot be derived`);
+      throw new Error(
+        `${name} is measured but holds no capture, so its mapped count cannot be derived`,
+      );
     }
     const row = div.servers[name];
     return {
@@ -251,7 +261,12 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
   }
 
   const triple: PublishedStats['triple'] = {};
-  for (const name of new Set<string>([max.name, measured[1].entry.name, min.name, ...SAMPLE_SERVERS])) {
+  for (const name of new Set<string>([
+    max.name,
+    measured[1].entry.name,
+    min.name,
+    ...SAMPLE_SERVERS,
+  ])) {
     triple[name] = tripleOf(name);
   }
 
@@ -271,14 +286,18 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
   // by a delta that still had the fixed tool overhead in it.
   const band = wireToClientRatio(div);
   if (shares.length === 0 || band.servers === 0) {
-    throw new Error('no current divergence row — METHODOLOGY states ranges over them; run `npm run divergence`');
+    throw new Error(
+      'no current divergence row — METHODOLOGY states ranges over them; run `npm run divergence`',
+    );
   }
   // The exemplar METHODOLOGY names for the field-selection effect is whichever
   // current row shows it most, rather than a server hardcoded into the prose.
   const widest = currentRows
     .filter(([, r]) => (fieldSelectionShare(r) ?? -1) >= 0)
     .sort((a, b) => (fieldSelectionShare(b[1]) ?? 0) - (fieldSelectionShare(a[1]) ?? 0))[0]!;
-  const withClaude = measured.filter((r) => isCurrent(div.servers[r.entry.name], r.m.canonicalSha256));
+  const withClaude = measured.filter((r) =>
+    isCurrent(div.servers[r.entry.name], r.m.canonicalSha256),
+  );
   const heaviest = [...withClaude].sort(
     (a, b) => div.servers[b.entry.name].claudeDelta - div.servers[a.entry.name].claudeDelta,
   )[0];
@@ -297,8 +316,13 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
 
   const shape = (() => {
     const p = join(root, 'results', 'tool-shape.json');
-    if (!existsSync(p)) throw new Error('results/tool-shape.json is missing — README states its numbers');
-    const j = JSON.parse(readFileSync(p, 'utf8')) as { toolCount: number; serverCount: number; generatedAt: string };
+    if (!existsSync(p))
+      throw new Error('results/tool-shape.json is missing — README states its numbers');
+    const j = JSON.parse(readFileSync(p, 'utf8')) as {
+      toolCount: number;
+      serverCount: number;
+      generatedAt: string;
+    };
     return { toolCount: j.toolCount, serverCount: j.serverCount, generatedAt: j.generatedAt };
   })();
 
@@ -324,7 +348,12 @@ export function computePublishedStats(entries: ServerEntry[], root = process.cwd
       notion: { badgeTokens: triple.notion.wire, claudeTokens: triple.notion.claude },
       // `claude` is not nullable here, unlike a triple's: `widest` is picked
       // out of `currentRows`, and `isCurrent` already required a numeric delta.
-      widest: { server: widest[0], full: widest[1].o200kFull, mapped: widest[1].o200kMapped, claude: widest[1].claudeDelta },
+      widest: {
+        server: widest[0],
+        full: widest[1].o200kFull,
+        mapped: widest[1].o200kMapped,
+        claude: widest[1].claudeDelta,
+      },
       shareMin: Math.min(...shares),
       shareMax: Math.max(...shares),
       ratioMin: band.low,
@@ -386,48 +415,84 @@ export const PAGE_CLAIMS: Claim[] = [
     file: 'README.md',
     id: 'sample:github',
     template: '| github (official) | **{n} tokens** | {n} | {q} | {n} |',
-    values: (s) => [fmt(s.triple.github.wire), fmt(s.triple.github.mapped), q(s.triple.github.claude), fmt(s.sample.github.tools)],
+    values: (s) => [
+      fmt(s.triple.github.wire),
+      fmt(s.triple.github.mapped),
+      q(s.triple.github.claude),
+      fmt(s.sample.github.tools),
+    ],
   },
   {
     file: 'README.md',
     id: 'sample:xcodebuildmcp',
     template: '| xcodebuildmcp | {n} | {n} | {q} | {n} |',
-    values: (s) => [fmt(s.triple.xcodebuildmcp.wire), fmt(s.triple.xcodebuildmcp.mapped), q(s.triple.xcodebuildmcp.claude), fmt(s.sample.xcodebuildmcp.tools)],
+    values: (s) => [
+      fmt(s.triple.xcodebuildmcp.wire),
+      fmt(s.triple.xcodebuildmcp.mapped),
+      q(s.triple.xcodebuildmcp.claude),
+      fmt(s.sample.xcodebuildmcp.tools),
+    ],
   },
   {
     file: 'README.md',
     id: 'sample:brave-search',
     template: '| brave-search | {n} | {n} | {q} | {n} |',
-    values: (s) => [fmt(s.triple['brave-search'].wire), fmt(s.triple['brave-search'].mapped), q(s.triple['brave-search'].claude), fmt(s.sample['brave-search'].tools)],
+    values: (s) => [
+      fmt(s.triple['brave-search'].wire),
+      fmt(s.triple['brave-search'].mapped),
+      q(s.triple['brave-search'].claude),
+      fmt(s.sample['brave-search'].tools),
+    ],
   },
   {
     file: 'README.md',
     id: 'sample:notion',
     template: '| notion | {n} | {n} | {q} | {n} |',
-    values: (s) => [fmt(s.triple.notion.wire), fmt(s.triple.notion.mapped), q(s.triple.notion.claude), fmt(s.sample.notion.tools)],
+    values: (s) => [
+      fmt(s.triple.notion.wire),
+      fmt(s.triple.notion.mapped),
+      q(s.triple.notion.claude),
+      fmt(s.sample.notion.tools),
+    ],
   },
   {
     file: 'README.md',
     id: 'sample:playwright',
     template: '| playwright *(4.8M installs/week)* | {n} | {n} | {q} | {n} |',
-    values: (s) => [fmt(s.triple.playwright.wire), fmt(s.triple.playwright.mapped), q(s.triple.playwright.claude), fmt(s.sample.playwright.tools)],
+    values: (s) => [
+      fmt(s.triple.playwright.wire),
+      fmt(s.triple.playwright.mapped),
+      q(s.triple.playwright.claude),
+      fmt(s.sample.playwright.tools),
+    ],
   },
   {
     file: 'README.md',
     id: 'sample:filesystem',
     template: '| filesystem (reference) | {n} | {n} | {q} | {n} |',
-    values: (s) => [fmt(s.triple.filesystem.wire), fmt(s.triple.filesystem.mapped), q(s.triple.filesystem.claude), fmt(s.sample.filesystem.tools)],
+    values: (s) => [
+      fmt(s.triple.filesystem.wire),
+      fmt(s.triple.filesystem.mapped),
+      q(s.triple.filesystem.claude),
+      fmt(s.sample.filesystem.tools),
+    ],
   },
   {
     file: 'README.md',
     id: 'sample:markitdown',
     template: '| markitdown | {n} | {n} | {q} | {n} |',
-    values: (s) => [fmt(s.triple.markitdown.wire), fmt(s.triple.markitdown.mapped), q(s.triple.markitdown.claude), fmt(s.sample.markitdown.tools)],
+    values: (s) => [
+      fmt(s.triple.markitdown.wire),
+      fmt(s.triple.markitdown.mapped),
+      q(s.triple.markitdown.claude),
+      fmt(s.sample.markitdown.tools),
+    ],
   },
   {
     file: 'README.md',
     id: 'measured-of-candidates',
-    template: '*({n} of {n} popular servers measured, each row dated by its own most recent sweep — full table in',
+    template:
+      '*({n} of {n} popular servers measured, each row dated by its own most recent sweep — full table in',
     values: (s) => [fmt(s.measuredCount), fmt(s.candidateTotal)],
   },
   {
@@ -436,7 +501,11 @@ export const PAGE_CLAIMS: Claim[] = [
     // Inside the `--suggest` sample block. A reader compares their own output
     // against it, so a stale baseline line there is read as a current one.
     template: '(baseline {w}: {n} tools across {n} measured servers):',
-    values: (s) => [s.toolShape.generatedAt, fmt(s.toolShape.toolCount), fmt(s.toolShape.serverCount)],
+    values: (s) => [
+      s.toolShape.generatedAt,
+      fmt(s.toolShape.toolCount),
+      fmt(s.toolShape.serverCount),
+    ],
   },
   {
     file: 'README.md',
@@ -444,7 +513,8 @@ export const PAGE_CLAIMS: Claim[] = [
     // The repo map's own count of servers.yaml. It said 82 against 106 on disk:
     // written by hand when the file held 82, and ninety lines from the
     // regen-maintained count that had moved four times since.
-    template: '| `servers.yaml` | {n} curated candidates with live install metrics and provenance |',
+    template:
+      '| `servers.yaml` | {n} curated candidates with live install metrics and provenance |',
     values: (s) => [fmt(s.candidateTotal)],
   },
   {
@@ -467,7 +537,8 @@ export const PAGE_CLAIMS: Claim[] = [
   {
     file: 'README.md',
     id: 'claude-table:github',
-    template: '| github | {n} | {n} | **{q}** | {d}% of the capture is `{w}` metadata Claude never sees |',
+    template:
+      '| github | {n} | {n} | **{q}** | {d}% of the capture is `{w}` metadata Claude never sees |',
     values: (s) => [
       fmt(s.claude.github.badgeTokens),
       fmt(s.triple.github.mapped),
@@ -479,8 +550,13 @@ export const PAGE_CLAIMS: Claim[] = [
   {
     file: 'README.md',
     id: 'claude-table:notion',
-    template: '| notion | {n} | {n} | **{q}** | almost no metadata to drop, so the tokenizer difference dominates |',
-    values: (s) => [fmt(s.claude.notion.badgeTokens), fmt(s.triple.notion.mapped), q(s.claude.notion.claudeTokens)],
+    template:
+      '| notion | {n} | {n} | **{q}** | almost no metadata to drop, so the tokenizer difference dominates |',
+    values: (s) => [
+      fmt(s.claude.notion.badgeTokens),
+      fmt(s.triple.notion.mapped),
+      q(s.claude.notion.claudeTokens),
+    ],
   },
   {
     file: 'README.md',
@@ -501,13 +577,15 @@ export const PAGE_CLAIMS: Claim[] = [
   {
     file: 'README.md',
     id: 'verify-transcript',
-    template: '# OK {w}: {d} tokens (o200k_base, methodology 1.0) — capture, hash, and count all agree',
+    template:
+      '# OK {w}: {d} tokens (o200k_base, methodology 1.0) — capture, hash, and count all agree',
     values: (s) => [s.verify.serverName, String(s.verify.tokens)],
   },
   {
     file: 'docs/index.md',
     id: 'index:counts',
-    template: 'We measure {n} popular MCP servers; {n} have a number today, and every failure is listed with its reason.',
+    template:
+      'We measure {n} popular MCP servers; {n} have a number today, and every failure is listed with its reason.',
     values: (s) => [fmt(s.candidateTotal), fmt(s.measuredCount)],
   },
   {
@@ -526,7 +604,8 @@ export const PAGE_CLAIMS: Claim[] = [
   {
     file: 'docs/index.md',
     id: 'index:triple',
-    template: 'Of that, an Anthropic request carries {n} tokens as tool definitions, and Claude counts those at {q}.',
+    template:
+      'Of that, an Anthropic request carries {n} tokens as tool definitions, and Claude counts those at {q}.',
     values: (s) => [fmt(s.triple[s.max.name].mapped), q(s.triple[s.max.name].claude)],
   },
   {
@@ -538,12 +617,18 @@ export const PAGE_CLAIMS: Claim[] = [
     // claim belongs to `divergence:heaviest-pair`, which derives both names, and
     // asserting one here in fixed words would be a claim a sweep can falsify.
     template: 'Second-heaviest is `{w}` at {n} on the wire, {n} carried, {q} on Claude.',
-    values: (s) => [s.second.name, fmt(s.second.tokens), fmt(s.triple[s.second.name].mapped), q(s.triple[s.second.name].claude)],
+    values: (s) => [
+      s.second.name,
+      fmt(s.second.tokens),
+      fmt(s.triple[s.second.name].mapped),
+      q(s.triple[s.second.name].claude),
+    ],
   },
   {
     file: 'docs/METHODOLOGY.md',
     id: 'divergence:share-range',
-    template: 'this removes between {f}% and **{f}%** of the payload ({w}: {n} → {n} tokens, which Claude counts at {n}).',
+    template:
+      'this removes between {f}% and **{f}%** of the payload ({w}: {n} → {n} tokens, which Claude counts at {n}).',
     // The exemplar is whichever current row shows the effect most, not a server
     // named in the prose — a hardcoded name goes stale the week it is re-swept.
     values: (s) => [
@@ -584,7 +669,8 @@ export const PAGE_CLAIMS: Claim[] = [
   {
     file: 'docs/METHODOLOGY.md',
     id: 'divergence:probe-delta',
-    template: 'A single minimal tool costs {n} tokens more than no tools at all, which is an upper bound on the fixed part.',
+    template:
+      'A single minimal tool costs {n} tokens more than no tools at all, which is an upper bound on the fixed part.',
     values: (s) => [fmt(s.claude.probeDelta)],
   },
   {
@@ -593,7 +679,9 @@ export const PAGE_CLAIMS: Claim[] = [
     template: '{w} is the heaviest server on o200k and {w} is the heaviest on Claude.',
     values: (s) => {
       if (!s.claude.heaviestClaudeName) {
-        throw new Error('no row has a current claude number — the heaviest-on-Claude sentence cannot be maintained');
+        throw new Error(
+          'no row has a current claude number — the heaviest-on-Claude sentence cannot be maintained',
+        );
       }
       return [s.max.name, s.claude.heaviestClaudeName];
     },
@@ -642,7 +730,8 @@ export const CHECK_CLAIMS: CheckClaim[] = [
   {
     file: 'README.md',
     id: 'deferring-costlier-somewhere',
-    words: 'for at least one server in the published set it costs **more** than loading the definitions would',
+    words:
+      'for at least one server in the published set it costs **more** than loading the definitions would',
     holds: (s) =>
       s.deferralCostlierCount >= 1
         ? null
@@ -650,7 +739,8 @@ export const CHECK_CLAIMS: CheckClaim[] = [
   },
 ];
 
-const escapeLiteral = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
+const escapeLiteral = (s: string) =>
+  s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
 
 /** Fixed words with `\s+` for every gap (prose wraps; a claim is its words, not its layout). */
 export function compileTemplate(template: string): RegExp {
@@ -747,12 +837,18 @@ export interface PublishedStatsResult {
 }
 
 /** Compute stats and report what regen would rewrite, without writing anything. */
-export function verifyPublishedPages(entries: ServerEntry[], root = process.cwd()): PublishedStatsResult {
+export function verifyPublishedPages(
+  entries: ServerEntry[],
+  root = process.cwd(),
+): PublishedStatsResult {
   return applyTo(entries, root, false);
 }
 
 /** Compute stats and rewrite the pages in place. Returns what changed and any refusals. */
-export function applyPublishedStats(entries: ServerEntry[], root = process.cwd()): PublishedStatsResult {
+export function applyPublishedStats(
+  entries: ServerEntry[],
+  root = process.cwd(),
+): PublishedStatsResult {
   return applyTo(entries, root, true);
 }
 

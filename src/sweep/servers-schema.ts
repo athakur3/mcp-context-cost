@@ -90,7 +90,10 @@ function isPlainObject(v: unknown): v is Record<string, unknown> {
 /** Shape-check one entry. `index` names it when its own `name` is unusable. */
 export function validateEntry(raw: unknown, index: number): SchemaProblem[] {
   const problems: SchemaProblem[] = [];
-  const label = isPlainObject(raw) && typeof raw.name === 'string' && raw.name ? raw.name : `entry #${index + 1}`;
+  const label =
+    isPlainObject(raw) && typeof raw.name === 'string' && raw.name
+      ? raw.name
+      : `entry #${index + 1}`;
   const bad = (message: string, field?: string) => problems.push({ entry: label, field, message });
 
   if (!isPlainObject(raw)) {
@@ -107,27 +110,35 @@ export function validateEntry(raw: unknown, index: number): SchemaProblem[] {
   }
 
   if (typeof e.name === 'string' && !NAME.test(e.name)) {
-    bad(`must be a slug — it becomes results/<name>/, badges/<name>.json and docs/servers/<name>.md`, 'name');
+    bad(
+      `must be a slug — it becomes results/<name>/, badges/<name>.json and docs/servers/<name>.md`,
+      'name',
+    );
   } else if (e.name !== undefined && typeof e.name !== 'string') {
     bad('must be a string', 'name');
   }
 
   for (const key of ['command', 'package', 'metricSource', 'repo'] as const) {
     const v = e[key];
-    if (v !== undefined && (typeof v !== 'string' || v.trim() === '')) bad('must be a non-empty string', key);
+    if (v !== undefined && (typeof v !== 'string' || v.trim() === ''))
+      bad('must be a non-empty string', key);
   }
 
   if (e.category !== undefined && !CATEGORIES.includes(String(e.category))) {
     bad(`must be one of ${CATEGORIES.join(', ')} — the leaderboard groups on it`, 'category');
   }
 
-  if (e.metric !== undefined && (typeof e.metric !== 'number' || !Number.isFinite(e.metric) || e.metric < 0)) {
+  if (
+    e.metric !== undefined &&
+    (typeof e.metric !== 'number' || !Number.isFinite(e.metric) || e.metric < 0)
+  ) {
     bad('must be a non-negative number — it is the install metric the row is ranked by', 'metric');
   }
 
   const env = e.env;
   if (env !== undefined) {
-    if (!Array.isArray(env)) bad('must be a list of variable NAMES (values are never committed)', 'env');
+    if (!Array.isArray(env))
+      bad('must be a list of variable NAMES (values are never committed)', 'env');
     else {
       for (const n of env) {
         if (typeof n !== 'string' || !ENV_NAME.test(n)) {
@@ -158,7 +169,8 @@ export function validateEntry(raw: unknown, index: number): SchemaProblem[] {
     // The names are joined into a shell word list inside the container, so this
     // character class is the boundary: a value that is not a package name never
     // reaches `sh -lc`.
-    if (!Array.isArray(apt) || apt.length === 0) bad('must be a non-empty list of Debian package names', 'aptPackages');
+    if (!Array.isArray(apt) || apt.length === 0)
+      bad('must be a non-empty list of Debian package names', 'aptPackages');
     else {
       for (const n of apt) {
         if (typeof n !== 'string' || !/^[a-z0-9][a-z0-9+._-]*$/.test(n)) {
@@ -168,7 +180,10 @@ export function validateEntry(raw: unknown, index: number): SchemaProblem[] {
     }
   }
 
-  if (e.dockerImage !== undefined && (typeof e.dockerImage !== 'string' || e.dockerImage.trim() === '')) {
+  if (
+    e.dockerImage !== undefined &&
+    (typeof e.dockerImage !== 'string' || e.dockerImage.trim() === '')
+  ) {
     bad('must be a non-empty image reference', 'dockerImage');
   }
 
@@ -179,7 +194,8 @@ export function validateEntry(raw: unknown, index: number): SchemaProblem[] {
 
   const values = e.envValues;
   if (values !== undefined) {
-    if (!isPlainObject(values)) bad('must be a mapping of variable name to placeholder', 'envValues');
+    if (!isPlainObject(values))
+      bad('must be a mapping of variable name to placeholder', 'envValues');
     else {
       const declared = new Set(Array.isArray(env) ? env.map(String) : []);
       for (const [k, v] of Object.entries(values)) {
@@ -187,7 +203,8 @@ export function validateEntry(raw: unknown, index: number): SchemaProblem[] {
         // An override for a variable the entry never asks for is injected by
         // nobody: docker mode iterates `env`, so the placeholder that was
         // supposed to get the server past a URI parse never reaches it.
-        if (!declared.has(k)) bad(`overrides ${k}, which the entry does not list in env`, 'envValues');
+        if (!declared.has(k))
+          bad(`overrides ${k}, which the entry does not list in env`, 'envValues');
       }
     }
   }
@@ -202,7 +219,8 @@ export function validateEntry(raw: unknown, index: number): SchemaProblem[] {
         // null on a falsy evidence string, so the declaration is inert and the
         // entry goes on being published as the failure the bucket exists to
         // avoid asserting.
-        if (typeof v !== 'string' || v.trim() === '') bad(`${key} is required and must be non-empty`, 'notApplicable');
+        if (typeof v !== 'string' || v.trim() === '')
+          bad(`${key} is required and must be non-empty`, 'notApplicable');
       }
       for (const key of Object.keys(na)) {
         if (key !== 'reason' && key !== 'evidence') bad(`unknown key ${key}`, 'notApplicable');
@@ -216,7 +234,8 @@ export function validateEntry(raw: unknown, index: number): SchemaProblem[] {
     else {
       for (const key of ['version', 'source', 'readOn'] as const) {
         const v = dep[key];
-        if (typeof v !== 'string' || v.trim() === '') bad(`${key} is required and must be non-empty`, 'deprecated');
+        if (typeof v !== 'string' || v.trim() === '')
+          bad(`${key} is required and must be non-empty`, 'deprecated');
       }
       if (typeof dep.source === 'string' && !/^https?:\/\//.test(dep.source)) {
         bad('source must be a URL — a published claim carries its evidence', 'deprecated');
@@ -229,18 +248,21 @@ export function validateEntry(raw: unknown, index: number): SchemaProblem[] {
         bad('replacement must be a string when present', 'deprecated');
       }
       for (const key of Object.keys(dep)) {
-        if (!['version', 'source', 'readOn', 'replacement'].includes(key)) bad(`unknown key ${key}`, 'deprecated');
+        if (!['version', 'source', 'readOn', 'replacement'].includes(key))
+          bad(`unknown key ${key}`, 'deprecated');
       }
     }
   }
 
   const coll = e.nameCollision;
   if (coll !== undefined) {
-    if (!isPlainObject(coll)) bad('must be a mapping with project, source and readOn', 'nameCollision');
+    if (!isPlainObject(coll))
+      bad('must be a mapping with project, source and readOn', 'nameCollision');
     else {
       for (const key of ['project', 'source', 'readOn'] as const) {
         const v = coll[key];
-        if (typeof v !== 'string' || v.trim() === '') bad(`${key} is required and must be non-empty`, 'nameCollision');
+        if (typeof v !== 'string' || v.trim() === '')
+          bad(`${key} is required and must be non-empty`, 'nameCollision');
       }
       // Same rule as a deprecation, and for the same reason: this is a claim
       // about a project outside this repository, so it names where it was read.
@@ -253,10 +275,14 @@ export function validateEntry(raw: unknown, index: number): SchemaProblem[] {
       // The whole point of the field is to name something this row is *not*.
       // A declaration pointing at the entry's own repository says nothing.
       if (typeof coll.source === 'string' && typeof e.repo === 'string' && coll.source === e.repo) {
-        bad('source is this entry\'s own repo — the field names a different project', 'nameCollision');
+        bad(
+          "source is this entry's own repo — the field names a different project",
+          'nameCollision',
+        );
       }
       for (const key of Object.keys(coll)) {
-        if (!['project', 'source', 'readOn'].includes(key)) bad(`unknown key ${key}`, 'nameCollision');
+        if (!['project', 'source', 'readOn'].includes(key))
+          bad(`unknown key ${key}`, 'nameCollision');
       }
     }
   }
@@ -279,7 +305,8 @@ export function validateServers(doc: unknown): SchemaProblem[] {
     // results/<name>/measurement.json, and the later sweep in the shard would
     // silently overwrite the earlier one's number.
     const first = seen.get(name);
-    if (first !== undefined) problems.push({ entry: name, field: 'name', message: `duplicates entry #${first + 1}` });
+    if (first !== undefined)
+      problems.push({ entry: name, field: 'name', message: `duplicates entry #${first + 1}` });
     else seen.set(name, i);
   });
   return problems;

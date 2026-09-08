@@ -23,27 +23,37 @@ import { measureServer } from '../src/sweep/run.js';
 describe('isDockerRunFailure', () => {
   it('recognises docker failing to find its image', () => {
     expect(
-      isDockerRunFailure("server exited (code 125); stderr tail: Unable to find image 'node:22-slim' locally"),
+      isDockerRunFailure(
+        "server exited (code 125); stderr tail: Unable to find image 'node:22-slim' locally",
+      ),
     ).toBe(true);
   });
 
   it('recognises the daemon refusing in its own voice', () => {
     expect(
-      isDockerRunFailure('server exited (code 125); stderr tail: docker: Error response from daemon: pull rate limit'),
+      isDockerRunFailure(
+        'server exited (code 125); stderr tail: docker: Error response from daemon: pull rate limit',
+      ),
     ).toBe(true);
     expect(
-      isDockerRunFailure('server exited (code 125); stderr tail: docker: Cannot connect to the Docker daemon'),
+      isDockerRunFailure(
+        'server exited (code 125); stderr tail: docker: Cannot connect to the Docker daemon',
+      ),
     ).toBe(true);
   });
 
   it('leaves a contained process that exits 125 to own its exit code', () => {
     // Docker reserves 125, but a contained process exiting 125 passes through
     // indistinguishably — without docker's stderr voice it stays the server's.
-    expect(isDockerRunFailure('server exited (code 125); stderr tail: fatal: config parse error')).toBe(false);
+    expect(
+      isDockerRunFailure('server exited (code 125); stderr tail: fatal: config parse error'),
+    ).toBe(false);
   });
 
   it('never fires on other exit codes or timeouts, whatever the stderr says', () => {
-    expect(isDockerRunFailure("server exited (code 1); stderr tail: Unable to find image 'x' locally")).toBe(false);
+    expect(
+      isDockerRunFailure("server exited (code 1); stderr tail: Unable to find image 'x' locally"),
+    ).toBe(false);
     expect(isDockerRunFailure('timeout after 60000ms waiting for initialize')).toBe(false);
   });
 });

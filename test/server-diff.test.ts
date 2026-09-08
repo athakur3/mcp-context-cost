@@ -21,7 +21,12 @@ const server = (tools: { name: string; description: string; extra?: number }[]):
     tools.map((t) => ({
       name: t.name,
       description: t.description,
-      inputSchema: { type: 'object', properties: Object.fromEntries(Array.from({ length: t.extra ?? 1 }, (_, i) => [`p${i}`, { type: 'string' }])) },
+      inputSchema: {
+        type: 'object',
+        properties: Object.fromEntries(
+          Array.from({ length: t.extra ?? 1 }, (_, i) => [`p${i}`, { type: 'string' }]),
+        ),
+      },
     })),
     { serverName: 'demo', launchCommand: 'node server.js', envVarNames: [] },
   );
@@ -35,7 +40,10 @@ const grown = server([
   { name: 'get', description: 'Fetch one record by id.' },
   { name: 'bulk_export', description: 'Export every record.' },
 ]);
-const broken = failedMeasurement('startup-failure', { serverName: 'demo', notes: 'server exited (code 1)' });
+const broken = failedMeasurement('startup-failure', {
+  serverName: 'demo',
+  notes: 'server exited (code 1)',
+});
 
 describe('diffServer', () => {
   it('establishes an exact change and attributes it per tool', () => {
@@ -80,7 +88,10 @@ describe('diffServer', () => {
 });
 
 describe('a baseline that describes a different server', () => {
-  const other = { ...server([{ name: 'x', description: 'Other.' }]), serverName: 'a-different-server' };
+  const other = {
+    ...server([{ name: 'x', description: 'Other.' }]),
+    serverName: 'a-different-server',
+  };
 
   it('is refused rather than diffed, because the difference is not a change', () => {
     const d = diffServer('demo', other, grown);

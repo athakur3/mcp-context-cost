@@ -86,7 +86,15 @@ describe('the leaderboard publishes the deprecation beside the row', () => {
 
   it('lists a measured row and a failed row alike', () => {
     write('demo', measurement());
-    write('broken', measurement({ status: 'startup-failure', totalTokens: null, toolCount: null, notes: 'server exited (code 1)' }));
+    write(
+      'broken',
+      measurement({
+        status: 'startup-failure',
+        totalTokens: null,
+        toolCount: null,
+        notes: 'server exited (code 1)',
+      }),
+    );
     const entries: ServerEntry[] = [
       { name: 'demo', command: 'npx -y demo', deprecated },
       { name: 'broken', command: 'npx -y broken', deprecated },
@@ -106,12 +114,16 @@ describe('the leaderboard publishes the deprecation beside the row', () => {
   it('omits the section entirely when nothing is deprecated', () => {
     write('demo', measurement());
     writeLeaderboard([{ name: 'demo', command: 'npx -y demo' }], root);
-    expect(readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8')).not.toContain('Deprecated upstream');
+    expect(readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8')).not.toContain(
+      'Deprecated upstream',
+    );
   });
 });
 
 describe('the deprecations committed in servers.yaml', () => {
-  const doc = parse(readFileSync(join(repoRoot, 'servers.yaml'), 'utf8')) as { servers: ServerEntry[] };
+  const doc = parse(readFileSync(join(repoRoot, 'servers.yaml'), 'utf8')) as {
+    servers: ServerEntry[];
+  };
   const deprecated = doc.servers.filter((s) => s.deprecated);
 
   it('each carries the version, source and reading date its claim rests on', () => {

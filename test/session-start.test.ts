@@ -66,7 +66,9 @@ describe('toolNames', () => {
 
 describe('the session-start number', () => {
   it('is the JSON.stringify of the name array, tokenized like the headline', () => {
-    expect(toolNameTokens(rawTools)).toBe(countTokens(JSON.stringify(['search', 'fetch_document'])));
+    expect(toolNameTokens(rawTools)).toBe(
+      countTokens(JSON.stringify(['search', 'fetch_document'])),
+    );
   });
 
   it('is dramatically smaller than the full definitions it defers', () => {
@@ -109,8 +111,12 @@ describe('measuredInstructions — absent is not zero', () => {
 
 describe('measureTools records the instructions it was given', () => {
   it('stores a string, and null when the server returned none', () => {
-    expect(measureTools(rawTools, { serverName: 'demo', instructions: 'use me' }).serverInstructions).toBe('use me');
-    expect(measureTools(rawTools, { serverName: 'demo', instructions: null }).serverInstructions).toBeNull();
+    expect(
+      measureTools(rawTools, { serverName: 'demo', instructions: 'use me' }).serverInstructions,
+    ).toBe('use me');
+    expect(
+      measureTools(rawTools, { serverName: 'demo', instructions: null }).serverInstructions,
+    ).toBeNull();
   });
 
   it('leaves the field out of the JSON entirely when nothing was captured', () => {
@@ -119,7 +125,10 @@ describe('measureTools records the instructions it was given', () => {
   });
 
   it('does not disturb the headline number or its hash', () => {
-    const bare = measureTools(rawTools, { serverName: 'demo', measuredAt: '2026-08-19T00:00:00.000Z' });
+    const bare = measureTools(rawTools, {
+      serverName: 'demo',
+      measuredAt: '2026-08-19T00:00:00.000Z',
+    });
     const withInstructions = measureTools(rawTools, {
       serverName: 'demo',
       measuredAt: '2026-08-19T00:00:00.000Z',
@@ -146,7 +155,9 @@ describe('sessionStartLoad', () => {
   });
 
   it('is null for a measurement with no capture at all — no session, no load', () => {
-    expect(sessionStartLoad(measurement({ rawToolsCapture: null, status: 'startup-failure' }))).toBeNull();
+    expect(
+      sessionStartLoad(measurement({ rawToolsCapture: null, status: 'startup-failure' })),
+    ).toBeNull();
   });
 
   // The names half IS bounded by the definitions — every name is bytes inside
@@ -157,7 +168,9 @@ describe('sessionStartLoad', () => {
   // so the assertion is scoped to the half that is genuinely guaranteed and the
   // other half is pinned below.
   it('never claims a names half larger than the definitions it defers', () => {
-    const load = sessionStartLoad(measurement({ serverInstructions: 'Prefer search over fetch.' }))!;
+    const load = sessionStartLoad(
+      measurement({ serverInstructions: 'Prefer search over fetch.' }),
+    )!;
     expect(load.toolNameTokens).toBeLessThan(measurement().totalTokens!);
   });
 
@@ -192,11 +205,19 @@ describe('the leaderboard shows both figures for every measured server', () => {
   beforeEach(() => {
     root = mkdtempSync(join(tmpdir(), 'ss-report-'));
     mkdirSync(join(root, 'results'), { recursive: true });
-    place('known', measurement({ serverName: 'known', serverInstructions: 'Prefer search over fetch.' }));
+    place(
+      'known',
+      measurement({ serverName: 'known', serverInstructions: 'Prefer search over fetch.' }),
+    );
     place('floored', legacyMeasurement({ serverName: 'floored' }));
     place(
       'broken',
-      measurement({ serverName: 'broken', status: 'startup-failure', rawToolsCapture: null, totalTokens: null }),
+      measurement({
+        serverName: 'broken',
+        status: 'startup-failure',
+        rawToolsCapture: null,
+        totalTokens: null,
+      }),
     );
   });
   afterEach(() => rmSync(root, { recursive: true, force: true }));
@@ -213,7 +234,11 @@ describe('the leaderboard shows both figures for every measured server', () => {
     writeLeaderboard(entries, root);
     const md = readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8');
     const cell = (name: string) =>
-      md.split('\n').find((l) => l.includes(`[${name}]`))!.split('|')[sessionStartCol(md)].trim();
+      md
+        .split('\n')
+        .find((l) => l.includes(`[${name}]`))!
+        .split('|')
+        [sessionStartCol(md)].trim();
     expect(cell('floored').startsWith('≥')).toBe(true);
     expect(cell('known').startsWith('≥')).toBe(false);
     expect(md).toContain('marks a floor, on 1 of 2 rows');
@@ -222,7 +247,9 @@ describe('the leaderboard shows both figures for every measured server', () => {
   it('says nothing about floors when there are none', () => {
     rmSync(join(root, 'results', 'floored'), { recursive: true });
     writeLeaderboard([entries[0], entries[2]], root);
-    expect(readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8')).not.toContain('marks a floor');
+    expect(readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8')).not.toContain(
+      'marks a floor',
+    );
   });
 
   it('names the rows where deferring costs more, with both figures', () => {
@@ -248,12 +275,16 @@ describe('the leaderboard shows both figures for every measured server', () => {
 
   it('says nothing about deferring costing more when it never does', () => {
     writeLeaderboard(entries, root);
-    expect(readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8')).not.toContain('Deferring costs more');
+    expect(readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8')).not.toContain(
+      'Deferring costs more',
+    );
   });
 
   it('carries the parts and the floor flag into the CSV, appended after the existing columns', () => {
     writeLeaderboard(entries, root);
-    const csv = readFileSync(join(root, 'results', 'leaderboard.csv'), 'utf8').trim().split('\n');
+    const csv = readFileSync(join(root, 'results', 'leaderboard.csv'), 'utf8')
+      .trim()
+      .split('\n');
     expect(csv[0]).toBe(
       'name,tokens,toolCount,status,category,metric,metricSource,claudeTokens,claudeModel,' +
         'sessionStartTokens,sessionStartIsFloor,toolNameTokens,instructionsTokens,' +
@@ -266,7 +297,12 @@ describe('the leaderboard shows both figures for every measured server', () => {
       String(toolNameTokens(rawTools)),
       String(countTokens('Prefer search over fetch.')),
     ]);
-    expect(cols('floored').slice(9, 13)).toEqual([String(toolNameTokens(rawTools)), 'true', String(toolNameTokens(rawTools)), '']);
+    expect(cols('floored').slice(9, 13)).toEqual([
+      String(toolNameTokens(rawTools)),
+      'true',
+      String(toolNameTokens(rawTools)),
+      '',
+    ]);
     // A server with no capture has no session-start columns at all — not zeros.
     expect(cols('broken').slice(9, 13)).toEqual(['', '', '', '']);
   });

@@ -351,7 +351,11 @@ export async function measureServer(
       // The declared evidence travels with the launch, because the truncation
       // that could lose it happens inside the client, before anything here sees
       // the message it will be classified from.
-      const captureOpts = { ...attemptOpts, keepEvidence: opts.notApplicable?.evidence, posture: opts.posture };
+      const captureOpts = {
+        ...attemptOpts,
+        keepEvidence: opts.notApplicable?.evidence,
+        posture: opts.posture,
+      };
       const first = await captureTools(buildSpec(noSharedCache), captureOpts);
       const second = await captureTools(buildSpec(noSharedCache), captureOpts);
       r = measureTools(first.tools, {
@@ -373,7 +377,9 @@ export async function measureServer(
       // launched the server — classifying it would publish a fact about this
       // machine as a fact about the server, so it is thrown instead of returned.
       if (dockerWrapped && isDockerRunFailure(msg)) {
-        throw new DockerHarnessFault(`docker could not run the container for ${name}: ${msg.slice(0, 400)}`);
+        throw new DockerHarnessFault(
+          `docker could not run the container for ${name}: ${msg.slice(0, 400)}`,
+        );
       }
       const declared = notApplicableReason(opts.notApplicable, msg);
       r = failedMeasurement(declared ? 'not-applicable' : classifyFailure(msg), {
@@ -381,7 +387,11 @@ export async function measureServer(
         launchCommand: command,
         // The declared reason leads, but the raw failure stays behind it: the
         // record has to remain checkable against the run that produced it.
-        notes: clampNotes(declared ? `${declared} — ${msg}` : msg, 700, opts.notApplicable?.evidence),
+        notes: clampNotes(
+          declared ? `${declared} — ${msg}` : msg,
+          700,
+          opts.notApplicable?.evidence,
+        ),
       });
     }
     const iso = isolation ?? { docker: false };
@@ -448,12 +458,15 @@ export async function measureServer(
 // Exact path match, not endsWith('run.ts'): any other file whose name happens to
 // end in "run.ts" (src/audit/run.ts, a scratch dryrun.ts) would otherwise run this
 // block and exit 2 on missing --name.
-const isMain = process.argv[1] !== undefined && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+const isMain =
+  process.argv[1] !== undefined && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
   const name = arg('name');
   const command = arg('command');
   if (!name || !command) {
-    console.error('usage: npm run sweep -- --name <slug> --command "<launch command>" [--docker] [--timeout <ms>] [--no-persist]');
+    console.error(
+      'usage: npm run sweep -- --name <slug> --command "<launch command>" [--docker] [--timeout <ms>] [--no-persist]',
+    );
     process.exit(2);
   }
   // `--no-persist` is the form a contributor is told to run (README, "Measure

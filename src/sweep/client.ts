@@ -253,7 +253,10 @@ export function clampNotes(text: string, limit: number, required?: string): stri
   if (at < 0) return plain;
   const room = Math.max(0, limit - ELISION.length);
   const width = Math.min(room, Math.max(needle.length, Math.floor(room / 2)));
-  const start = Math.max(0, Math.min(at - Math.floor((width - needle.length) / 2), text.length - width));
+  const start = Math.max(
+    0,
+    Math.min(at - Math.floor((width - needle.length) / 2), text.length - width),
+  );
   return text.slice(0, Math.max(0, room - width)) + ELISION + text.slice(start, start + width);
 }
 
@@ -395,7 +398,12 @@ export class McpStdioClient {
           if (msg.method === 'ping') this.send({ jsonrpc: '2.0', id: msg.id, result: {} });
           else if (Object.hasOwn(this.answers, msg.method))
             this.send({ jsonrpc: '2.0', id: msg.id, result: this.answers[msg.method] });
-          else this.send({ jsonrpc: '2.0', id: msg.id, error: { code: -32601, message: 'method not found' } });
+          else
+            this.send({
+              jsonrpc: '2.0',
+              id: msg.id,
+              error: { code: -32601, message: 'method not found' },
+            });
         }
         continue;
       }
@@ -447,7 +455,9 @@ export class McpStdioClient {
   }
 
   notify(method: string, params?: unknown) {
-    this.send(params === undefined ? { jsonrpc: '2.0', method } : { jsonrpc: '2.0', method, params });
+    this.send(
+      params === undefined ? { jsonrpc: '2.0', method } : { jsonrpc: '2.0', method, params },
+    );
   }
 
   get stderrTail(): string {
@@ -483,7 +493,8 @@ export async function captureTools(
 ): Promise<WireCapture> {
   const timeoutMs = opts.timeoutMs ?? 60_000;
   const posture = opts.posture ?? MINIMAL_POSTURE;
-  const [cmd, ...args] = typeof spec === 'string' ? splitCommand(spec) : [spec.command, ...spec.argv];
+  const [cmd, ...args] =
+    typeof spec === 'string' ? splitCommand(spec) : [spec.command, ...spec.argv];
   const client = new McpStdioClient(
     cmd,
     args,
@@ -508,12 +519,17 @@ export async function captureTools(
     let cursor: string | undefined;
     let pages = 0;
     do {
-      if (++pages > 100) throw new Error('tools/list pagination exceeded 100 pages — cursor loop suspected');
+      if (++pages > 100)
+        throw new Error('tools/list pagination exceeded 100 pages — cursor loop suspected');
       const res = await client.request('tools/list', cursor ? { cursor } : {}, timeoutMs);
       if (Array.isArray(res?.tools)) tools.push(...res.tools);
-      cursor = typeof res?.nextCursor === 'string' && res.nextCursor.length > 0 ? res.nextCursor : undefined;
+      cursor =
+        typeof res?.nextCursor === 'string' && res.nextCursor.length > 0
+          ? res.nextCursor
+          : undefined;
       if (cursor) {
-        if (seenCursors.has(cursor)) throw new Error('tools/list returned a repeated cursor — pagination loop');
+        if (seenCursors.has(cursor))
+          throw new Error('tools/list returned a repeated cursor — pagination loop');
         seenCursors.add(cursor);
       }
     } while (cursor);

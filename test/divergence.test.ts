@@ -31,7 +31,14 @@ const rawTool = {
 };
 
 function row(over: Partial<DivergenceRow> = {}): DivergenceRow {
-  return { o200kFull: 1000, o200kMapped: 400, claudeDelta: 700, toolCount: 2, capturedSha256: 'a'.repeat(64), ...over };
+  return {
+    o200kFull: 1000,
+    o200kMapped: 400,
+    claudeDelta: 700,
+    toolCount: 2,
+    capturedSha256: 'a'.repeat(64),
+    ...over,
+  };
 }
 
 function run(over: Partial<DivergenceRun> = {}): DivergenceRun {
@@ -63,7 +70,9 @@ describe('toAnthropicTools', () => {
   });
 
   it('skips tools with no usable name instead of inventing one', () => {
-    expect(toAnthropicTools([{ description: 'x' }, { name: '', description: 'y' }, rawTool])).toHaveLength(1);
+    expect(
+      toAnthropicTools([{ description: 'x' }, { name: '', description: 'y' }, rawTool]),
+    ).toHaveLength(1);
   });
 
   it('defaults a missing description and schema to empty rather than omitting the key', () => {
@@ -73,7 +82,9 @@ describe('toAnthropicTools', () => {
   });
 
   it('preserves tool order — the comparison is against the same sequence', () => {
-    const names = toAnthropicTools([{ name: 'b' }, { name: 'a' }, { name: 'c' }]).map((t) => t.name);
+    const names = toAnthropicTools([{ name: 'b' }, { name: 'a' }, { name: 'c' }]).map(
+      (t) => t.name,
+    );
     expect(names).toEqual(['b', 'a', 'c']);
   });
 });

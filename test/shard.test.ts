@@ -160,7 +160,10 @@ describe('sweep-all sharding (subprocess)', () => {
       join(root, 'servers.yaml'),
       'servers:\n' +
         names
-          .map((nm) => `  - name: ${nm}\n    command: node -e "process.exit(1)"\n    timeoutSeconds: 10\n`)
+          .map(
+            (nm) =>
+              `  - name: ${nm}\n    command: node -e "process.exit(1)"\n    timeoutSeconds: 10\n`,
+          )
           .join(''),
     );
     return names;
@@ -228,7 +231,9 @@ describe('sweep-all sharding (subprocess)', () => {
     expect(code).toBe(0);
     expect(swept(out)).toEqual([...slice].sort());
     for (const name of outside) {
-      expect(readFileSync(join(root, 'results', name, 'measurement.json'), 'utf8')).toBe(before[name]);
+      expect(readFileSync(join(root, 'results', name, 'measurement.json'), 'utf8')).toBe(
+        before[name],
+      );
     }
     // ...and they are still on the published leaderboard and in history.
     const leaderboard = readFileSync(join(root, 'results', 'leaderboard.md'), 'utf8');

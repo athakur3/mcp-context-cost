@@ -28,7 +28,8 @@ import {
 } from '../src/core/adoption.js';
 import { readmeSnippet } from '../src/core/snippet.js';
 
-const RAW = 'https://raw.githubusercontent.com/athakur3/mcp-context-cost/main/badges/my-server.json';
+const RAW =
+  'https://raw.githubusercontent.com/athakur3/mcp-context-cost/main/badges/my-server.json';
 const PAGE = 'https://athakur3.github.io/mcp-context-cost/servers/my-server.html';
 
 function query(over: Partial<QueryResult> = {}): QueryResult {
@@ -68,7 +69,9 @@ describe('adoptionQueries', () => {
     const qs = adoptionQueries();
     const encoded = qs.find((q) => q.name === 'badge-endpoint-encoded');
     const plain = qs.find((q) => q.name === 'badge-endpoint-plain');
-    expect(encoded?.q).toContain('raw.githubusercontent.com%2Fathakur3%2Fmcp-context-cost%2Fmain%2Fbadges');
+    expect(encoded?.q).toContain(
+      'raw.githubusercontent.com%2Fathakur3%2Fmcp-context-cost%2Fmain%2Fbadges',
+    );
     expect(encoded?.q).not.toContain('/badges');
     expect(plain?.q).toContain('raw.githubusercontent.com/athakur3/mcp-context-cost/main/badges');
     expect(plain?.q).not.toContain('%2F');
@@ -103,16 +106,20 @@ describe('classifyFile', () => {
     expect(classifyFile(md)).toBe('badge');
   });
 
-  it('does not count somebody else\'s shields endpoint badge', () => {
+  it("does not count somebody else's shields endpoint badge", () => {
     const md =
       '[![build](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fother%2Frepo%2Fmain%2Fbadges%2Fx.json)](https://example.com)';
     expect(classifyFile(md)).toBe(null);
   });
 
   it('separates naming the project from displaying its badge', () => {
-    expect(classifyFile('Measured with https://github.com/athakur3/mcp-context-cost — no badge yet.')).toBe('mention');
+    expect(
+      classifyFile('Measured with https://github.com/athakur3/mcp-context-cost — no badge yet.'),
+    ).toBe('mention');
     expect(classifyFile(`See ${PAGE} for the numbers.`)).toBe('mention');
-    expect(classifyFile('Run `npx -y mcp-context-cost audit` before adding a server.')).toBe('mention');
+    expect(classifyFile('Run `npx -y mcp-context-cost audit` before adding a server.')).toBe(
+      'mention',
+    );
   });
 
   it('separates naming the project from merely containing its name', () => {
@@ -181,7 +188,7 @@ describe('files found in the wild', () => {
   const fixtures = join(import.meta.dirname, 'fixtures', 'adoption');
   const fixture = (name: string) => readFileSync(join(fixtures, name), 'utf8');
 
-  it('a file carrying the phrase only inside a link to somebody else\'s site is not naming the project', () => {
+  it("a file carrying the phrase only inside a link to somebody else's site is not naming the project", () => {
     // shuji-bonji/ai-agent-architecture, docs/glossary.md and seven more: every
     // occurrence is the slug of a chapter on an unrelated site.
     const text = fixture('phrase-in-foreign-url.md');
@@ -199,7 +206,7 @@ describe('files found in the wild', () => {
     expect(classifyFile(text)).toBe('phrase');
   });
 
-  it('a file whose only occurrence of the name is a temp file\'s name is not naming the project', () => {
+  it("a file whose only occurrence of the name is a temp file's name is not naming the project", () => {
     // bbingz/engram, macos/EngramMCPTests/EngramMCPExecutableTests.swift at
     // d97d0257 — the record the reading of 2026-09-07 carried forward.
     const text = fixture('phrase-in-sqlite-filename.swift');
@@ -220,18 +227,19 @@ describe('the badge forms this project actually publishes', () => {
   // own server, so every one of them points shields at the author's own JSON.
   // A rule that only counted JSON served from here would publish a zero about a
   // spelling nobody was told to write.
-  const OWN = 'https://raw.githubusercontent.com/someone/their-server/main/badges/their-server.json';
+  const OWN =
+    'https://raw.githubusercontent.com/someone/their-server/main/badges/their-server.json';
   const METHODOLOGY = 'https://athakur3.github.io/mcp-context-cost/METHODOLOGY.html';
 
-  it('counts README.md\'s snippet: the author\'s own badges/ JSON, linked back here', () => {
+  it("counts README.md's snippet: the author's own badges/ JSON, linked back here", () => {
     expect(classifyFile(readmeSnippet(OWN, PAGE))).toBe('badge');
     expect(classifyFile(readmeSnippet(OWN, METHODOLOGY))).toBe('badge');
   });
 
-  it('counts the dashboard\'s snippet written by hand, unencoded', () => {
-    expect(classifyFile(`[![context cost](https://img.shields.io/endpoint?url=${OWN})](${METHODOLOGY})`)).toBe(
-      'badge',
-    );
+  it("counts the dashboard's snippet written by hand, unencoded", () => {
+    expect(
+      classifyFile(`[![context cost](https://img.shields.io/endpoint?url=${OWN})](${METHODOLOGY})`),
+    ).toBe('badge');
   });
 
   it('does not count an unrelated endpoint badge that merely links here', () => {
@@ -242,16 +250,22 @@ describe('the badge forms this project actually publishes', () => {
     expect(classifyFile(coverage)).toBe('mention');
   });
 
-  it('reads the badge\'s own label tolerantly, since the URL cannot decide it', () => {
+  it("reads the badge's own label tolerantly, since the URL cannot decide it", () => {
     const gist = 'https://gist.githubusercontent.com/someone/abc123/raw/badge.json';
-    expect(classifyFile(`[![Context-Cost](https://img.shields.io/endpoint?url=${gist})](${METHODOLOGY})`)).toBe('badge');
+    expect(
+      classifyFile(
+        `[![Context-Cost](https://img.shields.io/endpoint?url=${gist})](${METHODOLOGY})`,
+      ),
+    ).toBe('badge');
   });
 
-  it('counts the staged action\'s gist badge, which has no badges/ segment at all', () => {
+  it("counts the staged action's gist badge, which has no badges/ segment at all", () => {
     const gist = 'https://gist.githubusercontent.com/someone/abc123/raw/badge.json';
-    expect(classifyFile(`[![context cost](https://img.shields.io/endpoint?url=${gist})](${METHODOLOGY})`)).toBe(
-      'badge',
-    );
+    expect(
+      classifyFile(
+        `[![context cost](https://img.shields.io/endpoint?url=${gist})](${METHODOLOGY})`,
+      ),
+    ).toBe('badge');
   });
 
   it('counts an HTML anchor wrapping the image, which READMEs also use', () => {
@@ -260,16 +274,20 @@ describe('the badge forms this project actually publishes', () => {
   });
 
   it('still counts a badge served from this repository, however it is linked', () => {
-    expect(classifyFile(`![context cost](https://img.shields.io/endpoint?url=${encodeURIComponent(RAW)})`)).toBe(
-      'badge',
-    );
+    expect(
+      classifyFile(
+        `![context cost](https://img.shields.io/endpoint?url=${encodeURIComponent(RAW)})`,
+      ),
+    ).toBe('badge');
   });
 
   it('leaves a self-hosted badge that links back to nothing outside the count', () => {
     // The one shape the page says it cannot see, stated there and true here.
-    expect(classifyFile(`[![context cost](https://img.shields.io/endpoint?url=${OWN})](https://example.com)`)).toBe(
-      null,
-    );
+    expect(
+      classifyFile(
+        `[![context cost](https://img.shields.io/endpoint?url=${OWN})](https://example.com)`,
+      ),
+    ).toBe(null);
     expect(classifyFile(`![context cost](https://img.shields.io/endpoint?url=${OWN})`)).toBe(null);
   });
 
@@ -328,7 +346,7 @@ describe('endpointUrls', () => {
 });
 
 describe('isThirdParty', () => {
-  it('excludes this project\'s own repositories, case-insensitively', () => {
+  it("excludes this project's own repositories, case-insensitively", () => {
     expect(isThirdParty('athakur3/mcp-context-cost')).toBe(false);
     expect(isThirdParty('ATHAKUR3/some-other-repo')).toBe(false);
     expect(isThirdParty('someone/mcp-context-cost')).toBe(true);
@@ -345,7 +363,9 @@ describe('mergeSightings', () => {
   });
 
   it('keeps a sighting that has disappeared, dated to when it was last seen', () => {
-    const previous = [sighting({ repo: 'gone/away', firstSeenAt: '2026-08-01', lastSeenAt: '2026-08-01' })];
+    const previous = [
+      sighting({ repo: 'gone/away', firstSeenAt: '2026-08-01', lastSeenAt: '2026-08-01' }),
+    ];
     const merged = mergeSightings(previous, [sighting()], '2026-09-01');
     expect(merged.map((s) => s.repo).sort()).toEqual(['gone/away', 'someone/their-server']);
     expect(merged.find((s) => s.repo === 'gone/away')?.lastSeenAt).toBe('2026-08-01');
@@ -361,7 +381,11 @@ describe('mergeSightings', () => {
   });
 
   it('counts a repository once however many of its files carry the badge', () => {
-    const merged = mergeSightings([], [sighting(), sighting({ path: 'docs/index.md' })], '2026-08-20');
+    const merged = mergeSightings(
+      [],
+      [sighting(), sighting({ path: 'docs/index.md' })],
+      '2026-08-20',
+    );
     expect(merged).toHaveLength(2);
     expect(badgeRepos(merged, '2026-08-20')).toEqual(['someone/their-server']);
   });
@@ -404,10 +428,17 @@ describe('a verdict belongs to the method that made it', () => {
   });
 
   it('does not present it under the v2 heading', () => {
-    const reading = run({ method: ADOPTION_METHOD, checkedAt: '2026-09-07', sightings: [carried()] });
+    const reading = run({
+      method: ADOPTION_METHOD,
+      checkedAt: '2026-09-07',
+      sightings: [carried()],
+    });
     const page = renderAdoptionPage(reading);
 
-    const found = page.slice(page.indexOf('## What was found'), page.indexOf('### Judged under an earlier rule'));
+    const found = page.slice(
+      page.indexOf('## What was found'),
+      page.indexOf('### Judged under an earlier rule'),
+    );
     expect(found).not.toContain('bbingz/engram');
     expect(found).not.toContain('names the project, no badge');
     expect(found).toContain(`No file was judged under \`${ADOPTION_METHOD}\``);
@@ -424,19 +455,25 @@ describe('a verdict belongs to the method that made it', () => {
   it('holds a row this reading did judge in the table, so the split is the method and not the date', () => {
     const mine = sighting({ kind: 'mention', judgedBy: ADOPTION_METHOD, lastSeenAt: '2026-09-07' });
     const page = renderAdoptionPage(run({ checkedAt: '2026-09-07', sightings: [mine, carried()] }));
-    const found = page.slice(page.indexOf('## What was found'), page.indexOf('### Judged under an earlier rule'));
+    const found = page.slice(
+      page.indexOf('## What was found'),
+      page.indexOf('### Judged under an earlier rule'),
+    );
     expect(found).toContain('someone/their-server');
     expect(found).not.toContain('bbingz/engram');
     expect(page).not.toContain('No file was judged under');
   });
 
-  it('takes an unstamped row as this reading\'s only when this reading saw it', () => {
+  it("takes an unstamped row as this reading's only when this reading saw it", () => {
     const reading = { method: ADOPTION_METHOD, checkedAt: '2026-09-07' };
     expect(judgingMethod(sighting({ lastSeenAt: '2026-09-07' }), reading)).toBe(ADOPTION_METHOD);
     expect(judgingMethod(sighting({ lastSeenAt: '2026-09-03' }), reading)).toBe(null);
-    expect(judgingMethod(sighting({ lastSeenAt: '2026-09-03', judgedBy: 'badge-sightings/v1' }), reading)).toBe(
-      'badge-sightings/v1',
-    );
+    expect(
+      judgingMethod(
+        sighting({ lastSeenAt: '2026-09-03', judgedBy: 'badge-sightings/v1' }),
+        reading,
+      ),
+    ).toBe('badge-sightings/v1');
   });
 
   it('holds out a carried-forward row that records no method at all, and says so', () => {
@@ -445,11 +482,16 @@ describe('a verdict belongs to the method that made it', () => {
     const page = renderAdoptionPage(run({ checkedAt: '2026-09-07', sightings: [unstamped] }));
     const earlier = page.slice(page.indexOf('### Judged under an earlier rule'));
     expect(earlier).toContain('| names the project, no badge | not recorded |');
-    expect(sightingsByMethod(run({ checkedAt: '2026-09-07', sightings: [unstamped] })).current).toEqual([]);
+    expect(
+      sightingsByMethod(run({ checkedAt: '2026-09-07', sightings: [unstamped] })).current,
+    ).toEqual([]);
   });
 
   it('re-judging a carried-forward record replaces the verdict and the version, and not the dates', () => {
-    const [after] = applyRejudgements([carried()], [{ repo: 'bbingz/engram', path: carried().path, kind: 'phrase' }]);
+    const [after] = applyRejudgements(
+      [carried()],
+      [{ repo: 'bbingz/engram', path: carried().path, kind: 'phrase' }],
+    );
     expect(after.kind).toBe('phrase');
     expect(after.judgedBy).toBe(ADOPTION_METHOD);
     // The search did not return it: it was re-read, not seen.
@@ -461,7 +503,11 @@ describe('a verdict belongs to the method that made it', () => {
   });
 
   it('leaves a record alone when the re-read produced nothing, rather than deleting the evidence', () => {
-    const gone = sighting({ kind: 'badge', judgedBy: 'badge-sightings/v1', lastSeenAt: '2026-09-03' });
+    const gone = sighting({
+      kind: 'badge',
+      judgedBy: 'badge-sightings/v1',
+      lastSeenAt: '2026-09-03',
+    });
     const [after] = applyRejudgements([gone], [{ repo: gone.repo, path: gone.path, kind: null }]);
     expect(after).toEqual(gone);
   });
@@ -475,17 +521,28 @@ describe('a verdict belongs to the method that made it', () => {
 
 describe('resolveCount', () => {
   it('publishes a zero only when every query answered', () => {
-    expect(resolveCount([query()], [], '2026-08-20')).toEqual({ thirdPartyRepos: 0, unresolved: null });
+    expect(resolveCount([query()], [], '2026-08-20')).toEqual({
+      thirdPartyRepos: 0,
+      unresolved: null,
+    });
   });
 
   it('refuses a number when a query did not answer', () => {
-    const r = resolveCount([query(), query({ name: 'link-target', state: 'failed', hits: null, error: 'HTTP 403' })], [], '2026-08-20');
+    const r = resolveCount(
+      [query(), query({ name: 'link-target', state: 'failed', hits: null, error: 'HTTP 403' })],
+      [],
+      '2026-08-20',
+    );
     expect(r.thirdPartyRepos).toBe(null);
     expect(r.unresolved).toContain('link-target');
   });
 
   it('refuses a number when a query had more results than were collected', () => {
-    const r = resolveCount([query({ name: 'project-name', hits: 900, truncated: true })], [], '2026-08-20');
+    const r = resolveCount(
+      [query({ name: 'project-name', hits: 900, truncated: true })],
+      [],
+      '2026-08-20',
+    );
     expect(r.thirdPartyRepos).toBe(null);
     expect(r.unresolved).toContain('more-results-than-collected');
   });
@@ -497,7 +554,10 @@ describe('resolveCount', () => {
   });
 
   it('refuses a number when nothing was asked at all', () => {
-    expect(resolveCount([], [], '2026-08-20')).toEqual({ thirdPartyRepos: null, unresolved: 'no-query-was-run' });
+    expect(resolveCount([], [], '2026-08-20')).toEqual({
+      thirdPartyRepos: null,
+      unresolved: 'no-query-was-run',
+    });
   });
 
   it('counts the badges, not the mentions and not the phrase', () => {
@@ -555,7 +615,11 @@ describe('renderAdoptionPage', () => {
 
   it('says a zero was looked for, and on what day', () => {
     const page = renderAdoptionPage(
-      run({ candidates: 3, sightings: [sighting({ kind: 'mention' })], queries: [query({ hits: 3 })] }),
+      run({
+        candidates: 3,
+        sightings: [sighting({ kind: 'mention' })],
+        queries: [query({ hits: 3 })],
+      }),
     );
     expect(page).toContain('Zero projects outside this repository display the badge');
     expect(page).toContain('2026-08-20');
@@ -567,29 +631,43 @@ describe('renderAdoptionPage', () => {
     const page = renderAdoptionPage(
       run({
         candidates: 2,
-        sightings: [sighting({ kind: 'mention' }), sighting({ repo: 'someone/book', path: 'glossary.md', kind: 'phrase' })],
+        sightings: [
+          sighting({ kind: 'mention' }),
+          sighting({ repo: 'someone/book', path: 'glossary.md', kind: 'phrase' }),
+        ],
       }),
     );
     expect(page).toContain('| names the project, no badge |');
     expect(page).toContain('| matches the phrase only |');
-    expect(page).toContain('*Names the project* means the file refers to something that is the project');
+    expect(page).toContain(
+      '*Names the project* means the file refers to something that is the project',
+    );
     expect(page).toContain('*Matches the phrase only*');
     expect(page).toContain('kept in this table rather than');
   });
 
   it('says, while the reading predates the rule, that a later one re-judges it — and only then', () => {
     const stale = renderAdoptionPage(
-      run({ method: 'badge-sightings/v1', sightings: [sighting({ kind: 'mention', judgedBy: 'badge-sightings/v1' })] }),
+      run({
+        method: 'badge-sightings/v1',
+        sightings: [sighting({ kind: 'mention', judgedBy: 'badge-sightings/v1' })],
+      }),
     );
     expect(stale).toContain('taken under method `badge-sightings/v1`; the rule now in force is');
-    expect(stale).toContain('the next reading re-judges every file it finds and every record it carries');
+    expect(stale).toContain(
+      'the next reading re-judges every file it finds and every record it carries',
+    );
     const current = renderAdoptionPage(run({ sightings: [sighting({ kind: 'mention' })] }));
     expect(current).not.toContain('taken under method');
   });
 
   it('publishes no number when the reading was refused, and says why', () => {
     const page = renderAdoptionPage(
-      run({ thirdPartyRepos: null, unresolved: 'query-did-not-answer: link-target', lastResolved: null }),
+      run({
+        thirdPartyRepos: null,
+        unresolved: 'query-did-not-answer: link-target',
+        lastResolved: null,
+      }),
     );
     expect(page).toContain('could not be established');
     expect(page).toContain('query-did-not-answer: link-target');
@@ -611,14 +689,19 @@ describe('renderAdoptionPage', () => {
   });
 
   it('names the repositories when there are some', () => {
-    const page = renderAdoptionPage(run({ thirdPartyRepos: 1, sightings: [sighting()], candidates: 1 }));
+    const page = renderAdoptionPage(
+      run({ thirdPartyRepos: 1, sightings: [sighting()], candidates: 1 }),
+    );
     expect(page).toContain('1 project(s) outside this repository display the badge');
     expect(page).toContain('https://github.com/someone/their-server');
   });
 
   it('publishes the queries it ran, so a reader can run them too', () => {
-    const page = renderAdoptionPage(run({ queries: adoptionQueries().map((d) => ({ ...d, state: 'ok' as const, hits: 0 })) }));
-    for (const q of adoptionQueries()) expect(page).toContain(q.q.replace(/[|`[\]<>]/g, (c) => `\\${c}`));
+    const page = renderAdoptionPage(
+      run({ queries: adoptionQueries().map((d) => ({ ...d, state: 'ok' as const, hits: 0 })) }),
+    );
+    for (const q of adoptionQueries())
+      expect(page).toContain(q.q.replace(/[|`[\]<>]/g, (c) => `\\${c}`));
   });
 
   it('says what it cannot see', () => {
@@ -628,13 +711,20 @@ describe('renderAdoptionPage', () => {
   });
 
   it('never shortens a file link, however long the path', () => {
-    const url = 'https://github.com/someone/their-server/blob/' + 'a'.repeat(40) + '/' + 'd/'.repeat(60) + 'file.md';
+    const url =
+      'https://github.com/someone/their-server/blob/' +
+      'a'.repeat(40) +
+      '/' +
+      'd/'.repeat(60) +
+      'file.md';
     const page = renderAdoptionPage(run({ thirdPartyRepos: 1, sightings: [sighting({ url })] }));
     expect(page).toContain(`(${url})`);
   });
 
   it('escapes markdown table syntax in third-party paths', () => {
-    const page = renderAdoptionPage(run({ thirdPartyRepos: 1, sightings: [sighting({ path: 'a|b`c.md' })] }));
+    const page = renderAdoptionPage(
+      run({ thirdPartyRepos: 1, sightings: [sighting({ path: 'a|b`c.md' })] }),
+    );
     expect(page).toContain('a\\|b\\`c.md');
   });
 });
@@ -652,7 +742,9 @@ describe('parseAdoption', () => {
   });
 
   it('reads a refused count as refused, never as zero', () => {
-    const parsed = parseAdoption(JSON.stringify(run({ thirdPartyRepos: null, unresolved: 'no-query-was-run' })));
+    const parsed = parseAdoption(
+      JSON.stringify(run({ thirdPartyRepos: null, unresolved: 'no-query-was-run' })),
+    );
     expect(parsed?.thirdPartyRepos).toBe(null);
     expect(parsed?.unresolved).toBe('no-query-was-run');
   });

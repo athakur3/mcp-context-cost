@@ -181,7 +181,10 @@ describe('snapshot / restore round-trip', () => {
 
   function publish(name: string, m: Measurement, badge = '{"schemaVersion":1,"label":"x"}') {
     mkdirSync(join(root, 'results', name), { recursive: true });
-    writeFileSync(join(root, 'results', name, 'measurement.json'), JSON.stringify(m, null, 2) + '\n');
+    writeFileSync(
+      join(root, 'results', name, 'measurement.json'),
+      JSON.stringify(m, null, 2) + '\n',
+    );
     mkdirSync(join(root, 'badges'), { recursive: true });
     writeFileSync(join(root, 'badges', `${name}.json`), badge + '\n');
   }
@@ -216,8 +219,14 @@ describe('snapshot / restore round-trip', () => {
     const snaps = snapshot(['memory'], root);
 
     // The sweep overwrites both artifacts with a failure, as measureServer does.
-    publish('memory', measurement({ status: 'startup-failure', totalTokens: null }), '{"message":"unknown"}');
-    expect(readFileSync(join(root, 'results', 'memory', 'measurement.json'), 'utf8')).not.toBe(before);
+    publish(
+      'memory',
+      measurement({ status: 'startup-failure', totalTokens: null }),
+      '{"message":"unknown"}',
+    );
+    expect(readFileSync(join(root, 'results', 'memory', 'measurement.json'), 'utf8')).not.toBe(
+      before,
+    );
 
     const restored = restore(snaps, ['memory'], root);
     expect(restored).toEqual(['memory']);
@@ -234,9 +243,13 @@ describe('snapshot / restore round-trip', () => {
     publish('filesystem', measurement({ serverName: 'filesystem', totalTokens: 9999 }));
 
     restore(snaps, ['memory'], root);
-    const fs = JSON.parse(readFileSync(join(root, 'results', 'filesystem', 'measurement.json'), 'utf8'));
+    const fs = JSON.parse(
+      readFileSync(join(root, 'results', 'filesystem', 'measurement.json'), 'utf8'),
+    );
     expect(fs.totalTokens).toBe(9999); // untouched — not in the restore list
-    const mem = JSON.parse(readFileSync(join(root, 'results', 'memory', 'measurement.json'), 'utf8'));
+    const mem = JSON.parse(
+      readFileSync(join(root, 'results', 'memory', 'measurement.json'), 'utf8'),
+    );
     expect(mem.status).toBe('measured');
   });
 
@@ -246,7 +259,9 @@ describe('snapshot / restore round-trip', () => {
     const restored = restore(snaps, ['brand-new'], root);
     expect(restored).toEqual([]);
     // The honest new failure record survives.
-    const m = JSON.parse(readFileSync(join(root, 'results', 'brand-new', 'measurement.json'), 'utf8'));
+    const m = JSON.parse(
+      readFileSync(join(root, 'results', 'brand-new', 'measurement.json'), 'utf8'),
+    );
     expect(m.status).toBe('startup-failure');
   });
 
@@ -285,7 +300,10 @@ describe('sweep-all wiring (subprocess)', () => {
       join(root, 'servers.yaml'),
       'servers:\n' +
         names
-          .map((nm) => `  - name: ${nm}\n    command: node -e "process.exit(1)"\n    timeoutSeconds: 10\n`)
+          .map(
+            (nm) =>
+              `  - name: ${nm}\n    command: node -e "process.exit(1)"\n    timeoutSeconds: 10\n`,
+          )
           .join(''),
     );
     for (let i = 0; i < priorGood; i++) {
@@ -296,14 +314,21 @@ describe('sweep-all wiring (subprocess)', () => {
         JSON.stringify(measurement({ serverName: name, totalTokens: 1000 + i }), null, 2) + '\n',
       );
       mkdirSync(join(root, 'badges'), { recursive: true });
-      writeFileSync(join(root, 'badges', `${name}.json`), '{"schemaVersion":1,"label":"context"}\n');
+      writeFileSync(
+        join(root, 'badges', `${name}.json`),
+        '{"schemaVersion":1,"label":"context"}\n',
+      );
     }
     return names;
   }
 
   function runSweep(): { code: number; out: string } {
     try {
-      const out = execFileSync(process.execPath, [TSX_CLI, sweepAll], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+      const out = execFileSync(process.execPath, [TSX_CLI, sweepAll], {
+        cwd: root,
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'pipe'],
+      });
       return { code: 0, out };
     } catch (err) {
       const e = err as { status?: number; stdout?: string; stderr?: string };
@@ -324,7 +349,9 @@ describe('sweep-all wiring (subprocess)', () => {
     // Every prior measurement is back to its real number, not the failure the
     // sweep just wrote over it.
     for (let i = 0; i < names.length; i++) {
-      const m = JSON.parse(readFileSync(join(root, 'results', names[i], 'measurement.json'), 'utf8'));
+      const m = JSON.parse(
+        readFileSync(join(root, 'results', names[i], 'measurement.json'), 'utf8'),
+      );
       expect(m.status).toBe('measured');
       expect(m.totalTokens).toBe(1000 + i);
     }

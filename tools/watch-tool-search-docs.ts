@@ -57,7 +57,10 @@ async function request(url: string): Promise<string> {
   for (let attempt = 0; attempt <= BACKOFF_MS.length; attempt++) {
     try {
       const res = await fetch(url, {
-        headers: { accept: 'text/plain, text/markdown', 'user-agent': 'mcp-context-cost-doc-watch' },
+        headers: {
+          accept: 'text/plain, text/markdown',
+          'user-agent': 'mcp-context-cost-doc-watch',
+        },
         signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       });
       const text = await res.text();
@@ -119,8 +122,12 @@ if (problems.length === 0) {
 
 console.log('the deferral model rests on passages that no longer read as recorded:\n');
 for (const p of problems) console.log(`  - ${p}`);
-console.log(`\nRecorded on ${TOOL_SEARCH_DOC_READ_ON}. What has to change with them, if they moved:`);
+console.log(
+  `\nRecorded on ${TOOL_SEARCH_DOC_READ_ON}. What has to change with them, if they moved:`,
+);
 console.log('  src/audit/deferral.ts — the rules and the dated source bullets in its header');
-console.log('  docs/METHODOLOGY.md   — the value table, and the paragraph naming what is not a quotation');
+console.log(
+  '  docs/METHODOLOGY.md   — the value table, and the paragraph naming what is not a quotation',
+);
 console.log('  README.md             — the settings table');
 process.exit(1);

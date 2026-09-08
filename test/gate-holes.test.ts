@@ -13,22 +13,44 @@ import type { AuditReport } from '../src/audit/audit.js';
  */
 
 const cfg = (source: string, total: number, servers: any[], skipped: any[] = []) => ({
-  client: 'claude-code', source, totalTokens: total, toolCount: 1, serverCount: servers.length,
-  contextShare: total / 200000, servers, skipped, heaviestTools: [], trimAdvice: null,
+  client: 'claude-code',
+  source,
+  totalTokens: total,
+  toolCount: 1,
+  serverCount: servers.length,
+  contextShare: total / 200000,
+  servers,
+  skipped,
+  heaviestTools: [],
+  trimAdvice: null,
   deferral: { posture: 'unknown', sources: [] } as any,
 });
-const rep = (configs: any[]): AuditReport => ({
-  methodologyVersion: '1.0', encoding: 'o200k_base', generatedAt: 'T',
-  contextWindow: 200000, configs, emptyConfigs: [], problems: [],
-} as AuditReport);
+const rep = (configs: any[]): AuditReport =>
+  ({
+    methodologyVersion: '1.0',
+    encoding: 'o200k_base',
+    generatedAt: 'T',
+    contextWindow: 200000,
+    configs,
+    emptyConfigs: [],
+    problems: [],
+  }) as AuditReport;
 const srv = (name: string, tokens: number | null, status = 'measured') => ({
-  name, status, tokens, toolCount: tokens === null ? null : 1, share: null, command: 'x', argv: ['x'],
+  name,
+  status,
+  tokens,
+  toolCount: tokens === null ? null : 1,
+  share: null,
+  command: 'x',
+  argv: ['x'],
 });
 
 describe('--max-increase: a server added and unmeasurable', () => {
   // The ordinary CI case: the PR adds a server, and CI has no credential for it.
   const before = rep([cfg('/cfg.json', 5000, [srv('a', 5000)])]);
-  const after = rep([cfg('/cfg.json', 5000, [srv('a', 5000)], [srv('notion', null, 'startup-failure')])]);
+  const after = rep([
+    cfg('/cfg.json', 5000, [srv('a', 5000)], [srv('notion', null, 'startup-failure')]),
+  ]);
 
   it('is not an exact comparison, because its cost is unknown rather than zero', () => {
     expect(buildDiff(before, after).configs[0].exact).toBe(false);
@@ -46,7 +68,9 @@ describe('--max-increase: a server added and unmeasurable', () => {
   });
 
   it('leaves a removed-and-never-measured server exact — it was never in the total', () => {
-    const wasSkipped = rep([cfg('/cfg.json', 5000, [srv('a', 5000)], [srv('ghost', null, 'auth-required')])]);
+    const wasSkipped = rep([
+      cfg('/cfg.json', 5000, [srv('a', 5000)], [srv('ghost', null, 'auth-required')]),
+    ]);
     const gone = rep([cfg('/cfg.json', 5000, [srv('a', 5000)])]);
     expect(buildDiff(wasSkipped, gone).configs[0].exact).toBe(true);
   });
@@ -55,7 +79,10 @@ describe('--max-increase: a server added and unmeasurable', () => {
 describe('--max-increase: a baseline that cannot be read is never "no change"', () => {
   it('refuses a baseline config with no usable totalTokens', () => {
     const trimmed = JSON.stringify({
-      methodologyVersion: '1.0', encoding: 'o200k_base', contextWindow: 200000, generatedAt: 'T',
+      methodologyVersion: '1.0',
+      encoding: 'o200k_base',
+      contextWindow: 200000,
+      generatedAt: 'T',
       configs: [{ client: 'claude-code', source: '/cfg.json' }],
     });
     const parsed = parseBaselineReport(trimmed);
@@ -71,19 +98,44 @@ describe('--max-increase: a baseline that cannot be read is never "no change"', 
   });
 
   it('never reads a non-finite increase as zero', () => {
-    const diff = { comparable: true, configs: [{ source: '/x', matchedBy: 'source', exact: true, delta: NaN }], droppedConfigs: [], worstIncrease: { source: '/x', delta: NaN } } as never;
+    const diff = {
+      comparable: true,
+      configs: [{ source: '/x', matchedBy: 'source', exact: true, delta: NaN }],
+      droppedConfigs: [],
+      worstIncrease: { source: '/x', delta: NaN },
+    } as never;
     expect(evaluateIncreaseGate(diff, 0).increase).not.toBe(0);
   });
 });
 
 describe('--budget: a total missing a server is not a total', () => {
-  const stdio = (name: string) => ({ name, transport: 'stdio' as const, command: 'node', argv: ['node', `${name}.js`] });
+  const stdio = (name: string) => ({
+    name,
+    transport: 'stdio' as const,
+    command: 'node',
+    argv: ['node', `${name}.js`],
+  });
   const ok = stdio('ok');
   const broken = stdio('heavy-but-broken');
-  const configs = [{ client: 'claude-desktop', source: '/cfg.json', servers: [ok, broken] }] as Parameters<typeof buildReport>[0];
+  const configs = [
+    { client: 'claude-desktop', source: '/cfg.json', servers: [ok, broken] },
+  ] as Parameters<typeof buildReport>[0];
   const measured = new Map([
-    [serverKey(ok), measureTools([{ name: 't', description: 'A tool.', inputSchema: { type: 'object' } }], { serverName: 'ok', launchCommand: 'node ok.js', envVarNames: [] })],
-    [serverKey(broken), failedMeasurement('startup-failure', { serverName: 'heavy-but-broken', notes: 'server exited (code 1)' })],
+    [
+      serverKey(ok),
+      measureTools([{ name: 't', description: 'A tool.', inputSchema: { type: 'object' } }], {
+        serverName: 'ok',
+        launchCommand: 'node ok.js',
+        envVarNames: [],
+      }),
+    ],
+    [
+      serverKey(broken),
+      failedMeasurement('startup-failure', {
+        serverName: 'heavy-but-broken',
+        notes: 'server exited (code 1)',
+      }),
+    ],
   ]);
 
   it('fails under the line when a server produced no number, naming which', () => {
@@ -96,7 +148,9 @@ describe('--budget: a total missing a server is not a total', () => {
   });
 
   it('passes when every server in the config measured', () => {
-    const onlyOk = [{ client: 'claude-desktop', source: '/cfg.json', servers: [ok] }] as Parameters<typeof buildReport>[0];
+    const onlyOk = [{ client: 'claude-desktop', source: '/cfg.json', servers: [ok] }] as Parameters<
+      typeof buildReport
+    >[0];
     const r = buildReport(onlyOk, measured, { generatedAt: 'T', budget: 100_000 });
     expect(r.budget!.over).toBe(false);
     expect(r.budget!.unestablished).toBeUndefined();
@@ -105,10 +159,23 @@ describe('--budget: a total missing a server is not a total', () => {
 });
 
 describe('attribution joins the capture in force, not the date', () => {
-  const vec = (date: string, sha: string, total: number, tools: { name: string; tokens: number }[]) => ({
-    date, canonicalSha256: sha, totalTokens: total, tools,
+  const vec = (
+    date: string,
+    sha: string,
+    total: number,
+    tools: { name: string; tokens: number }[],
+  ) => ({
+    date,
+    canonicalSha256: sha,
+    totalTokens: total,
+    tools,
   });
-  const row = (date: string, tokens: number, toolCount: number) => ({ date, tokens, toolCount, status: 'measured' });
+  const row = (date: string, tokens: number, toolCount: number) => ({
+    date,
+    tokens,
+    toolCount,
+    status: 'measured',
+  });
 
   it('explains a change measured across an unchanged sweep', () => {
     // The ordinary rhythm: measured weekly, unchanged once, then it moves.
@@ -117,9 +184,19 @@ describe('attribution joins the capture in force, not the date', () => {
     let v: ToolVectorFile = { method: 'cost-regression/v1', server: 's', entries: [] };
     v = appendVector(v, vec('2026-08-19', 'a'.repeat(64), 1000, [{ name: 't', tokens: 1000 }]));
     v = appendVector(v, vec('2026-08-26', 'a'.repeat(64), 1000, [{ name: 't', tokens: 1000 }])); // deduped
-    v = appendVector(v, vec('2026-09-02', 'b'.repeat(64), 1400, [{ name: 't', tokens: 1000 }, { name: 'new', tokens: 400 }]));
+    v = appendVector(
+      v,
+      vec('2026-09-02', 'b'.repeat(64), 1400, [
+        { name: 't', tokens: 1000 },
+        { name: 'new', tokens: 400 },
+      ]),
+    );
 
-    const c = latestChange('s', [row('2026-08-19', 1000, 1), row('2026-08-26', 1000, 1), row('2026-09-02', 1400, 2)], v)!;
+    const c = latestChange(
+      's',
+      [row('2026-08-19', 1000, 1), row('2026-08-26', 1000, 1), row('2026-09-02', 1400, 2)],
+      v,
+    )!;
     expect(c.fromDate).toBe('2026-08-26');
     expect(c.attribution).not.toBeNull();
     expect(c.attribution!.added.map((t) => t.name)).toEqual(['new']);

@@ -99,7 +99,10 @@ describe('observedArch — what gets written into the record', () => {
     // unknown, which is true; the host's architecture would be a claim about
     // someone else's container.
     expect(
-      await observedArch({ docker: true, note: 'command is itself a docker run (host-spawned container)' }),
+      await observedArch({
+        docker: true,
+        note: 'command is itself a docker run (host-spawned container)',
+      }),
     ).toBeUndefined();
   });
 });
@@ -149,7 +152,10 @@ describe('the published records say which machine made them', () => {
     .filter((r): r is { name: string; m: Measurement } => r !== null);
 
   it('reads the boundary and finds records on both sides of it', () => {
-    expect(shipped, 'CHANGELOG has a dated 0.12.0 section — the release that added isolation.arch').toBeDefined();
+    expect(
+      shipped,
+      'CHANGELOG has a dated 0.12.0 section — the release that added isolation.arch',
+    ).toBeDefined();
     expect(records.length).toBeGreaterThan(50);
     expect(records.some((r) => (r.m.measuredAt ?? '') >= shipped!)).toBe(true);
   });
@@ -161,20 +167,28 @@ describe('the published records say which machine made them', () => {
   });
 
   it('carries isolation.arch on every record measured since, or says why not', () => {
-    const since = records.filter((r) => typeof r.m.measuredAt === 'string' && r.m.measuredAt >= shipped!);
+    const since = records.filter(
+      (r) => typeof r.m.measuredAt === 'string' && r.m.measuredAt >= shipped!,
+    );
     expect(since.length).toBeGreaterThan(0);
     for (const { name, m } of since) {
       const iso = m.isolation ?? {};
       if (iso.docker === true && iso.image === undefined) {
         // The host-spawned case. Absent is the honest answer, and the note is
         // what makes it readable as an answer rather than an omission.
-        expect(iso.arch, `${name}: a container this harness did not launch has no architecture to report`).toBeUndefined();
-        expect(iso.note ?? '', `${name}: absent arch with nothing saying why`).toContain(HOST_SPAWNED);
+        expect(
+          iso.arch,
+          `${name}: a container this harness did not launch has no architecture to report`,
+        ).toBeUndefined();
+        expect(iso.note ?? '', `${name}: absent arch with nothing saying why`).toContain(
+          HOST_SPAWNED,
+        );
         continue;
       }
-      expect(iso.arch, `${name} (${m.measuredAt}) was measured after ${shipped} without recording its architecture`).toMatch(
-        /^[a-z0-9]+\/[a-z0-9][a-z0-9/.]*$/,
-      );
+      expect(
+        iso.arch,
+        `${name} (${m.measuredAt}) was measured after ${shipped} without recording its architecture`,
+      ).toMatch(/^[a-z0-9]+\/[a-z0-9][a-z0-9/.]*$/);
     }
   });
 });

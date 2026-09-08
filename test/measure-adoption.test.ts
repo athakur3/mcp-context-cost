@@ -24,7 +24,12 @@ const noTokens = Object.fromEntries(
 /** Run the tool from `cwd`; returns the exit status rather than throwing. */
 function runTool(cwd: string, args: string[]): { status: number; stderr: string } {
   try {
-    execFileSync(process.execPath, [TSX_CLI, tool, ...args], { cwd, encoding: 'utf8', env: noTokens, stdio: 'pipe' });
+    execFileSync(process.execPath, [TSX_CLI, tool, ...args], {
+      cwd,
+      encoding: 'utf8',
+      env: noTokens,
+      stdio: 'pipe',
+    });
     return { status: 0, stderr: '' };
   } catch (e) {
     const err = e as { status: number; stderr: string };
@@ -122,7 +127,9 @@ describe('measure-adoption --render-only', () => {
  */
 describe('the committed reading', () => {
   it('is what the committed page renders — `npm run adoption -- --render-only` rebuilds it', () => {
-    const run = parseAdoption(readFileSync(join(repoRoot, 'results', 'badge-adoption.json'), 'utf8'));
+    const run = parseAdoption(
+      readFileSync(join(repoRoot, 'results', 'badge-adoption.json'), 'utf8'),
+    );
     expect(run).not.toBeNull();
     const page = readFileSync(join(repoRoot, 'docs', 'adoption.md'), 'utf8');
     expect(

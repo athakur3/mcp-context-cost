@@ -96,7 +96,8 @@ async function probe(entry: ServerEntry): Promise<Row> {
 }
 
 /** Disagreement is only claimable when the server actually named something. */
-const disagrees = (r: Row): boolean => r.negotiated !== null && r.requested !== null && r.negotiated !== r.requested;
+const disagrees = (r: Row): boolean =>
+  r.negotiated !== null && r.requested !== null && r.negotiated !== r.requested;
 
 const rows: Row[] = [];
 const queue = [...entries];
@@ -117,7 +118,9 @@ await Promise.all(
       rows.push(row);
       if (!asJson) {
         const said = row.negotiated ?? (row.status === 'measured' ? 'named none' : '—');
-        console.log(`  ${row.name}: ${said}${disagrees(row) ? '  <-- differs from what we asked' : ''} (${row.status})`);
+        console.log(
+          `  ${row.name}: ${said}${disagrees(row) ? '  <-- differs from what we asked' : ''} (${row.status})`,
+        );
       }
     }
   }),
@@ -127,13 +130,23 @@ const sorted = [...rows].sort((a, b) => a.name.localeCompare(b.name));
 const differing = sorted.filter(disagrees);
 // A server that answered `initialize` and named no revision omitted a field the
 // schema requires. Not a disagreement, and not nothing either.
-const silent = sorted.filter((r) => r.negotiated === null && (r.status === 'measured' || r.status === 'dynamic'));
+const silent = sorted.filter(
+  (r) => r.negotiated === null && (r.status === 'measured' || r.status === 'dynamic'),
+);
 const agreed = sorted.filter((r) => r.negotiated !== null && !disagrees(r));
 
 if (asJson) {
   console.log(
     JSON.stringify(
-      { asked: PROTOCOL_VERSION, selected: entries.length, probed: sorted.length, agreed: agreed.length, differing, silent, rows: sorted },
+      {
+        asked: PROTOCOL_VERSION,
+        selected: entries.length,
+        probed: sorted.length,
+        agreed: agreed.length,
+        differing,
+        silent,
+        rows: sorted,
+      },
       null,
       2,
     ),
@@ -144,7 +157,8 @@ if (asJson) {
       `${differing.length} named something else; ${silent.length} answered and named nothing; ` +
       `${sorted.length - agreed.length - differing.length - silent.length} never got that far.`,
   );
-  for (const r of differing) console.log(`  differs: ${r.name} asked ${r.requested}, answered ${r.negotiated}`);
+  for (const r of differing)
+    console.log(`  differs: ${r.name} asked ${r.requested}, answered ${r.negotiated}`);
   for (const r of silent) console.log(`  named none: ${r.name} (${r.status})`);
 }
 

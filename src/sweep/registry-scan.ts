@@ -96,7 +96,12 @@ export interface RegistryRecord {
     remotes?: { type: string; url: string }[];
   };
   _meta?: {
-    [OFFICIAL_META]?: { status?: string; isLatest?: boolean; publishedAt?: string; updatedAt?: string };
+    [OFFICIAL_META]?: {
+      status?: string;
+      isLatest?: boolean;
+      publishedAt?: string;
+      updatedAt?: string;
+    };
   };
 }
 
@@ -139,15 +144,28 @@ export async function walkLatest(
   let pages = 0;
   for (;;) {
     if (opts.maxPages !== undefined && pages >= opts.maxPages) {
-      return { records, pages, truncated: true, ...(startedAt ? { startedAt } : {}), ...(cursor ? { lastCursor: cursor } : {}) };
+      return {
+        records,
+        pages,
+        truncated: true,
+        ...(startedAt ? { startedAt } : {}),
+        ...(cursor ? { lastCursor: cursor } : {}),
+      };
     }
     const page = await fetchPage(cursor);
     pages++;
     records.push(...(page.servers ?? []));
     const next = page.metadata?.nextCursor;
-    if (!next) return { records, pages, truncated: startedAt !== undefined, ...(startedAt ? { startedAt } : {}) };
+    if (!next)
+      return {
+        records,
+        pages,
+        truncated: startedAt !== undefined,
+        ...(startedAt ? { startedAt } : {}),
+      };
     // A cursor that does not advance would page forever; say so instead.
-    if (next === cursor) throw new Error(`registry returned the cursor it was given (${next}); refusing to loop`);
+    if (next === cursor)
+      throw new Error(`registry returned the cursor it was given (${next}); refusing to loop`);
     cursor = next;
   }
 }
@@ -226,11 +244,17 @@ export function trackedPackages(doc: unknown): Set<string> {
   return tracked;
 }
 
-export function alreadyTracked(registry: PackageRegistry, pkg: string, tracked: Set<string>): boolean {
+export function alreadyTracked(
+  registry: PackageRegistry,
+  pkg: string,
+  tracked: Set<string>,
+): boolean {
   return tracked.has(metricKey(registry, pkg));
 }
 
-function isCandidatePackage(p: RegistryPackage): p is RegistryPackage & { registryType: PackageRegistry } {
+function isCandidatePackage(
+  p: RegistryPackage,
+): p is RegistryPackage & { registryType: PackageRegistry } {
   return (p.registryType === 'npm' || p.registryType === 'pypi') && p.transport?.type === 'stdio';
 }
 
@@ -301,7 +325,8 @@ export function splitForNpm(names: string[]): { bulk: string[][]; single: string
   const single = names.filter((n) => n.startsWith('@'));
   const unscoped = names.filter((n) => !n.startsWith('@'));
   const bulk: string[][] = [];
-  for (let i = 0; i < unscoped.length; i += NPM_BULK_LIMIT) bulk.push(unscoped.slice(i, i + NPM_BULK_LIMIT));
+  for (let i = 0; i < unscoped.length; i += NPM_BULK_LIMIT)
+    bulk.push(unscoped.slice(i, i + NPM_BULK_LIMIT));
   const last = bulk[bulk.length - 1];
   if (last && last.length === 1) {
     bulk.pop();
@@ -330,10 +355,13 @@ function downloads(v: unknown): number | null {
 export function parseNpmBulk(body: unknown): Map<string, number | null> {
   const out = new Map<string, number | null>();
   if (typeof body !== 'object' || body === null || Array.isArray(body)) return out;
-  if ('error' in body) throw new Error(`npm bulk lookup: ${String((body as { error: unknown }).error)}`);
+  if ('error' in body)
+    throw new Error(`npm bulk lookup: ${String((body as { error: unknown }).error)}`);
   const flat = body as { downloads?: unknown; package?: unknown };
   if (typeof flat.downloads === 'number' && typeof flat.package === 'string') {
-    throw new Error(`npm bulk lookup: single-lookup shape given to the bulk parser (package ${flat.package})`);
+    throw new Error(
+      `npm bulk lookup: single-lookup shape given to the bulk parser (package ${flat.package})`,
+    );
   }
   for (const [name, v] of Object.entries(body)) out.set(name, downloads(v));
   return out;
@@ -375,7 +403,8 @@ export function metricSourceFor(registry: PackageRegistry, pkg: string): string 
     : `https://pypistats.org/packages/${pypiName(pkg)} (PyPI weekly)`;
 }
 
-export type Draft = { entry: ServerEntry; commandGuessed: boolean; optionalEnv: string[] } | { refused: string };
+export type Draft =
+  { entry: ServerEntry; commandGuessed: boolean; optionalEnv: string[] } | { refused: string };
 
 interface RenderedArgument {
   text: string;
@@ -486,12 +515,16 @@ export function draftName(pkg: string): string {
  */
 export function draftEntry(c: ScanCandidate, metric: number | null, why?: string): Draft {
   if (metric === null) {
-    return { refused: `no weekly-download figure — ${why ?? 'the endpoint returned no number for this package'}` };
+    return {
+      refused: `no weekly-download figure — ${why ?? 'the endpoint returned no number for this package'}`,
+    };
   }
   if (!c.repositoryUrl) return { refused: 'no repository.url on the registry record' };
   const { command, guessed } = draftCommand(c);
   const required = c.environmentVariables.filter((e) => e.isRequired === true).map((e) => e.name);
-  const optionalEnv = c.environmentVariables.filter((e) => e.isRequired !== true).map((e) => e.name);
+  const optionalEnv = c.environmentVariables
+    .filter((e) => e.isRequired !== true)
+    .map((e) => e.name);
   const entry: ServerEntry = {
     name: draftName(c.pkg),
     command,
@@ -532,7 +565,12 @@ export function rankCandidates(
   const ranked = candidates.map((c) => {
     const key = metricKey(c.registry, c.pkg);
     const metric = metrics.get(key) ?? null;
-    return { ...c, metric, metricSource: metricSourceFor(c.registry, c.pkg), draft: draftEntry(c, metric, reasons.get(key)) };
+    return {
+      ...c,
+      metric,
+      metricSource: metricSourceFor(c.registry, c.pkg),
+      draft: draftEntry(c, metric, reasons.get(key)),
+    };
   });
   ranked.sort((a, b) => {
     if (a.metric === null && b.metric === null) return a.pkg.localeCompare(b.pkg);
@@ -595,7 +633,9 @@ export function assembleScan(
 
 /** The one line an expansion commit quotes. Every number in it is in the JSON beside it. */
 export function summaryLine(scan: ScanOutput): string {
-  const cover = scan.truncated ? ` (TRUNCATED${scan.lastCursor ? `, resume at ${scan.lastCursor}` : ''})` : '';
+  const cover = scan.truncated
+    ? ` (TRUNCATED${scan.lastCursor ? `, resume at ${scan.lastCursor}` : ''})`
+    : '';
   return (
     `registry scan ${scan.scannedAt.slice(0, 10)}: ${scan.pages} page(s)${cover}, ` +
     `${scan.distinctLatest} distinct latest name(s), ${scan.active} active, ` +

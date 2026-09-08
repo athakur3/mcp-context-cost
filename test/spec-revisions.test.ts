@@ -18,7 +18,10 @@ const agreeing: SpecListingReading = {
   unrecognised: [],
   latestSaid: '2026-07-28',
 };
-const listing = (over: Partial<SpecListingReading>): SpecListingReading => ({ ...agreeing, ...over });
+const listing = (over: Partial<SpecListingReading>): SpecListingReading => ({
+  ...agreeing,
+  ...over,
+});
 
 describe('the reading itself', () => {
   it('names the revision this probe sends', () => {
@@ -59,7 +62,9 @@ describe('newerThanPinned', () => {
   });
 
   it('defaults to the revision this probe sends', () => {
-    expect(newerThanPinned(KNOWN_SPEC_REVISIONS)).toEqual(newerThanPinned(KNOWN_SPEC_REVISIONS, PROTOCOL_VERSION));
+    expect(newerThanPinned(KNOWN_SPEC_REVISIONS)).toEqual(
+      newerThanPinned(KNOWN_SPEC_REVISIONS, PROTOCOL_VERSION),
+    );
   });
 });
 
@@ -70,7 +75,10 @@ describe('specSnapshotProblem', () => {
 
   /** The case the whole watch exists for, driven by the real one. */
   it('names a revision the specification published and the snapshot does not', () => {
-    const behind = { ...KNOWN_SPEC_REVISIONS, revisions: KNOWN_SPEC_REVISIONS.revisions.filter((r) => r !== '2026-07-28') };
+    const behind = {
+      ...KNOWN_SPEC_REVISIONS,
+      revisions: KNOWN_SPEC_REVISIONS.revisions.filter((r) => r !== '2026-07-28'),
+    };
     const problems = specSnapshotProblem(behind, agreeing);
     expect(problems).toHaveLength(1);
     expect(problems[0]).toContain('2026-07-28');
@@ -94,7 +102,10 @@ describe('specSnapshotProblem', () => {
   });
 
   it('reports a name it does not understand rather than dropping it', () => {
-    const problems = specSnapshotProblem(KNOWN_SPEC_REVISIONS, listing({ unrecognised: ['2026-07-28-rc1'] }));
+    const problems = specSnapshotProblem(
+      KNOWN_SPEC_REVISIONS,
+      listing({ unrecognised: ['2026-07-28-rc1'] }),
+    );
     expect(problems.join(' ')).toContain('2026-07-28-rc1');
   });
 
@@ -108,7 +119,9 @@ describe('specSnapshotProblem', () => {
   it('ignores draft by decision, and would report it if it were not on the list', () => {
     expect(IGNORED_SPEC_DIRS).toContain('draft');
     expect(specSnapshotProblem(KNOWN_SPEC_REVISIONS, listing({ ignored: ['draft'] }))).toEqual([]);
-    expect(specSnapshotProblem(KNOWN_SPEC_REVISIONS, listing({ ignored: [], unrecognised: ['draft'] }))).toHaveLength(1);
+    expect(
+      specSnapshotProblem(KNOWN_SPEC_REVISIONS, listing({ ignored: [], unrecognised: ['draft'] })),
+    ).toHaveLength(1);
   });
 });
 
@@ -150,11 +163,19 @@ describe('listingIsUnreadable', () => {
  */
 describe('a snapshot of the spec may not lag, unlike the band', () => {
   it('forgives a band measured over fewer servers than the run now holds', () => {
-    expect(bandSnapshotProblem({ low: 0.19, high: 1.93, servers: 20 }, { low: 0.19, high: 1.93, servers: 86 })).toBeNull();
+    expect(
+      bandSnapshotProblem(
+        { low: 0.19, high: 1.93, servers: 20 },
+        { low: 0.19, high: 1.93, servers: 86 },
+      ),
+    ).toBeNull();
   });
 
   it('does not forgive a spec snapshot that has fallen behind the listing', () => {
-    const behind = { ...KNOWN_SPEC_REVISIONS, revisions: KNOWN_SPEC_REVISIONS.revisions.slice(0, -1) };
+    const behind = {
+      ...KNOWN_SPEC_REVISIONS,
+      revisions: KNOWN_SPEC_REVISIONS.revisions.slice(0, -1),
+    };
     expect(specSnapshotProblem(behind, agreeing)).not.toEqual([]);
   });
 });

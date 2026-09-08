@@ -37,7 +37,9 @@ if (stats.problems.length > 0) {
 console.log(`history: ${h.rows} rows (${signed(h.added)})`);
 console.log(`server pages: ${p.pages}`);
 console.log(`dashboard: ${d.out} (${(d.bytes / 1024).toFixed(0)}KB)`);
-console.log(`tool shape: ${ts.toolCount} tools across ${ts.serverCount} servers (median description ${ts.quantiles.descriptionTokens[50]})`);
+console.log(
+  `tool shape: ${ts.toolCount} tools across ${ts.serverCount} servers (median description ${ts.quantiles.descriptionTokens[50]})`,
+);
 console.log(
   `regressions: ${regressions.summary.changes.length} movement(s), ${regressions.summary.grew} heavier / ` +
     `${regressions.summary.shrank} cheaper, net ${signed(regressions.summary.netTokens)} tokens; tool vectors ${tv.appended} appended across ${tv.servers} servers; ` +

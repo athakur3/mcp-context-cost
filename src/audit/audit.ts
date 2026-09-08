@@ -287,10 +287,14 @@ function envSignature(s: ConfiguredServer): string {
   const env = s.env ?? {};
   const headers = s.headers ?? {};
   return JSON.stringify([
-    Object.keys(env).sort().map((k) => [k, env[k]]),
+    Object.keys(env)
+      .sort()
+      .map((k) => [k, env[k]]),
     // A remote's headers decide what it serves the way env decides for a
     // process: a bearer token selects an account, and an account its tools.
-    Object.keys(headers).sort().map((k) => [k, headers[k]]),
+    Object.keys(headers)
+      .sort()
+      .map((k) => [k, headers[k]]),
   ]);
 }
 
@@ -301,7 +305,9 @@ function envSignature(s: ConfiguredServer): string {
  * message is not redaction.
  */
 function secrets(s: ConfiguredServer): string[] {
-  return [...Object.values(s.env ?? {}), ...Object.values(s.headers ?? {})].filter((v) => v.length >= 4);
+  return [...Object.values(s.env ?? {}), ...Object.values(s.headers ?? {})].filter(
+    (v) => v.length >= 4,
+  );
 }
 
 function redact(text: string | undefined, values: string[]): string | undefined {
@@ -514,7 +520,12 @@ export function buildReport(
       if (s.transport === 'remote') {
         const probe = opts.remotes?.get(serverKey(s));
         if (!probe) {
-          skipped.push({ ...base, ...none, status: 'unreachable', notes: `${s.url ?? 'url'} — not probed` });
+          skipped.push({
+            ...base,
+            ...none,
+            status: 'unreachable',
+            notes: `${s.url ?? 'url'} — not probed`,
+          });
           continue;
         }
         if (probe.kind === 'auth-walled') {
@@ -545,14 +556,26 @@ export function buildReport(
           continue;
         }
         if (probe.kind === 'unreachable') {
-          skipped.push({ ...base, ...none, status: 'unreachable', notes: `${s.url}: ${probe.detail}` });
+          skipped.push({
+            ...base,
+            ...none,
+            status: 'unreachable',
+            notes: `${s.url}: ${probe.detail}`,
+          });
           continue;
         }
         // Open: measured through the bridge, and read below like any launch.
       }
       const m = measured.get(serverKey(s));
       if (!m) {
-        skipped.push({ ...base, status: 'startup-failure', tokens: null, toolCount: null, share: null, notes: 'not measured' });
+        skipped.push({
+          ...base,
+          status: 'startup-failure',
+          tokens: null,
+          toolCount: null,
+          share: null,
+          notes: 'not measured',
+        });
         continue;
       }
       if (!measuredOk(m)) {
@@ -575,7 +598,11 @@ export function buildReport(
         toolCount: m.toolCount,
         share: null, // filled once the total is known
         canonicalSha256: m.canonicalSha256,
-        claudeTokens: opts.divergence ? (isCurrent(divRow, m.canonicalSha256 ?? null) ? divRow.claudeDelta : null) : undefined,
+        claudeTokens: opts.divergence
+          ? isCurrent(divRow, m.canonicalSha256 ?? null)
+            ? divRow.claudeDelta
+            : null
+          : undefined,
         notes: m.status === 'dynamic' ? redact(m.notes, secrets(s)) : undefined,
       });
       for (const t of m.tools) {
@@ -607,7 +634,10 @@ export function buildReport(
       trimAdvice: buildTrimAdvice(tools, totalTokens),
       suggestions: opts.toolShape ? buildSuggestions(shapePool, opts.toolShape) : undefined,
       captureVerdicts: opts.captureIndex
-        ? ok.map((s) => ({ name: s.name, verdict: identify(s.canonicalSha256, opts.captureIndex!) }))
+        ? ok.map((s) => ({
+            name: s.name,
+            verdict: identify(s.canonicalSha256, opts.captureIndex!),
+          }))
         : undefined,
     };
     built.push(result);
@@ -628,7 +658,10 @@ export function buildReport(
   };
 
   if (opts.divergence) {
-    report.claudeDivergence = { model: opts.divergence.model, measuredAt: opts.divergence.measuredAt };
+    report.claudeDivergence = {
+      model: opts.divergence.model,
+      measuredAt: opts.divergence.measuredAt,
+    };
   }
 
   if (opts.toolShape) {
@@ -658,7 +691,9 @@ export function buildReport(
     // skipped row counts: an auth-walled endpoint is a working server the
     // session pays for with its credential, and an unreachable one is a cost
     // this could not establish, not a cost of zero.
-    const unestablished = results.flatMap((c) => c.skipped.map((s) => `${c.source}: ${s.name} (${s.status})`));
+    const unestablished = results.flatMap((c) =>
+      c.skipped.map((s) => `${c.source}: ${s.name} (${s.status})`),
+    );
     const over = (worst?.totalTokens ?? 0) > opts.budget;
     report.budget = {
       limit: opts.budget,
@@ -701,7 +736,8 @@ function settingPhrase(d: DeferralVerdict): string {
   if (!s.readFromMachine) return `${s.variable} is unset here, which is the documented default`;
   // A base URL is reported by hostname only (see ToolSearchSetting.value), so it
   // is phrased as where the variable points and never as what it equals.
-  if (s.variable === 'ANTHROPIC_BASE_URL') return `${s.variable} points at ${s.value} on this machine`;
+  if (s.variable === 'ANTHROPIC_BASE_URL')
+    return `${s.variable} points at ${s.value} on this machine`;
   return `${s.variable}=${s.value} on this machine`;
 }
 
@@ -737,8 +773,9 @@ function postureSourceLines(d: DeferralVerdict): string[] {
     const held =
       r.state === 'unreadable'
         ? 'could not be read — what it sets is unknown'
-        : [r.sets.length ? `sets ${r.sets.join(', ')}` : '', unreadableVars].filter(Boolean).join(', and ') ||
-          'sets none of them';
+        : [r.sets.length ? `sets ${r.sets.join(', ')}` : '', unreadableVars]
+            .filter(Boolean)
+            .join(', and ') || 'sets none of them';
     // Which place the verdict came out of, said once rather than left to a
     // reader to work out from two lists.
     const decided = d.setting?.source === r.source ? ', which decided this' : '';
@@ -748,7 +785,7 @@ function postureSourceLines(d: DeferralVerdict): string[] {
     lines.push(`    ${absent} other settings file(s) it reads are not on this machine`);
   }
   if (!recs.some((r) => r.scope !== 'shell')) {
-    lines.push("    its settings files were NOT read here, so what they set is unknown");
+    lines.push('    its settings files were NOT read here, so what they set is unknown');
   }
   return lines;
 }
@@ -779,7 +816,9 @@ function sharedMeasurementLines(
     ...consequence,
   ];
   if (d.isFloor) {
-    lines.push(`  ${skippedNames} server(s) here also produced no number — see "not measured" above.`);
+    lines.push(
+      `  ${skippedNames} server(s) here also produced no number — see "not measured" above.`,
+    );
   }
   return lines;
 }
@@ -885,14 +924,17 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
     lines.push(
       `  ${n} server${n === 1 ? ' is' : 's are'} pinned "alwaysLoad": true and load${n === 1 ? 's' : ''} at session start whatever`,
     );
-    lines.push(`  the setting says: ${d.alwaysLoad.servers.join(', ')} — ${d.alwaysLoad.tokens.toLocaleString()} wire tokens,`);
+    lines.push(
+      `  the setting says: ${d.alwaysLoad.servers.join(', ')} — ${d.alwaysLoad.tokens.toLocaleString()} wire tokens,`,
+    );
     lines.push('  left out of any threshold comparison below.');
   }
 
   if (d.mode === 'client-unknown') {
     lines.push('  Which client reads this config is not known here, so whether it defers');
     lines.push('  tool definitions by default is not known either. Read as loaded up front.');
-    if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
+    if (d.sharedMeasurements > 0)
+      lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
     return lines;
   }
 
@@ -900,7 +942,8 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
     lines.push(`  No default deferral is on record for ${d.client}, so every request`);
     lines.push('  carries these tokens before you type anything — an absence of a record');
     lines.push('  about the client, not a measurement of it.');
-    if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
+    if (d.sharedMeasurements > 0)
+      lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
     return lines;
   }
 
@@ -928,16 +971,20 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
     for (const c of r.conditions) lines.push(...bullet(c));
     lines.push('  What the vendor is on record with, and when it was read:');
     for (const src of r.sources) lines.push(...bullet(src));
-    if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
+    if (d.sharedMeasurements > 0)
+      lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
     return lines;
   }
 
   if (d.mode === 'setting-unrecognized') {
-    lines.push(`  ${d.setting?.variable} is set to "${d.setting?.value}" on this machine, which is not`);
+    lines.push(
+      `  ${d.setting?.variable} is set to "${d.setting?.value}" on this machine, which is not`,
+    );
     lines.push('  one of the values Claude Code documents (unset, true, false, auto, auto:N).');
     lines.push('  Whether these tokens are deferred cannot be said from it.');
     lines.push(...postureSourceLines(d));
-    if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
+    if (d.sharedMeasurements > 0)
+      lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
     return lines;
   }
 
@@ -958,7 +1005,8 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
       lines.push('  Whether these tokens are deferred cannot be said from them.');
     }
     lines.push(...postureSourceLines(d));
-    if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
+    if (d.sharedMeasurements > 0)
+      lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
     return lines;
   }
 
@@ -967,17 +1015,21 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
     lines.push(`  because ${settingPhrase(d)}. Every request carries these`);
     lines.push('  tokens before you type anything.');
     lines.push(...postureSourceLines(d));
-    if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
+    if (d.sharedMeasurements > 0)
+      lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
     return lines;
   }
 
   if (d.mode === 'defers-all') {
-    lines.push(`  ${d.client} defers every MCP tool definition (${d.mechanism}), with no threshold —`);
+    lines.push(
+      `  ${d.client} defers every MCP tool definition (${d.mechanism}), with no threshold —`,
+    );
     lines.push(`  ${settingPhrase(d)}. These tokens are NOT loaded`);
     lines.push('  up front at any size; they load when the model reaches for a tool. Size');
     lines.push('  decides nothing here, so none of the arithmetic above changes the answer.');
     lines.push(...postureSourceLines(d));
-    if (d.sharedMeasurements > 0) lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
+    if (d.sharedMeasurements > 0)
+      lines.push(...sharedMeasurementLines(d, skippedNames, SIZE_UNKNOWN));
     lines.push('  The full number is paid where deferral does not apply:');
     for (const e of d.exceptions) lines.push(`    ${e}`);
     return lines;
@@ -987,7 +1039,9 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
   const t = d.thresholdTokens ?? 0;
   lines.push(`  ${d.client} defers tool definitions above a threshold here (${d.mechanism}):`);
   lines.push(`  ${settingPhrase(d)}, so deferral activates once the`);
-  lines.push(`  definitions reach ${n(t)} tokens — ${pct(d.thresholdShare ?? 0)} of the context window.`);
+  lines.push(
+    `  definitions reach ${n(t)} tokens — ${pct(d.thresholdShare ?? 0)} of the context window.`,
+  );
   lines.push(...thresholdAssumptionLines(d));
   lines.push(...postureSourceLines(d));
 
@@ -1008,7 +1062,9 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
     lines.push('  threshold is counted on.');
   } else {
     lines.push(`  This stack is ${total} tokens on the wire. The threshold is counted in what`);
-    lines.push(`  the client sends to the API, which is a different number: across ${d.ratio!.servers}`);
+    lines.push(
+      `  the client sends to the API, which is a different number: across ${d.ratio!.servers}`,
+    );
     lines.push(
       `  servers in ${d.ratio!.source} the two differ by ${ratioBand(d)}, putting this stack`,
     );
@@ -1019,12 +1075,16 @@ function deferralLines(d: DeferralVerdict, skippedNames: number): string[] {
   }
 
   if (d.crosses === true) {
-    lines.push(`  That is at or above the threshold — over by ${n(d.distanceTokens!.low)} at the low end —`);
+    lines.push(
+      `  That is at or above the threshold — over by ${n(d.distanceTokens!.low)} at the low end —`,
+    );
     lines.push('  so these tokens are NOT loaded up front. The full number is still paid');
     lines.push('  where deferral does not apply:');
     for (const e of d.exceptions) lines.push(`    ${e}`);
   } else if (d.crosses === false) {
-    lines.push(`  That is below the threshold — under by ${n(-d.distanceTokens!.high)} at the high end —`);
+    lines.push(
+      `  That is below the threshold — under by ${n(-d.distanceTokens!.high)} at the high end —`,
+    );
     lines.push('  so deferral does not activate and every request carries these tokens');
     lines.push('  before you type anything.');
   } else {
@@ -1085,7 +1145,9 @@ export function formatReport(report: AuditReport): string {
 
     lines.push(line('server', 'tools', 'tokens', 'share', 'claude'));
     for (const r of rows) lines.push(line(r.name, r.tools, r.tokens, r.share, r.claude));
-    lines.push(`  ${'─'.repeat(w.name + w.tools + w.tokens + 14 + (showClaude ? w.claude + 2 : 0))}`);
+    lines.push(
+      `  ${'─'.repeat(w.name + w.tools + w.tokens + 14 + (showClaude ? w.claude + 2 : 0))}`,
+    );
     lines.push(line('total', String(cfg.toolCount), n(cfg.totalTokens), '', ''));
 
     lines.push('');
@@ -1119,7 +1181,8 @@ export function formatReport(report: AuditReport): string {
 
     if (cfg.captureVerdicts) {
       const behind = cfg.captureVerdicts.filter(
-        (v): v is { name: string; verdict: Extract<CaptureVerdict, { kind: 'behind' }> } => v.verdict.kind === 'behind',
+        (v): v is { name: string; verdict: Extract<CaptureVerdict, { kind: 'behind' }> } =>
+          v.verdict.kind === 'behind',
       );
       const current = cfg.captureVerdicts.filter((v) => v.verdict.kind === 'current');
       const unknown = cfg.captureVerdicts.length - behind.length - current.length;
@@ -1191,7 +1254,9 @@ export function formatReport(report: AuditReport): string {
           );
         }
         if (sg.outOfDistribution.length > shown.length) {
-          lines.push(`    …and ${sg.outOfDistribution.length - shown.length} more above the threshold.`);
+          lines.push(
+            `    …and ${sg.outOfDistribution.length - shown.length} more above the threshold.`,
+          );
         }
         const within = sg.checkedTools - sg.outOfDistribution.length;
         lines.push(
@@ -1263,9 +1328,7 @@ export function formatReport(report: AuditReport): string {
           lines.push(`  what any one of these servers costs.`);
         } else if (fit.feasible) {
           const share = b.limit > 0 ? ` (${pct(fit.keptTokens / b.limit)} of budget)` : '';
-          lines.push(
-            `  keeps ${fit.keptCount} server(s) at ${n(fit.keptTokens)} tokens${share}`,
-          );
+          lines.push(`  keeps ${fit.keptCount} server(s) at ${n(fit.keptTokens)} tokens${share}`);
         } else {
           lines.push(
             `  even removing every measured server leaves ${n(fit.keptTokens)} — the limit is below this config's floor`,

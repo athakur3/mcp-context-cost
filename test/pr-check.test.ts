@@ -1,6 +1,14 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { execFileSync } from 'node:child_process';
-import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import {
+  chmodSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { parse, stringify } from 'yaml';
@@ -66,7 +74,9 @@ describe('entriesToMeasure', () => {
     env: { env: ['A_TOKEN'] },
     envValues: { env: ['A_TOKEN'], envValues: { A_TOKEN: 'bolt://localhost:7687' } },
     timeoutSeconds: { timeoutSeconds: 420 },
-    notApplicable: { notApplicable: { reason: 'needs a display', evidence: 'cannot open display' } },
+    notApplicable: {
+      notApplicable: { reason: 'needs a display', evidence: 'cannot open display' },
+    },
   };
 
   for (const field of LAUNCH_FIELDS) {
@@ -128,7 +138,7 @@ describe('worstCaseSeconds', () => {
     expect(budget).toBe(DEFAULT_MAX_ENTRIES * defaultTimeout * (1 + TIMEOUT_RETRY_FACTOR));
   });
 
-  it('is within budget for the cap\'s worth of entries at the default, and over it one second later', () => {
+  it("is within budget for the cap's worth of entries at the default, and over it one second later", () => {
     const atDefault = Array.from({ length: DEFAULT_MAX_ENTRIES }, (_, i) => entry(`s${i}`));
     expect(worstCaseSeconds(atDefault, defaultTimeout)).toBe(budget);
     const oneOver = [entry('slow', { timeoutSeconds: DEFAULT_MAX_ENTRIES * defaultTimeout + 1 })];
@@ -136,13 +146,22 @@ describe('worstCaseSeconds', () => {
   });
 
   it('charges an entry its own timeoutSeconds, and its retry, when it has one', () => {
-    expect(worstCaseSeconds([entry('own', { timeoutSeconds: 7 })], defaultTimeout)).toBe(7 * (1 + TIMEOUT_RETRY_FACTOR));
+    expect(worstCaseSeconds([entry('own', { timeoutSeconds: 7 })], defaultTimeout)).toBe(
+      7 * (1 + TIMEOUT_RETRY_FACTOR),
+    );
   });
 
   it('counts neither a remote endpoint nor a self-containerised command — neither is launched', () => {
     const listed = [
-      entry('endpoint', { remote: true, command: 'https://mcp.example.invalid/sse', timeoutSeconds: 9999 }),
-      entry('containerised', { command: 'docker run --rm -i ghcr.io/example/x', timeoutSeconds: 9999 }),
+      entry('endpoint', {
+        remote: true,
+        command: 'https://mcp.example.invalid/sse',
+        timeoutSeconds: 9999,
+      }),
+      entry('containerised', {
+        command: 'docker run --rm -i ghcr.io/example/x',
+        timeoutSeconds: 9999,
+      }),
     ];
     expect(worstCaseSeconds(listed, defaultTimeout)).toBe(0);
     expect(worstCaseSeconds([...listed, entry('launched')], defaultTimeout)).toBe(
@@ -153,7 +172,8 @@ describe('worstCaseSeconds', () => {
 
 describe('failsCheck', () => {
   it('fails the outcomes that mean the entry does not launch as written, or has no one number', () => {
-    for (const s of ['startup-failure', 'timeout', 'dynamic'] as const) expect(failsCheck(s)).toBe(true);
+    for (const s of ['startup-failure', 'timeout', 'dynamic'] as const)
+      expect(failsCheck(s)).toBe(true);
   });
 
   it('passes the outcomes the leaderboard publishes as findings', () => {
@@ -186,7 +206,11 @@ describe('isSelfContainerised', () => {
       for (const d of readdirSync(dir, { withFileTypes: true })) {
         const p = join(dir, d.name);
         if (d.isDirectory()) walk(p);
-        else if (d.name.endsWith('.ts') && readFileSync(p, 'utf8').includes("startsWith('docker ')")) hits.push(p);
+        else if (
+          d.name.endsWith('.ts') &&
+          readFileSync(p, 'utf8').includes("startsWith('docker ')")
+        )
+          hits.push(p);
       }
     };
     walk(srcDir);
@@ -347,7 +371,14 @@ describe('pr-check (subprocess)', () => {
     const defaultTimeout = 10;
     const tooLong = DEFAULT_MAX_ENTRIES * defaultTimeout + 1;
     const [b, h] = docs([], [stubEntry('slow', { timeoutSeconds: tooLong })]);
-    const { code, out } = run(prCheck, ['--base', b, '--head', h, '--default-timeout', String(defaultTimeout)]);
+    const { code, out } = run(prCheck, [
+      '--base',
+      b,
+      '--head',
+      h,
+      '--default-timeout',
+      String(defaultTimeout),
+    ]);
     expect(code).toBe(2);
     expect(out).toContain(`slow (timeoutSeconds ${tooLong})`);
     expect(out).toContain('Nothing was launched');
@@ -356,14 +387,17 @@ describe('pr-check (subprocess)', () => {
     wroteNothing();
   }, 60_000);
 
-  it('refuses a head document that does not parse, with the parser\'s message and no stack trace', () => {
+  it("refuses a head document that does not parse, with the parser's message and no stack trace", () => {
     // An unquoted `a: b` inside a plain-scalar command is the YAML mistake a
     // hand-edited entry makes; the first draft let the parser's exception out
     // as a stack trace with exit 1, the code reserved for a launched entry.
     const b = join(root, 'base.yaml');
     const h = join(root, 'head.yaml');
     writeFileSync(b, stringify(doc([])));
-    writeFileSync(h, `servers:\n  - name: broken\n    command: node ${stub} a: b\n    package: broken\n`);
+    writeFileSync(
+      h,
+      `servers:\n  - name: broken\n    command: node ${stub} a: b\n    package: broken\n`,
+    );
     const { code, out } = run(prCheck, ['--base', b, '--head', h]);
     expect(code).toBe(2);
     expect(out).toContain(`${h} does not parse as YAML:`);
@@ -383,7 +417,10 @@ describe('pr-check (subprocess)', () => {
   it('lists a self-containerised entry without launching it, and names the maintainer path', () => {
     // Host mode on purpose: here the harness would hand `docker run …` straight
     // to the shim on PATH, so an empty invocation log is the proof.
-    const [b, h] = docs([], [entry('containerised', { command: 'docker run --rm -i ghcr.io/example/x' })]);
+    const [b, h] = docs(
+      [],
+      [entry('containerised', { command: 'docker run --rm -i ghcr.io/example/x' })],
+    );
     const { code, out } = run(prCheck, ['--base', b, '--head', h]);
     expect(code).toBe(0);
     expect(out).toContain('containerised (added): listed, not launched here');
@@ -394,14 +431,25 @@ describe('pr-check (subprocess)', () => {
   }, 60_000);
 
   it('lists a remote entry without launching it', () => {
-    const [b, h] = docs([], [entry('endpoint', { remote: true, command: 'https://mcp.example.invalid/sse' })]);
+    const [b, h] = docs(
+      [],
+      [entry('endpoint', { remote: true, command: 'https://mcp.example.invalid/sse' })],
+    );
     const { code, out } = run(prCheck, ['--base', b, '--head', h]);
     expect(code).toBe(0);
     expect(out).toContain('endpoint (added): remote — listed, not measured');
   }, 60_000);
 
   it('fails the check when the added entry does not launch as written, with the evidence printed', () => {
-    const [b, h] = docs([], [entry('broken', { command: `node -e "console.error('no such subcommand'); process.exit(1)"`, timeoutSeconds: 10 })]);
+    const [b, h] = docs(
+      [],
+      [
+        entry('broken', {
+          command: `node -e "console.error('no such subcommand'); process.exit(1)"`,
+          timeoutSeconds: 10,
+        }),
+      ],
+    );
     const { code, out } = run(prCheck, ['--base', b, '--head', h]);
     expect(code).toBe(1);
     expect(out).toMatch(/broken \(added\): startup-failure \(\d+s\)/);
@@ -410,7 +458,7 @@ describe('pr-check (subprocess)', () => {
     wroteNothing();
   }, 60_000);
 
-  it('refuses a malformed head document before anything is launched, in the schema check\'s voice', () => {
+  it("refuses a malformed head document before anything is launched, in the schema check's voice", () => {
     const bad = { ...stubEntry('typo'), timeoutSecond: 240 } as unknown as ServerEntry;
     const [b, h] = docs([], [bad]);
     const { code, out } = run(prCheck, ['--base', b, '--head', h]);
@@ -448,7 +496,15 @@ describe('pr-check (subprocess)', () => {
    */
   describe('npm run sweep -- --no-persist', () => {
     it('prints the number, says where the record would have gone, and writes nothing', () => {
-      const { code, out } = run(sweepRun, ['--no-persist', '--name', 'mine', '--command', `node ${stub}`, '--timeout', '10000']);
+      const { code, out } = run(sweepRun, [
+        '--no-persist',
+        '--name',
+        'mine',
+        '--command',
+        `node ${stub}`,
+        '--timeout',
+        '10000',
+      ]);
       expect(code).toBe(0);
       expect(out).toMatch(/mine: \d+ tokens across 1 tools \(measured\)/);
       expect(out).toContain('nothing written');
@@ -470,7 +526,14 @@ describe('pr-check (subprocess)', () => {
     });
 
     it('is the flag that made the difference — without it the CLI still persists', () => {
-      const { code } = run(sweepRun, ['--name', 'mine', '--command', `node ${stub}`, '--timeout', '10000']);
+      const { code } = run(sweepRun, [
+        '--name',
+        'mine',
+        '--command',
+        `node ${stub}`,
+        '--timeout',
+        '10000',
+      ]);
       expect(code).toBe(0);
       expect(existsSync(join(root, 'results', 'mine', 'measurement.json'))).toBe(true);
       expect(existsSync(join(root, 'badges', 'mine.json'))).toBe(true);
@@ -531,7 +594,8 @@ describe('the pull-request measurement workflow', () => {
   });
 
   it('pushes nothing', () => {
-    for (const needle of ['git push', 'git commit', 'git config user.name']) expect(text).not.toContain(needle);
+    for (const needle of ['git push', 'git commit', 'git config user.name'])
+      expect(text).not.toContain(needle);
   });
 
   it('is capped, and the cap is derived from the entry cap and the retry arithmetic', () => {

@@ -47,7 +47,15 @@ export const CROSS_CHECK_CLI_VERSION = 'v0.2.5';
  * falls back to cl100k_base — a systematic difference that would swamp the one
  * being measured (spec/upstream-notes.md, finding 1).
  */
-export const CROSS_CHECK_CLI_ARGS = ['analyze', '--provider', 'tiktoken', '--model', 'gpt-4o', '--format', 'json'] as const;
+export const CROSS_CHECK_CLI_ARGS = [
+  'analyze',
+  '--provider',
+  'tiktoken',
+  '--model',
+  'gpt-4o',
+  '--format',
+  'json',
+] as const;
 
 export interface CrossCheckRow {
   /** o200k count of our fresh canonical capture from this run — the headline. */
@@ -172,7 +180,10 @@ export function sameToolSet(ours: string[], theirs: string[]): boolean {
  * decides whether to run the CLI at all; a failed side arrives here as an
  * `error`, and the row keeps whatever the other side established.
  */
-export function toCrossCheckRow(m: Measurement, cli: { report?: CliReport; problem?: string }): CrossCheckRow {
+export function toCrossCheckRow(
+  m: Measurement,
+  cli: { report?: CliReport; problem?: string },
+): CrossCheckRow {
   const measured = m.status === 'measured' || m.status === 'dynamic';
   const raw = measured && Array.isArray(m.rawToolsCapture) ? m.rawToolsCapture : [];
   const ours = toolNames(raw);
@@ -182,7 +193,8 @@ export function toCrossCheckRow(m: Measurement, cli: { report?: CliReport; probl
     cliTokens: cli.report?.total ?? 0,
     ourToolCount: measured && typeof m.toolCount === 'number' ? m.toolCount : 0,
     cliToolCount: cli.report?.count ?? 0,
-    toolSetMatches: cli.report !== undefined && measured ? sameToolSet(ours, cli.report.names) : false,
+    toolSetMatches:
+      cli.report !== undefined && measured ? sameToolSet(ours, cli.report.names) : false,
     dynamic: m.status === 'dynamic',
     capturedSha256: measured ? m.canonicalSha256 : null,
   };

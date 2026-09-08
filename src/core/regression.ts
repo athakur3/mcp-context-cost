@@ -122,11 +122,17 @@ export function parseToolVectorFile(text: string): ToolVectorFile | null {
       totalTokens: e.totalTokens,
       ...(typeof e.version === 'string' && e.version ? { version: e.version } : {}),
       tools: e.tools
-        .filter((t): t is ToolVector => !!t && typeof t.name === 'string' && typeof t.tokens === 'number')
+        .filter(
+          (t): t is ToolVector => !!t && typeof t.name === 'string' && typeof t.tokens === 'number',
+        )
         .map((t) => ({ name: t.name, tokens: t.tokens })),
     });
   }
-  return { method: typeof f.method === 'string' ? f.method : REGRESSION_METHOD, server: f.server, entries };
+  return {
+    method: typeof f.method === 'string' ? f.method : REGRESSION_METHOD,
+    server: f.server,
+    entries,
+  };
 }
 
 /**
@@ -136,7 +142,8 @@ export function parseToolVectorFile(text: string): ToolVectorFile | null {
  */
 export function vectorEntryOf(m: Measurement): ToolVectorEntry | null {
   if (m.status !== 'measured' && m.status !== 'dynamic') return null;
-  if (typeof m.totalTokens !== 'number' || !m.canonicalSha256 || !Array.isArray(m.tools)) return null;
+  if (typeof m.totalTokens !== 'number' || !m.canonicalSha256 || !Array.isArray(m.tools))
+    return null;
   const date = String(m.measuredAt ?? '').slice(0, 10);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
   return {
@@ -203,7 +210,11 @@ export interface ToolAttribution {
  * deliberately drop nameless tools rather than invent one. Where the names
  * cannot identify the tools, there is no attribution to give.
  */
-export function attribute(from: ToolVectorEntry, to: ToolVectorEntry, deltaTokens: number): ToolAttribution | null {
+export function attribute(
+  from: ToolVectorEntry,
+  to: ToolVectorEntry,
+  deltaTokens: number,
+): ToolAttribution | null {
   const unique = (ts: ToolVector[]) => new Set(ts.map((t) => t.name)).size === ts.length;
   if (!unique(from.tools) || !unique(to.tools)) return null;
   const before = new Map(from.tools.map((t) => [t.name, t.tokens]));
@@ -383,7 +394,10 @@ export function readSeries(
     // describes: prefer the capture whose total is the number history recorded.
     const agreeing = upto.filter((e) => e.totalTokens === tokensThatDay);
     const pool = agreeing.length > 0 ? agreeing : upto;
-    return pool.reduce<ToolVectorEntry | undefined>((best, e) => (!best || e.date >= best.date ? e : best), undefined);
+    return pool.reduce<ToolVectorEntry | undefined>(
+      (best, e) => (!best || e.date >= best.date ? e : best),
+      undefined,
+    );
   };
   const fromVec = inForceOn(from.date, from.tokens);
   const toVec = inForceOn(to.date, to.tokens);

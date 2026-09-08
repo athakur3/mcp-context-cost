@@ -110,7 +110,9 @@ async function firstBytes(res: Response): Promise<string | null> {
  * 400 is also what a malformed request earns, and calling that a protocol
  * refusal would be a claim about the server made from a fact about us.
  */
-export function refusedProtocol(body: string | null): { supported?: string[]; requested?: string } | null {
+export function refusedProtocol(
+  body: string | null,
+): { supported?: string[]; requested?: string } | null {
   if (!body) return null;
   let parsed: unknown;
   try {
@@ -144,7 +146,11 @@ export async function probeRemote(
   const configured = opts.headers ?? {};
 
   const attempt = async (init: RequestInit): Promise<Answer> => {
-    const res = await fetch(url, { ...init, signal: AbortSignal.timeout(timeoutMs), redirect: 'follow' });
+    const res = await fetch(url, {
+      ...init,
+      signal: AbortSignal.timeout(timeoutMs),
+      redirect: 'follow',
+    });
     // The headers are usually the whole answer, and a success body is never
     // read: an event stream stays open for the life of a session, and this is
     // not a session. An error that is not a credential wall is the exception.
@@ -179,7 +185,10 @@ export async function probeRemote(
     // The older SSE transport opens its stream on GET and may refuse the POST
     // outright; an endpoint that does is asked the way it expects to be.
     if (answer.res.status === 404 || answer.res.status === 405) {
-      answer = await attempt({ method: 'GET', headers: { ...configured, accept: 'text/event-stream' } });
+      answer = await attempt({
+        method: 'GET',
+        headers: { ...configured, accept: 'text/event-stream' },
+      });
     }
     return classify(answer);
   } catch (e) {
@@ -216,7 +225,9 @@ function classify({ res, body }: Answer): RemoteProbe {
   // that answered.
   const refused = refusedProtocol(body);
   if (refused) {
-    const supported = refused.supported?.length ? ` — it speaks ${refused.supported.join(', ')}` : '';
+    const supported = refused.supported?.length
+      ? ` — it speaks ${refused.supported.join(', ')}`
+      : '';
     return {
       kind: 'protocol-mismatch',
       status: res.status,
@@ -228,7 +239,8 @@ function classify({ res, body }: Answer): RemoteProbe {
 
 function describeFailure(e: unknown, timeoutMs: number): string {
   const err = e as { name?: string; message?: string; cause?: { code?: string; message?: string } };
-  if (err?.name === 'TimeoutError' || err?.name === 'AbortError') return `no answer within ${timeoutMs}ms`;
+  if (err?.name === 'TimeoutError' || err?.name === 'AbortError')
+    return `no answer within ${timeoutMs}ms`;
   // Node's fetch wraps the socket error: "fetch failed" with the code underneath.
   const code = err?.cause?.code;
   if (code) return code;

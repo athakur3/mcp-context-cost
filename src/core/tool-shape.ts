@@ -64,7 +64,9 @@ export function quantileTable(values: number[]): number[] {
   const n = sorted.length;
   const q: number[] = [];
   for (let p = 0; p <= 100; p++) {
-    q.push(p === 0 ? sorted[0] : sorted[Math.min(n - 1, Math.max(0, Math.ceil((p / 100) * n) - 1))]);
+    q.push(
+      p === 0 ? sorted[0] : sorted[Math.min(n - 1, Math.max(0, Math.ceil((p / 100) * n) - 1))],
+    );
   }
   return q;
 }
@@ -93,7 +95,9 @@ export function percentileOf(quantiles: number[], value: number): number {
 /** A tool whose measurement carries all three counts — the only kind a baseline may be built from. */
 function complete(t: ToolMeasurement): boolean {
   return (
-    typeof t.tokens === 'number' && typeof t.descriptionTokens === 'number' && typeof t.inputSchemaTokens === 'number'
+    typeof t.tokens === 'number' &&
+    typeof t.descriptionTokens === 'number' &&
+    typeof t.inputSchemaTokens === 'number'
   );
 }
 
@@ -102,7 +106,8 @@ export function buildToolShapeBaseline(
   meta: { serverCount: number; generatedAt?: string; methodologyVersion: string },
 ): ToolShapeBaseline {
   const usable = tools.filter(complete);
-  if (usable.length < 2) throw new Error('fewer than two complete tool measurements — no distribution to derive');
+  if (usable.length < 2)
+    throw new Error('fewer than two complete tool measurements — no distribution to derive');
   return {
     method: TOOL_SHAPE_METHOD,
     methodologyVersion: meta.methodologyVersion,
@@ -127,15 +132,21 @@ export function parseToolShapeBaseline(text: string): ToolShapeBaseline | null {
   const b = parsed as Partial<ToolShapeBaseline>;
   if (!b || typeof b.generatedAt !== 'string' || typeof b.toolCount !== 'number') return null;
   const q = b.quantiles;
-  const table = (v: unknown): v is number[] => Array.isArray(v) && v.length === 101 && v.every((x) => typeof x === 'number');
-  if (!q || !table(q.tokens) || !table(q.descriptionTokens) || !table(q.inputSchemaTokens)) return null;
+  const table = (v: unknown): v is number[] =>
+    Array.isArray(v) && v.length === 101 && v.every((x) => typeof x === 'number');
+  if (!q || !table(q.tokens) || !table(q.descriptionTokens) || !table(q.inputSchemaTokens))
+    return null;
   return {
     method: typeof b.method === 'string' ? b.method : TOOL_SHAPE_METHOD,
     methodologyVersion: typeof b.methodologyVersion === 'string' ? b.methodologyVersion : 'unknown',
     generatedAt: b.generatedAt,
     serverCount: typeof b.serverCount === 'number' ? b.serverCount : 0,
     toolCount: b.toolCount,
-    quantiles: { tokens: q.tokens, descriptionTokens: q.descriptionTokens, inputSchemaTokens: q.inputSchemaTokens },
+    quantiles: {
+      tokens: q.tokens,
+      descriptionTokens: q.descriptionTokens,
+      inputSchemaTokens: q.inputSchemaTokens,
+    },
   };
 }
 
@@ -163,7 +174,11 @@ export interface ToolSuggestion {
  * sits below the threshold percentile, or when trimming toward the median
  * would recover nothing.
  */
-export function suggestFor(server: string, t: ToolMeasurement, baseline: ToolShapeBaseline): ToolSuggestion | null {
+export function suggestFor(
+  server: string,
+  t: ToolMeasurement,
+  baseline: ToolShapeBaseline,
+): ToolSuggestion | null {
   if (!complete(t)) return null;
   const pct = percentileOf(baseline.quantiles.descriptionTokens, t.descriptionTokens);
   if (pct < SUGGEST_DESCRIPTION_PERCENTILE) return null;

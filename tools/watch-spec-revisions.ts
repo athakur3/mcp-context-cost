@@ -105,7 +105,9 @@ function partition(listing: unknown): SpecListingReading {
   return {
     dated: names.filter((n) => SPEC_REVISION_NAME.test(n)).sort(),
     ignored: names.filter((n) => IGNORED_SPEC_DIRS.includes(n)),
-    unrecognised: names.filter((n) => !SPEC_REVISION_NAME.test(n) && !IGNORED_SPEC_DIRS.includes(n)).sort(),
+    unrecognised: names
+      .filter((n) => !SPEC_REVISION_NAME.test(n) && !IGNORED_SPEC_DIRS.includes(n))
+      .sort(),
     latestSaid: null,
   };
 }
@@ -117,10 +119,15 @@ function latestFrom(source: string): string | null {
 
 function couldNotLook(why: string): never {
   const first = `could not read the specification: ${why}`;
-  if (asJson) console.log(JSON.stringify({ ok: false, couldNotLook: why, pinned: PROTOCOL_VERSION }, null, 2));
+  if (asJson)
+    console.log(
+      JSON.stringify({ ok: false, couldNotLook: why, pinned: PROTOCOL_VERSION }, null, 2),
+    );
   else {
     console.log(first);
-    console.log('\nNothing about the specification is claimed by this run. Re-run it; if it keeps failing,');
+    console.log(
+      '\nNothing about the specification is claimed by this run. Re-run it; if it keeps failing,',
+    );
     console.log(`look at ${LISTING_URL} and ${LATEST_URL} by hand.`);
   }
   process.exit(1);
@@ -138,7 +145,9 @@ try {
 try {
   live.latestSaid = latestFrom(await request(LATEST_URL, 'text/plain'));
 } catch (e) {
-  log(`  the schema file could not be read (${(e as Error).message}); continuing on the listing alone`);
+  log(
+    `  the schema file could not be read (${(e as Error).message}); continuing on the listing alone`,
+  );
 }
 
 const unreadable = listingIsUnreadable(live);
@@ -148,12 +157,20 @@ const problems = specSnapshotProblem(KNOWN_SPEC_REVISIONS, live);
 const ahead = newerThanPinned(KNOWN_SPEC_REVISIONS);
 
 if (asJson) {
-  console.log(JSON.stringify({ ok: problems.length === 0, problems, pinned: PROTOCOL_VERSION, ahead, live }, null, 2));
+  console.log(
+    JSON.stringify(
+      { ok: problems.length === 0, problems, pinned: PROTOCOL_VERSION, ahead, live },
+      null,
+      2,
+    ),
+  );
   process.exit(problems.length === 0 ? 0 : 1);
 }
 
 if (problems.length === 0) {
-  console.log(`the specification publishes exactly what this repository names, as read on ${KNOWN_SPEC_REVISIONS.readOn}:`);
+  console.log(
+    `the specification publishes exactly what this repository names, as read on ${KNOWN_SPEC_REVISIONS.readOn}:`,
+  );
   console.log(`  ${KNOWN_SPEC_REVISIONS.revisions.join(', ')}`);
   console.log(`  ignored, deliberately: ${live.ignored.join(', ') || '(none present)'}`);
   console.log(`  the schema file calls the latest: ${live.latestSaid ?? '(not read)'}`);

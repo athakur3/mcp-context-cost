@@ -74,10 +74,9 @@ describe('evidenceTail', () => {
   });
 
   it('keeps a stack when a stack is all there is', () => {
-    const framesOnly = [
-      '    at foo (/app/index.js:1:1)',
-      '    at bar (/app/index.js:2:2)',
-    ].join('\n');
+    const framesOnly = ['    at foo (/app/index.js:1:1)', '    at bar (/app/index.js:2:2)'].join(
+      '\n',
+    );
     expect(evidenceTail(framesOnly)).toContain('at foo');
   });
 
@@ -104,15 +103,21 @@ describe('evidenceTail', () => {
       "Configure a context with 'kubectl config set-context <name>'",
       'Usage:',
       '  kubernetes-mcp-server [command] [options] [flags]',
-      ...Array.from({ length: 40 }, (_, i) => `      --flag-${i} string          some documentation for flag ${i}`),
+      ...Array.from(
+        { length: 40 },
+        (_, i) => `      --flag-${i} string          some documentation for flag ${i}`,
+      ),
     ].join('\n');
 
     const kept = evidenceTail(usage);
     expect(kept.length).toBeLessThanOrEqual(600);
     expect(kept).toContain('no current-context is set');
-    expect(notApplicableReason({ reason: 'needs a kubeconfig', evidence: 'no current-context is set' }, kept)).toBe(
-      'needs a kubeconfig',
-    );
+    expect(
+      notApplicableReason(
+        { reason: 'needs a kubeconfig', evidence: 'no current-context is set' },
+        kept,
+      ),
+    ).toBe('needs a kubeconfig');
   });
 
   it('truncates a structured log line rather than dropping it whole', () => {
@@ -200,7 +205,10 @@ describe('evidenceTail keeps the evidence a declared status rests on', () => {
   it('outranks the noise filters, because npm prints some evidence itself', () => {
     // safari-mcp declares EBADPLATFORM, and npm prints it on a line of its own.
     // A filter that reaches it first deletes the evidence before any budget runs.
-    const noisy = ['npm warn EBADPLATFORM safari-mcp@2.17.1 is darwin-only', 'something else entirely'].join('\n');
+    const noisy = [
+      'npm warn EBADPLATFORM safari-mcp@2.17.1 is darwin-only',
+      'something else entirely',
+    ].join('\n');
     expect(evidenceTail(noisy)).not.toContain('EBADPLATFORM');
     expect(evidenceTail(noisy, 600, 'EBADPLATFORM')).toContain('EBADPLATFORM');
   });
@@ -208,7 +216,9 @@ describe('evidenceTail keeps the evidence a declared status rests on', () => {
   it('never conjures evidence that was not printed', () => {
     // The declaration has to keep failing when the server fails a different way —
     // that is the guard the whole mechanism exists for, and this must not weaken it.
-    const different = Array.from({ length: 60 }, (_, i) => `panic: unrelated failure ${i}`).join('\n');
+    const different = Array.from({ length: 60 }, (_, i) => `panic: unrelated failure ${i}`).join(
+      '\n',
+    );
     const kept = evidenceTail(different, 600, DECLARED.evidence);
     expect(notApplicableReason(DECLARED, kept)).toBeNull();
   });

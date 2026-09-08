@@ -34,24 +34,37 @@ export function verifyMeasurement(m: Measurement): {
 } {
   const problems: string[] = [];
   if (!m.rawToolsCapture) {
-    return { ok: false, rederivedTokens: null, rederivedSha: null, problems: ['no rawToolsCapture in measurement'] };
+    return {
+      ok: false,
+      rederivedTokens: null,
+      rederivedSha: null,
+      problems: ['no rawToolsCapture in measurement'],
+    };
   }
   const canonical = canonicalString(m.rawToolsCapture);
   const tokens = countTokens(canonical);
   const sha = sha256Hex(canonical);
-  if (tokens !== m.totalTokens) problems.push(`token mismatch: re-derived ${tokens}, stored ${m.totalTokens}`);
-  if (sha !== m.canonicalSha256) problems.push(`sha mismatch: re-derived ${sha}, stored ${m.canonicalSha256}`);
+  if (tokens !== m.totalTokens)
+    problems.push(`token mismatch: re-derived ${tokens}, stored ${m.totalTokens}`);
+  if (sha !== m.canonicalSha256)
+    problems.push(`sha mismatch: re-derived ${sha}, stored ${m.canonicalSha256}`);
   if (m.toolCount !== m.rawToolsCapture.length)
-    problems.push(`toolCount mismatch: capture has ${m.rawToolsCapture.length}, stored ${m.toolCount}`);
+    problems.push(
+      `toolCount mismatch: capture has ${m.rawToolsCapture.length}, stored ${m.toolCount}`,
+    );
   return { ok: problems.length === 0, rederivedTokens: tokens, rederivedSha: sha, problems };
 }
 
 /** Derives a servers.yaml-style slug from a remote URL's hostname, e.g. mcp.deepwiki.com -> deepwiki. */
 export function slugFromUrl(url: string): string {
   const host = new URL(url).hostname.replace(/^(www|mcp)\./, '');
-  return host.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'remote';
+  return (
+    host
+      .replace(/[^a-z0-9]+/gi, '-')
+      .replace(/^-+|-+$/g, '')
+      .toLowerCase() || 'remote'
+  );
 }
-
 
 /**
  * Report a `verify` failure and exit 1, in whichever shape the caller asked
@@ -60,7 +73,10 @@ export function slugFromUrl(url: string): string {
  * exception, so every failure path goes through here.
  */
 function failVerify(json: boolean, problem: string): never {
-  if (json) console.log(JSON.stringify({ ok: false, rederivedTokens: null, rederivedSha: null, problems: [problem] }));
+  if (json)
+    console.log(
+      JSON.stringify({ ok: false, rederivedTokens: null, rederivedSha: null, problems: [problem] }),
+    );
   else console.error(problem);
   process.exit(1);
 }
@@ -87,7 +103,10 @@ export function cliVersion(): string {
  * So an unknown flag is a usage error, and the message names the running version, because
  * the likeliest cause is that the reader's command is newer than their install.
  */
-export function unknownFlags(argv: string[], spec: { value: string[]; boolean: string[] }): string[] {
+export function unknownFlags(
+  argv: string[],
+  spec: { value: string[]; boolean: string[] },
+): string[] {
   const known = new Set([...spec.value, ...spec.boolean]);
   const unknown: string[] = [];
   for (let i = 0; i < argv.length; i++) {
@@ -149,7 +168,11 @@ export function flagValues(argv: string[], name: string, known: Set<string> = ne
 }
 
 /** The last value given for a flag, or undefined when the flag is absent. */
-export function flagValue(argv: string[], name: string, known: Set<string> = new Set()): string | undefined {
+export function flagValue(
+  argv: string[],
+  name: string,
+  known: Set<string> = new Set(),
+): string | undefined {
   const values = flagValues(argv, name, known);
   return values.length ? values[values.length - 1] : undefined;
 }
@@ -164,7 +187,10 @@ export function flagValue(argv: string[], name: string, known: Set<string> = new
  * failure `unknownFlags` exists to prevent, reached through a different door,
  * so it is refused in the same place and with the same severity.
  */
-export function valuelessFlags(argv: string[], spec: { value: string[]; boolean: string[] }): string[] {
+export function valuelessFlags(
+  argv: string[],
+  spec: { value: string[]; boolean: string[] },
+): string[] {
   const known = knownFlagNames(spec);
   const bad: string[] = [];
   for (let i = 0; i < argv.length; i++) {
@@ -183,21 +209,36 @@ export function valuelessFlags(argv: string[], spec: { value: string[]; boolean:
   return bad;
 }
 
-function rejectUnknownFlags(cmd: string, argv: string[], spec: { value: string[]; boolean: string[] }): void {
+function rejectUnknownFlags(
+  cmd: string,
+  argv: string[],
+  spec: { value: string[]; boolean: string[] },
+): void {
   const bad = unknownFlags(argv, spec);
   if (bad.length) {
-    const all = [...spec.value, ...spec.boolean].sort().map((f) => `--${f}`).join(' ');
+    const all = [...spec.value, ...spec.boolean]
+      .sort()
+      .map((f) => `--${f}`)
+      .join(' ');
     console.error(`unknown flag for \`${cmd}\`: ${bad.join(', ')}`);
-    console.error(`this is mcp-context-cost ${cliVersion()} — if you copied the command from the README,`);
-    console.error(`your install may be older than the docs. Try: npx -y mcp-context-cost@latest ${cmd} ...`);
+    console.error(
+      `this is mcp-context-cost ${cliVersion()} — if you copied the command from the README,`,
+    );
+    console.error(
+      `your install may be older than the docs. Try: npx -y mcp-context-cost@latest ${cmd} ...`,
+    );
     console.error(`known flags for ${cmd}: ${all}`);
     process.exit(2);
   }
   const empty = valuelessFlags(argv, spec);
   if (empty.length) {
     console.error(`flag with no value for \`${cmd}\`: ${empty.join(', ')}`);
-    console.error(`a flag given without its value is refused rather than ignored: ignoring it would run`);
-    console.error(`a command that quietly does less than it was asked to — a gate that never gates.`);
+    console.error(
+      `a flag given without its value is refused rather than ignored: ignoring it would run`,
+    );
+    console.error(
+      `a command that quietly does less than it was asked to — a gate that never gates.`,
+    );
     process.exit(2);
   }
 }
@@ -298,7 +339,9 @@ if (cmd === 'audit') {
       changed: rest.includes('--changed'),
       captureIndexUrl: argOf('capture-index-url'),
       // Progress goes to stderr so `--json` stdout stays a single parseable object.
-      onProgress: json ? undefined : (name, done, total) => process.stderr.write(`  [${done}/${total}] ${name}\n`),
+      onProgress: json
+        ? undefined
+        : (name, done, total) => process.stderr.write(`  [${done}/${total}] ${name}\n`),
     });
   } catch (e) {
     // Docker failing as docker means every measurement through it would be a
@@ -313,8 +356,11 @@ if (cmd === 'audit') {
   }
 
   if (report.configs.length === 0) {
-    const where = report.problems.length ? `\n${report.problems.map((p) => `  ${p}`).join('\n')}` : '';
-    const empty: { client: string; source: string; allDisabled?: string[] }[] = report.emptyConfigs ?? [];
+    const where = report.problems.length
+      ? `\n${report.problems.map((p) => `  ${p}`).join('\n')}`
+      : '';
+    const empty: { client: string; source: string; allDisabled?: string[] }[] =
+      report.emptyConfigs ?? [];
     if (json) console.log(JSON.stringify(report));
     // A machine whose client config was found, opened and parsed, and has
     // nothing to total, is told that — being told no client was found anywhere
@@ -367,7 +413,8 @@ if (cmd === 'audit') {
 
   if (baseline) {
     report.diff = buildDiff(baseline, report);
-    if (maxIncrease !== undefined) report.increaseGate = evaluateIncreaseGate(report.diff, maxIncrease);
+    if (maxIncrease !== undefined)
+      report.increaseGate = evaluateIncreaseGate(report.diff, maxIncrease);
   }
 
   console.log(json ? JSON.stringify(report) : formatReport(report));
@@ -412,7 +459,9 @@ if (cmd === 'audit') {
   }
   const r = verifyMeasurement(m);
   if (json) {
-    console.log(JSON.stringify({ serverName: m.serverName, ...r, badge: r.ok ? toBadge(m) : undefined }));
+    console.log(
+      JSON.stringify({ serverName: m.serverName, ...r, badge: r.ok ? toBadge(m) : undefined }),
+    );
     process.exit(r.ok ? 0 : 1);
   }
   if (r.ok) {
@@ -427,7 +476,16 @@ if (cmd === 'audit') {
   process.exit(1);
 } else if (cmd === 'measure') {
   const spec = {
-    value: ['name', 'command', 'remote', 'timeout', 'docker-image', 'baseline', 'max-increase', 'budget'],
+    value: [
+      'name',
+      'command',
+      'remote',
+      'timeout',
+      'docker-image',
+      'baseline',
+      'max-increase',
+      'budget',
+    ],
     boolean: ['docker'],
   };
   rejectUnknownFlags('measure', rest, spec);
@@ -440,21 +498,23 @@ if (cmd === 'audit') {
     process.exit(2);
   }
   if (!command && !remoteUrl) {
-    console.error('usage: mcp-context-cost measure --name <slug> --command "npx -y <server>" [--timeout ms] [--docker]');
-    console.error('       mcp-context-cost measure --remote <url> [--name <slug>] [--timeout ms] [--docker]');
+    console.error(
+      'usage: mcp-context-cost measure --name <slug> --command "npx -y <server>" [--timeout ms] [--docker]',
+    );
+    console.error(
+      '       mcp-context-cost measure --remote <url> [--name <slug>] [--timeout ms] [--docker]',
+    );
     process.exit(2);
   }
   const name = argOf('name') ?? (remoteUrl ? slugFromUrl(remoteUrl) : undefined);
   if (!name) {
-    console.error('usage: mcp-context-cost measure --name <slug> --command "npx -y <server>" [--timeout ms] [--docker]');
+    console.error(
+      'usage: mcp-context-cost measure --name <slug> --command "npx -y <server>" [--timeout ms] [--docker]',
+    );
     process.exit(2);
   }
-  const {
-    diffServer,
-    evaluateServerGate,
-    formatServerDiff,
-    parseBaselineMeasurement,
-  } = await import('./core/server-diff.js');
+  const { diffServer, evaluateServerGate, formatServerDiff, parseBaselineMeasurement } =
+    await import('./core/server-diff.js');
 
   // Gate limits are read before anything is measured: an unusable number is a
   // usage error, and finding that out after a two-minute container launch is
@@ -529,12 +589,16 @@ if (cmd === 'audit') {
   process.exit(2);
 } else {
   console.log('mcp-context-cost — reproducible context-cost measurement for MCP servers');
-  console.log('  audit [--config <path>] [--budget N] [--claude]  measure the servers in your own MCP config');
+  console.log(
+    '  audit [--config <path>] [--budget N] [--claude]  measure the servers in your own MCP config',
+  );
   console.log('        [--json] [--context N] [--timeout ms] [--concurrency N] [--docker]');
   console.log('        [--baseline <report.json>] [--max-increase N]   diff against an earlier');
   console.log('                                              audit --json report; --max-increase');
   console.log('                                              fails when a change adds too much');
-  console.log('  verify <measurement.json> [--json]    re-derive tokens+sha from the published capture');
+  console.log(
+    '  verify <measurement.json> [--json]    re-derive tokens+sha from the published capture',
+  );
   console.log('  verify --remote <url> [--json]        same, fetched from a measurement URL');
   console.log('  measure --name x --command "npx -y <server>"   run a one-off measurement');
   console.log('  measure --remote <url> [--name x]      measure a remote server via mcp-remote');

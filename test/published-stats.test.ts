@@ -32,7 +32,9 @@ import type { ServerEntry } from '../src/sweep/report.js';
  */
 
 const repoRoot = join(import.meta.dirname, '..');
-const entries = (parse(readFileSync(join(repoRoot, 'servers.yaml'), 'utf8')) as { servers: ServerEntry[] }).servers;
+const entries = (
+  parse(readFileSync(join(repoRoot, 'servers.yaml'), 'utf8')) as { servers: ServerEntry[] }
+).servers;
 const stats = computePublishedStats(entries, repoRoot);
 
 describe('published pages agree with the data on disk', () => {
@@ -80,9 +82,13 @@ describe('published pages agree with the data on disk', () => {
     for (const name of ['github', 'notion'] as const) {
       const row = lines.find((l) => l.includes(`| [${name}](`))!;
       const boardShowsClaude = row.split('|')[claudeCol]?.trim() !== '—';
-      expect(stats.claude[name].claudeTokens === null, `${name}: README vs leaderboard`).toBe(!boardShowsClaude);
+      expect(stats.claude[name].claudeTokens === null, `${name}: README vs leaderboard`).toBe(
+        !boardShowsClaude,
+      );
       // And the badge column is the measured number, never the run's copy of it.
-      expect(stats.claude[name].badgeTokens).toBe(stats.sample[name]?.tokens ?? stats.claude[name].badgeTokens);
+      expect(stats.claude[name].badgeTokens).toBe(
+        stats.sample[name]?.tokens ?? stats.claude[name].badgeTokens,
+      );
     }
   });
 
@@ -106,7 +112,11 @@ describe('published pages agree with the data on disk', () => {
 });
 
 describe('the patch engine', () => {
-  const claim = { file: 'README.md', id: 'unit', template: 'cost spans **{n}×**, from `{w}` at {n} tokens' } as const;
+  const claim = {
+    file: 'README.md',
+    id: 'unit',
+    template: 'cost spans **{n}×**, from `{w}` at {n} tokens',
+  } as const;
 
   it('matches a sentence across the line wraps prose actually has', () => {
     const wrapped = 'cost spans **1,700×**,\nfrom `postgres` at 32 tokens';
@@ -120,7 +130,9 @@ describe('the patch engine', () => {
   });
 
   it('reads a decimal as one slot', () => {
-    const m = [...'between 0.7% and **89.9%**'.matchAll(compileTemplate('between {f}% and **{f}%**'))];
+    const m = [
+      ...'between 0.7% and **89.9%**'.matchAll(compileTemplate('between {f}% and **{f}%**')),
+    ];
     expect(m).toHaveLength(1);
     expect(m[0].slice(1)).toEqual(['0.7', '89.9']);
   });
@@ -130,7 +142,9 @@ describe('the patch engine', () => {
     const applied = applyClaim(stale, claim, ['1,700', 'postgres', '32']);
     expect(applied.changed).toBe(true);
     expect(applied.problem).toBeNull();
-    expect(applied.text).toBe('lead-in\ncost spans **1,700×**,\nfrom `postgres` at 32 tokens\ntrail-out');
+    expect(applied.text).toBe(
+      'lead-in\ncost spans **1,700×**,\nfrom `postgres` at 32 tokens\ntrail-out',
+    );
   });
 
   it('reports agreement as no change at all', () => {
@@ -142,13 +156,18 @@ describe('the patch engine', () => {
   });
 
   it('refuses a page that dropped the sentence, naming the claim', () => {
-    const applied = applyClaim('a page about something else entirely', claim, ['1,700', 'postgres', '32']);
+    const applied = applyClaim('a page about something else entirely', claim, [
+      '1,700',
+      'postgres',
+      '32',
+    ]);
     expect(applied.changed).toBe(false);
     expect(applied.problem).toContain("'unit' not found");
   });
 
   it('refuses an ambiguous anchor rather than patching the wrong one', () => {
-    const twice = 'cost spans **9×**, from `a` at 1 tokens … cost spans **9×**, from `a` at 1 tokens';
+    const twice =
+      'cost spans **9×**, from `a` at 1 tokens … cost spans **9×**, from `a` at 1 tokens';
     const applied = applyClaim(twice, claim, ['1,700', 'postgres', '32']);
     expect(applied.changed).toBe(false);
     expect(applied.problem).toContain('matches 2 places');
@@ -172,8 +191,18 @@ describe('the patch engine', () => {
   describe('heaviestDroppedField', () => {
     it('names the heaviest field an Anthropic request cannot carry, and its share', () => {
       const capture = [
-        { name: 'a', description: 'd', inputSchema: { type: 'object' }, icons: { big: 'x'.repeat(400) } },
-        { name: 'b', description: 'd', inputSchema: { type: 'object' }, annotations: { readOnlyHint: true } },
+        {
+          name: 'a',
+          description: 'd',
+          inputSchema: { type: 'object' },
+          icons: { big: 'x'.repeat(400) },
+        },
+        {
+          name: 'b',
+          description: 'd',
+          inputSchema: { type: 'object' },
+          annotations: { readOnlyHint: true },
+        },
       ];
       const total = countTokens(JSON.stringify(capture));
       const got = heaviestDroppedField(capture, total);
@@ -182,10 +211,19 @@ describe('the patch engine', () => {
     });
 
     it('never counts the three fields the request does carry', () => {
-      const capture = [{ name: 'a', description: 'x'.repeat(2000), inputSchema: { type: 'object' }, icons: { s: 'y' } }];
+      const capture = [
+        {
+          name: 'a',
+          description: 'x'.repeat(2000),
+          inputSchema: { type: 'object' },
+          icons: { s: 'y' },
+        },
+      ];
       // The description dwarfs everything, and it is not dropped — so it must
       // not be the answer.
-      expect(heaviestDroppedField(capture, countTokens(JSON.stringify(capture))).dropField).toBe('icons');
+      expect(heaviestDroppedField(capture, countTokens(JSON.stringify(capture))).dropField).toBe(
+        'icons',
+      );
     });
 
     it('says none rather than guessing when a capture drops nothing', () => {
@@ -217,7 +255,16 @@ describe('the patch engine', () => {
  */
 describe('the triple', () => {
   const div = JSON.parse(readFileSync(join(repoRoot, 'results', 'divergence.json'), 'utf8')) as {
-    servers: Record<string, { o200kFull: number; o200kMapped: number; claudeDelta: number; capturedSha256: string; error?: string }>;
+    servers: Record<
+      string,
+      {
+        o200kFull: number;
+        o200kMapped: number;
+        claudeDelta: number;
+        capturedSha256: string;
+        error?: string;
+      }
+    >;
   };
   const measurement = (name: string) =>
     JSON.parse(readFileSync(join(repoRoot, 'results', name, 'measurement.json'), 'utf8')) as {
@@ -242,12 +289,13 @@ describe('the triple', () => {
       // agree; a stale row was computed from bytes that are gone.
       if (m.canonicalSha256 !== row.capturedSha256) continue;
       const recomputed = mappedTokens(m.rawToolsCapture ?? []);
-      if (recomputed !== row.o200kMapped) mismatched.push(`${name}: recomputed ${recomputed} vs published ${row.o200kMapped}`);
+      if (recomputed !== row.o200kMapped)
+        mismatched.push(`${name}: recomputed ${recomputed} vs published ${row.o200kMapped}`);
     }
     expect(mismatched, 'mappedTokens and results/divergence.json disagree').toEqual([]);
   });
 
-  it('takes the wire leg from the measurement, never from the run\'s copy of it', () => {
+  it("takes the wire leg from the measurement, never from the run's copy of it", () => {
     for (const [name, t] of Object.entries(stats.triple)) {
       expect(t.wire, `${name} wire`).toBe(measurement(name).totalTokens);
     }

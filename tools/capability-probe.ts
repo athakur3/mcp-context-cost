@@ -150,7 +150,9 @@ const queue = [...entries];
 function writeSummary(): void {
   const sorted = [...rows].sort((a, b) => a.name.localeCompare(b.name));
   const cmp = sorted.filter(
-    (r) => ['measured', 'dynamic'].includes(r.minimalStatus) && ['measured', 'dynamic'].includes(r.declaringStatus),
+    (r) =>
+      ['measured', 'dynamic'].includes(r.minimalStatus) &&
+      ['measured', 'dynamic'].includes(r.declaringStatus),
   );
   const mv = cmp.filter((r) => r.gained.length > 0 || r.lost.length > 0);
   writeFileSync(
@@ -165,7 +167,10 @@ function writeSummary(): void {
         comparable: cmp.length,
         moved: mv.length,
         movedNames: mv.map((r) => r.name),
-        extraTokens: mv.reduce((n, r) => n + ((r.declaringTokens ?? 0) - (r.minimalTokens ?? 0)), 0),
+        extraTokens: mv.reduce(
+          (n, r) => n + ((r.declaringTokens ?? 0) - (r.minimalTokens ?? 0)),
+          0,
+        ),
         rows: sorted,
       },
       null,
@@ -214,7 +219,11 @@ console.log(
     (summary.moved > 0 ? `: ${summary.movedNames.join(', ')}` : ''),
 );
 if (summary.moved > 0) {
-  console.log(`those servers publish ${summary.extraTokens} fewer tokens than a declaring client would load.`);
+  console.log(
+    `those servers publish ${summary.extraTokens} fewer tokens than a declaring client would load.`,
+  );
 }
-console.log(`${summary.probed - summary.comparable} not comparable (a capture failed on one side or both).`);
+console.log(
+  `${summary.probed - summary.comparable} not comparable (a capture failed on one side or both).`,
+);
 console.log(`written: ${outPath}`);

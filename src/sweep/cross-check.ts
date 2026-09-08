@@ -21,7 +21,16 @@
  * package-cache volumes a sweep uses, so the server it launches runs under the
  * exact isolation every published measurement ran under.
  */
-import { chmodSync, existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  chmodSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  renameSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { createHash } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { homedir, tmpdir } from 'node:os';
@@ -51,11 +60,18 @@ export function writeCrossCheck(run: CrossCheckRun, root = process.cwd()): void 
   // Key order sorted so a re-run of the same servers produces no diff noise.
   const servers: Record<string, CrossCheckRow> = {};
   for (const name of Object.keys(run.servers).sort()) servers[name] = run.servers[name];
-  writeFileSync(join(root, 'results', 'cross-check.json'), JSON.stringify({ ...run, servers }, null, 2) + '\n');
+  writeFileSync(
+    join(root, 'results', 'cross-check.json'),
+    JSON.stringify({ ...run, servers }, null, 2) + '\n',
+  );
 }
 
 /** Release-asset triple for where the CLI will actually run. */
-export function cliTriple(docker: boolean, platform = process.platform, arch = process.arch): string {
+export function cliTriple(
+  docker: boolean,
+  platform = process.platform,
+  arch = process.arch,
+): string {
   if (docker) {
     // The container is Linux whatever the host is; its architecture is the host's.
     return arch === 'arm64' ? 'aarch64-unknown-linux-gnu' : 'x86_64-unknown-linux-gnu';
@@ -63,7 +79,9 @@ export function cliTriple(docker: boolean, platform = process.platform, arch = p
   const cpu = arch === 'arm64' ? 'aarch64' : 'x86_64';
   if (platform === 'darwin') return `${cpu}-apple-darwin`;
   if (platform === 'linux') return `${cpu}-unknown-linux-gnu`;
-  throw new Error(`no ${CROSS_CHECK_CLI} release asset for ${platform}/${arch} — run with --docker`);
+  throw new Error(
+    `no ${CROSS_CHECK_CLI} release asset for ${platform}/${arch} — run with --docker`,
+  );
 }
 
 function sh(command: string, args: string[]): Promise<{ code: number | null; stderr: string }> {
@@ -87,7 +105,13 @@ export async function ensureCliBinary(triple: string): Promise<string> {
   const override = process.env.MCP_TOKENS_BIN;
   if (override) return override;
 
-  const cacheDir = join(homedir(), '.cache', 'mcp-context-cost', 'mcp-tokens', `${CROSS_CHECK_CLI_VERSION}-${triple}`);
+  const cacheDir = join(
+    homedir(),
+    '.cache',
+    'mcp-context-cost',
+    'mcp-tokens',
+    `${CROSS_CHECK_CLI_VERSION}-${triple}`,
+  );
   const binPath = join(cacheDir, 'mcp-tokens');
   if (existsSync(binPath)) return binPath;
 
@@ -104,7 +128,9 @@ export async function ensureCliBinary(triple: string): Promise<string> {
   const expected = sumFile.trim().split(/\s+/)[0]?.toLowerCase();
   const actual = createHash('sha256').update(archive).digest('hex');
   if (!expected || expected !== actual) {
-    throw new Error(`${asset}: SHA-256 mismatch — expected ${expected ?? '(unparseable)'}, got ${actual}; refusing to run it`);
+    throw new Error(
+      `${asset}: SHA-256 mismatch — expected ${expected ?? '(unparseable)'}, got ${actual}; refusing to run it`,
+    );
   }
 
   const work = join(tmpdir(), `mcp-tokens-${process.pid}-${Math.floor(Math.random() * 1e6)}`);
@@ -113,7 +139,8 @@ export async function ensureCliBinary(triple: string): Promise<string> {
     const archivePath = join(work, asset);
     writeFileSync(archivePath, archive);
     const tar = await sh('tar', ['-xJf', archivePath, '-C', work]);
-    if (tar.code !== 0) throw new Error(`tar failed extracting ${asset}: ${tar.stderr.slice(-200)}`);
+    if (tar.code !== 0)
+      throw new Error(`tar failed extracting ${asset}: ${tar.stderr.slice(-200)}`);
     const found = findFile(work, 'mcp-tokens');
     if (!found) throw new Error(`${asset} did not contain an mcp-tokens binary`);
     mkdirSync(cacheDir, { recursive: true });
@@ -204,11 +231,15 @@ export function runCli(
     // Grace beyond the CLI's own deadline: startup is what its timeout covers,
     // and the counting that follows deserves to finish rather than be killed
     // at the exact same instant.
-    const timer = setTimeout(() => {
-      timedOut = true;
-      child.kill('SIGKILL');
-      if (containerName) spawn('docker', ['rm', '-f', containerName], { stdio: 'ignore' }).on('error', () => {});
-    }, opts.timeoutMs + (opts.graceMs ?? 30_000));
+    const timer = setTimeout(
+      () => {
+        timedOut = true;
+        child.kill('SIGKILL');
+        if (containerName)
+          spawn('docker', ['rm', '-f', containerName], { stdio: 'ignore' }).on('error', () => {});
+      },
+      opts.timeoutMs + (opts.graceMs ?? 30_000),
+    );
     child.on('error', (err) => {
       clearTimeout(timer);
       resolvePromise({ code: null, stdout, stderr: String(err.message), timedOut });
@@ -227,7 +258,8 @@ function arg(name: string): string | undefined {
 
 // Exact path match, for the reason src/sweep/run.ts states: any other file whose
 // name merely ends the same way would otherwise run this block.
-const isMain = process.argv[1] !== undefined && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+const isMain =
+  process.argv[1] !== undefined && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
   const doc = loadServersDoc() as { servers: ServerEntry[] };
   const only = arg('only')?.split(',');
@@ -280,7 +312,9 @@ if (isMain) {
     return false;
   });
   if (skipped.length > 0) {
-    console.log(`skipping ${skipped.length} with no published number to compare against: ${skipped.join(', ')}`);
+    console.log(
+      `skipping ${skipped.length} with no published number to compare against: ${skipped.join(', ')}`,
+    );
   }
 
   const triple = cliTriple(docker);
@@ -363,7 +397,9 @@ if (isMain) {
     cliArgs: [...CROSS_CHECK_CLI_ARGS],
     measuredAt: new Date().toISOString().slice(0, 10),
     isolation:
-      (docker ? 'docker (same images, limits and package caches as a sweep)' : 'host process (no container)') +
+      (docker
+        ? 'docker (same images, limits and package caches as a sweep)'
+        : 'host process (no container)') +
       (process.env.MCP_TOKENS_BIN ? '; binary supplied via MCP_TOKENS_BIN' : ''),
     servers,
   });

@@ -146,7 +146,8 @@ export function verdict(
   }
   const ratio = failed / comparable;
   const pct = (ratio * 100).toFixed(0);
-  const how = dockerFaults > 0 ? ` (${regressed.length} regressed, ${dockerFaults} unmeasurable)` : '';
+  const how =
+    dockerFaults > 0 ? ` (${regressed.length} regressed, ${dockerFaults} unmeasurable)` : '';
   if (failed >= MIN_REGRESSIONS && ratio >= FAULT_RATIO) {
     return {
       fault: true,

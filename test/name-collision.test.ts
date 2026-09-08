@@ -69,7 +69,11 @@ describe('the leaderboard says which project a shared name refers to', () => {
   };
 
   it('names what the row measures and what it is not', () => {
-    const md = build({ package: 'demo-mcp', repo: 'https://github.com/Mine/demo', nameCollision: collision });
+    const md = build({
+      package: 'demo-mcp',
+      repo: 'https://github.com/Mine/demo',
+      nameCollision: collision,
+    });
     expect(md).toContain('## Same name, different project');
     expect(md).toContain('`demo-mcp` — [Mine/demo](https://github.com/Mine/demo)');
     expect(md).toContain('[Other/demo](https://github.com/Other/demo), read 2026-09-07');
@@ -86,7 +90,11 @@ describe('the leaderboard says which project a shared name refers to', () => {
 });
 
 describe('the server page carries it too', () => {
-  const entry: ServerEntry = { name: 'demo', command: 'npx -y demo-mcp', repo: 'https://github.com/Mine/demo' };
+  const entry: ServerEntry = {
+    name: 'demo',
+    command: 'npx -y demo-mcp',
+    repo: 'https://github.com/Mine/demo',
+  };
 
   it('names the other project for a reader who arrived from a badge', () => {
     const md = renderServerPage({ ...entry, nameCollision: collision }, measurement());
@@ -101,7 +109,9 @@ describe('the server page carries it too', () => {
 });
 
 describe('the collision committed in servers.yaml', () => {
-  const doc = parse(readFileSync(join(repoRoot, 'servers.yaml'), 'utf8')) as { servers: ServerEntry[] };
+  const doc = parse(readFileSync(join(repoRoot, 'servers.yaml'), 'utf8')) as {
+    servers: ServerEntry[];
+  };
   const declared = doc.servers.filter((s) => s.nameCollision);
 
   it('names a project that is not the entry own, with its evidence and date', () => {

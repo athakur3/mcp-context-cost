@@ -57,7 +57,10 @@ describe('generateDashboard sparklines', () => {
   beforeEach(() => {
     root = mkdtempSync(join(tmpdir(), 'mcc-dashboard-'));
     mkdirSync(join(root, 'results', 'demo'), { recursive: true });
-    writeFileSync(join(root, 'servers.yaml'), 'servers:\n  - name: demo\n    command: npx -y demo-mcp\n    category: search\n');
+    writeFileSync(
+      join(root, 'servers.yaml'),
+      'servers:\n  - name: demo\n    command: npx -y demo-mcp\n    category: search\n',
+    );
     writeFileSync(join(root, 'results', 'demo', 'measurement.json'), JSON.stringify(measurement()));
   });
 
@@ -104,7 +107,9 @@ describe('generateDashboard sparklines', () => {
     );
     const html = generateDashboard(root);
     expect(html).not.toContain('class="spark"');
-    expect(html).toContain('earlier sweeps were measured under different isolation, so no trend is plotted');
+    expect(html).toContain(
+      'earlier sweeps were measured under different isolation, so no trend is plotted',
+    );
   });
 
   it('still plots a series recorded before the isolation column existed', () => {
@@ -124,7 +129,10 @@ describe('writeDashboard', () => {
   beforeEach(() => {
     root = mkdtempSync(join(tmpdir(), 'mcc-writedash-'));
     mkdirSync(join(root, 'results', 'demo'), { recursive: true });
-    writeFileSync(join(root, 'servers.yaml'), 'servers:\n  - name: demo\n    command: npx -y demo-mcp\n    category: search\n');
+    writeFileSync(
+      join(root, 'servers.yaml'),
+      'servers:\n  - name: demo\n    command: npx -y demo-mcp\n    category: search\n',
+    );
     writeFileSync(join(root, 'results', 'demo', 'measurement.json'), JSON.stringify(measurement()));
     writeFileSync(
       join(root, 'results', 'history.csv'),

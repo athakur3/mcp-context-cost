@@ -141,7 +141,9 @@ await Promise.all(Array.from({ length: Math.max(1, concurrency) }, () => worker(
 const v = verdict(prior, statuses, dockerFaults.size);
 console.log(`harness check: ${v.reason}`);
 if (dockerFaults.size > 0 && !v.fault) {
-  console.warn(`  (${dockerFaults.size} docker fault(s) counted toward that check; those servers were not measured)`);
+  console.warn(
+    `  (${dockerFaults.size} docker fault(s) counted toward that check; those servers were not measured)`,
+  );
 }
 if (v.fault) {
   if (dockerFaults.size) {
@@ -178,4 +180,6 @@ if (dockerFaults.size > 0) {
       `previous records untouched. The next cycle re-attempts ${dockerFaults.size === 1 ? 'it' : 'them'}.`,
   );
 }
-console.log(`done: ${measured}/${entries.length} measured; leaderboard + history (${h.rows} rows) regenerated`);
+console.log(
+  `done: ${measured}/${entries.length} measured; leaderboard + history (${h.rows} rows) regenerated`,
+);

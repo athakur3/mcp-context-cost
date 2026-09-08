@@ -58,10 +58,16 @@ export function parseCaptureIndex(text: string): CaptureIndex | null {
     const v = c as Partial<IndexedCapture>;
     if (typeof v?.server !== 'string' || typeof v.date !== 'string') continue;
     if (typeof v.totalTokens !== 'number' || typeof v.toolCount !== 'number') continue;
-    captures[sha] = { server: v.server, date: v.date, totalTokens: v.totalTokens, toolCount: v.toolCount };
+    captures[sha] = {
+      server: v.server,
+      date: v.date,
+      totalTokens: v.totalTokens,
+      toolCount: v.toolCount,
+    };
   }
   const current: Record<string, string> = {};
-  for (const [server, sha] of Object.entries(i.current)) if (typeof sha === 'string') current[server] = sha;
+  for (const [server, sha] of Object.entries(i.current))
+    if (typeof sha === 'string') current[server] = sha;
   return {
     method: typeof i.method === 'string' ? i.method : CAPTURE_INDEX_METHOD,
     generatedAt: i.generatedAt,
@@ -101,7 +107,10 @@ export type CaptureVerdict =
  * current. Anything else — including a version newer than anything published —
  * is `unknown`, because the index cannot describe what it has never measured.
  */
-export function identify(canonicalSha256: string | null | undefined, index: CaptureIndex): CaptureVerdict {
+export function identify(
+  canonicalSha256: string | null | undefined,
+  index: CaptureIndex,
+): CaptureVerdict {
   if (!canonicalSha256) return { kind: 'unknown' };
   const mine = index.captures[canonicalSha256];
   if (!mine) return { kind: 'unknown' };

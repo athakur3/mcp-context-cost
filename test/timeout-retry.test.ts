@@ -148,7 +148,11 @@ describe('measureServer timeout retry', () => {
  */
 describe('the revision the server named', () => {
   it('is recorded from the reply, not echoed from what we asked for', async () => {
-    const m = await measureServer('stub-negotiated', 'node stub.mjs', stubOpts(0, 5_000, '2025-03-26'));
+    const m = await measureServer(
+      'stub-negotiated',
+      'node stub.mjs',
+      stubOpts(0, 5_000, '2025-03-26'),
+    );
     expect(m.negotiatedProtocolVersion).toBe('2025-03-26');
     expect(m.requestedProtocolVersion).toBe(PROTOCOL_VERSION);
     expect(m.negotiatedProtocolVersion).not.toBe(m.requestedProtocolVersion);

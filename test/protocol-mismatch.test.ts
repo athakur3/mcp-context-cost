@@ -45,7 +45,9 @@ const VERBOSE_REVISION = rpcErrorMessage('initialize', {
   code: -32022,
   message:
     'Unsupported protocol version. ' +
-    'Please consult the server documentation for the revisions this deployment accepts. '.repeat(10),
+    'Please consult the server documentation for the revisions this deployment accepts. '.repeat(
+      10,
+    ),
   data: { supported: ['2026-07-28'], requested: PROTOCOL_VERSION },
 });
 
@@ -190,7 +192,7 @@ describe('what the status does to everything downstream', () => {
    * the server answered; the reason there is no number is the revision this
    * repository pins, which no contributor can change from their entry.
    */
-  it('does not fail a contributor\'s pull request', () => {
+  it("does not fail a contributor's pull request", () => {
     expect(failsCheck('protocol-mismatch')).toBe(false);
   });
 

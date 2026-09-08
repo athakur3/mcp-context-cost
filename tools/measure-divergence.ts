@@ -80,7 +80,10 @@ const only = arg('only')?.split(',');
 const shards = arg('shards') === undefined ? undefined : Number(arg('shards'));
 const shardIndexArg = arg('shard-index') === undefined ? undefined : Number(arg('shard-index'));
 /** Legacy positional: measure this many from the top, preserving the rest. */
-const topNArg = process.argv[2] !== undefined && !process.argv[2].startsWith('--') ? Number(process.argv[2]) : undefined;
+const topNArg =
+  process.argv[2] !== undefined && !process.argv[2].startsWith('--')
+    ? Number(process.argv[2])
+    : undefined;
 
 if (shards !== undefined && only) {
   // Same refusal as sweep-all and the cross-check runner, same reason: a slice
@@ -143,7 +146,9 @@ if (shards !== undefined) {
     ),
   );
   selected = selected.filter((c) => slice.has(c.name));
-  console.log(`shard ${index + 1}/${shards}: ${selected.map((c) => c.name).join(', ') || '(none measured)'}`);
+  console.log(
+    `shard ${index + 1}/${shards}: ${selected.map((c) => c.name).join(', ') || '(none measured)'}`,
+  );
 }
 if (topNArg !== undefined) selected = selected.slice(0, topNArg);
 if (selected.length === 0) {
@@ -164,7 +169,9 @@ const count = async (tools?: unknown[]): Promise<number> => {
 
 const baselineTokens = await count();
 const probeDelta = (await count([PROBE_TOOL])) - baselineTokens;
-console.log(`baseline ${baselineTokens} tokens; probe delta ${probeDelta} (upper bound on fixed tool overhead)`);
+console.log(
+  `baseline ${baselineTokens} tokens; probe delta ${probeDelta} (upper bound on fixed tool overhead)`,
+);
 
 const outPath = join(root, 'results', 'divergence.json');
 const previous = existsSync(outPath) ? parseDivergence(readFileSync(outPath, 'utf8')) : null;
@@ -187,12 +194,16 @@ const servers: Record<string, DivergenceRow> = touchUp ? { ...(previous?.servers
  * makes the gap countable: what is owed is a bare run, and the line below says
  * how much of one.
  */
-const captureNow = new Map(candidates.map((c) => [c.name, c.m.canonicalSha256 as string | undefined]));
+const captureNow = new Map(
+  candidates.map((c) => [c.name, c.m.canonicalSha256 as string | undefined]),
+);
 const { kept, dropped: stale } = dropStaleRows(servers, (name) => captureNow.get(name));
 for (const name of Object.keys(servers)) delete servers[name];
 Object.assign(servers, kept);
 if (stale.length > 0) {
-  console.log(`dropped ${stale.length} row(s) whose capture has moved since they were measured: ${stale.join(', ')}`);
+  console.log(
+    `dropped ${stale.length} row(s) whose capture has moved since they were measured: ${stale.join(', ')}`,
+  );
 }
 
 for (const { name, m } of selected) {
@@ -232,7 +243,9 @@ writeFileSync(outPath, JSON.stringify(run, null, 2) + '\n');
 // somebody notices later on a page that prints an em dash.
 const withRow = candidates.filter((c) => {
   const row = run.servers[c.name];
-  return row && !row.error && row.capturedSha256 === ((c.m.canonicalSha256 as string | undefined) ?? '');
+  return (
+    row && !row.error && row.capturedSha256 === ((c.m.canonicalSha256 as string | undefined) ?? '')
+  );
 }).length;
 console.log(
   `${withRow} of ${candidates.length} measured servers now carry a current Claude row` +

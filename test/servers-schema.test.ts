@@ -73,8 +73,12 @@ describe('an entry is rejected when', () => {
     category: 'community',
     repo: 'https://github.com/example/demo',
   };
-  const check = (patch: Record<string, unknown>): SchemaProblem[] => validateEntry({ ...base, ...patch }, 0);
-  const fields = (patch: Record<string, unknown>) => check(patch).map((p) => p.field ?? '').sort();
+  const check = (patch: Record<string, unknown>): SchemaProblem[] =>
+    validateEntry({ ...base, ...patch }, 0);
+  const fields = (patch: Record<string, unknown>) =>
+    check(patch)
+      .map((p) => p.field ?? '')
+      .sort();
 
   it('accepts the entry the rest of these mutate', () => {
     expect(check({})).toEqual([]);
@@ -109,7 +113,9 @@ describe('an entry is rejected when', () => {
 
   it('a declaration is missing the evidence that would corroborate it', () => {
     expect(fields({ notApplicable: { reason: 'needs a Redis' } })).toEqual(['notApplicable']);
-    expect(fields({ notApplicable: { reason: 'needs a Redis', evidence: '  ' } })).toEqual(['notApplicable']);
+    expect(fields({ notApplicable: { reason: 'needs a Redis', evidence: '  ' } })).toEqual([
+      'notApplicable',
+    ]);
   });
 
   it('a deprecation is not a dated reading', () => {
@@ -119,7 +125,11 @@ describe('an entry is rejected when', () => {
     expect(fields({ deprecated: { ...dep, source: 'npm' } })).toEqual(['deprecated']);
   });
 
-  const coll = { project: 'Muvon/octocode', source: 'https://github.com/Muvon/octocode', readOn: '2026-09-07' };
+  const coll = {
+    project: 'Muvon/octocode',
+    source: 'https://github.com/Muvon/octocode',
+    readOn: '2026-09-07',
+  };
 
   it('accepts a name collision that carries where and when it was read', () => {
     expect(check({ nameCollision: coll })).toEqual([]);
@@ -136,9 +146,12 @@ describe('an entry is rejected when', () => {
   it('rejects a collision pointing at the entry own repo, which names nothing', () => {
     // The field exists to name a project this row is NOT. Aimed at the entry's
     // own repository it is a sentence that reassures and says nothing.
-    expect(fields({ repo: 'https://github.com/x/y', nameCollision: { ...coll, source: 'https://github.com/x/y' } })).toEqual([
-      'nameCollision',
-    ]);
+    expect(
+      fields({
+        repo: 'https://github.com/x/y',
+        nameCollision: { ...coll, source: 'https://github.com/x/y' },
+      }),
+    ).toEqual(['nameCollision']);
   });
 
   it('a remote entry names a package instead of an endpoint', () => {

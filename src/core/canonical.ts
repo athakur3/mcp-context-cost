@@ -119,7 +119,13 @@ export function measureTools(
 
 export function failedMeasurement(
   status: Exclude<MeasurementStatus, 'measured' | 'dynamic'>,
-  meta: { serverName: string; serverVersion?: string; launchCommand?: string; notes?: string; measuredAt?: string },
+  meta: {
+    serverName: string;
+    serverVersion?: string;
+    launchCommand?: string;
+    notes?: string;
+    measuredAt?: string;
+  },
 ): Measurement {
   return {
     methodologyVersion: METHODOLOGY_VERSION,

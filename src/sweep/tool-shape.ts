@@ -11,7 +11,10 @@ import { buildToolShapeBaseline, type ToolShapeBaseline } from '../core/tool-sha
 import { loadRows, type ServerEntry } from './report.js';
 import type { ToolMeasurement } from '../core/types.js';
 
-export function writeToolShapeBaseline(entries: ServerEntry[], root = process.cwd()): ToolShapeBaseline {
+export function writeToolShapeBaseline(
+  entries: ServerEntry[],
+  root = process.cwd(),
+): ToolShapeBaseline {
   const tools: ToolMeasurement[] = [];
   const dates: string[] = [];
   let serverCount = 0;

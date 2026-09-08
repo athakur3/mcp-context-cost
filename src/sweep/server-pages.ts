@@ -39,7 +39,9 @@ const fmt = (n: number) => n.toLocaleString('en-US');
 
 /** True when a measurement produced a number we can stand behind. */
 function isMeasured(m: Measurement | null): m is Measurement {
-  return !!m && (m.status === 'measured' || m.status === 'dynamic') && typeof m.totalTokens === 'number';
+  return (
+    !!m && (m.status === 'measured' || m.status === 'dynamic') && typeof m.totalTokens === 'number'
+  );
 }
 
 /**
@@ -84,7 +86,9 @@ function divergenceSection(row: DivergenceRow, run: DivergenceRun): string[] {
   md.push('');
   md.push('| | tokens | |');
   md.push('|---|---:|---|');
-  md.push(`| o200k, full capture | ${fmt(row.o200kFull)} | the badge number — every byte \`tools/list\` returned |`);
+  md.push(
+    `| o200k, full capture | ${fmt(row.o200kFull)} | the badge number — every byte \`tools/list\` returned |`,
+  );
   md.push(
     `| o200k, Anthropic fields only | ${fmt(row.o200kMapped)} | ` +
       `${share === null ? '—' : `${(share * 100).toFixed(1)}% of the capture is MCP-only metadata`} |`,
@@ -116,7 +120,9 @@ export function renderServerPage(
   const total = m.totalTokens as number;
   const band = BAND_META[bandColor(total)];
   const headlineRow = divergence?.servers[entry.name];
-  const claudeOfThisPage = isCurrent(headlineRow, m.canonicalSha256) ? headlineRow.claudeDelta : null;
+  const claudeOfThisPage = isCurrent(headlineRow, m.canonicalSha256)
+    ? headlineRow.claudeDelta
+    : null;
   const tools = [...m.tools].sort((a, b) => b.tokens - a.tokens);
   const shown = tools.slice(0, MAX_TOOL_ROWS);
   const pct = (n: number) => (total > 0 ? `${((n / total) * 100).toFixed(1)}%` : '—');
@@ -151,7 +157,9 @@ export function renderServerPage(
   md.push('');
   md.push('| | |');
   md.push('|---|---|');
-  md.push(`| server (self-reported) | ${mdCell(m.serverName)}${m.serverVersion ? ` v${mdCell(String(m.serverVersion).replace(/^v/, ''))}` : ''} |`);
+  md.push(
+    `| server (self-reported) | ${mdCell(m.serverName)}${m.serverVersion ? ` v${mdCell(String(m.serverVersion).replace(/^v/, ''))}` : ''} |`,
+  );
   md.push(`| status | ${mdCell(m.status)} |`);
   // A reader who arrives here from a badge sees this page and not the
   // leaderboard, so the deprecation has to be on it too — beside the status,
@@ -160,7 +168,9 @@ export function renderServerPage(
   md.push(`| tokenizer | ${mdCell(m.provider)} / ${mdCell(m.encoding)} |`);
   md.push(`| launch command | \`${mdCell(m.launchCommand ?? entry.command)}\` |`);
   md.push(`| isolation | ${mdCell(isolationText(m))} |`);
-  md.push(`| env vars supplied | ${m.envVarNames?.length ? m.envVarNames.map(mdCell).join(', ') : 'none'} |`);
+  md.push(
+    `| env vars supplied | ${m.envVarNames?.length ? m.envVarNames.map(mdCell).join(', ') : 'none'} |`,
+  );
   md.push(`| canonical SHA-256 | \`${mdCell(m.canonicalSha256)}\` |`);
   if (entry.category) md.push(`| category | ${mdCell(entry.category)} |`);
   if (entry.repo) md.push(`| source | ${mdCell(entry.repo)} |`);
@@ -178,7 +188,7 @@ export function renderServerPage(
   md.push('');
   if (m.status === 'dynamic') {
     md.push(
-      '> This server\'s `tools/list` differed between two consecutive captures, so the number ' +
+      "> This server's `tools/list` differed between two consecutive captures, so the number " +
         'is the first capture and moves between sweeps. Treat it as a range, not a constant.',
     );
     md.push('');
@@ -195,7 +205,9 @@ export function renderServerPage(
   // deliberately gets no column: at roughly 3% of the set it almost never
   // explains a row, and it is in the measurement file for anyone who looks.
   const hasOutput = shown.some((t) => (t.outputSchemaTokens ?? 0) > 0);
-  md.push(`| tool | tokens | share | description | input schema |${hasOutput ? ' output schema |' : ''}`);
+  md.push(
+    `| tool | tokens | share | description | input schema |${hasOutput ? ' output schema |' : ''}`,
+  );
   md.push(`|---|---:|---:|---:|---:|${hasOutput ? '---:|' : ''}`);
   for (const t of shown) {
     md.push(
@@ -236,7 +248,8 @@ export function renderServerPage(
     md.push('|---|---:|---:|---|---|---:|');
     history.forEach((h, i) => {
       const prev = history[i - 1];
-      const comparable = prev && (!prev.isolation || !h.isolation || prev.isolation === h.isolation);
+      const comparable =
+        prev && (!prev.isolation || !h.isolation || prev.isolation === h.isolation);
       const delta = prev && comparable ? h.tokens - prev.tokens : null;
       const change = !prev
         ? '—'
@@ -308,7 +321,9 @@ export function renderServerIndex(
   rows: { entry: ServerEntry; m: Measurement | null }[],
   divergence: DivergenceRun | null = null,
 ): string {
-  const measured = rows.filter((r) => isMeasured(r.m)).sort((a, b) => (b.m!.totalTokens as number) - (a.m!.totalTokens as number));
+  const measured = rows
+    .filter((r) => isMeasured(r.m))
+    .sort((a, b) => (b.m!.totalTokens as number) - (a.m!.totalTokens as number));
   const rest = rows.filter((r) => !isMeasured(r.m));
 
   const md: string[] = [];
@@ -349,7 +364,9 @@ export function renderServerIndex(
     }
     md.push('');
   }
-  md.push(`[Leaderboard](${BLOB}/results/leaderboard.md) · [Methodology](../METHODOLOGY.html) · [Dashboard](../dashboard.html)`);
+  md.push(
+    `[Leaderboard](${BLOB}/results/leaderboard.md) · [Methodology](../METHODOLOGY.html) · [Dashboard](../dashboard.html)`,
+  );
   md.push('');
   return md.join('\n');
 }

@@ -539,11 +539,14 @@ export function resolveToolSearchSources(sources: ToolSearchSource[]): ResolvedT
    */
   const overriddenByAdminTier = adminTier.some((s) => {
     const raw = (s.vars.ENABLE_TOOL_SEARCH ?? '').trim();
-    return raw !== '' && resolveToolSearch({ ENABLE_TOOL_SEARCH: raw }).mode === 'setting-unrecognized';
+    return (
+      raw !== '' && resolveToolSearch({ ENABLE_TOOL_SEARCH: raw }).mode === 'setting-unrecognized'
+    );
   });
 
   const betas = overriddenByAdminTier ? null : read('CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS');
-  if (betas === 'conflict') return unresolved('sources-disagree', 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS');
+  if (betas === 'conflict')
+    return unresolved('sources-disagree', 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS');
   if (betas === 'unreadable')
     return unresolved('value-unreadable', 'CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS');
   // A value that reads as false must not be delegated. `resolveToolSearch` is
@@ -860,7 +863,8 @@ export function wireToClientRatio(run?: DivergenceRun | null): WireToClientRatio
   // attached, minus the same request with none. An upper bound, and the only
   // measurement of it there is. A run that does not carry one converts as it
   // always did rather than guessing at a correction.
-  const fixedOverhead = typeof run.probeDelta === 'number' && run.probeDelta > 0 ? run.probeDelta : 0;
+  const fixedOverhead =
+    typeof run.probeDelta === 'number' && run.probeDelta > 0 ? run.probeDelta : 0;
   let low = Infinity;
   let high = -Infinity;
   let servers = 0;
@@ -875,7 +879,13 @@ export function wireToClientRatio(run?: DivergenceRun | null): WireToClientRatio
     servers++;
   }
   if (servers === 0) return PUBLISHED_WIRE_TO_CLIENT_RATIO;
-  return { low, high, fixedOverhead, servers, source: `the ${run.measuredAt} ${run.model} divergence run` };
+  return {
+    low,
+    high,
+    fixedOverhead,
+    servers,
+    source: `the ${run.measuredAt} ${run.model} divergence run`,
+  };
 }
 
 /** One measured server, as the deferral arithmetic needs it. */
@@ -1047,9 +1057,9 @@ const DEFERRAL_ON_RECORD = new Map<string, DeferralRecord>([
       mechanism: 'dynamic context discovery',
       states: [
         'cursor is on record as deferring MCP tool definitions (dynamic context',
-        'discovery): the agent gets tool names, and a tool\'s description and input',
+        "discovery): the agent gets tool names, and a tool's description and input",
         'schema load when it reaches for one. Cursor states it does not put every',
-        'attached tool\'s schema in every request.',
+        "attached tool's schema in every request.",
       ],
       notReadable: [
         'No Cursor setting on record turns this on or off, and the MCP configuration',
@@ -1057,7 +1067,7 @@ const DEFERRAL_ON_RECORD = new Map<string, DeferralRecord>([
         'a posture, and this audit has not measured one.',
       ],
       conditions: [
-        'definitions and tool results pulled in during a session stay in that session\'s history, so a deferring session is not a free one (Cursor staff, same post)',
+        "definitions and tool results pulled in during a session stay in that session's history, so a deferring session is not a free one (Cursor staff, same post)",
         "the vendor's own figure — 46.9% fewer total agent tokens — is an A/B result over runs that called an MCP tool, not a saving for this stack",
         "Cursor's context tray is not a check on the number above either: staff describe its count as a calibrated estimate rather than a tokenizer count (forum.cursor.com/t/168744 post 5, 2026-08-20)",
       ],
@@ -1091,7 +1101,7 @@ const DEFERRAL_ON_RECORD = new Map<string, DeferralRecord>([
       sources: [
         'github.com/openai/codex/pull/29486, merged 2026-06-22, read 2026-09-07 — defer all effective MCP tools when tool search and namespaced tools are supported, and treat the old feature keys as removed',
         'openai/codex tag rust-v0.142.2, published 2026-06-25, read 2026-09-07 — the first stable release carrying it',
-        'codex-rs/core/src/tools/spec_plan.rs at main, read 2026-09-07 — the condition is the model\'s support for the search tool AND the provider\'s for namespaced tools',
+        "codex-rs/core/src/tools/spec_plan.rs at main, read 2026-09-07 — the condition is the model's support for the search tool AND the provider's for namespaced tools",
         'codex-rs/features/src/lib.rs at main, read 2026-09-07 — tool_search and tool_search_always_defer_mcp_tools are Stage::Removed, and the config table skips them',
       ],
     },
@@ -1099,7 +1109,7 @@ const DEFERRAL_ON_RECORD = new Map<string, DeferralRecord>([
   [
     'vscode',
     {
-      mechanism: 'virtual tools, and the agent host\'s tool search',
+      mechanism: "virtual tools, and the agent host's tool search",
       states: [
         'vscode ships two mechanisms that can defer tool definitions, and this is a',
         'record of them rather than a verdict about your session. It documents a hard',
@@ -1109,7 +1119,7 @@ const DEFERRAL_ON_RECORD = new Map<string, DeferralRecord>([
         'default in source.',
       ],
       notReadable: [
-        'Both switches live in VS Code\'s own settings, not in the .vscode/mcp.json',
+        "Both switches live in VS Code's own settings, not in the .vscode/mcp.json",
         'this audit reads, and neither is in the published settings documentation.',
         'So no file read here states a posture, and none of it has been measured.',
       ],
@@ -1346,7 +1356,10 @@ export function evaluateDeferral(
     thresholdTokens,
     clientTokens,
     ratio,
-    distanceTokens: { low: clientTokens.low - thresholdTokens, high: clientTokens.high - thresholdTokens },
+    distanceTokens: {
+      low: clientTokens.low - thresholdTokens,
+      high: clientTokens.high - thresholdTokens,
+    },
     crosses,
     exceptions: EXCEPTIONS,
   };

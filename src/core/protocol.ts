@@ -125,7 +125,10 @@ export function listingIsUnreadable(live: SpecListingReading): string | null {
  * bare array so that only a list already held to the shape rules can reach a
  * comparison that assumes dates.
  */
-export function newerThanPinned(reading: SpecRevisionReading, pin: string = PROTOCOL_VERSION): string[] {
+export function newerThanPinned(
+  reading: SpecRevisionReading,
+  pin: string = PROTOCOL_VERSION,
+): string[] {
   return reading.revisions.filter((r) => r > pin);
 }
 
@@ -138,7 +141,10 @@ export function newerThanPinned(reading: SpecRevisionReading, pin: string = PROT
  * independent, and stopping at the first would let a stale-snapshot complaint
  * hide the new revision that is the whole reason for looking.
  */
-export function specSnapshotProblem(snapshot: SpecRevisionReading, live: SpecListingReading): string[] {
+export function specSnapshotProblem(
+  snapshot: SpecRevisionReading,
+  live: SpecListingReading,
+): string[] {
   const problems: string[] = [];
   const unnamed = live.dated.filter((r) => !snapshot.revisions.includes(r));
   if (unnamed.length > 0) {

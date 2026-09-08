@@ -48,7 +48,8 @@ function section(heading: string): string {
 /** Prose wraps; a sentence is its words, not its layout. */
 const flat = (text: string) => text.replace(/\s+/g, ' ');
 
-const backticked = (text: string) => [...text.matchAll(/`([A-Za-z][A-Za-z0-9-]*)`/g)].map((m) => m[1]);
+const backticked = (text: string) =>
+  [...text.matchAll(/`([A-Za-z][A-Za-z0-9-]*)`/g)].map((m) => m[1]);
 
 /** A complete, valid entry — the shape servers-schema.test.ts mutates. */
 const base = (): ServerEntry => ({
@@ -128,12 +129,16 @@ describe('what an entry is', () => {
     expect(required.length).toBeGreaterThan(0);
     for (const field of knownFields) {
       const need = required.includes(field) ? 'required' : 'optional';
-      expect(text, `${field} is ${need}`).toMatch(new RegExp(`^\\| \`${field}\` \\| ${need} \\|`, 'm'));
+      expect(text, `${field} is ${need}`).toMatch(
+        new RegExp(`^\\| \`${field}\` \\| ${need} \\|`, 'm'),
+      );
     }
   });
 
   it('lists the category values the validator accepts', () => {
-    const bad = validateEntry({ ...base(), category: 'not-a-category' }, 0).find((p) => p.field === 'category')!;
+    const bad = validateEntry({ ...base(), category: 'not-a-category' }, 0).find(
+      (p) => p.field === 'category',
+    )!;
     const categories = /must be one of (.*?) —/.exec(bad.message)![1].split(', ');
     expect(categories.length).toBeGreaterThan(1);
     for (const c of categories) expect(text).toContain(`\`${c}\``);
@@ -142,10 +147,16 @@ describe('what an entry is', () => {
   it('states the metricSource forms servers.yaml actually uses', () => {
     const sources = servers.map((s) => s.metricSource);
     for (const form of ['(npm weekly)', '(PyPI weekly)']) {
-      expect(sources.some((s) => s.includes(form)), `servers.yaml uses ${form}`).toBe(true);
+      expect(
+        sources.some((s) => s.includes(form)),
+        `servers.yaml uses ${form}`,
+      ).toBe(true);
       expect(text).toContain(form);
     }
-    for (const host of ['https://api.npmjs.org/downloads/point/last-week/', 'https://pypistats.org/packages/']) {
+    for (const host of [
+      'https://api.npmjs.org/downloads/point/last-week/',
+      'https://pypistats.org/packages/',
+    ]) {
       expect(sources.some((s) => s.startsWith(host))).toBe(true);
       expect(text).toContain(host);
     }
@@ -168,8 +179,10 @@ describe('add an entry', () => {
       .split(/\n(?=\d+\. )/)
       .map((step) => /\*\*(.*?)\*\*/.exec(step)?.[1] ?? '');
     const at = steps.map((s) => instructions.findIndex((h) => h.includes(s)));
-    for (const [i, s] of steps.entries()) expect(at[i], `a step says to run ${s}`).toBeGreaterThanOrEqual(0);
-    for (let i = 1; i < at.length; i++) expect(at[i], `${steps[i]} after ${steps[i - 1]}`).toBeGreaterThan(at[i - 1]);
+    for (const [i, s] of steps.entries())
+      expect(at[i], `a step says to run ${s}`).toBeGreaterThanOrEqual(0);
+    for (let i = 1; i < at.length; i++)
+      expect(at[i], `${steps[i]} after ${steps[i - 1]}`).toBeGreaterThan(at[i - 1]);
   });
 
   it('describes the gate that makes the changelog bullet mandatory, and that gate still watches servers.yaml', () => {
@@ -202,7 +215,10 @@ describe('the launch command', () => {
     for (const name of ['agent-device', 'githits', 'emailmd']) {
       const e = entry(name);
       expect(e.command).not.toBe(`npx -y ${e.package}`);
-      expect(items.some((l) => l.startsWith(`- \`${e.command}\``)), `${name}'s command is a list item`).toBe(true);
+      expect(
+        items.some((l) => l.startsWith(`- \`${e.command}\``)),
+        `${name}'s command is a list item`,
+      ).toBe(true);
     }
   });
 
@@ -233,7 +249,7 @@ describe('the launch command', () => {
     const source = read('src/sweep/pr-check.ts');
     const printed = source.includes('listed, not launched here');
     expect(contributing.includes('listed, not launched')).toBe(printed);
-    if (printed) expect(contributing).toContain("its command is its own `docker run`");
+    if (printed) expect(contributing).toContain('its command is its own `docker run`');
   });
 });
 
@@ -264,7 +280,7 @@ describe('check it locally', () => {
     }
   });
 
-  it('gives run.ts\'s reason for the cleanup, in run.ts\'s words', () => {
+  it("gives run.ts's reason for the cleanup, in run.ts's words", () => {
     // The document once said every working MCP server never exits; the
     // record says some. The sentence quotes the comment above the `finally`.
     const run = read('src/sweep/run.ts');
@@ -311,7 +327,9 @@ describe('env', () => {
   const text = section('env: names, never values');
 
   it('says names only, and the validator still rejects a value', () => {
-    expect(validateEntry({ ...base(), env: ['API_KEY=x'] }, 0).some((p) => p.field === 'env')).toBe(true);
+    expect(validateEntry({ ...base(), env: ['API_KEY=x'] }, 0).some((p) => p.field === 'env')).toBe(
+      true,
+    );
     expect(text).toContain('`NAME=dummy`');
     expect(read('src/sweep/docker.ts')).toContain("?? 'dummy'");
   });
@@ -334,7 +352,11 @@ describe('env', () => {
       expect(entry(name).envValues, `${name} has envValues`).toBeDefined();
       expect(text).toContain(`\`${name}\``);
     }
-    expect(validateEntry({ ...base(), envValues: { NOT_LISTED: 'x' } }, 0).some((p) => p.field === 'envValues')).toBe(true);
+    expect(
+      validateEntry({ ...base(), envValues: { NOT_LISTED: 'x' } }, 0).some(
+        (p) => p.field === 'envValues',
+      ),
+    ).toBe(true);
   });
 
   it('calls auth-required a finding and sends the reader to the taxonomy that defines it', () => {
@@ -357,7 +379,9 @@ describe('what happens on the pull request', () => {
   it('says every pull_request workflow holds a read-only token, and each one does', () => {
     expect(prWorkflows.length).toBeGreaterThan(0);
     for (const w of prWorkflows) {
-      const wf = parse(readFileSync(join(wfDir, w.file), 'utf8')) as { permissions?: Record<string, string> };
+      const wf = parse(readFileSync(join(wfDir, w.file), 'utf8')) as {
+        permissions?: Record<string, string>;
+      };
       expect(wf.permissions, `${w.file} declares permissions`).toEqual({ contents: 'read' });
     }
     expect(text).toContain('read-only token');
@@ -385,10 +409,11 @@ describe('what happens on the pull request', () => {
     expect(step).toBeDefined();
     if (!last.includes('release-readiness')) expect(flat(step)).not.toMatch(/runs last/);
     const after = ci.runs.slice(ci.runs.findIndex((l) => l.includes('release-readiness')) + 1);
-    if (after.some((l) => l.includes('badge'))) expect(flat(step)).toContain('badge golden tests run after it');
+    if (after.some((l) => l.includes('badge')))
+      expect(flat(step)).toContain('badge golden tests run after it');
   });
 
-  it('states the check\'s permissions and its run-line flags as the yml has them', () => {
+  it("states the check's permissions and its run-line flags as the yml has them", () => {
     for (const w of measuring) {
       const yml = readFileSync(join(wfDir, w.file), 'utf8');
       const wf = parse(yml) as { permissions: Record<string, string> };
@@ -463,7 +488,8 @@ describe('what happens on the pull request', () => {
 
   it('gives the reviewer a list, and does not repeat the provenance summary servers.yaml promises but lacks', () => {
     expect(text).toContain('What the reviewer checks');
-    for (const needle of ['`metricSource`', '`timeoutSeconds`', 'Provenance']) expect(text).toContain(needle);
+    for (const needle of ['`metricSource`', '`timeoutSeconds`', 'Provenance'])
+      expect(text).toContain(needle);
     expect(contributing).not.toMatch(/provenance summary/);
   });
 });
@@ -477,9 +503,23 @@ describe('after merge', () => {
     expect(text).toContain('`not-yet-run`');
   });
 
-  it('states the wait from the rotation\'s cron and shard default', () => {
+  it("states the wait from the rotation's cron and shard default", () => {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
+    const words = [
+      'zero',
+      'one',
+      'two',
+      'three',
+      'four',
+      'five',
+      'six',
+      'seven',
+      'eight',
+      'nine',
+      'ten',
+      'eleven',
+      'twelve',
+    ];
     const cron = /cron: '([^']*)'/.exec(resweep)![1].trim().split(/\s+/);
     expect(text).toContain(days[Number(cron[4])]);
     const shards = Number(/inputs\.shards \|\| '(\d+)'/.exec(resweep)![1]);
@@ -531,7 +571,11 @@ describe('the page states no live count', () => {
       .replace(/`[^`\n]*`/g, blank)
       .replace(/\]\([^)]*\)/g, blank)
       .replace(/https?:\/\/\S+/g, blank);
-    const hits = [...prose.matchAll(/\d[\d,]*\s+(?:[A-Za-z]+\s+){0,2}(?:servers?|entries|candidates?|files?|values?)\b/gi)];
+    const hits = [
+      ...prose.matchAll(
+        /\d[\d,]*\s+(?:[A-Za-z]+\s+){0,2}(?:servers?|entries|candidates?|files?|values?)\b/gi,
+      ),
+    ];
     expect(hits.map((h) => h[0])).toEqual([]);
   });
 });
@@ -558,7 +602,12 @@ describe('the pull-request template', () => {
     // Any of these in the template would be a second copy of a procedure, which
     // is what moving the steps into the guide was for. The guide still has to
     // carry them; that is checked against the code above, not against this file.
-    for (const command of ['npx tsx src/sweep/regen.ts', 'tools/release-readiness.ts', '--no-persist', 'npm test']) {
+    for (const command of [
+      'npx tsx src/sweep/regen.ts',
+      'tools/release-readiness.ts',
+      '--no-persist',
+      'npm test',
+    ]) {
       expect(template, command).not.toContain(command);
       expect(guide, `${command} is in the guide the template points at`).toContain(command);
     }

@@ -17,7 +17,9 @@ describe('dockerize', () => {
     const shCommand = d.argv[d.argv.length - 1];
     expect(shCommand.startsWith('command -v git >/dev/null')).toBe(true);
     expect(shCommand).toContain('apt-get install -y -qq --no-install-recommends git');
-    expect(shCommand.endsWith('uvx --from git+https://github.com/redis/mcp-redis.git redis-mcp-server')).toBe(true);
+    expect(
+      shCommand.endsWith('uvx --from git+https://github.com/redis/mcp-redis.git redis-mcp-server'),
+    ).toBe(true);
     expect(d.isolation.note).toContain('git installed');
   });
 
@@ -103,6 +105,8 @@ describe('retriesWithoutSharedCache', () => {
   });
 
   it('does not retry a command that is already its own docker run', () => {
-    expect(retriesWithoutSharedCache('startup-failure', true, '  docker run --rm -i thing')).toBe(false);
+    expect(retriesWithoutSharedCache('startup-failure', true, '  docker run --rm -i thing')).toBe(
+      false,
+    );
   });
 });

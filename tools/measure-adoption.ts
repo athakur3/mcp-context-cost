@@ -89,14 +89,18 @@ if (args.includes('--render-only')) {
   }
   mkdirSync(dirname(pagePath), { recursive: true });
   writeFileSync(pagePath, renderAdoptionPage(run));
-  console.log(`wrote docs/adoption.md from ${run ? `the reading of ${run.checkedAt}` : 'no reading'} (no network, checkedAt untouched)`);
+  console.log(
+    `wrote docs/adoption.md from ${run ? `the reading of ${run.checkedAt}` : 'no reading'} (no network, checkedAt untouched)`,
+  );
   process.exit(0);
 }
 
 const token = process.env.MCP_CTX_GITHUB_TOKEN ?? process.env.GITHUB_TOKEN;
 if (!token) {
   console.error('MCP_CTX_GITHUB_TOKEN (or GITHUB_TOKEN) is not set — refusing to run.');
-  console.error('An unauthenticated code search returns nothing, which is not the same as finding nothing.');
+  console.error(
+    'An unauthenticated code search returns nothing, which is not the same as finding nothing.',
+  );
   process.exit(1);
 }
 
@@ -115,7 +119,10 @@ interface SearchItem {
   html_url: string;
 }
 
-async function searchPage(q: string, page: number): Promise<{ total: number; items: SearchItem[] }> {
+async function searchPage(
+  q: string,
+  page: number,
+): Promise<{ total: number; items: SearchItem[] }> {
   const url = `${API}/search/code?q=${encodeURIComponent(q)}&per_page=${PER_PAGE}&page=${page}`;
   const res = await fetch(url, { headers });
   if (!res.ok) throw new Error(`HTTP ${res.status} ${(await res.text()).slice(0, 120)}`);
@@ -135,7 +142,8 @@ async function fetchFile(repo: string, path: string, ref?: string): Promise<stri
   const res = await fetch(url, { headers });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const body = (await res.json()) as { content?: string; encoding?: string };
-  if (body.encoding !== 'base64' || typeof body.content !== 'string') throw new Error('no base64 content');
+  if (body.encoding !== 'base64' || typeof body.content !== 'string')
+    throw new Error('no base64 content');
   return Buffer.from(body.content, 'base64').toString('utf8');
 }
 
@@ -154,7 +162,8 @@ for (const def of adoptionQueries()) {
         const repo = item.repository.full_name;
         if (!isThirdParty(repo)) continue;
         const key = `${repo}/${item.path}`;
-        if (!candidates.has(key)) candidates.set(key, { repo, path: item.path, url: item.html_url, foundBy: def.name });
+        if (!candidates.has(key))
+          candidates.set(key, { repo, path: item.path, url: item.html_url, foundBy: def.name });
       }
       collected += items.length;
       if (collected >= total || items.length === 0) break;
@@ -162,9 +171,16 @@ for (const def of adoptionQueries()) {
     }
     const truncated = collected < total;
     queries.push({ ...def, state: 'ok', hits: total, ...(truncated ? { truncated } : {}) });
-    console.log(`${def.name}: ${total} file(s)${truncated ? ` — only ${collected} collected` : ''}`);
+    console.log(
+      `${def.name}: ${total} file(s)${truncated ? ` — only ${collected} collected` : ''}`,
+    );
   } catch (e) {
-    queries.push({ ...def, state: 'failed', hits: null, error: (e as Error).message.slice(0, 200) });
+    queries.push({
+      ...def,
+      state: 'failed',
+      hits: null,
+      error: (e as Error).message.slice(0, 200),
+    });
     console.log(`${def.name}: FAILED ${(e as Error).message.slice(0, 200)}`);
   }
   await sleep(SEARCH_GAP_MS);
@@ -213,7 +229,9 @@ for (const s of previous?.sightings ?? []) {
   try {
     const kind = classifyFile(await fetchFile(s.repo, s.path, ref));
     rejudged.push({ repo: s.repo, path: s.path, kind });
-    console.log(`${s.repo}/${s.path}: carried forward, re-judged ${kind ?? 'as nothing — verdict left as it was'}`);
+    console.log(
+      `${s.repo}/${s.path}: carried forward, re-judged ${kind ?? 'as nothing — verdict left as it was'}`,
+    );
   } catch (e) {
     console.log(
       `${s.repo}/${s.path}: carried forward, could not re-read — ${(e as Error).message.slice(0, 120)}; ` +

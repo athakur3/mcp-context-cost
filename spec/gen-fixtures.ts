@@ -46,4 +46,12 @@ writeFileSync(
     2,
   ) + '\n',
 );
-console.log('total:', m.totalTokens, 'sha:', m.canonicalSha256, 'badge:', badge.message, badge.color);
+console.log(
+  'total:',
+  m.totalTokens,
+  'sha:',
+  m.canonicalSha256,
+  'badge:',
+  badge.message,
+  badge.color,
+);

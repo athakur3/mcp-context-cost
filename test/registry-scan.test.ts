@@ -77,7 +77,10 @@ function playback(pages: RegistryPage[]) {
 }
 
 /** page2 with its cursor removed, which is the shape the registry sends for the last page. */
-const lastPage: RegistryPage = { servers: page2.servers, metadata: { count: page2.metadata?.count } };
+const lastPage: RegistryPage = {
+  servers: page2.servers,
+  metadata: { count: page2.metadata?.count },
+};
 
 describe('walkLatest', () => {
   it('follows metadata.nextCursor from the start and stops when a page carries none', async () => {
@@ -156,7 +159,9 @@ describe('candidatesFrom', () => {
 
   it('builds the tracked set only from package spellings that name a package', () => {
     const tracked = trackedPackages(serversYaml);
-    const spelled = serversYaml.servers.map((s) => s.package).filter((p): p is string => typeof p === 'string');
+    const spelled = serversYaml.servers
+      .map((s) => s.package)
+      .filter((p): p is string => typeof p === 'string');
     const named = spelled.filter((p) => PACKAGE_ID.test(p.replace(/ \(PyPI\)$/, '')));
     const other = spelled.filter((p) => !named.includes(p));
     // The file really does carry the other spellings, or this proves nothing.
@@ -173,7 +178,10 @@ describe('candidatesFrom', () => {
 
   it('lists a package once when two registry names publish it', () => {
     const rec = records['npm-active-runtime-hint']!;
-    const twin: RegistryRecord = { ...rec, server: { ...rec.server, name: 'io.github.someone-else/same-package' } };
+    const twin: RegistryRecord = {
+      ...rec,
+      server: { ...rec.server, name: 'io.github.someone-else/same-package' },
+    };
     expect(candidatesFrom([rec, twin], none).length).toBe(1);
   });
 
@@ -232,10 +240,21 @@ describe('download lookups', () => {
     expect(lone.bulk).toEqual([]);
     expect(lone.single).toEqual(['only-one']);
 
-    for (const n of [0, 1, 2, NPM_BULK_LIMIT - 1, NPM_BULK_LIMIT, NPM_BULK_LIMIT + 1, 2 * NPM_BULK_LIMIT + 1]) {
+    for (const n of [
+      0,
+      1,
+      2,
+      NPM_BULK_LIMIT - 1,
+      NPM_BULK_LIMIT,
+      NPM_BULK_LIMIT + 1,
+      2 * NPM_BULK_LIMIT + 1,
+    ]) {
       const names = Array.from({ length: n }, (_, i) => `p-${i}`);
       const { bulk, single } = splitForNpm(['@scoped/one', ...names]);
-      expect(bulk.some((c) => c.length === 1), `${n} unscoped names`).toBe(false);
+      expect(
+        bulk.some((c) => c.length === 1),
+        `${n} unscoped names`,
+      ).toBe(false);
       // Nothing is lost by the move: every name is looked up exactly once.
       expect([...bulk.flat(), ...single].sort()).toEqual(['@scoped/one', ...names].sort());
     }
@@ -324,7 +343,13 @@ describe('draftName', () => {
     ] as const) {
       expect(draftName(pkg), pkg).toBe(name);
     }
-    const scoped = ['@trusty-squire/mcp', '@motiblog/mcp', '@starreel/mcp', '@tuteliq/mcp', '@stratta/mcp'];
+    const scoped = [
+      '@trusty-squire/mcp',
+      '@motiblog/mcp',
+      '@starreel/mcp',
+      '@tuteliq/mcp',
+      '@stratta/mcp',
+    ];
     expect(new Set(scoped.map(draftName)).size).toBe(scoped.length);
   });
 });
@@ -341,7 +366,11 @@ describe('draftEntry', () => {
     if (!('entry' in d)) throw new Error(d.refused);
     expect(validateEntry(d.entry, 0)).toEqual([]);
     expect(d.entry.command).toBe(
-      [pkg.runtimeHint, ...argValues(pkg.runtimeArguments), ...argValues(pkg.packageArguments)].join(' '),
+      [
+        pkg.runtimeHint,
+        ...argValues(pkg.runtimeArguments),
+        ...argValues(pkg.packageArguments),
+      ].join(' '),
     );
     expect(d.commandGuessed).toBe(false);
     expect(d.entry.package).toBe(pkg.identifier);
@@ -380,7 +409,9 @@ describe('draftEntry', () => {
     // ai.callmcp/server (page2.json) is the live record with a `node` hint on
     // an npm package. Its runtimeArguments are null live, so the with-args
     // case is built by hand from it: the arguments below are the addition.
-    const rec = page2.servers.find((r) => r.server.packages?.some((p) => p.runtimeHint && !['npx', 'uvx'].includes(p.runtimeHint)))!;
+    const rec = page2.servers.find((r) =>
+      r.server.packages?.some((p) => p.runtimeHint && !['npx', 'uvx'].includes(p.runtimeHint)),
+    )!;
     const pkg = rec.server.packages!.find((p) => p.runtimeHint === 'node')!;
     expect(pkg.registryType).toBe('npm');
     const [base] = candidatesFrom([rec], none);
@@ -388,7 +419,10 @@ describe('draftEntry', () => {
     expect(base!.runtimeArguments).toBeUndefined();
     expect(draftCommand(base!)).toEqual({ command: `npx -y ${pkg.identifier}`, guessed: true });
 
-    const withArgs: ScanCandidate = { ...base!, runtimeArguments: [{ type: 'positional', value: 'dist/index.js' }] };
+    const withArgs: ScanCandidate = {
+      ...base!,
+      runtimeArguments: [{ type: 'positional', value: 'dist/index.js' }],
+    };
     const d = draftCommand(withArgs);
     expect(d.command).toBe(`node dist/index.js ${pkg.identifier}`);
     expect(d.guessed).toBe(true);
@@ -398,7 +432,7 @@ describe('draftEntry', () => {
     expect(draftCommand(conventional).guessed).toBe(false);
   });
 
-  it('splits a PyPI record\'s env into required and optional the same way as an npm one', () => {
+  it("splits a PyPI record's env into required and optional the same way as an npm one", () => {
     const req = records['pypi-with-env']!;
     const reqVars = req.server.packages![0]!.environmentVariables!;
     expect(reqVars.every((v) => v.isRequired === true)).toBe(true);
@@ -430,7 +464,9 @@ describe('draftEntry', () => {
 
   it('refuses, with the reason, a candidate with no figure, no repository, or an env name the schema rejects', () => {
     const unmetered = draftEntry(candidate('io-github-runtime-arguments'), null);
-    expect(unmetered).toMatchObject({ refused: expect.stringMatching(/no weekly-download figure/) });
+    expect(unmetered).toMatchObject({
+      refused: expect.stringMatching(/no weekly-download figure/),
+    });
 
     const noRepo = draftEntry(candidate('npm-no-repository'), 5);
     expect(noRepo).toMatchObject({ refused: expect.stringMatching(/repository\.url/) });
@@ -464,7 +500,12 @@ describe('draftEntry', () => {
 describe('rankCandidates and the summary line', () => {
   const none = new Set<string>();
   const all = candidatesFrom(
-    ['io-github-runtime-arguments', 'io-github-owners-agree', 'io-github-pypi', 'npm-no-repository'].map((k) => records[k]!),
+    [
+      'io-github-runtime-arguments',
+      'io-github-owners-agree',
+      'io-github-pypi',
+      'npm-no-repository',
+    ].map((k) => records[k]!),
     none,
   );
 
@@ -486,10 +527,17 @@ describe('rankCandidates and the summary line', () => {
     const { fetchPage } = playback([page1, lastPage]);
     const walk = await walkLatest(fetchPage, { maxPages: 1 });
     const ranked = rankCandidates(all, new Map());
-    const scan = assembleScan(walk, ranked, { scannedAt: '2026-09-05T00:00:00.000Z', elapsedSeconds: 3 });
+    const scan = assembleScan(walk, ranked, {
+      scannedAt: '2026-09-05T00:00:00.000Z',
+      elapsedSeconds: 3,
+    });
     expect(scan.records).toBe(page1.servers.length);
     expect(scan.distinctLatest).toBe(new Set(page1.servers.map((r) => r.server.name)).size);
-    expect(scan.active).toBe(page1.servers.filter((r) => r._meta!['io.modelcontextprotocol.registry/official']!.status === 'active').length);
+    expect(scan.active).toBe(
+      page1.servers.filter(
+        (r) => r._meta!['io.modelcontextprotocol.registry/official']!.status === 'active',
+      ).length,
+    );
     expect(scan.candidates).toBe(all.length);
     expect(scan.drafted + scan.refused).toBe(scan.candidates);
     expect(scan.provenance).toMatch(/judgment/);
@@ -497,12 +545,22 @@ describe('rankCandidates and the summary line', () => {
     const line = summaryLine(scan);
     expect(line).toContain('TRUNCATED');
     expect(line).toContain(walk.lastCursor!);
-    for (const n of [scan.pages, scan.distinctLatest, scan.active, scan.candidates, scan.drafted, scan.refused]) {
+    for (const n of [
+      scan.pages,
+      scan.distinctLatest,
+      scan.active,
+      scan.candidates,
+      scan.drafted,
+      scan.refused,
+    ]) {
       expect(line).toContain(String(n));
     }
     expect(line).toContain('2026-09-05');
 
-    const whole = assembleScan({ ...walk, truncated: false, lastCursor: undefined }, ranked, { scannedAt: scan.scannedAt, elapsedSeconds: 3 });
+    const whole = assembleScan({ ...walk, truncated: false, lastCursor: undefined }, ranked, {
+      scannedAt: scan.scannedAt,
+      elapsedSeconds: 3,
+    });
     expect(summaryLine(whole)).not.toContain('TRUNCATED');
   });
 
@@ -519,12 +577,20 @@ describe('rankCandidates and the summary line', () => {
     const why = 'pypistats.org rate-limited this run (gave up after 6 attempts (HTTP 429))';
 
     const bare = rankCandidates(all, metrics).find((r) => r.pkg === all[2]!.pkg)!;
-    expect('refused' in bare.draft && bare.draft.refused).toMatch(/no weekly-download figure — the endpoint returned no number/);
+    expect('refused' in bare.draft && bare.draft.refused).toMatch(
+      /no weekly-download figure — the endpoint returned no number/,
+    );
 
-    const told = rankCandidates(all, metrics, new Map([[key, why]])).find((r) => r.pkg === all[2]!.pkg)!;
-    expect('refused' in told.draft && told.draft.refused).toBe(`no weekly-download figure — ${why}`);
+    const told = rankCandidates(all, metrics, new Map([[key, why]])).find(
+      (r) => r.pkg === all[2]!.pkg,
+    )!;
+    expect('refused' in told.draft && told.draft.refused).toBe(
+      `no weekly-download figure — ${why}`,
+    );
     // A reason changes the words, never the ranking or the count.
-    expect(rankCandidates(all, metrics, new Map([[key, why]])).map((r) => r.pkg)).toEqual(rankCandidates(all, metrics).map((r) => r.pkg));
+    expect(rankCandidates(all, metrics, new Map([[key, why]])).map((r) => r.pkg)).toEqual(
+      rankCandidates(all, metrics).map((r) => r.pkg),
+    );
 
     const { fetchPage } = playback([page1, lastPage]);
     const walk = await walkLatest(fetchPage, {});
@@ -537,7 +603,11 @@ describe('rankCandidates and the summary line', () => {
     expect(summaryLine(withCount)).toContain('1 of them unmetered');
     expect(summaryLine(withCount)).toContain('rate-limited');
 
-    const none = assembleScan(walk, rankCandidates(all, metrics), { scannedAt: '2026-09-06T00:00:00.000Z', elapsedSeconds: 3, unmetered: { count: 0, why } });
+    const none = assembleScan(walk, rankCandidates(all, metrics), {
+      scannedAt: '2026-09-06T00:00:00.000Z',
+      elapsedSeconds: 3,
+      unmetered: { count: 0, why },
+    });
     expect(none.unmetered).toBeUndefined();
     expect(summaryLine(none)).not.toContain('unmetered');
   });
@@ -559,12 +629,18 @@ describe('tools/scan-registry.ts', () => {
     const writes = source.match(/writeFileSync\(/g) ?? [];
     expect(writes.length).toBe(1);
     expect(source).toMatch(/writeFileSync\(out,/);
-    expect(source).not.toMatch(/appendFileSync|createWriteStream|\bwriteFile\(|copyFileSync|renameSync/);
+    expect(source).not.toMatch(
+      /appendFileSync|createWriteStream|\bwriteFile\(|copyFileSync|renameSync/,
+    );
   });
 
   const run = (args: string[]) => {
     try {
-      execFileSync(process.execPath, [TSX_CLI, script, ...args], { cwd: repoRoot, encoding: 'utf8', stdio: 'pipe' });
+      execFileSync(process.execPath, [TSX_CLI, script, ...args], {
+        cwd: repoRoot,
+        encoding: 'utf8',
+        stdio: 'pipe',
+      });
       return { status: 0, stderr: '' };
     } catch (e) {
       const err = e as { status: number; stderr: string };
@@ -587,7 +663,9 @@ describe('tools/scan-registry.ts', () => {
   });
 
   it('is what the npm script runs', () => {
-    const pkg = JSON.parse(readFileSync(join(repoRoot, 'package.json'), 'utf8')) as { scripts: Record<string, string> };
+    const pkg = JSON.parse(readFileSync(join(repoRoot, 'package.json'), 'utf8')) as {
+      scripts: Record<string, string>;
+    };
     expect(pkg.scripts['scan-registry']).toBe('tsx tools/scan-registry.ts');
   });
 });
@@ -602,7 +680,10 @@ describe('the live registry', () => {
       url.searchParams.set('version', 'latest');
       url.searchParams.set('limit', '5');
       if (cursor) url.searchParams.set('cursor', cursor);
-      const res = await fetch(url, { headers: { 'user-agent': 'mcp-context-cost-scan-test' }, signal: AbortSignal.timeout(8_000) });
+      const res = await fetch(url, {
+        headers: { 'user-agent': 'mcp-context-cost-scan-test' },
+        signal: AbortSignal.timeout(8_000),
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return (await res.json()) as RegistryPage;
     };

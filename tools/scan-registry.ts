@@ -82,8 +82,12 @@ function arg(name: string): string | undefined {
 
 const outArg = arg('out');
 if (!outArg || outArg.startsWith('--')) {
-  console.error('--out <path> is required — the scan writes one JSON file, and the operator names where.');
-  console.error('Never under results/, badges/ or docs/: a scan is not a measurement. Put it outside the tree.');
+  console.error(
+    '--out <path> is required — the scan writes one JSON file, and the operator names where.',
+  );
+  console.error(
+    'Never under results/, badges/ or docs/: a scan is not a measurement. Put it outside the tree.',
+  );
   process.exit(2);
 }
 const out = resolve(root, outArg);
@@ -104,7 +108,9 @@ if (maxPages !== undefined && (!Number.isInteger(maxPages) || maxPages <= 0)) {
 const limitArg = arg('limit');
 const limit = limitArg === undefined ? REGISTRY_PAGE_LIMIT : Number(limitArg);
 if (!Number.isInteger(limit) || limit <= 0 || limit > REGISTRY_PAGE_LIMIT) {
-  console.error(`--limit expects a whole number from 1 to ${REGISTRY_PAGE_LIMIT} (the registry's cap), got '${limitArg}'`);
+  console.error(
+    `--limit expects a whole number from 1 to ${REGISTRY_PAGE_LIMIT} (the registry's cap), got '${limitArg}'`,
+  );
   process.exit(2);
 }
 const startCursor = arg('cursor');
@@ -112,7 +118,9 @@ const startCursor = arg('cursor');
 const doc = loadServersDoc(root);
 const problems = validateServers(doc);
 if (problems.length) {
-  console.error('servers.yaml does not validate; refusing to scan against a set whose packages cannot be read:');
+  console.error(
+    'servers.yaml does not validate; refusing to scan against a set whose packages cannot be read:',
+  );
   console.error(formatProblems(problems));
   process.exit(1);
 }
@@ -180,15 +188,22 @@ async function fetchPage(cursor?: string): Promise<RegistryPage> {
   const res = await request(url.toString());
   if (res.status !== 200) throw new Error(`${url}: HTTP ${res.status} ${res.text.slice(0, 120)}`);
   const page = JSON.parse(res.text) as RegistryPage;
-  log(`page ${page.servers?.length ?? 0} row(s)${page.metadata?.nextCursor ? ` → ${page.metadata.nextCursor}` : ' (last)'}`);
+  log(
+    `page ${page.servers?.length ?? 0} row(s)${page.metadata?.nextCursor ? ` → ${page.metadata.nextCursor}` : ' (last)'}`,
+  );
   return page;
 }
 
 const startedAtMs = Date.now();
 const scannedAt = new Date().toISOString();
 
-const walk = await walkLatest(fetchPage, { ...(maxPages !== undefined ? { maxPages } : {}), ...(startCursor ? { cursor: startCursor } : {}) });
-log(`${walk.pages} page(s), ${walk.records.length} record(s)${walk.truncated ? ' — TRUNCATED' : ''}`);
+const walk = await walkLatest(fetchPage, {
+  ...(maxPages !== undefined ? { maxPages } : {}),
+  ...(startCursor ? { cursor: startCursor } : {}),
+});
+log(
+  `${walk.pages} page(s), ${walk.records.length} record(s)${walk.truncated ? ' — TRUNCATED' : ''}`,
+);
 
 const candidates = candidatesFrom(walk.records, tracked);
 const metrics = new Map<string, number | null>();
@@ -199,9 +214,13 @@ const unmetered = (registry: 'npm' | 'pypi', pkg: string, why: string) => {
   reasons.set(metricKey(registry, pkg), why);
 };
 
-const { bulk, single } = splitForNpm(candidates.filter((c) => c.registry === 'npm').map((c) => c.pkg));
+const { bulk, single } = splitForNpm(
+  candidates.filter((c) => c.registry === 'npm').map((c) => c.pkg),
+);
 const pypi = candidates.filter((c) => c.registry === 'pypi').map((c) => c.pkg);
-log(`${candidates.length} candidate(s): ${bulk.length} npm bulk chunk(s), ${single.length} npm single(s), ${pypi.length} pypi lookup(s)`);
+log(
+  `${candidates.length} candidate(s): ${bulk.length} npm bulk chunk(s), ${single.length} npm single(s), ${pypi.length} pypi lookup(s)`,
+);
 
 for (const chunk of bulk) {
   const res = await tryRequest(`${NPM_API}/${chunk.join(',')}`);
@@ -210,14 +229,19 @@ for (const chunk of bulk) {
     log(`  npm bulk lookup for ${chunk.length} name(s) failed: ${why}`);
     for (const name of chunk) unmetered('npm', name, `api.npmjs.org bulk lookup failed: ${why}`);
   } else {
-    for (const [name, n] of parseNpmBulk(JSON.parse(res.text))) metrics.set(metricKey('npm', name), n);
+    for (const [name, n] of parseNpmBulk(JSON.parse(res.text)))
+      metrics.set(metricKey('npm', name), n);
   }
   await sleep(NPM_GAP_MS);
 }
 for (const name of single) {
   const res = await tryRequest(`${NPM_API}/${name}`);
   if ('failed' in res) unmetered('npm', name, `api.npmjs.org lookup failed: ${res.failed}`);
-  else metrics.set(metricKey('npm', name), res.status === 200 ? parseNpmSingle(JSON.parse(res.text)) : null);
+  else
+    metrics.set(
+      metricKey('npm', name),
+      res.status === 200 ? parseNpmSingle(JSON.parse(res.text)) : null,
+    );
   await sleep(NPM_GAP_MS);
 }
 // pypistats answers a sustained 429 to a whole run once it has decided to: the
@@ -258,7 +282,12 @@ const scan = assembleScan(walk, ranked, {
   scannedAt,
   elapsedSeconds: Math.round((Date.now() - startedAtMs) / 1000),
   ...(reasons.size > 0
-    ? { unmetered: { count: reasons.size, why: pypiBlocked ?? 'one or more download lookups failed; each refusal names its reason' } }
+    ? {
+        unmetered: {
+          count: reasons.size,
+          why: pypiBlocked ?? 'one or more download lookups failed; each refusal names its reason',
+        },
+      }
     : {}),
 });
 

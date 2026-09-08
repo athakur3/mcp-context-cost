@@ -1,0 +1,22 @@
+# Published data. These bytes are the product: a measurement's JSON is hashed and
+# re-derived by anyone who disputes it, so reformatting one would change a number
+# nobody re-measured.
+results/
+badges/
+spec/fixtures/
+
+# Generated. Regen rewrites these whole on every sweep, and `regenIsAFixedPoint`
+# compares them byte for byte — a formatter in the loop would fail that gate.
+docs/
+dist/
+
+# Hand-wrapped prose. The line breaks in these carry meaning the formatter cannot
+# see, and every one of them is read by a person rather than a parser.
+*.md
+
+# servers.yaml is hand-maintained, comment-heavy, and its entry order is the
+# rotation's slot order (src/sweep/shard.ts deals by position).
+servers.yaml
+
+node_modules/
+package-lock.json

@@ -74,9 +74,11 @@ function tableRows(page: Page): string[] {
   // removed it. Refusing here is the same rule the product applies to a gate
   // whose answer could not be established.
   if (head < 0) throw new Error(`${PAGE_FILES[page]} no longer carries the deferral table`);
-  if (!lines[head + 1].startsWith('|-')) throw new Error(`${PAGE_FILES[page]}: no table under that header`);
+  if (!lines[head + 1].startsWith('|-'))
+    throw new Error(`${PAGE_FILES[page]}: no table under that header`);
   const rows: string[] = [];
-  for (let i = head + 2; i < lines.length && lines[i].startsWith('|'); i++) rows.push(flatten(lines[i]));
+  for (let i = head + 2; i < lines.length && lines[i].startsWith('|'); i++)
+    rows.push(flatten(lines[i]));
   rowCache.set(page, rows);
   return rows;
 }
@@ -89,7 +91,10 @@ function tableRows(page: Page): string[] {
 function unionMembers(declaration: string): string[] {
   const src = readRepo('src/audit/deferral.ts');
   const at = src.indexOf(declaration);
-  if (at < 0) throw new Error(`deferral.ts no longer declares \`${declaration}\` — this check cannot be established`);
+  if (at < 0)
+    throw new Error(
+      `deferral.ts no longer declares \`${declaration}\` — this check cannot be established`,
+    );
   const body = src.slice(at + declaration.length, src.indexOf(';', at));
   const members = [...body.matchAll(/'([a-z-]+)'/g)].map((m) => m[1]);
   if (members.length === 0) throw new Error(`no members read from \`${declaration}\``);
@@ -162,7 +167,8 @@ const CASES: Case[] = [
     machines: [{}, { env: {} }, { settings: [] }],
     mode: 'defers-all',
     row: {
-      METHODOLOGY: '| | otherwise / nothing set anywhere | the documented default: every definition deferred, no threshold |',
+      METHODOLOGY:
+        '| | otherwise / nothing set anywhere | the documented default: every definition deferred, no threshold |',
     },
   },
   {
@@ -213,7 +219,9 @@ const CASES: Case[] = [
       { env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: 'Yes' } },
       { env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '1', ENABLE_TOOL_SEARCH: 'true' } },
       {
-        settings: [settingsFile('user-settings', USER, { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '1' })],
+        settings: [
+          settingsFile('user-settings', USER, { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '1' }),
+        ],
         env: { ENABLE_TOOL_SEARCH: 'true' },
       },
     ],
@@ -233,7 +241,11 @@ const CASES: Case[] = [
       { env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: 'false' } },
       { env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: 'off' } },
       { env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: 'No' } },
-      { settings: [settingsFile('user-settings', USER, { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '0' })] },
+      {
+        settings: [
+          settingsFile('user-settings', USER, { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '0' }),
+        ],
+      },
     ],
     mode: 'defers-all',
     row: {
@@ -241,7 +253,8 @@ const CASES: Case[] = [
         '| | `0`, `false`, `no` or `off`, in any casing | it turned nothing off, so it decides nothing and the read moves on to `ENABLE_TOOL_SEARCH` |',
     },
     prose: {
-      METHODOLOGY: 'is a boolean flag in the client, not a marker whose presence alone is the signal',
+      METHODOLOGY:
+        'is a boolean flag in the client, not a marker whose presence alone is the signal',
     },
   },
   {
@@ -249,7 +262,11 @@ const CASES: Case[] = [
     machines: [
       { env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '2' } },
       { env: { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: 'tool-search-2026-01-01' } },
-      { settings: [settingsFile('user-settings', USER, { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: 'maybe' })] },
+      {
+        settings: [
+          settingsFile('user-settings', USER, { CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: 'maybe' }),
+        ],
+      },
     ],
     mode: 'setting-unrecognized',
     row: {
@@ -262,7 +279,11 @@ const CASES: Case[] = [
     machines: [
       { env: { ANTHROPIC_BASE_URL: 'https://proxy.internal/v1' } },
       { env: { ANTHROPIC_BASE_URL: 'not a url?key=redacted' } },
-      { settings: [settingsFile('user-settings', USER, { ANTHROPIC_BASE_URL: 'https://proxy.internal/v1' })] },
+      {
+        settings: [
+          settingsFile('user-settings', USER, { ANTHROPIC_BASE_URL: 'https://proxy.internal/v1' }),
+        ],
+      },
       // The row says host, and a host carries its port. Claude Code compares
       // the host too, so this machine has tool search off — reading the
       // hostname made it first-party here and printed the opposite.
@@ -325,16 +346,21 @@ const CASES: Case[] = [
     mode: 'setting-unresolved',
     unresolved: 'sources-disagree',
     prose: {
-      METHODOLOGY: 'when two places set the same variable to different values and no order between them is on record',
+      METHODOLOGY:
+        'when two places set the same variable to different values and no order between them is on record',
     },
   },
   {
     what: 'a settings file that exists and cannot be read is refused, not treated as empty',
-    machines: [{ settings: [unreadableFile] }, { env: { ENABLE_TOOL_SEARCH: 'true' }, settings: [unreadableFile] }],
+    machines: [
+      { settings: [unreadableFile] },
+      { env: { ENABLE_TOOL_SEARCH: 'true' }, settings: [unreadableFile] },
+    ],
     mode: 'setting-unresolved',
     unresolved: 'source-unreadable',
     prose: {
-      METHODOLOGY: 'when a settings file exists and cannot be read, since what it sets is unknown rather than nothing',
+      METHODOLOGY:
+        'when a settings file exists and cannot be read, since what it sets is unknown rather than nothing',
     },
   },
   {
@@ -424,19 +450,30 @@ describe('the published deferral tables describe the resolver', () => {
     it(c.what, () => {
       for (const m of c.machines) {
         const verdict = verdictFor(m);
-        expect(verdict.mode, `the resolver answers ${JSON.stringify(m)} differently from the page`).toBe(c.mode);
+        expect(
+          verdict.mode,
+          `the resolver answers ${JSON.stringify(m)} differently from the page`,
+        ).toBe(c.mode);
         expect(verdict.setting?.unresolved ?? null).toBe(c.unresolved ?? null);
         if (c.thresholdShare !== undefined) expect(verdict.thresholdShare).toBe(c.thresholdShare);
-        if (c.crosses !== undefined) expect(verdict.crosses, `the resolver puts ${JSON.stringify(m)} on a side the page does not`).toBe(c.crosses);
+        if (c.crosses !== undefined)
+          expect(
+            verdict.crosses,
+            `the resolver puts ${JSON.stringify(m)} on a side the page does not`,
+          ).toBe(c.crosses);
       }
       for (const page of PAGES) {
         const row = c.row?.[page];
         if (row) {
-          expect(tableRows(page), `${PAGE_FILES[page]} no longer carries this row`).toContain(flatten(row));
+          expect(tableRows(page), `${PAGE_FILES[page]} no longer carries this row`).toContain(
+            flatten(row),
+          );
         }
         const prose = c.prose?.[page];
         if (prose) {
-          expect(pageText(page), `${PAGE_FILES[page]} no longer says this`).toContain(flatten(prose));
+          expect(pageText(page), `${PAGE_FILES[page]} no longer says this`).toContain(
+            flatten(prose),
+          );
         }
       }
     });
@@ -450,7 +487,9 @@ describe('the published deferral tables describe the resolver', () => {
       const claimed = CASES.map((c) => c.row?.[page])
         .filter((r): r is string => Boolean(r))
         .map(flatten);
-      expect(new Set(claimed).size, `${PAGE_FILES[page]}: two cases claim the same row`).toBe(claimed.length);
+      expect(new Set(claimed).size, `${PAGE_FILES[page]}: two cases claim the same row`).toBe(
+        claimed.length,
+      );
       expect([...tableRows(page)].sort()).toEqual([...claimed].sort());
     }
   });
@@ -458,11 +497,17 @@ describe('the published deferral tables describe the resolver', () => {
   it('publishes something about every posture the resolver can return', () => {
     for (const mode of MODES) {
       const covered = CASES.filter((c) => c.mode === mode && (c.row || c.prose));
-      expect(covered.length, `\`${mode}\` is a posture no published page describes`).toBeGreaterThan(0);
+      expect(
+        covered.length,
+        `\`${mode}\` is a posture no published page describes`,
+      ).toBeGreaterThan(0);
     }
     for (const reason of REFUSAL_REASONS) {
       const covered = CASES.filter((c) => c.unresolved === reason && (c.row || c.prose));
-      expect(covered.length, `\`${reason}\` is a refusal no published page describes`).toBeGreaterThan(0);
+      expect(
+        covered.length,
+        `\`${reason}\` is a refusal no published page describes`,
+      ).toBeGreaterThan(0);
     }
   });
 
@@ -479,11 +524,15 @@ describe('the published deferral tables describe the resolver', () => {
         (c) => c.unresolved ?? c.mode,
       ),
     );
-    expect(pageText('METHODOLOGY')).toContain(`which is ${NUMBER_WORDS[refusals.size]} refusals and not one`);
+    expect(pageText('METHODOLOGY')).toContain(
+      `which is ${NUMBER_WORDS[refusals.size]} refusals and not one`,
+    );
   });
 
   it('prints the threshold share both pages quote', () => {
-    expect(verdictFor({ env: { ENABLE_TOOL_SEARCH: 'auto' } }).thresholdShare).toBe(TOOL_SEARCH_AUTO_SHARE);
+    expect(verdictFor({ env: { ENABLE_TOOL_SEARCH: 'auto' } }).thresholdShare).toBe(
+      TOOL_SEARCH_AUTO_SHARE,
+    );
     // The `N%` half of the same row: the page promises the number is the one
     // asked for, not the default in disguise.
     expect(verdictFor({ env: { ENABLE_TOOL_SEARCH: 'auto:35' } }).thresholdShare).toBe(0.35);
@@ -492,9 +541,13 @@ describe('the published deferral tables describe the resolver', () => {
 
   it('consults the base URL only while ENABLE_TOOL_SEARCH is unset, as both rows say', () => {
     expect(
-      verdictFor({ env: { ENABLE_TOOL_SEARCH: 'true', ANTHROPIC_BASE_URL: 'https://proxy.internal/v1' } }).mode,
+      verdictFor({
+        env: { ENABLE_TOOL_SEARCH: 'true', ANTHROPIC_BASE_URL: 'https://proxy.internal/v1' },
+      }).mode,
     ).toBe('defers-all');
-    expect(verdictFor({ env: { ANTHROPIC_BASE_URL: 'https://api.anthropic.com' } }).mode).toBe('defers-all');
+    expect(verdictFor({ env: { ANTHROPIC_BASE_URL: 'https://api.anthropic.com' } }).mode).toBe(
+      'defers-all',
+    );
   });
 
   it('reads the base URL host the way the client does, port and all', () => {
@@ -523,7 +576,9 @@ describe('the published deferral tables describe the resolver', () => {
     const { low, high, servers } = wireToClientRatio(run);
     const band = `${low.toFixed(2)}×–${high.toFixed(2)}× across ${servers} servers`;
     for (const page of PAGES) {
-      expect(pageText(page), `${PAGE_FILES[page]} no longer prints the derived band`).toContain(band);
+      expect(pageText(page), `${PAGE_FILES[page]} no longer prints the derived band`).toContain(
+        band,
+      );
     }
   });
 
@@ -548,7 +603,10 @@ describe('the published deferral tables describe the resolver', () => {
    */
   it('is a snapshot of the committed divergence run that may lag but never overstates', () => {
     const run = parseDivergence(readFileSync(join(repoRoot, 'results', 'divergence.json'), 'utf8'));
-    expect(run, 'results/divergence.json must parse — the constant is a snapshot of it').not.toBeNull();
+    expect(
+      run,
+      'results/divergence.json must parse — the constant is a snapshot of it',
+    ).not.toBeNull();
     // Asked of `bandSnapshotProblem` rather than restated here, because the
     // release readiness gate asks the same question of the constant the *last
     // release* shipped, and one rule written twice is how the two would come to
@@ -579,14 +637,18 @@ describe('the published deferral tables describe the resolver', () => {
 
     it('refuses a snapshot measured across more servers than the run holds', () => {
       // Not an old number but an invented one: nobody measured that many.
-      expect(bandSnapshotProblem({ ...run, servers: 87 }, run)).toContain('87 servers where the run holds 86');
+      expect(bandSnapshotProblem({ ...run, servers: 87 }, run)).toContain(
+        '87 servers where the run holds 86',
+      );
     });
 
     it('refuses a band that has moved at the precision it is published at', () => {
       expect(bandSnapshotProblem({ ...run, high: 1.94 }, run)).toContain('0.19×–1.94×');
       expect(bandSnapshotProblem({ ...run, low: 0.2 }, run)).toContain('0.20×–1.93×');
       // The five-fold move of 2026-09-05, which is what this exists to catch.
-      expect(bandSnapshotProblem(run, { ...run, high: 10.88 })).toContain('the run derives 0.19×–10.88×');
+      expect(bandSnapshotProblem(run, { ...run, high: 10.88 })).toContain(
+        'the run derives 0.19×–10.88×',
+      );
     });
   });
 });

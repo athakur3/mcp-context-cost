@@ -227,7 +227,9 @@ function toServer(
   }
   if (!command) return null;
 
-  const args = Array.isArray(raw.args) ? raw.args.filter((a): a is string => typeof a === 'string') : [];
+  const args = Array.isArray(raw.args)
+    ? raw.args.filter((a): a is string => typeof a === 'string')
+    : [];
   const argv = [command, ...args];
   return {
     name,
@@ -286,12 +288,14 @@ export function extractDeclaration(
   // when a server is toggled off in its /mcp panel (both read 2026-09-06).
   const listedOff = new Set<string>();
   const mcp = d.mcp;
-  if (mcp && typeof mcp === 'object') for (const n of stringList((mcp as Record<string, unknown>).excluded)) listedOff.add(n);
+  if (mcp && typeof mcp === 'object')
+    for (const n of stringList((mcp as Record<string, unknown>).excluded)) listedOff.add(n);
   const project =
     meta.cwd && d.projects && typeof d.projects === 'object'
       ? ((d.projects as Record<string, unknown>)[meta.cwd] as Record<string, unknown> | undefined)
       : undefined;
-  if (project && typeof project === 'object') for (const n of stringList(project.disabledMcpServers)) listedOff.add(n);
+  if (project && typeof project === 'object')
+    for (const n of stringList(project.disabledMcpServers)) listedOff.add(n);
 
   const addBlock = (block: unknown, launchable: (raw: RawEntry) => boolean = () => true) => {
     if (!block || typeof block !== 'object') return;
@@ -350,7 +354,11 @@ export function configCandidates(env: {
     platform === 'darwin'
       ? join(home, 'Library', 'Application Support', 'Claude', 'claude_desktop_config.json')
       : platform === 'win32'
-        ? join(env.appData ?? join(home, 'AppData', 'Roaming'), 'Claude', 'claude_desktop_config.json')
+        ? join(
+            env.appData ?? join(home, 'AppData', 'Roaming'),
+            'Claude',
+            'claude_desktop_config.json',
+          )
         : join(home, '.config', 'Claude', 'claude_desktop_config.json');
 
   // Paths each client's own documentation gives, read 2026-09-06. Zed's user
@@ -374,7 +382,9 @@ export function configCandidates(env: {
     { client: 'codex', path: join(cwd, '.codex', 'config.toml'), format: 'toml' },
     { client: 'gemini', path: join(home, '.gemini', 'settings.json') },
     { client: 'gemini', path: join(cwd, '.gemini', 'settings.json') },
-    ...(platform === 'win32' ? [] : [{ client: 'zed', path: join(home, '.config', 'zed', 'settings.json') }]),
+    ...(platform === 'win32'
+      ? []
+      : [{ client: 'zed', path: join(home, '.config', 'zed', 'settings.json') }]),
     { client: 'zed', path: join(cwd, '.zed', 'settings.json') },
     { client: 'kiro', path: join(home, '.kiro', 'settings', 'mcp.json') },
     { client: 'kiro', path: join(cwd, '.kiro', 'settings', 'mcp.json') },
@@ -432,7 +442,12 @@ export function loadConfigs(
     seen.add(c.path);
     try {
       const doc = parseConfigText(readFileSync(c.path, 'utf8'), c.format);
-      const { servers, disabled } = extractDeclaration(doc, { client: c.client, source: c.path, cwd, env: processEnv });
+      const { servers, disabled } = extractDeclaration(doc, {
+        client: c.client,
+        source: c.path,
+        cwd,
+        env: processEnv,
+      });
       // A config with no MCP block at all (e.g. a ~/.claude.json holding only
       // session history) is not worth a line in the report — it has no total.
       // It is still worth carrying: it is the evidence that a client is on this
@@ -558,10 +573,12 @@ export function managedDropInCandidates(
  */
 export function loadSettingsSources(candidates: SettingsCandidate[]): ToolSearchSource[] {
   return candidates.map((c) => {
-    if (!existsSync(c.path)) return { scope: c.scope, source: c.path, state: 'absent' as const, vars: {} };
+    if (!existsSync(c.path))
+      return { scope: c.scope, source: c.path, state: 'absent' as const, vars: {} };
     try {
       const doc = parseJsonc(readFileSync(c.path, 'utf8'));
-      if (!doc || typeof doc !== 'object' || Array.isArray(doc)) throw new Error('not a settings object');
+      if (!doc || typeof doc !== 'object' || Array.isArray(doc))
+        throw new Error('not a settings object');
       const block = (doc as { env?: unknown }).env;
       const vars: ToolSearchEnv = {};
       const unreadable: ToolSearchVar[] = [];
