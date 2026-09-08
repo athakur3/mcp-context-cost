@@ -458,7 +458,9 @@ told that every request carries these tokens.
 it starts in *and* from the `env` block of its own settings files, so `audit` opens all of
 them: the managed settings file for the platform
 (`/Library/Application Support/ClaudeCode/managed-settings.json` on macOS,
-`/etc/claude-code/managed-settings.json` on Linux, `%ProgramData%\ClaudeCode\managed-settings.json` on Windows),
+`/etc/claude-code/managed-settings.json` on Linux, `C:\Program Files\ClaudeCode\managed-settings.json` on
+Windows — not `%ProgramData%\ClaudeCode\managed-settings.json`, which the vendor names as a legacy path
+Claude Code does not read, and which this opened instead until 2026-09-08),
 `<cwd>/.claude/settings.local.json`, `<cwd>/.claude/settings.json`, then
 `~/.claude/settings.json`. Among the settings files the first that sets a variable wins —
 sets it at all, readably or not, so a readable value above an unreadable one is still the

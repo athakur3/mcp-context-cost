@@ -7,6 +7,16 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **On Windows the audit opened the one managed-settings path the vendor says Claude Code does not
+  read.** `settingsCandidates` built `%ProgramData%\ClaudeCode\managed-settings.json`;
+  `code.claude.com/docs/en/managed-settings.md`, read 2026-09-08, gives the system directory as
+  `C:\Program Files\ClaudeCode\` and then says outright that "Claude Code doesn't read the legacy
+  Windows path `C:\ProgramData\ClaudeCode\managed-settings.json`". So a managed Windows machine had
+  its policy file read from a location that decides nothing, while the file that does decide was
+  never opened — and METHODOLOGY published the wrong path beside it. The `programData` parameter is
+  gone rather than corrected, since nothing else wants it. WSL's inheritance of the Windows policy
+  chain is still not modelled, and the docblock now says so instead of leaving it implied.
+
 - **`CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` is a boolean flag, and reading its presence instead
   told every machine that had set it to `0` that it pays the whole total on every request.**
   `resolveToolSearch` tested bare truthiness after `.trim()`, so `0`, `false`, `off` and any other

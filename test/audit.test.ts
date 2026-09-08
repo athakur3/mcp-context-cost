@@ -2301,8 +2301,7 @@ describe('the deferral posture is read from every place the machine sets it', ()
     });
 
     it('lists the files in precedence order, and knows where the managed one lives', () => {
-      const at = (platform: NodeJS.Platform, programData?: string) =>
-        settingsCandidates({ home: '/h', cwd: '/c', platform, programData });
+      const at = (platform: NodeJS.Platform) => settingsCandidates({ home: '/h', cwd: '/c', platform });
       expect(at('darwin').map((c) => c.scope)).toEqual([
         'managed-settings',
         'local-settings',
@@ -2311,7 +2310,13 @@ describe('the deferral posture is read from every place the machine sets it', ()
       ]);
       expect(at('darwin')[0].path).toBe('/Library/Application Support/ClaudeCode/managed-settings.json');
       expect(at('linux')[0].path).toBe('/etc/claude-code/managed-settings.json');
-      expect(at('win32', 'D:\\PD')[0].path).toBe(join('D:\\PD', 'ClaudeCode', 'managed-settings.json'));
+      // Not %ProgramData%: the vendor names that path as one Claude Code does
+      // NOT read, so opening it read a file that decides nothing and missed the
+      // one that does.
+      expect(at('win32')[0].path).toBe('C:\\Program Files\\ClaudeCode\\managed-settings.json');
+      for (const platform of ['darwin', 'linux', 'win32'] as NodeJS.Platform[]) {
+        expect(at(platform)[0].path, platform).not.toContain('ProgramData');
+      }
       expect(at('darwin')[3].path).toBe(join('/h', '.claude', 'settings.json'));
     });
   });

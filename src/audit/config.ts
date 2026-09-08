@@ -474,19 +474,30 @@ export interface SettingsCandidate {
  * Order is Claude Code's documented settings precedence (enterprise managed
  * policy, then project-local, then project, then user), read 2026-08-20. Paths
  * in, candidates out — nothing here touches a disk.
+ *
+ * The Windows directory is `C:\Program Files\ClaudeCode`, not `%ProgramData%`.
+ * `code.claude.com/docs/en/managed-settings.md`, read 2026-09-08, names the
+ * system directory per platform and then says in as many words: "Claude Code
+ * doesn't read the legacy Windows path
+ * `C:\ProgramData\ClaudeCode\managed-settings.json`". This opened that legacy
+ * path and no other, so on a managed Windows machine it read a file that
+ * decides nothing and never opened the one that does.
+ *
+ * Not modelled, and named here so the gap is on record rather than implied:
+ * WSL can be told to inherit the Windows policy chain, and whether it does
+ * turns on a key in a file this may not have read.
  */
 export function settingsCandidates(env: {
   home: string;
   cwd: string;
   platform: NodeJS.Platform;
-  programData?: string;
 }): SettingsCandidate[] {
   const { home, cwd, platform } = env;
   const managed =
     platform === 'darwin'
       ? '/Library/Application Support/ClaudeCode/managed-settings.json'
       : platform === 'win32'
-        ? join(env.programData ?? 'C:\\ProgramData', 'ClaudeCode', 'managed-settings.json')
+        ? 'C:\\Program Files\\ClaudeCode\\managed-settings.json'
         : '/etc/claude-code/managed-settings.json';
 
   return [

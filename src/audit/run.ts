@@ -135,7 +135,7 @@ export function discoverSettings(opts: AuditOptions = {}): ToolSearchSource[] {
   const cwd = opts.cwd ?? process.cwd();
   const home = opts.home ?? homedir();
   return loadSettingsSources(
-    settingsCandidates({ home, cwd, platform: process.platform, programData: process.env.ProgramData }),
+    settingsCandidates({ home, cwd, platform: process.platform }),
   );
 }
 
