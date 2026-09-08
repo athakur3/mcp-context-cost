@@ -18,11 +18,22 @@ while reading it.
   published surface with nothing noticing.
 
   `package.json` now declares `main`, `types` and an `exports` map pointing at that barrel, and
-  the thirty runtime exports are pinned by a test in `test/core.test.ts`. Adding an export fails
-  it and so does removing one, so either arrives as a deliberate edit with an entry here rather
-  than as a side effect of tidying a module. The test says what it does not cover: a type
-  dropped from `dist/core/index.d.ts` breaks a TypeScript consumer and a runtime-key check
-  cannot see it.
+  the barrel names its thirty-nine exports rather than re-exporting seven modules with `*`. The
+  wildcard was the mechanism: it made the API "whatever these modules happen to export", so a
+  name added to one widened the surface and a name removed narrowed it, both without anyone
+  deciding. Named, a name that leaves its module is a compile error in `core/index.ts`, and a
+  name added to a module does not reach the API until it is added there.
+
+  Four ways the surface can move, and what stops each, all four verified by making the change
+  and watching it fail: a type deleted from its module, and a type or a name dropped from the
+  barrel, are compile errors; the thirty runtime exports are a list in `test/core.test.ts`; and
+  the nine types are pinned by a type-only self-import in `core/index.ts`, with a tuple length
+  so the list cannot be shortened quietly.
+
+  That pin is in `src/` rather than beside the runtime list for a reason worth recording: **no
+  test file is typechecked.** `tsconfig.json` includes only `src` and `tsconfig.tools.json` only
+  `src` and `tools`, so a compile-time assertion written in a test would report nothing while
+  reading as a guarantee.
 
   **This closes deep imports.** An `exports` map means `mcp-context-cost/dist/<anything>.js` now
   fails with `ERR_PACKAGE_PATH_NOT_EXPORTED` where it used to resolve. That is the point of

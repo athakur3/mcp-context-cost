@@ -13,6 +13,9 @@
  *
  *  - `signed` is a magnitude with a direction. Zero has no direction, so it
  *    prints bare.
+ * Not in the library export: these render this repository's own pages, and a
+ * consumer formats its own numbers. `core/index.ts` says what is public.
+ *
  *  - `signedToPrecision` is for a value whose *displayed* precision can round to
  *    zero while the value itself still points one way. The leaderboard's
  *    cross-check column is the case: `+0.0%` and `−0.0%` are a small rise and a

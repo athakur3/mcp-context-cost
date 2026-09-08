@@ -186,6 +186,10 @@ describe('the published library surface', () => {
     ).toEqual([...SURFACE].sort());
   });
 
+  // The type half of this surface is pinned in `src/core/index.ts` itself, not
+  // here: no test file is in either tsconfig's `include`, so a compile-time
+  // assertion written in this file would never be checked by `npm run
+  // typecheck` and would read as a guarantee it could not give.
   it('is what package.json points at, so the promise and the file cannot come apart', () => {
     const pkg = JSON.parse(readFileSync(join(repoRoot, 'package.json'), 'utf8')) as {
       main: string;

@@ -16,9 +16,9 @@
  * would agree with the probe by construction and could no longer catch it
  * drifting.
  *
- * Deliberately not exported from `core/index.ts`, alongside the other modules
- * that are reached by path — the barrel is what a library export would ship,
- * and this is the harness talking about itself.
+ * Deliberately absent from `core/index.ts`, which names the library's exports
+ * one by one rather than re-exporting whole modules — this is the harness
+ * talking about itself, not part of the measurement anyone imports.
  */
 export const PROTOCOL_VERSION = '2025-06-18';
 
