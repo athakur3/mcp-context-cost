@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { removeTempRoot } from './tmp.js';
 import {
   configCandidates,
   extractDeclaration,
@@ -336,8 +337,14 @@ describe('configCandidates — where each client documents its file', () => {
 });
 
 describe('loadConfigs — the format follows the candidate', () => {
+  const tmpDirs: string[] = [];
+  afterEach(() => {
+    for (const dir of tmpDirs.splice(0)) removeTempRoot(dir);
+  });
+
   it('parses TOML and YAML files by their declared format, and reports one that does not parse', () => {
     const dir = mkdtempSync(join(tmpdir(), 'mcp-audit-formats-'));
+    tmpDirs.push(dir);
     writeFileSync(join(dir, 'config.toml'), '[mcp_servers.a]\ncommand = "node"\nargs = ["a.js"]\n');
     writeFileSync(
       join(dir, 'config.yaml'),

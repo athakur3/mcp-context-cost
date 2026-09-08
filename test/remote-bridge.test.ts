@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import { spawn, execFileSync, type ChildProcess } from 'node:child_process';
 import { createServer } from 'node:http';
 import { mkdtempSync, readdirSync, writeFileSync } from 'node:fs';
@@ -7,6 +7,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { probeRemote } from '../src/audit/remote.js';
 import { TSX_CLI } from './tsx.js';
+import { removeTempRoot } from './tmp.js';
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -71,8 +72,16 @@ afterAll(() => {
 });
 
 describe('audit — an open http entry is a number', () => {
+  const tmpDirs: string[] = [];
+  afterEach(() => {
+    // The audit CLI ran with cwd inside this root — exactly the late-writer
+    // race removeTempRoot exists for.
+    for (const dir of tmpDirs.splice(0)) removeTempRoot(dir);
+  });
+
   it('measures the endpoint through the bridge, as a remote, and writes nothing', () => {
     const dir = mkdtempSync(join(tmpdir(), 'mcp-audit-bridge-'));
+    tmpDirs.push(dir);
     writeFileSync(
       join(dir, 'mcp.json'),
       JSON.stringify({ mcpServers: { everything: { type: 'http', url } } }),

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
@@ -12,6 +12,7 @@ import { bridgeLaunch, probeRemotes } from '../src/audit/run.js';
 import type { ConfiguredServer, LoadedConfig } from '../src/audit/config.js';
 import { measureTools } from '../src/core/canonical.js';
 import { TSX_CLI } from './tsx.js';
+import { removeTempRoot } from './tmp.js';
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 // Async, deliberately: the endpoint the CLI under test probes is served by this
@@ -415,8 +416,16 @@ describe('buildReport — a remote entry is what its endpoint said', () => {
 });
 
 describe('audit CLI — a config with an http entry', () => {
+  const tmpDirs: string[] = [];
+  afterEach(() => {
+    // The audit CLI ran with cwd inside this root — exactly the late-writer
+    // race removeTempRoot exists for.
+    for (const dir of tmpDirs.splice(0)) removeTempRoot(dir);
+  });
+
   it('prints an auth-walled line for a walled endpoint, never remote-not-measurable, and opens no browser', async () => {
     const dir = mkdtempSync(join(tmpdir(), 'mcp-audit-remote-'));
+    tmpDirs.push(dir);
     writeFileSync(
       join(dir, 'mcp.json'),
       JSON.stringify({

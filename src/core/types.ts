@@ -117,24 +117,26 @@ export interface Measurement {
   launchCommand?: string | undefined;
   envVarNames?: string[] | undefined;
   /** How the server was isolated during measurement (docker image, network). */
-  isolation?: {
-    docker: boolean;
-    image?: string | undefined;
-    network?: string | undefined;
-    note?: string | undefined;
-    /**
-     * The architecture the measurement ran on, as `<platform>/<arch>` (e.g.
-     * `linux/amd64`). Part of the isolation because some packages ship builds
-     * for only some of them: `local-mcp` was published as a startup failure on
-     * the strength of a run whose real finding was "this laptop is arm64 and
-     * the package has no arm64 runtime" — a fact about the machine that the
-     * record gave no way to see.
-     *
-     * Absent on records written before this was captured, which is why it is
-     * optional; absence means unknown, never "the same as yours".
-     */
-    arch?: string | undefined;
-  };
+  isolation?:
+    | {
+        docker: boolean;
+        image?: string | undefined;
+        network?: string | undefined;
+        note?: string | undefined;
+        /**
+         * The architecture the measurement ran on, as `<platform>/<arch>` (e.g.
+         * `linux/amd64`). Part of the isolation because some packages ship builds
+         * for only some of them: `local-mcp` was published as a startup failure on
+         * the strength of a run whose real finding was "this laptop is arm64 and
+         * the package has no arm64 runtime" — a fact about the machine that the
+         * record gave no way to see.
+         *
+         * Absent on records written before this was captured, which is why it is
+         * optional; absence means unknown, never "the same as yours".
+         */
+        arch?: string | undefined;
+      }
+    | undefined;
   /** Request timeout in force during this measurement. */
   timeoutMs?: number | undefined;
   notes?: string | undefined;
