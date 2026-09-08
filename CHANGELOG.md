@@ -147,10 +147,26 @@ while reading it.
   Withdrawn rather than corrected. Bringing it under the existing guard would have meant sixteen
   allow-list entries freezing prose nobody maintains, and the article was history with a reading
   date attached — history that states a thing which was never true is not worth keeping for the
-  date's sake. Its two inbound links go with it, its published URL now 404s, and `ROADMAP.md`
-  phase 5 describes the report it wants instead of numbering it against a withdrawn one. The
-  changelog entries that announced it are left exactly as they were: they record what shipped on
-  their dates, and a record is corrected forward.
+  date's sake. Its two inbound links go with it, and `ROADMAP.md` phase 5 describes the report
+  it wants instead of numbering it against a withdrawn one.
+
+  **The address could not be withdrawn with the page.** It is printed in the README of every
+  release from 0.10.0 to 0.17.0, and a published tarball cannot be edited, so a reader who
+  installed any of them still holds the link. The path now answers with a withdrawal notice
+  rather than a 404: what the report got wrong, that it is not coming back in that form, and
+  where the live numbers are. Putting hand-written prose back at the address that produced this
+  defect is safe under one property only — that it states no number — so `page-numbers.test.ts`
+  holds it to that, and to the two dates it is a record of. Both halves are mutation-checked: a
+  percentage in the prose fails the first, a third date the second. The `v1` Action tag still
+  points at a tree whose README carries the link and is not moved for this, because `release.yml`
+  moves it only when `action.yml` changes, and re-pointing every consumer's workflow at newer
+  code to repair a link is the worse trade.
+
+  Two changelog entries went with the page. Both described it in the present tense as a live
+  document — one that a dated correction sat above its text, the other that it kept a six-week
+  sentence — about a file that no longer exists. The entry under 0.10.0 announcing the report
+  stands: that release is the first whose README carries the link, and someone installing it
+  still gets one.
 
 - **Eleven published numbers were measured over a protocol revision the server picked, and nothing
   recorded that.** Every session this harness opens says which MCP revision it speaks, and the
@@ -345,13 +361,11 @@ while reading it.
   mechanism, with nothing found; the other three are closed and only their pages have been read.
   Two published sentences went with the fix. The front page opened by telling every reader that
   a server's schemas ride along on every single request, which is false for Claude Code's
-  default and for these three, and now states both cases. `docs/state-of-mcp-context-cost.md`
-  makes the same claim and is a **dated reading, so it is annotated rather than edited**: a
-  correction dated 2026-09-07 sits above the text, which stands as it was published. Tests:
-  `audit-clients.test.ts` gains a block that requires every discovered client to have been
-  decided, refuses a record without dated sources or without conditions, and pins each of the
-  three against the words the report prints; `published-deferral.test.ts` reads the new
-  paragraphs on both pages against the resolver. Mutation-checked six ways — putting `cursor`
+  default and for these three, and now states both cases; the second was on a page since
+  withdrawn. Tests: `audit-clients.test.ts` gains a block that requires every discovered client
+  to have been decided, refuses a record without dated sources or without conditions, and pins
+  each of the three against the words the report prints; `published-deferral.test.ts` reads the
+  new paragraphs on both pages against the resolver. Mutation-checked six ways — putting `cursor`
   back among the clients with no record fails nine tests across three files, and stripping a
   date, turning VS Code's record into a verdict, or reverting either page's paragraph each fail
   their own. The sixth is the branch itself: everything it prints is quotation, so a record that
@@ -608,8 +622,7 @@ checked was not being checked, and nothing said so.
   only the 61m17s one carried the `anki` and `grafana` timeouts since fixed. So the schedule now
   cuts the list into three, every row comes round within three Wednesdays, and `resweep.yml`
   carries the timings beside the number they chose. README, METHODOLOGY and CONTRIBUTING say
-  three where they said six; `docs/state-of-mcp-context-cost.md` keeps its six-week sentence,
-  because it states the day its numbers were read and a dated reading is not edited afterwards.
+  three where they said six.
 
 - **What the rotation published while this was going on.** The slice that run 33999205923
   finally pushed re-read 34 records and moved exactly two costs: `comfyui-mcp` 50,640 → 50,776

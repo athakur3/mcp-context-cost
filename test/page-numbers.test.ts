@@ -112,3 +112,48 @@ describe('every count on the front pages is maintained or deliberately static', 
     expect(stale.map((s) => `${s.file}: "${s.text}"`)).toEqual([]);
   });
 });
+
+/**
+ * The page that replaced the withdrawn state-of report, held to nothing that
+ * can rot.
+ *
+ * `docs/state-of-mcp-context-cost.md` was hand-written prose outside
+ * `PAGE_FILES`, and it published a figure that was never true beside six more
+ * that had drifted since the day they were read. Nothing above catches that,
+ * because the guard above only walks `PAGE_FILES`, and nothing else did
+ * either: regen never wrote the file, so `regenIsAFixedPoint` copied it into
+ * its scratch tree and compared it against itself, green unconditionally.
+ *
+ * It was withdrawn on 2026-09-08. The address could not be, because it is
+ * printed in the README of every release from 0.10.0 to 0.17.0 and those
+ * tarballs are immutable, so the path now serves a withdrawal notice instead
+ * of a 404. Putting a hand-written page back at the address that produced the
+ * defect is only safe under one property: it states no number. That is what is
+ * checked here, rather than trusted — a notice that acquires a measurement has
+ * become the thing it replaced, and would be just as unreachable from the
+ * guard above.
+ */
+describe('the withdrawn state-of report states nothing that can drift', () => {
+  const TOMBSTONE = 'docs/state-of-mcp-context-cost.md';
+  const ISO_DATE = /\b\d{4}-\d{2}-\d{2}\b/g;
+
+  /** The two events the notice is a record of. Both are history and cannot move. */
+  const DATES_IT_MAY_STATE = ['2026-09-04', '2026-09-08'];
+
+  const prose = stripNonProse(readFileSync(join(repoRoot, TOMBSTONE), 'utf8'));
+
+  it('carries no digit outside the dates it records', () => {
+    const withoutDates = prose.replace(ISO_DATE, (m) => ' '.repeat(m.length));
+    const stray = [...withoutDates.matchAll(/\d[\d,.]*/g)].map((m) => m[0]);
+    expect(
+      stray,
+      `${TOMBSTONE} states a number. It is hand-written prose at the address of a report ` +
+        'withdrawn for publishing figures nothing could check; the only thing keeping it safe ' +
+        'is that it has none. Send the reader to the leaderboard instead.',
+    ).toEqual([]);
+  });
+
+  it('states those two dates and no others', () => {
+    expect([...new Set(prose.match(ISO_DATE) ?? [])].sort()).toEqual(DATES_IT_MAY_STATE);
+  });
+});
