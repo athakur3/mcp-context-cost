@@ -13,6 +13,7 @@ import {
   configCandidates,
   loadConfigs,
   loadSettingsSources,
+  managedDropInCandidates,
   settingsCandidates,
 } from '../src/audit/config.js';
 import { buildReport, formatReport, planBudgetFit, serverKey, DEFAULT_CONTEXT_WINDOW, type AuditReport } from '../src/audit/audit.js';
@@ -2298,6 +2299,96 @@ describe('the deferral posture is read from every place the machine sets it', ()
         settingsCandidates({ home: tempDir('mcc-home-'), cwd, platform: 'linux' }),
       );
       expect(read.find((r) => r.scope === 'project-settings')).toMatchObject({ state: 'unreadable' });
+    });
+
+    // `managed-settings.d/*.json` and `managed-settings.json` are documented as
+    // one source "merged together", so the drop-ins are a place Claude Code
+    // takes these variables from that this never opened.
+    describe('the managed-settings.d drop-ins', () => {
+      const withDropIns = (files: Record<string, unknown>) => {
+        const dir = tempDir('mcc-managed-');
+        const managed = join(dir, 'managed-settings.json');
+        writeFileSync(managed, JSON.stringify({}));
+        mkdirSync(join(dir, 'managed-settings.d'));
+        for (const [name, doc] of Object.entries(files)) {
+          writeFileSync(join(dir, 'managed-settings.d', name), JSON.stringify(doc));
+        }
+        return managed;
+      };
+
+      it('reads every .json in the directory, in name order, and ignores the rest', () => {
+        const managed = withDropIns({
+          '20-b.json': { env: { ENABLE_TOOL_SEARCH: 'false' } },
+          '10-a.json': { env: {} },
+          'notes.txt': {},
+          '.hidden.json': {},
+        });
+        const paths = managedDropInCandidates(managed).map((c) => c.path);
+        expect(paths.map((p) => p.split('/').pop())).toEqual(['10-a.json', '20-b.json']);
+        expect(managedDropInCandidates(managed).every((c) => c.scope === 'managed-drop-in')).toBe(true);
+      });
+
+      it('has nothing to say where the directory does not exist', () => {
+        const dir = tempDir('mcc-managed-');
+        const managed = join(dir, 'managed-settings.json');
+        writeFileSync(managed, JSON.stringify({}));
+        expect(managedDropInCandidates(managed)).toEqual([]);
+      });
+
+      it('reads a directory it cannot list as one unreadable source, not as silence', () => {
+        const managed = withDropIns({});
+        const candidates = managedDropInCandidates(managed, () => {
+          throw new Error('EACCES');
+        });
+        expect(candidates).toEqual([
+          { scope: 'managed-drop-in', path: join(dirname(managed), 'managed-settings.d') },
+        ]);
+        // And a directory read as a file is exactly that: unknown, not empty.
+        expect(loadSettingsSources(candidates)[0]).toMatchObject({ state: 'unreadable' });
+      });
+
+      it('lets a drop-in decide the posture, the same as the managed file would', () => {
+        const managed = withDropIns({ '10-a.json': { env: { ENABLE_TOOL_SEARCH: 'false' } } });
+        const read = loadSettingsSources([
+          { scope: 'managed-settings', path: managed },
+          ...managedDropInCandidates(managed),
+        ]);
+        expect(resolveToolSearchSources(read)).toMatchObject({
+          mode: 'loads-upfront',
+          variable: 'ENABLE_TOOL_SEARCH',
+          value: 'false',
+        });
+      });
+
+      // Between tiers, precedence is documented and the walk answers. Inside
+      // this one it is not, so answering by array order would be inventing it.
+      it('refuses where the tier disagrees with itself rather than taking the first file', () => {
+        const managed = withDropIns({
+          '10-a.json': { env: { ENABLE_TOOL_SEARCH: 'false' } },
+          '20-b.json': { env: { ENABLE_TOOL_SEARCH: 'true' } },
+        });
+        const read = loadSettingsSources([
+          { scope: 'managed-settings', path: managed },
+          ...managedDropInCandidates(managed),
+        ]);
+        expect(resolveToolSearchSources(read)).toMatchObject({
+          mode: 'setting-unresolved',
+          unresolved: 'sources-disagree',
+          variable: 'ENABLE_TOOL_SEARCH',
+        });
+      });
+
+      it('does not refuse where the tier agrees with itself', () => {
+        const managed = withDropIns({
+          '10-a.json': { env: { ENABLE_TOOL_SEARCH: 'false' } },
+          '20-b.json': { env: { ENABLE_TOOL_SEARCH: 'false' } },
+        });
+        const read = loadSettingsSources([
+          { scope: 'managed-settings', path: managed },
+          ...managedDropInCandidates(managed),
+        ]);
+        expect(resolveToolSearchSources(read).mode).toBe('loads-upfront');
+      });
     });
 
     it('lists the files in precedence order, and knows where the managed one lives', () => {

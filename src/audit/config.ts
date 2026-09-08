@@ -30,8 +30,8 @@
  * name) are held to the same rule: sent with the request, never reported —
  * only `headerNames` is.
  */
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { parse as parseToml } from 'smol-toml';
 import { parse as parseYaml } from 'yaml';
 import {
@@ -506,6 +506,42 @@ export function settingsCandidates(env: {
     { scope: 'project-settings', path: join(cwd, '.claude', 'settings.json') },
     { scope: 'user-settings', path: join(home, '.claude', 'settings.json') },
   ];
+}
+
+/**
+ * The `managed-settings.d/*.json` drop-ins beside the managed settings file.
+ *
+ * `code.claude.com/docs/en/managed-settings.md`, read 2026-09-08: the file
+ * source is "`managed-settings.d/*.json` and `managed-settings.json` merged
+ * together" in the same system directory — one tier, not two. Reading only
+ * `managed-settings.json` is the same shape of miss as reading only the shell
+ * was: a place the client takes these variables from, never opened.
+ *
+ * Unlike `settingsCandidates` this one lists a directory, which is why it is a
+ * separate function called from `discoverSettings` rather than folded in there:
+ * that one promises paths in, candidates out, and nothing touching a disk.
+ *
+ * A directory that exists and cannot be listed yields the directory itself as a
+ * candidate, so it is read as one `unreadable` source rather than as silence.
+ * What it holds is unknown, and an unknown in the tier that outranks every
+ * other file is not the same as a tier that sets nothing.
+ */
+export function managedDropInCandidates(
+  managedSettingsPath: string,
+  list: (dir: string) => string[] = readdirSync,
+): SettingsCandidate[] {
+  const dir = join(dirname(managedSettingsPath), 'managed-settings.d');
+  if (!existsSync(dir)) return [];
+  let names: string[];
+  try {
+    names = list(dir);
+  } catch {
+    return [{ scope: 'managed-drop-in', path: dir }];
+  }
+  return names
+    .filter((n) => n.endsWith('.json') && !n.startsWith('.'))
+    .sort()
+    .map((n) => ({ scope: 'managed-drop-in' as const, path: join(dir, n) }));
 }
 
 /**

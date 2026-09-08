@@ -460,9 +460,13 @@ them: the managed settings file for the platform
 (`/Library/Application Support/ClaudeCode/managed-settings.json` on macOS,
 `/etc/claude-code/managed-settings.json` on Linux, `C:\Program Files\ClaudeCode\managed-settings.json` on
 Windows — not `%ProgramData%\ClaudeCode\managed-settings.json`, which the vendor names as a legacy path
-Claude Code does not read, and which this opened instead until 2026-09-08),
+Claude Code does not read, and which this opened instead until 2026-09-08), every
+`managed-settings.d/*.json` drop-in beside it,
 `<cwd>/.claude/settings.local.json`, `<cwd>/.claude/settings.json`, then
-`~/.claude/settings.json`. Among the settings files the first that sets a variable wins —
+`~/.claude/settings.json`. The managed file and its drop-ins are **one** source, documented as
+merged together, and the vendor does not say which file inside that pair wins: where they set the
+same variable to different values the posture is refused rather than decided by an order this has
+no source for. Among the settings files the first that sets a variable wins —
 sets it at all, readably or not, so a readable value above an unreadable one is still the
 value in force, and an unreadable one beneath it decides nothing. Every place consulted is
 published with what it set — **by name, never by value** — and each is marked read, absent,

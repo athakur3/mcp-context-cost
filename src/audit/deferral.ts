@@ -124,6 +124,8 @@ export function toolSearchEnv(env: Record<string, string | undefined>): ToolSear
 export type ToolSearchScope =
   | 'shell'
   | 'managed-settings'
+  /** A `managed-settings.d/*.json` drop-in: the managed file's own tier, not a rank below it. */
+  | 'managed-drop-in'
   | 'local-settings'
   | 'project-settings'
   | 'user-settings';
@@ -445,6 +447,24 @@ export function resolveToolSearchSources(sources: ToolSearchSource[]): ResolvedT
   /** Whether a place sets this variable at all — readably or not. */
   const holds = (s: ToolSearchSource, name: ToolSearchVar): boolean =>
     (s.vars[name] ?? '').trim() !== '' || (s.unreadable ?? []).includes(name);
+
+  // The managed settings file and the `managed-settings.d` drop-ins beside it
+  // are ONE tier — the vendor documents them as "merged together" — and it does
+  // not say which file inside that tier wins. The precedence walk below answers
+  // by array order, which is an answer this has no source for, so a tier that
+  // disagrees with itself is refused instead. Between tiers, precedence IS
+  // documented, and that walk is left alone.
+  const adminTier = sources.filter(
+    (s) => s.scope === 'managed-settings' || s.scope === 'managed-drop-in',
+  );
+  if (adminTier.length > 1) {
+    for (const name of TOOL_SEARCH_VARS) {
+      const held = adminTier.filter((s) => holds(s, name));
+      if (new Set(held.map((s) => (s.vars[name] ?? '').trim())).size > 1) {
+        return unresolved('sources-disagree', name);
+      }
+    }
+  }
 
   /**
    * The value that would win for one variable, or the fact that it cannot be

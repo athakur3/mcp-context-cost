@@ -7,6 +7,25 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+- **The `managed-settings.d` drop-ins are read, and a tier that disagrees with itself is refused.**
+  `code.claude.com/docs/en/managed-settings.md`, read 2026-09-08, gives the file source as
+  "`managed-settings.d/*.json` and `managed-settings.json` merged together" — one tier in the same
+  system directory. Only the single file was opened, so a policy split across drop-ins, which is
+  what the vendor recommends when several teams own parts of one policy, was invisible: the same
+  shape of miss as reading only the shell, which this fixed for settings files in 0.7.0.
+
+  New scope `managed-drop-in` in the published source records, listed beside the managed file
+  rather than below it — appended at the end, the precedence walk would have let a user's own
+  settings outrank an organisation's policy. The directory listing lives in
+  `managedDropInCandidates`, called from `discoverSettings`, so `settingsCandidates` keeps its
+  promise that nothing in it touches a disk. A directory that exists and cannot be listed is one
+  `unreadable` source rather than silence.
+
+  **The vendor does not say which file inside that tier wins**, so where the managed file and its
+  drop-ins set the same variable to different values the posture is refused (`sources-disagree`)
+  rather than answered by array order. Precedence *between* tiers is documented and that walk is
+  untouched.
+
 - **On Windows the audit opened the one managed-settings path the vendor says Claude Code does not
   read.** `settingsCandidates` built `%ProgramData%\ClaudeCode\managed-settings.json`;
   `code.claude.com/docs/en/managed-settings.md`, read 2026-09-08, gives the system directory as

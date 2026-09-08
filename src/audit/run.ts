@@ -17,6 +17,7 @@ import {
   configCandidates,
   loadConfigs,
   loadSettingsSources,
+  managedDropInCandidates,
   settingsCandidates,
   type ConfiguredServer,
   type LoadedConfig,
@@ -134,9 +135,20 @@ export function discover(opts: AuditOptions = {}): LoadedConfig[] {
 export function discoverSettings(opts: AuditOptions = {}): ToolSearchSource[] {
   const cwd = opts.cwd ?? process.cwd();
   const home = opts.home ?? homedir();
-  return loadSettingsSources(
-    settingsCandidates({ home, cwd, platform: process.platform }),
-  );
+  const candidates = settingsCandidates({ home, cwd, platform: process.platform });
+  // The drop-ins are the managed file's own tier, so they belong beside it and
+  // above every other settings file — not appended at the end, where the
+  // precedence walk would let a user file outrank an organisation's policy.
+  const at = candidates.findIndex((c) => c.scope === 'managed-settings');
+  const all =
+    at < 0
+      ? candidates
+      : [
+          ...candidates.slice(0, at + 1),
+          ...managedDropInCandidates(candidates[at].path),
+          ...candidates.slice(at + 1),
+        ];
+  return loadSettingsSources(all);
 }
 
 /**
