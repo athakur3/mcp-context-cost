@@ -21,9 +21,12 @@ every time: an item that quoted the record held up, and an item that inferred a 
 category did not — the symptom was real in every case, the mechanism behind it often was not.
 So the first hour of a phase re-reads the records its items name and either confirms the
 sentence or rewrites it. It is the same discipline this project applies to its own published
-numbers: a claim is worth what its evidence is worth, including a claim in here. Which items
-were wrong, and about what, is in the changelog and the git history — this file states the
-rule, not the tally.
+numbers: a claim is worth what its evidence is worth, including a claim in here. The rule
+held at the `0.19.0` cut (2026-09-08) in both directions: refuting the changelog against the
+commit list before cutting found three numbers written from memory and one gate whose name
+promised a coverage check it could not perform — all corrected before the release rather
+than after it. Which items were wrong, and about what, is in the changelog and the git
+history — this file states the rule, not the tally.
 
 ## Where it stands
 
