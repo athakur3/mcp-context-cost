@@ -10,7 +10,7 @@
  * only thing standing between the pin and the specification was a person
  * remembering to look.
  *
- * Like `measure-adoption.ts`, this talks to a network API and so lives outside
+ * This talks to a network API and so lives outside
  * `src/` and outside the published package: the library, the CLI and every
  * generated artifact stay offline. The rules it applies — what counts as a
  * revision, which names are deliberately not revisions, what makes a listing
@@ -60,9 +60,7 @@ if (unknown.length > 0) {
 const asJson = process.argv.includes('--json');
 
 /**
- * The token is optional, unlike `measure-adoption.ts`, which refuses to run
- * without one because an unauthenticated code search returns nothing and that
- * is not the same as finding nothing. Here the raw half needs no credential at
+ * The token is optional: the raw half needs no credential at
  * all and the listing half works unauthenticated at a lower limit, so refusing
  * would turn a missing token into a red run that says nothing about the
  * specification.

@@ -126,8 +126,7 @@ export interface WalkResult {
  *
  * The fetch is a parameter so the walk itself is under test: the loop that
  * decides when to stop, and whether stopping early is *said*, is the part that
- * would otherwise live only in the script nothing imports. `measure-adoption.ts`
- * has the same MAX_PAGES rule and no test holds it.
+ * would otherwise live only in the script nothing imports.
  *
  * `truncated` is never silent. It is true whenever the records do not cover
  * the whole registry — the page cap fired while a next cursor was still

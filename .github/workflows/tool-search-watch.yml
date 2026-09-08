@@ -18,8 +18,7 @@
 # tool is only the part that fetches.
 #
 # Thursday, away from every other scheduled job here: resweep is Wednesday
-# 03:11, the spec watch Tuesday 02:47, self-badge Monday 06:17, adoption the 1st
-# at 08:37.
+# 03:11, the spec watch Tuesday 02:47, self-badge Monday 06:17.
 #
 # Read-only, and it publishes nothing: `contents: read`, no write token, and the
 # tool writes no file at all. A drift fails the run rather than opening an issue

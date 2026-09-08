@@ -49,7 +49,6 @@
     "lint": "oxlint src tools test spec vitest.config.ts",
     "format": "prettier --write \"{src,tools,test,spec}/**/*.ts\" vitest.config.ts",
     "format:check": "prettier --check \"{src,tools,test,spec}/**/*.ts\" vitest.config.ts",
-    "adoption": "tsx tools/measure-adoption.ts",
     "scan-registry": "tsx tools/scan-registry.ts",
     "cross-check": "tsx src/sweep/cross-check.ts",
     "divergence": "tsx tools/measure-divergence.ts",

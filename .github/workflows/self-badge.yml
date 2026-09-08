@@ -70,9 +70,9 @@ jobs:
         # divergence run, which moves the count of rows that still match it.
         #
         # No rebase before the push: this job takes minutes, and its Monday
-        # slot is kept clear by the other pushers (see the cron comments in
-        # resweep.yml and adoption.yml). A dispatch of either during this run
-        # would make this push fail and lose the week's badge, not theirs.
+        # slot is kept clear by the other pusher (see the cron comments in
+        # resweep.yml). A dispatch of it during this run would make this push
+        # fail and lose the week's badge, not its.
         env:
           # The only step that holds the write token (the checkout above did
           # not keep it). It reaches git on the push command line, never the

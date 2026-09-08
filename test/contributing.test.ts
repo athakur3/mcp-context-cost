@@ -27,7 +27,7 @@ import type { Measurement } from '../src/core/types.js';
  * So every expectation here is derived from the thing the sentence describes —
  * `FIELDS` through `knownFields` and the validator's own messages, the
  * workflow ymls' `run:` lines, `pr-check.ts`'s source and exit policy,
- * `resweep.yml`'s cron and shard default, `ROADMAP.md`'s own wording — rather
+ * `resweep.yml`'s cron and shard default — rather
  * than restated as literals a second time. A literal here would be the same
  * hand-written claim in two places, which is the failure the page exists to
  * avoid.

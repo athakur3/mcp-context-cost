@@ -151,8 +151,8 @@ runner's own daemon with the pull request's argv, so the check prints
 
 and moves on with exit 0 (`src/sweep/pr-check.ts`). And an entry with `remote: true` is
 listed and never launched anywhere: an OAuth-walled endpoint never reaches `initialize`
-without credentials, and measuring one with a real key is on the roadmap's
-[not-planned list](ROADMAP.md#not-planned). A remote endpoint that needs no credential is
+without credentials, and measuring one with a real key is on the
+[not-planned list](#not-planned) below. A remote endpoint that needs no credential is
 measured through the `mcp-remote` bridge instead, with `npx -y mcp-remote <url>` as its
 `command` and no `remote` flag (`cloudflare-docs`, `deepwiki`).
 
@@ -182,8 +182,8 @@ know about it:
 - **Without `--no-persist` the same command writes** `results/<name>/measurement.json`,
   `badges/<name>.json` and a `results/history.csv` row into your checkout, and nothing in
   `.gitignore` refuses them. Those files must not be in the pull request.
-- **The number it prints is never the published one.** The rule is in the roadmap's
-  [not-planned list](ROADMAP.md#not-planned), and the record that produced it is in
+- **The number it prints is never the published one.** The rule is in the
+  [not-planned list](#not-planned) below, and the record that produced it is in
   [METHODOLOGY §which machine a number applies to](docs/METHODOLOGY.md#which-machine-a-number-applies-to).
   `resweep.yml`'s header carries the same reasoning for the rotation.
 
@@ -342,9 +342,23 @@ workflow offers, not a promise this file makes.
   registry says about the package (`gdrive`, `neon`, `elasticsearch`).
 - **Remote entries have limits.** A no-auth endpoint is measured through the `mcp-remote`
   bridge; an OAuth-walled one is listed with `remote: true` and not measured, and measuring it
-  with real credentials is on the roadmap's [not-planned list](ROADMAP.md#not-planned),
-  which gives the reason.
+  with real credentials is on the [not-planned list](#not-planned) below, which gives the
+  reason.
 - **No metric floor is on record.** Nothing in the repository states a minimum download count,
   so this file does not invent one. What the record does state is how the long-tail block was
   chosen — ranked by live weekly downloads and provenance-checked by org and repo — which is
   the standard a reviewer holds a new entry to.
+
+## Not planned <a id="not-planned"></a>
+
+Decisions the project has taken and will not revisit in a pull request, each with its reason.
+They were the roadmap's list until 2026-09-08; a contributor is who needs them, so they live here.
+
+- Merging per-client totals into one number: a context window belongs to one session.
+- Measuring OAuth-walled remotes (`linear`, `zapier`, `vercel`) with real credentials: the
+  isolation is credential-free by definition, and a number taken with a key would describe
+  that key's account.
+- Publishing any measurement taken on a developer machine. CI measures; the laptop probes.
+- Widening the failure taxonomy again without a corroboration rule for the new bucket.
+- Bumping methodology v1.0 for anything above: none of it touches canonical bytes,
+  `totalTokens`, or a hash.

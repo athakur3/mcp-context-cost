@@ -18,8 +18,6 @@ Second-heaviest is `agent-device` at 53,669 on the wire, 40,105 carried, 75,686 
   lines, what it is not
 - **[Get the badge](https://github.com/athakur3/mcp-context-cost#measure-your-own-server)** —
   one line in your README, backed by a published measurement
-- **[Who displays the badge](adoption.md)** — how many projects outside this repository
-  carry it, the day someone last looked, and every file that was examined to say so
 
 ## The badge
 

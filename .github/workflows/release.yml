@@ -219,6 +219,6 @@ jobs:
           echo "Published $VERSION and verified it from npm."
           echo
           echo "Still yours:"
-          echo "  - ROADMAP.md: mark what shipped, and where the plan was wrong."
+          echo "  - The roadmap, in the operations repository: mark what shipped, and where the plan was wrong."
           echo "  - The v1 Action tag moves only if action.yml changed:"
           echo "      git diff v1 HEAD -- action.yml"

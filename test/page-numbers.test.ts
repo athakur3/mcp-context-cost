@@ -124,7 +124,7 @@ const STATIC_COUNTS: { file: PageFile; text: string; why: string }[] = [
     text: '197 tokens',
     why:
       'a dated reading from one capability-probe run in CI on 2026-09-06, stated with its date — ' +
-      'it describes what that run saw, not the current data, the same way the adoption reading does. ' +
+      'it describes what that run saw, not the current data. ' +
       'Regen cannot maintain it because nothing in results/ holds it: the probe writes no published ' +
       'record by design. Retake it with tools/capability-probe.ts and re-date the sentence.',
   },

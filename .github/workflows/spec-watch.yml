@@ -10,8 +10,7 @@
 #
 # Tuesday, a clear day before the Wednesday re-sweep, so a revision landing
 # upstream is visible before anything is published against it — and away from
-# the Monday self-badge push and the monthly adoption reading, which are the
-# only other scheduled jobs here.
+# the Monday self-badge push, the only other scheduled pusher here.
 #
 # The token is the Actions one and nothing more: the contents API allows 60
 # requests an hour per IP to an unauthenticated caller and runners share
@@ -33,7 +32,7 @@ name: Spec revision watch
 on:
   schedule:
     # Tuesday 02:47 UTC — resweep.yml is Wednesday 03:11, self-badge Monday
-    # 06:17, adoption the 1st at 08:37. Nothing shares this slot.
+    # 06:17. Nothing shares this slot.
     - cron: '47 2 * * 2'
   workflow_dispatch:
 

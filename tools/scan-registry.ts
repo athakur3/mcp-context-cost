@@ -9,8 +9,8 @@
  *
  * Every rule this applies lives in `src/sweep/registry-scan.ts`, offline and
  * under test; this file is the part that fetches, so it lives outside `src/`
- * and outside the published package like `measure-adoption.ts` and
- * `measure-divergence.ts`. Read that module's docblock for what the scan is
+ * and outside the published package like `measure-divergence.ts`. Read that
+ * module's docblock for what the scan is
  * and is not: it emits the two owner strings a provenance judgment compares
  * and makes no judgment; it emits drafts, not entries.
  *

@@ -15,7 +15,7 @@
  * and the report was somebody remembering to re-read them — and these pages
  * have already moved host once under this project.
  *
- * Like `watch-spec-revisions.ts` and `measure-adoption.ts`, this talks to a
+ * Like `watch-spec-revisions.ts`, this talks to a
  * network and so lives outside `src/` and outside the published package: the
  * library, the CLI and every generated artifact stay offline. The rule it
  * applies — which passages, what counts as drift, what counts as not having
