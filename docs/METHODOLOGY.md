@@ -370,6 +370,21 @@ not part of the definition, moves no published number, and no badge or `totalTok
 because of anything in this section. It is what `audit` answers for a config it discovers,
 and it is stated here because a number nobody can attribute to a payer is not a cost.
 
+**What deferring changes, and what it does not.** Deferring means the definitions stay out of
+the model's context window until the model reaches for one — it does not mean they stop being
+sent. For the mechanism Claude Code's deferral is documented as riding on, the vendor states it
+in one sentence: "`defer_loading` controls what enters the context window, not what you send in
+the request" — every tool's full definition still travels in the `tools` array of every
+request, deferred ones included, because the API needs the definitions server-side to run the
+search (Anthropic tool-search documentation, §Deferred tool loading,
+`platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool.md`, read
+**2026-09-09**). So a deferring client does not make the headline above moot: it is what that
+stack puts into every request the session makes, before anything enters context. What deferral
+moves is which of those bytes enter the window — the difference the
+[session-start load](#session-start-load) column exists to measure. This is a statement about
+that one documented mechanism, not about every deferring client: Cursor's record below
+describes a different one, and what its backend sends is on no surface this project reads.
+
 **What counts as a record.** A record is a first-party statement about the client's own
 behaviour, on a surface that client's vendor controls, readable at a fixed address and
 carrying a date. Four kinds qualify, and the rule admits all four as of **2026-09-07**:

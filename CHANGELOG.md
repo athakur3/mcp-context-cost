@@ -109,6 +109,17 @@ while reading it.
   zero tools today; the guard is proven by mutation, and a sweep of empty lists is proven to
   restore the prior bytes end to end.
 
+- **"Deferred" was never allowed to read as "not sent", except nothing said so.** The pages
+  explain where a stack's definitions are deferred out of the context window, and never stated
+  the other half: on the mechanism that deferral rides on, every tool's full definition is
+  still sent in the `tools` array of every request — the vendor's own documentation says
+  `defer_loading` "controls what enters the context window, not what you send in the request"
+  (tool-search documentation, §Deferred tool loading, read 2026-09-09). The methodology's
+  who-pays section now carries that sentence with its source, and its scope: the wire headline
+  is what a deferring session's requests still carry, and what deferral moves is what enters
+  context, which the session-start column measures. Scoped to the documented mechanism — a
+  client whose record describes a different one keeps its own words.
+
 ## 0.19.0 — 2026-09-08
 
 - **The repository had no formatter, no linter, and `strict: true` as its only compiler flag.**
