@@ -184,6 +184,13 @@ npx -y mcp-context-cost audit --config .mcp.json --budget 20000
 # exits 1 when the stack exceeds the budget, so a PR adding a 25K-token server fails
 ```
 
+The budget is denominated in **sessions**, because a context window belongs to one session:
+for claude-code that is the files one session loads together — both its configs, or the
+managed file alone where one is deployed, minus anything `deniedMcpServers` removes — and for
+every other client one file is one session. Per-file totals are still reported as file facts;
+the gate reads the costliest session. The baseline diff below stays per file, because a
+baseline pins a file artifact.
+
 The budget is an absolute ceiling. What a reviewer actually wants to know is what *this pull
 request* did, so record a baseline and diff against it:
 

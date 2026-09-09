@@ -163,6 +163,19 @@ while reading it.
   printed as set-but-unevaluated, and the vendor's own evaluation tables run as tests, row for
   row (managed-mcp documentation, read 2026-09-09).
 
+- **`--budget` now gates the costliest session, not the costliest file.** A context window
+  belongs to one session, and claude-code loads two config files into one — so a pull request
+  could keep every file under the limit while the session it actually runs blew it, and the
+  gate stayed green. Decided 2026-09-09: sessions are the denominator. The report carries a
+  `sessions` array — which files load together, what that costs, what the denylist removed —
+  composed in one place and consumed by the deferral verdict, the printed session line and
+  the gate alike, so the three cannot disagree about what a session is. Under exclusive
+  control the session is the managed file alone, so a heavier suppressed config no longer
+  fails a budget it never loads into, and a suppressed file's unmeasured server no longer
+  blocks the check as an unestablished cost — it is nobody's bill. Per-file totals are
+  untouched, every other client keeps one file as one session, and the baseline diff stays
+  per file, because a baseline pins a file artifact.
+
 ## 0.19.0 — 2026-09-08
 
 - **The repository had no formatter, no linter, and `strict: true` as its only compiler flag.**

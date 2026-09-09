@@ -215,7 +215,10 @@ export interface BudgetFit {
  * need, and dropping by weight will sometimes name the one you cannot live without. That
  * caveat is printed with the result rather than left implied.
  */
-export function planBudgetFit(config: AuditConfigResult, limit: number): BudgetFit {
+export function planBudgetFit(
+  config: Pick<AuditConfigResult, 'servers' | 'totalTokens'>,
+  limit: number,
+): BudgetFit {
   const measured = config.servers
     .filter((srv) => typeof srv.tokens === 'number' && (srv.tokens as number) > 0)
     .toSorted((a, b) => (b.tokens as number) - (a.tokens as number));
@@ -273,6 +276,21 @@ export interface AuditReport {
     /** Present only when over budget: the arithmetic of getting back under it. */
     fit?: BudgetFit | undefined;
   };
+  /**
+   * What each session loads, one row per session scope — for claude-code the
+   * files one session reads together (the managed file alone where deployed),
+   * with denylist removals already applied and named. Config rows above stay
+   * file facts; this is the session fact, and it is what `--budget` gates.
+   */
+  sessions?:
+    | {
+        client: string;
+        sources: string[];
+        totalTokens: number;
+        contextShare: number;
+        deniedTokens?: number | undefined;
+      }[]
+    | undefined;
   /**
    * Present when the managed MCP file exists on this machine. `exclusive`
    * means a claude-code session loads only its servers; `disabled` that it is
@@ -408,6 +426,70 @@ function measuredOk(m: Measurement): boolean {
  */
 const ONE_SESSION_PER_CLIENT = new Set(['claude-code']);
 
+/**
+ * One session's composition: which files load together, which servers that
+ * actually is once the managed file and the denylist have spoken, and the
+ * sums over exactly that set. The one home for "what does a session load" —
+ * the deferral verdict, the report's `sessions` array and the `--budget` gate
+ * all read it, so they cannot disagree about what a session is.
+ */
+interface SessionComposition {
+  client: string;
+  /** Every config in the scope, suppressed ones included. */
+  group: Omit<AuditConfigResult, 'deferral'>[];
+  /** The configs the session actually loads (managed-aware). */
+  sessionCfgs: Omit<AuditConfigResult, 'deferral'>[];
+  sources: string[];
+  /** Session servers after the denylist. */
+  servers: AuditServerResult[];
+  totalTokens: number;
+  /** Tokens a clean deny entry removed from this session. */
+  deniedTokens: number;
+  skippedRows: { source: string; name: string; status: string }[];
+  sharedSum: number;
+}
+
+function composeSessions(
+  built: Omit<AuditConfigResult, 'deferral'>[],
+  opts: {
+    shared: Map<Omit<AuditConfigResult, 'deferral'>, number>;
+    managedActive?: 'exclusive' | 'disabled' | undefined;
+    deniedNames?: Set<string> | undefined;
+  },
+): Map<string, SessionComposition> {
+  const scopes = new Map<string, Omit<AuditConfigResult, 'deferral'>[]>();
+  for (const cfg of built) {
+    const key = deferralScopeKey(cfg.client, cfg.source);
+    const group = scopes.get(key);
+    if (group) group.push(cfg);
+    else scopes.set(key, [cfg]);
+  }
+  const out = new Map<string, SessionComposition>();
+  for (const [key, group] of scopes) {
+    const isCc = ONE_SESSION_PER_CLIENT.has(group[0]!.client);
+    const sessionCfgs = isCc && opts.managedActive ? group.filter((c) => c.managed) : group;
+    const denied = isCc ? (opts.deniedNames ?? new Set<string>()) : new Set<string>();
+    const all = sessionCfgs.flatMap((c) => c.servers);
+    const servers = all.filter((s) => !denied.has(s.name));
+    out.set(key, {
+      client: group[0]!.client,
+      group,
+      sessionCfgs,
+      sources: sessionCfgs.map((c) => c.source),
+      servers,
+      totalTokens: servers.reduce((a, s) => a + (s.tokens ?? 0), 0),
+      deniedTokens: all.filter((s) => denied.has(s.name)).reduce((a, s) => a + (s.tokens ?? 0), 0),
+      skippedRows: sessionCfgs.flatMap((c) =>
+        c.skipped
+          .filter((s) => !denied.has(s.name))
+          .map((s) => ({ source: c.source, name: s.name, status: s.status })),
+      ),
+      sharedSum: sessionCfgs.reduce((a, c) => a + (opts.shared.get(c) ?? 0), 0),
+    });
+  }
+  return out;
+}
+
 /** Which configs share a deferral verdict. */
 function deferralScopeKey(client: string, source: string): string {
   return ONE_SESSION_PER_CLIENT.has(client) ? client : `${client}\0${source}`;
@@ -431,55 +513,32 @@ function attachDeferral(
      * because that is what the scopes below are grouped from.
      */
     shared: Map<Omit<AuditConfigResult, 'deferral'>, number>;
-    /**
-     * Set when a managed MCP file governs claude-code sessions: 'exclusive'
-     * keeps only the managed config's servers in the session verdict,
-     * 'disabled' keeps none. File-level rows are untouched either way.
-     */
-    managedActive?: 'exclusive' | 'disabled' | undefined;
-    /** Session servers a clean deniedMcpServers entry matched — they do not load. */
-    deniedNames?: Set<string> | undefined;
+    /** What each session loads, from `composeSessions` — the one home for it. */
+    sessions: Map<string, SessionComposition>;
   },
 ): AuditConfigResult[] {
-  const scopes = new Map<string, Omit<AuditConfigResult, 'deferral'>[]>();
-  for (const cfg of configs) {
-    const key = deferralScopeKey(cfg.client, cfg.source);
-    const group = scopes.get(key);
-    if (group) group.push(cfg);
-    else scopes.set(key, [cfg]);
-  }
-
   const verdicts = new Map<string, DeferralVerdict>();
-  for (const [key, group] of scopes) {
-    // Under a managed MCP file, the claude-code session is the managed file's
-    // servers (or none, when it disables MCP) — the suppressed configs still
-    // share the verdict object, so their rows can point at it, but nothing
-    // they declare is in the session that verdict describes. A server a clean
-    // deny entry matched does not load either, so it leaves the session here —
-    // and only here, never a file's own total.
-    const isCc = ONE_SESSION_PER_CLIENT.has(group[0]!.client);
-    const sessionCfgs = isCc && opts.managedActive ? group.filter((c) => c.managed) : group;
-    const denied = isCc ? (opts.deniedNames ?? new Set<string>()) : new Set<string>();
+  for (const [key, comp] of opts.sessions) {
+    // The composition already speaks the managed file's exclusivity and the
+    // denylist: what reaches evaluateDeferral is what the session loads, and
+    // suppressed configs still share the verdict object so their rows can
+    // point at it.
     verdicts.set(
       key,
       // Computed against the same context window the share uses, so any
       // threshold moves with `--context` instead of being pinned to 200,000.
       evaluateDeferral(
         {
-          client: group[0]!.client,
-          sources: sessionCfgs.map((c) => c.source),
-          servers: sessionCfgs.flatMap((c) =>
-            c.servers
-              .filter((s) => !denied.has(s.name))
-              .map((s) => ({
-                name: s.name,
-                tokens: s.tokens ?? 0,
-                claudeTokens: s.claudeTokens,
-                ...(s.alwaysLoad ? { alwaysLoad: true } : {}),
-              })),
-          ),
-          skippedCount: sessionCfgs.reduce((a, c) => a + c.skipped.length, 0),
-          sharedMeasurements: sessionCfgs.reduce((a, c) => a + (opts.shared.get(c) ?? 0), 0),
+          client: comp.client,
+          sources: comp.sources,
+          servers: comp.servers.map((s) => ({
+            name: s.name,
+            tokens: s.tokens ?? 0,
+            claudeTokens: s.claudeTokens,
+            ...(s.alwaysLoad ? { alwaysLoad: true } : {}),
+          })),
+          skippedCount: comp.skippedRows.length,
+          sharedMeasurements: comp.sharedSum,
         },
         { contextWindow, env: opts.env, settings: opts.settings, divergence: opts.divergence },
       ),
@@ -752,12 +811,12 @@ export function buildReport(
   }
 
   built.sort((a, b) => b.totalTokens - a.totalTokens);
-  const results = attachDeferral(built, contextWindow, {
-    ...opts,
+  const sessions = composeSessions(built, {
     shared,
     managedActive: managedActive ? managedState : undefined,
     deniedNames,
   });
+  const results = attachDeferral(built, contextWindow, { ...opts, shared, sessions });
 
   const report: AuditReport = {
     methodologyVersion: METHODOLOGY_VERSION,
@@ -768,6 +827,14 @@ export function buildReport(
     emptyConfigs,
     problems,
   };
+
+  report.sessions = [...sessions.values()].map((s) => ({
+    client: s.client,
+    sources: s.sources,
+    totalTokens: s.totalTokens,
+    contextShare: s.totalTokens / contextWindow,
+    ...(s.deniedTokens > 0 ? { deniedTokens: s.deniedTokens } : {}),
+  }));
 
   if (managedCfg && managedState) {
     report.managedMcp = {
@@ -812,25 +879,30 @@ export function buildReport(
   }
 
   if (typeof opts.budget === 'number') {
-    // The worst config is the gate: passing because your *lightest* client fits
-    // would be a green check on a session you don't run.
-    const worst = results[0];
+    // The worst SESSION is the gate — decided 2026-09-09. A context window
+    // belongs to one session, and for claude-code a session loads two files
+    // together (or the managed file alone, minus what the denylist removed);
+    // gating the worst file passed a budget the session it belongs to blows.
+    // Passing because your *lightest* client fits would still be a green check
+    // on a session you don't run, so the costliest one is the gate.
+    const worst = [...sessions.values()].toSorted((a, b) => b.totalTokens - a.totalTokens)[0];
     // A total is only a ceiling to compare against if it is the whole cost. A
-    // server that failed to start contributes 0, so the stack reads lighter
+    // server that failed to start contributes 0, so the session reads lighter
     // than it is and the budget passes on a number that is missing a server —
-    // exactly the PR the README says this gate catches. The server-level gate
-    // (core/server-diff.ts) already refuses this; so does this one now. Every
-    // skipped row counts: an auth-walled endpoint is a working server the
+    // exactly the PR the README says this gate catches. Every skipped row of
+    // every session counts: an auth-walled endpoint is a working server the
     // session pays for with its credential, and an unreachable one is a cost
-    // this could not establish, not a cost of zero.
-    const unestablished = results.flatMap((c) =>
-      c.skipped.map((s) => `${c.source}: ${s.name} (${s.status})`),
+    // this could not establish, not a cost of zero. What no session loads — a
+    // config the managed file suppresses, a server the denylist removed — is
+    // nobody's bill, so it does not count.
+    const unestablished = [...sessions.values()].flatMap((s) =>
+      s.skippedRows.map((r) => `${r.source}: ${r.name} (${r.status})`),
     );
     const over = (worst?.totalTokens ?? 0) > opts.budget;
     report.budget = {
       limit: opts.budget,
       worstTotal: worst?.totalTokens ?? 0,
-      worstSource: worst?.source ?? '(none)',
+      worstSource: worst ? worst.sources.join(' + ') || '(none)' : '(none)',
       over: over || unestablished.length > 0,
       // Named so the reader knows which way the number is wrong: the total
       // understates by however much these cost, which nobody knows.
@@ -1277,6 +1349,7 @@ export function formatReport(report: AuditReport): string {
   // Configs one session loads together share a verdict object; it answers for
   // all of them at once, so it is printed under the first one and not repeated.
   const verdictPrinted = new Set<DeferralVerdict>();
+  const sessionPrinted = new Set<NonNullable<AuditReport['sessions']>[number]>();
   let policyPrinted = false;
 
   for (const cfg of report.configs) {
@@ -1330,6 +1403,34 @@ export function formatReport(report: AuditReport): string {
         .reduce((a, c) => a + c.skipped.length, 0);
       for (const deferralLine of deferralLines(cfg.deferral, skippedInScope))
         lines.push(deferralLine);
+    }
+    {
+      const session = report.sessions?.find((s) =>
+        ONE_SESSION_PER_CLIENT.has(cfg.client)
+          ? s.client === cfg.client
+          : s.client === cfg.client && s.sources.length === 1 && s.sources[0] === cfg.source,
+      );
+      if (
+        session &&
+        !sessionPrinted.has(session) &&
+        (session.sources.length !== 1 || (session.deniedTokens ?? 0) > 0)
+      ) {
+        sessionPrinted.add(session);
+        const denied =
+          (session.deniedTokens ?? 0) > 0
+            ? ` (after ${n(session.deniedTokens!)} tokens removed by deniedMcpServers)`
+            : '';
+        const what =
+          session.sources.length === 0
+            ? 'no MCP servers'
+            : `${session.sources.length} config files together`;
+        lines.push('');
+        lines.push(
+          `  one ${cfg.client} session loads ${what}: ${n(session.totalTokens)} tokens — ` +
+            `${pct(session.contextShare)} of a ${n(report.contextWindow)}-token context window${denied}.`,
+        );
+        lines.push('  That session figure is what --budget gates; per-file totals stay above.');
+      }
     }
     if (cfg.client === 'claude-code' && report.mcpPolicy && !policyPrinted) {
       policyPrinted = true;
@@ -1518,7 +1619,9 @@ export function formatReport(report: AuditReport): string {
     lines.push('');
     if (!b.over) {
       const headroom = b.limit - b.worstTotal;
-      lines.push(`budget ok: ${n(b.worstTotal)} ≤ ${n(b.limit)} — ${n(headroom)} to spare`);
+      lines.push(
+        `budget ok: ${n(b.worstTotal)} ≤ ${n(b.limit)} — ${n(headroom)} to spare (costliest session: ${b.worstSource})`,
+      );
     } else if (b.unestablished && b.worstTotal <= b.limit) {
       // Under the line on what was measured, but not everything was: say which
       // way the number is wrong rather than passing on it.

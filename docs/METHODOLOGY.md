@@ -538,7 +538,9 @@ listed condition.
 `~/.claude.json` and `<cwd>/.mcp.json` into one session, so the threshold question is put to
 their sum and answered once. Per-config totals are still never merged (see above): the sum
 exists for the threshold and nowhere else. Where the managed MCP file below is deployed, the
-session is that file alone, and the sum is its.
+session is that file alone, and the sum is its. The session is also the unit `--budget` gates
+(decided **2026-09-09**): per-file totals stay file facts, the gate reads the costliest
+session, and a server the denylist removes is nobody's bill.
 
 **The managed tier owns the server list, where it exists.** `managed-mcp.json` — one fixed
 path per platform, in the same system directory as the managed settings file and, unlike it,
