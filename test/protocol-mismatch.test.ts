@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { mkdtempSync, rmSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { rpcErrorMessage, clampNotes } from '../src/sweep/client.js';
@@ -16,8 +16,6 @@ import { rowFor } from '../src/sweep/history.js';
 import { toBadge } from '../src/core/badge.js';
 import { failedMeasurement } from '../src/core/canonical.js';
 import { PROTOCOL_VERSION } from '../src/core/protocol.js';
-
-const repoRoot = join(import.meta.dirname, '..');
 
 /**
  * Unlike `evidence-tail.test.ts`, these are not transcriptions: no server has
@@ -131,15 +129,27 @@ describe('classifyFailure reads a protocol refusal', () => {
   /**
    * The true positive this must not cost. `magic` answers `-32001`, which is
    * neither of the two codes, and it is the record that made `AUTH_EVIDENCE`
-   * bound its alternatives in the first place (5e99a3d).
+   * bound its alternatives in the first place (5e99a3d). Its message is
+   * transcribed from the measurement of 2026-09-05 and rebuilt through
+   * `rpcErrorMessage` like every fixture above. It used to be read off the
+   * disk instead, and that pin outlived the phrasing it pinned: when JSON-RPC
+   * errors learned to name the method they refused, the first re-measure
+   * produced `-32001 answering initialize:` against a record and a pin that
+   * predated it, and run 34316551533 refused to publish a healthy sweep —
+   * same code, same vendor message, zero regressions — over the difference.
+   * The claim was never about the disk: this real message classifies as
+   * auth-required in whatever phrasing the wire path currently emits.
    */
-  it('still reads the magic record on disk as auth-required', () => {
-    const path = join(repoRoot, 'results', 'magic', 'measurement.json');
-    expect(existsSync(path), 'results/magic/measurement.json').toBe(true);
-    const m = JSON.parse(readFileSync(path, 'utf8')) as { status: string; notes: string };
-    expect(m.notes.startsWith('server error -32001:')).toBe(true);
-    expect(classifyFailure(m.notes)).toBe('auth-required');
-    expect(m.status).toBe('auth-required');
+  it("still reads magic's refusal as auth-required, in the current phrasing", () => {
+    const magic = rpcErrorMessage('initialize', {
+      code: -32001,
+      message:
+        'Not authenticated - your API key is missing or was reset. Get a fresh key at ' +
+        'https://21st.dev/mcp and update your MCP config (x-api-key / Bearer).',
+    });
+    expect(magic).toContain('-32001 answering initialize');
+    expect(PROTOCOL_MISMATCH_EVIDENCE.test(magic)).toBe(false);
+    expect(classifyFailure(magic)).toBe('auth-required');
   });
 });
 

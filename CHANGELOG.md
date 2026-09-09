@@ -133,6 +133,21 @@ while reading it.
   documents the threshold, and only the agent host's switches remain undocumented. Dates
   refreshed; the audit still reads no posture from any of it and has measured none of it.
 
+- **A test pinned the harness's own old phrasing to a live record, and vetoed a healthy
+  sweep.** The suite runs inside the sweep job before anything is committed, because a bot
+  push starts no CI — and one test there read `results/magic/measurement.json` off the disk
+  and required its notes to open with the error format the harness emitted before JSON-RPC
+  errors learned to name the method they refused. The first re-measure through the new
+  phrasing (run 34316551533) answered identically — same `-32001`, same vendor message, still
+  auth-required, zero of twenty-nine previously-measured servers regressed — and the job
+  refused to publish over the inserted words `answering initialize`. The claim the test
+  protects, that magic's real refusal classifies as auth-required (the true positive
+  `AUTH_EVIDENCE` was bounded against, 5e99a3d), is now a transcription rebuilt through
+  `rpcErrorMessage` — the rule every other fixture in that file already follows — so it moves
+  with the wire path's phrasing instead of vetoing it. The one remaining record-content pin
+  in the publish path, hana-cli's status, stays deliberately: a recovery there must change a
+  CONTRIBUTING sentence with it.
+
 ## 0.19.0 — 2026-09-08
 
 - **The repository had no formatter, no linter, and `strict: true` as its only compiler flag.**
