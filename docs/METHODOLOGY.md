@@ -215,7 +215,10 @@ exits non-zero. Nothing about that sweep reaches the published data. Below eithe
 the sweep publishes normally, including failures, because a small number of servers breaking
 at once is exactly what a real upstream breakage looks like. A sweep with no prior
 measurements to compare against reports that the check could not be performed, rather than
-reporting a pass.
+reporting a pass. A server that answers `tools/list` with an empty array is measured as it
+answered — zero tools, with a note saying whether it had declared a tools capability at
+`initialize` — but a zero is not counted as a real number by this check: a broken harness
+that gets nothing back would produce exactly that, a sweep of empty lists, and read as success.
 
 ## Trends over time — same conditions, or no line
 

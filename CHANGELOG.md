@@ -97,6 +97,18 @@ while reading it.
   the first scheduled sweep that writes the pair into published records, so the fields are
   documented before any reader meets one. No number moves; the change is prose on one page.
 
+- **An empty `tools/list` could vouch for the harness.** A server that answers with `[]` is
+  recorded as measured with zero tools — correctly, that is its answer — but the population
+  check that refuses to publish a sweep taken through a broken harness counted every
+  `measured` record as a real number. A harness that got nothing back from anyone would
+  therefore have read as a 100% success and published zeros over every number on record: the
+  one failure the check exists to catch, arriving as a pass. A zero-tool record now carries a
+  note saying what it is and whether the server had declared a tools capability at
+  `initialize` — read from the initialize result the client used to discard — and it no longer
+  counts as evidence in that check, on either side of the comparison. No published record has
+  zero tools today; the guard is proven by mutation, and a sweep of empty lists is proven to
+  restore the prior bytes end to end.
+
 ## 0.19.0 — 2026-09-08
 
 - **The repository had no formatter, no linter, and `strict: true` as its only compiler flag.**

@@ -17,6 +17,14 @@ export interface WireCapture {
    * different fact from never having asked, so the two are never conflated.
    */
   instructions: string | null;
+  /**
+   * Whether the initialize result's `capabilities` object carried a `tools`
+   * key — the server's own statement that it has tools to list. `null` when
+   * the result carried no capabilities object at all. Kept so that an empty
+   * `tools/list` can be read: a server that declared no tools and listed none
+   * is coherent; one that declared tools and listed none is worth saying.
+   */
+  declaresTools: boolean | null;
   stderrTail: string;
 }
 
@@ -543,6 +551,10 @@ export async function captureTools(
       protocolVersion: init?.protocolVersion,
       tools,
       instructions: typeof init?.instructions === 'string' ? init.instructions : null,
+      declaresTools:
+        init && typeof init.capabilities === 'object' && init.capabilities !== null
+          ? Object.hasOwn(init.capabilities, 'tools')
+          : null,
       stderrTail: client.stderrTail,
     };
   } finally {

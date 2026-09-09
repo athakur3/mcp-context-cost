@@ -16,9 +16,8 @@ import { DockerHarnessFault } from './docker.js';
 import { writeLeaderboard, type ServerEntry } from './report.js';
 import { appendHistory } from './history.js';
 import { appendToolVectors, writeRegressions } from './regressions.js';
-import { MIN_REGRESSIONS, snapshot, verdict, restore } from './harness-guard.js';
+import { MIN_REGRESSIONS, snapshot, verdict, restore, type Outcome } from './harness-guard.js';
 import { selectShard, shardIndexForDate } from './shard.js';
-import type { MeasurementStatus } from '../core/types.js';
 import { loadServersDoc } from './servers-schema.js';
 import { flagValue, knownFlagNames, unknownFlags, valuelessFlags } from '../flags.js';
 
@@ -100,7 +99,7 @@ const prior = snapshot(entries.map((e) => e.name));
 
 const queue = [...entries];
 const summary: Record<string, string> = {};
-const statuses = new Map<string, MeasurementStatus>();
+const outcomes = new Map<string, Outcome>();
 // Servers docker itself failed to run — never a measurement (measureServer
 // throws before persisting), so each one's previous record simply stands.
 const dockerFaults = new Map<string, string>();
@@ -128,7 +127,7 @@ async function worker() {
       continue;
     }
     const secs = ((Date.now() - started) / 1000).toFixed(0);
-    statuses.set(e.name, m.status);
+    outcomes.set(e.name, { status: m.status, toolCount: m.toolCount });
     summary[e.name] =
       m.status === 'measured' || m.status === 'dynamic'
         ? `${m.totalTokens} tokens / ${m.toolCount} tools (${m.status}, ${secs}s)`
@@ -148,7 +147,7 @@ await Promise.all(Array.from({ length: Math.max(1, concurrency) }, () => worker(
 // neither threshold, and the sweep publishes with 10 of 14 servers producing no
 // number and four good records overwritten with failures. A server that could
 // have produced a number and didn't is one fact, however it failed.
-const v = verdict(prior, statuses, dockerFaults.size);
+const v = verdict(prior, outcomes, dockerFaults.size);
 console.log(`harness check: ${v.reason}`);
 if (dockerFaults.size > 0 && !v.fault) {
   console.warn(

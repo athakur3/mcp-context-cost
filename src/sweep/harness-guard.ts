@@ -64,10 +64,37 @@ export function isGood(status: MeasurementStatus): boolean {
   return status === 'measured' || status === 'dynamic';
 }
 
+/** What one server's sweep came back as: the status, and how many tools it listed. */
+export interface Outcome {
+  status: MeasurementStatus;
+  toolCount: number | null;
+}
+
+/**
+ * Whether an outcome is evidence that the harness produced a real number.
+ *
+ * `isGood` answers "is this status a measurement"; this asks the narrower
+ * question the population check needs. A server that answers `tools/list`
+ * with `[]` is recorded as `measured` with zero tools — correctly, that is its
+ * answer, and the record says so in its note — but a *harness* that gets
+ * nothing back from every server produces exactly the same record for all of
+ * them at once. Counted as good, a sweep of empty lists would read as 100%
+ * success and publish zeros over every number on record, which is the one
+ * failure this guard exists to catch, arriving dressed as a pass. So a zero
+ * stays on record and cannot testify. A missing count (`null`) is left to the
+ * status: every measured record carries one, so `null` only ever accompanies a
+ * failure.
+ */
+export function hasNumber(o: Outcome): boolean {
+  return isGood(o.status) && o.toolCount !== 0;
+}
+
 /** The bytes of one server's published artifacts, exactly as they were pre-sweep. */
 export interface Snapshot {
   name: string;
   status: MeasurementStatus | null;
+  /** The tool count on record, so a zero-tool record is not read as a baseline (see `hasNumber`). */
+  toolCount: number | null;
   /** Raw file contents, so a restore is byte-identical rather than re-serialized. */
   measurementJson: string | null;
   badgeJson: string | null;
@@ -85,16 +112,19 @@ export function snapshot(names: string[], root = process.cwd()): Snapshot[] {
     const measurementJson = existsSync(mPath) ? readFileSync(mPath, 'utf8') : null;
     const badgeJson = existsSync(bPath) ? readFileSync(bPath, 'utf8') : null;
     let status: MeasurementStatus | null = null;
+    let toolCount: number | null = null;
     if (measurementJson) {
       try {
-        status = (JSON.parse(measurementJson) as Measurement).status;
+        const m = JSON.parse(measurementJson) as Measurement;
+        status = m.status;
+        toolCount = typeof m.toolCount === 'number' ? m.toolCount : null;
       } catch {
         // An unreadable prior record is not evidence of anything; treat it as
         // no record rather than as a good one that just broke.
         status = null;
       }
     }
-    return { name, status, measurementJson, badgeJson };
+    return { name, status, toolCount, measurementJson, badgeJson };
   });
 }
 
@@ -112,12 +142,13 @@ export interface Verdict {
 /**
  * Compare pre-sweep snapshots against this sweep's outcomes.
  *
- * `current` maps server name to the status it just measured at. Servers absent
- * from it were not swept and are ignored.
+ * `current` maps server name to what it just measured as — status and tool
+ * count, judged by `hasNumber`. Servers absent from it were not swept and are
+ * ignored.
  */
 export function verdict(
   prior: Snapshot[],
-  current: Map<string, MeasurementStatus>,
+  current: Map<string, Outcome>,
   /**
    * Servers this sweep could not measure because docker itself failed. They
    * never reached a status, so they are absent from `current` and invisible to
@@ -128,9 +159,14 @@ export function verdict(
   dockerFaults = 0,
 ): Verdict {
   const comparableNames = prior
-    .filter((s) => s.status !== null && isGood(s.status) && current.has(s.name))
+    .filter(
+      (s) =>
+        s.status !== null &&
+        hasNumber({ status: s.status, toolCount: s.toolCount }) &&
+        current.has(s.name),
+    )
     .map((s) => s.name);
-  const regressed = comparableNames.filter((n) => !isGood(current.get(n)!));
+  const regressed = comparableNames.filter((n) => !hasNumber(current.get(n)!));
   const failed = regressed.length + dockerFaults;
   const comparable = comparableNames.length + dockerFaults;
 

@@ -366,6 +366,14 @@ export async function measureServer(
         r.status = 'dynamic';
         r.notes = 'tools/list differed between two runs; value is for the first capture';
       }
+      if (first.tools.length === 0) {
+        // Zero is the server's answer and is measured as such — no status is
+        // invented for it. The note says what the zero is; the population
+        // check in harness-guard.ts (`hasNumber`) declines to count it as
+        // evidence that the harness works.
+        const zero = emptyToolsNote(first.declaresTools);
+        r.notes = r.notes ? `${r.notes} ${zero}` : zero;
+      }
     } catch (err) {
       if (err instanceof DockerHarnessFault) throw err;
       const msg = err instanceof Error ? err.message : String(err);
@@ -523,4 +531,38 @@ if (isMain) {
     );
   }
   process.exit(m.status === 'measured' || m.status === 'dynamic' ? 0 : 1);
+}
+
+/**
+ * The note a `measured` record carries when `tools/list` answered `[]`.
+ *
+ * An empty list is a real answer — a prompts- or resources-only server has
+ * nothing to list — and it is recorded as the measurement it is: zero tools,
+ * zero tokens of definitions. What the note adds is the one fact that makes the
+ * zero readable, the server's own `capabilities` declaration at `initialize`:
+ * a server that declared no tools and listed none is coherent; one that
+ * declared tools and listed none has said two different things, and the record
+ * says so rather than picking one. Nothing here claims *why* the list was
+ * empty; `hasNumber` in harness-guard.ts is where a zero stops counting as
+ * evidence, because a harness that gets nothing back from every server looks
+ * exactly like this, for everyone at once.
+ */
+export function emptyToolsNote(declaresTools: boolean | null): string {
+  const measured = 'This record measures that answer — zero tools, zero tokens of definitions';
+  if (declaresTools === true) {
+    return (
+      'tools/list answered with an empty array although the server declared a tools ' +
+      `capability at initialize. ${measured} — and claims nothing about why the list was empty.`
+    );
+  }
+  if (declaresTools === false) {
+    return (
+      'tools/list answered with an empty array, and the server declared no tools capability ' +
+      `at initialize: it exposes no tools. ${measured}.`
+    );
+  }
+  return (
+    'tools/list answered with an empty array; the initialize result carried no capabilities ' +
+    `object to read it against. ${measured} — and claims nothing about why the list was empty.`
+  );
 }
