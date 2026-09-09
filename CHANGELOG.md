@@ -7,6 +7,8 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+## 0.20.0 — 2026-09-09
+
 None of the 103 published records changed status under this release: its two re-sweeps
 measured the same thirty-four servers twice and moved no verdict, which makes those
 thirty-four the first published records to carry the protocol handshake pair — documented
