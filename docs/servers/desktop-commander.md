@@ -1,8 +1,8 @@
 # desktop-commander — context cost
 
-**11,837 tokens** across 26 tools — *moderate* (5–15K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
+**11,835 tokens** across 26 tools — *moderate* (5–15K). Measured 2026-09-09 under [methodology v1.0](../METHODOLOGY.html).
 
-An Anthropic request carries 11,057 of those tokens as tool definitions, and Claude counts those at **19,307**.
+An Anthropic request carries 11,055 of those tokens as tool definitions, and Claude counts those at **19,304**.
 
 | | |
 |---|---|
@@ -12,7 +12,7 @@ An Anthropic request carries 11,057 of those tokens as tool definitions, and Cla
 | launch command | `npx -y @wonderwhy-er/desktop-commander` |
 | isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | none |
-| canonical SHA-256 | `ed461d75b5dc273d9389408e032abece8af3bdca493ecf120be6924ef902004a` |
+| canonical SHA-256 | `07f606daeb7a0e968c2c5a580727372ffdd494cc9202173b6b71d064c7545047` |
 | category | community |
 | source | https://github.com/wonderwhy-er/DesktopCommanderMCP |
 
@@ -23,7 +23,7 @@ An Anthropic request carries 11,057 of those tokens as tool definitions, and Cla
 | tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
 | start_search | 1,351 | 11.4% | 1,078 | 158 |
-| start_process | 1,181 | 10.0% | 984 | 81 |
+| start_process | 1,179 | 10.0% | 982 | 81 |
 | read_file | 1,024 | 8.7% | 778 | 112 |
 | edit_block | 917 | 7.7% | 670 | 107 |
 | write_pdf | 882 | 7.5% | 567 | 203 |
@@ -53,13 +53,13 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 
 ## What this costs on Claude
 
-Measured 2026-09-07 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
+Measured 2026-09-09 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
 
 | | tokens | |
 |---|---:|---|
-| o200k, full capture | 11,837 | the badge number — every byte `tools/list` returned |
-| o200k, Anthropic fields only | 11,057 | 6.6% of the capture is MCP-only metadata |
-| **Claude, same fields** | **19,307** | 1.63× the badge number |
+| o200k, full capture | 11,835 | the badge number — every byte `tools/list` returned |
+| o200k, Anthropic fields only | 11,055 | 6.6% of the capture is MCP-only metadata |
+| **Claude, same fields** | **19,304** | 1.63× the badge number |
 
 An Anthropic tool definition carries `name`, `description`, and `input_schema` and nothing else, so `title`, `annotations`, `outputSchema`, `execution`, and `icons` are dropped before the request — that is the second row. The third row is the same tools counted by Anthropic, which is larger than the second because Anthropic's tokenizer is denser on this content than o200k_base *and* the API adds its own framing (at most 328 tokens of it fixed, measured against a single minimal tool). The two effects run in opposite directions, which is why the Claude number is not a fixed multiple of the badge.
 
@@ -71,6 +71,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-08-19 | 11,836 | 26 | not recorded | docker | +1 |
 | 2026-09-04 | 11,834 | 26 | 0.2.48 | docker | −2 |
 | 2026-09-05 | 11,837 | 26 | 0.2.48 | docker | +3 |
+| 2026-09-09 | 11,835 | 26 | 0.2.48 | docker | −2 |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

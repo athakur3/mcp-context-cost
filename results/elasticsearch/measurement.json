@@ -130,7 +130,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-05T23:43:50.043Z",
+  "measuredAt": "2026-09-09T06:07:06.441Z",
   "serverName": "elasticsearch-mcp",
   "serverVersion": "0.3.1",
   "launchCommand": "npx -y @elastic/mcp-server-elasticsearch",
@@ -139,6 +139,7 @@
     "ES_API_KEY"
   ],
   "serverInstructions": null,
+  "negotiatedProtocolVersion": "2025-06-18",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
@@ -146,5 +147,6 @@
     "note": "network enabled for package fetch; clean FS, no host credentials",
     "arch": "linux/amd64"
   },
-  "timeoutMs": 480000
+  "timeoutMs": 240000,
+  "requestedProtocolVersion": "2025-06-18"
 }

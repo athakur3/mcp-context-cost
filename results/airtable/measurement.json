@@ -1276,7 +1276,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-05T23:40:48.626Z",
+  "measuredAt": "2026-09-09T06:07:39.979Z",
   "serverName": "airtable-mcp-server",
   "serverVersion": "1.14.0",
   "launchCommand": "npx -y airtable-mcp-server",
@@ -1284,6 +1284,7 @@
     "AIRTABLE_API_KEY"
   ],
   "serverInstructions": null,
+  "negotiatedProtocolVersion": "2025-06-18",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
@@ -1291,5 +1292,6 @@
     "note": "network enabled for package fetch; clean FS, no host credentials",
     "arch": "linux/amd64"
   },
-  "timeoutMs": 240000
+  "timeoutMs": 240000,
+  "requestedProtocolVersion": "2025-06-18"
 }

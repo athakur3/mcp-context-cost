@@ -11,18 +11,18 @@
     "--format",
     "json"
   ],
-  "measuredAt": "2026-09-05",
+  "measuredAt": "2026-09-09",
   "isolation": "docker (same images, limits and package caches as a sweep)",
   "servers": {
     "accessibility-scanner": {
-      "ourTokens": 8959,
-      "ourMappedTokens": 7904,
-      "cliTokens": 7918,
-      "ourToolCount": 33,
-      "cliToolCount": 33,
+      "ourTokens": 9247,
+      "ourMappedTokens": 8151,
+      "cliTokens": 8169,
+      "ourToolCount": 34,
+      "cliToolCount": 34,
       "toolSetMatches": true,
       "dynamic": false,
-      "capturedSha256": "09ec3a887ad0244e50e5f3ae1ae117d1dc3979ba5e96be187961d55b5022c8fa"
+      "capturedSha256": "42d3cde136eda54a68cea42f820dbadf27e15394b10daa8ed26c90fd8fb59fcc"
     },
     "agent-device": {
       "ourTokens": 53669,
@@ -115,14 +115,14 @@
       "capturedSha256": "096790f5b6a85d5faf9b4a09edbeddc34de23ed3c26c195bee05c42fb7f8b6a7"
     },
     "azure": {
-      "ourTokens": 15239,
-      "ourMappedTokens": 14303,
-      "cliTokens": 14297,
-      "ourToolCount": 68,
-      "cliToolCount": 68,
+      "ourTokens": 15657,
+      "ourMappedTokens": 14703,
+      "cliTokens": 14697,
+      "ourToolCount": 70,
+      "cliToolCount": 70,
       "toolSetMatches": true,
       "dynamic": false,
-      "capturedSha256": "0539db0747ec02a1bfb4167d12146549e697758d0977f487126116c1fa2a6a26"
+      "capturedSha256": "0e1597d24f0d7f891c5d98d631e5e8cd6dd0cf70d5c3df7de9b972a5641c0818"
     },
     "basic-memory": {
       "ourTokens": 9188,
@@ -295,14 +295,14 @@
       "capturedSha256": "3735162916165ab23696fc91fbf626bd99a36ddcd1e15746e91e16c7e336b379"
     },
     "desktop-commander": {
-      "ourTokens": 11838,
-      "ourMappedTokens": 11058,
-      "cliTokens": 11071,
+      "ourTokens": 11837,
+      "ourMappedTokens": 11057,
+      "cliTokens": 11070,
       "ourToolCount": 26,
       "cliToolCount": 26,
       "toolSetMatches": true,
       "dynamic": true,
-      "capturedSha256": "82c79aa63ee12db00e87b08811de54cb088348ffa07c72d302fc94c7ef298032"
+      "capturedSha256": "86644f055922b169fe8d2d3993e1269c153aa558a2f44a40634c094b42b97012"
     },
     "duckduckgo": {
       "ourTokens": 724,

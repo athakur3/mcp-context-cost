@@ -8,10 +8,10 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-09-05T23:41:55.564Z",
+  "measuredAt": "2026-09-09T06:08:25.169Z",
   "serverName": "local-mcp",
   "launchCommand": "npx -y local-mcp",
-  "notes": "the vendor ships no Linux runtime yet — its own Go server is in preview for Windows and Linux — server exited (code 1); stderr tail: LMCP v3.0.405 (linux-amd64) not found in cache.\nDownloading from https://download.local-mcp.com/lmcp-server-3.0.405-linux-amd64.tar.gz\n\nError al preparar el runtime de LMCP:\nLMCP 3.0.405 is not yet available for linux-amd64.\nThe Windows/Linux Go server is in preview — check https://local-mcp.com for updates.\nIntentá reinstalar: npx local-mcp update",
+  "notes": "the vendor ships no Linux runtime yet — its own Go server is in preview for Windows and Linux — server exited (code 1); stderr tail: LMCP v3.0.408 (linux-amd64) not found in cache.\nDownloading from https://download.local-mcp.com/lmcp-server-3.0.408-linux-amd64.tar.gz\n\nError al preparar el runtime de LMCP:\nLMCP 3.0.408 is not yet available for linux-amd64.\nThe Windows/Linux Go server is in preview — check https://local-mcp.com for updates.\nIntentá reinstalar: npx local-mcp update",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
@@ -19,5 +19,6 @@
     "note": "network enabled for package fetch; clean FS, no host credentials",
     "arch": "linux/amd64"
   },
-  "timeoutMs": 240000
+  "timeoutMs": 240000,
+  "requestedProtocolVersion": "2025-06-18"
 }

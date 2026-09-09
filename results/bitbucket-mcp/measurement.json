@@ -2139,7 +2139,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-05T23:41:31.981Z",
+  "measuredAt": "2026-09-09T06:08:10.287Z",
   "serverName": "bitbucket-mcp-server",
   "serverVersion": "1.0.0",
   "launchCommand": "npx -y bitbucket-mcp",
@@ -2147,6 +2147,7 @@
     "BITBUCKET_TOKEN"
   ],
   "serverInstructions": null,
+  "negotiatedProtocolVersion": "2024-11-05",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
@@ -2154,5 +2155,6 @@
     "note": "network enabled for package fetch; clean FS, no host credentials",
     "arch": "linux/amd64"
   },
-  "timeoutMs": 240000
+  "timeoutMs": 240000,
+  "requestedProtocolVersion": "2025-06-18"
 }

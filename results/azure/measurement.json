@@ -3,8 +3,8 @@
   "provider": "tiktoken",
   "encoding": "o200k_base",
   "status": "measured",
-  "totalTokens": 15239,
-  "toolCount": 68,
+  "totalTokens": 15657,
+  "toolCount": 70,
   "tools": [
     {
       "name": "documentation",
@@ -45,6 +45,14 @@
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 7
+    },
+    {
+      "name": "adme",
+      "tokens": 208,
+      "descriptionTokens": 88,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 9
     },
     {
       "name": "aks",
@@ -359,6 +367,14 @@
       "annotationsTokens": 9
     },
     {
+      "name": "optimization",
+      "tokens": 210,
+      "descriptionTokens": 93,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
+    },
+    {
       "name": "policy",
       "tokens": 196,
       "descriptionTokens": 79,
@@ -551,7 +567,7 @@
       "annotationsTokens": 33
     }
   ],
-  "canonicalSha256": "0539db0747ec02a1bfb4167d12146549e697758d0977f487126116c1fa2a6a26",
+  "canonicalSha256": "0e1597d24f0d7f891c5d98d631e5e8cd6dd0cf70d5c3df7de9b972a5641c0818",
   "rawToolsCapture": [
     {
       "name": "documentation",
@@ -716,6 +732,39 @@
       },
       "annotations": {
         "title": "Azure Best Practices"
+      }
+    },
+    {
+      "name": "adme",
+      "description": "Azure Data Manager for Energy operations for the OSDU data platform. Commands target a specific endpoint and data partition and cover platform health checks and OSDU schema discovery.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "intent": {
+            "type": "string",
+            "description": "The intent of the operation to perform."
+          },
+          "command": {
+            "type": "string",
+            "description": "The command to execute against the specified tool."
+          },
+          "parameters": {
+            "type": "object",
+            "description": "The parameters to pass to the tool command."
+          },
+          "learn": {
+            "type": "boolean",
+            "description": "To learn about the tool and its supported child tools and parameters.",
+            "default": false
+          }
+        },
+        "required": [
+          "intent"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Azure Data Manager for Energy"
       }
     },
     {
@@ -2006,6 +2055,39 @@
       }
     },
     {
+      "name": "optimization",
+      "description": "Azure optimization operations - Discover Azure Advisor cost-saving recommendations for a subscription, compare alternative compute resize/SKU options, and explain a recommendation with current-versus-target utilization projections. Requires Azure subscription context.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "intent": {
+            "type": "string",
+            "description": "The intent of the operation to perform."
+          },
+          "command": {
+            "type": "string",
+            "description": "The command to execute against the specified tool."
+          },
+          "parameters": {
+            "type": "object",
+            "description": "The parameters to pass to the tool command."
+          },
+          "learn": {
+            "type": "boolean",
+            "description": "To learn about the tool and its supported child tools and parameters.",
+            "default": false
+          }
+        },
+        "required": [
+          "intent"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Azure Optimization Recommendations"
+      }
+    },
+    {
       "name": "policy",
       "description": "Manage Azure Policy assignments and definitions using Azure CLI. Retrieve policy assignments, view enforcement modes, and analyze policy compliance across subscriptions.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
@@ -2779,12 +2861,13 @@
       }
     }
   ],
-  "measuredAt": "2026-09-05T23:39:22.280Z",
+  "measuredAt": "2026-09-09T06:06:24.376Z",
   "serverName": "Azure MCP Server",
-  "serverVersion": "3.0.0-beta.41",
+  "serverVersion": "3.0.0-beta.42",
   "launchCommand": "npx -y @azure/mcp@latest server start",
   "envVarNames": [],
   "serverInstructions": "Azure MCP server usage rules:\n- Use Azure Tools: When handling requests related to Azure, always use your tools.\n- Troubleshoot Azure errors: When an Azure MCP tool call fails or returns an error (for example an authentication, authorization, tenant, or subscription related failure), consult the troubleshooting guide at https://aka.ms/azmcp/troubleshooting for possible causes and resolutions before giving up or asking the user. For example, if a call fails because of an incorrect subscription or tenant context, retry the tool call with the correct `tenant` and/or `subscription` parameter.\n- If a user wants to use, install, or generate commands for the Azure CLI (az), Azure Developer CLI (azd), Azure Functions Core Tools CLI (func), or Azure Quick Review CLI (azqr), use your `extension` tools first.\n- Use Azure Code Gen Best Practices: When generating code for Azure or any Azure services, running terminal commands for Azure, or performing operations related to Azure, invoke your `bestpractices` tool if available.\n- Use Azure Deployment Best Practices: When deploying to Azure or preparing applications for deployment to Azure, invoke your `bestpractices` tool if available.\n- Only call your `bestpractices` tool when you are sure the user is discussing Azure; do not call it otherwise.\n- Use Azure AI App Code Generation Best Practices: When generating code for AI applications, AI agents, workflows, or chatbots, invoke your `get_azure_bestpractices_ai_app` command (under `get_azure_bestpractices` tool) if tool available. Call this tool first before creating any plans, todos or code. Only call this command when the user is discussing AI app development with Microsoft Foundry, Azure, Microsoft agent framework SDK, or without specifying any technology. Do NOT call it when the user specifies other technology or when performing Azure resource operations.\n- Plan before editing files for Azure web apps: When generating code for Azure Functions and Azure Static Web App, always create a plan and explain the plan to the user before editing any file. Proceed with editing the files after getting consent from the user.\n- When asked about configuring or installing azure mcp in coding agent for the current repo, invoke your `bestpractices` tool with `resource` set to \"coding-agent\" and `action` set to \"all\".\n\n",
+  "negotiatedProtocolVersion": "2025-06-18",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
@@ -2792,5 +2875,6 @@
     "note": "network enabled for package fetch; clean FS, no host credentials, installed libicu72 libssl3",
     "arch": "linux/amd64"
   },
-  "timeoutMs": 180000
+  "timeoutMs": 180000,
+  "requestedProtocolVersion": "2025-06-18"
 }

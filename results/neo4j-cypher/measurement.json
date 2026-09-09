@@ -131,7 +131,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-05T23:39:40.026Z",
+  "measuredAt": "2026-09-09T06:06:43.923Z",
   "serverName": "mcp-neo4j-cypher",
   "serverVersion": "2.13.3",
   "launchCommand": "uvx mcp-neo4j-cypher",
@@ -141,6 +141,7 @@
     "NEO4J_PASSWORD"
   ],
   "serverInstructions": null,
+  "negotiatedProtocolVersion": "2025-06-18",
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
@@ -148,5 +149,6 @@
     "note": "network enabled for package fetch; clean FS, no host credentials",
     "arch": "linux/amd64"
   },
-  "timeoutMs": 240000
+  "timeoutMs": 240000,
+  "requestedProtocolVersion": "2025-06-18"
 }

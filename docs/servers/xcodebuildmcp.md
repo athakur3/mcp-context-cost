@@ -1,6 +1,6 @@
 # xcodebuildmcp — context cost
 
-**26,594 tokens** across 24 tools — *heavy* (15–30K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
+**26,594 tokens** across 24 tools — *heavy* (15–30K). Measured 2026-09-09 under [methodology v1.0](../METHODOLOGY.html).
 
 An Anthropic request carries 2,676 of those tokens as tool definitions, and Claude counts those at **5,335**.
 
@@ -49,7 +49,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 
 ## What this costs on Claude
 
-Measured 2026-09-07 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
+Measured 2026-09-09 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
 
 | | tokens | |
 |---|---:|---|
@@ -67,6 +67,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-08-19 | 26,594 | 24 | not recorded | docker | no change |
 | 2026-09-04 | 26,594 | 24 | 2.7.0 | docker | no change |
 | 2026-09-05 | 26,594 | 24 | 2.7.0 | docker | no change |
+| 2026-09-09 | 26,594 | 24 | 2.7.0 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

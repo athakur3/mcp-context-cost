@@ -1,16 +1,16 @@
 {
   "method": "tools-delta/v1",
   "model": "claude-opus-5",
-  "measuredAt": "2026-09-07",
+  "measuredAt": "2026-09-09",
   "baselineTokens": 7,
   "probeDelta": 328,
   "servers": {
     "accessibility-scanner": {
-      "o200kFull": 8959,
-      "o200kMapped": 7904,
-      "claudeDelta": 14301,
-      "toolCount": 33,
-      "capturedSha256": "09ec3a887ad0244e50e5f3ae1ae117d1dc3979ba5e96be187961d55b5022c8fa"
+      "o200kFull": 9247,
+      "o200kMapped": 8151,
+      "claudeDelta": 14771,
+      "toolCount": 34,
+      "capturedSha256": "42d3cde136eda54a68cea42f820dbadf27e15394b10daa8ed26c90fd8fb59fcc"
     },
     "agent-device": {
       "o200kFull": 53669,
@@ -76,11 +76,11 @@
       "capturedSha256": "096790f5b6a85d5faf9b4a09edbeddc34de23ed3c26c195bee05c42fb7f8b6a7"
     },
     "azure": {
-      "o200kFull": 15239,
-      "o200kMapped": 14303,
-      "claudeDelta": 26202,
-      "toolCount": 68,
-      "capturedSha256": "0539db0747ec02a1bfb4167d12146549e697758d0977f487126116c1fa2a6a26"
+      "o200kFull": 15657,
+      "o200kMapped": 14703,
+      "claudeDelta": 26928,
+      "toolCount": 70,
+      "capturedSha256": "0e1597d24f0d7f891c5d98d631e5e8cd6dd0cf70d5c3df7de9b972a5641c0818"
     },
     "basic-memory": {
       "o200kFull": 9188,
@@ -202,11 +202,11 @@
       "capturedSha256": "3735162916165ab23696fc91fbf626bd99a36ddcd1e15746e91e16c7e336b379"
     },
     "desktop-commander": {
-      "o200kFull": 11837,
-      "o200kMapped": 11057,
-      "claudeDelta": 19307,
+      "o200kFull": 11835,
+      "o200kMapped": 11055,
+      "claudeDelta": 19304,
       "toolCount": 26,
-      "capturedSha256": "ed461d75b5dc273d9389408e032abece8af3bdca493ecf120be6924ef902004a"
+      "capturedSha256": "07f606daeb7a0e968c2c5a580727372ffdd494cc9202173b6b71d064c7545047"
     },
     "duckduckgo": {
       "o200kFull": 724,

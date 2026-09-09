@@ -1,12 +1,12 @@
 # comfyui-mcp — context cost
 
-**50,776 tokens** across 41 tools — *very heavy* (≥ 30K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
+**50,776 tokens** across 41 tools — *very heavy* (≥ 30K). Measured 2026-09-09 under [methodology v1.0](../METHODOLOGY.html).
 
 An Anthropic request carries 50,385 of those tokens as tool definitions, and Claude counts those at **84,168**.
 
 | | |
 |---|---|
-| server (self-reported) | comfyui-mcp v0.52.199 |
+| server (self-reported) | comfyui-mcp v0.52.202 |
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y comfyui-mcp` |
@@ -57,7 +57,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 
 ## What this costs on Claude
 
-Measured 2026-09-07 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
+Measured 2026-09-09 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
 
 | | tokens | |
 |---|---:|---|
@@ -74,6 +74,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-09-03 | 50,640 | 41 | not recorded | docker | — |
 | 2026-09-04 | 50,640 | 41 | 0.52.189 | docker | no change |
 | 2026-09-05 | 50,776 | 41 | 0.52.199 | docker | +136 |
+| 2026-09-09 | 50,776 | 41 | 0.52.202 | docker | no change |
 
 Full series: [results/history.csv](https://github.com/athakur3/mcp-context-cost/blob/main/results/history.csv).
 

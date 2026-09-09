@@ -2,11 +2,11 @@
 
 Tokens = o200k_base count of the canonical `tools/list` bytes ([methodology v1.0](../docs/METHODOLOGY.md)). Measured 87/107 candidates; every candidate is listed — failures are findings, not omissions. Server names link to their per-tool breakdown.
 
-The **claude** column is the same tools measured through Anthropic's `count_tokens` on `claude-opus-5` (2026-09-07, method `tools-delta/v1`): the tokens the server's tools add to a request, measured for the top 86. It is not a rescaling of the o200k column — two effects pull in opposite directions, and the [per-server pages](../docs/servers/) break both out. See [Claude divergence](../docs/METHODOLOGY.md#claude-divergence).
+The **claude** column is the same tools measured through Anthropic's `count_tokens` on `claude-opus-5` (2026-09-09, method `tools-delta/v1`): the tokens the server's tools add to a request, measured for the top 86. It is not a rescaling of the o200k column — two effects pull in opposite directions, and the [per-server pages](../docs/servers/) break both out. See [Claude divergence](../docs/METHODOLOGY.md#claude-divergence).
 
-The **mcp-tokens** column is the other CLI's count of the same server — `sd2k/mcp-tokens` `v0.2.5` (2026-09-05, method `cli-cross-check/v1`), invoked with `--model gpt-4o` so both columns count o200k tokens. Its structs model the three request fields (name/description/input\_schema), so its number sits below the tokens column wherever a server ships metadata those fields do not carry — that gap is each server's field-selection share, published on its page, not a disagreement of counters. The parenthesized percentage is the disagreement of counters: the CLI's count against ours of the same three-field projection, −0.8% to +1.4% across the 84 rows where both tools saw the same tool set. A row prints only while the comparison is between like and like: the same tool names on both sides, and our capture unchanged since the run. See [CLI cross-check](../docs/METHODOLOGY.md#cli-cross-check).
+The **mcp-tokens** column is the other CLI's count of the same server — `sd2k/mcp-tokens` `v0.2.5` (2026-09-09, method `cli-cross-check/v1`), invoked with `--model gpt-4o` so both columns count o200k tokens. Its structs model the three request fields (name/description/input\_schema), so its number sits below the tokens column wherever a server ships metadata those fields do not carry — that gap is each server's field-selection share, published on its page, not a disagreement of counters. The parenthesized percentage is the disagreement of counters: the CLI's count against ours of the same three-field projection, −0.8% to +1.4% across the 84 rows where both tools saw the same tool set. A row prints only while the comparison is between like and like: the same tool names on both sides, and our capture unchanged since the run. See [CLI cross-check](../docs/METHODOLOGY.md#cli-cross-check).
 
-**Of the servers whose cost has moved at all, 13 moved upward and 5 moved down** — a net +4,587 tokens across the set. Most entries here launch unpinned, so a movement is a real upstream release landing in real context windows, and only measurements taken under the same isolation are compared. Every movement, which half of the server moved, and where the tokens went: [regressions.md](regressions.md).
+**Of the servers whose cost has moved at all, 14 moved upward and 6 moved down** — a net +5,288 tokens across the set. Most entries here launch unpinned, so a movement is a real upstream release landing in real context windows, and only measurements taken under the same isolation are compared. Every movement, which half of the server moved, and where the tokens went: [regressions.md](regressions.md).
 
 The **session start** column is what a client puts in context when it *defers* tool definitions until they are used: the server's tool names plus the `instructions` string it returns from `initialize` (method `deferred-load/v1`). The tokens column is what a client that loads every definition up front pays; this one is what the same server costs a client that does not. See [session-start load](../docs/METHODOLOGY.md#session-start-load).
 
@@ -23,20 +23,20 @@ The **session start** column is what a client puts in context when it *defers* t
 | 7 | [notion](../docs/servers/notion.md) | 17,500 | 17,163 | 135 | 33,560 | 17,408 (+1.4%) | 24 | API-update-page-markdown (1,282) | measured | vendor-official |
 | 8 | [mcp-atlassian](../docs/servers/mcp-atlassian.md) | 17,311 | 12,823 | 347 | 22,234 | — | 63 | jira_update_proforma_form_answers (800) | dynamic | community |
 | 9 | [grafana](../docs/servers/grafana.md) | 16,774 | 15,460 | 731 | 26,641 | 15,465 (+0.0%) | 65 | alerting_manage_rules (1,368) | measured | vendor-official |
-| 10 | [azure](../docs/servers/azure.md) | 15,239 | 14,303 | 697 | 26,202 | 14,297 (−0.0%) | 68 | get_azure_bestpractices (454) | measured | vendor-official |
+| 10 | [azure](../docs/servers/azure.md) | 15,657 | 14,703 | 702 | 26,928 | 14,697 (−0.0%) | 70 | get_azure_bestpractices (454) | measured | vendor-official |
 | 11 | [octocode](../docs/servers/octocode.md) | 13,552 | 12,967 | 791 | 23,343 | 13,122 (+1.2%) | 14 | ghSearchPullRequests (1,799) | measured | community |
 | 12 | [githits](../docs/servers/githits.md) | 12,833 | 12,384 | 53 | 20,689 | 12,416 (+0.3%) | 16 | search (2,270) | measured | community |
 | 13 | [circleci](../docs/servers/circleci.md) | 11,912 | 11,755 | 61 | 19,164 | 11,750 (−0.0%) | 13 | run_rollback_pipeline (1,391) | measured | vendor-official |
-| 14 | [desktop-commander](../docs/servers/desktop-commander.md) | 11,837 | 11,057 | 99 | 19,307 | — | 26 | start_search (1,351) | dynamic | community |
+| 14 | [desktop-commander](../docs/servers/desktop-commander.md) | 11,835 | 11,055 | 99 | 19,304 | — | 26 | start_search (1,351) | dynamic | community |
 | 15 | [google-surf](../docs/servers/google-surf.md) | 10,948 | 6,412 | 21 | 11,232 | 6,472 (+0.9%) | 7 | project_memory (3,279) | measured | community |
 | 16 | [apify](../docs/servers/apify.md) | 10,452 | 4,793 | 1,144 | 8,297 | 4,803 (+0.2%) | 10 | search-actors (2,226) | measured | vendor-official |
 | 17 | [appium-mcp](../docs/servers/appium-mcp.md) | 10,267 | 9,798 | 328 | 17,001 | 9,843 (+0.5%) | 31 | appium_gesture (1,308) | measured | vendor-official |
 | 18 | [obsidian-rest](../docs/servers/obsidian-rest.md) | 10,173 | 5,878 | 65 | 10,172 | 5,855 (−0.4%) | 12 | obsidian_get_note (1,523) | measured | community |
 | 19 | [firecrawl](../docs/servers/firecrawl.md) | 9,561 | 8,869 | 342 | 16,428 | 8,993 (+1.4%) | 27 | firecrawl_search (1,391) | measured | vendor-official |
-| 20 | [redis](../docs/servers/redis.md) | 9,246 | 7,489 | 169 | 13,221 | 7,489 (+0.0%) | 53 | hybrid_search (510) | measured | vendor-official |
-| 21 | [basic-memory](../docs/servers/basic-memory.md) | 9,188 | 7,120 | 71 | 12,426 | 7,113 (−0.1%) | 23 | search_notes (970) | measured | community |
-| 22 | [hubspot](../docs/servers/hubspot.md) | 9,158 | 8,433 | 133 | 14,398 | 8,446 (+0.2%) | 21 | hubspot-search-objects (964) | measured | vendor-official |
-| 23 | [accessibility-scanner](../docs/servers/accessibility-scanner.md) | 8,959 | 7,904 | 353 | 14,301 | 7,918 (+0.2%) | 33 | audit_site (1,100) | measured | community |
+| 20 | [accessibility-scanner](../docs/servers/accessibility-scanner.md) | 9,247 | 8,151 | 358 | 14,771 | 8,169 (+0.2%) | 34 | audit_site (1,100) | measured | community |
+| 21 | [redis](../docs/servers/redis.md) | 9,246 | 7,489 | 169 | 13,221 | 7,489 (+0.0%) | 53 | hybrid_search (510) | measured | vendor-official |
+| 22 | [basic-memory](../docs/servers/basic-memory.md) | 9,188 | 7,120 | 71 | 12,426 | 7,113 (−0.1%) | 23 | search_notes (970) | measured | community |
+| 23 | [hubspot](../docs/servers/hubspot.md) | 9,158 | 8,433 | 133 | 14,398 | 8,446 (+0.2%) | 21 | hubspot-search-objects (964) | measured | vendor-official |
 | 24 | [postgres-mcp](../docs/servers/postgres-mcp.md) | 8,632 | 1,178 | 39 | 2,381 | 1,178 (+0.0%) | 9 | explain_query (1,147) | measured | community |
 | 25 | [ssh-manager](../docs/servers/ssh-manager.md) | 8,446 | 8,149 | 143 | 14,196 | 8,162 (+0.2%) | 37 | ssh_sync (477) | measured | community |
 | 26 | [serena](../docs/servers/serena.md) | 8,204 | 6,550 | 138 | 11,494 | 6,528 (−0.3%) | 29 | find_symbol (883) | measured | community |
@@ -126,7 +126,7 @@ A row here is named for the package it launches, and one name is shared with an 
 |---|---|---|
 | gdrive | auth-required | **[deprecated by its publisher](https://www.npmjs.com/package/@modelcontextprotocol/server-gdrive) — 2025.1.14, read 2026-09-05.** server exited (code 1); stderr tail: Credentials not found. Please run with 'auth' argument first. |
 | redis-legacy | not-applicable | needs a Redis at 127.0.0.1:6379; the isolation deliberately provides no backing services — server exited (code 1); stderr tail: \[Redis Retry\] Attempt 1/5 fail |
-| magic | auth-required | server error -32001: Not authenticated - your API key is missing or was reset. Get a fresh key at https://21st.dev/mcp and update your MCP config (x-api-key / B |
+| magic | auth-required | server error -32001 answering initialize: Not authenticated - your API key is missing or was reset. Get a fresh key at https://21st.dev/mcp and update your MCP  |
 | stripe | auth-required | server exited (code 1); stderr tail: 🚨  Error initializing Stripe MCP server:     Invalid API key format. Expected sk_* (secret key) or rk_* (restricted key).  |
 | heroku | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: Fatal error in main(): Cannot find module '/tmp/.npm-cache/_npx/909ffbc9 |
 | neon | startup-failure | **[superseded by the remote MCP server at mcp.neon.tech](https://www.npmjs.com/package/@neondatabase/mcp-server-neon) — 0.6.5, read 2026-09-05.** reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: npm warn deprecated @neondatabase/mcp-server-neon@0.6.5: This package is |
@@ -134,12 +134,12 @@ A row here is named for the package it launches, and one name is shared with an 
 | zapier | remote-auth-wall |  |
 | vercel | remote-auth-wall |  |
 | gmail | auth-required | server exited (code 1); stderr tail: Error: OAuth keys file not found. Please place gcp-oauth.keys.json in current directory or /tmp/.gmail-mcp |
-| slack | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: {"level":"error","timestamp":"2026-09-05T23:40:39Z","message":"Request f |
+| slack | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: {"level":"error","timestamp":"2026-09-09T06:07:26Z","message":"Request f |
 | kubernetes-containers | not-applicable | needs a kubeconfig with a cluster context; the isolation deliberately has neither — server exited (code 1); stderr tail: Error: unable to create kubernetes targ |
 | hana-cli | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: purchased (at exorbitant rates) by contacting i@izs.me node:internal/mod |
 | keboola | auth-required | server error 0: Client error '401 Unauthorized' for url 'https://connection.keboola.com/v2/storage/tokens/verify' For more information check: https://developer. |
 | hevy | auth-required | server exited (code 1); stderr tail: Hevy API key is required. Provide it via the HEVY_API_KEY environment variable. |
-| local-mcp | not-applicable | the vendor ships no Linux runtime yet — its own Go server is in preview for Windows and Linux — server exited (code 1); stderr tail: LMCP v3.0.405 (linux-amd64) |
+| local-mcp | not-applicable | the vendor ships no Linux runtime yet — its own Go server is in preview for Windows and Linux — server exited (code 1); stderr tail: LMCP v3.0.408 (linux-amd64) |
 | windows-mcp | not-applicable | Windows only — it depends on pywin32, which publishes no Linux wheels — server exited (code 1); stderr tail: Downloading cpython-3.13.12-linux-x86_64-gnu (downl |
 | yandex-tracker | auth-required | server exited (code 1); stderr tail: Downloading grpcio-tools (2.6MiB) Downloading yandexcloud (6.3MiB)  Downloaded grpcio-tools  Downloaded yandexcloud Install |
 | safari-mcp | not-applicable | macOS only — the package declares os darwin and npm refuses to install it on Linux — server exited (code 1); stderr tail: npm error code EBADPLATFORM npm error  |

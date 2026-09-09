@@ -2461,12 +2461,13 @@
       }
     }
   ],
-  "measuredAt": "2026-09-05T23:42:27.496Z",
+  "measuredAt": "2026-09-09T06:08:51.758Z",
   "serverName": "google-surf-mcp",
   "serverVersion": "1.0.9",
   "launchCommand": "npx -y google-surf-mcp",
   "envVarNames": [],
   "serverInstructions": null,
+  "negotiatedProtocolVersion": "2025-06-18",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
@@ -2474,5 +2475,6 @@
     "note": "network enabled for package fetch; clean FS, no host credentials",
     "arch": "linux/amd64"
   },
-  "timeoutMs": 240000
+  "timeoutMs": 240000,
+  "requestedProtocolVersion": "2025-06-18"
 }

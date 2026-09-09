@@ -1,6 +1,6 @@
 # hubspot — context cost
 
-**9,158 tokens** across 21 tools — *moderate* (5–15K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
+**9,158 tokens** across 21 tools — *moderate* (5–15K). Measured 2026-09-09 under [methodology v1.0](../METHODOLOGY.html).
 
 An Anthropic request carries 8,433 of those tokens as tool definitions, and Claude counts those at **14,398**.
 
@@ -46,7 +46,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 
 ## What this costs on Claude
 
-Measured 2026-09-07 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
+Measured 2026-09-09 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
 
 | | tokens | |
 |---|---:|---|
@@ -64,6 +64,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-08-19 | 9,158 | 21 | not recorded | docker | no change |
 | 2026-09-04 | 9,158 | 21 | 0.4.0 | docker | no change |
 | 2026-09-05 | 9,158 | 21 | 0.4.0 | docker | no change |
+| 2026-09-09 | 9,158 | 21 | 0.4.0 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

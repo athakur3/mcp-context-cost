@@ -22,7 +22,7 @@ github,54622,44,measured,vendor-official,32282,"https://api.github.com/repos/git
 aws-documentation,5045,5,measured,vendor-official,248642,https://pypistats.org/packages/awslabs-aws-documentation-mcp-server (PyPI weekly),5749,claude-opus-5,425,false,17,408,3380,v0.2.5
 firecrawl,9561,27,measured,vendor-official,167934,https://api.npmjs.org/downloads/point/last-week/firecrawl-mcp (npm weekly),16428,claude-opus-5,342,false,150,192,8993,v0.2.5
 notion,17500,24,measured,vendor-official,141622,https://api.npmjs.org/downloads/point/last-week/@notionhq/notion-mcp-server (npm weekly),33560,claude-opus-5,135,false,135,0,17408,v0.2.5
-azure,15239,68,measured,vendor-official,105959,https://api.npmjs.org/downloads/point/last-week/@azure/mcp (npm weekly),26202,claude-opus-5,697,false,214,483,14297,v0.2.5
+azure,15657,70,measured,vendor-official,105959,https://api.npmjs.org/downloads/point/last-week/@azure/mcp (npm weekly),26928,claude-opus-5,702,false,219,483,14697,v0.2.5
 supabase,5007,29,measured,vendor-official,89662,https://api.npmjs.org/downloads/point/last-week/@supabase/mcp-server-supabase (npm weekly),7323,claude-opus-5,342,false,104,238,4061,v0.2.5
 sentry,6086,9,measured,vendor-official,85640,https://api.npmjs.org/downloads/point/last-week/@sentry/mcp-server (npm weekly; remote alt https://mcp.sentry.dev/mcp),9481,claude-opus-5,40,false,40,0,5432,v0.2.5
 markitdown,64,1,measured,vendor-official,75650,https://pypistats.org/packages/markitdown-mcp (PyPI weekly),404,claude-opus-5,6,false,6,0,64,v0.2.5
@@ -67,7 +67,7 @@ blender,6928,28,measured,community,71408,https://pypistats.org/packages/blender-
 excel,4266,25,measured,community,57839,https://pypistats.org/packages/excel-mcp-server (PyPI weekly),6338,claude-opus-5,106,false,99,7,3080,v0.2.5
 figma-context,946,2,measured,community,57771,https://api.npmjs.org/downloads/point/last-week/figma-developer-mcp (npm weekly),1773,claude-opus-5,11,false,11,0,898,v0.2.5
 duckduckgo,724,2,measured,community,41360,https://pypistats.org/packages/duckduckgo-mcp-server (PyPI weekly),1322,claude-opus-5,6,false,6,0,661,v0.2.5
-desktop-commander,11837,26,dynamic,community,38626,https://api.npmjs.org/downloads/point/last-week/@wonderwhy-er/desktop-commander (npm weekly),19307,claude-opus-5,99,false,99,0,,
+desktop-commander,11835,26,dynamic,community,38626,https://api.npmjs.org/downloads/point/last-week/@wonderwhy-er/desktop-commander (npm weekly),19304,claude-opus-5,99,false,99,0,,
 serena,8204,29,measured,community,28084,https://api.github.com/repos/oraios/serena (GitHub stars; installed from git),11494,claude-opus-5,138,false,109,29,6528,v0.2.5
 gmail,,,auth-required,community,26678,https://api.npmjs.org/downloads/point/last-week/@gongrzhe/server-gmail-autoauth-mcp (npm weekly; needs OAuth keys file),,,,,,,,
 pandoc,1425,1,measured,community,23590,https://pypistats.org/packages/mcp-pandoc (PyPI weekly),2628,claude-opus-5,5,false,5,0,1426,v0.2.5
@@ -91,7 +91,7 @@ obsidian-rest,10173,12,measured,community,5784,https://api.npmjs.org/downloads/p
 bitbucket-mcp,6156,47,measured,community,5033,https://api.npmjs.org/downloads/point/last-week/bitbucket-mcp (npm weekly),12210,claude-opus-5,230,false,230,0,6156,v0.2.5
 hana-cli,,,startup-failure,vendor-official,3854,https://api.npmjs.org/downloads/point/last-week/hana-cli (npm weekly),,,,,,,,
 clinicaltrialsgov,5134,7,measured,community,3123,https://api.npmjs.org/downloads/point/last-week/clinicaltrialsgov-mcp-server (npm weekly),5540,claude-opus-5,54,false,54,0,2874,v0.2.5
-accessibility-scanner,8959,33,measured,community,3068,https://api.npmjs.org/downloads/point/last-week/mcp-accessibility-scanner (npm weekly),14301,claude-opus-5,353,false,121,232,7918,v0.2.5
+accessibility-scanner,9247,34,measured,community,3068,https://api.npmjs.org/downloads/point/last-week/mcp-accessibility-scanner (npm weekly),14771,claude-opus-5,358,false,126,232,8169,v0.2.5
 keboola,,,auth-required,vendor-official,2907,https://pypistats.org/packages/keboola-mcp-server (PyPI weekly),,,,,,,,
 octocode,13552,14,measured,community,1797,https://api.npmjs.org/downloads/point/last-week/octocode-mcp (npm weekly),23343,claude-opus-5,791,false,64,727,13122,v0.2.5
 anki,20037,50,measured,community,1716,https://api.npmjs.org/downloads/point/last-week/@ankimcp/anki-mcp-server (npm weekly),16189,claude-opus-5,179,false,179,0,9371,v0.2.5

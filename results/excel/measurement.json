@@ -1610,12 +1610,13 @@
       }
     }
   ],
-  "measuredAt": "2026-09-05T23:40:14.791Z",
+  "measuredAt": "2026-09-09T06:07:18.137Z",
   "serverName": "excel-mcp",
-  "serverVersion": "1.29.1",
+  "serverVersion": "1.30.0",
   "launchCommand": "uvx excel-mcp-server stdio",
   "envVarNames": [],
   "serverInstructions": "Excel MCP Server for manipulating Excel files",
+  "negotiatedProtocolVersion": "2025-06-18",
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
@@ -1623,5 +1624,6 @@
     "note": "network enabled for package fetch; clean FS, no host credentials",
     "arch": "linux/amd64"
   },
-  "timeoutMs": 240000
+  "timeoutMs": 240000,
+  "requestedProtocolVersion": "2025-06-18"
 }

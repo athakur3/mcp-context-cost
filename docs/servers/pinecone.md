@@ -1,6 +1,6 @@
 # pinecone — context cost
 
-**5,903 tokens** across 9 tools — *moderate* (5–15K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
+**5,903 tokens** across 9 tools — *moderate* (5–15K). Measured 2026-09-09 under [methodology v1.0](../METHODOLOGY.html).
 
 An Anthropic request carries 5,679 of those tokens as tool definitions, and Claude counts those at **9,184**.
 
@@ -34,7 +34,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 
 ## What this costs on Claude
 
-Measured 2026-09-07 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
+Measured 2026-09-09 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
 
 | | tokens | |
 |---|---:|---|
@@ -52,6 +52,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-08-19 | 5,903 | 9 | not recorded | docker | no change |
 | 2026-09-04 | 5,903 | 9 | 0.3.0 | docker | no change |
 | 2026-09-05 | 5,903 | 9 | 0.3.0 | docker | no change |
+| 2026-09-09 | 5,903 | 9 | 0.3.0 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

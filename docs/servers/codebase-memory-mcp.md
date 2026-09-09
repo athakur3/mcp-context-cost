@@ -1,6 +1,6 @@
 # codebase-memory-mcp — context cost
 
-**5,258 tokens** across 15 tools — *moderate* (5–15K). Measured 2026-09-05 under [methodology v1.0](../METHODOLOGY.html).
+**5,258 tokens** across 15 tools — *moderate* (5–15K). Measured 2026-09-09 under [methodology v1.0](../METHODOLOGY.html).
 
 An Anthropic request carries 4,774 of those tokens as tool definitions, and Claude counts those at **8,585**.
 
@@ -40,7 +40,7 @@ Each tool is tokenized on its own, so the parts do not sum exactly to the whole:
 
 ## What this costs on Claude
 
-Measured 2026-09-07 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
+Measured 2026-09-09 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
 
 | | tokens | |
 |---|---:|---|
@@ -57,6 +57,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-09-03 | 5,258 | 15 | not recorded | docker | — |
 | 2026-09-04 | 5,258 | 15 | 0.10.8 | docker | no change |
 | 2026-09-05 | 5,258 | 15 | 0.10.8 | docker | no change |
+| 2026-09-09 | 5,258 | 15 | 0.10.8 | docker | no change |
 
 Full series: [results/history.csv](https://github.com/athakur3/mcp-context-cost/blob/main/results/history.csv).
 

@@ -257,7 +257,7 @@ does, and the percentile that decides are in
 
 ```
   suggest — descriptions at or above the 90th percentile of measured tools
-  (baseline 2026-09-07: 1,430 tools across 87 measured servers):
+  (baseline 2026-09-09: 1,433 tools across 87 measured servers):
     stub · wordy — 345 tokens: description 321 (p92), schema 14
       rewriting the description toward the measured median (27) would recover ≈294 tokens on every request
     1 of 2 tools sit inside the distribution — no advice where nothing is measurably unusual.
@@ -317,7 +317,7 @@ answers a question no client asks: **what did this server cost last month?**
 [results/regressions.md](results/regressions.md) reports each server's most recent movement —
 dated to when it happened, separated into *shipped more tools* versus *same tools, rewritten*,
 and compared only within one isolation. The ecosystem ratchets upward: of the servers whose
-cost has moved at all, 13 moved up against 5 that moved down. Method:
+cost has moved at all, 14 moved up against 6 that moved down. Method:
 [cost movement](docs/METHODOLOGY.md#cost-movement).
 
 If you publish a server, the same measurement is available as a badge, so your users can see
@@ -424,8 +424,8 @@ repository), then in your README:
 A badge says what your server costs today; it does nothing about the release
 that adds 1,200 tokens to every user's context next month. Across the servers
 measured here most costs hold steady from sweep to sweep, but when a cost does
-move it usually moves up: the [movement report](results/regressions.md) has 13
-servers ratcheting upward against 5 that got cheaper, and none of those
+move it usually moves up: the [movement report](results/regressions.md) has 14
+servers ratcheting upward against 6 that got cheaper, and none of those
 maintainers had a check that would have said so first. `measure` takes the same
 gate flags `audit` does, so your own CI can be that check:
 

@@ -853,12 +853,13 @@
       }
     }
   ],
-  "measuredAt": "2026-09-05T23:39:11.845Z",
+  "measuredAt": "2026-09-09T06:06:11.740Z",
   "serverName": "awslabs.aws-documentation-mcp-server",
   "serverVersion": "",
   "launchCommand": "uvx awslabs.aws-documentation-mcp-server@latest",
   "envVarNames": [],
   "serverInstructions": "\n    # AWS Documentation MCP Server\n\n    This server provides tools to access public AWS documentation, search for content, and get recommendations.\n\n    ## Best Practices\n\n    - For long documentation pages, make multiple calls to `read_documentation` with different `start_index` values for pagination\n    - By default, use read_sections when the answer could be within a specific section(s), given the table of contents. Otherwise, use read_documentation to scan the entire page.\n    - For very long documents (>30,000 characters), stop reading if you've found the needed information\n    - When searching, use specific technical terms rather than general phrases\n    - Use `recommend` tool to discover related content that might not appear in search results\n    - For recent updates to a service, get an URL for any page in that service, then check the **New** section of the `recommend` tool output on that URL\n    - If multiple searches with similar terms yield insufficient results, pivot to using `recommend` to find related pages.\n    - Always cite the documentation URL when providing information to users\n\n    ## Tool Selection Guide\n\n    - Use `search_documentation` when: You need to find documentation about a specific AWS service or feature\n    - Use `read_documentation` when: You have a specific documentation URL and need its content\n    - Use `read_sections` when: You have a specific documentation URL and specific section title(s) and only need content from those specific section(s)\n    - Use `search_table` when: You need specific rows from a large table (e.g., service quotas, pricing, supported models). If read_sections or read_documentation shows a truncated table, use this tool with a query to find the rows you need.\n    - Use `recommend` when: You want to find related content to a documentation page you're already viewing or need to find newly released information\n    - Use `recommend` as a fallback when: Multiple searches have not yielded the specific information needed\n    ",
+  "negotiatedProtocolVersion": "2025-06-18",
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",
@@ -866,5 +867,6 @@
     "note": "network enabled for package fetch; clean FS, no host credentials",
     "arch": "linux/amd64"
   },
-  "timeoutMs": 240000
+  "timeoutMs": 240000,
+  "requestedProtocolVersion": "2025-06-18"
 }

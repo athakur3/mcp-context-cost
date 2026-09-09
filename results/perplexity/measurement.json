@@ -51,7 +51,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-05T23:39:56.893Z",
+  "measuredAt": "2026-09-09T06:07:05.875Z",
   "serverName": "example-servers/perplexity-ask",
   "serverVersion": "0.1.0",
   "launchCommand": "npx -y server-perplexity-ask",
@@ -59,6 +59,7 @@
     "PERPLEXITY_API_KEY"
   ],
   "serverInstructions": null,
+  "negotiatedProtocolVersion": "2025-06-18",
   "isolation": {
     "docker": true,
     "image": "public.ecr.aws/docker/library/node:22-slim",
@@ -66,5 +67,6 @@
     "note": "network enabled for package fetch; clean FS, no host credentials",
     "arch": "linux/amd64"
   },
-  "timeoutMs": 240000
+  "timeoutMs": 240000,
+  "requestedProtocolVersion": "2025-06-18"
 }
