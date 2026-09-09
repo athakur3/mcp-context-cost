@@ -41,6 +41,7 @@ import {
   type ToolSearchSource,
   type ToolSearchVar,
 } from './deferral.js';
+import { extractSourcePolicy } from './mcp-policy.js';
 
 export interface ConfiguredServer {
   name: string;
@@ -340,6 +341,8 @@ export interface ConfigCandidate {
   path: string;
   /** How the file is written. Absent means JSON, with comments and trailing commas tolerated. */
   format?: 'json' | 'toml' | 'yaml';
+  /** Set on the managed MCP file, whose presence changes what a session loads. */
+  managed?: true;
 }
 
 /** Every place a client config is known to live, whether or not it exists. */
@@ -402,6 +405,8 @@ export function parseConfigText(text: string, format: ConfigCandidate['format'] 
 export interface LoadedConfig {
   client: string;
   source: string;
+  /** Carried from the candidate: this is the managed MCP file (see managedMcpPath). */
+  managed?: true;
   servers: ConfiguredServer[];
   /** Set when the file exists but could not be read/parsed. */
   error?: string;
@@ -457,18 +462,79 @@ export function loadConfigs(
         // that, not as one declaring nothing: the second is a claim about the
         // file that the file itself contradicts.
         if (disabled.length) {
-          out.push({ client: c.client, source: c.path, servers: [], allDisabled: disabled });
+          out.push({
+            client: c.client,
+            source: c.path,
+            ...(c.managed ? { managed: true as const } : {}),
+            servers: [],
+            allDisabled: disabled,
+          });
           continue;
         }
-        out.push({ client: c.client, source: c.path, servers: [], declaresNothing: true });
+        out.push({
+          client: c.client,
+          source: c.path,
+          ...(c.managed ? { managed: true as const } : {}),
+          servers: [],
+          declaresNothing: true,
+        });
         continue;
       }
-      out.push({ client: c.client, source: c.path, servers });
+      out.push({
+        client: c.client,
+        source: c.path,
+        ...(c.managed ? { managed: true as const } : {}),
+        servers,
+      });
     } catch (e) {
-      out.push({ client: c.client, source: c.path, servers: [], error: (e as Error).message });
+      out.push({
+        client: c.client,
+        source: c.path,
+        ...(c.managed ? { managed: true as const } : {}),
+        servers: [],
+        error: (e as Error).message,
+      });
     }
   }
   return out;
+}
+
+/**
+ * Where Claude Code looks for the managed MCP file: one fixed path per
+ * platform, in the same system directory as `managed-settings.json` — and,
+ * unlike that file, with no drop-in directory: the vendor documents a single
+ * standalone file that "cannot be delivered through server-managed settings".
+ * When it exists, a claude-code session loads only the servers it defines
+ * (plus in-process servers the launching app registers, which no config file
+ * describes). code.claude.com/docs/en/managed-mcp.md, §Exclusive control with
+ * managed-mcp.json, read **2026-09-09**.
+ */
+export function managedMcpPath(platform: NodeJS.Platform): string {
+  return platform === 'darwin'
+    ? '/Library/Application Support/ClaudeCode/managed-mcp.json'
+    : platform === 'win32'
+      ? 'C:\\Program Files\\ClaudeCode\\managed-mcp.json'
+      : '/etc/claude-code/managed-mcp.json';
+}
+
+/**
+ * The candidate list with the managed MCP file spliced in ahead of the
+ * claude-code user and project configs, so the file that decides what a
+ * session loads is read — and reported — before the files it can suppress.
+ */
+export function withManagedMcpCandidate(
+  candidates: ConfigCandidate[],
+  platform: NodeJS.Platform,
+): ConfigCandidate[] {
+  const managed: ConfigCandidate = {
+    client: 'claude-code',
+    path: managedMcpPath(platform),
+    managed: true,
+  };
+  const at = candidates.findIndex((c) => c.client === 'claude-code');
+  return at < 0
+    ? [...candidates, managed]
+    : [...candidates.slice(0, at), managed, ...candidates.slice(at)];
 }
 
 /** One file Claude Code reads its `env` block from. */
@@ -595,12 +661,16 @@ export function loadSettingsSources(candidates: SettingsCandidate[]): ToolSearch
           else unreadable.push(name);
         }
       }
+      // The same open answers a second question: whether this file sets the
+      // MCP allowlist, denylist, or the managed-only flag (mcp-policy.ts).
+      const mcpPolicy = extractSourcePolicy(doc);
       return {
         scope: c.scope,
         source: c.path,
         state: 'read' as const,
         vars,
         ...(unreadable.length ? { unreadable } : {}),
+        ...(mcpPolicy ? { mcpPolicy } : {}),
       };
     } catch {
       return { scope: c.scope, source: c.path, state: 'unreadable' as const, vars: {} };

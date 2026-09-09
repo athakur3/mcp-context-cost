@@ -102,7 +102,10 @@ Not every client puts every tool definition in context on every request, so the 
 is not automatically your bill. Which client reads the config decides it, and for Claude Code
 so does how that client is configured **on this machine** — three environment variables and a
 per-server `alwaysLoad` pin, which `audit` reads rather than assumes, from the shell it runs
-in *and* from the `env` block of Claude Code's own settings files. No other client's posture
+in *and* from the `env` block of Claude Code's own settings files. It also reads what an
+organisation deploys: the managed MCP file that takes exclusive control of the server list
+where it exists, and the allow/deny lists that filter what loads — a clean deny is applied to
+the session's claims, an allowlist is reported and never subtracted. No other client's posture
 is readable from a file this opens, so for those the report gives what the vendor is on record
 with, or says there is nothing on record, and claims neither as a measurement.
 

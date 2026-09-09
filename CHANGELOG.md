@@ -148,6 +148,21 @@ while reading it.
   in the publish path, hana-cli's status, stays deliberately: a recovery there must change a
   CONTRIBUTING sentence with it.
 
+- **The managed tier could rewrite a machine's server list, and the audit never looked.** An
+  organisation can deploy `managed-mcp.json` — one fixed path per platform — and a claude-code
+  session then loads only what that file defines; deployed empty, it disables MCP outright. On
+  such a machine the audit's session claims described files that do not load. `audit` now
+  reads that path: the managed file gets a row of its own, every suppressed config says so and
+  stays measured as a file, an empty deployment reads as MCP disabled by policy, and a managed
+  file that cannot be read refuses the session's composition rather than guessing. The
+  allow/deny lists are read off the settings files already opened, and applied by direction: a
+  clean `deniedMcpServers` match leaves the session's claims — nothing overrides a deny, and
+  an entry in a tier this audit does not read could only remove more — while
+  `allowedMcpServers` verdicts are reported and never subtracted, because allowlists union
+  across scopes and an unread tier can only broaden one. An entry carrying `${}` expansion is
+  printed as set-but-unevaluated, and the vendor's own evaluation tables run as tests, row for
+  row (managed-mcp documentation, read 2026-09-09).
+
 ## 0.19.0 — 2026-09-08
 
 - **The repository had no formatter, no linter, and `strict: true` as its only compiler flag.**

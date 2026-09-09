@@ -35,6 +35,12 @@ import {
 } from './deferral.js';
 import { formatDiff, formatGate, type AuditDiff, type IncreaseGate } from './diff.js';
 import { signed } from '../core/format.js';
+import {
+  evaluateMcpPolicy,
+  type DenyVerdict,
+  type McpPolicyEvaluation,
+  type UnevaluatedEntry,
+} from './mcp-policy.js';
 
 export const DEFAULT_CONTEXT_WINDOW = 200_000;
 
@@ -136,6 +142,15 @@ export interface AuditConfigResult {
   suggestions?: ConfigSuggestions | undefined;
   /** Present only when `--changed` ran with a usable capture index. */
   captureVerdicts?: ServerCaptureVerdict[] | undefined;
+  /** Set on the managed MCP file's own row (see managedMcpPath in config.ts). */
+  managed?: true | undefined;
+  /**
+   * Set on a claude-code config that is measured here but does not load in a
+   * session, because a managed MCP file has exclusive control. The value is
+   * that file's path. The measurement stands — it is a fact about this file —
+   * and every session-level claim belongs to the managed file instead.
+   */
+  suppressedByManagedMcp?: string | undefined;
   /**
    * Whether this client loads the total up front or defers it, and — when the
    * client decides that by a threshold — which side of it this stack is on.
@@ -258,6 +273,38 @@ export interface AuditReport {
     /** Present only when over budget: the arithmetic of getting back under it. */
     fit?: BudgetFit | undefined;
   };
+  /**
+   * Present when the managed MCP file exists on this machine. `exclusive`
+   * means a claude-code session loads only its servers; `disabled` that it is
+   * deployed with an empty server map, so no MCP server loads at all;
+   * `unreadable` that it exists and could not be read, so which servers a
+   * session loads cannot be said. `suppressed` names the claude-code configs
+   * measured here that do not load under it. Source:
+   * code.claude.com/docs/en/managed-mcp.md, read 2026-09-09.
+   */
+  managedMcp?:
+    | {
+        path: string;
+        state: 'exclusive' | 'disabled' | 'unreadable';
+        error?: string | undefined;
+        suppressed: string[];
+      }
+    | undefined;
+  /**
+   * Claude Code's MCP allowlist/denylist, as read from the settings files this
+   * audit opens, evaluated over the claude-code session's servers. Deny
+   * matches are applied — those servers are left out of the session-level
+   * sums, never out of a file's own total; allow verdicts are reported and
+   * never applied (mcp-policy.ts says why the two differ). Absent when no read
+   * settings file sets either list.
+   */
+  mcpPolicy?:
+    | {
+        denied: (DenyVerdict & { tokens: number | null })[];
+        denyUnevaluated: UnevaluatedEntry[];
+        allow?: McpPolicyEvaluation['allow'];
+      }
+    | undefined;
   /** Present only when a divergence run was supplied (`--claude`). */
   claudeDivergence?: { model: string; measuredAt: string } | undefined;
   /** Which published tool-shape baseline `--suggest` read its percentiles from. */
@@ -384,6 +431,14 @@ function attachDeferral(
      * because that is what the scopes below are grouped from.
      */
     shared: Map<Omit<AuditConfigResult, 'deferral'>, number>;
+    /**
+     * Set when a managed MCP file governs claude-code sessions: 'exclusive'
+     * keeps only the managed config's servers in the session verdict,
+     * 'disabled' keeps none. File-level rows are untouched either way.
+     */
+    managedActive?: 'exclusive' | 'disabled' | undefined;
+    /** Session servers a clean deniedMcpServers entry matched — they do not load. */
+    deniedNames?: Set<string> | undefined;
   },
 ): AuditConfigResult[] {
   const scopes = new Map<string, Omit<AuditConfigResult, 'deferral'>[]>();
@@ -396,6 +451,15 @@ function attachDeferral(
 
   const verdicts = new Map<string, DeferralVerdict>();
   for (const [key, group] of scopes) {
+    // Under a managed MCP file, the claude-code session is the managed file's
+    // servers (or none, when it disables MCP) — the suppressed configs still
+    // share the verdict object, so their rows can point at it, but nothing
+    // they declare is in the session that verdict describes. A server a clean
+    // deny entry matched does not load either, so it leaves the session here —
+    // and only here, never a file's own total.
+    const isCc = ONE_SESSION_PER_CLIENT.has(group[0]!.client);
+    const sessionCfgs = isCc && opts.managedActive ? group.filter((c) => c.managed) : group;
+    const denied = isCc ? (opts.deniedNames ?? new Set<string>()) : new Set<string>();
     verdicts.set(
       key,
       // Computed against the same context window the share uses, so any
@@ -403,17 +467,19 @@ function attachDeferral(
       evaluateDeferral(
         {
           client: group[0]!.client,
-          sources: group.map((c) => c.source),
-          servers: group.flatMap((c) =>
-            c.servers.map((s) => ({
-              name: s.name,
-              tokens: s.tokens ?? 0,
-              claudeTokens: s.claudeTokens,
-              ...(s.alwaysLoad ? { alwaysLoad: true } : {}),
-            })),
+          sources: sessionCfgs.map((c) => c.source),
+          servers: sessionCfgs.flatMap((c) =>
+            c.servers
+              .filter((s) => !denied.has(s.name))
+              .map((s) => ({
+                name: s.name,
+                tokens: s.tokens ?? 0,
+                claudeTokens: s.claudeTokens,
+                ...(s.alwaysLoad ? { alwaysLoad: true } : {}),
+              })),
           ),
-          skippedCount: group.reduce((a, c) => a + c.skipped.length, 0),
-          sharedMeasurements: group.reduce((a, c) => a + (opts.shared.get(c) ?? 0), 0),
+          skippedCount: sessionCfgs.reduce((a, c) => a + c.skipped.length, 0),
+          sharedMeasurements: sessionCfgs.reduce((a, c) => a + (opts.shared.get(c) ?? 0), 0),
         },
         { contextWindow, env: opts.env, settings: opts.settings, divergence: opts.divergence },
       ),
@@ -481,6 +547,43 @@ export function buildReport(
   // the other client's entry just the same.
   const collapsed = collapsedKeys(configs);
   const shared = new Map<Omit<AuditConfigResult, 'deferral'>, number>();
+
+  // The managed MCP file, when present, decides what a claude-code session
+  // loads (config.ts: managedMcpPath). Detected before the build, so every
+  // claude-code row can say which side of that fact it is on.
+  const managedCfg = configs.find((c) => c.client === 'claude-code' && c.managed);
+  const otherCc = configs.filter((c) => c.client === 'claude-code' && !c.managed);
+  const managedState = managedCfg
+    ? managedCfg.error
+      ? ('unreadable' as const)
+      : managedCfg.servers.length
+        ? ('exclusive' as const)
+        : ('disabled' as const)
+    : undefined;
+  const managedActive = managedState === 'exclusive' || managedState === 'disabled';
+
+  // The claude-code session's servers, managed-aware — taken at the config
+  // level because policy entries match argv and URL, which built rows drop.
+  const ccSessionServers = managedActive
+    ? managedState === 'exclusive'
+      ? managedCfg!.servers
+      : []
+    : otherCc.flatMap((c) => c.servers);
+  const policy = evaluateMcpPolicy(
+    ccSessionServers.map((s) => ({
+      name: s.name,
+      transport: s.transport,
+      argv: s.argv,
+      url: s.url,
+    })),
+    (opts.settings ?? []).map((s) => ({
+      scope: s.scope,
+      source: s.source,
+      state: s.state,
+      policy: s.mcpPolicy,
+    })),
+  );
+  const deniedNames = new Set(policy.denied.map((d) => d.server));
 
   for (const cfg of configs) {
     if (cfg.error) {
@@ -639,13 +742,22 @@ export function buildReport(
             verdict: identify(s.canonicalSha256, opts.captureIndex!),
           }))
         : undefined,
+      ...(cfg.managed ? { managed: true as const } : {}),
+      ...(managedActive && cfg.client === 'claude-code' && !cfg.managed
+        ? { suppressedByManagedMcp: managedCfg!.source }
+        : {}),
     };
     built.push(result);
     shared.set(result, sharedHere);
   }
 
   built.sort((a, b) => b.totalTokens - a.totalTokens);
-  const results = attachDeferral(built, contextWindow, { ...opts, shared });
+  const results = attachDeferral(built, contextWindow, {
+    ...opts,
+    shared,
+    managedActive: managedActive ? managedState : undefined,
+    deniedNames,
+  });
 
   const report: AuditReport = {
     methodologyVersion: METHODOLOGY_VERSION,
@@ -656,6 +768,26 @@ export function buildReport(
     emptyConfigs,
     problems,
   };
+
+  if (managedCfg && managedState) {
+    report.managedMcp = {
+      path: managedCfg.source,
+      state: managedState,
+      ...(managedCfg.error ? { error: managedCfg.error } : {}),
+      suppressed: managedActive ? otherCc.map((c) => c.source) : [],
+    };
+  }
+  if (policy.sources.length) {
+    const ccServers = built.filter((b) => b.client === 'claude-code').flatMap((b) => b.servers);
+    report.mcpPolicy = {
+      denied: policy.denied.map((d) => ({
+        ...d,
+        tokens: ccServers.find((s) => s.name === d.server)?.tokens ?? null,
+      })),
+      denyUnevaluated: policy.denyUnevaluated,
+      ...(policy.allow ? { allow: policy.allow } : {}),
+    };
+  }
 
   if (opts.divergence) {
     report.claudeDivergence = {
@@ -1118,13 +1250,52 @@ export function formatReport(report: AuditReport): string {
   );
 
   const showClaude = !!report.claudeDivergence;
+
+  // The managed MCP file with no server rows of its own still owns the session:
+  // deployed empty it disables MCP, unreadable it makes the session unsayable.
+  // Either way that is the first fact about claude-code on this machine.
+  if (report.managedMcp && report.managedMcp.state !== 'exclusive') {
+    const m = report.managedMcp;
+    lines.push('');
+    lines.push(`claude-code  ${m.path}`);
+    if (m.state === 'disabled') {
+      lines.push(
+        '  managed: deployed with an empty server map — MCP is disabled by policy. No MCP',
+        '  server loads in a claude-code session on this machine, whatever the configs below',
+        '  declare; they are measured as files.',
+      );
+    } else {
+      lines.push(
+        '  managed: this file exists and could not be read — which servers a claude-code',
+        '  session loads cannot be said. The configs below are measured as files, and no',
+        '  session-level claim is made for this client.',
+      );
+      if (m.error) lines.push(`  ${m.error}`);
+    }
+  }
+
   // Configs one session loads together share a verdict object; it answers for
   // all of them at once, so it is printed under the first one and not repeated.
   const verdictPrinted = new Set<DeferralVerdict>();
+  let policyPrinted = false;
 
   for (const cfg of report.configs) {
     lines.push('');
     lines.push(`${cfg.client}  ${cfg.source}`);
+    if (cfg.managed) {
+      lines.push(
+        '  managed-mcp.json — exclusive control: a claude-code session loads only the servers',
+        '  in this file (plus in-process servers the launching app registers, which no config',
+        '  file describes). Other claude-code configs here are measured and do not load.',
+      );
+    }
+    if (cfg.suppressedByManagedMcp) {
+      lines.push(
+        `  does not load: ${cfg.suppressedByManagedMcp} has exclusive control of`,
+        '  claude-code sessions. Measured all the same — the numbers below are facts about',
+        '  this file, not about any session.',
+      );
+    }
 
     const rows = cfg.servers.map((s) => ({
       name: s.name,
@@ -1159,6 +1330,57 @@ export function formatReport(report: AuditReport): string {
         .reduce((a, c) => a + c.skipped.length, 0);
       for (const deferralLine of deferralLines(cfg.deferral, skippedInScope))
         lines.push(deferralLine);
+    }
+    if (cfg.client === 'claude-code' && report.mcpPolicy && !policyPrinted) {
+      policyPrinted = true;
+      const p = report.mcpPolicy;
+      if (p.denied.length) {
+        lines.push('');
+        lines.push(
+          '  blocked by deniedMcpServers — a denied server does not load, whatever else is',
+          "  set, so these are left out of the session claims above (never out of a file's",
+          '  own total):',
+        );
+        for (const d of p.denied) {
+          const tok = d.tokens != null ? ` — ${n(d.tokens)} tokens` : '';
+          lines.push(`    ${d.server}${tok} — matched ${d.entry} (${d.source})`);
+        }
+      }
+      if (p.denyUnevaluated.length) {
+        lines.push('');
+        lines.push('  deny entries set but not evaluated here — a match would only remove more:');
+        for (const u of p.denyUnevaluated) lines.push(`    ${u.entry} (${u.source}) — ${u.reason}`);
+      }
+      if (p.allow) {
+        lines.push('');
+        lines.push(`  an MCP allowlist is set in ${p.allow.sources.join(', ')}.`);
+        if (p.allow.managedOnly) {
+          lines.push(
+            `    allowManagedMcpServersOnly is true in ${p.allow.managedOnly.source}, so only`,
+            '    managed-tier entries counted below.',
+          );
+        }
+        const fails = p.allow.rows.filter((r) => r.verdict === 'fails').map((r) => r.server);
+        const unev = p.allow.rows.filter((r) => r.verdict === 'unevaluated').map((r) => r.server);
+        const hit = p.allow.rows.length - fails.length - unev.length;
+        lines.push(
+          `    ${hit} of ${p.allow.rows.length} session server(s) match an entry read here.`,
+        );
+        if (fails.length) {
+          lines.push(
+            `    matched by nothing read here: ${fails.join(', ')} — reported, not removed. An`,
+            '    entry in a tier this audit does not read (server-managed settings, an MDM',
+            '    profile, a registry key) can only broaden an allowlist, so this is a condition',
+            '    to check, never a subtraction.',
+          );
+        }
+        if (unev.length) {
+          lines.push(`    not evaluated: ${unev.join(', ')} — an entry below decides them.`);
+        }
+        for (const u of p.allow.unevaluated) {
+          lines.push(`      entry not evaluated: ${u.entry} (${u.source}) — ${u.reason}`);
+        }
+      }
     }
 
     if (cfg.heaviestTools.length) {

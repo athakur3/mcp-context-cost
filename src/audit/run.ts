@@ -16,6 +16,7 @@ import { DEFAULT_PROBE_TIMEOUT_MS, probeRemote, type RemoteProbe } from './remot
 import {
   configCandidates,
   loadConfigs,
+  withManagedMcpCandidate,
   loadSettingsSources,
   managedDropInCandidates,
   settingsCandidates,
@@ -140,7 +141,10 @@ export function discover(opts: AuditOptions = {}): LoadedConfig[] {
   const candidates =
     opts.configPaths && opts.configPaths.length
       ? opts.configPaths.map((path) => ({ client: 'explicit', path }))
-      : configCandidates({ home, cwd, platform: process.platform, appData: process.env.APPDATA });
+      : withManagedMcpCandidate(
+          configCandidates({ home, cwd, platform: process.platform, appData: process.env.APPDATA }),
+          process.platform,
+        );
   return loadConfigs(candidates, cwd);
 }
 

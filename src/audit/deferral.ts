@@ -88,6 +88,7 @@
  *     their pages have been read.
  */
 import type { DivergenceRun } from '../core/divergence.js';
+import type { SourcePolicy } from './mcp-policy.js';
 
 /** Share of the context window at which deferral activates under `auto`. */
 export const TOOL_SEARCH_AUTO_SHARE = 0.1;
@@ -162,6 +163,12 @@ export interface ToolSearchSource {
    * these tokens are never loaded up front.
    */
   unreadable?: ToolSearchVar[];
+  /**
+   * What this file sets of Claude Code's MCP allowlist/denylist and the
+   * managed-only flag — read off the same open, evaluated in mcp-policy.ts,
+   * and never part of any deferral decision here.
+   */
+  mcpPolicy?: SourcePolicy;
 }
 
 /**

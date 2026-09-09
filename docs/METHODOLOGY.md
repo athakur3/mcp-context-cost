@@ -537,7 +537,34 @@ listed condition.
 **Configs one session loads together face the question together.** Claude Code reads
 `~/.claude.json` and `<cwd>/.mcp.json` into one session, so the threshold question is put to
 their sum and answered once. Per-config totals are still never merged (see above): the sum
-exists for the threshold and nowhere else.
+exists for the threshold and nowhere else. Where the managed MCP file below is deployed, the
+session is that file alone, and the sum is its.
+
+**The managed tier owns the server list, where it exists.** `managed-mcp.json` — one fixed
+path per platform, in the same system directory as the managed settings file and, unlike it,
+with no drop-in directory — gives an organisation exclusive control: a claude-code session
+loads only the servers that file defines, plus in-process servers the launching app
+registers, which no config file describes; deployed with an empty server map it disables MCP
+outright (code.claude.com/docs/en/managed-mcp.md, §Exclusive control, read **2026-09-09**).
+`audit` reads that path, says which state it found, and keeps measuring the user and project
+configs it suppresses — their totals are facts about those files — while every session-level
+claim moves to the managed file. A managed file that exists and cannot be read is its own
+refusal: which servers a session loads cannot be said, and the report says that instead of
+picking a side.
+
+**The allowlist and the denylist, and why only one of them is applied.** `allowedMcpServers`
+and `deniedMcpServers` filter what loads, and they live in the same settings files this audit
+already opens — and in tiers it does not: server-managed settings, an MDM profile, a registry
+key. The two lists are treated by direction. A server matching a **deny** entry read here is
+left out of the session's claims: the vendor says nothing overrides a deny, so that much is
+certain, and a deny entry in an unread tier could only lower the bill further. An **allow**
+verdict is reported and never subtracted: allowlists merge as a union across scopes, so an
+entry in an unread tier can only broaden what loads, and removing a server for failing the
+entries read here could understate a session. Neither list ever touches a file's own total.
+An entry carrying `${}` expansion is returned as set-but-unevaluated — the two sides expand
+from environments this audit does not hold — and `allowManagedMcpServersOnly` narrows the
+counted allowlist to the managed tier when a managed source sets it readably (same page,
+§Policy-based control and §How a server is evaluated, read **2026-09-09**).
 
 **The threshold comparison is a range, not a point.** Only `auto`/`auto:N` makes size decide
 anything. There the audit's number and the threshold are counted in different units — wire
@@ -557,7 +584,9 @@ straddles the line; and when the stack's total could not be established because 
 configured entries collapsed onto one measurement. The first four are the ways a machine can
 fail to state a posture readably, which is four refusals and not one: collapsing them into a
 single "unknown" would hide that three of the four are answerable by the reader, who can look
-at the file this audit could not.
+at the file this audit could not. The managed tier adds a refusal of the same kind: a
+`managed-mcp.json` that exists and cannot be read refuses the session's composition itself,
+and an allow or deny entry that is set but not evaluable here is printed as exactly that.
 
 **Deferral is not a blanket discount.** Even where the posture defers, the full number is
 paid on a Microsoft Foundry deployment hosted on Azure (which rejects tool search
