@@ -7,6 +7,17 @@ renames this heading to that version and dates it. Every other section here desc
 someone can install; this one describes the trunk, which is the difference to hold in mind
 while reading it.
 
+None of the 103 published records changed status under this release: its two re-sweeps
+measured the same thirty-four servers twice and moved no verdict, which makes those
+thirty-four the first published records to carry the protocol handshake pair — documented
+below before any of them existed. Everything else that changed, changed because this
+project's own words or code were wrong, and most of it traces to one event: on 2026-09-08
+two independent readers audited the plan against the repository and catalogued twelve
+defects. Eight are fixed below. Two stand as written, because the changelog is never
+corrected backward; two await data or a decision. The audit tool itself grew the most: it
+now reads the managed tier that can own a machine's server list, and its budget learned
+what a session is.
+
 - **`sweep:all --only=github` was not a narrow sweep.** Eight scripts carried the same
   byte-identical private flag reader, and it read only the space form — so `--only=github`
   read as no selection at all and ran a full host sweep that overwrites published records,
