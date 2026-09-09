@@ -326,7 +326,7 @@ date,server,tokens,toolCount,status,isolation,version
 2026-09-09,chroma,2837,13,measured,docker,1.6.0
 2026-09-09,codebase-memory-mcp,5258,15,measured,docker,0.10.8
 2026-09-09,comfyui-mcp,50776,41,measured,docker,0.52.202
-2026-09-09,desktop-commander,11835,26,dynamic,docker,0.2.48
+2026-09-09,desktop-commander,11837,26,dynamic,docker,0.2.48
 2026-09-09,elasticsearch,374,4,measured,docker,0.3.1
 2026-09-09,everything,1708,13,measured,docker,2.0.0
 2026-09-09,excel,4266,25,measured,docker,1.30.0

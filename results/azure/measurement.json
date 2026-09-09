@@ -2861,7 +2861,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-09T06:06:24.376Z",
+  "measuredAt": "2026-09-09T08:04:39.152Z",
   "serverName": "Azure MCP Server",
   "serverVersion": "3.0.0-beta.42",
   "launchCommand": "npx -y @azure/mcp@latest server start",

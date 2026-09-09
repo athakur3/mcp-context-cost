@@ -1610,7 +1610,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-09T06:07:18.137Z",
+  "measuredAt": "2026-09-09T08:05:19.460Z",
   "serverName": "excel-mcp",
   "serverVersion": "1.30.0",
   "launchCommand": "uvx excel-mcp-server stdio",

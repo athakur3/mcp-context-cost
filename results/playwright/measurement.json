@@ -1020,7 +1020,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-09T06:06:04.974Z",
+  "measuredAt": "2026-09-09T08:04:22.196Z",
   "serverName": "Playwright",
   "serverVersion": "1.63.0-alpha-2026-08-31",
   "launchCommand": "npx -y @playwright/mcp@latest",

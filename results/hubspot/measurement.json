@@ -1443,7 +1443,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-09T06:06:36.170Z",
+  "measuredAt": "2026-09-09T08:04:47.875Z",
   "serverName": "hubspot-mcp-server",
   "serverVersion": "0.4.0",
   "launchCommand": "npx -y @hubspot/mcp-server",

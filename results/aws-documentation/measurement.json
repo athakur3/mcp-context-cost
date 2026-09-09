@@ -853,7 +853,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-09T06:06:11.740Z",
+  "measuredAt": "2026-09-09T08:04:24.328Z",
   "serverName": "awslabs.aws-documentation-mcp-server",
   "serverVersion": "",
   "launchCommand": "uvx awslabs.aws-documentation-mcp-server@latest",

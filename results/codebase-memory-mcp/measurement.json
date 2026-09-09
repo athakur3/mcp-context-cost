@@ -851,7 +851,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-09T06:08:05.953Z",
+  "measuredAt": "2026-09-09T08:05:59.206Z",
   "serverName": "codebase-memory-mcp",
   "serverVersion": "0.10.8",
   "launchCommand": "npx -y codebase-memory-mcp",

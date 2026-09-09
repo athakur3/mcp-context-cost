@@ -17,7 +17,7 @@ One page per measured server: the per-tool breakdown behind the badge, the exact
 | 11 | [octocode](octocode.html) | 13,552 | 12,967 | 23,343 | 14 | moderate |
 | 12 | [githits](githits.html) | 12,833 | 12,384 | 20,689 | 16 | moderate |
 | 13 | [circleci](circleci.html) | 11,912 | 11,755 | 19,164 | 13 | moderate |
-| 14 | [desktop-commander](desktop-commander.html) | 11,835 | 11,055 | 19,304 | 26 | moderate |
+| 14 | [desktop-commander](desktop-commander.html) | 11,837 | 11,057 | 19,306 | 26 | moderate |
 | 15 | [google-surf](google-surf.html) | 10,948 | 6,412 | 11,232 | 7 | moderate |
 | 16 | [apify](apify.html) | 10,452 | 4,793 | 8,297 | 10 | moderate |
 | 17 | [appium-mcp](appium-mcp.html) | 10,267 | 9,798 | 17,001 | 31 | moderate |

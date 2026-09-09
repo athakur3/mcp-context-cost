@@ -6,7 +6,7 @@ Comparable means the two runs used the same isolation — two numbers taken unde
 
 Every server with a measurement on record is in exactly one of the three sections below: **20 moved**, **65 held the same cost across every comparable measurement**, and **2 have no second comparable measurement yet** — 20 + 65 + 2 = 87.
 
-**14 servers moved upward and 6 moved down**, a net +5,288 tokens across the measured set. 6 movements clear both thresholds for being called out (at least 5% *and* at least 25 tokens — relative alone would headline a fifth of a cheap server, absolute alone would headline drift on an expensive one). Everything comparable is listed either way.
+**15 servers moved upward and 5 moved down**, a net +5,293 tokens across the measured set. 6 movements clear both thresholds for being called out (at least 5% *and* at least 25 tokens — relative alone would headline a fifth of a cheap server, absolute alone would headline drift on an expensive one). Everything comparable is listed either way.
 
 | server | window | release | tokens | change | tools | what moved |
 |---|---|---|---:|---:|---:|---|
@@ -29,7 +29,7 @@ Every server with a measurement on record is in exactly one of the three section
 | [apify](../docs/servers/apify.md) | 2026-08-19 → 2026-09-04 | — | 10,426 → 10,452 | +26 (+0.2%) | — | same tools, rewritten |
 | [brave-search](../docs/servers/brave-search.md) | 2026-08-19 → 2026-09-04, held to 2026-09-09 | — | 25,456 → 25,487 | +31 (+0.1%) | — | same tools, rewritten |
 | [supabase](../docs/servers/supabase.md) | 2026-08-18 → 2026-09-04 | — | 5,013 → 5,007 | −6 (−0.1%) | — | same tools, rewritten |
-| [desktop-commander](../docs/servers/desktop-commander.md) | 2026-09-05 → 2026-09-09 | still `0.2.48` | 11,837 → 11,835 | −2 (−0.0%) | — | same tools, rewritten |
+| [desktop-commander](../docs/servers/desktop-commander.md) | 2026-09-04 → 2026-09-05, held to 2026-09-09 | still `0.2.48` | 11,834 → 11,837 | +3 (+0.0%) | — | same tools, rewritten |
 
 Rows marked **·** clear both thresholds.
 

@@ -202,11 +202,11 @@
       "capturedSha256": "3735162916165ab23696fc91fbf626bd99a36ddcd1e15746e91e16c7e336b379"
     },
     "desktop-commander": {
-      "o200kFull": 11835,
-      "o200kMapped": 11055,
-      "claudeDelta": 19304,
+      "o200kFull": 11837,
+      "o200kMapped": 11057,
+      "claudeDelta": 19306,
       "toolCount": 26,
-      "capturedSha256": "07f606daeb7a0e968c2c5a580727372ffdd494cc9202173b6b71d064c7545047"
+      "capturedSha256": "93139d61e27fc656cd32c0061d5eccc58be171c4246574ef2a48b7f05c2d33ad"
     },
     "duckduckgo": {
       "o200kFull": 724,

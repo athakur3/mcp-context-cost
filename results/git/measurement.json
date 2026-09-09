@@ -506,7 +506,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-09T06:05:59.152Z",
+  "measuredAt": "2026-09-09T08:04:18.111Z",
   "serverName": "mcp-git",
   "serverVersion": "1.30.0",
   "launchCommand": "uvx --with \"mcp<2\" mcp-server-git",

@@ -8,7 +8,7 @@
   "tools": [],
   "canonicalSha256": null,
   "rawToolsCapture": null,
-  "measuredAt": "2026-09-09T06:06:26.324Z",
+  "measuredAt": "2026-09-09T08:04:40.685Z",
   "serverName": "magic",
   "launchCommand": "npx -y @21st-dev/magic@latest",
   "notes": "server error -32001 answering initialize: Not authenticated - your API key is missing or was reset. Get a fresh key at https://21st.dev/mcp and update your MCP config (x-api-key / Bearer).",
