@@ -120,6 +120,19 @@ while reading it.
   context, which the session-start column measures. Scoped to the documented mechanism — a
   client whose record describes a different one keeps its own words.
 
+- **VS Code's 128 was two facts sharing a numeral, and one sentence about it had expired.**
+  The record read "a hard cap of 128 tools per chat request" beside a threshold "that
+  defaults to 128", leaving open whether the vendor documents a maximum. Re-read 2026-09-09:
+  the cap is documented as a maximum in those words — a chat request "can have a maximum of
+  128 tools enabled at a time", and exceeding it is an error — while the virtual-tools
+  threshold is a *default* with no documented ceiling, described by the settings reference as
+  the way to go **beyond** the 128-tool limit. The two are now stated as the two different
+  facts they are, on the methodology page and in the audit's printed record. The expired
+  sentence: both surfaces said none of these settings appears in VS Code's published settings
+  documentation, which was true on 2026-09-07 and is not today — the settings reference now
+  documents the threshold, and only the agent host's switches remain undocumented. Dates
+  refreshed; the audit still reads no posture from any of it and has measured none of it.
+
 ## 0.19.0 — 2026-09-08
 
 - **The repository had no formatter, no linter, and `strict: true` as its only compiler flag.**

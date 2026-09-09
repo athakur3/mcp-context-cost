@@ -112,7 +112,7 @@ const STATIC_COUNTS: { file: PageFile; text: string; why: string }[] = [
   {
     file: 'docs/METHODOLOGY.md',
     text: '128 tools',
-    why: "VS Code's documented per-request tool cap, a fact about that client read 2026-09-07, not about this data",
+    why: "VS Code's documented maximum of enabled tools per chat request, a fact about that client read 2026-09-09, not about this data",
   },
   {
     file: 'docs/METHODOLOGY.md',

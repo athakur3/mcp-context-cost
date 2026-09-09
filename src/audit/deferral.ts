@@ -1112,15 +1112,17 @@ const DEFERRAL_ON_RECORD = new Map<string, DeferralRecord>([
       mechanism: "virtual tools, and the agent host's tool search",
       states: [
         'vscode ships two mechanisms that can defer tool definitions, and this is a',
-        'record of them rather than a verdict about your session. It documents a hard',
-        'cap of 128 tools per chat request, and virtual tools — grouped sets the model',
-        'activates on demand — above a threshold that defaults to 128. Separately its',
+        'record of them rather than a verdict about your session. It documents a maximum',
+        'of 128 tools enabled per chat request, and virtual tools — grouped sets the model',
+        'activates on demand — above a threshold defaulting to 128, which its settings',
+        'reference states no ceiling for and offers as the way past that limit. Separately its',
         'agent host defers MCP and non-core tools behind a tool-search tool, on by',
         'default in source.',
       ],
       notReadable: [
         "Both switches live in VS Code's own settings, not in the .vscode/mcp.json",
-        'this audit reads, and neither is in the published settings documentation.',
+        "this audit reads. The agent host's pair is in no published settings",
+        'documentation; the virtual-tools threshold is, as experimental (2026-09-09).',
         'So no file read here states a posture, and none of it has been measured.',
       ],
       conditions: [
@@ -1129,7 +1131,8 @@ const DEFERRAL_ON_RECORD = new Map<string, DeferralRecord>([
         'which VS Code release runs Copilot sessions on that agent host by default is not established here, so whether the source default reaches a given install is unknown',
       ],
       sources: [
-        'code.visualstudio.com agent tools documentation, read 2026-09-07 — 128 tools per request, and github.copilot.chat.virtualTools.threshold, an experimental setting defaulting to 128',
+        'code.visualstudio.com agent tools documentation, read 2026-09-09 — "a maximum of 128 tools enabled at a time", with the virtual-tools threshold offered as the remedy',
+        'code.visualstudio.com AI settings reference, read 2026-09-09 — github.copilot.chat.virtualTools.threshold, experimental, default 128, "go beyond the limit of 128 tools for a chat request"',
         'microsoft/vscode src/vs/platform/agentHost/common/copilotCliConfig.ts at main, read 2026-09-07 — chat.agentHost.copilot.toolSearch.enabled defaults true, its deferThreshold to 1',
         'microsoft/vscode src/vs/platform/agentHost/node/copilot/toolSearchDeferral.ts at main, read 2026-09-07 — the model allowlist',
         'github.com/microsoft/vscode/pull/326213, merged 2026-07-23, read 2026-09-07 — the change that added it',

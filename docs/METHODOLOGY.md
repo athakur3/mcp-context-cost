@@ -444,10 +444,13 @@ be the same error as the one above, in the other direction.
   skipped when the features table is applied, though both still appear in the published config
   schema.
 - **VS Code** — conditions, not a verdict, and the only one of the three whose record does not
-  amount to a default. VS Code documents a hard cap of **128 tools per chat request** and
-  virtual tools, grouped sets the model activates on demand, above
-  `github.copilot.chat.virtualTools.threshold`, an experimental setting that defaults to 128.
-  Separately, `chat.agentHost.copilot.toolSearch.enabled` defaults to **true** in
+  amount to a default. Two documented facts share one numeral. A chat request "can have a
+  maximum of **128 tools** enabled at a time" — a cap, and exceeding it is an error. And
+  `github.copilot.chat.virtualTools.threshold`, an experimental setting defaulting to 128:
+  above that count, virtual tools group the set for the model to activate on demand; the
+  settings reference states no ceiling for it and describes it as the way to go
+  beyond the 128-tool limit (the agent tools documentation and the AI settings reference on
+  code.visualstudio.com, both read **2026-09-09**). Separately, `chat.agentHost.copilot.toolSearch.enabled` defaults to **true** in
   `src/vs/platform/agentHost/common/copilotCliConfig.ts` and defers MCP and non-core tools
   behind a tool-search tool, gated by an allowlist in
   `src/vs/platform/agentHost/node/copilot/toolSearchDeferral.ts` to the GPT-5.4, 5.5 and 5.6
@@ -456,7 +459,9 @@ be the same error as the one above, in the other direction.
   2026-07-23; source read **2026-09-07**). Left open, and stated as such: at or below 128 tools
   nothing documented defers, and the cap is an error rather than a saving; **which VS Code
   release runs Copilot sessions on that agent host by default is not established here**; and
-  none of those settings appears in VS Code's published settings documentation. Both switches
+  the agent host's settings appear nowhere in the published settings documentation, though
+  the virtual-tools threshold now does, as experimental (read **2026-09-09** — an earlier
+  read of 2026-09-07 found none of them). Both switches
   live in VS Code's own settings rather than in the `.vscode/mcp.json` this audit reads.
 
 **Where the cost is paid in full.** No default deferral is on record for Claude Desktop,
