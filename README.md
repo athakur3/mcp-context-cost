@@ -267,7 +267,7 @@ does, and the percentile that decides are in
 
 ```
   suggest — descriptions at or above the 90th percentile of measured tools
-  (baseline 2026-09-21: 1,433 tools across 87 measured servers):
+  (baseline 2026-09-28: 1,433 tools across 87 measured servers):
     stub · wordy — 345 tokens: description 321 (p92), schema 14
       rewriting the description toward the measured median (27) would recover ≈294 tokens on every request
     1 of 2 tools sit inside the distribution — no advice where nothing is measurably unusual.

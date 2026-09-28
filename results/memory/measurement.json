@@ -784,7 +784,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-21T12:47:52.399Z",
+  "measuredAt": "2026-09-28T13:54:17.940Z",
   "serverName": "memory-server",
   "serverVersion": "0.6.3",
   "launchCommand": "npx -y @modelcontextprotocol/server-memory@2026.7.4",
