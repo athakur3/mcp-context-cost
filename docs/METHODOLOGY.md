@@ -294,7 +294,7 @@ opposite directions, and a single ratio hides the larger one:
 
 Because the effects can cancel or compound, the Claude number is **not** a fixed multiple of
 the badge — it ranged from 0.19× to 1.93× across the 86 servers in the run, and it reorders the leaderboard:
-github is the heaviest server on o200k and comfyui-mcp is the heaviest on Claude.
+github is the heaviest server on o200k and notion is the heaviest on Claude.
 
 **What it is not.** It is not any client's context bill either. `count_tokens` is Anthropic's
 accounting for tools sent through the API's `tools` parameter; a client that re-renders

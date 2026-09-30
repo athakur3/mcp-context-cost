@@ -5,48 +5,48 @@ One page per measured server: the per-tool breakdown behind the badge, the exact
 | # | server | wire | mapped | Claude | tools | band |
 |---:|---|---:|---:|---:|---:|---|
 | 1 | [github](github.html) | 54,622 | 10,735 | 18,728 | 44 | very heavy |
-| 2 | [comfyui-mcp](comfyui-mcp.html) | 50,776 | 50,385 | 84,168 | 41 | very heavy |
+| 2 | [comfyui-mcp](comfyui-mcp.html) | 50,268 | 49,877 | — | 41 | very heavy |
 | 3 | [agent-device](agent-device.html) | 48,909 | 33,319 | — | 57 | very heavy |
 | 4 | [xcodebuildmcp](xcodebuildmcp.html) | 26,594 | 2,676 | 5,335 | 24 | heavy |
-| 5 | [brave-search](brave-search.html) | 25,487 | 8,278 | 13,762 | 8 | heavy |
-| 6 | [anki](anki.html) | 20,037 | 9,357 | 16,189 | 50 | heavy |
+| 5 | [brave-search](brave-search.html) | 25,500 | 8,291 | — | 8 | heavy |
+| 6 | [anki](anki.html) | 21,608 | 10,032 | — | 53 | heavy |
 | 7 | [notion](notion.html) | 17,500 | 17,163 | 33,560 | 24 | heavy |
 | 8 | [mcp-atlassian](mcp-atlassian.html) | 17,311 | 12,823 | — | 63 | heavy |
-| 9 | [grafana](grafana.html) | 16,774 | 15,460 | 26,641 | 65 | heavy |
-| 10 | [azure](azure.html) | 15,657 | 14,703 | 26,928 | 70 | heavy |
-| 11 | [octocode](octocode.html) | 13,552 | 12,967 | 23,343 | 14 | moderate |
-| 12 | [githits](githits.html) | 12,833 | 12,384 | 20,689 | 16 | moderate |
-| 13 | [circleci](circleci.html) | 11,912 | 11,755 | 19,164 | 13 | moderate |
-| 14 | [desktop-commander](desktop-commander.html) | 11,837 | 11,057 | 19,306 | 26 | moderate |
-| 15 | [google-surf](google-surf.html) | 10,948 | 6,412 | 11,232 | 7 | moderate |
-| 16 | [apify](apify.html) | 10,452 | 4,793 | 8,297 | 10 | moderate |
-| 17 | [appium-mcp](appium-mcp.html) | 10,267 | 9,798 | 17,001 | 31 | moderate |
-| 18 | [obsidian-rest](obsidian-rest.html) | 10,173 | 5,878 | 10,172 | 12 | moderate |
-| 19 | [firecrawl](firecrawl.html) | 9,561 | 8,869 | 16,428 | 27 | moderate |
-| 20 | [accessibility-scanner](accessibility-scanner.html) | 9,247 | 8,151 | 14,771 | 34 | moderate |
+| 9 | [google-surf](google-surf.html) | 17,185 | 11,434 | — | 7 | heavy |
+| 10 | [grafana](grafana.html) | 16,774 | 15,460 | 26,641 | 65 | heavy |
+| 11 | [azure](azure.html) | 14,808 | 13,844 | — | 71 | moderate |
+| 12 | [octocode](octocode.html) | 13,552 | 12,967 | 23,343 | 14 | moderate |
+| 13 | [githits](githits.html) | 12,833 | 12,384 | 20,689 | 16 | moderate |
+| 14 | [circleci](circleci.html) | 11,912 | 11,755 | 19,164 | 13 | moderate |
+| 15 | [desktop-commander](desktop-commander.html) | 11,063 | 10,283 | — | 26 | moderate |
+| 16 | [excel](excel.html) | 10,493 | 7,798 | — | 26 | moderate |
+| 17 | [apify](apify.html) | 10,452 | 4,793 | 8,297 | 10 | moderate |
+| 18 | [appium-mcp](appium-mcp.html) | 10,267 | 9,798 | 17,001 | 31 | moderate |
+| 19 | [obsidian-rest](obsidian-rest.html) | 10,173 | 5,878 | 10,172 | 12 | moderate |
+| 20 | [firecrawl](firecrawl.html) | 9,561 | 8,869 | 16,428 | 27 | moderate |
 | 21 | [redis](redis.html) | 9,246 | 7,489 | 13,221 | 53 | moderate |
 | 22 | [basic-memory](basic-memory.html) | 9,188 | 7,120 | 12,426 | 23 | moderate |
 | 23 | [hubspot](hubspot.html) | 9,158 | 8,433 | 14,398 | 21 | moderate |
-| 24 | [postgres-mcp](postgres-mcp.html) | 8,632 | 1,178 | 2,381 | 9 | moderate |
-| 25 | [ssh-manager](ssh-manager.html) | 8,446 | 8,149 | 14,196 | 37 | moderate |
-| 26 | [serena](serena.html) | 8,204 | 6,550 | 11,494 | 29 | moderate |
-| 27 | [mongodb](mongodb.html) | 7,926 | 4,501 | 8,765 | 27 | moderate |
-| 28 | [blender](blender.html) | 6,928 | 6,160 | 10,576 | 28 | moderate |
-| 29 | [shopify-dev](shopify-dev.html) | 6,841 | 6,793 | 11,831 | 6 | moderate |
-| 30 | [bitbucket-mcp](bitbucket-mcp.html) | 6,156 | 6,156 | 12,210 | 47 | moderate |
-| 31 | [agentphone](agentphone.html) | 6,139 | 5,587 | — | 28 | moderate |
-| 32 | [sentry](sentry.html) | 6,086 | 5,442 | 9,481 | 9 | moderate |
-| 33 | [pinecone](pinecone.html) | 5,903 | 5,679 | 9,184 | 9 | moderate |
-| 34 | [chrome-devtools](chrome-devtools.html) | 5,717 | 5,100 | 9,215 | 29 | moderate |
-| 35 | [kubernetes](kubernetes.html) | 5,268 | 5,089 | 9,165 | 23 | moderate |
-| 36 | [codebase-memory-mcp](codebase-memory-mcp.html) | 5,258 | 4,774 | 8,585 | 15 | moderate |
+| 24 | [accessibility-scanner](accessibility-scanner.html) | 9,111 | 8,055 | — | 33 | moderate |
+| 25 | [postgres-mcp](postgres-mcp.html) | 8,632 | 1,178 | 2,381 | 9 | moderate |
+| 26 | [ssh-manager](ssh-manager.html) | 8,446 | 8,149 | 14,196 | 37 | moderate |
+| 27 | [serena](serena.html) | 8,204 | 6,550 | 11,494 | 29 | moderate |
+| 28 | [mongodb](mongodb.html) | 7,926 | 4,501 | 8,765 | 27 | moderate |
+| 29 | [blender](blender.html) | 6,928 | 6,160 | 10,576 | 28 | moderate |
+| 30 | [shopify-dev](shopify-dev.html) | 6,841 | 6,793 | 11,831 | 6 | moderate |
+| 31 | [bitbucket-mcp](bitbucket-mcp.html) | 6,156 | 6,156 | 12,210 | 47 | moderate |
+| 32 | [agentphone](agentphone.html) | 6,139 | 5,587 | — | 28 | moderate |
+| 33 | [sentry](sentry.html) | 6,086 | 5,442 | 9,481 | 9 | moderate |
+| 34 | [pinecone](pinecone.html) | 5,903 | 5,679 | 9,184 | 9 | moderate |
+| 35 | [chrome-devtools](chrome-devtools.html) | 5,717 | 5,100 | 9,215 | 29 | moderate |
+| 36 | [kubernetes](kubernetes.html) | 5,268 | 5,089 | 9,165 | 23 | moderate |
 | 37 | [clinicaltrialsgov](clinicaltrialsgov.html) | 5,134 | 2,879 | 5,540 | 7 | moderate |
-| 38 | [aws-documentation](aws-documentation.html) | 5,045 | 3,380 | 5,749 | 5 | moderate |
+| 38 | [aws-documentation](aws-documentation.html) | 5,008 | 3,367 | — | 5 | moderate |
 | 39 | [supabase](supabase.html) | 5,007 | 4,062 | 7,323 | 29 | moderate |
-| 40 | [huggingface](huggingface.html) | 4,724 | 1,604 | 3,043 | 4 | light |
-| 41 | [excel](excel.html) | 4,266 | 3,080 | 6,338 | 25 | light |
+| 40 | [huggingface](huggingface.html) | 4,910 | 1,796 | — | 4 | light |
+| 41 | [playwright](playwright.html) | 4,413 | 3,764 | — | 25 | light |
 | 42 | [airtable](airtable.html) | 4,186 | 2,531 | 4,555 | 16 | light |
-| 43 | [playwright](playwright.html) | 4,024 | 3,402 | 6,172 | 24 | light |
+| 43 | [codebase-memory-mcp](codebase-memory-mcp.html) | 4,065 | 3,606 | — | 17 | light |
 | 44 | [arxiv](arxiv.html) | 3,960 | 3,699 | 6,622 | 19 | light |
 | 45 | [github-legacy](github-legacy.html) | 3,548 | 3,548 | 6,662 | 26 | light |
 | 46 | [playwright-community](playwright-community.html) | 2,920 | 2,920 | 5,688 | 33 | light |
@@ -89,7 +89,7 @@ One page per measured server: the per-tool breakdown behind the badge, the exact
 | 83 | [fetch](fetch.html) | 238 | 238 | 700 | 1 | lean |
 | 84 | [qdrant](qdrant.html) | 188 | 188 | 607 | 2 | lean |
 | 85 | [perplexity](perplexity.html) | 133 | 133 | 503 | 1 | lean |
-| 86 | [markitdown](markitdown.html) | 64 | 64 | 404 | 1 | lean |
+| 86 | [markitdown](markitdown.html) | 98 | 64 | — | 1 | lean |
 | 87 | [postgres](postgres.html) | 32 | 32 | 348 | 1 | lean |
 
 ## Not measured

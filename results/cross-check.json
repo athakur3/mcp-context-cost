@@ -11,18 +11,18 @@
     "--format",
     "json"
   ],
-  "measuredAt": "2026-09-16",
+  "measuredAt": "2026-09-30",
   "isolation": "docker (same images, limits and package caches as a sweep)",
   "servers": {
     "accessibility-scanner": {
-      "ourTokens": 9247,
-      "ourMappedTokens": 8151,
-      "cliTokens": 8169,
-      "ourToolCount": 34,
-      "cliToolCount": 34,
+      "ourTokens": 9111,
+      "ourMappedTokens": 8055,
+      "cliTokens": 8074,
+      "ourToolCount": 33,
+      "cliToolCount": 33,
       "toolSetMatches": true,
       "dynamic": false,
-      "capturedSha256": "42d3cde136eda54a68cea42f820dbadf27e15394b10daa8ed26c90fd8fb59fcc"
+      "capturedSha256": "7b69b6e616dc3719801b349ba9db1ec673fa20bcab58ef64b749bf4efac03ec1"
     },
     "agent-device": {
       "ourTokens": 48909,
@@ -65,14 +65,14 @@
       "capturedSha256": "5f90d662e26a77e01125999b97db0bf9204bb92bd0fc7297a28495986d80ec30"
     },
     "anki": {
-      "ourTokens": 20037,
-      "ourMappedTokens": 9357,
-      "cliTokens": 9371,
-      "ourToolCount": 50,
-      "cliToolCount": 50,
+      "ourTokens": 21608,
+      "ourMappedTokens": 10032,
+      "cliTokens": 10046,
+      "ourToolCount": 53,
+      "cliToolCount": 53,
       "toolSetMatches": true,
       "dynamic": false,
-      "capturedSha256": "ff5c37e3ceea7d5f2514dc0b15b4443a9c6b10ce53fd9328f28be21759c69276"
+      "capturedSha256": "bad42d792f7e97407147274574bb0b785c45af7476d62025f653530073c7f97d"
     },
     "apify": {
       "ourTokens": 10452,
@@ -105,24 +105,24 @@
       "capturedSha256": "2ee361441efca1de3e296a572bbe2d20fa88d5565c9d4f54a8a1523ee7f54251"
     },
     "aws-documentation": {
-      "ourTokens": 5045,
-      "ourMappedTokens": 3380,
-      "cliTokens": 3380,
+      "ourTokens": 5008,
+      "ourMappedTokens": 3367,
+      "cliTokens": 3367,
       "ourToolCount": 5,
       "cliToolCount": 5,
       "toolSetMatches": true,
       "dynamic": false,
-      "capturedSha256": "096790f5b6a85d5faf9b4a09edbeddc34de23ed3c26c195bee05c42fb7f8b6a7"
+      "capturedSha256": "3a368215b275dbc5c029f9f89998588903db35a1e2aaba325922c2c2d4f18b0f"
     },
     "azure": {
-      "ourTokens": 15657,
-      "ourMappedTokens": 14703,
-      "cliTokens": 14697,
-      "ourToolCount": 70,
-      "cliToolCount": 70,
+      "ourTokens": 14808,
+      "ourMappedTokens": 13844,
+      "cliTokens": 13838,
+      "ourToolCount": 71,
+      "cliToolCount": 71,
       "toolSetMatches": true,
       "dynamic": false,
-      "capturedSha256": "0e1597d24f0d7f891c5d98d631e5e8cd6dd0cf70d5c3df7de9b972a5641c0818"
+      "capturedSha256": "ee0a96dcba902514e37b0564405f85b34a633f0863f593e2abc20cc76c7ab2c5"
     },
     "basic-memory": {
       "ourTokens": 9188,
@@ -155,14 +155,14 @@
       "capturedSha256": "5d8045af01c1eaf81a5931cfc5aa814fe0928f66cf1e176962bd3a97aff0a62f"
     },
     "brave-search": {
-      "ourTokens": 25487,
-      "ourMappedTokens": 8278,
-      "cliTokens": 8300,
+      "ourTokens": 25500,
+      "ourMappedTokens": 8291,
+      "cliTokens": 8313,
       "ourToolCount": 8,
       "cliToolCount": 8,
       "toolSetMatches": true,
       "dynamic": false,
-      "capturedSha256": "ec3c4f85b22d1e4866faeb04af7038fc28568dc4a262416cea7ce77c63b2b015"
+      "capturedSha256": "fed4dcff1fa9d22287c4a6332e8e13545db7952753f0e87eaf751c7812033d91"
     },
     "brave-search-legacy": {
       "ourTokens": 319,
@@ -255,24 +255,24 @@
       "capturedSha256": "a65649ac29928ffde9e8bf8796482b5aaeb17e79d02ea2f3b8b96f11ac32b604"
     },
     "codebase-memory-mcp": {
-      "ourTokens": 5258,
-      "ourMappedTokens": 4774,
-      "cliTokens": 4776,
-      "ourToolCount": 15,
-      "cliToolCount": 15,
+      "ourTokens": 4065,
+      "ourMappedTokens": 3606,
+      "cliTokens": 3654,
+      "ourToolCount": 17,
+      "cliToolCount": 17,
       "toolSetMatches": true,
       "dynamic": false,
-      "capturedSha256": "01a1bd0f450ccf86b0bf36b2b63749c70dc4add7b0a4d9621ce69e29c9db7b27"
+      "capturedSha256": "db11670b6fc094f5af5ae6a24bf875d4c8440da3a5eb4bc87d99c289ab5bd345"
     },
     "comfyui-mcp": {
-      "ourTokens": 50776,
-      "ourMappedTokens": 50385,
-      "cliTokens": 50511,
+      "ourTokens": 50268,
+      "ourMappedTokens": 49877,
+      "cliTokens": 50003,
       "ourToolCount": 41,
       "cliToolCount": 41,
       "toolSetMatches": true,
       "dynamic": false,
-      "capturedSha256": "47b201e9455f2aba4184e2f88c52939ea543f536e305490e17efd9d4730cde9d"
+      "capturedSha256": "c15058cd28d060963b537e7c4d10895d56c2730ea0382b1a037d44e16cd8bb1b"
     },
     "context7": {
       "ourTokens": 1052,
@@ -295,14 +295,14 @@
       "capturedSha256": "3735162916165ab23696fc91fbf626bd99a36ddcd1e15746e91e16c7e336b379"
     },
     "desktop-commander": {
-      "ourTokens": 11835,
-      "ourMappedTokens": 11055,
-      "cliTokens": 11070,
+      "ourTokens": 11062,
+      "ourMappedTokens": 10282,
+      "cliTokens": 10300,
       "ourToolCount": 26,
       "cliToolCount": 26,
       "toolSetMatches": true,
       "dynamic": true,
-      "capturedSha256": "d939ee1b26ee52f19ba433792f258c6e3c378c935e1703568789efb6a1869d5f"
+      "capturedSha256": "4f6d69561e3f0138c28d53bd119c5b2e7f0b6ba75accc0e79dc8d0c3c25ee562"
     },
     "duckduckgo": {
       "ourTokens": 724,
@@ -356,14 +356,14 @@
       "capturedSha256": "8c3c954e5a791807875357bc783cc67385bd7bb53ee31b659e83015b36ed99a9"
     },
     "excel": {
-      "ourTokens": 4266,
-      "ourMappedTokens": 3080,
-      "cliTokens": 3080,
-      "ourToolCount": 25,
-      "cliToolCount": 25,
+      "ourTokens": 10493,
+      "ourMappedTokens": 7798,
+      "cliTokens": 7798,
+      "ourToolCount": 26,
+      "cliToolCount": 26,
       "toolSetMatches": true,
       "dynamic": false,
-      "capturedSha256": "cf374a8866847f36b743f5b59176d3908466f40c2d5d9b3cb0462ea47af40999"
+      "capturedSha256": "821aae9d8816d70368d42aea139dc573c8ca9a1a71cdc99e15611ce2cf576c81"
     },
     "fetch": {
       "ourTokens": 238,
@@ -466,14 +466,14 @@
       "capturedSha256": "a88e204db09aa56954e3e041d6a9814aee9ac888fdfc7d5cb47aec1877441986"
     },
     "google-surf": {
-      "ourTokens": 10948,
-      "ourMappedTokens": 6412,
-      "cliTokens": 6472,
+      "ourTokens": 17185,
+      "ourMappedTokens": 11434,
+      "cliTokens": 11593,
       "ourToolCount": 7,
       "cliToolCount": 7,
       "toolSetMatches": true,
       "dynamic": false,
-      "capturedSha256": "64ca81a34311e1318d731b8fbf14e5f1759567e4a7bdaabf43f3553ee732ee41"
+      "capturedSha256": "169cfd8e49a251baf2e62bed239afae4ee1999f6fb00a763fa4c66d35b26c515"
     },
     "grafana": {
       "ourTokens": 16774,
@@ -496,14 +496,14 @@
       "capturedSha256": "3389dd469cfc2f46f06e4be24ba13ff95595ee30fd8dd62df81809a95daf3791"
     },
     "huggingface": {
-      "ourTokens": 4724,
-      "ourMappedTokens": 1604,
-      "cliTokens": 1611,
+      "ourTokens": 4910,
+      "ourMappedTokens": 1796,
+      "cliTokens": 1803,
       "ourToolCount": 4,
       "cliToolCount": 4,
       "toolSetMatches": true,
       "dynamic": false,
-      "capturedSha256": "a2e48e88545d92665679b878c9e66f4f902af2a11bccafc29cc6e627def941ae"
+      "capturedSha256": "3bc9987909c0f43691f98cb4e2fd56d7bdd04aa87b35c95d137f74c67bf4022d"
     },
     "kubernetes": {
       "ourTokens": 5268,
@@ -516,14 +516,14 @@
       "capturedSha256": "20126671be70fdb77743a595f195002612b03c889b348447ed9ff4d7057f8c1c"
     },
     "markitdown": {
-      "ourTokens": 64,
+      "ourTokens": 98,
       "ourMappedTokens": 64,
       "cliTokens": 64,
       "ourToolCount": 1,
       "cliToolCount": 1,
       "toolSetMatches": true,
       "dynamic": false,
-      "capturedSha256": "d708fc0ae4f3fb818d01cc3d4da0b74c2e5591a7982735d6200b3d56ab74d66b"
+      "capturedSha256": "eef53f600eee8a14332be832c38139fe2092e219c3429c033befa8c41adf054e"
     },
     "mcp-atlassian": {
       "ourTokens": 17311,
@@ -676,14 +676,14 @@
       "capturedSha256": "cc8ffaadb37615f11747b0a1eafd8541cfb2f31064adcd4973860f8f03bab377"
     },
     "playwright": {
-      "ourTokens": 4024,
-      "ourMappedTokens": 3402,
-      "cliTokens": 3409,
-      "ourToolCount": 24,
-      "cliToolCount": 24,
+      "ourTokens": 4413,
+      "ourMappedTokens": 3764,
+      "cliTokens": 3770,
+      "ourToolCount": 25,
+      "cliToolCount": 25,
       "toolSetMatches": true,
       "dynamic": false,
-      "capturedSha256": "5d5d92a7c727ef75bd9a70f076039dbdbfd331c56f022915c2e89b76f7fc88f0"
+      "capturedSha256": "af2dba5441a3ab02c472d49212573e953d5e60084942ee079c8f6bd8e6a1c5de"
     },
     "playwright-community": {
       "ourTokens": 2920,

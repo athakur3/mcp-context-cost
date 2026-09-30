@@ -3,8 +3,8 @@
   "provider": "tiktoken",
   "encoding": "o200k_base",
   "status": "measured",
-  "totalTokens": 9247,
-  "toolCount": 34,
+  "totalTokens": 9111,
+  "toolCount": 33,
   "tools": [
     {
       "name": "browser_close",
@@ -69,14 +69,6 @@
       "inputSchemaTokens": 220,
       "outputSchemaTokens": 0,
       "annotationsTokens": 24
-    },
-    {
-      "name": "browser_install",
-      "tokens": 136,
-      "descriptionTokens": 22,
-      "inputSchemaTokens": 64,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 29
     },
     {
       "name": "browser_press_key",
@@ -279,7 +271,7 @@
       "annotationsTokens": 26
     }
   ],
-  "canonicalSha256": "42d3cde136eda54a68cea42f820dbadf27e15394b10daa8ed26c90fd8fb59fcc",
+  "canonicalSha256": "7b69b6e616dc3719801b349ba9db1ec673fa20bcab58ef64b749bf4efac03ec1",
   "rawToolsCapture": [
     {
       "name": "browser_close",
@@ -583,28 +575,6 @@
       },
       "annotations": {
         "title": "Fill form",
-        "readOnlyHint": false,
-        "destructiveHint": true,
-        "openWorldHint": true
-      }
-    },
-    {
-      "name": "browser_install",
-      "title": "Install the browser specified in the config",
-      "description": "Install the browser specified in the config. Call this if you get an error about the browser not being installed.",
-      "inputSchema": {
-        "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "type": "object",
-        "properties": {
-          "browserSessionId": {
-            "type": "string",
-            "description": "Browser session to run this tool in, as returned by browser_session_open. Omit to use the default session."
-          }
-        },
-        "additionalProperties": false
-      },
-      "annotations": {
-        "title": "Install the browser specified in the config",
         "readOnlyHint": false,
         "destructiveHint": true,
         "openWorldHint": true
@@ -2046,9 +2016,9 @@
       }
     }
   ],
-  "measuredAt": "2026-09-09T08:06:13.095Z",
+  "measuredAt": "2026-09-30T09:37:53.486Z",
   "serverName": "Playwright",
-  "serverVersion": "3.4.0",
+  "serverVersion": "3.5.0",
   "launchCommand": "npx -y mcp-accessibility-scanner",
   "envVarNames": [],
   "serverInstructions": "This server runs automated web accessibility audits (axe-core / WCAG) and drives a real browser via Playwright. Use `browser_navigate` to load a page first. Then use `audit_site` to crawl and scan multiple pages of a site, `scan_page_matrix` to scan the current page across viewports and WCAG tag sets, `audit_keyboard` to check keyboard navigation, focus visibility and skip links, and `audit_screen_reader` to check accessible name quality and reading order. Results are returned as markdown with axe-core rule ids, impact levels, failure summaries and remediation links. Regular browser interaction tools (click, type, snapshot, screenshot, tabs) are also available for navigating to the state you want to audit. To work with several separate browsers at once, `browser_session_open` returns a browserSessionId that the non-session browser tools accept as an optional argument; omit it to use the default session, and close extra sessions with `browser_session_close` when done. Modes that share one live browser context (non-isolated CDP attach, extension) reject browser_session_open instead of handing out a session that is not separate.",

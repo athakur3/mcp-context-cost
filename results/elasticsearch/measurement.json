@@ -130,7 +130,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-09T08:05:11.813Z",
+  "measuredAt": "2026-09-30T09:36:44.405Z",
   "serverName": "elasticsearch-mcp",
   "serverVersion": "0.3.1",
   "launchCommand": "npx -y @elastic/mcp-server-elasticsearch",

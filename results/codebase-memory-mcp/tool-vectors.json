@@ -68,6 +68,82 @@
           "tokens": 119
         }
       ]
+    },
+    {
+      "date": "2026-09-30",
+      "canonicalSha256": "db11670b6fc094f5af5ae6a24bf875d4c8440da3a5eb4bc87d99c289ab5bd345",
+      "totalTokens": 4065,
+      "version": "0.11.0",
+      "tools": [
+        {
+          "name": "index_repository",
+          "tokens": 224
+        },
+        {
+          "name": "search_graph",
+          "tokens": 342
+        },
+        {
+          "name": "query_graph",
+          "tokens": 346
+        },
+        {
+          "name": "trace_path",
+          "tokens": 403
+        },
+        {
+          "name": "get_code_snippet",
+          "tokens": 295
+        },
+        {
+          "name": "get_file_outline",
+          "tokens": 190
+        },
+        {
+          "name": "get_graph_schema",
+          "tokens": 144
+        },
+        {
+          "name": "compare_graphs",
+          "tokens": 167
+        },
+        {
+          "name": "get_architecture",
+          "tokens": 205
+        },
+        {
+          "name": "search_code",
+          "tokens": 380
+        },
+        {
+          "name": "list_projects",
+          "tokens": 197
+        },
+        {
+          "name": "delete_project",
+          "tokens": 63
+        },
+        {
+          "name": "index_status",
+          "tokens": 171
+        },
+        {
+          "name": "check_index_coverage",
+          "tokens": 229
+        },
+        {
+          "name": "detect_changes",
+          "tokens": 338
+        },
+        {
+          "name": "manage_adr",
+          "tokens": 254
+        },
+        {
+          "name": "ingest_traces",
+          "tokens": 115
+        }
+      ]
     }
   ]
 }

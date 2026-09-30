@@ -3,67 +3,67 @@
   "provider": "tiktoken",
   "encoding": "o200k_base",
   "status": "measured",
-  "totalTokens": 10948,
+  "totalTokens": 17185,
   "toolCount": 7,
   "tools": [
     {
       "name": "search",
-      "tokens": 1737,
+      "tokens": 1873,
       "descriptionTokens": 478,
       "inputSchemaTokens": 612,
-      "outputSchemaTokens": 599,
+      "outputSchemaTokens": 735,
       "annotationsTokens": 20
     },
     {
       "name": "scholar_search",
-      "tokens": 981,
+      "tokens": 1004,
       "descriptionTokens": 134,
       "inputSchemaTokens": 302,
-      "outputSchemaTokens": 496,
+      "outputSchemaTokens": 519,
       "annotationsTokens": 20
     },
     {
       "name": "search_parallel",
-      "tokens": 1860,
+      "tokens": 1996,
       "descriptionTokens": 482,
       "inputSchemaTokens": 631,
-      "outputSchemaTokens": 697,
+      "outputSchemaTokens": 833,
       "annotationsTokens": 20
     },
     {
       "name": "extract",
-      "tokens": 1249,
+      "tokens": 1272,
       "descriptionTokens": 330,
       "inputSchemaTokens": 511,
-      "outputSchemaTokens": 358,
+      "outputSchemaTokens": 381,
       "annotationsTokens": 20
     },
     {
       "name": "project_memory_search",
-      "tokens": 1436,
+      "tokens": 2742,
       "descriptionTokens": 208,
-      "inputSchemaTokens": 261,
-      "outputSchemaTokens": 917,
+      "inputSchemaTokens": 1130,
+      "outputSchemaTokens": 1354,
       "annotationsTokens": 20
     },
     {
       "name": "project_memory",
-      "tokens": 3279,
-      "descriptionTokens": 285,
-      "inputSchemaTokens": 2030,
-      "outputSchemaTokens": 917,
+      "tokens": 7869,
+      "descriptionTokens": 380,
+      "inputSchemaTokens": 6088,
+      "outputSchemaTokens": 1354,
       "annotationsTokens": 20
     },
     {
       "name": "health",
-      "tokens": 404,
+      "tokens": 427,
       "descriptionTokens": 50,
       "inputSchemaTokens": 24,
-      "outputSchemaTokens": 281,
+      "outputSchemaTokens": 304,
       "annotationsTokens": 20
     }
   ],
-  "canonicalSha256": "64ca81a34311e1318d731b8fbf14e5f1759567e4a7bdaabf43f3553ee732ee41",
+  "canonicalSha256": "169cfd8e49a251baf2e62bed239afae4ee1999f6fb00a763fa4c66d35b26c515",
   "rawToolsCapture": [
     {
       "name": "search",
@@ -266,6 +266,42 @@
                 "document_id": {
                   "type": "string"
                 },
+                "record_id": {
+                  "type": "string"
+                },
+                "revision_id": {
+                  "type": "string"
+                },
+                "body_handle": {
+                  "type": "string"
+                },
+                "source_span": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "end": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "additionalProperties": false
+                },
+                "index_freshness": {
+                  "type": "string",
+                  "enum": [
+                    "current",
+                    "stale"
+                  ]
+                },
                 "project_ids": {
                   "type": "array",
                   "items": {
@@ -387,6 +423,15 @@
                 "type": "number"
               },
               "user_action": {
+                "type": "string"
+              },
+              "request_id": {
+                "type": "string"
+              },
+              "phase": {
+                "type": "string"
+              },
+              "cancel_reason": {
                 "type": "string"
               }
             },
@@ -618,6 +663,15 @@
               },
               "user_action": {
                 "type": "string"
+              },
+              "request_id": {
+                "type": "string"
+              },
+              "phase": {
+                "type": "string"
+              },
+              "cancel_reason": {
+                "type": "string"
               }
             },
             "required": [
@@ -841,6 +895,42 @@
                       "document_id": {
                         "type": "string"
                       },
+                      "record_id": {
+                        "type": "string"
+                      },
+                      "revision_id": {
+                        "type": "string"
+                      },
+                      "body_handle": {
+                        "type": "string"
+                      },
+                      "source_span": {
+                        "type": "object",
+                        "properties": {
+                          "start": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "end": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "required": [
+                          "start",
+                          "end"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "index_freshness": {
+                        "type": "string",
+                        "enum": [
+                          "current",
+                          "stale"
+                        ]
+                      },
                       "project_ids": {
                         "type": "array",
                         "items": {
@@ -999,6 +1089,15 @@
                 "type": "number"
               },
               "user_action": {
+                "type": "string"
+              },
+              "request_id": {
+                "type": "string"
+              },
+              "phase": {
+                "type": "string"
+              },
+              "cancel_reason": {
                 "type": "string"
               }
             },
@@ -1205,6 +1304,15 @@
                   },
                   "user_action": {
                     "type": "string"
+                  },
+                  "request_id": {
+                    "type": "string"
+                  },
+                  "phase": {
+                    "type": "string"
+                  },
+                  "cancel_reason": {
+                    "type": "string"
                   }
                 },
                 "required": [
@@ -1236,10 +1344,10 @@
         "type": "object",
         "properties": {
           "query": {
+            "description": "One natural-language query over indexed local project knowledge. Use queries instead for independent grouped answers.",
             "type": "string",
             "minLength": 1,
-            "maxLength": 400,
-            "description": "Natural-language query over indexed local project knowledge."
+            "maxLength": 400
           },
           "query_variants": {
             "description": "Optional retrieval variants executed inside this one broker request. Exact identifiers and quoted phrases are added deterministically, candidates are fused with RRF, and the primary query is reranked once. Do not make repeated terminal or tool calls for query variants.",
@@ -1277,11 +1385,134 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 20
+          },
+          "queries": {
+            "description": "Independent questions returned as separate ranked groups inside one broker request.",
+            "minItems": 1,
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                "query": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 400
+                },
+                "query_variants": {
+                  "maxItems": 19,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                },
+                "limit": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 20
+                }
+              },
+              "required": [
+                "id",
+                "query"
+              ]
+            }
+          },
+          "response_budget_bytes": {
+            "description": "Explicit result-array byte budget. Without an override, summaries adapt to unique result, question and source-family counts. Stored bodies and retrieval scope are not truncated by this budget; envelope metadata is separate.",
+            "type": "integer",
+            "minimum": 1000,
+            "maximum": 1000000
+          },
+          "request_id": {
+            "description": "Caller-chosen ID for one local query. Supply it before a long request so project_memory query_status/query_cancel can inspect or cancel the same operation.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "response_deadline_ms": {
+            "description": "Caller-selected 1-300 second response deadline. Returns available lane results or QUERY_TIMEOUT with request_id. Native reads remain tracked until they settle; stored evidence and writes are unaffected.",
+            "type": "integer",
+            "minimum": 1000,
+            "maximum": 300000
+          },
+          "filters": {
+            "description": "Optional project, source, type, role, lane, and recorded-time filters. Excluded lanes are not executed.",
+            "type": "object",
+            "properties": {
+              "source_families": {
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "document",
+                    "code",
+                    "graph"
+                  ]
+                }
+              },
+              "retrieval_lanes": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "exact",
+                    "bm25",
+                    "vector",
+                    "graph"
+                  ]
+                }
+              },
+              "kinds": {
+                "maxItems": 20,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                }
+              },
+              "roles": {
+                "maxItems": 10,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "experiment_record",
+                    "result",
+                    "method",
+                    "log",
+                    "paper",
+                    "plan",
+                    "config",
+                    "source",
+                    "report",
+                    "other"
+                  ]
+                }
+              },
+              "recorded_after": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "recorded_before": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              }
+            }
           }
-        },
-        "required": [
-          "query"
-        ]
+        }
       },
       "annotations": {
         "readOnlyHint": true,
@@ -1392,6 +1623,42 @@
                 "document_id": {
                   "type": "string"
                 },
+                "record_id": {
+                  "type": "string"
+                },
+                "revision_id": {
+                  "type": "string"
+                },
+                "body_handle": {
+                  "type": "string"
+                },
+                "source_span": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "end": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "additionalProperties": false
+                },
+                "index_freshness": {
+                  "type": "string",
+                  "enum": [
+                    "current",
+                    "stale"
+                  ]
+                },
                 "project_ids": {
                   "type": "array",
                   "items": {
@@ -1432,6 +1699,16 @@
                 "description"
               ],
               "additionalProperties": false
+            }
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
             }
           },
           "elapsed_ms": {
@@ -1490,6 +1767,103 @@
             "additionalProperties": {}
           },
           "record": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "records": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "receipt": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "receipts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "context": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "current": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "timeline": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "diff": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "job": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "verification": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "snapshot": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "imported": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "doctor": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "query_status": {
             "type": "object",
             "propertyNames": {
               "type": "string"
@@ -1623,6 +1997,15 @@
               },
               "user_action": {
                 "type": "string"
+              },
+              "request_id": {
+                "type": "string"
+              },
+              "phase": {
+                "type": "string"
+              },
+              "cancel_reason": {
+                "type": "string"
               }
             },
             "required": [
@@ -1639,7 +2022,7 @@
     {
       "name": "project_memory",
       "title": "Project Memory",
-      "description": "PROJECT MEMORY MANAGEMENT. With research enabled, one local broker lets multiple MCP sessions query the same knowledge base concurrently and orders writes safely. Use create to create a project; show to inspect known projects or durable records; record to store session intent, immutable plan revisions, experiments, decisions, versioned ontology terms, or corrections; rebuild to index approved local roots; export to write graph or lineage views; and forget for reversible deletion. show always returns a bounded summary; detail_level=full is accepted for compatibility but never dumps every durable record body. Use project_memory_search for relevant bodies or target_id for one assertion or entity. record returns only a compact receipt and never echoes submitted bodies. action=search remains a compatibility alias, but project_memory_search should be used for local knowledge retrieval. Ontology revisions use supersedes_term_id. Corrections preserve bitemporal data lineage and support assertion replacement plus entity merge or split. rebuild indexes approved local roots and code structure into a reproducible snapshot; export writes an interactive HTML viewer, Graphviz DOT, D3 JSON, or a Neo4j import bundle. HTML always includes PKM, Lineage, and Ontology tabs, an embedded-project selector, empty-canvas focus reset, and visible PNG or JSON download. forget previews impact before reversible project or assertion deletion. Search, search_parallel, scholar_search, and extract automatically capture sources and provenance; project_memory manages their durable structure.",
+      "description": "PROJECT MEMORY MANAGEMENT. With research enabled, one local broker lets multiple MCP sessions query the same knowledge base concurrently and orders writes safely. It links session intent, immutable plan revisions, experiments, decisions, versioned ontology, and bitemporal data lineage; corrections can use entity merge or split without discarding history. Use project_update for revision-checked changes to an existing project profile; context reads that same versioned profile. Use query_status/query_cancel with a caller-supplied search request_id to inspect or cooperatively stop a long retrieval. Use context for the bounded current project view; current to generate a compact CURRENT.md; get/get_batch for exact records and body spans; record/record_batch for durable idempotent writes; timeline/diff for history; sync for declared source deltas; job_status/job_wait/job_cancel for background progress and safe stage-boundary cancellation; verify for preservation levels; snapshot/snapshot_import/snapshot_rollback for versioned offline transfer and append-only recovery; doctor for passive diagnostics; rebuild for derived indexes; export for graph views; and forget for reversible deletion. Typed record writes return compact receipts and never echo submitted bodies. action=search remains a compatibility alias, but project_memory_search should be used for local knowledge retrieval. Ontology revisions use supersedes_term_id. Corrections preserve bitemporal data lineage and support assertion replacement plus entity merge or split. rebuild indexes approved local roots and code structure into a reproducible snapshot; export writes an interactive HTML viewer, Graphviz DOT, D3 JSON, or a Neo4j import bundle. HTML always includes PKM, Lineage, and Ontology tabs, an embedded-project selector, empty-canvas focus reset, and visible PNG or JSON download. forget previews impact before reversible project or assertion deletion. Search, search_parallel, scholar_search, and extract automatically capture sources and provenance; project_memory manages their durable structure.",
       "inputSchema": {
         "$schema": "http://json-schema.org/draft-07/schema#",
         "type": "object",
@@ -1648,14 +2031,33 @@
             "type": "string",
             "enum": [
               "create",
+              "project_update",
               "show",
               "search",
               "record",
+              "record_batch",
+              "get",
+              "get_batch",
+              "context",
+              "timeline",
+              "diff",
+              "sync",
+              "job_status",
+              "job_wait",
+              "job_cancel",
+              "query_status",
+              "query_cancel",
+              "verify",
+              "current",
+              "snapshot",
+              "snapshot_import",
+              "snapshot_rollback",
+              "doctor",
               "rebuild",
               "export",
               "forget"
             ],
-            "description": "create: project_id and name required. show: inspect a known project, assertion, entity, or durable record. search: compatibility alias for project_memory_search. record: project_id and record_type required. rebuild: project_id required; roots optional. export: project_id, include_project_ids, or all_projects=true required. forget: project_id and forget_mode required; apply also requires confirm_token."
+            "description": "Typed project-memory operation. create: project_id and name required. project_update: versioned profile update with expected_revision and idempotency_key. get/get_batch: exact IDs and bounded body spans; body_bytes=0 returns metadata only. record/record_batch: typed durable writes with idempotency_key. context/current/timeline/diff: compact current or historical views. query_status/query_cancel: inspect or cooperatively cancel caller-identified local retrieval. sync/rebuild: incremental source and derived indexing. job_status/job_wait/job_cancel: durable background work. snapshot/snapshot_import/snapshot_rollback: offline transfer and append-only recovery. export: HTML, DOT, JSON, or Neo4j. forget: reversible deletion preview and confirmation. Unrelated local questions use project_memory_search."
           },
           "project_id": {
             "description": "Stable project id. For search, this is the write-isolated primary scope. Omit to list projects or use all_projects.",
@@ -1709,6 +2111,132 @@
             "minimum": 1,
             "maximum": 20
           },
+          "queries": {
+            "description": "Independent questions returned as separate ranked groups inside one broker request.",
+            "minItems": 1,
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                "query": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 400
+                },
+                "query_variants": {
+                  "maxItems": 19,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                },
+                "limit": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 20
+                }
+              },
+              "required": [
+                "id",
+                "query"
+              ]
+            }
+          },
+          "response_budget_bytes": {
+            "description": "Explicit result-array byte budget. Without an override, summaries adapt to unique result, question and source-family counts. Stored bodies and retrieval scope are not truncated by this budget; envelope metadata is separate.",
+            "type": "integer",
+            "minimum": 1000,
+            "maximum": 1000000
+          },
+          "request_id": {
+            "description": "Caller-chosen ID for one local query. Supply it before a long request so project_memory query_status/query_cancel can inspect or cancel the same operation.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "response_deadline_ms": {
+            "description": "Caller-selected 1-300 second response deadline. Returns available lane results or QUERY_TIMEOUT with request_id. Native reads remain tracked until they settle; stored evidence and writes are unaffected.",
+            "type": "integer",
+            "minimum": 1000,
+            "maximum": 300000
+          },
+          "filters": {
+            "description": "Optional project, source, type, role, lane, and recorded-time filters. Excluded lanes are not executed.",
+            "type": "object",
+            "properties": {
+              "source_families": {
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "document",
+                    "code",
+                    "graph"
+                  ]
+                }
+              },
+              "retrieval_lanes": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "exact",
+                    "bm25",
+                    "vector",
+                    "graph"
+                  ]
+                }
+              },
+              "kinds": {
+                "maxItems": 20,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                }
+              },
+              "roles": {
+                "maxItems": 10,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "experiment_record",
+                    "result",
+                    "method",
+                    "log",
+                    "paper",
+                    "plan",
+                    "config",
+                    "source",
+                    "report",
+                    "other"
+                  ]
+                }
+              },
+              "recorded_after": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "recorded_before": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              }
+            }
+          },
           "export_format": {
             "default": "d3",
             "description": "Visualization file format. html writes one offline explorer with PKM, Lineage, Ontology, project selection, and current-view PNG or anonymized JSON download; d3 writes node-link JSON; dot writes Graphviz DOT; neo4j writes an import-ready CSV and Cypher bundle.",
@@ -1731,7 +2259,7 @@
             ]
           },
           "name": {
-            "description": "Project name for create, or entity name lookup for show.",
+            "description": "Project name for create/project_update, or entity name lookup for show.",
             "type": "string",
             "minLength": 1,
             "maxLength": 120
@@ -1767,10 +2295,16 @@
             "maxLength": 200
           },
           "body": {
-            "description": "Plan body for record_type=plan.",
+            "description": "Complete UTF-8 record body. Typed writes preserve it losslessly and return byte counts plus an exact get route.",
             "type": "string",
             "minLength": 1,
-            "maxLength": 50000
+            "maxLength": 4194304
+          },
+          "body_path": {
+            "description": "Local UTF-8 file for a streamed versioned body attachment up to 256 MiB. Use instead of body; only a compact receipt is returned.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
           },
           "change_reason": {
             "description": "Reason for a new plan revision.",
@@ -1828,8 +2362,8 @@
             }
           },
           "artifacts": {
-            "description": "Experiment artifact paths or identifiers.",
-            "maxItems": 100,
+            "description": "Legacy experiment artifact paths. Typed writes should use artifact_references; no values are silently sliced.",
+            "maxItems": 50000,
             "type": "array",
             "items": {
               "type": "string",
@@ -1837,9 +2371,9 @@
             }
           },
           "roots": {
-            "description": "Approved local roots to index. Omit to rebuild derived state from stored sources.",
+            "description": "Approved local roots and optional path-independent role/alias manifest. sync merges roots by default; removal is explicit.",
             "minItems": 1,
-            "maxItems": 8,
+            "maxItems": 64,
             "type": "array",
             "items": {
               "type": "object",
@@ -1853,10 +2387,115 @@
                   "type": "string",
                   "minLength": 1,
                   "maxLength": 2000
+                },
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "experiment_record",
+                    "result",
+                    "method",
+                    "log",
+                    "paper",
+                    "plan",
+                    "config",
+                    "source",
+                    "report",
+                    "other"
+                  ]
+                },
+                "manifest": {
+                  "maxItems": 100000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "path": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000
+                      },
+                      "role": {
+                        "type": "string",
+                        "enum": [
+                          "experiment_record",
+                          "result",
+                          "method",
+                          "log",
+                          "paper",
+                          "plan",
+                          "config",
+                          "source",
+                          "report",
+                          "other"
+                        ]
+                      },
+                      "aliases": {
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 2000
+                        }
+                      }
+                    },
+                    "required": [
+                      "path",
+                      "role"
+                    ]
+                  }
                 }
               },
               "required": [
                 "label",
+                "path"
+              ]
+            }
+          },
+          "changed_paths": {
+            "description": "Explicit root-relative files or collection boundaries to re-read. Existing roots and all unlisted entries are preserved.",
+            "maxItems": 100000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "root": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 32
+                },
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "root",
+                "path"
+              ]
+            }
+          },
+          "removed_paths": {
+            "description": "Explicit root-relative entries to remove from the active snapshot. Historical snapshots remain addressable.",
+            "maxItems": 100000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "root": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 32
+                },
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "root",
                 "path"
               ]
             }
@@ -1977,13 +2616,512 @@
             "description": "Corrected assertion valid-time start.",
             "type": "string",
             "format": "date-time",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
           },
           "valid_to": {
             "description": "Corrected assertion valid-time end.",
             "type": "string",
             "format": "date-time",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "operation": {
+            "description": "Typed durable write operation. Use with asset_kind and idempotency_key.",
+            "type": "string",
+            "enum": [
+              "create",
+              "patch",
+              "append_evidence",
+              "relocate",
+              "correct"
+            ]
+          },
+          "asset_kind": {
+            "type": "string",
+            "enum": [
+              "project",
+              "plan",
+              "task",
+              "method",
+              "experiment",
+              "attempt",
+              "arm",
+              "measurement",
+              "byte_ledger",
+              "artifact",
+              "document",
+              "decision",
+              "session"
+            ]
+          },
+          "asset_id": {
+            "description": "Stable logical identity. Revisions remain under this ID.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "record_id": {
+            "description": "Known exact record or alias ID for get, diff, or verify.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "record_ids": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "expected_revision": {
+            "description": "Optimistic concurrency revision. Stale values return a conflict.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "idempotency_key": {
+            "description": "Stable operation key. Reuse it after an uncertain response.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "fields": {
+            "description": "Typed structured fields stored with the record revision. measurement requires metric, value, unit, evaluator_contract, dataset, split, tokenizer, context_length, targets, carrier_precision, and source_locator; byte_ledger requires byte_components, denominator, and scope. Put unknown required values in missing_fields.",
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "artifact_references": {
+            "maxItems": 50000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "artifact_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "path": {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                "member": {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                "size": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "media_type": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "content_hash": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "role": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "location": {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                "observed_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                },
+                "available": {
+                  "type": "boolean"
+                },
+                "verification": {
+                  "type": "string",
+                  "enum": [
+                    "declared",
+                    "present",
+                    "hash_verified",
+                    "restore_tested",
+                    "replayed"
+                  ]
+                }
+              },
+              "required": [
+                "artifact_id"
+              ]
+            }
+          },
+          "records": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "project",
+                    "plan",
+                    "task",
+                    "method",
+                    "experiment",
+                    "attempt",
+                    "arm",
+                    "measurement",
+                    "byte_ledger",
+                    "artifact",
+                    "document",
+                    "decision",
+                    "session"
+                  ]
+                },
+                "operation": {
+                  "type": "string",
+                  "enum": [
+                    "create",
+                    "patch",
+                    "append_evidence",
+                    "relocate",
+                    "correct"
+                  ]
+                },
+                "asset_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "expected_revision": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "idempotency_key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "body": {
+                  "type": "string",
+                  "maxLength": 4194304
+                },
+                "body_path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4000
+                },
+                "fields": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                "evidence_ids": {
+                  "maxItems": 50000,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                },
+                "artifact_references": {
+                  "maxItems": 50000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "artifact_id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 500
+                      },
+                      "path": {
+                        "type": "string",
+                        "maxLength": 2000
+                      },
+                      "member": {
+                        "type": "string",
+                        "maxLength": 2000
+                      },
+                      "size": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "media_type": {
+                        "type": "string",
+                        "maxLength": 200
+                      },
+                      "content_hash": {
+                        "type": "string",
+                        "maxLength": 200
+                      },
+                      "role": {
+                        "type": "string",
+                        "maxLength": 200
+                      },
+                      "location": {
+                        "type": "string",
+                        "maxLength": 2000
+                      },
+                      "observed_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                      },
+                      "available": {
+                        "type": "boolean"
+                      },
+                      "verification": {
+                        "type": "string",
+                        "enum": [
+                          "declared",
+                          "present",
+                          "hash_verified",
+                          "restore_tested",
+                          "replayed"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "artifact_id"
+                    ]
+                  }
+                },
+                "aliases": {
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000
+                  }
+                },
+                "protected": {
+                  "type": "boolean"
+                },
+                "access_tier": {
+                  "type": "string",
+                  "enum": [
+                    "hot",
+                    "warm",
+                    "cold"
+                  ]
+                },
+                "set_current": {
+                  "type": "boolean"
+                },
+                "missing_fields": {
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                },
+                "effective_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                },
+                "source_sequence": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "source_reference": {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                "correction_reason": {
+                  "type": "string",
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "kind",
+                "operation",
+                "idempotency_key"
+              ]
+            }
+          },
+          "protected": {
+            "type": "boolean"
+          },
+          "access_tier": {
+            "description": "Operational access tier. It does not rank scientific quality.",
+            "type": "string",
+            "enum": [
+              "hot",
+              "warm",
+              "cold"
+            ]
+          },
+          "set_current": {
+            "description": "For plan writes, select this revision as current. Defaults to true; use false for historical imports.",
+            "type": "boolean"
+          },
+          "missing_fields": {
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "effective_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "source_sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "source_reference": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "correction_reason": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "from_revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "to_revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "body_offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "body_bytes": {
+            "description": "UTF-8 bytes to return. Use 0 for metadata-only readback; use a positive value and next_body_offset for exact paging.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1048576
+          },
+          "artifact_offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "artifact_limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "budget_bytes": {
+            "type": "integer",
+            "minimum": 1000,
+            "maximum": 1000000
+          },
+          "since_revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "after": {
+            "type": "string"
+          },
+          "before": {
+            "type": "string"
+          },
+          "as_of": {
+            "description": "For context, reconstruct the project and plan view at this effective or recorded time.",
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "job_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "after_revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "wait_timeout_ms": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 60000
+          },
+          "cancel_reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "verification_level": {
+            "type": "string",
+            "enum": [
+              "declared",
+              "present",
+              "hash_verified",
+              "restore_tested",
+              "replayed"
+            ]
+          },
+          "root_mode": {
+            "type": "string",
+            "enum": [
+              "merge",
+              "replace",
+              "remove"
+            ]
+          },
+          "snapshot_path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "dry_run": {
+            "type": "boolean"
+          },
+          "purpose": {
+            "type": "string",
+            "maxLength": 10000
+          },
+          "user_constraints": {
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 2000
+            }
+          },
+          "protected_parent_ids": {
+            "maxItems": 10000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 500
+            }
           }
         },
         "required": [
@@ -2099,6 +3237,42 @@
                 "document_id": {
                   "type": "string"
                 },
+                "record_id": {
+                  "type": "string"
+                },
+                "revision_id": {
+                  "type": "string"
+                },
+                "body_handle": {
+                  "type": "string"
+                },
+                "source_span": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "end": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "additionalProperties": false
+                },
+                "index_freshness": {
+                  "type": "string",
+                  "enum": [
+                    "current",
+                    "stale"
+                  ]
+                },
                 "project_ids": {
                   "type": "array",
                   "items": {
@@ -2139,6 +3313,16 @@
                 "description"
               ],
               "additionalProperties": false
+            }
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
             }
           },
           "elapsed_ms": {
@@ -2197,6 +3381,103 @@
             "additionalProperties": {}
           },
           "record": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "records": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "receipt": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "receipts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "context": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "current": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "timeline": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "diff": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "job": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "verification": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "snapshot": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "imported": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "doctor": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "query_status": {
             "type": "object",
             "propertyNames": {
               "type": "string"
@@ -2330,6 +3611,15 @@
               },
               "user_action": {
                 "type": "string"
+              },
+              "request_id": {
+                "type": "string"
+              },
+              "phase": {
+                "type": "string"
+              },
+              "cancel_reason": {
+                "type": "string"
               }
             },
             "required": [
@@ -2447,6 +3737,15 @@
               },
               "user_action": {
                 "type": "string"
+              },
+              "request_id": {
+                "type": "string"
+              },
+              "phase": {
+                "type": "string"
+              },
+              "cancel_reason": {
+                "type": "string"
               }
             },
             "required": [
@@ -2461,9 +3760,9 @@
       }
     }
   ],
-  "measuredAt": "2026-09-09T08:06:38.688Z",
+  "measuredAt": "2026-09-30T09:38:21.775Z",
   "serverName": "google-surf-mcp",
-  "serverVersion": "1.0.9",
+  "serverVersion": "1.1.3",
   "launchCommand": "npx -y google-surf-mcp",
   "envVarNames": [],
   "serverInstructions": null,

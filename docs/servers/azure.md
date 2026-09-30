@@ -1,18 +1,18 @@
 # azure — context cost
 
-**15,657 tokens** across 70 tools — *heavy* (15–30K). Measured 2026-09-09 under [methodology v1.0](../METHODOLOGY.html).
+**14,808 tokens** across 71 tools — *moderate* (5–15K). Measured 2026-09-30 under [methodology v1.0](../METHODOLOGY.html).
 
-An Anthropic request carries 14,703 of those tokens as tool definitions, and Claude counts those at **26,928**.
+An Anthropic request carries 13,844 of those tokens as tool definitions. What Claude makes of them is not published for this server: its Claude count is missing, or was taken against a capture this measurement has since replaced.
 
 | | |
 |---|---|
-| server (self-reported) | Azure MCP Server v3.0.0-beta.42 |
+| server (self-reported) | Azure MCP Server v3.0.0-beta.48 |
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @azure/mcp@latest server start` |
 | isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials, installed |
 | env vars supplied | none |
-| canonical SHA-256 | `0e1597d24f0d7f891c5d98d631e5e8cd6dd0cf70d5c3df7de9b972a5641c0818` |
+| canonical SHA-256 | `ee0a96dcba902514e37b0564405f85b34a633f0863f593e2abc20cc76c7ab2c5` |
 | category | vendor-official |
 | source | https://github.com/microsoft/mcp |
 
@@ -20,52 +20,40 @@ An Anthropic request carries 14,703 of those tokens as tool definitions, and Cla
 
 | tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
-| get_azure_bestpractices | 454 | 2.9% | 318 | 96 |
-| compute | 367 | 2.3% | 242 | 96 |
-| extension_azqr | 322 | 2.1% | 151 | 91 |
-| monitor | 289 | 1.8% | 172 | 96 |
-| storage | 285 | 1.8% | 164 | 96 |
-| azuremigrate | 280 | 1.8% | 158 | 96 |
-| documentation | 258 | 1.6% | 141 | 96 |
-| aks | 256 | 1.6% | 138 | 96 |
-| foundryextensions | 250 | 1.6% | 127 | 96 |
-| servicebus | 246 | 1.6% | 128 | 96 |
-| speech | 243 | 1.6% | 125 | 96 |
-| azurebackup | 242 | 1.5% | 122 | 96 |
-| search | 240 | 1.5% | 123 | 96 |
-| azd | 236 | 1.5% | 118 | 96 |
-| deploy | 232 | 1.5% | 116 | 96 |
-| resilience | 232 | 1.5% | 112 | 96 |
-| applens | 231 | 1.5% | 111 | 96 |
-| group_resource_list | 231 | 1.5% | 54 | 97 |
-| advisor | 230 | 1.5% | 113 | 96 |
-| pricing | 229 | 1.5% | 112 | 96 |
-| managedlustre | 224 | 1.4% | 104 | 96 |
-| foundry | 223 | 1.4% | 104 | 96 |
-| wellarchitectedframework | 223 | 1.4% | 100 | 96 |
-| bicepschema | 221 | 1.4% | 100 | 96 |
-| azureterraform | 220 | 1.4% | 103 | 96 |
-| deviceregistry | 220 | 1.4% | 97 | 96 |
-| sreagent | 219 | 1.4% | 99 | 96 |
-| storagesync | 219 | 1.4% | 98 | 96 |
-| subscription_list | 219 | 1.4% | 110 | 34 |
-| redis | 218 | 1.4% | 102 | 96 |
+| get_azure_bestpractices | 401 | 2.7% | 277 | 96 |
+| compute | 344 | 2.3% | 224 | 96 |
+| extension_azqr | 322 | 2.2% | 151 | 91 |
+| monitor | 266 | 1.8% | 149 | 96 |
+| azuremigrate | 264 | 1.8% | 141 | 96 |
+| storage | 264 | 1.8% | 145 | 96 |
+| documentation | 258 | 1.7% | 141 | 96 |
+| aks | 240 | 1.6% | 121 | 96 |
+| azd | 236 | 1.6% | 118 | 96 |
+| group_resource_list | 231 | 1.6% | 54 | 97 |
+| servicebus | 230 | 1.6% | 111 | 96 |
+| foundryextensions | 228 | 1.5% | 107 | 96 |
+| iotoperations | 225 | 1.5% | 104 | 96 |
+| speech | 225 | 1.5% | 107 | 96 |
+| azurebackup | 224 | 1.5% | 105 | 96 |
+| foundry | 223 | 1.5% | 104 | 96 |
+| search | 219 | 1.5% | 101 | 96 |
+| subscription_list | 219 | 1.5% | 110 | 34 |
+| extension_cli_generate | 217 | 1.5% | 49 | 91 |
+| deploy | 216 | 1.5% | 99 | 96 |
+| extension_cli_install | 216 | 1.5% | 65 | 67 |
+| applens | 215 | 1.5% | 94 | 96 |
+| advisor | 214 | 1.4% | 96 | 96 |
+| pricing | 213 | 1.4% | 95 | 96 |
+| managedlustre | 208 | 1.4% | 87 | 96 |
+| wellarchitectedframework | 206 | 1.4% | 82 | 96 |
+| bicepschema | 205 | 1.4% | 83 | 96 |
+| azureterraform | 204 | 1.4% | 86 | 96 |
+| arm | 203 | 1.4% | 85 | 96 |
+| sreagent | 203 | 1.4% | 82 | 96 |
 
-*40 smaller tools omitted (8,096 tokens combined) — all of them are in the [raw capture](https://github.com/athakur3/mcp-context-cost/blob/main/results/azure/measurement.json).*
+*41 smaller tools omitted (7,667 tokens combined) — all of them are in the [raw capture](https://github.com/athakur3/mcp-context-cost/blob/main/results/azure/measurement.json).*
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
-
-## What this costs on Claude
-
-Measured 2026-09-14 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
-
-| | tokens | |
-|---|---:|---|
-| o200k, full capture | 15,657 | the badge number — every byte `tools/list` returned |
-| o200k, Anthropic fields only | 14,703 | 6.1% of the capture is MCP-only metadata |
-| **Claude, same fields** | **26,928** | 1.72× the badge number |
-
-An Anthropic tool definition carries `name`, `description`, and `input_schema` and nothing else, so `title`, `annotations`, `outputSchema`, `execution`, and `icons` are dropped before the request — that is the second row. The third row is the same tools counted by Anthropic, which is larger than the second because Anthropic's tokenizer is denser on this content than o200k_base *and* the API adds its own framing (at most 328 tokens of it fixed, measured against a single minimal tool). The two effects run in opposite directions, which is why the Claude number is not a fixed multiple of the badge.
 
 ## Over time
 
@@ -73,6 +61,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 |---|---:|---:|---|---|---:|
 | 2026-09-05 | 15,239 | 68 | 3.0.0-beta.41 | docker | — |
 | 2026-09-09 | 15,657 | 70 | 3.0.0-beta.42 | docker | +418 |
+| 2026-09-30 | 14,808 | 71 | 3.0.0-beta.48 | docker | −849 |
 
 Full series: [results/history.csv](https://github.com/athakur3/mcp-context-cost/blob/main/results/history.csv).
 

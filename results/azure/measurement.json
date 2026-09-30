@@ -3,8 +3,8 @@
   "provider": "tiktoken",
   "encoding": "o200k_base",
   "status": "measured",
-  "totalTokens": 15657,
-  "toolCount": 70,
+  "totalTokens": 14808,
+  "toolCount": 71,
   "tools": [
     {
       "name": "documentation",
@@ -40,286 +40,142 @@
     },
     {
       "name": "get_azure_bestpractices",
-      "tokens": 454,
-      "descriptionTokens": 318,
+      "tokens": 401,
+      "descriptionTokens": 277,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 7
     },
     {
       "name": "adme",
-      "tokens": 208,
-      "descriptionTokens": 88,
+      "tokens": 196,
+      "descriptionTokens": 75,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 9
     },
     {
       "name": "aks",
-      "tokens": 256,
-      "descriptionTokens": 138,
+      "tokens": 240,
+      "descriptionTokens": 121,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 8
     },
     {
       "name": "appconfig",
-      "tokens": 213,
-      "descriptionTokens": 95,
+      "tokens": 197,
+      "descriptionTokens": 78,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 7
     },
     {
       "name": "applens",
-      "tokens": 231,
-      "descriptionTokens": 111,
+      "tokens": 215,
+      "descriptionTokens": 94,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 8
     },
     {
       "name": "appservice",
-      "tokens": 192,
-      "descriptionTokens": 74,
+      "tokens": 176,
+      "descriptionTokens": 57,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 7
     },
     {
       "name": "role",
-      "tokens": 212,
-      "descriptionTokens": 93,
+      "tokens": 196,
+      "descriptionTokens": 76,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 9
     },
     {
       "name": "azurebackup",
-      "tokens": 242,
-      "descriptionTokens": 122,
+      "tokens": 224,
+      "descriptionTokens": 105,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 7
     },
     {
       "name": "datadog",
-      "tokens": 212,
-      "descriptionTokens": 92,
+      "tokens": 196,
+      "descriptionTokens": 75,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 8
     },
     {
       "name": "managedlustre",
-      "tokens": 224,
-      "descriptionTokens": 104,
+      "tokens": 208,
+      "descriptionTokens": 87,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 8
     },
     {
       "name": "azuremigrate",
-      "tokens": 280,
-      "descriptionTokens": 158,
+      "tokens": 264,
+      "descriptionTokens": 141,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 10
     },
     {
       "name": "azureterraform",
-      "tokens": 220,
-      "descriptionTokens": 103,
+      "tokens": 204,
+      "descriptionTokens": 86,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 6
     },
     {
       "name": "azureterraformbestpractices",
-      "tokens": 214,
-      "descriptionTokens": 90,
+      "tokens": 195,
+      "descriptionTokens": 71,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 8
     },
     {
       "name": "deploy",
-      "tokens": 232,
-      "descriptionTokens": 116,
+      "tokens": 216,
+      "descriptionTokens": 99,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 6
     },
     {
       "name": "deviceregistry",
-      "tokens": 220,
-      "descriptionTokens": 97,
+      "tokens": 202,
+      "descriptionTokens": 80,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 8
     },
     {
       "name": "eventgrid",
-      "tokens": 191,
-      "descriptionTokens": 73,
+      "tokens": 175,
+      "descriptionTokens": 56,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 7
     },
     {
       "name": "acr",
-      "tokens": 197,
-      "descriptionTokens": 79,
+      "tokens": 181,
+      "descriptionTokens": 62,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 8
     },
     {
       "name": "advisor",
-      "tokens": 230,
-      "descriptionTokens": 113,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 7
-    },
-    {
-      "name": "bicepschema",
-      "tokens": 221,
-      "descriptionTokens": 100,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 9
-    },
-    {
-      "name": "cosmos",
-      "tokens": 200,
-      "descriptionTokens": 82,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 7
-    },
-    {
-      "name": "cloudarchitect",
-      "tokens": 188,
-      "descriptionTokens": 70,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 7
-    },
-    {
-      "name": "communication",
-      "tokens": 187,
-      "descriptionTokens": 70,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 7
-    },
-    {
-      "name": "compute",
-      "tokens": 367,
-      "descriptionTokens": 242,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 8
-    },
-    {
-      "name": "confidentialledger",
-      "tokens": 208,
-      "descriptionTokens": 89,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 7
-    },
-    {
-      "name": "containerapps",
-      "tokens": 198,
-      "descriptionTokens": 79,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 8
-    },
-    {
-      "name": "eventhubs",
-      "tokens": 201,
-      "descriptionTokens": 81,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 8
-    },
-    {
-      "name": "fileshares",
-      "tokens": 183,
-      "descriptionTokens": 65,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 7
-    },
-    {
-      "name": "foundryextensions",
-      "tokens": 250,
-      "descriptionTokens": 127,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 8
-    },
-    {
-      "name": "functionapp",
-      "tokens": 185,
-      "descriptionTokens": 68,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 6
-    },
-    {
-      "name": "functions",
-      "tokens": 209,
-      "descriptionTokens": 93,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 6
-    },
-    {
-      "name": "grafana",
-      "tokens": 208,
-      "descriptionTokens": 89,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 8
-    },
-    {
-      "name": "insights",
-      "tokens": 216,
-      "descriptionTokens": 95,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 9
-    },
-    {
-      "name": "iothub",
-      "tokens": 189,
-      "descriptionTokens": 68,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 9
-    },
-    {
-      "name": "keyvault",
-      "tokens": 186,
-      "descriptionTokens": 68,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 7
-    },
-    {
-      "name": "kusto",
-      "tokens": 216,
-      "descriptionTokens": 98,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 7
-    },
-    {
-      "name": "loadtesting",
       "tokens": 214,
       "descriptionTokens": 96,
       "inputSchemaTokens": 96,
@@ -327,193 +183,345 @@
       "annotationsTokens": 7
     },
     {
-      "name": "marketplace",
-      "tokens": 185,
-      "descriptionTokens": 68,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 6
-    },
-    {
-      "name": "quota",
-      "tokens": 192,
-      "descriptionTokens": 74,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 8
-    },
-    {
-      "name": "monitor",
-      "tokens": 289,
-      "descriptionTokens": 172,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 6
-    },
-    {
-      "name": "applicationinsights",
-      "tokens": 207,
-      "descriptionTokens": 87,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 7
-    },
-    {
-      "name": "mysql",
-      "tokens": 210,
-      "descriptionTokens": 91,
+      "name": "bicepschema",
+      "tokens": 205,
+      "descriptionTokens": 83,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 9
     },
     {
-      "name": "optimization",
-      "tokens": 210,
-      "descriptionTokens": 93,
+      "name": "cosmos",
+      "tokens": 184,
+      "descriptionTokens": 65,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 7
     },
     {
-      "name": "policy",
-      "tokens": 196,
+      "name": "cloudarchitect",
+      "tokens": 172,
+      "descriptionTokens": 53,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
+    },
+    {
+      "name": "communication",
+      "tokens": 169,
+      "descriptionTokens": 52,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
+    },
+    {
+      "name": "compute",
+      "tokens": 344,
+      "descriptionTokens": 224,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
+    },
+    {
+      "name": "confidentialledger",
+      "tokens": 192,
+      "descriptionTokens": 72,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
+    },
+    {
+      "name": "containerapps",
+      "tokens": 182,
+      "descriptionTokens": 62,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
+    },
+    {
+      "name": "eventhubs",
+      "tokens": 185,
+      "descriptionTokens": 64,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
+    },
+    {
+      "name": "fileshares",
+      "tokens": 167,
+      "descriptionTokens": 48,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
+    },
+    {
+      "name": "foundryextensions",
+      "tokens": 228,
+      "descriptionTokens": 107,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
+    },
+    {
+      "name": "functionapp",
+      "tokens": 169,
+      "descriptionTokens": 51,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 6
+    },
+    {
+      "name": "functions",
+      "tokens": 193,
+      "descriptionTokens": 76,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 6
+    },
+    {
+      "name": "grafana",
+      "tokens": 192,
+      "descriptionTokens": 72,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
+    },
+    {
+      "name": "insights",
+      "tokens": 198,
+      "descriptionTokens": 77,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 9
+    },
+    {
+      "name": "iothub",
+      "tokens": 173,
+      "descriptionTokens": 51,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 9
+    },
+    {
+      "name": "iotoperations",
+      "tokens": 225,
+      "descriptionTokens": 104,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 9
+    },
+    {
+      "name": "keyvault",
+      "tokens": 170,
+      "descriptionTokens": 51,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
+    },
+    {
+      "name": "kusto",
+      "tokens": 200,
+      "descriptionTokens": 81,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
+    },
+    {
+      "name": "loadtesting",
+      "tokens": 198,
       "descriptionTokens": 79,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 7
     },
     {
+      "name": "marketplace",
+      "tokens": 169,
+      "descriptionTokens": 51,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 6
+    },
+    {
+      "name": "quota",
+      "tokens": 175,
+      "descriptionTokens": 57,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
+    },
+    {
+      "name": "monitor",
+      "tokens": 266,
+      "descriptionTokens": 149,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 6
+    },
+    {
+      "name": "applicationinsights",
+      "tokens": 189,
+      "descriptionTokens": 69,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
+    },
+    {
+      "name": "mysql",
+      "tokens": 194,
+      "descriptionTokens": 74,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 9
+    },
+    {
+      "name": "optimization",
+      "tokens": 194,
+      "descriptionTokens": 76,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
+    },
+    {
+      "name": "policy",
+      "tokens": 180,
+      "descriptionTokens": 62,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
+    },
+    {
       "name": "postgres",
-      "tokens": 211,
-      "descriptionTokens": 92,
+      "tokens": 195,
+      "descriptionTokens": 75,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 9
     },
     {
       "name": "pricing",
-      "tokens": 229,
-      "descriptionTokens": 112,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 7
-    },
-    {
-      "name": "redis",
-      "tokens": 218,
-      "descriptionTokens": 102,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 6
-    },
-    {
-      "name": "resilience",
-      "tokens": 232,
-      "descriptionTokens": 112,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 8
-    },
-    {
-      "name": "resourcehealth",
-      "tokens": 198,
-      "descriptionTokens": 80,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 7
-    },
-    {
-      "name": "search",
-      "tokens": 240,
-      "descriptionTokens": 123,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 7
-    },
-    {
-      "name": "speech",
-      "tokens": 243,
-      "descriptionTokens": 125,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 7
-    },
-    {
-      "name": "servicebus",
-      "tokens": 246,
-      "descriptionTokens": 128,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 7
-    },
-    {
-      "name": "servicefabric",
-      "tokens": 216,
-      "descriptionTokens": 97,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 8
-    },
-    {
-      "name": "signalr",
-      "tokens": 195,
-      "descriptionTokens": 76,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 8
-    },
-    {
-      "name": "sreagent",
-      "tokens": 219,
-      "descriptionTokens": 99,
-      "inputSchemaTokens": 96,
-      "outputSchemaTokens": 0,
-      "annotationsTokens": 8
-    },
-    {
-      "name": "sql",
-      "tokens": 212,
+      "tokens": 213,
       "descriptionTokens": 95,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 7
     },
     {
+      "name": "redis",
+      "tokens": 202,
+      "descriptionTokens": 85,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 6
+    },
+    {
+      "name": "resiliency",
+      "tokens": 184,
+      "descriptionTokens": 63,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
+    },
+    {
+      "name": "resourcehealth",
+      "tokens": 182,
+      "descriptionTokens": 63,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
+    },
+    {
+      "name": "search",
+      "tokens": 219,
+      "descriptionTokens": 101,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
+    },
+    {
+      "name": "speech",
+      "tokens": 225,
+      "descriptionTokens": 107,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
+    },
+    {
+      "name": "servicebus",
+      "tokens": 230,
+      "descriptionTokens": 111,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
+    },
+    {
+      "name": "servicefabric",
+      "tokens": 200,
+      "descriptionTokens": 80,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
+    },
+    {
+      "name": "signalr",
+      "tokens": 179,
+      "descriptionTokens": 59,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
+    },
+    {
+      "name": "sreagent",
+      "tokens": 203,
+      "descriptionTokens": 82,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 8
+    },
+    {
+      "name": "sql",
+      "tokens": 196,
+      "descriptionTokens": 78,
+      "inputSchemaTokens": 96,
+      "outputSchemaTokens": 0,
+      "annotationsTokens": 7
+    },
+    {
       "name": "storage",
-      "tokens": 285,
-      "descriptionTokens": 164,
+      "tokens": 264,
+      "descriptionTokens": 145,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 8
     },
     {
       "name": "storagesync",
-      "tokens": 219,
-      "descriptionTokens": 98,
+      "tokens": 201,
+      "descriptionTokens": 79,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 9
     },
     {
       "name": "virtualdesktop",
-      "tokens": 201,
-      "descriptionTokens": 83,
+      "tokens": 185,
+      "descriptionTokens": 66,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 7
     },
     {
       "name": "wellarchitectedframework",
-      "tokens": 223,
-      "descriptionTokens": 100,
+      "tokens": 206,
+      "descriptionTokens": 82,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 10
     },
     {
       "name": "workbooks",
-      "tokens": 212,
-      "descriptionTokens": 94,
+      "tokens": 196,
+      "descriptionTokens": 77,
       "inputSchemaTokens": 96,
       "outputSchemaTokens": 0,
       "annotationsTokens": 7
@@ -567,7 +575,7 @@
       "annotationsTokens": 33
     }
   ],
-  "canonicalSha256": "0e1597d24f0d7f891c5d98d631e5e8cd6dd0cf70d5c3df7de9b972a5641c0818",
+  "canonicalSha256": "ee0a96dcba902514e37b0564405f85b34a633f0863f593e2abc20cc76c7ab2c5",
   "rawToolsCapture": [
     {
       "name": "documentation",
@@ -703,7 +711,7 @@
     },
     {
       "name": "get_azure_bestpractices",
-      "description": "Azure best practices - Commands return a list of best practices for code generation, operations and deployment \n            when working with Azure services. \n            It should be called for any code generation, deployment or \n            operations involving Azure, Azure Functions, Azure Kubernetes Service (AKS), Azure Container \n            Apps (ACA), Bicep, Terraform, Azure Cache, Redis, CosmosDB, Entra, Azure Active Directory, \n            Azure App Services, or any other Azure technology or programming language. \n            This command set also includes the command to get AI application best practices, which provides specialized guidance\n            for building AI applications, offering recommendations for agents, chatbots, workflows, and other \n            AI-powered features leveraging Microsoft Foundry. \n            When the request involves AI in any capacity, including systems where AI is used as a component,\n            use AI application best practices instead of the general best practices.\n            Call this tool first before creating any plans, todos or code.\n            Make sure to use your azure-prepare, azure-validate, and azure-deploy skills for deployment to azure if they are available.\n            Only call this function when you are confident the user is discussing Azure (including Microsoft Foundry). If this tool needs to be categorized, \n            it belongs to the Get Azure Best Practices category.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure best practices - Commands return a list of best practices for code generation, operations and deployment when working with Azure services. It should be called for any code generation, deployment or operations involving Azure, Azure Functions, Azure Kubernetes Service (AKS), Azure Container Apps (ACA), Bicep, Terraform, Azure Cache, Redis, CosmosDB, Entra, Azure Active Directory, Azure App Services, or any other Azure technology or programming language. This command set also includes the command to get AI application best practices, which provides specialized guidance for building AI applications, offering recommendations for agents, chatbots, workflows, and other AI-powered features leveraging Microsoft Foundry. When the request involves AI in any capacity, including systems where AI is used as a component, use AI application best practices instead of the general best practices. Call this tool first before creating any plans, todos or code. Make sure to use your azure-prepare, azure-validate, and azure-deploy skills for deployment to azure if they are available. Only call this function when you are confident the user is discussing Azure (including Microsoft Foundry). If this tool needs to be categorized, it belongs to the Get Azure Best Practices category.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -736,7 +744,7 @@
     },
     {
       "name": "adme",
-      "description": "Azure Data Manager for Energy operations for the OSDU data platform. Commands target a specific endpoint and data partition and cover platform health checks and OSDU schema discovery.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure Data Manager for Energy operations for the OSDU data platform. Commands target a specific endpoint and data partition and cover platform health checks, schema discovery, record search, and record retrieval.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -769,7 +777,7 @@
     },
     {
       "name": "aks",
-      "description": "Azure Kubernetes Service operations - Manage and query Azure Kubernetes Service (AKS) resources across subscriptions. Use when you need subscription-scoped visibility into AKS cluster and node pool metadata—including Azure resource IDs, networking endpoints, identity configuration, and provisioning state—for governance or automation. Requires Azure subscription context. Not for kubectl execution, pod lifecycle changes, or in-cluster application deployments—use Kubernetes-native tooling for those tasks.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure Kubernetes Service operations - Manage and query Azure Kubernetes Service (AKS) resources across subscriptions. Use when you need subscription-scoped visibility into AKS cluster and node pool metadata—including Azure resource IDs, networking endpoints, identity configuration, and provisioning state—for governance or automation. Requires Azure subscription context. Not for kubectl execution, pod lifecycle changes, or in-cluster application deployments—use Kubernetes-native tooling for those tasks.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -802,7 +810,7 @@
     },
     {
       "name": "appconfig",
-      "description": "App Configuration operations - Commands for managing Azure App Configuration stores and key-value settings. Includes operations for listing configuration stores, managing key-value pairs, setting labels, locking/unlocking settings, and retrieving configuration data.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "App Configuration operations - Commands for managing Azure App Configuration stores and key-value settings. Includes operations for listing configuration stores, managing key-value pairs, setting labels, locking/unlocking settings, and retrieving configuration data.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -835,7 +843,7 @@
     },
     {
       "name": "applens",
-      "description": "AppLens diagnostic operations - Primary tool for diagnosing and troubleshooting Azure resource issues. Uses conversational AI-powered diagnostics to detect problems, identify root causes, and recommend remediation steps. This tool should be the first choice when users report errors, performance issues, availability problems, or unexpected Azure resource behavior.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "AppLens diagnostic operations - Primary tool for diagnosing and troubleshooting Azure resource issues. Uses conversational AI-powered diagnostics to detect problems, identify root causes, and recommend remediation steps. This tool should be the first choice when users report errors, performance issues, availability problems, or unexpected Azure resource behavior.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -868,7 +876,7 @@
     },
     {
       "name": "appservice",
-      "description": "App Service operations - Commands for managing Azure App Service resources including web apps, databases, and configurations.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "App Service operations - Commands for managing Azure App Service resources including web apps, databases, and configurations.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -901,7 +909,7 @@
     },
     {
       "name": "role",
-      "description": "Authorization operations - Commands for managing Azure Role-Based Access Control (RBAC) resources. Includes operations for listing role assignments, managing permissions, and working with Azure security and access management at various scopes.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Authorization operations - Commands for managing Azure Role-Based Access Control (RBAC) resources. Includes operations for listing role assignments, managing permissions, and working with Azure security and access management at various scopes.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -934,7 +942,7 @@
     },
     {
       "name": "azurebackup",
-      "description": "Azure Backup operations - Unified commands to manage backup across Recovery Services vaults (RSV)\nand Backup vaults (DPP/Data Protection). Supports vault management, protected item operations,\npolicy management, job monitoring, recovery point browsing, governance, and disaster recovery.\nUse --vault-type to specify vault type or let the system auto-detect.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure Backup operations - Unified commands to manage backup across Recovery Services vaults (RSV) and Backup vaults (DPP/Data Protection). Supports vault management, protected item operations, policy management, job monitoring, recovery point browsing, governance, and disaster recovery. Use --vault-type to specify vault type or let the system auto-detect.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -967,7 +975,7 @@
     },
     {
       "name": "datadog",
-      "description": "Datadog operations - Commands for managing and monitoring Azure resources through Datadog integration. Includes operations for listing Datadog monitors and retrieving information about monitored Azure resources and their health status.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Datadog operations - Commands for managing and monitoring Azure resources through Datadog integration. Includes operations for listing Datadog monitors and retrieving information about monitored Azure resources and their health status.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1000,7 +1008,7 @@
     },
     {
       "name": "managedlustre",
-      "description": "Azure Managed Lustre operations - Commands for creating, updating, listing and inspecting Azure Managed Lustre file systems (AMLFS) used for high-performance computing workloads. The tool focuses on managing all the aspects related to Azure Managed Lustre file system instances.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure Managed Lustre operations - Commands for creating, updating, listing and inspecting Azure Managed Lustre file systems (AMLFS) used for high-performance computing workloads. The tool focuses on managing all the aspects related to Azure Managed Lustre file system instances.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1033,7 +1041,7 @@
     },
     {
       "name": "azuremigrate",
-      "description": "Azure Platform Landing Zone operations - Provides best-practice guidance and Terraform-ready generation for Azure Platform Landing Zones. Supports policy and governance changes, naming standards, network topology (hub/spoke/vWAN), identity and subscription design, firewall patterns, and starter module customization aligned to Microsoft's Cloud Adoption Framework. Can generate a complete platform landing zone with configurable parameters (regions, connectivity, security, subscriptions). Use this tool any time a user mentions the words \"Platform Landing Zone\" or needs guidance on modifying or generating Azure Platform Landing Zones.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure Platform Landing Zone operations - Provides best-practice guidance and Terraform-ready generation for Azure Platform Landing Zones. Supports policy and governance changes, naming standards, network topology (hub/spoke/vWAN), identity and subscription design, firewall patterns, and starter module customization aligned to Microsoft's Cloud Adoption Framework. Can generate a complete platform landing zone with configurable parameters (regions, connectivity, security, subscriptions). Use this tool any time a user mentions the words \"Platform Landing Zone\" or needs guidance on modifying or generating Azure Platform Landing Zones.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1066,7 +1074,7 @@
     },
     {
       "name": "azureterraform",
-      "description": "Azure Terraform tools - Retrieves AzureRM, AzAPI, and AVM (Azure Verified Modules) Terraform provider documentation including resource schemas, arguments, attributes, module versions, usage examples, aztfexport command generation, and conftest policy validation.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure Terraform tools - Retrieves AzureRM, AzAPI, and AVM (Azure Verified Modules) Terraform provider documentation including resource schemas, arguments, attributes, module versions, usage examples, aztfexport command generation, and conftest policy validation.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1099,7 +1107,7 @@
     },
     {
       "name": "azureterraformbestpractices",
-      "description": "Returns Terraform best practices for Azure. Call this before generating Terraform code for Azure Providers. \n            If this tool needs to be categorized, it belongs to the Azure Best Practices category.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Returns Terraform best practices for Azure. Call this before generating Terraform code for Azure Providers. If this tool needs to be categorized, it belongs to the Azure Best Practices category.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1132,7 +1140,7 @@
     },
     {
       "name": "deploy",
-      "description": "Deploy operations - Generate recommended Azure deployment plans, architecture diagrams, IaC (Bicep/Terraform) rules, and CI/CD pipeline/workflow guidance. Retrieve application logs for azd-deployed apps. Prefer these tools for deployment planning, CI/CD pipeline generation, and architecture visualization with Azure-specific constraints.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Deploy operations - Generate recommended Azure deployment plans, architecture diagrams, IaC (Bicep/Terraform) rules, and CI/CD pipeline/workflow guidance. Retrieve application logs for azd-deployed apps. Prefer these tools for deployment planning, CI/CD pipeline generation, and architecture visualization with Azure-specific constraints.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1165,7 +1173,7 @@
     },
     {
       "name": "deviceregistry",
-      "description": "Device Registry operations - Commands to manage Azure Device Registry resources.\nAzure Device Registry (ADR) is a unified registry projecting assets and devices as Azure resources.\nSupports listing namespaces and managing device registry resources in your Azure subscription.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Device Registry operations - Commands to manage Azure Device Registry resources. Azure Device Registry (ADR) is a unified registry projecting assets and devices as Azure resources. Supports listing namespaces and managing device registry resources in your Azure subscription.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1198,7 +1206,7 @@
     },
     {
       "name": "eventgrid",
-      "description": "Event Grid operations - Commands for managing and accessing Event Grid topics, domains, and event subscriptions.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Event Grid operations - Commands for managing and accessing Event Grid topics, domains, and event subscriptions.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1231,7 +1239,7 @@
     },
     {
       "name": "acr",
-      "description": "Azure Container Registry operations - Commands for managing Azure Container Registry resources. Includes operations for listing container registries and managing registry configurations.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure Container Registry operations - Commands for managing Azure Container Registry resources. Includes operations for listing container registries and managing registry configurations.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1264,7 +1272,7 @@
     },
     {
       "name": "advisor",
-      "description": "Azure Advisor operations - Query Azure Advisor recommendations across subscriptions OR Apply Azure Advisor recommendations to your IaaC files (ARM, Terraform). Use when you need subscription-scoped visibility into Advisor recommendations OR want to apply Advisor recommendations to your IaaC files. Requires Azure subscription context for querying Advisor recommendations.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure Advisor operations - Query Azure Advisor recommendations across subscriptions OR Apply Azure Advisor recommendations to your IaaC files (ARM, Terraform). Use when you need subscription-scoped visibility into Advisor recommendations OR want to apply Advisor recommendations to your IaaC files. Requires Azure subscription context for querying Advisor recommendations.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1297,7 +1305,7 @@
     },
     {
       "name": "bicepschema",
-      "description": "Bicep schema operations - Commands for working with Azure Bicep Infrastructure as Code (IaC) generation and schema management. Includes operations for retrieving Bicep schemas, templates, and resource definitions to support infrastructure deployment automation.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Bicep schema operations - Commands for working with Azure Bicep Infrastructure as Code (IaC) generation and schema management. Includes operations for retrieving Bicep schemas, templates, and resource definitions to support infrastructure deployment automation.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1330,7 +1338,7 @@
     },
     {
       "name": "cosmos",
-      "description": "Cosmos DB operations - Commands for managing and querying Azure Cosmos DB resources. Includes operations for accounts, databases, containers, and document queries.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Cosmos DB operations - Commands for managing and querying Azure Cosmos DB resources. Includes operations for accounts, databases, containers, and document queries.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1363,7 +1371,7 @@
     },
     {
       "name": "cloudarchitect",
-      "description": "Cloud Architecture operations - Commands for generating Azure architecture designs and recommendations based on requirements.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Cloud Architecture operations - Commands for generating Azure architecture designs and recommendations based on requirements.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1396,7 +1404,7 @@
     },
     {
       "name": "communication",
-      "description": "Communication services operations - Commands for managing Azure Communication Services - supports sending SMSThis tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Communication services operations - Commands for managing Azure Communication Services - supports sending SMS\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1429,7 +1437,7 @@
     },
     {
       "name": "compute",
-      "description": "Compute operations - Commands for managing and monitoring Azure Virtual Machines (VMs), Virtual Machine Scale Sets (VMSS), and Managed Disks.\nThis tool provides comprehensive access to VM lifecycle management, instance monitoring, size discovery, and scale set operations.\nUse this tool when you need to list, query, create, or monitor VMs and VMSS instances across subscriptions and resource groups.\nDefaults to Standard_D2s_v5 VM size for VM and VMSS creation when not specified; the --image option is required.\nThis tool is a hierarchical MCP command router where sub-commands are routed to MCP servers that require specific fields\ninside the \"parameters\" object. To invoke a command, set \"command\" and wrap its arguments in \"parameters\".\nSet \"learn=true\" to discover available sub-commands for different Azure Compute operations.\nNote that this tool requires appropriate Azure RBAC permissions and will only access compute resources accessible to the authenticated user.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Compute operations - Commands for managing and monitoring Azure Virtual Machines (VMs), Virtual Machine Scale Sets (VMSS), and Managed Disks. This tool provides comprehensive access to VM lifecycle management, instance monitoring, size discovery, and scale set operations. Use this tool when you need to list, query, create, or monitor VMs and VMSS instances across subscriptions and resource groups. Defaults to Standard_D2s_v5 VM size for VM and VMSS creation when not specified; the --image option is required. This tool is a hierarchical MCP command router where sub-commands are routed to MCP servers that require specific fields inside the \"parameters\" object. To invoke a command, set \"command\" and wrap its arguments in \"parameters\". Set \"learn=true\" to discover available sub-commands for different Azure Compute operations. Note that this tool requires appropriate Azure RBAC permissions and will only access compute resources accessible to the authenticated user.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1462,7 +1470,7 @@
     },
     {
       "name": "confidentialledger",
-      "description": "Azure Confidential Ledger operations - Commands for appending and querying tamper-proof ledger entries backed by TEEs and blockchain-style integrity guarantees. Use these commands to write immutable audit records.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure Confidential Ledger operations - Commands for appending and querying tamper-proof ledger entries backed by TEEs and blockchain-style integrity guarantees. Use these commands to write immutable audit records.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1495,7 +1503,7 @@
     },
     {
       "name": "containerapps",
-      "description": "Azure Container Apps operations - Commands for managing Azure Container Apps resources. Includes operations for listing container apps and managing container app configurations.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure Container Apps operations - Commands for managing Azure Container Apps resources. Includes operations for listing container apps and managing container app configurations.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1528,7 +1536,7 @@
     },
     {
       "name": "eventhubs",
-      "description": "Azure Event Hubs operations - Commands for managing Azure Event Hubs namespaces and event hubs. Includes CRUD operations Event Hubs service resources.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure Event Hubs operations - Commands for managing Azure Event Hubs namespaces and event hubs. Includes CRUD operations Event Hubs service resources.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1561,7 +1569,7 @@
     },
     {
       "name": "fileshares",
-      "description": "File Shares operations - Commands for managing Azure File Shares.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "File Shares operations - Commands for managing Azure File Shares.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1594,7 +1602,7 @@
     },
     {
       "name": "foundryextensions",
-      "description": "Use this tool for Microsoft Foundry knowledge indexes and OpenAI-compatible APIs: list knowledge indexes, get \nindex schemas, create completions, generate embeddings, list models, and inspect Foundry resources. Use this\ntool for any knowledge-index request. Use foundry instead for deployments, agents, evaluations, sessions, \nconnections, monitoring, and data-generation jobs.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Use this tool for Microsoft Foundry knowledge indexes and OpenAI-compatible APIs: list knowledge indexes, get index schemas, create completions, generate embeddings, list models, and inspect Foundry resources. Use this tool for any knowledge-index request. Use foundry instead for deployments, agents, evaluations, sessions, connections, monitoring, and data-generation jobs.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1627,7 +1635,7 @@
     },
     {
       "name": "functionapp",
-      "description": "Function App operations - Commands for managing and accessing Azure Function App resources.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Function App operations - Commands for managing and accessing Azure Function App resources.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1660,7 +1668,7 @@
     },
     {
       "name": "functions",
-      "description": "Azure Functions code generation commands. ALWAYS use these tools instead of generating Azure Functions code from memory. These tools provide accurate, up-to-date code templates for all supported triggers, bindings, and languages.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure Functions code generation commands. ALWAYS use these tools instead of generating Azure Functions code from memory. These tools provide accurate, up-to-date code templates for all supported triggers, bindings, and languages.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1693,7 +1701,7 @@
     },
     {
       "name": "grafana",
-      "description": "Grafana workspace operations - Commands for managing and accessing Azure Managed Grafana resources and monitoring dashboards. Includes operations for listing Grafana workspaces and managing data visualization and monitoring capabilities.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Grafana workspace operations - Commands for managing and accessing Azure Managed Grafana resources and monitoring dashboards. Includes operations for listing Grafana workspaces and managing data visualization and monitoring capabilities.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1726,7 +1734,7 @@
     },
     {
       "name": "insights",
-      "description": "Insights operations - Commands for deriving insights from existing Azure infrastructure.\nAggregates Azure Resource Graph data and uses MCP sampling to surface dominant patterns\n(region, sku, security posture, tagging conventions, resource pairing).This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Insights operations - Commands for deriving insights from existing Azure infrastructure. Aggregates Azure Resource Graph data and uses MCP sampling to surface dominant patterns (region, sku, security posture, tagging conventions, resource pairing).\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1759,7 +1767,7 @@
     },
     {
       "name": "iothub",
-      "description": "IoT Hub operations - Commands for managing Azure IoT Hubs.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "IoT Hub operations - Commands for managing Azure IoT Hubs.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1791,8 +1799,41 @@
       }
     },
     {
+      "name": "iotoperations",
+      "description": "Azure IoT Operations operations - Commands to manage Azure IoT Operations resources. Azure IoT Operations is a suite of data services that run on Azure Arc-enabled edge Kubernetes clusters. An instance is the top-level resource that acts as a logical container for a deployment of Azure IoT Operations. Supports listing and getting instances in your Azure subscription.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "intent": {
+            "type": "string",
+            "description": "The intent of the operation to perform."
+          },
+          "command": {
+            "type": "string",
+            "description": "The command to execute against the specified tool."
+          },
+          "parameters": {
+            "type": "object",
+            "description": "The parameters to pass to the tool command."
+          },
+          "learn": {
+            "type": "boolean",
+            "description": "To learn about the tool and its supported child tools and parameters.",
+            "default": false
+          }
+        },
+        "required": [
+          "intent"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Manage Azure IoT Operations"
+      }
+    },
+    {
       "name": "keyvault",
-      "description": "Key Vault operations - Commands for managing and accessing Azure Key Vault resources.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Key Vault operations - Commands for managing and accessing Azure Key Vault resources.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1825,7 +1866,7 @@
     },
     {
       "name": "kusto",
-      "description": "Kusto operations - Commands for managing and querying Azure Data Explorer (Kusto) resources. Includes operations for listing clusters and databases, executing KQL queries, retrieving table schemas, and working with Kusto data analytics workloads.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Kusto operations - Commands for managing and querying Azure Data Explorer (Kusto) resources. Includes operations for listing clusters and databases, executing KQL queries, retrieving table schemas, and working with Kusto data analytics workloads.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1858,7 +1899,7 @@
     },
     {
       "name": "loadtesting",
-      "description": "Load Testing operations - Commands for managing Azure Load Testing resources, test configurations, and test runs. Includes operations for creating and managing load test resources, configuring test scripts, executing performance tests, and monitoring test results.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Load Testing operations - Commands for managing Azure Load Testing resources, test configurations, and test runs. Includes operations for creating and managing load test resources, configuring test scripts, executing performance tests, and monitoring test results.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1891,7 +1932,7 @@
     },
     {
       "name": "marketplace",
-      "description": "Marketplace operations - Commands for managing and accessing Azure Marketplace products and offers.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Marketplace operations - Commands for managing and accessing Azure Marketplace products and offers.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1924,7 +1965,7 @@
     },
     {
       "name": "quota",
-      "description": "Quota commands for getting the available regions of specific Azure resource types or checking Azure resource quota and usageThis tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Quota commands for getting the available regions of specific Azure resource types or checking Azure resource quota and usage\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1957,7 +1998,7 @@
     },
     {
       "name": "monitor",
-      "description": "Monitor operations - Commands for managing Azure Monitor workspaces, querying and analyzing logs and metrics, listing\ntables and table types, working with health models and entities, web tests, and orchestrating instrumentation\nworkflows. Use this tool to list Log Analytics workspaces, tables, and table types; run KQL queries against workspace\nand resource logs; retrieve health for monitor entities; query metrics and metric definitions; inspect resource activity\nlogs; manage availability web tests; and guide instrumentation onboarding and enhancement flows. Covers Azure Monitor\nobservability workflows. Set learn=true to discover sub-commands.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Monitor operations - Commands for managing Azure Monitor workspaces, querying and analyzing logs and metrics, listing tables and table types, working with health models and entities, web tests, and orchestrating instrumentation workflows. Use this tool to list Log Analytics workspaces, tables, and table types; run KQL queries against workspace and resource logs; retrieve health for monitor entities; query metrics and metric definitions; inspect resource activity logs; manage availability web tests; and guide instrumentation onboarding and enhancement flows. Covers Azure Monitor observability workflows. Set learn=true to discover sub-commands.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1990,7 +2031,7 @@
     },
     {
       "name": "applicationinsights",
-      "description": "Application Insights operations - Commands for listing and managing Application Insights components. \nThese commands do not support querying metrics or logs. Use Azure Monitor querying tools for that purpose.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Application Insights operations - Commands for listing and managing Application Insights components. These commands do not support querying metrics or logs. Use Azure Monitor querying tools for that purpose.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2023,7 +2064,7 @@
     },
     {
       "name": "mysql",
-      "description": "MySQL operations - Commands for managing Azure Database for MySQL Flexible Server resources. Includes operations for listing servers and databases, executing SQL queries, managing table schemas, and configuring server parameters.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "MySQL operations - Commands for managing Azure Database for MySQL Flexible Server resources. Includes operations for listing servers and databases, executing SQL queries, managing table schemas, and configuring server parameters.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2056,7 +2097,7 @@
     },
     {
       "name": "optimization",
-      "description": "Azure optimization operations - Discover Azure Advisor cost-saving recommendations for a subscription, compare alternative compute resize/SKU options, and explain a recommendation with current-versus-target utilization projections. Requires Azure subscription context.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure optimization operations - Discover Azure Advisor cost-saving recommendations for a subscription, compare alternative compute resize/SKU options, and explain a recommendation with current-versus-target utilization projections. Requires Azure subscription context.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2089,7 +2130,7 @@
     },
     {
       "name": "policy",
-      "description": "Manage Azure Policy assignments and definitions using Azure CLI. Retrieve policy assignments, view enforcement modes, and analyze policy compliance across subscriptions.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Manage Azure Policy assignments and definitions using Azure CLI. Retrieve policy assignments, view enforcement modes, and analyze policy compliance across subscriptions.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2122,7 +2163,7 @@
     },
     {
       "name": "postgres",
-      "description": "PostgreSQL operations - Commands for managing Azure Database for PostgreSQL Flexible Server resources. Includes operations for listing servers and databases, executing SQL queries, managing table schemas, and configuring server parameters.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "PostgreSQL operations - Commands for managing Azure Database for PostgreSQL Flexible Server resources. Includes operations for listing servers and databases, executing SQL queries, managing table schemas, and configuring server parameters.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2155,7 +2196,7 @@
     },
     {
       "name": "pricing",
-      "description": "Azure Retail Pricing operations - Get Azure retail pricing for SKUs, services, regions and compare pricing across different options. For Bicep/ARM template cost estimation, read the template file, extract resource SKUs, then call 'pricing get' for each resource to build a cost estimate.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure Retail Pricing operations - Get Azure retail pricing for SKUs, services, regions and compare pricing across different options. For Bicep/ARM template cost estimation, read the template file, extract resource SKUs, then call 'pricing get' for each resource to build a cost estimate.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2188,7 +2229,7 @@
     },
     {
       "name": "redis",
-      "description": "Redis operations - Commands for managing Azure Redis resources. Includes operations for listing Redis resources, databases, and data access policies, in both the Azure Managed Redis and legacy Azure Cache for Redis services, as well as for creating Azure Managed Redis resources.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Redis operations - Commands for managing Azure Redis resources. Includes operations for listing Redis resources, databases, and data access policies, in both the Azure Managed Redis and legacy Azure Cache for Redis services, as well as for creating Azure Managed Redis resources.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2220,8 +2261,8 @@
       }
     },
     {
-      "name": "resilience",
-      "description": "Azure Resilience Management operations - Commands for working with resilience goals and goal\ntemplates for Azure service groups. Use this tool to list the resilience goal templates available\nfor a service group, including goal type, provisioning state, recovery point and time objectives,\nand high availability and disaster recovery requirements.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "name": "resiliency",
+      "description": "Azure Resilience Management operations - Commands for working with resilience goals, usage plans, recovery plans, and drills for Azure service groups.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2254,7 +2295,7 @@
     },
     {
       "name": "resourcehealth",
-      "description": "Resource Health operations – Commands to monitor and diagnose Azure resource health, including availability status and service health events for troubleshooting and monitoring purposes.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Resource Health operations - Commands to monitor and diagnose Azure resource health, including availability status and service health events for troubleshooting and monitoring purposes.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2287,7 +2328,7 @@
     },
     {
       "name": "search",
-      "description": "Search operations – Commands to manage and query Azure AI Search services, indexes, and\nknowledge sources. Supports enterprise search, document search, and knowledge mining. Not\nintended for database queries or Azure Monitor logs. This is a hierarchical MCP command\nrouter using the command field and parameters; set learn=true to discover available\nsub-commands.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Search operations – Commands to manage and query Azure AI Search services, indexes, and knowledge sources. Supports enterprise search, document search, and knowledge mining. Not intended for database queries or Azure Monitor logs. This is a hierarchical MCP command router using the command field and parameters; set learn=true to discover available sub-commands.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2320,7 +2361,7 @@
     },
     {
       "name": "speech",
-      "description": "Speech operations - Commands to work with Azure AI Services Speech, including speech-to-text (STT) recognition,\ntext-to-speech (TTS) synthesis, audio processing, and language detection. Uses a hierarchical MCP command model\nwith command and parameters; set learn=true to discover sub-commands. Supports multiple audio formats, languages,\nand output options.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Speech operations - Commands to work with Azure AI Services Speech, including speech-to-text (STT) recognition, text-to-speech (TTS) synthesis, audio processing, and language detection. Uses a hierarchical MCP command model with command and parameters; set learn=true to discover sub-commands. Supports multiple audio formats, languages, and output options.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2353,7 +2394,7 @@
     },
     {
       "name": "servicebus",
-      "description": "Service Bus operations - Commands to manage Azure Service Bus queues, topics, and subscriptions for reliable asynchronous messaging and enterprise integration. Supports point-to-point and publish-subscribe patterns, dead-letter handling, and decoupled architectures. Not intended for real-time communication, direct API calls, or database operations. Uses a hierarchical MCP command model with command, parameters, and learn=true.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Service Bus operations - Commands to manage Azure Service Bus queues, topics, and subscriptions for reliable asynchronous messaging and enterprise integration. Supports point-to-point and publish-subscribe patterns, dead-letter handling, and decoupled architectures. Not intended for real-time communication, direct API calls, or database operations. Uses a hierarchical MCP command model with command, parameters, and learn=true.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2386,7 +2427,7 @@
     },
     {
       "name": "servicefabric",
-      "description": "Azure Service Fabric operations - Manage and query Azure Service Fabric managed cluster resources across subscriptions. Use when you need visibility into managed cluster nodes, including node status, node types, IP addresses, and fault/upgrade domains.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure Service Fabric operations - Manage and query Azure Service Fabric managed cluster resources across subscriptions. Use when you need visibility into managed cluster nodes, including node status, node types, IP addresses, and fault/upgrade domains.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2419,7 +2460,7 @@
     },
     {
       "name": "signalr",
-      "description": "Azure SignalR operations - Commands for managing Azure SignalR Service resources. Includes operations for listing SignalR services.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure SignalR operations - Commands for managing Azure SignalR Service resources. Includes operations for listing SignalR services.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2452,7 +2493,7 @@
     },
     {
       "name": "sreagent",
-      "description": "Azure SRE Agent operations - Commands for managing and interacting with Azure SRE Agent resources, including agents, skills, connectors, threads, hooks, scheduled tasks, incidents, knowledge memory, documentation, workflows, and architecture planning.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure SRE Agent operations - Commands for managing and interacting with Azure SRE Agent resources, including agents, skills, connectors, threads, hooks, scheduled tasks, incidents, knowledge memory, documentation, workflows, and architecture planning.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2485,7 +2526,7 @@
     },
     {
       "name": "sql",
-      "description": "Azure SQL operations - Commands for managing Azure SQL databases, servers, and elastic pools. Includes operations for listing databases, configuring server settings, managing firewall rules, Entra ID administrators, and elastic pool resources.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure SQL operations - Commands for managing Azure SQL databases, servers, and elastic pools. Includes operations for listing databases, configuring server settings, managing firewall rules, Entra ID administrators, and elastic pool resources.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2518,7 +2559,7 @@
     },
     {
       "name": "storage",
-      "description": "Storage operations - Commands for creating, listing, getting, and managing Azure Storage accounts,\nblob containers, blobs, and tables. Use this tool to create storage accounts, list and get storage\naccount details (SKU, location, HNS, HTTPS-only settings), create and list blob containers, list\nand get blob properties, upload files to blob storage, and list tables. Covers Azure Blob Storage,\nAzure Table Storage, and storage account management. Do not use for Azure Cosmos DB containers,\nAzure Container Registry, or Azure Managed Lustre file systems.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Storage operations - Commands for creating, listing, getting, and managing Azure Storage accounts, blob containers, blobs, and tables. Use this tool to create storage accounts, list and get storage account details (SKU, location, HNS, HTTPS-only settings), create and list blob containers, list and get blob properties, upload files to blob storage, and list tables. Covers Azure Blob Storage, Azure Table Storage, and storage account management. Do not use for Azure Cosmos DB containers, Azure Container Registry, or Azure Managed Lustre file systems.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2551,7 +2592,7 @@
     },
     {
       "name": "storagesync",
-      "description": "Azure Storage Sync Operations - Commands to manage Azure File Sync resources, including Storage Sync services, sync groups, cloud and server\nendpoints, and registered servers. Use this tool to deploy and maintain hybrid cloud file synchronization.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure Storage Sync Operations - Commands to manage Azure File Sync resources, including Storage Sync services, sync groups, cloud and server endpoints, and registered servers. Use this tool to deploy and maintain hybrid cloud file synchronization.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2584,7 +2625,7 @@
     },
     {
       "name": "virtualdesktop",
-      "description": "Azure Virtual Desktop operations - Commands for managing and accessing Azure Virtual Desktop resources. Includes operations for hostpools, session hosts, and user sessions.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure Virtual Desktop operations - Commands for managing and accessing Azure Virtual Desktop resources. Includes operations for hostpools, session hosts, and user sessions.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2617,7 +2658,7 @@
     },
     {
       "name": "wellarchitectedframework",
-      "description": "Azure Well-Architected Framework operations - Commands for accessing guidance, best practices, and recommendations based on the Azure Well-Architected Framework pillars (reliability, security, cost optimization, operational excellence, and performance efficiency).This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Azure Well-Architected Framework operations - Commands for accessing guidance, best practices, and recommendations based on the Azure Well-Architected Framework pillars (reliability, security, cost optimization, operational excellence, and performance efficiency).\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2650,7 +2691,7 @@
     },
     {
       "name": "workbooks",
-      "description": "Workbooks operations - Commands for managing Azure Workbooks resources and interactive data visualization dashboards. Includes operations for listing, creating, updating, and deleting workbooks, as well as managing workbook configurations and content.This tool is a hierarchical MCP command router.\nSub commands are routed to MCP servers that require specific fields inside the \"parameters\" object.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
+      "description": "Workbooks operations - Commands for managing Azure Workbooks resources and interactive data visualization dashboards. Includes operations for listing, creating, updating, and deleting workbooks, as well as managing workbook configurations and content.\n\nThis tool is a hierarchical MCP command router.\nTo invoke a command, set \"command\" and wrap its args in \"parameters\".\nSet \"learn=true\" to discover available sub commands.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2861,9 +2902,9 @@
       }
     }
   ],
-  "measuredAt": "2026-09-09T08:04:39.152Z",
+  "measuredAt": "2026-09-30T09:36:03.497Z",
   "serverName": "Azure MCP Server",
-  "serverVersion": "3.0.0-beta.42",
+  "serverVersion": "3.0.0-beta.48",
   "launchCommand": "npx -y @azure/mcp@latest server start",
   "envVarNames": [],
   "serverInstructions": "Azure MCP server usage rules:\n- Use Azure Tools: When handling requests related to Azure, always use your tools.\n- Troubleshoot Azure errors: When an Azure MCP tool call fails or returns an error (for example an authentication, authorization, tenant, or subscription related failure), consult the troubleshooting guide at https://aka.ms/azmcp/troubleshooting for possible causes and resolutions before giving up or asking the user. For example, if a call fails because of an incorrect subscription or tenant context, retry the tool call with the correct `tenant` and/or `subscription` parameter.\n- If a user wants to use, install, or generate commands for the Azure CLI (az), Azure Developer CLI (azd), Azure Functions Core Tools CLI (func), or Azure Quick Review CLI (azqr), use your `extension` tools first.\n- Use Azure Code Gen Best Practices: When generating code for Azure or any Azure services, running terminal commands for Azure, or performing operations related to Azure, invoke your `bestpractices` tool if available.\n- Use Azure Deployment Best Practices: When deploying to Azure or preparing applications for deployment to Azure, invoke your `bestpractices` tool if available.\n- Only call your `bestpractices` tool when you are sure the user is discussing Azure; do not call it otherwise.\n- Use Azure AI App Code Generation Best Practices: When generating code for AI applications, AI agents, workflows, or chatbots, invoke your `get_azure_bestpractices_ai_app` command (under `get_azure_bestpractices` tool) if tool available. Call this tool first before creating any plans, todos or code. Only call this command when the user is discussing AI app development with Microsoft Foundry, Azure, Microsoft agent framework SDK, or without specifying any technology. Do NOT call it when the user specifies other technology or when performing Azure resource operations.\n- Plan before editing files for Azure web apps: When generating code for Azure Functions and Azure Static Web App, always create a plan and explain the plan to the user before editing any file. Proceed with editing the files after getting consent from the user.\n- When asked about configuring or installing azure mcp in coding agent for the current repo, invoke your `bestpractices` tool with `resource` set to \"coding-agent\" and `action` set to \"all\".\n\n",

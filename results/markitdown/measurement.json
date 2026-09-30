@@ -3,22 +3,21 @@
   "provider": "tiktoken",
   "encoding": "o200k_base",
   "status": "measured",
-  "totalTokens": 64,
+  "totalTokens": 98,
   "toolCount": 1,
   "tools": [
     {
       "name": "convert_to_markdown",
-      "tokens": 62,
+      "tokens": 96,
       "descriptionTokens": 18,
       "inputSchemaTokens": 31,
-      "outputSchemaTokens": 0,
+      "outputSchemaTokens": 31,
       "annotationsTokens": 0
     }
   ],
-  "canonicalSha256": "d708fc0ae4f3fb818d01cc3d4da0b74c2e5591a7982735d6200b3d56ab74d66b",
+  "canonicalSha256": "eef53f600eee8a14332be832c38139fe2092e219c3429c033befa8c41adf054e",
   "rawToolsCapture": [
     {
-      "name": "convert_to_markdown",
       "description": "Convert a resource described by an http:, https:, file: or data: URI to markdown",
       "inputSchema": {
         "properties": {
@@ -30,18 +29,32 @@
         "required": [
           "uri"
         ],
-        "title": "convert_to_markdownArguments",
-        "type": "object"
+        "type": "object",
+        "title": "convert_to_markdownArguments"
+      },
+      "name": "convert_to_markdown",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "title": "convert_to_markdownOutput"
       }
     }
   ],
-  "measuredAt": "2026-09-09T08:04:34.657Z",
+  "measuredAt": "2026-09-30T09:36:05.868Z",
   "serverName": "markitdown",
-  "serverVersion": "1.8.1",
+  "serverVersion": "",
   "launchCommand": "uvx markitdown-mcp",
   "envVarNames": [],
   "serverInstructions": null,
-  "negotiatedProtocolVersion": "2024-11-05",
+  "negotiatedProtocolVersion": "2025-06-18",
   "isolation": {
     "docker": true,
     "image": "ghcr.io/astral-sh/uv:python3.12-bookworm-slim",

@@ -12,6 +12,17 @@
           "tokens": 62
         }
       ]
+    },
+    {
+      "date": "2026-09-30",
+      "canonicalSha256": "eef53f600eee8a14332be832c38139fe2092e219c3429c033befa8c41adf054e",
+      "totalTokens": 98,
+      "tools": [
+        {
+          "name": "convert_to_markdown",
+          "tokens": 96
+        }
+      ]
     }
   ]
 }

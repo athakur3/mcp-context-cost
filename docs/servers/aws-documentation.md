@@ -1,8 +1,8 @@
 # aws-documentation — context cost
 
-**5,045 tokens** across 5 tools — *moderate* (5–15K). Measured 2026-09-09 under [methodology v1.0](../METHODOLOGY.html).
+**5,008 tokens** across 5 tools — *moderate* (5–15K). Measured 2026-09-30 under [methodology v1.0](../METHODOLOGY.html).
 
-An Anthropic request carries 3,380 of those tokens as tool definitions, and Claude counts those at **5,749**.
+An Anthropic request carries 3,367 of those tokens as tool definitions. What Claude makes of them is not published for this server: its Claude count is missing, or was taken against a capture this measurement has since replaced.
 
 | | |
 |---|---|
@@ -12,7 +12,7 @@ An Anthropic request carries 3,380 of those tokens as tool definitions, and Clau
 | launch command | `uvx awslabs.aws-documentation-mcp-server@latest` |
 | isolation | docker · ghcr.io/astral-sh/uv:python3.12-bookworm-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | none |
-| canonical SHA-256 | `096790f5b6a85d5faf9b4a09edbeddc34de23ed3c26c195bee05c42fb7f8b6a7` |
+| canonical SHA-256 | `3a368215b275dbc5c029f9f89998588903db35a1e2aaba325922c2c2d4f18b0f` |
 | category | vendor-official |
 | source | https://github.com/awslabs/mcp |
 
@@ -20,25 +20,13 @@ An Anthropic request carries 3,380 of those tokens as tool definitions, and Clau
 
 | tool | tokens | share | description | input schema | output schema |
 |---|---:|---:|---:|---:|---:|
-| search_documentation | 1,956 | 38.8% | 657 | 239 | 1,007 |
-| search_table | 1,361 | 27.0% | 658 | 172 | 464 |
-| read_sections | 634 | 12.6% | 467 | 75 | 29 |
-| read_documentation | 571 | 11.3% | 377 | 125 | 30 |
-| recommend | 521 | 10.3% | 325 | 41 | 120 |
+| search_documentation | 1,956 | 39.1% | 657 | 239 | 1,007 |
+| search_table | 1,324 | 26.4% | 645 | 172 | 440 |
+| read_sections | 634 | 12.7% | 467 | 75 | 29 |
+| read_documentation | 571 | 11.4% | 377 | 125 | 30 |
+| recommend | 521 | 10.4% | 325 | 41 | 120 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
-
-## What this costs on Claude
-
-Measured 2026-09-14 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
-
-| | tokens | |
-|---|---:|---|
-| o200k, full capture | 5,045 | the badge number — every byte `tools/list` returned |
-| o200k, Anthropic fields only | 3,380 | 33.0% of the capture is MCP-only metadata |
-| **Claude, same fields** | **5,749** | 1.14× the badge number |
-
-An Anthropic tool definition carries `name`, `description`, and `input_schema` and nothing else, so `title`, `annotations`, `outputSchema`, `execution`, and `icons` are dropped before the request — that is the second row. The third row is the same tools counted by Anthropic, which is larger than the second because Anthropic's tokenizer is denser on this content than o200k_base *and* the API adds its own framing (at most 328 tokens of it fixed, measured against a single minimal tool). The two effects run in opposite directions, which is why the Claude number is not a fixed multiple of the badge.
 
 ## Over time
 
@@ -50,6 +38,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-09-04 | 5,045 | 5 | not recorded | docker | −29 |
 | 2026-09-05 | 5,045 | 5 | not recorded | docker | no change |
 | 2026-09-09 | 5,045 | 5 | not recorded | docker | no change |
+| 2026-09-30 | 5,008 | 5 | not recorded | docker | −37 |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

@@ -104,6 +104,114 @@
           "tokens": 128
         }
       ]
+    },
+    {
+      "date": "2026-09-30",
+      "canonicalSha256": "af2dba5441a3ab02c472d49212573e953d5e60084942ee079c8f6bd8e6a1c5de",
+      "totalTokens": 4413,
+      "version": "1.64.0-alpha-1790635538000",
+      "tools": [
+        {
+          "name": "browser_close",
+          "tokens": 70
+        },
+        {
+          "name": "browser_resize",
+          "tokens": 107
+        },
+        {
+          "name": "browser_console_messages",
+          "tokens": 192
+        },
+        {
+          "name": "browser_handle_dialog",
+          "tokens": 112
+        },
+        {
+          "name": "browser_emulate_media",
+          "tokens": 281
+        },
+        {
+          "name": "browser_evaluate",
+          "tokens": 195
+        },
+        {
+          "name": "browser_file_upload",
+          "tokens": 111
+        },
+        {
+          "name": "browser_drop",
+          "tokens": 243
+        },
+        {
+          "name": "browser_find",
+          "tokens": 253
+        },
+        {
+          "name": "browser_fill_form",
+          "tokens": 255
+        },
+        {
+          "name": "browser_press_key",
+          "tokens": 110
+        },
+        {
+          "name": "browser_type",
+          "tokens": 198
+        },
+        {
+          "name": "browser_navigate",
+          "tokens": 92
+        },
+        {
+          "name": "browser_navigate_back",
+          "tokens": 78
+        },
+        {
+          "name": "browser_network_requests",
+          "tokens": 195
+        },
+        {
+          "name": "browser_network_request",
+          "tokens": 218
+        },
+        {
+          "name": "browser_run_code_unsafe",
+          "tokens": 212
+        },
+        {
+          "name": "browser_take_screenshot",
+          "tokens": 336
+        },
+        {
+          "name": "browser_snapshot",
+          "tokens": 194
+        },
+        {
+          "name": "browser_click",
+          "tokens": 205
+        },
+        {
+          "name": "browser_drag",
+          "tokens": 183
+        },
+        {
+          "name": "browser_hover",
+          "tokens": 122
+        },
+        {
+          "name": "browser_select_option",
+          "tokens": 162
+        },
+        {
+          "name": "browser_tabs",
+          "tokens": 154
+        },
+        {
+          "name": "browser_wait_for",
+          "tokens": 133
+        }
+      ]
     }
   ]
 }

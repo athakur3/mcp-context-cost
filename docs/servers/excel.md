@@ -1,18 +1,18 @@
 # excel — context cost
 
-**4,266 tokens** across 25 tools — *light* (1–5K). Measured 2026-09-09 under [methodology v1.0](../METHODOLOGY.html).
+**10,493 tokens** across 26 tools — *moderate* (5–15K). Measured 2026-09-30 under [methodology v1.0](../METHODOLOGY.html).
 
-An Anthropic request carries 3,080 of those tokens as tool definitions, and Claude counts those at **6,338**.
+An Anthropic request carries 7,798 of those tokens as tool definitions. What Claude makes of them is not published for this server: its Claude count is missing, or was taken against a capture this measurement has since replaced.
 
 | | |
 |---|---|
-| server (self-reported) | excel-mcp v1.30.0 |
+| server (self-reported) | excel-mcp-server v1.1.1 |
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `uvx excel-mcp-server stdio` |
 | isolation | docker · ghcr.io/astral-sh/uv:python3.12-bookworm-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | none |
-| canonical SHA-256 | `cf374a8866847f36b743f5b59176d3908466f40c2d5d9b3cb0462ea47af40999` |
+| canonical SHA-256 | `821aae9d8816d70368d42aea139dc573c8ca9a1a71cdc99e15611ce2cf576c81` |
 | category | community |
 | source | https://github.com/haris-musa/excel-mcp-server |
 
@@ -20,45 +20,34 @@ An Anthropic request carries 3,080 of those tokens as tool definitions, and Clau
 
 | tool | tokens | share | description | input schema | output schema |
 |---|---:|---:|---:|---:|---:|
-| format_range | 472 | 11.1% | 8 | 408 | 29 |
-| read_data_from_excel | 293 | 6.9% | 107 | 109 | 31 |
-| write_data_to_excel | 244 | 5.7% | 82 | 90 | 31 |
-| create_pivot_table | 219 | 5.1% | 6 | 152 | 31 |
-| create_chart | 198 | 4.6% | 5 | 137 | 29 |
-| get_data_validation_info | 191 | 4.5% | 68 | 48 | 31 |
-| copy_range | 185 | 4.3% | 9 | 120 | 29 |
-| create_table | 176 | 4.1% | 12 | 108 | 29 |
-| delete_range | 161 | 3.8% | 10 | 95 | 29 |
-| validate_excel_range | 158 | 3.7% | 10 | 89 | 30 |
-| apply_formula | 151 | 3.5% | 19 | 72 | 29 |
-| delete_sheet_rows | 147 | 3.4% | 11 | 78 | 30 |
-| delete_sheet_columns | 147 | 3.4% | 11 | 78 | 30 |
-| unmerge_cells | 145 | 3.4% | 7 | 79 | 30 |
-| insert_rows | 144 | 3.4% | 11 | 77 | 29 |
-| insert_columns | 144 | 3.4% | 11 | 77 | 29 |
-| validate_formula_syntax | 143 | 3.4% | 8 | 74 | 31 |
-| merge_cells | 140 | 3.3% | 6 | 78 | 29 |
-| copy_worksheet | 126 | 3.0% | 5 | 63 | 30 |
-| rename_worksheet | 126 | 3.0% | 5 | 63 | 30 |
-| get_workbook_metadata | 122 | 2.9% | 11 | 50 | 31 |
-| get_merged_cells | 117 | 2.7% | 7 | 48 | 31 |
-| create_worksheet | 111 | 2.6% | 6 | 47 | 30 |
-| delete_worksheet | 110 | 2.6% | 5 | 47 | 30 |
-| create_workbook | 94 | 2.2% | 5 | 31 | 30 |
+| format_range | 884 | 8.4% | 71 | 732 | 29 |
+| set_sheet_layout | 763 | 7.3% | 93 | 588 | 30 |
+| add_data_validation | 685 | 6.5% | 79 | 524 | 30 |
+| add_conditional_format | 680 | 6.5% | 85 | 511 | 31 |
+| describe_sheet | 647 | 6.2% | 29 | 99 | 472 |
+| create_chart | 618 | 5.9% | 36 | 505 | 29 |
+| create_summary_table | 512 | 4.9% | 65 | 367 | 30 |
+| read_range | 502 | 4.8% | 60 | 263 | 131 |
+| find_cells | 500 | 4.8% | 12 | 304 | 138 |
+| read_vba | 452 | 4.3% | 102 | 153 | 147 |
+| write_range | 414 | 3.9% | 115 | 194 | 57 |
+| describe_workbook | 375 | 3.6% | 48 | 74 | 203 |
+| insert_rows_or_columns | 323 | 3.1% | 41 | 199 | 31 |
+| delete_rows_or_columns | 323 | 3.1% | 41 | 199 | 31 |
+| create_table | 319 | 3.0% | 16 | 228 | 29 |
+| copy_range | 302 | 2.9% | 29 | 196 | 29 |
+| merge_cells | 270 | 2.6% | 23 | 167 | 29 |
+| clear_range | 257 | 2.4% | 14 | 168 | 29 |
+| create_workbook | 236 | 2.2% | 8 | 151 | 30 |
+| create_sheet | 229 | 2.2% | 5 | 149 | 29 |
+| rename_sheet | 229 | 2.2% | 16 | 138 | 29 |
+| copy_sheet | 227 | 2.2% | 14 | 138 | 29 |
+| import_workbook | 222 | 2.1% | 17 | 128 | 30 |
+| list_workbooks | 218 | 2.1% | 7 | 70 | 93 |
+| delete_sheet | 182 | 1.7% | 8 | 99 | 29 |
+| export_workbook | 147 | 1.4% | 27 | 74 | 0 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
-
-## What this costs on Claude
-
-Measured 2026-09-14 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
-
-| | tokens | |
-|---|---:|---|
-| o200k, full capture | 4,266 | the badge number — every byte `tools/list` returned |
-| o200k, Anthropic fields only | 3,080 | 27.8% of the capture is MCP-only metadata |
-| **Claude, same fields** | **6,338** | 1.49× the badge number |
-
-An Anthropic tool definition carries `name`, `description`, and `input_schema` and nothing else, so `title`, `annotations`, `outputSchema`, `execution`, and `icons` are dropped before the request — that is the second row. The third row is the same tools counted by Anthropic, which is larger than the second because Anthropic's tokenizer is denser on this content than o200k_base *and* the API adds its own framing (at most 328 tokens of it fixed, measured against a single minimal tool). The two effects run in opposite directions, which is why the Claude number is not a fixed multiple of the badge.
 
 ## Over time
 
@@ -69,6 +58,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-09-04 | 4,266 | 25 | 1.29.1 | docker | no change |
 | 2026-09-05 | 4,266 | 25 | 1.29.1 | docker | no change |
 | 2026-09-09 | 4,266 | 25 | 1.30.0 | docker | no change |
+| 2026-09-30 | 10,493 | 26 | 1.1.1 | docker | +6,227 |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

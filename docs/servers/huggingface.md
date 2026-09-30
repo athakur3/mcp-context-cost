@@ -1,18 +1,18 @@
 # huggingface — context cost
 
-**4,724 tokens** across 4 tools — *light* (1–5K). Measured 2026-09-09 under [methodology v1.0](../METHODOLOGY.html).
+**4,910 tokens** across 4 tools — *light* (1–5K). Measured 2026-09-30 under [methodology v1.0](../METHODOLOGY.html).
 
-An Anthropic request carries 1,604 of those tokens as tool definitions, and Claude counts those at **3,043**.
+An Anthropic request carries 1,796 of those tokens as tool definitions. What Claude makes of them is not published for this server: its Claude count is missing, or was taken against a capture this measurement has since replaced.
 
 | | |
 |---|---|
-| server (self-reported) | huggingface.co/mcp v0.4.15 |
+| server (self-reported) | huggingface.co/mcp v0.4.25 |
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y mcp-remote https://huggingface.co/mcp` |
 | isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | none |
-| canonical SHA-256 | `a2e48e88545d92665679b878c9e66f4f902af2a11bccafc29cc6e627def941ae` |
+| canonical SHA-256 | `3bc9987909c0f43691f98cb4e2fd56d7bdd04aa87b35c95d137f74c67bf4022d` |
 | category | vendor-official |
 | source | https://github.com/huggingface/hf-mcp-server |
 
@@ -20,24 +20,12 @@ An Anthropic request carries 1,604 of those tokens as tool definitions, and Clau
 
 | tool | tokens | share | description | input schema | output schema |
 |---|---:|---:|---:|---:|---:|
-| hf_fs | 1,957 | 41.4% | 596 | 142 | 1,059 |
-| hf_whoami | 1,948 | 41.2% | 30 | 26 | 1,832 |
-| hub_repo_details | 453 | 9.6% | 76 | 327 | 0 |
-| hub_repo_search | 364 | 7.7% | 38 | 278 | 0 |
+| hf_fs | 2,152 | 43.8% | 734 | 191 | 1,062 |
+| hf_whoami | 1,939 | 39.5% | 30 | 26 | 1,823 |
+| hub_repo_details | 453 | 9.2% | 76 | 327 | 0 |
+| hub_repo_search | 364 | 7.4% | 38 | 278 | 0 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
-
-## What this costs on Claude
-
-Measured 2026-09-14 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
-
-| | tokens | |
-|---|---:|---|
-| o200k, full capture | 4,724 | the badge number — every byte `tools/list` returned |
-| o200k, Anthropic fields only | 1,604 | 66.0% of the capture is MCP-only metadata |
-| **Claude, same fields** | **3,043** | 0.64× the badge number |
-
-An Anthropic tool definition carries `name`, `description`, and `input_schema` and nothing else, so `title`, `annotations`, `outputSchema`, `execution`, and `icons` are dropped before the request — that is the second row. The third row is the same tools counted by Anthropic, which is larger than the second because Anthropic's tokenizer is denser on this content than o200k_base *and* the API adds its own framing (at most 328 tokens of it fixed, measured against a single minimal tool). The two effects run in opposite directions, which is why the Claude number is not a fixed multiple of the badge.
 
 ## Over time
 
@@ -48,6 +36,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-09-04 | 4,724 | 4 | 0.4.15 | docker | +33 |
 | 2026-09-05 | 4,724 | 4 | 0.4.15 | docker | no change |
 | 2026-09-09 | 4,724 | 4 | 0.4.15 | docker | no change |
+| 2026-09-30 | 4,910 | 4 | 0.4.25 | docker | +186 |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

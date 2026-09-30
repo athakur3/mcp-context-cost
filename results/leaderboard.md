@@ -2,11 +2,11 @@
 
 Tokens = o200k_base count of the canonical `tools/list` bytes ([methodology v1.0](../docs/METHODOLOGY.md)). Measured 87/107 candidates; every candidate is listed — failures are findings, not omissions. Server names link to their per-tool breakdown.
 
-The **claude** column is the same tools measured through Anthropic's `count_tokens` on `claude-opus-5` (2026-09-14, method `tools-delta/v1`): the tokens the server's tools add to a request, measured for the top 83. It is not a rescaling of the o200k column — two effects pull in opposite directions, and the [per-server pages](../docs/servers/) break both out. See [Claude divergence](../docs/METHODOLOGY.md#claude-divergence).
+The **claude** column is the same tools measured through Anthropic's `count_tokens` on `claude-opus-5` (2026-09-14, method `tools-delta/v1`): the tokens the server's tools add to a request, measured for the top 70. It is not a rescaling of the o200k column — two effects pull in opposite directions, and the [per-server pages](../docs/servers/) break both out. See [Claude divergence](../docs/METHODOLOGY.md#claude-divergence).
 
-The **mcp-tokens** column is the other CLI's count of the same server — `sd2k/mcp-tokens` `v0.2.5` (2026-09-16, method `cli-cross-check/v1`), invoked with `--model gpt-4o` so both columns count o200k tokens. Its structs model the three request fields (name/description/input\_schema), so its number sits below the tokens column wherever a server ships metadata those fields do not carry — that gap is each server's field-selection share, published on its page, not a disagreement of counters. The parenthesized percentage is the disagreement of counters: the CLI's count against ours of the same three-field projection, −0.8% to +1.4% across the 84 rows where both tools saw the same tool set. A row prints only while the comparison is between like and like: the same tool names on both sides, and our capture unchanged since the run. See [CLI cross-check](../docs/METHODOLOGY.md#cli-cross-check).
+The **mcp-tokens** column is the other CLI's count of the same server — `sd2k/mcp-tokens` `v0.2.5` (2026-09-30, method `cli-cross-check/v1`), invoked with `--model gpt-4o` so both columns count o200k tokens. Its structs model the three request fields (name/description/input\_schema), so its number sits below the tokens column wherever a server ships metadata those fields do not carry — that gap is each server's field-selection share, published on its page, not a disagreement of counters. The parenthesized percentage is the disagreement of counters: the CLI's count against ours of the same three-field projection, −0.8% to +1.4% across the 84 rows where both tools saw the same tool set. A row prints only while the comparison is between like and like: the same tool names on both sides, and our capture unchanged since the run. See [CLI cross-check](../docs/METHODOLOGY.md#cli-cross-check).
 
-**Of the servers whose cost has moved at all, 16 moved upward and 6 moved down** — a net +538 tokens across the set. Most entries here launch unpinned, so a movement is a real upstream release landing in real context windows, and only measurements taken under the same isolation are compared. Every movement, which half of the server moved, and where the tokens went: [regressions.md](regressions.md).
+**Of the servers whose cost has moved at all, 17 moved upward and 11 moved down** — a net +10,818 tokens across the set. Most entries here launch unpinned, so a movement is a real upstream release landing in real context windows, and only measurements taken under the same isolation are compared. Every movement, which half of the server moved, and where the tokens went: [regressions.md](regressions.md).
 
 The **session start** column is what a client puts in context when it *defers* tool definitions until they are used: the server's tool names plus the `instructions` string it returns from `initialize` (method `deferred-load/v1`). The tokens column is what a client that loads every definition up front pays; this one is what the same server costs a client that does not. See [session-start load](../docs/METHODOLOGY.md#session-start-load).
 
@@ -15,48 +15,48 @@ The **session start** column is what a client puts in context when it *defers* t
 | # | server | tokens | mapped | session start | claude | mcp-tokens | tools | largest tool | status | category |
 |---:|---|---:|---:|---:|---:|---:|---:|---|---|---|
 | 1 | [github](../docs/servers/github.md) | 54,622 | 10,735 | 556 | 18,728 | 10,803 (+0.6%) | 44 | issue_write (2,050) | measured | vendor-official |
-| 2 | [comfyui-mcp](../docs/servers/comfyui-mcp.md) | 50,776 | 50,385 | 428 | 84,168 | 50,511 (+0.3%) | 41 | download_model (3,986) | measured | community |
+| 2 | [comfyui-mcp](../docs/servers/comfyui-mcp.md) | 50,268 | 49,877 | 428 | — | 50,003 (+0.3%) | 41 | download_model (3,986) | measured | community |
 | 3 | [agent-device](../docs/servers/agent-device.md) | 48,909 | 33,319 | 523 | — | 33,339 (+0.1%) | 57 | fill (4,848) | measured | community |
 | 4 | [xcodebuildmcp](../docs/servers/xcodebuildmcp.md) | 26,594 | 2,676 | 559 | 5,335 | 2,704 (+1.0%) | 24 | snapshot_ui (2,139) | measured | community |
-| 5 | [brave-search](../docs/servers/brave-search.md) | 25,487 | 8,278 | 61 | 13,762 | 8,300 (+0.3%) | 8 | brave_place_search (17,295) | measured | vendor-official |
-| 6 | [anki](../docs/servers/anki.md) | 20,037 | 9,357 | 179 | 16,189 | 9,371 (+0.1%) | 50 | collection_stats (1,853) | measured | community |
+| 5 | [brave-search](../docs/servers/brave-search.md) | 25,500 | 8,291 | 61 | — | 8,313 (+0.3%) | 8 | brave_place_search (17,295) | measured | vendor-official |
+| 6 | [anki](../docs/servers/anki.md) | 21,608 | 10,032 | 189 | — | 10,046 (+0.1%) | 53 | collection_stats (1,853) | measured | community |
 | 7 | [notion](../docs/servers/notion.md) | 17,500 | 17,163 | 135 | 33,560 | 17,408 (+1.4%) | 24 | API-update-page-markdown (1,282) | measured | vendor-official |
 | 8 | [mcp-atlassian](../docs/servers/mcp-atlassian.md) | 17,311 | 12,823 | 347 | — | — | 63 | jira_update_proforma_form_answers (800) | dynamic | community |
-| 9 | [grafana](../docs/servers/grafana.md) | 16,774 | 15,460 | 731 | 26,641 | 15,465 (+0.0%) | 65 | alerting_manage_rules (1,368) | measured | vendor-official |
-| 10 | [azure](../docs/servers/azure.md) | 15,657 | 14,703 | 702 | 26,928 | 14,697 (−0.0%) | 70 | get_azure_bestpractices (454) | measured | vendor-official |
-| 11 | [octocode](../docs/servers/octocode.md) | 13,552 | 12,967 | 791 | 23,343 | 13,122 (+1.2%) | 14 | ghSearchPullRequests (1,799) | measured | community |
-| 12 | [githits](../docs/servers/githits.md) | 12,833 | 12,384 | 53 | 20,689 | 12,416 (+0.3%) | 16 | search (2,270) | measured | community |
-| 13 | [circleci](../docs/servers/circleci.md) | 11,912 | 11,755 | 61 | 19,164 | 11,750 (−0.0%) | 13 | run_rollback_pipeline (1,391) | measured | vendor-official |
-| 14 | [desktop-commander](../docs/servers/desktop-commander.md) | 11,837 | 11,057 | 99 | 19,306 | — | 26 | start_search (1,351) | dynamic | community |
-| 15 | [google-surf](../docs/servers/google-surf.md) | 10,948 | 6,412 | 21 | 11,232 | 6,472 (+0.9%) | 7 | project_memory (3,279) | measured | community |
-| 16 | [apify](../docs/servers/apify.md) | 10,452 | 4,793 | 1,035 | 8,297 | 4,803 (+0.2%) | 10 | search-actors (2,226) | measured | vendor-official |
-| 17 | [appium-mcp](../docs/servers/appium-mcp.md) | 10,267 | 9,798 | 328 | 17,001 | 9,843 (+0.5%) | 31 | appium_gesture (1,308) | measured | vendor-official |
-| 18 | [obsidian-rest](../docs/servers/obsidian-rest.md) | 10,173 | 5,878 | 65 | 10,172 | 5,855 (−0.4%) | 12 | obsidian_get_note (1,523) | measured | community |
-| 19 | [firecrawl](../docs/servers/firecrawl.md) | 9,561 | 8,869 | 342 | 16,428 | 8,993 (+1.4%) | 27 | firecrawl_search (1,391) | measured | vendor-official |
-| 20 | [accessibility-scanner](../docs/servers/accessibility-scanner.md) | 9,247 | 8,151 | 358 | 14,771 | 8,169 (+0.2%) | 34 | audit_site (1,100) | measured | community |
+| 9 | [google-surf](../docs/servers/google-surf.md) | 17,185 | 11,434 | 21 | — | 11,593 (+1.4%) | 7 | project_memory (7,869) | measured | community |
+| 10 | [grafana](../docs/servers/grafana.md) | 16,774 | 15,460 | 731 | 26,641 | 15,465 (+0.0%) | 65 | alerting_manage_rules (1,368) | measured | vendor-official |
+| 11 | [azure](../docs/servers/azure.md) | 14,808 | 13,844 | 706 | — | 13,838 (−0.0%) | 71 | get_azure_bestpractices (401) | measured | vendor-official |
+| 12 | [octocode](../docs/servers/octocode.md) | 13,552 | 12,967 | 791 | 23,343 | 13,122 (+1.2%) | 14 | ghSearchPullRequests (1,799) | measured | community |
+| 13 | [githits](../docs/servers/githits.md) | 12,833 | 12,384 | 53 | 20,689 | 12,416 (+0.3%) | 16 | search (2,270) | measured | community |
+| 14 | [circleci](../docs/servers/circleci.md) | 11,912 | 11,755 | 61 | 19,164 | 11,750 (−0.0%) | 13 | run_rollback_pipeline (1,391) | measured | vendor-official |
+| 15 | [desktop-commander](../docs/servers/desktop-commander.md) | 11,063 | 10,283 | 99 | — | — | 26 | start_search (1,351) | dynamic | community |
+| 16 | [excel](../docs/servers/excel.md) | 10,493 | 7,798 | 165 | — | 7,798 (+0.0%) | 26 | format_range (884) | measured | community |
+| 17 | [apify](../docs/servers/apify.md) | 10,452 | 4,793 | 1,035 | 8,297 | 4,803 (+0.2%) | 10 | search-actors (2,226) | measured | vendor-official |
+| 18 | [appium-mcp](../docs/servers/appium-mcp.md) | 10,267 | 9,798 | 328 | 17,001 | 9,843 (+0.5%) | 31 | appium_gesture (1,308) | measured | vendor-official |
+| 19 | [obsidian-rest](../docs/servers/obsidian-rest.md) | 10,173 | 5,878 | 65 | 10,172 | 5,855 (−0.4%) | 12 | obsidian_get_note (1,523) | measured | community |
+| 20 | [firecrawl](../docs/servers/firecrawl.md) | 9,561 | 8,869 | 342 | 16,428 | 8,993 (+1.4%) | 27 | firecrawl_search (1,391) | measured | vendor-official |
 | 21 | [redis](../docs/servers/redis.md) | 9,246 | 7,489 | 169 | 13,221 | 7,489 (+0.0%) | 53 | hybrid_search (510) | measured | vendor-official |
 | 22 | [basic-memory](../docs/servers/basic-memory.md) | 9,188 | 7,120 | 71 | 12,426 | 7,113 (−0.1%) | 23 | search_notes (970) | measured | community |
 | 23 | [hubspot](../docs/servers/hubspot.md) | 9,158 | 8,433 | 133 | 14,398 | 8,446 (+0.2%) | 21 | hubspot-search-objects (964) | measured | vendor-official |
-| 24 | [postgres-mcp](../docs/servers/postgres-mcp.md) | 8,632 | 1,178 | 39 | 2,381 | 1,178 (+0.0%) | 9 | explain_query (1,147) | measured | community |
-| 25 | [ssh-manager](../docs/servers/ssh-manager.md) | 8,446 | 8,149 | 143 | 14,196 | 8,162 (+0.2%) | 37 | ssh_sync (477) | measured | community |
-| 26 | [serena](../docs/servers/serena.md) | 8,204 | 6,550 | 138 | 11,494 | 6,528 (−0.3%) | 29 | find_symbol (883) | measured | community |
-| 27 | [mongodb](../docs/servers/mongodb.md) | 7,926 | 4,501 | 103 | 8,765 | 4,519 (+0.4%) | 27 | explain (813) | measured | vendor-official |
-| 28 | [blender](../docs/servers/blender.md) | 6,928 | 6,160 | 169 | 10,576 | 6,162 (+0.0%) | 28 | download_polypizza_model (490) | measured | community |
-| 29 | [shopify-dev](../docs/servers/shopify-dev.md) | 6,841 | 6,793 | 26 | 11,831 | 6,804 (+0.2%) | 6 | learn_shopify_api (2,847) | measured | vendor-official |
-| 30 | [bitbucket-mcp](../docs/servers/bitbucket-mcp.md) | 6,156 | 6,156 | 230 | 12,210 | 6,156 (+0.0%) | 47 | listPipelineRuns (258) | measured | community |
-| 31 | [agentphone](../docs/servers/agentphone.md) | 6,139 | 5,587 | 100 | — | 5,618 (+0.6%) | 28 | create_agent (763) | measured | community |
-| 32 | [sentry](../docs/servers/sentry.md) | 6,086 | 5,442 | 40 | 9,481 | 5,432 (−0.2%) | 9 | update_issue (1,248) | measured | vendor-official |
-| 33 | [pinecone](../docs/servers/pinecone.md) | 5,903 | 5,679 | 294 | 9,184 | 5,680 (+0.0%) | 9 | search-records (1,179) | measured | vendor-official |
-| 34 | [chrome-devtools](../docs/servers/chrome-devtools.md) | 5,717 | 5,100 | 98 | 9,215 | 5,080 (−0.4%) | 29 | emulate (418) | measured | vendor-official |
-| 35 | [kubernetes](../docs/servers/kubernetes.md) | 5,268 | 5,089 | 95 | 9,165 | 5,089 (+0.0%) | 23 | kubectl_create (945) | measured | community |
-| 36 | [codebase-memory-mcp](../docs/servers/codebase-memory-mcp.md) | 5,258 | 4,774 | 205 | 8,585 | 4,776 (+0.0%) | 15 | search_graph (905) | measured | community |
+| 24 | [accessibility-scanner](../docs/servers/accessibility-scanner.md) | 9,111 | 8,055 | 355 | — | 8,074 (+0.2%) | 33 | audit_site (1,100) | measured | community |
+| 25 | [postgres-mcp](../docs/servers/postgres-mcp.md) | 8,632 | 1,178 | 39 | 2,381 | 1,178 (+0.0%) | 9 | explain_query (1,147) | measured | community |
+| 26 | [ssh-manager](../docs/servers/ssh-manager.md) | 8,446 | 8,149 | 143 | 14,196 | 8,162 (+0.2%) | 37 | ssh_sync (477) | measured | community |
+| 27 | [serena](../docs/servers/serena.md) | 8,204 | 6,550 | 138 | 11,494 | 6,528 (−0.3%) | 29 | find_symbol (883) | measured | community |
+| 28 | [mongodb](../docs/servers/mongodb.md) | 7,926 | 4,501 | 103 | 8,765 | 4,519 (+0.4%) | 27 | explain (813) | measured | vendor-official |
+| 29 | [blender](../docs/servers/blender.md) | 6,928 | 6,160 | 169 | 10,576 | 6,162 (+0.0%) | 28 | download_polypizza_model (490) | measured | community |
+| 30 | [shopify-dev](../docs/servers/shopify-dev.md) | 6,841 | 6,793 | 26 | 11,831 | 6,804 (+0.2%) | 6 | learn_shopify_api (2,847) | measured | vendor-official |
+| 31 | [bitbucket-mcp](../docs/servers/bitbucket-mcp.md) | 6,156 | 6,156 | 230 | 12,210 | 6,156 (+0.0%) | 47 | listPipelineRuns (258) | measured | community |
+| 32 | [agentphone](../docs/servers/agentphone.md) | 6,139 | 5,587 | 100 | — | 5,618 (+0.6%) | 28 | create_agent (763) | measured | community |
+| 33 | [sentry](../docs/servers/sentry.md) | 6,086 | 5,442 | 40 | 9,481 | 5,432 (−0.2%) | 9 | update_issue (1,248) | measured | vendor-official |
+| 34 | [pinecone](../docs/servers/pinecone.md) | 5,903 | 5,679 | 294 | 9,184 | 5,680 (+0.0%) | 9 | search-records (1,179) | measured | vendor-official |
+| 35 | [chrome-devtools](../docs/servers/chrome-devtools.md) | 5,717 | 5,100 | 98 | 9,215 | 5,080 (−0.4%) | 29 | emulate (418) | measured | vendor-official |
+| 36 | [kubernetes](../docs/servers/kubernetes.md) | 5,268 | 5,089 | 95 | 9,165 | 5,089 (+0.0%) | 23 | kubectl_create (945) | measured | community |
 | 37 | [clinicaltrialsgov](../docs/servers/clinicaltrialsgov.md) | 5,134 | 2,879 | 54 | 5,540 | 2,874 (−0.2%) | 7 | clinicaltrials_search_studies (1,257) | measured | community |
-| 38 | [aws-documentation](../docs/servers/aws-documentation.md) | 5,045 | 3,380 | 425 | 5,749 | 3,380 (+0.0%) | 5 | search_documentation (1,956) | measured | vendor-official |
+| 38 | [aws-documentation](../docs/servers/aws-documentation.md) | 5,008 | 3,367 | 425 | — | 3,367 (+0.0%) | 5 | search_documentation (1,956) | measured | vendor-official |
 | 39 | [supabase](../docs/servers/supabase.md) | 5,007 | 4,062 | 337 | 7,323 | 4,061 (−0.0%) | 29 | query_logs (794) | measured | vendor-official |
-| 40 | [huggingface](../docs/servers/huggingface.md) | 4,724 | 1,604 | 378 | 3,043 | 1,611 (+0.4%) | 4 | hf_fs (1,957) | measured | vendor-official |
-| 41 | [excel](../docs/servers/excel.md) | 4,266 | 3,080 | 106 | 6,338 | 3,080 (+0.0%) | 25 | format_range (472) | measured | community |
+| 40 | [huggingface](../docs/servers/huggingface.md) | 4,910 | 1,796 | 378 | — | 1,803 (+0.4%) | 4 | hf_fs (2,152) | measured | vendor-official |
+| 41 | [playwright](../docs/servers/playwright.md) | 4,413 | 3,764 | 96 | — | 3,770 (+0.2%) | 25 | browser_take_screenshot (336) | measured | vendor-official |
 | 42 | [airtable](../docs/servers/airtable.md) | 4,186 | 2,531 | 50 | 4,555 | 2,533 (+0.1%) | 16 | list_records (395) | measured | community |
-| 43 | [playwright](../docs/servers/playwright.md) | 4,024 | 3,402 | 91 | 6,172 | 3,409 (+0.2%) | 24 | browser_take_screenshot (329) | measured | vendor-official |
+| 43 | [codebase-memory-mcp](../docs/servers/codebase-memory-mcp.md) | 4,065 | 3,606 | 119 | — | 3,654 (+1.3%) | 17 | trace_path (403) | measured | community |
 | 44 | [arxiv](../docs/servers/arxiv.md) | 3,960 | 3,699 | 84 | 6,622 | 3,696 (−0.1%) | 19 | search_papers (516) | measured | community |
 | 45 | [github-legacy](../docs/servers/github-legacy.md) | 3,548 | 3,548 | 103 | 6,662 | 3,564 (+0.5%) | 26 | create_pull_request_review (360) | measured | official-reference |
 | 46 | [playwright-community](../docs/servers/playwright-community.md) | 2,920 | 2,920 | 158 | 5,688 | 2,925 (+0.2%) | 33 | playwright_get_visible_html (228) | measured | community |
@@ -99,7 +99,7 @@ The **session start** column is what a client puts in context when it *defers* t
 | 83 | [fetch](../docs/servers/fetch.md) | 238 | 238 | 3 | 700 | 238 (+0.0%) | 1 | fetch (236) | measured | official-reference |
 | 84 | [qdrant](../docs/servers/qdrant.md) | 188 | 188 | 11 | 607 | 188 (+0.0%) | 2 | qdrant-store (101) | measured | vendor-official |
 | 85 | [perplexity](../docs/servers/perplexity.md) | 133 | 133 | 7 | 503 | 134 (+0.8%) | 1 | perplexity_ask (131) | measured | vendor-official |
-| 86 | [markitdown](../docs/servers/markitdown.md) | 64 | 64 | 6 | 404 | 64 (+0.0%) | 1 | convert_to_markdown (62) | measured | vendor-official |
+| 86 | [markitdown](../docs/servers/markitdown.md) | 98 | 64 | 6 | — | 64 (+0.0%) | 1 | convert_to_markdown (96) | measured | vendor-official |
 | 87 | [postgres](../docs/servers/postgres.md) | 32 | 32 | 3 | 348 | 32 (+0.0%) | 1 | query (30) | measured | official-reference |
 
 ## Deprecated upstream
@@ -134,13 +134,13 @@ A row here is named for the package it launches, and one name is shared with an 
 | zapier | remote-auth-wall |  |
 | vercel | remote-auth-wall |  |
 | gmail | auth-required | server exited (code 1); stderr tail: Error: OAuth keys file not found. Please place gcp-oauth.keys.json in current directory or /tmp/.gmail-mcp |
-| slack | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: {"level":"error","timestamp":"2026-09-09T08:05:26Z","message":"Request f |
+| slack | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: {"level":"error","timestamp":"2026-09-30T09:37:02Z","message":"Request f |
 | kubernetes-containers | not-applicable | needs a kubeconfig with a cluster context; the isolation deliberately has neither — server exited (code 1); stderr tail: Error: unable to create kubernetes targ |
 | hana-cli | startup-failure | reproduced with the shared package cache bypassed; server exited (code 1); stderr tail: widely publicized security vulnerabilities, which have been fixed in the |
 | keboola | auth-required | server error 0 answering tools/list: Client error '401 Unauthorized' for url 'https://connection.keboola.com/v2/storage/tokens/verify' For more information chec |
 | hevy | auth-required | server exited (code 1); stderr tail: Hevy API key is required. Provide it via the HEVY_API_KEY environment variable. |
-| local-mcp | not-applicable | the vendor ships no Linux runtime yet — its own Go server is in preview for Windows and Linux — server exited (code 1); stderr tail: LMCP v3.0.408 (linux-amd64) |
-| windows-mcp | not-applicable | Windows only — it depends on pywin32, which publishes no Linux wheels — server exited (code 1); stderr tail: Downloading cpython-3.13.12-linux-x86_64-gnu (downl |
+| local-mcp | not-applicable | the vendor ships no Linux runtime yet — its own Go server is in preview for Windows and Linux — server exited (code 1); stderr tail: LMCP v3.0.415 (linux-amd64) |
+| windows-mcp | not-applicable | Windows only — it depends on pywin32, which publishes no Linux wheels — server exited (code 1); stderr tail: Downloading cpython-3.14.3-linux-x86_64-gnu (downlo |
 | yandex-tracker | auth-required | server exited (code 1); stderr tail: Downloading aiohttp (1.7MiB) Downloading grpcio-tools (2.6MiB) Downloading yandexcloud (6.5MiB)  Downloaded aiohttp  Downlo |
 | safari-mcp | not-applicable | macOS only — the package declares os darwin and npm refuses to install it on Linux — server exited (code 1); stderr tail: npm error code EBADPLATFORM npm error  |
 | codehealth-mcp | not-yet-run |  |

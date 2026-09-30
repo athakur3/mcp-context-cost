@@ -1,6 +1,6 @@
 # airtable — context cost
 
-**4,186 tokens** across 16 tools — *light* (1–5K). Measured 2026-09-09 under [methodology v1.0](../METHODOLOGY.html).
+**4,186 tokens** across 16 tools — *light* (1–5K). Measured 2026-09-30 under [methodology v1.0](../METHODOLOGY.html).
 
 An Anthropic request carries 2,531 of those tokens as tool definitions, and Claude counts those at **4,555**.
 
@@ -60,6 +60,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-09-04 | 4,186 | 16 | 1.14.0 | docker | −21 |
 | 2026-09-05 | 4,186 | 16 | 1.14.0 | docker | no change |
 | 2026-09-09 | 4,186 | 16 | 1.14.0 | docker | no change |
+| 2026-09-30 | 4,186 | 16 | 1.14.0 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

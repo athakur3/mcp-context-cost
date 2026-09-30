@@ -3,7 +3,7 @@
   "provider": "tiktoken",
   "encoding": "o200k_base",
   "status": "measured",
-  "totalTokens": 5045,
+  "totalTokens": 5008,
   "toolCount": 5,
   "tools": [
     {
@@ -24,10 +24,10 @@
     },
     {
       "name": "search_table",
-      "tokens": 1361,
-      "descriptionTokens": 658,
+      "tokens": 1324,
+      "descriptionTokens": 645,
       "inputSchemaTokens": 172,
-      "outputSchemaTokens": 464,
+      "outputSchemaTokens": 440,
       "annotationsTokens": 0
     },
     {
@@ -47,7 +47,7 @@
       "annotationsTokens": 0
     }
   ],
-  "canonicalSha256": "096790f5b6a85d5faf9b4a09edbeddc34de23ed3c26c195bee05c42fb7f8b6a7",
+  "canonicalSha256": "3a368215b275dbc5c029f9f89998588903db35a1e2aaba325922c2c2d4f18b0f",
   "rawToolsCapture": [
     {
       "description": "Fetch and convert an AWS documentation page to markdown format.\n\n    ## Usage\n\n    This tool retrieves the content of an AWS documentation page and converts it to markdown format.\n    For long documents, you can make multiple calls with different start_index values to retrieve\n    the entire content in chunks.\n\n    ## URL Requirements\n\n    - Must be from the docs.aws.amazon.com domain\n    - Must end with .html\n\n    ## Example URLs\n\n    - https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html\n    - https://docs.aws.amazon.com/lambda/latest/dg/lambda-invocation.html\n\n    ## Output Format\n\n    The output is formatted as markdown text with:\n    - Preserved headings and structure\n    - Code blocks for examples\n    - Lists and tables converted to markdown format\n\n    ## Large Tables\n\n    Tables with more than 20 rows are automatically truncated to show only the header and 5 sample rows,\n    along with a hint to use the `search_table` tool. Use `search_table` to filter and retrieve specific\n    rows from large tables (e.g., service quotas, IAM actions).\n\n    ## Handling Long Documents\n\n    If the response indicates the document was truncated, you have several options:\n\n    1. **Continue Reading**: Make another call with start_index set to the end of the previous response\n    2. **Stop Early**: For very long documents (>30,000 characters), if you've already found the specific information needed, you can stop reading\n\n    Args:\n        ctx: MCP context for logging and error handling\n        url: URL of the AWS documentation page to read\n        max_length: Maximum number of characters to return\n        start_index: On return output starting at this character index\n\n    Returns:\n        Markdown content of the AWS documentation\n    ",
@@ -136,7 +136,7 @@
       }
     },
     {
-      "description": "Search for specific rows in a large documentation table.\n\n    Use this tool when you need specific rows from a large documentation table\n    (e.g., service quotas, pricing tables, supported models lists). Returns\n    matching rows as JSON instead of dumping the entire table.\n\n    This is more efficient than read_sections for pages with hundreds of table rows.\n    If read_sections or read_documentation indicates a table was truncated, use this\n    tool to find the specific rows you need.\n\n    ## Section Title\n\n    - If you know the exact section title, provide it for precision\n    - If unsure, omit section_title — the tool will search all tables on the page\n    - Use section titles from search_documentation results (TOC) or read_documentation output\n    - If the section title is wrong, the hint field will list available sections\n\n    ## URL Requirements\n\n    - Must be from the docs.aws.amazon.com domain\n    - Must end with .html\n\n    ## Example Usage\n\n    ```\n    # With section title (searches all tables in that section):\n    search_table(\n        url='https://docs.aws.amazon.com/general/latest/gr/bedrock.html',\n        section_title='Amazon Bedrock service quotas',\n        query='Titan Text Embeddings V2',\n    )\n\n    # Without section title (searches all tables on the page):\n    search_table(\n        url='https://docs.aws.amazon.com/general/latest/gr/bedrock.html',\n        query='Claude 3 Sonnet requests',\n    )\n    ```\n\n    ## Response Format\n\n    Returns a SearchTableResponse with:\n    - tables_searched: Number of tables searched\n    - tables_with_matches: Number of tables containing matching rows\n    - hint: Guidance message when no matches found, section not found, or no tables on page\n    - error: Error message on HTTP/transport failures only\n    - results: Array of table result objects, each with:\n        - table_heading: The sub-heading above the table (if any)\n        - columns: Column headers for that table\n        - parent_columns: (optional) For rowspan/nested tables, which columns are group headers\n        - child_columns: (optional) For rowspan/nested tables, which columns are nested under groups\n        - total_rows: Total rows (or groups, for nested tables) in that table\n        - matched_rows: Number of rows/groups matching the query per table\n        - showing: Number of rows/groups returned per table (capped by max_rows per table)\n        - rows: Array of matching row objects. For flat tables: {column → value}.\n          For nested tables: {parent_col → value, ..., \"rows\": [{child_col → value}, ...]}\n\n    Args:\n        ctx: MCP context for logging and error handling\n        url: AWS documentation page URL (must end with .html)\n        section_title: The section heading containing the table (optional — omit to search all tables on the page)\n        query: Search term to filter rows (all words must match, case-insensitive)\n        max_rows: Maximum matching rows to return per table (default 20)\n\n    Returns:\n        SearchTableResponse with matching rows grouped by table\n    ",
+      "description": "Search for specific rows in a large documentation table.\n\n    Use this tool when you need specific rows from a large documentation table\n    (e.g., service quotas, pricing tables, supported models lists). Returns\n    matching rows as JSON instead of dumping the entire table.\n\n    This is more efficient than read_sections for pages with hundreds of table rows.\n    If read_sections or read_documentation indicates a table was truncated, use this\n    tool to find the specific rows you need.\n\n    ## Section Title\n\n    - If you know the exact section title, provide it for precision\n    - If unsure, omit section_title — the tool will search all tables on the page\n    - Use section titles from search_documentation results (TOC) or read_documentation output\n    - If the section title is wrong, the hint field will list available sections\n\n    ## URL Requirements\n\n    - Must be from the docs.aws.amazon.com domain\n    - Must end with .html\n\n    ## Example Usage\n\n    ```\n    # With section title (searches all tables in that section):\n    search_table(\n        url='https://docs.aws.amazon.com/general/latest/gr/bedrock.html',\n        section_title='Amazon Bedrock service quotas',\n        query='Titan Text Embeddings V2',\n    )\n\n    # Without section title (searches all tables on the page):\n    search_table(\n        url='https://docs.aws.amazon.com/general/latest/gr/bedrock.html',\n        query='Claude 3 Sonnet requests',\n    )\n    ```\n\n    ## Response Format\n\n    Returns a SearchTableResponse with:\n    - tables_searched: Number of tables searched\n    - tables_with_matches: Number of tables containing matching rows\n    - hint: Guidance message when no matches found, section not found, or no tables on page\n    - results: Array of table result objects, each with:\n        - table_heading: The sub-heading above the table (if any)\n        - columns: Column headers for that table\n        - parent_columns: (optional) For rowspan/nested tables, which columns are group headers\n        - child_columns: (optional) For rowspan/nested tables, which columns are nested under groups\n        - total_rows: Total rows (or groups, for nested tables) in that table\n        - matched_rows: Number of rows/groups matching the query per table\n        - showing: Number of rows/groups returned per table (capped by max_rows per table)\n        - rows: Array of matching row objects. For flat tables: {column → value}.\n          For nested tables: {parent_col → value, ..., \"rows\": [{child_col → value}, ...]}\n\n    Args:\n        ctx: MCP context for logging and error handling\n        url: AWS documentation page URL (must end with .html)\n        section_title: The section heading containing the table (optional — omit to search all tables on the page)\n        query: Search term to filter rows (all words must match, case-insensitive)\n        max_rows: Maximum matching rows to return per table (default 20)\n\n    Returns:\n        SearchTableResponse with matching rows grouped by table\n    ",
       "inputSchema": {
         "properties": {
           "url": {
@@ -207,18 +207,6 @@
             },
             "title": "Results",
             "type": "array"
-          },
-          "error": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Error"
           },
           "hint": {
             "anyOf": [
@@ -853,7 +841,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-09T08:04:24.328Z",
+  "measuredAt": "2026-09-30T09:35:53.000Z",
   "serverName": "awslabs.aws-documentation-mcp-server",
   "serverVersion": "",
   "launchCommand": "uvx awslabs.aws-documentation-mcp-server@latest",

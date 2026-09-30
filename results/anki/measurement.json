@@ -3,8 +3,8 @@
   "provider": "tiktoken",
   "encoding": "o200k_base",
   "status": "measured",
-  "totalTokens": 20037,
-  "toolCount": 50,
+  "totalTokens": 21608,
+  "toolCount": 53,
   "tools": [
     {
       "name": "sync",
@@ -61,6 +61,30 @@
       "inputSchemaTokens": 197,
       "outputSchemaTokens": 254,
       "annotationsTokens": 27
+    },
+    {
+      "name": "areSuspended",
+      "tokens": 407,
+      "descriptionTokens": 69,
+      "inputSchemaTokens": 101,
+      "outputSchemaTokens": 181,
+      "annotationsTokens": 27
+    },
+    {
+      "name": "suspend",
+      "tokens": 572,
+      "descriptionTokens": 127,
+      "inputSchemaTokens": 101,
+      "outputSchemaTokens": 291,
+      "annotationsTokens": 25
+    },
+    {
+      "name": "unsuspend",
+      "tokens": 551,
+      "descriptionTokens": 102,
+      "inputSchemaTokens": 101,
+      "outputSchemaTokens": 294,
+      "annotationsTokens": 26
     },
     {
       "name": "modelNames",
@@ -176,10 +200,10 @@
     },
     {
       "name": "notesInfo",
-      "tokens": 432,
+      "tokens": 430,
       "descriptionTokens": 37,
       "inputSchemaTokens": 81,
-      "outputSchemaTokens": 260,
+      "outputSchemaTokens": 258,
       "annotationsTokens": 26
     },
     {
@@ -312,8 +336,8 @@
     },
     {
       "name": "review_stats",
-      "tokens": 669,
-      "descriptionTokens": 60,
+      "tokens": 712,
+      "descriptionTokens": 103,
       "inputSchemaTokens": 181,
       "outputSchemaTokens": 375,
       "annotationsTokens": 25
@@ -407,7 +431,7 @@
       "annotationsTokens": 26
     }
   ],
-  "canonicalSha256": "ff5c37e3ceea7d5f2514dc0b15b4443a9c6b10ce53fd9328f28be21759c69276",
+  "canonicalSha256": "bad42d792f7e97407147274574bb0b785c45af7476d62025f653530073c7f97d",
   "rawToolsCapture": [
     {
       "name": "sync",
@@ -1085,6 +1109,293 @@
           "days",
           "intervalOverwritten",
           "scheduled"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "areSuspended",
+      "description": "Check whether cards are suspended, without changing anything. Card IDs (not note IDs) — use get_cards, get_due_cards, or notesInfo to obtain them. The response preserves input order; a card ID that doesn't exist comes back with suspended: null rather than being dropped or throwing, so a single bad ID doesn't fail the whole batch.",
+      "annotations": {
+        "title": "Check Suspended Cards",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "cards": {
+            "minItems": 1,
+            "maxItems": 500,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "description": "Array of card IDs (max 500). Card IDs (not note IDs) — use get_cards, get_due_cards, or notesInfo to obtain them."
+          }
+        },
+        "required": [
+          "cards"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "cards": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "cardId": {
+                  "type": "number"
+                },
+                "suspended": {
+                  "description": "true if suspended, false if not suspended, null if the card ID does not exist",
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "cardId",
+                "suspended"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Per-card suspension status, in the same order as the input"
+          },
+          "total": {
+            "type": "number"
+          },
+          "suspendedCount": {
+            "type": "number"
+          },
+          "unsuspendedCount": {
+            "type": "number"
+          },
+          "missingCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "cards",
+          "total",
+          "suspendedCount",
+          "unsuspendedCount",
+          "missingCount"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "suspend",
+      "description": "Suspend cards so they're skipped during review until unsuspended. Card IDs (not note IDs) — use get_cards, get_due_cards, or notesInfo to obtain them. Card IDs are checked for existence first, and nothing is changed if any is missing — AnkiConnect's own suspend action handles nonexistent IDs inconsistently (usually an error, sometimes a silent skip depending on input order). Suspending a card that's already suspended is a safe no-op, so re-running with the same IDs is safe. IMPORTANT: Only suspend cards the user explicitly asked to suspend — a suspended card silently drops out of review until someone unsuspends it.",
+      "annotations": {
+        "title": "Suspend Cards",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "cards": {
+            "minItems": 1,
+            "maxItems": 500,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "description": "Array of card IDs (max 500). Card IDs (not note IDs) — use get_cards, get_due_cards, or notesInfo to obtain them."
+          }
+        },
+        "required": [
+          "cards"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "False means the call ran but the read-back shows some cards are not suspended; inspect `cards` to see which. Retrying with the same IDs is safe. A call that failed outright returns an error instead."
+          },
+          "message": {
+            "type": "string"
+          },
+          "cardsRequested": {
+            "type": "number"
+          },
+          "cardsChanged": {
+            "description": "Cards that were NOT suspended before this call and are suspended now. Omitted when the read-back failed — the suspend was still applied.",
+            "type": "number"
+          },
+          "alreadySuspended": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "description": "Card IDs that were already suspended before this call"
+          },
+          "cards": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "cardId": {
+                  "type": "number"
+                },
+                "suspended": {
+                  "description": "true if suspended, false if not suspended, null if the card ID does not exist",
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "cardId",
+                "suspended"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Final suspension status of each requested card, read back after the mutation. Empty when the read-back failed — the suspend itself still succeeded, so check `message` rather than treating an empty array as a no-op."
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "cardsRequested",
+          "alreadySuspended",
+          "cards"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "unsuspend",
+      "description": "Unsuspend cards so they return to normal review. Card IDs (not note IDs) — use get_cards, get_due_cards, or notesInfo to obtain them. Card IDs are checked for existence first, and nothing is changed if any is missing — AnkiConnect's own unsuspend action handles nonexistent IDs inconsistently (usually an error, sometimes a silent skip depending on input order). Unsuspending a card that's already unsuspended is a safe no-op, so re-running with the same IDs is safe.",
+      "annotations": {
+        "title": "Unsuspend Cards",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "noauth"
+          }
+        ]
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "cards": {
+            "minItems": 1,
+            "maxItems": 500,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "description": "Array of card IDs (max 500). Card IDs (not note IDs) — use get_cards, get_due_cards, or notesInfo to obtain them."
+          }
+        },
+        "required": [
+          "cards"
+        ]
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "False means the call ran but the read-back shows some cards are still suspended; inspect `cards` to see which. Retrying with the same IDs is safe. A call that failed outright returns an error instead."
+          },
+          "message": {
+            "type": "string"
+          },
+          "cardsRequested": {
+            "type": "number"
+          },
+          "cardsChanged": {
+            "description": "Cards that WERE suspended before this call and are not suspended now. Omitted when the read-back failed — the unsuspend was still applied.",
+            "type": "number"
+          },
+          "alreadyUnsuspended": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "description": "Card IDs that were already not suspended before this call"
+          },
+          "cards": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "cardId": {
+                  "type": "number"
+                },
+                "suspended": {
+                  "description": "true if suspended, false if not suspended, null if the card ID does not exist",
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "cardId",
+                "suspended"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Final suspension status of each requested card, read back after the mutation. Empty when the read-back failed — the unsuspend itself still succeeded, so check `message` rather than treating an empty array as a no-op."
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "cardsRequested",
+          "alreadyUnsuspended",
+          "cards"
         ],
         "additionalProperties": false
       }
@@ -2485,8 +2796,7 @@
                 "modelName",
                 "tags",
                 "fields",
-                "cards",
-                "mod"
+                "cards"
               ],
               "additionalProperties": false
             }
@@ -4066,7 +4376,7 @@
     },
     {
       "name": "review_stats",
-      "description": "Get review history analysis including temporal patterns, retention metrics, and study streak information. Use this to analyze learning progress over time, identify review patterns, and track consistency. Requires a start date; the deck is optional - omit it to analyze the entire collection (all decks). End date defaults to today.",
+      "description": "Get review history analysis including temporal patterns, retention metrics, and study streak information. Use this to analyze learning progress over time, identify review patterns, and track consistency. Requires a start date; the deck is optional - omit it to analyze the entire collection (all decks). End date defaults to today. Days are calendar days (midnight to midnight) in the timezone of the machine running the server, assumed to be the machine running Anki; Anki's 'next day starts at' hour is not applied.",
       "annotations": {
         "title": "Review Statistics",
         "readOnlyHint": true,
@@ -4983,9 +5293,9 @@
       }
     }
   ],
-  "measuredAt": "2026-09-09T08:06:13.381Z",
+  "measuredAt": "2026-09-30T09:37:54.654Z",
   "serverName": "anki-mcp-server",
-  "serverVersion": "0.25.0",
+  "serverVersion": "0.26.0",
   "launchCommand": "npx -y @ankimcp/anki-mcp-server --stdio",
   "envVarNames": [],
   "serverInstructions": null,

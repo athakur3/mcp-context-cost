@@ -251,7 +251,7 @@ Add `--claude` to annotate each server with its Anthropic-request cost from the 
 [Claude divergence](docs/METHODOLOGY.md#claude-divergence) run — an exact number when the
 published capture hash matches what you have installed, `—` (silence, not a stale guess)
 when it doesn't. The run holds 87 rows — the measured servers it covered when it last ran —
-and [results/leaderboard.md](results/leaderboard.md) prints a claude number for the 83 that
+and [results/leaderboard.md](results/leaderboard.md) prints a claude number for the 70 that
 still match today and silence for the rest. Most installs will show a mix:
 
 ```
@@ -267,7 +267,7 @@ does, and the percentile that decides are in
 
 ```
   suggest — descriptions at or above the 90th percentile of measured tools
-  (baseline 2026-09-28: 1,433 tools across 87 measured servers):
+  (baseline 2026-09-30: 1,440 tools across 87 measured servers):
     stub · wordy — 345 tokens: description 321 (p92), schema 14
       rewriting the description toward the measured median (27) would recover ≈294 tokens on every request
     1 of 2 tools sit inside the distribution — no advice where nothing is measurably unusual.
@@ -311,11 +311,11 @@ on the wire like every other list here; the full range is in
 |---|---:|---:|---:|---:|
 | github (official) | **54,622 tokens** | 10,735 | 18,728 | 44 |
 | xcodebuildmcp | 26,594 | 2,676 | 5,335 | 24 |
-| brave-search | 25,487 | 8,278 | 13,762 | 8 |
+| brave-search | 25,500 | 8,291 | — | 8 |
 | notion | 17,500 | 17,163 | 33,560 | 24 |
-| playwright *(4.8M installs/week)* | 4,024 | 3,402 | 6,172 | 24 |
+| playwright *(4.8M installs/week)* | 4,413 | 3,764 | — | 25 |
 | filesystem (reference) | 2,823 | 1,665 | 3,115 | 14 |
-| markitdown | 64 | 64 | 404 | 1 |
+| markitdown | 98 | 64 | — | 1 |
 
 *(87 of 107 popular servers measured, each row dated by its own most recent sweep — full table in
 [results/leaderboard.md](results/leaderboard.md); every failure is listed with its reason.
@@ -327,7 +327,7 @@ answers a question no client asks: **what did this server cost last month?**
 [results/regressions.md](results/regressions.md) reports each server's most recent movement —
 dated to when it happened, separated into *shipped more tools* versus *same tools, rewritten*,
 and compared only within one isolation. The ecosystem ratchets upward: of the servers whose
-cost has moved at all, 16 moved up against 6 that moved down. Method:
+cost has moved at all, 17 moved up against 11 that moved down. Method:
 [cost movement](docs/METHODOLOGY.md#cost-movement).
 
 If you publish a server, the same measurement is available as a badge, so your users can see
@@ -434,8 +434,8 @@ repository), then in your README:
 A badge says what your server costs today; it does nothing about the release
 that adds 1,200 tokens to every user's context next month. Across the servers
 measured here most costs hold steady from sweep to sweep, but when a cost does
-move it usually moves up: the [movement report](results/regressions.md) has 16
-servers ratcheting upward against 6 that got cheaper, and none of those
+move it usually moves up: the [movement report](results/regressions.md) has 17
+servers ratcheting upward against 11 that got cheaper, and none of those
 maintainers had a check that would have said so first. `measure` takes the same
 gate flags `audit` does, so your own CI can be that check:
 

@@ -1,6 +1,6 @@
 {
   "method": "capture-index/v1",
-  "generatedAt": "2026-09-16",
+  "generatedAt": "2026-09-30",
   "captures": {
     "01a1bd0f450ccf86b0bf36b2b63749c70dc4add7b0a4d9621ce69e29c9db7b27": {
       "server": "codebase-memory-mcp",
@@ -61,6 +61,12 @@
       "date": "2026-09-03",
       "totalTokens": 5717,
       "toolCount": 29
+    },
+    "169cfd8e49a251baf2e62bed239afae4ee1999f6fb00a763fa4c66d35b26c515": {
+      "server": "google-surf",
+      "date": "2026-09-30",
+      "totalTokens": 17185,
+      "toolCount": 7
     },
     "17bae5bf5a76df127b4ddba609724a2a52b86400700daa315562e18f1082304f": {
       "server": "octocode",
@@ -158,11 +164,23 @@
       "totalTokens": 359,
       "toolCount": 3
     },
+    "3a368215b275dbc5c029f9f89998588903db35a1e2aaba325922c2c2d4f18b0f": {
+      "server": "aws-documentation",
+      "date": "2026-09-30",
+      "totalTokens": 5008,
+      "toolCount": 5
+    },
     "3b7694bcedabac9706eba0c497c1fb4591121db0fd25e4e87e4802a001e34cd6": {
       "server": "firecrawl",
       "date": "2026-09-03",
       "totalTokens": 9561,
       "toolCount": 27
+    },
+    "3bc9987909c0f43691f98cb4e2fd56d7bdd04aa87b35c95d137f74c67bf4022d": {
+      "server": "huggingface",
+      "date": "2026-09-30",
+      "totalTokens": 4910,
+      "toolCount": 4
     },
     "40d73048f0112cd8282ee61d586632738f6746678ece24f8f61f4dcc4b8b2135": {
       "server": "github",
@@ -320,6 +338,12 @@
       "totalTokens": 486,
       "toolCount": 2
     },
+    "7b69b6e616dc3719801b349ba9db1ec673fa20bcab58ef64b749bf4efac03ec1": {
+      "server": "accessibility-scanner",
+      "date": "2026-09-30",
+      "totalTokens": 9111,
+      "toolCount": 33
+    },
     "7c6ff08840620894a66a103e02a8eb315013dd0a7d7c6cfb59b0fbe51f8a5d87": {
       "server": "time",
       "date": "2026-08-18",
@@ -337,6 +361,12 @@
       "date": "2026-09-04",
       "totalTokens": 17311,
       "toolCount": 63
+    },
+    "821aae9d8816d70368d42aea139dc573c8ca9a1a71cdc99e15611ce2cf576c81": {
+      "server": "excel",
+      "date": "2026-09-30",
+      "totalTokens": 10493,
+      "toolCount": 26
     },
     "85d23a7fa63923641625701d0c5fff39249eb8b379c3c1a7a444fef6437d6bc4": {
       "server": "obsidian-rest",
@@ -428,6 +458,12 @@
       "totalTokens": 5134,
       "toolCount": 7
     },
+    "af2dba5441a3ab02c472d49212573e953d5e60084942ee079c8f6bd8e6a1c5de": {
+      "server": "playwright",
+      "date": "2026-09-30",
+      "totalTokens": 4413,
+      "toolCount": 25
+    },
     "af7eaa380b99a67fc49ab075c762cd2686f108acc4ba21d001ce922554f7510a": {
       "server": "comfyui-mcp",
       "date": "2026-09-03",
@@ -445,6 +481,18 @@
       "date": "2026-09-03",
       "totalTokens": 1653,
       "toolCount": 5
+    },
+    "b71040e15f7b214bf1107857cff176108f473faf17d9e3dee74523a67101843b": {
+      "server": "desktop-commander",
+      "date": "2026-09-30",
+      "totalTokens": 11063,
+      "toolCount": 26
+    },
+    "bad42d792f7e97407147274574bb0b785c45af7476d62025f653530073c7f97d": {
+      "server": "anki",
+      "date": "2026-09-30",
+      "totalTokens": 21608,
+      "toolCount": 53
     },
     "bbdb8dd9b6d3cd9b855597127ad5268e3fa4e3355e616b3dc102f4ed12cca454": {
       "server": "postgres",
@@ -475,6 +523,12 @@
       "date": "2026-09-03",
       "totalTokens": 946,
       "toolCount": 2
+    },
+    "c15058cd28d060963b537e7c4d10895d56c2730ea0382b1a037d44e16cd8bb1b": {
+      "server": "comfyui-mcp",
+      "date": "2026-09-30",
+      "totalTokens": 50268,
+      "toolCount": 41
     },
     "c771e7295dc27668861b2a251566196a3e30b5b3ac282f7736aab96891bff300": {
       "server": "mongodb",
@@ -542,6 +596,12 @@
       "totalTokens": 17311,
       "toolCount": 63
     },
+    "db11670b6fc094f5af5ae6a24bf875d4c8440da3a5eb4bc87d99c289ab5bd345": {
+      "server": "codebase-memory-mcp",
+      "date": "2026-09-30",
+      "totalTokens": 4065,
+      "toolCount": 17
+    },
     "e0194003d2ddaf668a23e0570cdbcf8c142c3314d3dd811a50ae99e5afd79ae3": {
       "server": "github-legacy",
       "date": "2026-09-03",
@@ -590,11 +650,23 @@
       "totalTokens": 11837,
       "toolCount": 26
     },
+    "ee0a96dcba902514e37b0564405f85b34a633f0863f593e2abc20cc76c7ab2c5": {
+      "server": "azure",
+      "date": "2026-09-30",
+      "totalTokens": 14808,
+      "toolCount": 71
+    },
     "eec89a7ec71ac3e9e65fb8477bf594b4ce9af01b572bcc5d7e9fbbcc85f4e813": {
       "server": "agentphone",
       "date": "2026-09-03",
       "totalTokens": 6134,
       "toolCount": 28
+    },
+    "eef53f600eee8a14332be832c38139fe2092e219c3429c033befa8c41adf054e": {
+      "server": "markitdown",
+      "date": "2026-09-30",
+      "totalTokens": 98,
+      "toolCount": 1
     },
     "efc31b255c09a3f364367c1450285b1e107d999faf01d4c9c37711aa12410948": {
       "server": "n8n-mcp",
@@ -632,6 +704,12 @@
       "totalTokens": 17311,
       "toolCount": 63
     },
+    "fed4dcff1fa9d22287c4a6332e8e13545db7952753f0e87eaf751c7812033d91": {
+      "server": "brave-search",
+      "date": "2026-09-30",
+      "totalTokens": 25500,
+      "toolCount": 8
+    },
     "ff5c37e3ceea7d5f2514dc0b15b4443a9c6b10ce53fd9328f28be21759c69276": {
       "server": "anki",
       "date": "2026-09-05",
@@ -640,21 +718,21 @@
     }
   },
   "current": {
-    "accessibility-scanner": "42d3cde136eda54a68cea42f820dbadf27e15394b10daa8ed26c90fd8fb59fcc",
+    "accessibility-scanner": "7b69b6e616dc3719801b349ba9db1ec673fa20bcab58ef64b749bf4efac03ec1",
     "agent-device": "3405333902a4a368c930626f35a1c4cd947ab9cdc0e88e81963165028de16c55",
     "agentphone": "d8e7072a1f0c7a586c9a7f4550329242fdaec8228d6f3acba0ea09cc106f12fa",
     "airbnb": "79c3109b4fa4e4735ba1071cacbd98948c6aba20b70c9a4295a78e84850a81e0",
     "airtable": "5f90d662e26a77e01125999b97db0bf9204bb92bd0fc7297a28495986d80ec30",
-    "anki": "ff5c37e3ceea7d5f2514dc0b15b4443a9c6b10ce53fd9328f28be21759c69276",
+    "anki": "bad42d792f7e97407147274574bb0b785c45af7476d62025f653530073c7f97d",
     "apify": "4dd4565165c7066d8e8ef666f79cd8b323bad3d7f66b4d34fbe769f07e979453",
     "appium-mcp": "d024ca5b97d52d5442da395ed92d1d107b6728db57cf1295bb87c5d3624c0e53",
     "arxiv": "2ee361441efca1de3e296a572bbe2d20fa88d5565c9d4f54a8a1523ee7f54251",
-    "aws-documentation": "096790f5b6a85d5faf9b4a09edbeddc34de23ed3c26c195bee05c42fb7f8b6a7",
-    "azure": "0e1597d24f0d7f891c5d98d631e5e8cd6dd0cf70d5c3df7de9b972a5641c0818",
+    "aws-documentation": "3a368215b275dbc5c029f9f89998588903db35a1e2aaba325922c2c2d4f18b0f",
+    "azure": "ee0a96dcba902514e37b0564405f85b34a633f0863f593e2abc20cc76c7ab2c5",
     "basic-memory": "0ba9e9185e3d5c167bbaf0dcfeb499f27020c307f1387a3b85374f849f0a38a7",
     "bitbucket-mcp": "e131b1d46e30c0d05f07995aa167fa323ec1003719d861dbe27c82c94ad803cf",
     "blender": "5d8045af01c1eaf81a5931cfc5aa814fe0928f66cf1e176962bd3a97aff0a62f",
-    "brave-search": "ec3c4f85b22d1e4866faeb04af7038fc28568dc4a262416cea7ce77c63b2b015",
+    "brave-search": "fed4dcff1fa9d22287c4a6332e8e13545db7952753f0e87eaf751c7812033d91",
     "brave-search-legacy": "727577fbcd5fe4e811453a32d9c9852ea877c90b8acf56e0cdf5eda15e97d803",
     "bright-data": "bd26660364200a7866906bbfecc185e41ea6a42e43ed5d6380b1c3b77a699eae",
     "browserbase": "1dc53461369d7cb64ea8151f33283db371951cf44289471f6156e35cd1ae28bb",
@@ -664,17 +742,17 @@
     "clickhouse": "6f42fcefaf49e720fe8ec5acf8dafc7ae6065bf541957572b6a6abbe61f111d4",
     "clinicaltrialsgov": "acdc9b99e581c7493a98e8c0fac919bbe384ac3205227c15891b94d6ddcf4825",
     "cloudflare-docs": "a65649ac29928ffde9e8bf8796482b5aaeb17e79d02ea2f3b8b96f11ac32b604",
-    "codebase-memory-mcp": "01a1bd0f450ccf86b0bf36b2b63749c70dc4add7b0a4d9621ce69e29c9db7b27",
-    "comfyui-mcp": "47b201e9455f2aba4184e2f88c52939ea543f536e305490e17efd9d4730cde9d",
+    "codebase-memory-mcp": "db11670b6fc094f5af5ae6a24bf875d4c8440da3a5eb4bc87d99c289ab5bd345",
+    "comfyui-mcp": "c15058cd28d060963b537e7c4d10895d56c2730ea0382b1a037d44e16cd8bb1b",
     "context7": "699d8b33d6d2d90ce7deb777994bb408e1e07bb08fa997042b7cce19e6c1ecec",
     "deepwiki": "3735162916165ab23696fc91fbf626bd99a36ddcd1e15746e91e16c7e336b379",
-    "desktop-commander": "93139d61e27fc656cd32c0061d5eccc58be171c4246574ef2a48b7f05c2d33ad",
+    "desktop-commander": "b71040e15f7b214bf1107857cff176108f473faf17d9e3dee74523a67101843b",
     "duckduckgo": "61f82494284ccb413e9cb213ed93d7b79f43769229713b2748056a7f1018db14",
     "elasticsearch": "76a005f840c738f5788e7b5801fdc12194713fce1ed435ad500f891a2b2dd13c",
     "emailmd": "991fa59036ab1d4a4c1270ba14025668cd37bad41d9a804544a5e6aa23564365",
     "everything": "e61b2e1761ff2f931d030faf1dc192ca70247e52ff31d8633431b69ba6e00b7e",
     "exa": "8c3c954e5a791807875357bc783cc67385bd7bb53ee31b659e83015b36ed99a9",
-    "excel": "cf374a8866847f36b743f5b59176d3908466f40c2d5d9b3cb0462ea47af40999",
+    "excel": "821aae9d8816d70368d42aea139dc573c8ca9a1a71cdc99e15611ce2cf576c81",
     "fetch": "5d0a1b56f6c08786d7d764b6f4376fba201015e5a5995b6b39c14350bd4aeeb3",
     "figma-context": "c1409e496bb0262b3dd4d78de8da42d1b79d5704fcf693e1455c5b3dff0f2604",
     "filesystem": "245b04832111268c3fcc72543af89fb2f8c109d8306c1b5b8c49dc45977e41e1",
@@ -685,12 +763,12 @@
     "github-legacy": "e0194003d2ddaf668a23e0570cdbcf8c142c3314d3dd811a50ae99e5afd79ae3",
     "gitlab": "d51fb022687ee403f9710c9fae31ac91dbc796f5c52a3fcdbe0a91c387aa9365",
     "google-maps": "a88e204db09aa56954e3e041d6a9814aee9ac888fdfc7d5cb47aec1877441986",
-    "google-surf": "64ca81a34311e1318d731b8fbf14e5f1759567e4a7bdaabf43f3553ee732ee41",
+    "google-surf": "169cfd8e49a251baf2e62bed239afae4ee1999f6fb00a763fa4c66d35b26c515",
     "grafana": "f35587d4d6afaf90c68d7b861793a9e980bb6817b389fdb2391d365e7358beab",
     "hubspot": "3389dd469cfc2f46f06e4be24ba13ff95595ee30fd8dd62df81809a95daf3791",
-    "huggingface": "a2e48e88545d92665679b878c9e66f4f902af2a11bccafc29cc6e627def941ae",
+    "huggingface": "3bc9987909c0f43691f98cb4e2fd56d7bdd04aa87b35c95d137f74c67bf4022d",
     "kubernetes": "20126671be70fdb77743a595f195002612b03c889b348447ed9ff4d7057f8c1c",
-    "markitdown": "d708fc0ae4f3fb818d01cc3d4da0b74c2e5591a7982735d6200b3d56ab74d66b",
+    "markitdown": "eef53f600eee8a14332be832c38139fe2092e219c3429c033befa8c41adf054e",
     "mcp-atlassian": "da19c0b307a393749f9451c0a8ca03344949edc55bf97afc9d3fbdcb26573ef6",
     "memory": "d028274f76dc9aa2e622ae02a17ce313aa65d7b5935254ca53889d4094238abb",
     "microsoft-learn": "9e3f4a65f0dc136a6ffa5ed00f95785ec561e9a78413888da160e44ceb139346",
@@ -706,7 +784,7 @@
     "pandoc": "4d8f9de25d7aa74f0fb5e0c828a904d74b3934e62cb1032bc6cf0fada1f0d952",
     "perplexity": "bf3f548ecca0308f30e544a03d3a36778dbbfba3a5ed12dab6d981dcbcc7a73c",
     "pinecone": "cc8ffaadb37615f11747b0a1eafd8541cfb2f31064adcd4973860f8f03bab377",
-    "playwright": "5d5d92a7c727ef75bd9a70f076039dbdbfd331c56f022915c2e89b76f7fc88f0",
+    "playwright": "af2dba5441a3ab02c472d49212573e953d5e60084942ee079c8f6bd8e6a1c5de",
     "playwright-community": "4af7a9d131b4506471d83cc2d014ffc39b784a16ff181cce05ae2d9f26dbe9ff",
     "postgres": "bbdb8dd9b6d3cd9b855597127ad5268e3fa4e3355e616b3dc102f4ed12cca454",
     "postgres-mcp": "9bb1e5d26dd377de9dbfac88ffe77663a1169cddf66c6b1f52f57d3a740b0e54",

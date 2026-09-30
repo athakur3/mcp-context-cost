@@ -108,6 +108,118 @@
           "tokens": 147
         }
       ]
+    },
+    {
+      "date": "2026-09-30",
+      "canonicalSha256": "821aae9d8816d70368d42aea139dc573c8ca9a1a71cdc99e15611ce2cf576c81",
+      "totalTokens": 10493,
+      "version": "1.1.1",
+      "tools": [
+        {
+          "name": "create_workbook",
+          "tokens": 236
+        },
+        {
+          "name": "describe_workbook",
+          "tokens": 375
+        },
+        {
+          "name": "list_workbooks",
+          "tokens": 218
+        },
+        {
+          "name": "export_workbook",
+          "tokens": 147
+        },
+        {
+          "name": "import_workbook",
+          "tokens": 222
+        },
+        {
+          "name": "describe_sheet",
+          "tokens": 647
+        },
+        {
+          "name": "create_sheet",
+          "tokens": 229
+        },
+        {
+          "name": "rename_sheet",
+          "tokens": 229
+        },
+        {
+          "name": "copy_sheet",
+          "tokens": 227
+        },
+        {
+          "name": "delete_sheet",
+          "tokens": 182
+        },
+        {
+          "name": "insert_rows_or_columns",
+          "tokens": 323
+        },
+        {
+          "name": "delete_rows_or_columns",
+          "tokens": 323
+        },
+        {
+          "name": "read_range",
+          "tokens": 502
+        },
+        {
+          "name": "write_range",
+          "tokens": 414
+        },
+        {
+          "name": "clear_range",
+          "tokens": 257
+        },
+        {
+          "name": "copy_range",
+          "tokens": 302
+        },
+        {
+          "name": "find_cells",
+          "tokens": 500
+        },
+        {
+          "name": "format_range",
+          "tokens": 884
+        },
+        {
+          "name": "merge_cells",
+          "tokens": 270
+        },
+        {
+          "name": "set_sheet_layout",
+          "tokens": 763
+        },
+        {
+          "name": "add_conditional_format",
+          "tokens": 680
+        },
+        {
+          "name": "add_data_validation",
+          "tokens": 685
+        },
+        {
+          "name": "create_table",
+          "tokens": 319
+        },
+        {
+          "name": "create_chart",
+          "tokens": 618
+        },
+        {
+          "name": "create_summary_table",
+          "tokens": 512
+        },
+        {
+          "name": "read_vba",
+          "tokens": 452
+        }
+      ]
     }
   ]
 }

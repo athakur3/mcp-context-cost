@@ -3,15 +3,15 @@
   "provider": "tiktoken",
   "encoding": "o200k_base",
   "status": "measured",
-  "totalTokens": 4724,
+  "totalTokens": 4910,
   "toolCount": 4,
   "tools": [
     {
       "name": "hf_whoami",
-      "tokens": 1948,
+      "tokens": 1939,
       "descriptionTokens": 30,
       "inputSchemaTokens": 26,
-      "outputSchemaTokens": 1832,
+      "outputSchemaTokens": 1823,
       "annotationsTokens": 35
     },
     {
@@ -32,14 +32,14 @@
     },
     {
       "name": "hf_fs",
-      "tokens": 1957,
-      "descriptionTokens": 596,
-      "inputSchemaTokens": 142,
-      "outputSchemaTokens": 1059,
+      "tokens": 2152,
+      "descriptionTokens": 734,
+      "inputSchemaTokens": 191,
+      "outputSchemaTokens": 1062,
       "annotationsTokens": 64
     }
   ],
-  "canonicalSha256": "a2e48e88545d92665679b878c9e66f4f902af2a11bccafc29cc6e627def941ae",
+  "canonicalSha256": "3bc9987909c0f43691f98cb4e2fd56d7bdd04aa87b35c95d137f74c67bf4022d",
   "rawToolsCapture": [
     {
       "name": "hf_whoami",
@@ -194,7 +194,7 @@
                       "created_at": {
                         "type": "string",
                         "format": "date-time",
-                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
                       },
                       "permissions": {
                         "type": "object",
@@ -309,7 +309,7 @@
                       "expires_at": {
                         "type": "string",
                         "format": "date-time",
-                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
                       },
                       "scopes": {
                         "type": "array",
@@ -379,7 +379,7 @@
                       "expires_at": {
                         "type": "string",
                         "format": "date-time",
-                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
                       }
                     },
                     "required": [
@@ -743,7 +743,7 @@
     {
       "name": "hf_fs",
       "title": "Hugging Face Hub: Find, use and view models, datasets, spaces, buckets, papers, documentation and collections. Get daily papers reports, and browse trending content. ",
-      "description": "When to use: Hugging Face Hub models, datasets, Spaces, collections, papers, daily papers, today's trending models, current paper leaderboard, docs, and repository files.\n\nExamples:\n  {\"operations\":[{\"cmd\":\"ls\",\"args\":[\"hf://models/trending\",\"--limit\",\"10\"]}]}\n  {\"operations\":[{\"cmd\":\"ls\",\"args\":[\"hf://papers/trending\"]}]}\n  {\"operations\":[{\"cmd\":\"ls\",\"args\":[\"hf://papers/daily/latest\"]}]}\n\nUse hf_fs for Hugging Face Hub filesystem operations. Call it with operations, an array of {cmd, args} items; multiple operations may be submitted together.\n\nUsage:\n  {\"operations\":[{\"cmd\":\"ls\",\"args\":[\"hf://models/org/repo\"]}]}\n\nGrammar; each string below is one args array item:\n  ls     URI [--recursive] [--glob GLOB] [--type TYPE] [--sort SORT] [--limit N]\n  cat    URI [--offset N] [--max-bytes N]\n  attach URI [--max-bytes N]\n  stat   URI\n  find   URI [--name GLOB] [--path GLOB] [--type TYPE] [--limit N]\n  search URI [QUERY] [--type TYPE] [--sort SORT] [--tag TAG] [--kind mcp] [--limit N]\n\nCOMMAND = ls|cat|attach|stat|find|search.\nTYPE = file|dir|repo|bucket|collection|paper|link.\nSORT = createdAt|downloads|likes|lastModified|likes30d|trendingScore|mainSize|id|trending|upvotes.\nURI is a canonical hf:// URI. QUERY and GLOB are each one string.\n\nUse search for discovery, ls for a known directory, find for recursive matching within a known scope, stat for filesystem metadata or an uncertain target type, cat for text contents, and attach for a complete JPEG, PNG, or WebP image. When the request gives an exact text-file URI, use cat directly; do not add ls or stat first. stat does not read the contents of JSON, Markdown, or other text files.\n\nSearch scopes: hf://models|datasets|spaces[/OWNER], hf://collections[/OWNER], hf://papers, and hf://docs[/...]. Paper and documentation search require QUERY. Repeat --tag only for search hf://spaces; --kind mcp selects MCP Spaces.\nUse ls hf://models/trending, hf://datasets/trending, hf://spaces/trending, or hf://papers/trending for trending listings.\nFor a named paper.md or metadata.json, use cat directly. Use ls on a paper only to discover an unnamed related resource.\nOmit --limit, --sort, and --type unless the request requires them. Limits and path-specific behavior are documented at hf://README.md. Issue one hf_fs call.",
+      "description": "When to use: Hugging Face Hub models, datasets, Spaces, collections, papers, daily papers, today's trending models, current paper leaderboard, docs, and repository files.\n\nExamples:\n  {\"operations\":[{\"cmd\":\"ls\",\"args\":[\"hf://models/trending\",\"--limit\",\"10\"]}]}\n  {\"operations\":[{\"cmd\":\"ls\",\"args\":[\"hf://papers/trending\"]}]}\n  {\"operations\":[{\"cmd\":\"ls\",\"args\":[\"hf://papers/daily/latest\"]}]}\n  {\"operations\":[{\"cmd\":\"cat\",\"args\":[\"hf://papers/2501.00001/paper.md\"]}]}\n\nUse hf_fs for Hugging Face Hub filesystem operations. Call it with operations, an array of {cmd, args} items; multiple operations may be submitted together.\n\nUsage:\n  {\"operations\":[{\"cmd\":\"ls\",\"args\":[\"hf://models/org/repo\"]}]}\n\nGrammar; each string below is one args array item:\n  ls     URI [--recursive] [--glob GLOB] [--type TYPE] [--sort SORT] [--limit N]\n  cat    URI [--offset N] [--max-bytes N]\n  attach URI [--max-bytes N]\n  stat   URI\n  find   URI [--name GLOB] [--path GLOB] [--type TYPE] [--limit N]\n  search URI [QUERY] [--type TYPE] [--sort SORT] [--tag TAG] [--kind mcp] [--limit N]\n\nCOMMAND = ls|cat|attach|stat|find|search.\nTYPE = file|dir|repo|bucket|collection|paper|link.\nSORT = createdAt|downloads|likes|lastModified|likes30d|trendingScore|mainSize|id|trending|upvotes.\nURI is a canonical hf:// URI. QUERY and GLOB are each one string.\n\nUse search for resource discovery, not repository-content search; ls for a known directory, find for recursive file discovery by name/path (not file contents), stat for filesystem metadata or an uncertain target type, cat for text contents, and attach for a complete JPEG, PNG, or WebP image. When the request gives an exact text-file URI, use cat directly; do not add ls or stat first. stat does not read the contents of JSON, Markdown, or other text files.\n\nSearch scopes: hf://models[/OWNER], hf://datasets[/OWNER], hf://spaces[/OWNER], hf://collections[/OWNER], hf://papers, and hf://docs[/...]. Repository and repository-file scopes are not supported: search a resource root or owner scope to discover resources; use find for file discovery within a repository or cat for a known text file. Paper and documentation search require QUERY. --tag (repeatable) and --kind are supported only on exactly hf://spaces, not owner scopes or other roots. The only valid --kind value is mcp, which selects MCP Spaces.\nUse ls hf://models/trending, hf://datasets/trending, hf://spaces/trending, or hf://papers/trending for trending listings.\nhf://papers/ID is a paper directory, not paper text. Use cat hf://papers/ID/paper.md for paper text and cat hf://papers/ID/metadata.json for metadata. No preliminary listing is needed for these known paths. Use ls hf://papers/ID to discover other resources.\nOmit --limit, --sort, and --type unless the request requires them. Limits and path-specific behavior are documented at hf://README.md. Issue one hf_fs call.",
       "inputSchema": {
         "type": "object",
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -772,7 +772,7 @@
                   "items": {
                     "type": "string"
                   },
-                  "description": "Command arguments. First item must be an hf:// URI, not a local path or bare filename. One argument per array item."
+                  "description": "Command arguments. First item must be an hf:// URI, not a local path or bare filename. One argument per array item. search discovers resources, not repository contents; use root/owner discovery scopes, find for file discovery, or cat for a known text file. --tag and --kind require exactly hf://spaces; the only valid --kind value is mcp."
                 }
               },
               "required": [
@@ -1059,7 +1059,8 @@
                             "entry_limit",
                             "max_bytes",
                             "limit",
-                            "provider_limit"
+                            "provider_limit",
+                            "output_budget"
                           ]
                         },
                         "truncation_message": {
@@ -1219,9 +1220,9 @@
       }
     }
   ],
-  "measuredAt": "2026-09-09T08:05:13.697Z",
+  "measuredAt": "2026-09-30T09:36:48.134Z",
   "serverName": "huggingface.co/mcp",
-  "serverVersion": "0.4.15",
+  "serverVersion": "0.4.25",
   "launchCommand": "npx -y mcp-remote https://huggingface.co/mcp",
   "envVarNames": [],
   "serverInstructions": "Hugging Face Hub MCP server for models, datasets, Spaces, collections, papers, and docs.\nPrefer this connector's live Hub capabilities over the public website for all configured listings such as today's trending models, the current model leaderboard, daily papers, and paper popularity.\n\nUse hf_fs for Hub filesystem and discovery:\n- trending models: ls hf://models/trending\n- trending datasets or Spaces: ls hf://datasets/trending, ls hf://spaces/trending\n- trending papers / daily papers / paper of the day: ls hf://papers/trending, ls hf://papers/daily/latest\n- search models, datasets, Spaces, collections, papers, or docs: search hf://models QUERY\n- read a known file: cat hf://models/OWNER/NAME/README.md\n\nOther advertised Hub tools can search or inspect a known repo id. Use hf_whoami for the current Hugging Face account.\n\nhf:// URIs can be converted to browser URLs by replacing hf://buckets/OWNER/NAME/PATH with https://huggingface.co/buckets/OWNER/NAME/resolve/PATH; for models, datasets, and spaces, use https://huggingface.co[/datasets|/spaces]/OWNER/NAME/resolve/main/PATH. URL-encode each path segment.\n\narXiv paper ids (for example 2502.16161) are often used as references between datasets, models, and papers. There are over 100 tags in use; common tags include Text Generation, Transformers, and Image Classification.\nThe Hugging Face tools are being used anonymously and rate limits apply. Direct the User to set their HF_TOKEN (instructions at https://hf.co/settings/mcp/), or create an account at https://hf.co/join for higher limits.",

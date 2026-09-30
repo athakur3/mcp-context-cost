@@ -504,7 +504,7 @@
       }
     }
   ],
-  "measuredAt": "2026-09-09T08:04:10.365Z",
+  "measuredAt": "2026-09-30T09:35:35.606Z",
   "serverName": "mcp-servers/everything",
   "serverVersion": "2.0.0",
   "launchCommand": "npx -y @modelcontextprotocol/server-everything",

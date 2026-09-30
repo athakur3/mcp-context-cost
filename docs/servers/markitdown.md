@@ -1,40 +1,28 @@
 # markitdown — context cost
 
-**64 tokens** across 1 tools — *lean* (< 1K). Measured 2026-09-09 under [methodology v1.0](../METHODOLOGY.html).
+**98 tokens** across 1 tools — *lean* (< 1K). Measured 2026-09-30 under [methodology v1.0](../METHODOLOGY.html).
 
-An Anthropic request carries 64 of those tokens as tool definitions, and Claude counts those at **404**.
+An Anthropic request carries 64 of those tokens as tool definitions. What Claude makes of them is not published for this server: its Claude count is missing, or was taken against a capture this measurement has since replaced.
 
 | | |
 |---|---|
-| server (self-reported) | markitdown v1.8.1 |
+| server (self-reported) | markitdown |
 | status | measured |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `uvx markitdown-mcp` |
 | isolation | docker · ghcr.io/astral-sh/uv:python3.12-bookworm-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | none |
-| canonical SHA-256 | `d708fc0ae4f3fb818d01cc3d4da0b74c2e5591a7982735d6200b3d56ab74d66b` |
+| canonical SHA-256 | `eef53f600eee8a14332be832c38139fe2092e219c3429c033befa8c41adf054e` |
 | category | vendor-official |
 | source | https://github.com/microsoft/markitdown |
 
 ## Where the tokens are
 
-| tool | tokens | share | description | input schema |
-|---|---:|---:|---:|---:|
-| convert_to_markdown | 62 | 96.9% | 18 | 31 |
+| tool | tokens | share | description | input schema | output schema |
+|---|---:|---:|---:|---:|---:|
+| convert_to_markdown | 96 | 98.0% | 18 | 31 | 31 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
-
-## What this costs on Claude
-
-Measured 2026-09-14 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
-
-| | tokens | |
-|---|---:|---|
-| o200k, full capture | 64 | the badge number — every byte `tools/list` returned |
-| o200k, Anthropic fields only | 64 | 0.0% of the capture is MCP-only metadata |
-| **Claude, same fields** | **404** | 6.31× the badge number |
-
-An Anthropic tool definition carries `name`, `description`, and `input_schema` and nothing else, so `title`, `annotations`, `outputSchema`, `execution`, and `icons` are dropped before the request — that is the second row. The third row is the same tools counted by Anthropic, which is larger than the second because Anthropic's tokenizer is denser on this content than o200k_base *and* the API adds its own framing (at most 328 tokens of it fixed, measured against a single minimal tool). The two effects run in opposite directions, which is why the Claude number is not a fixed multiple of the badge.
 
 ## Over time
 
@@ -46,6 +34,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-09-04 | 64 | 1 | 1.8.1 | docker | no change |
 | 2026-09-05 | 64 | 1 | 1.8.1 | docker | no change |
 | 2026-09-09 | 64 | 1 | 1.8.1 | docker | no change |
+| 2026-09-30 | 98 | 1 | not recorded | docker | +34 |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 

@@ -1,6 +1,6 @@
 # git — context cost
 
-**1,455 tokens** across 12 tools — *light* (1–5K). Measured 2026-09-09 under [methodology v1.0](../METHODOLOGY.html).
+**1,455 tokens** across 12 tools — *light* (1–5K). Measured 2026-09-30 under [methodology v1.0](../METHODOLOGY.html).
 
 An Anthropic request carries 1,119 of those tokens as tool definitions, and Claude counts those at **2,382**.
 
@@ -55,6 +55,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-09-04 | 1,455 | 12 | 1.29.1 | docker | no change |
 | 2026-09-05 | 1,455 | 12 | 1.29.1 | docker | no change |
 | 2026-09-09 | 1,455 | 12 | 1.30.0 | docker | no change |
+| 2026-09-30 | 1,455 | 12 | 1.30.0 | docker | no change |
 
 Full series: [results/history.csv](https://github.com/athakur3/mcp-context-cost/blob/main/results/history.csv).
 

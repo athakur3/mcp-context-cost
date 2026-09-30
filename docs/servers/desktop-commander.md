@@ -1,18 +1,18 @@
 # desktop-commander — context cost
 
-**11,837 tokens** across 26 tools — *moderate* (5–15K). Measured 2026-09-09 under [methodology v1.0](../METHODOLOGY.html).
+**11,063 tokens** across 26 tools — *moderate* (5–15K). Measured 2026-09-30 under [methodology v1.0](../METHODOLOGY.html).
 
-An Anthropic request carries 11,057 of those tokens as tool definitions, and Claude counts those at **19,306**.
+An Anthropic request carries 10,283 of those tokens as tool definitions. What Claude makes of them is not published for this server: its Claude count is missing, or was taken against a capture this measurement has since replaced.
 
 | | |
 |---|---|
-| server (self-reported) | desktop-commander v0.2.48 |
+| server (self-reported) | desktop-commander v0.2.52 |
 | status | dynamic |
 | tokenizer | tiktoken / o200k_base |
 | launch command | `npx -y @wonderwhy-er/desktop-commander` |
 | isolation | docker · public.ecr.aws/docker/library/node:22-slim · network bridge · linux/amd64 · network enabled for package fetch; clean FS, no host credentials |
 | env vars supplied | none |
-| canonical SHA-256 | `93139d61e27fc656cd32c0061d5eccc58be171c4246574ef2a48b7f05c2d33ad` |
+| canonical SHA-256 | `b71040e15f7b214bf1107857cff176108f473faf17d9e3dee74523a67101843b` |
 | category | community |
 | source | https://github.com/wonderwhy-er/DesktopCommanderMCP |
 
@@ -22,46 +22,34 @@ An Anthropic request carries 11,057 of those tokens as tool definitions, and Cla
 
 | tool | tokens | share | description | input schema |
 |---|---:|---:|---:|---:|
-| start_search | 1,351 | 11.4% | 1,078 | 158 |
-| start_process | 1,181 | 10.0% | 984 | 81 |
-| read_file | 1,024 | 8.7% | 778 | 112 |
-| edit_block | 917 | 7.7% | 670 | 107 |
-| write_pdf | 882 | 7.5% | 567 | 203 |
-| interact_with_process | 825 | 7.0% | 651 | 74 |
-| write_file | 726 | 6.1% | 516 | 81 |
-| list_directory | 536 | 4.5% | 366 | 64 |
-| read_process_output | 511 | 4.3% | 380 | 70 |
-| get_prompts | 445 | 3.8% | 326 | 55 |
-| give_feedback_to_desktop_commander | 389 | 3.3% | 296 | 29 |
-| get_more_search_results | 353 | 3.0% | 242 | 62 |
-| set_config_value | 306 | 2.6% | 154 | 91 |
-| get_config | 298 | 2.5% | 166 | 42 |
-| get_file_info | 262 | 2.2% | 183 | 39 |
-| read_multiple_files | 241 | 2.0% | 154 | 45 |
-| get_recent_tool_calls | 223 | 1.9% | 114 | 67 |
-| move_file | 213 | 1.8% | 116 | 48 |
-| create_directory | 191 | 1.6% | 111 | 39 |
-| list_sessions | 186 | 1.6% | 118 | 29 |
-| stop_search | 176 | 1.5% | 93 | 41 |
-| list_searches | 129 | 1.1% | 64 | 29 |
-| kill_process | 128 | 1.1% | 46 | 39 |
+| start_search | 1,351 | 12.2% | 1,078 | 158 |
+| read_file | 1,023 | 9.2% | 777 | 112 |
+| edit_block | 917 | 8.3% | 670 | 107 |
+| write_pdf | 882 | 8.0% | 567 | 203 |
+| start_process | 758 | 6.9% | 590 | 81 |
+| write_file | 726 | 6.6% | 516 | 81 |
+| list_directory | 536 | 4.8% | 366 | 64 |
+| read_process_output | 511 | 4.6% | 380 | 70 |
+| get_prompts | 445 | 4.0% | 326 | 55 |
+| interact_with_process | 440 | 4.0% | 294 | 74 |
+| give_feedback_to_desktop_commander | 389 | 3.5% | 296 | 29 |
+| get_more_search_results | 353 | 3.2% | 242 | 62 |
+| set_config_value | 306 | 2.8% | 154 | 91 |
+| get_config | 298 | 2.7% | 166 | 42 |
+| get_file_info | 262 | 2.4% | 183 | 39 |
+| get_recent_tool_calls | 258 | 2.3% | 149 | 67 |
+| read_multiple_files | 241 | 2.2% | 154 | 45 |
+| move_file | 213 | 1.9% | 116 | 48 |
+| create_directory | 191 | 1.7% | 111 | 39 |
+| list_sessions | 186 | 1.7% | 118 | 29 |
+| stop_search | 176 | 1.6% | 93 | 41 |
+| list_searches | 129 | 1.2% | 64 | 29 |
+| kill_process | 128 | 1.2% | 46 | 39 |
 | force_terminate | 116 | 1.0% | 32 | 39 |
 | get_usage_stats | 114 | 1.0% | 50 | 29 |
-| list_processes | 112 | 0.9% | 48 | 29 |
+| list_processes | 112 | 1.0% | 48 | 29 |
 
 Each tool is tokenized on its own, so the parts do not sum exactly to the whole: the array adds its own brackets and commas, and the tokenizer merges tokens across object boundaries. The badge number is always the count of the whole array, never a sum of parts.
-
-## What this costs on Claude
-
-Measured 2026-09-14 against `claude-opus-5` via Anthropic's `count_tokens` (method `tools-delta/v1`).
-
-| | tokens | |
-|---|---:|---|
-| o200k, full capture | 11,837 | the badge number — every byte `tools/list` returned |
-| o200k, Anthropic fields only | 11,057 | 6.6% of the capture is MCP-only metadata |
-| **Claude, same fields** | **19,306** | 1.63× the badge number |
-
-An Anthropic tool definition carries `name`, `description`, and `input_schema` and nothing else, so `title`, `annotations`, `outputSchema`, `execution`, and `icons` are dropped before the request — that is the second row. The third row is the same tools counted by Anthropic, which is larger than the second because Anthropic's tokenizer is denser on this content than o200k_base *and* the API adds its own framing (at most 328 tokens of it fixed, measured against a single minimal tool). The two effects run in opposite directions, which is why the Claude number is not a fixed multiple of the badge.
 
 ## Over time
 
@@ -72,6 +60,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-09-04 | 11,834 | 26 | 0.2.48 | docker | −2 |
 | 2026-09-05 | 11,837 | 26 | 0.2.48 | docker | +3 |
 | 2026-09-09 | 11,837 | 26 | 0.2.48 | docker | no change |
+| 2026-09-30 | 11,063 | 26 | 0.2.52 | docker | −774 |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 
