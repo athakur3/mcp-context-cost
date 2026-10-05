@@ -404,3 +404,4 @@ date,server,tokens,toolCount,status,isolation,version
 2026-09-30,playwright,4413,25,measured,docker,1.64.0-alpha-1790635538000
 2026-09-30,slack-legacy,681,8,measured,docker,1.0.0
 2026-09-30,xcodebuildmcp,26594,24,measured,docker,2.7.0
+2026-10-05,memory,2378,9,measured,docker,0.6.3
