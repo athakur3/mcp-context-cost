@@ -1,6 +1,6 @@
 # memory — context cost
 
-**2,378 tokens** across 9 tools — *light* (1–5K). Measured 2026-10-26 under [methodology v1.0](../METHODOLOGY.html).
+**2,378 tokens** across 9 tools — *light* (1–5K). Measured 2026-11-02 under [methodology v1.0](../METHODOLOGY.html).
 
 An Anthropic request carries 901 of those tokens as tool definitions, and Claude counts those at **1,880**.
 
@@ -64,6 +64,7 @@ An Anthropic tool definition carries `name`, `description`, and `input_schema` a
 | 2026-10-05 | 2,378 | 9 | 0.6.3 | docker | no change |
 | 2026-10-12 | 2,378 | 9 | 0.6.3 | docker | no change |
 | 2026-10-26 | 2,378 | 9 | 0.6.3 | docker | no change |
+| 2026-11-02 | 2,378 | 9 | 0.6.3 | docker | no change |
 
 > Some of these sweeps predate the `isolation` column, so the conditions they were measured under are not on record.
 
